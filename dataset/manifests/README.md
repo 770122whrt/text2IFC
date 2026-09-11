@@ -11,6 +11,8 @@
 
 生成入口：`scripts/dataset/build_ifc_source_manifests.py`；审查入口：`scripts/dataset/audit_ifc_source_dataset.py`。本次导航整理未重新运行全量数据探测。
 
+2026-09-10 补充：[两个新增 IFC ZIP 检查与 IFC-bench 登记修订](../external/_checks/incoming-ifc-audit-20260910/README.md)。`external-corpora.json` 的 IFC-bench 计数对应用户筛选后的本地子集（168 个文件、48 个 IFC）；用户已确认两份上游 IFC 因体积过大主动排除，不需要补回。原历史计数和排除路径保留，具体排除阈值未提供，不作推定。新增 80 个 ZIP 成员只登记在检查目录，未进入 canonical IFC 清单。
+
 ## 历史格式及仍被使用的专项合同
 
 ## `raw-files.jsonl`

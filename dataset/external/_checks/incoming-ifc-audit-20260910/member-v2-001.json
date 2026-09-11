@@ -1,0 +1,489 @@
+{
+  "archive": "Text2IFC_29RVT_IFC2X3_NoGrid_Full.zip",
+  "index": 1,
+  "member": "Text2IFC_IFC2X3_NoGrid_29/01_with_shapes_le10MiB/APS Check Models/RVT-018__FindColumns-Basic__IFC2X3_NoGrid.ifc",
+  "size_bytes": 311866,
+  "sha256": "5a440c81b5b018ed46526ceb4ab0ab1a37c03d62972b61ab7e5deb80f5d7ff21",
+  "parse_status": "ok",
+  "license_status": "not_reviewed",
+  "human_review": "pending",
+  "ifcopenshell_version": "0.8.5",
+  "schema": "IFC2X3",
+  "entity_count": 6409,
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 2,
+    "IfcElement": 24,
+    "IfcWall": 2,
+    "IfcDoor": 0,
+    "IfcWindow": 0,
+    "IfcSlab": 0,
+    "IfcRoof": 0,
+    "IfcBeam": 0,
+    "IfcColumn": 22,
+    "IfcSpace": 0,
+    "IfcGrid": 0
+  },
+  "grid_count": 0,
+  "roof_slab_count": 0,
+  "projects": [
+    {
+      "guid": "1oT30tj7LpPJ3quJbmD3Hc",
+      "name": "Project Number"
+    }
+  ],
+  "element_guids": [
+    "0k7npBjEb09ehB_mAtD1QD",
+    "1X3TiAyvzBs8T7g2DxsVQv",
+    "1X3TiAyvzBs8T7g2DxsVRo",
+    "1X3TiAyvzBs8T7g2DxsVat",
+    "1Zer3gSJHF18RDL1Eb1pQ$",
+    "1Zer3gSJHF18RDL1Eb1pSs",
+    "2HuOm76wv9IQ2JuAHLAVMI",
+    "2HuOm76wv9IQ2JuAHLAVPf",
+    "2HuOm76wv9IQ2JuAHLAVRZ",
+    "2IMheDybL61Qzga4ooSzeq",
+    "2pPoSGHnL2cA0JWubeic9v",
+    "2pPoSGHnL2cA0JWubeicBz",
+    "3ALsAr3qPABuMP7HfTqz07",
+    "3ALsAr3qPABuMP7HfTqz14",
+    "3ALsAr3qPABuMP7HfTqz1t",
+    "3ALsAr3qPABuMP7HfTqz4D",
+    "3ALsAr3qPABuMP7HfTqz5K",
+    "3ALsAr3qPABuMP7HfTqz76",
+    "3ALsAr3qPABuMP7HfTqzDT",
+    "3ALsAr3qPABuMP7HfTqzDi",
+    "3ALsAr3qPABuMP7HfTqzO9",
+    "3ALsAr3qPABuMP7HfTqzPQ",
+    "3ALsAr3qPABuMP7HfTqzS2",
+    "3ALsAr3qPABuMP7HfTqzUp"
+  ],
+  "duplicate_globalid_count": 3,
+  "body_elements": 24,
+  "body_by_class": {
+    "IfcColumn": 22,
+    "IfcWall": 2
+  },
+  "external_reference_records": [],
+  "image_texture_refs": [],
+  "schema_validation_scope": "attributes_cardinality_inverse_uniqueness_no_express_rules",
+  "schema_error_count": 18,
+  "schema_error_samples": [
+    {
+      "level": "error",
+      "message": "For instance:\n    FILE_NAME('Project Number','2026-09-10T11:54:55',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                                                                                         ^                          \nAttribute 'originating_system' has invalid type:\n    Expected: STRING (256)\n    Current value type: NoneType\n",
+      "type": "schema"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #4942=IfcPropertySet('0_z8B2w2E$jtjgeyd$DYJV',#20,'Cross-Section Definition','',(#303))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #4940=IfcPropertySet('0_z8B2w2E$jtjgeyd$DYJV',#20,'Constraints','',(#304,#305,#322,#327,#328,#329,#330,#331,#334,#4932,#4933))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ",
+      "type": "schema",
+      "instance": "#4942=IfcPropertySet('0_z8B2w2E$jtjgeyd$DYJV',#20,'Cross-Section Definition','',(#303))"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #1362=IfcColumnType('1X3TiAyvzBs8T7g2DxsVQZ',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#1427,#1428),(#1361),'101942',$,.NOTDEFINED.)\n      2. #2097=IfcColumnType('0qDcPrCtLnOpVYTNHZERLb',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2127,#2128),(#2096),'101942',$,.NOTDEFINED.)\n      3. #2798=IfcColumnType('1nPZPvTR9pTtHoE7CvT35n',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2828,#2829),(#2797),'101942',$,.NOTDEFINED.)\n      4. #6176=IfcColumnType('1YSdCqENCnUU9mOkBnSpSq',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#6206,#6207),(#6175),'101942',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#1423=IfcPropertySet('1jN73GKRG7JISE8ajgnHr2',#20,'Dimensions','',(#1403,#1404,#1405,#1406,#1407,#1408))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #1362=IfcColumnType('1X3TiAyvzBs8T7g2DxsVQZ',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#1427,#1428),(#1361),'101942',$,.NOTDEFINED.)\n      2. #2097=IfcColumnType('0qDcPrCtLnOpVYTNHZERLb',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2127,#2128),(#2096),'101942',$,.NOTDEFINED.)\n      3. #2798=IfcColumnType('1nPZPvTR9pTtHoE7CvT35n',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2828,#2829),(#2797),'101942',$,.NOTDEFINED.)\n      4. #6176=IfcColumnType('1YSdCqENCnUU9mOkBnSpSq',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#6206,#6207),(#6175),'101942',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#1424=IfcPropertySet('1l9O7dKUfWVbEZuJQu4YX4',#20,'Identity Data','',(#434,#435,#1397,#1399,#1400,#1402))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #1362=IfcColumnType('1X3TiAyvzBs8T7g2DxsVQZ',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#1427,#1428),(#1361),'101942',$,.NOTDEFINED.)\n      2. #2097=IfcColumnType('0qDcPrCtLnOpVYTNHZERLb',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2127,#2128),(#2096),'101942',$,.NOTDEFINED.)\n      3. #2798=IfcColumnType('1nPZPvTR9pTtHoE7CvT35n',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2828,#2829),(#2797),'101942',$,.NOTDEFINED.)\n      4. #6176=IfcColumnType('1YSdCqENCnUU9mOkBnSpSq',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#6206,#6207),(#6175),'101942',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#1425=IfcPropertySet('3uQ$_uglsToFXi1xsC9Nvd',#20,'Other','',(#1386,#1387,#1401))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #1362=IfcColumnType('1X3TiAyvzBs8T7g2DxsVQZ',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#1427,#1428),(#1361),'101942',$,.NOTDEFINED.)\n      2. #2097=IfcColumnType('0qDcPrCtLnOpVYTNHZERLb',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2127,#2128),(#2096),'101942',$,.NOTDEFINED.)\n      3. #2798=IfcColumnType('1nPZPvTR9pTtHoE7CvT35n',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#2828,#2829),(#2797),'101942',$,.NOTDEFINED.)\n      4. #6176=IfcColumnType('1YSdCqENCnUU9mOkBnSpSq',#20,'W10X49','',$,(#1423,#1424,#1425,#1426,#6206,#6207),(#6175),'101942',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#1426=IfcPropertySet('38CN067z0yt_3k13Ug22Ya',#20,'Structural','',(#1398,#1409,#1410))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #570=IfcColumnType('2pPoSGHnL2cA0JYubeicBz',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#608,#609),(#569),'79920',$,.NOTDEFINED.)\n      2. #621=IfcColumnType('1Zer3gSJHF18RDN1Eb1pSs',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#649,#650),(#620),'79920',$,.NOTDEFINED.)\n      3. #662=IfcColumnType('1Zer3gSJHF18RDN1Eb1pQ$',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#688,#689),(#661),'79920',$,.NOTDEFINED.)\n      4. #5042=IfcColumnType('3ALsAr3qPABuMP5HfTqz07',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5069,#5070),(#5041),'79920',$,.NOTDEFINED.)\n      5. #5091=IfcColumnType('3ALsAr3qPABuMP5HfTqz14',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5118,#5119),(#5090),'79920',$,.NOTDEFINED.)\n      6. #5141=IfcColumnType('3ALsAr3qPABuMP5HfTqz1t',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5168,#5169),(#5140),'79920',$,.NOTDEFINED.)\n      7. #5190=IfcColumnType('3ALsAr3qPABuMP5HfTqz76',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5217,#5218),(#5189),'79920',$,.NOTDEFINED.)\n      8. #5230=IfcColumnType('3ALsAr3qPABuMP5HfTqz4D',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5256,#5257),(#5229),'79920',$,.NOTDEFINED.)\n      9. #5269=IfcColumnType('3ALsAr3qPABuMP5HfTqz5K',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5295,#5296),(#5268),'79920',$,.NOTDEFINED.)\n      10. #5308=IfcColumnType('3ALsAr3qPABuMP5HfTqzO9',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5334,#5335),(#5307),'79920',$,.NOTDEFINED.)\n      11. #5347=IfcColumnType('3ALsAr3qPABuMP5HfTqzPQ',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5373,#5374),(#5346),'79920',$,.NOTDEFINED.)\n      12. #5391=IfcColumnType('3ALsAr3qPABuMP5HfTqzUp',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5418,#5419),(#5390),'79920',$,.NOTDEFINED.)\n      13. #5431=IfcColumnType('3ALsAr3qPABuMP5HfTqzS2',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5457,#5458),(#5430),'79920',$,.NOTDEFINED.)\n      14. #5479=IfcColumnType('2IMheDybL61Qzgc4ooSzeq',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5506,#5507),(#5478),'79920',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#604=IfcPropertySet('00dgqnhnEKaLGtaMBJTGWe',#20,'Dimensions','',(#440,#441,#442,#595))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #570=IfcColumnType('2pPoSGHnL2cA0JYubeicBz',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#608,#609),(#569),'79920',$,.NOTDEFINED.)\n      2. #621=IfcColumnType('1Zer3gSJHF18RDN1Eb1pSs',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#649,#650),(#620),'79920',$,.NOTDEFINED.)\n      3. #662=IfcColumnType('1Zer3gSJHF18RDN1Eb1pQ$',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#688,#689),(#661),'79920',$,.NOTDEFINED.)\n      4. #5042=IfcColumnType('3ALsAr3qPABuMP5HfTqz07',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5069,#5070),(#5041),'79920',$,.NOTDEFINED.)\n      5. #5091=IfcColumnType('3ALsAr3qPABuMP5HfTqz14',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5118,#5119),(#5090),'79920',$,.NOTDEFINED.)\n      6. #5141=IfcColumnType('3ALsAr3qPABuMP5HfTqz1t',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5168,#5169),(#5140),'79920',$,.NOTDEFINED.)\n      7. #5190=IfcColumnType('3ALsAr3qPABuMP5HfTqz76',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5217,#5218),(#5189),'79920',$,.NOTDEFINED.)\n      8. #5230=IfcColumnType('3ALsAr3qPABuMP5HfTqz4D',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5256,#5257),(#5229),'79920',$,.NOTDEFINED.)\n      9. #5269=IfcColumnType('3ALsAr3qPABuMP5HfTqz5K',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5295,#5296),(#5268),'79920',$,.NOTDEFINED.)\n      10. #5308=IfcColumnType('3ALsAr3qPABuMP5HfTqzO9',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5334,#5335),(#5307),'79920',$,.NOTDEFINED.)\n      11. #5347=IfcColumnType('3ALsAr3qPABuMP5HfTqzPQ',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5373,#5374),(#5346),'79920',$,.NOTDEFINED.)\n      12. #5391=IfcColumnType('3ALsAr3qPABuMP5HfTqzUp',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5418,#5419),(#5390),'79920',$,.NOTDEFINED.)\n      13. #5431=IfcColumnType('3ALsAr3qPABuMP5HfTqzS2',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5457,#5458),(#5430),'79920',$,.NOTDEFINED.)\n      14. #5479=IfcColumnType('2IMheDybL61Qzgc4ooSzeq',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5506,#5507),(#5478),'79920',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#605=IfcPropertySet('2rkMRJd3l_INZT_N5TxG_R',#20,'Graphics','',(#342))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #570=IfcColumnType('2pPoSGHnL2cA0JYubeicBz',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#608,#609),(#569),'79920',$,.NOTDEFINED.)\n      2. #621=IfcColumnType('1Zer3gSJHF18RDN1Eb1pSs',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#649,#650),(#620),'79920',$,.NOTDEFINED.)\n      3. #662=IfcColumnType('1Zer3gSJHF18RDN1Eb1pQ$',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#688,#689),(#661),'79920',$,.NOTDEFINED.)\n      4. #5042=IfcColumnType('3ALsAr3qPABuMP5HfTqz07',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5069,#5070),(#5041),'79920',$,.NOTDEFINED.)\n      5. #5091=IfcColumnType('3ALsAr3qPABuMP5HfTqz14',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5118,#5119),(#5090),'79920',$,.NOTDEFINED.)\n      6. #5141=IfcColumnType('3ALsAr3qPABuMP5HfTqz1t',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5168,#5169),(#5140),'79920',$,.NOTDEFINED.)\n      7. #5190=IfcColumnType('3ALsAr3qPABuMP5HfTqz76',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5217,#5218),(#5189),'79920',$,.NOTDEFINED.)\n      8. #5230=IfcColumnType('3ALsAr3qPABuMP5HfTqz4D',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5256,#5257),(#5229),'79920',$,.NOTDEFINED.)\n      9. #5269=IfcColumnType('3ALsAr3qPABuMP5HfTqz5K',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5295,#5296),(#5268),'79920',$,.NOTDEFINED.)\n      10. #5308=IfcColumnType('3ALsAr3qPABuMP5HfTqzO9',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5334,#5335),(#5307),'79920',$,.NOTDEFINED.)\n      11. #5347=IfcColumnType('3ALsAr3qPABuMP5HfTqzPQ',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5373,#5374),(#5346),'79920',$,.NOTDEFINED.)\n      12. #5391=IfcColumnType('3ALsAr3qPABuMP5HfTqzUp',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5418,#5419),(#5390),'79920',$,.NOTDEFINED.)\n      13. #5431=IfcColumnType('3ALsAr3qPABuMP5HfTqzS2',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5457,#5458),(#5430),'79920',$,.NOTDEFINED.)\n      14. #5479=IfcColumnType('2IMheDybL61Qzgc4ooSzeq',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5506,#5507),(#5478),'79920',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#606=IfcPropertySet('0VcHZKet5Z8IKdCMi_kEVr',#20,'Identity Data','',(#434,#435,#436,#437,#593,#594))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #570=IfcColumnType('2pPoSGHnL2cA0JYubeicBz',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#608,#609),(#569),'79920',$,.NOTDEFINED.)\n      2. #621=IfcColumnType('1Zer3gSJHF18RDN1Eb1pSs',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#649,#650),(#620),'79920',$,.NOTDEFINED.)\n      3. #662=IfcColumnType('1Zer3gSJHF18RDN1Eb1pQ$',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#688,#689),(#661),'79920',$,.NOTDEFINED.)\n      4. #5042=IfcColumnType('3ALsAr3qPABuMP5HfTqz07',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5069,#5070),(#5041),'79920',$,.NOTDEFINED.)\n      5. #5091=IfcColumnType('3ALsAr3qPABuMP5HfTqz14',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5118,#5119),(#5090),'79920',$,.NOTDEFINED.)\n      6. #5141=IfcColumnType('3ALsAr3qPABuMP5HfTqz1t',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5168,#5169),(#5140),'79920',$,.NOTDEFINED.)\n      7. #5190=IfcColumnType('3ALsAr3qPABuMP5HfTqz76',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5217,#5218),(#5189),'79920',$,.NOTDEFINED.)\n      8. #5230=IfcColumnType('3ALsAr3qPABuMP5HfTqz4D',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5256,#5257),(#5229),'79920',$,.NOTDEFINED.)\n      9. #5269=IfcColumnType('3ALsAr3qPABuMP5HfTqz5K',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5295,#5296),(#5268),'79920',$,.NOTDEFINED.)\n      10. #5308=IfcColumnType('3ALsAr3qPABuMP5HfTqzO9',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5334,#5335),(#5307),'79920',$,.NOTDEFINED.)\n      11. #5347=IfcColumnType('3ALsAr3qPABuMP5HfTqzPQ',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5373,#5374),(#5346),'79920',$,.NOTDEFINED.)\n      12. #5391=IfcColumnType('3ALsAr3qPABuMP5HfTqzUp',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5418,#5419),(#5390),'79920',$,.NOTDEFINED.)\n      13. #5431=IfcColumnType('3ALsAr3qPABuMP5HfTqzS2',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5457,#5458),(#5430),'79920',$,.NOTDEFINED.)\n      14. #5479=IfcColumnType('2IMheDybL61Qzgc4ooSzeq',#20,'18\" x 24\"','',$,(#604,#605,#606,#607,#5506,#5507),(#5478),'79920',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#607=IfcPropertySet('39JgZFyaS5vyXl9YoZJmBZ',#20,'Other','',(#420,#421,#438))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #398=IfcColumnType('2HuOm76wv9IQ2JwAHLAVPf',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#456,#457),(#397),'79918',$,.NOTDEFINED.)\n      2. #482=IfcColumnType('2HuOm76wv9IQ2JwAHLAVRZ',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#514,#515),(#481),'79918',$,.NOTDEFINED.)\n      3. #529=IfcColumnType('2pPoSGHnL2cA0JYubeic9v',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#556,#557),(#528),'79918',$,.NOTDEFINED.)\n      4. #4992=IfcColumnType('3ALsAr3qPABuMP5HfTqzDi',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#5019,#5020),(#4991),'79918',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#452=IfcPropertySet('1ZYrFswsOISE$euDmOpUEv',#20,'Dimensions','',(#440,#441,#442,#443))",
+      "attribute": "IfcPropertySet.DefinesType"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #398=IfcColumnType('2HuOm76wv9IQ2JwAHLAVPf',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#456,#457),(#397),'79918',$,.NOTDEFINED.)\n      2. #482=IfcColumnType('2HuOm76wv9IQ2JwAHLAVRZ',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#514,#515),(#481),'79918',$,.NOTDEFINED.)\n      3. #529=IfcColumnType('2pPoSGHnL2cA0JYubeic9v',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#556,#557),(#528),'79918',$,.NOTDEFINED.)\n      4. #4992=IfcColumnType('3ALsAr3qPABuMP5HfTqzDi',#20,'24\" x 24\"','',$,(#452,#453,#454,#455,#5019,#5020),(#4991),'79918',$,.NOTDEFINED.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#453=IfcPropertySet('2IIQhWSfB9kSJnntMscqol',#20,'Graphics','',(#342))",
+      "attribute": "IfcPropertySet.DefinesType"
+    }
+  ],
+  "schema_error_categories": {
+    "For instance:\n    FILE_NAME('Project Number','2026-09-10T11:54:55',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                 ": 1,
+    "On instance:\n    #4942=IfcPropertySet('0_z8B2w2E$jtjgeyd$DYJV',#20,'Cross-Section Definition','',(#303))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #1362=IfcColumnType('1X3TiAyvzBs8T7g2DxsVQZ',#20,'W10X49','',$,(#1423,#1424,#14": 4,
+    "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #570=IfcColumnType('2pPoSGHnL2cA0JYubeicBz',#20,'18\" x 24\"','',$,(#604,#605,#60": 4,
+    "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #398=IfcColumnType('2HuOm76wv9IQ2JwAHLAVPf',#20,'24\" x 24\"','',$,(#452,#453,#45": 4,
+    "On instance:\n    #350=IfcPropertySet('1k95uFXG8ibnj6nNdBC4M8',#20,'Cross-Section Definition','',(#303))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                            ": 1,
+    "Attribute not optional": 2,
+    "On instance:\n    #55=IfcPropertySet('2VHdUG_KsyJqwVlXc57$Yk',#20,'Other','',(#47,#48,#49,#50,#51,#52,#53,#54))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                      ": 1
+  },
+  "roundtrip_ok": true,
+  "geometry_scope": "class_stratified_max_24_or_class_count_body_element_sample",
+  "geometry_samples": [
+    {
+      "id": 406,
+      "class": "IfcColumn",
+      "guid": "2HuOm76wv9IQ2JuAHLAVPf",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.3435953360859578,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 292,
+      "class": "IfcWall",
+      "guid": "2HuOm76wv9IQ2JuAHLAVMI",
+      "ok": true,
+      "vertex_count": 33,
+      "triangle_count": 62,
+      "dimensions_m": [
+        21.178980178737806,
+        0.30480000000006946,
+        3.048
+      ]
+    },
+    {
+      "id": 493,
+      "class": "IfcColumn",
+      "guid": "2HuOm76wv9IQ2JuAHLAVRZ",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000164,
+        0.6095999999999995,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 535,
+      "class": "IfcColumn",
+      "guid": "2pPoSGHnL2cA0JWubeic9v",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6095999999999999,
+        0.3676046639140367,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 576,
+      "class": "IfcColumn",
+      "guid": "2pPoSGHnL2cA0JWubeicBz",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.21520466391404014,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 628,
+      "class": "IfcColumn",
+      "guid": "1Zer3gSJHF18RDL1Eb1pSs",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000001,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 668,
+      "class": "IfcColumn",
+      "guid": "1Zer3gSJHF18RDL1Eb1pQ$",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 1375,
+      "class": "IfcColumn",
+      "guid": "1X3TiAyvzBs8T7g2DxsVQv",
+      "ok": true,
+      "vertex_count": 96,
+      "triangle_count": 188,
+      "dimensions_m": [
+        0.25399999999999956,
+        0.25350390624999974,
+        3.048
+      ]
+    },
+    {
+      "id": 2104,
+      "class": "IfcColumn",
+      "guid": "1X3TiAyvzBs8T7g2DxsVRo",
+      "ok": true,
+      "vertex_count": 96,
+      "triangle_count": 188,
+      "dimensions_m": [
+        0.25399999999999956,
+        0.25350390624999974,
+        3.048
+      ]
+    },
+    {
+      "id": 2805,
+      "class": "IfcColumn",
+      "guid": "1X3TiAyvzBs8T7g2DxsVat",
+      "ok": true,
+      "vertex_count": 96,
+      "triangle_count": 188,
+      "dimensions_m": [
+        0.25399999999999956,
+        0.25350390624999974,
+        3.048
+      ]
+    },
+    {
+      "id": 4998,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqzDi",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000306,
+        0.6096000000000572,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5048,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqz07",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000532,
+        0.45720000000003225,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5097,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqz14",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000674,
+        0.4572000000000087,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5147,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqz1t",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000554,
+        0.45720000000000005,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5196,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqz76",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000412,
+        0.45719999999999983,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5236,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqz4D",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.4571999999999985,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5275,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqz5K",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5314,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqzO9",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6095999999999995,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5353,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqzPQ",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5397,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqzUp",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.4220868326677878,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5437,
+      "class": "IfcColumn",
+      "guid": "3ALsAr3qPABuMP7HfTqzS2",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.6096000000000004,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 5485,
+      "class": "IfcColumn",
+      "guid": "2IMheDybL61Qzga4ooSzeq",
+      "ok": true,
+      "vertex_count": 12,
+      "triangle_count": 16,
+      "dimensions_m": [
+        0.6096000000000394,
+        0.4572000000000003,
+        3.047999999999518
+      ]
+    },
+    {
+      "id": 6183,
+      "class": "IfcColumn",
+      "guid": "0k7npBjEb09ehB_mAtD1QD",
+      "ok": true,
+      "vertex_count": 96,
+      "triangle_count": 188,
+      "dimensions_m": [
+        0.25399999999999956,
+        0.25350390624999974,
+        3.048
+      ]
+    },
+    {
+      "id": 4879,
+      "class": "IfcWall",
+      "guid": "3ALsAr3qPABuMP7HfTqzDT",
+      "ok": true,
+      "vertex_count": 292,
+      "triangle_count": 580,
+      "dimensions_m": [
+        21.63727201378848,
+        9.623643541035062,
+        6.096
+      ]
+    }
+  ],
+  "geometry_checked": 24,
+  "geometry_passed": 24,
+  "geometry_failed": 0,
+  "flags": [
+    "schema_validation_errors"
+  ],
+  "basic_candidate": false
+}

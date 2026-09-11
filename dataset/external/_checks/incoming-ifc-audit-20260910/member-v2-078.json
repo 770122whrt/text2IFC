@@ -1,0 +1,542 @@
+{
+  "archive": "ResBIM_IFC2X3_50.zip",
+  "index": 53,
+  "member": "ResBIM_IFC2X3_50/ifc/10.ifc",
+  "size_bytes": 635241,
+  "sha256": "53bae318a4feadece0d859f2e1f52f07c3f85e34e8d0adfb794ce1e41e9e5a54",
+  "parse_status": "ok",
+  "license_status": "not_reviewed",
+  "human_review": "pending",
+  "ifcopenshell_version": "0.8.5",
+  "schema": "IFC2X3",
+  "entity_count": 12354,
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 2,
+    "IfcElement": 42,
+    "IfcWall": 18,
+    "IfcDoor": 6,
+    "IfcWindow": 4,
+    "IfcSlab": 1,
+    "IfcRoof": 0,
+    "IfcBeam": 0,
+    "IfcColumn": 0,
+    "IfcSpace": 0,
+    "IfcGrid": 0
+  },
+  "grid_count": 0,
+  "roof_slab_count": 0,
+  "projects": [
+    {
+      "guid": "0uTdCpUMLnOh5nyZXaE3ap",
+      "name": "Project Number"
+    }
+  ],
+  "element_guids": [
+    "0$Zt7ha8K$wAWmVzXHgLyR",
+    "0ADbLL$sI5mlryIsKV4sO4",
+    "0W57qIJ7Br_F4_TkfZvbi9",
+    "0g$SN882n858CjmHgpgHtM",
+    "19BZcxe5b3KaLaMl5MsVGU",
+    "1SQqJs1o0FzaLRF75pOzLC",
+    "1mHXKTeMJGhfp2r_VazWuT",
+    "1pFQttHS94ocwMzhBQnFY7",
+    "1qdduOHlBwbteKEvuiGMr6",
+    "2O8gEAhhI6_WH2uDtIJraW",
+    "2lQSzIobQW1891r7vxjWkS",
+    "3jsHqE6Q5ABwOESr$OHSO0",
+    "3jsHqE6Q5ABwOESr$OHSO1",
+    "3jsHqE6Q5ABwOESr$OHSO2",
+    "3jsHqE6Q5ABwOESr$OHSO3",
+    "3jsHqE6Q5ABwOESr$OHSO4",
+    "3jsHqE6Q5ABwOESr$OHSO5",
+    "3jsHqE6Q5ABwOESr$OHSO6",
+    "3jsHqE6Q5ABwOESr$OHSO7",
+    "3jsHqE6Q5ABwOESr$OHSO8",
+    "3jsHqE6Q5ABwOESr$OHSOC",
+    "3jsHqE6Q5ABwOESr$OHSOD",
+    "3jsHqE6Q5ABwOESr$OHSOE",
+    "3jsHqE6Q5ABwOESr$OHSOF",
+    "3jsHqE6Q5ABwOESr$OHSOL",
+    "3jsHqE6Q5ABwOESr$OHSOO",
+    "3jsHqE6Q5ABwOESr$OHSOP",
+    "3jsHqE6Q5ABwOESr$OHSOW",
+    "3jsHqE6Q5ABwOESr$OHSOX",
+    "3jsHqE6Q5ABwOESr$OHSOY",
+    "3jsHqE6Q5ABwOESr$OHSOZ",
+    "3jsHqE6Q5ABwOESr$OHSOa",
+    "3jsHqE6Q5ABwOESr$OHSOb",
+    "3jsHqE6Q5ABwOESr$OHSOc",
+    "3jsHqE6Q5ABwOESr$OHSOd",
+    "3jsHqE6Q5ABwOESr$OHSOi",
+    "3jsHqE6Q5ABwOESr$OHSOk",
+    "3jsHqE6Q5ABwOESr$OHSOl",
+    "3jsHqE6Q5ABwOESr$OHSR_",
+    "3jsHqE6Q5ABwOESr$OHSRu",
+    "3jsHqE6Q5ABwOESr$OHSRv",
+    "3jsHqE6Q5ABwOESr$OHSRz"
+  ],
+  "duplicate_globalid_count": 30,
+  "body_elements": 42,
+  "body_by_class": {
+    "IfcDoor": 6,
+    "IfcRailing": 2,
+    "IfcSlab": 1,
+    "IfcWall": 2,
+    "IfcWallStandardCase": 16,
+    "IfcWindow": 4,
+    "IfcOpeningElement": 11
+  },
+  "external_reference_records": [],
+  "image_texture_refs": [],
+  "schema_validation_scope": "attributes_cardinality_inverse_uniqueness_no_express_rules",
+  "schema_error_count": 56,
+  "schema_error_samples": [
+    {
+      "level": "error",
+      "message": "For instance:\n    FILE_NAME('Project Number','2026-09-08T10:54:14',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                                                                                         ^                          \nAttribute 'originating_system' has invalid type:\n    Expected: STRING (256)\n    Current value type: NoneType\n",
+      "type": "schema"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    ShapeOfProduct : SET [1:1] OF IfcProduct FOR Representation\nValue:\n    ()\nNot valid\n",
+      "type": "schema",
+      "instance": "#11574=IfcProductDefinitionShape('','',(#11573))",
+      "attribute": "IfcProductDefinitionShape.ShapeOfProduct"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    PlacesObject : SET [1:1] OF IfcProduct FOR ObjectPlacement\nValue:\n    ()\nNot valid\n",
+      "type": "schema",
+      "instance": "#11575=IfcLocalPlacement(#16,#32)",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    ShapeOfProduct : SET [1:1] OF IfcProduct FOR Representation\nValue:\n    ()\nNot valid\n",
+      "type": "schema",
+      "instance": "#11405=IfcProductDefinitionShape('','',(#11404))",
+      "attribute": "IfcProductDefinitionShape.ShapeOfProduct"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    PlacesObject : SET [1:1] OF IfcProduct FOR ObjectPlacement\nValue:\n    ()\nNot valid\n",
+      "type": "schema",
+      "instance": "#11406=IfcLocalPlacement(#16,#36)",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #10786=IfcPropertySet('0cOfMInI5lmFfThrZkqNaL',#20,'Handrail 2(Type)','',(#10750))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                    \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #10785=IfcPropertySet('0cOfMInI5lmFfThrZkqNaL',#20,'Handrail 1(Type)','',(#10750,#10751,#10752))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                                  ",
+      "type": "schema",
+      "instance": "#10786=IfcPropertySet('0cOfMInI5lmFfThrZkqNaL',#20,'Handrail 2(Type)','',(#10750))",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #10248=IfcPropertySet('1_zxMinvh_l3$f3Fyfv4AF',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #10246=IfcPropertySet('1_zxMinvh_l3$f3Fyfv4AF',#20,'Constraints','',(#104,#105,#114,#117,#119,#120,#121,#122,#123,#125,#10245))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ",
+      "type": "schema",
+      "instance": "#10248=IfcPropertySet('1_zxMinvh_l3$f3Fyfv4AF',#20,'Cross-Section Definition','',(#103))",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #10199=IfcPropertySet('0mgaCYRLfja1nBnQ6D9AOl',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #10197=IfcPropertySet('0mgaCYRLfja1nBnQ6D9AOl',#20,'Constraints','',(#104,#105,#114,#117,#119,#120,#121,#122,#123,#125,#10196))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ",
+      "type": "schema",
+      "instance": "#10199=IfcPropertySet('0mgaCYRLfja1nBnQ6D9AOl',#20,'Cross-Section Definition','',(#103))",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #10149=IfcPropertySet('26IW2gs1dCpfVCPBFCEhEe',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #10147=IfcPropertySet('26IW2gs1dCpfVCPBFCEhEe',#20,'Constraints','',(#104,#105,#114,#117,#119,#120,#121,#122,#123,#125,#10146))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ",
+      "type": "schema",
+      "instance": "#10149=IfcPropertySet('26IW2gs1dCpfVCPBFCEhEe',#20,'Cross-Section Definition','',(#103))",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #10100=IfcPropertySet('1uNBDXmUhdRr14HwI$DfOb',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #10098=IfcPropertySet('1uNBDXmUhdRr14HwI$DfOb',#20,'Constraints','',(#104,#105,#114,#117,#119,#120,#121,#122,#123,#125,#10097))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                                                                                 ",
+      "type": "schema",
+      "instance": "#10100=IfcPropertySet('1uNBDXmUhdRr14HwI$DfOb',#20,'Cross-Section Definition','',(#103))",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #9815=IfcPropertySet('0x38_SP7mn0Iyp9_Gx7BY8',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #9813=IfcPropertySet('0x38_SP7mn0Iyp9_Gx7BY8',#20,'Constraints','',(#104,#105,#114,#117,#119,#120,#121,#122,#123,#125,#9812))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                                                                                ",
+      "type": "schema",
+      "instance": "#9815=IfcPropertySet('0x38_SP7mn0Iyp9_Gx7BY8',#20,'Cross-Section Definition','',(#103))",
+      "attribute": "IfcLocalPlacement.PlacesObject"
+    },
+    {
+      "level": "error",
+      "message": "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #6458=IfcDoorStyle('3jsHqE6Q5ABwOESqhOHSOf',#20,'810x2110mm','',$,(#6456,#6457,#6542,#6543,#6544,#6545,#6546,#6547,#6548,#6549,#6550,#6551,#6552,#6553),(#6455),'177724',.SINGLE_SWING_RIGHT.,.NOTDEFINED.,.F.,.F.)\n      2. #8155=IfcDoorStyle('0vPNIsUNCnUBDYScHXPcGt',#20,'810x2110mm','',$,(#6542,#6543,#6544,#6545,#6546,#6547,#6548,#6549,#8153,#8154,#8190,#8191,#8192,#8193),(#8152),'177724',.SINGLE_SWING_RIGHT.,.NOTDEFINED.,.F.,.F.)\n      3. #9744=IfcDoorStyle('1bOt9oTNYnUJXsD3SmT_Ep',#20,'810x2110mm','',$,(#6542,#6543,#6544,#6545,#6546,#6547,#6548,#6549,#9742,#9743,#9779,#9780,#9781,#9782),(#9741),'177724',.SINGLE_SWING_RIGHT.,.NOTDEFINED.,.F.,.F.)\n    ]\nNot valid\n",
+      "type": "schema",
+      "instance": "#6542=IfcPropertySet('3yw8mJ1md9ioamqZyH6MLP',#20,'Analytical Properties','',(#352,#3521,#3522))",
+      "attribute": "IfcPropertySet.DefinesType"
+    }
+  ],
+  "schema_error_categories": {
+    "For instance:\n    FILE_NAME('Project Number','2026-09-08T10:54:14',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                 ": 1,
+    "With inverse:\n    ShapeOfProduct : SET [1:1] OF IfcProduct FOR Representation\nValue:\n    ()\nNot valid\n": 2,
+    "With inverse:\n    PlacesObject : SET [1:1] OF IfcProduct FOR ObjectPlacement\nValue:\n    ()\nNot valid\n": 2,
+    "On instance:\n    #10786=IfcPropertySet('0cOfMInI5lmFfThrZkqNaL',#20,'Handrail 2(Type)','',(#10750))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                              ": 1,
+    "On instance:\n    #10248=IfcPropertySet('1_zxMinvh_l3$f3Fyfv4AF',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                        ": 1,
+    "On instance:\n    #10199=IfcPropertySet('0mgaCYRLfja1nBnQ6D9AOl',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                        ": 1,
+    "On instance:\n    #10149=IfcPropertySet('26IW2gs1dCpfVCPBFCEhEe',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                        ": 1,
+    "On instance:\n    #10100=IfcPropertySet('1uNBDXmUhdRr14HwI$DfOb',#20,'Cross-Section Definition','',(#103))\n                          ^^^^^^^^^^^^^^^^^^^^^^^^                        ": 1,
+    "On instance:\n    #9815=IfcPropertySet('0x38_SP7mn0Iyp9_Gx7BY8',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #6458=IfcDoorStyle('3jsHqE6Q5ABwOESqhOHSOf',#20,'810x2110mm','',$,(#6456,#6457,": 8,
+    "On instance:\n    #6544=IfcPropertySet('2$$lXrQvcvNHFlF9$FdVf_',#20,'Construction','',(#366,#371))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                                 ": 1,
+    "On instance:\n    #6587=IfcPropertySet('27rmcbbEjzhDc40zD0U0lU',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #4885=IfcPropertySet('28pvy8new9_jdZR72pPN4P',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #4822=IfcPropertySet('2DfrrdoQrQ8w4oUivW0ZR0',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #4834=IfcPropertySet('0ZTTTRz$$NxSWMWB_AsBfS',#20,'Cross-Section Definition','',(#127,#132,#133))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                ": 1,
+    "On instance:\n    #4570=IfcPropertySet('1owkF6y9TtULtsa5IHm$dl',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #3727=IfcPropertySet('34WR6Gtfx0cjEk8PYESBFy',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #3677=IfcPropertySet('1HYsV19zuMSX8WKa2WYZtG',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #3585=IfcPropertySet('0XkuMla2Ctyc9tOeiEWiw7',#20,'Construction','',(#161,#366,#3552,#3572))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                     ": 1,
+    "On instance:\n    #3628=IfcPropertySet('3hXlrWq1AeuC4quppM$oeY',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #1002=IfcPropertySet('1EMv8zjhBR2IwyOUSZSlQU',#20,'Cross-Section Definition','',(#103))\n                         ^^^^^^^^^^^^^^^^^^^^^^^^                          ": 1,
+    "On instance:\n    #903=IfcPropertySet('1Mj3gRoUMqzSRJOZVglkcl',#20,'Cross-Section Definition','',(#103))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                            ": 1,
+    "On instance:\n    #953=IfcPropertySet('3zT79gTTQ2EfoBaVqnogNB',#20,'Cross-Section Definition','',(#103))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                            ": 1,
+    "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #769=IfcWindowStyle('3jsHqE6Q5ABwOESqhOHSOh',#20,'1360x1210mm','',$,(#768,#860,": 7,
+    "On instance:\n    #385=IfcPropertySet('3BpYFeOtStbeU$6B76fTWZ',#20,'Phasing','',(#108))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                         \nRule IfcRoot.UR1:\n ": 1,
+    "With inverse:\n    DefinesType : SET [0:1] OF IfcTypeObject FOR HasPropertySets\nValue:\n    [\n      1. #10027=IfcDoorStyle('3jsHqE6Q5ABwOESqhOHSOs',#20,'1800 x 2000mm','',$,(#387,#38": 5,
+    "On instance:\n    #329=IfcPropertySet('1olVCoaRC02UFLejJJ8XRb',#20,'Cross-Section Definition','',(#103))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                            ": 1,
+    "On instance:\n    #377=IfcPropertySet('04sJ_K3FlKy6SaHIPslMDS',#20,'Constraints','',(#349))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                             \nRule IfcRoo": 1,
+    "On instance:\n    #379=IfcPropertySet('0iGlTG73uIJyFXHSH1VDf1',#20,'Dimensions','',(#341,#342))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                 \nRul": 1,
+    "On instance:\n    #381=IfcPropertySet('2iEA$jSIUb6RNesSJtEiSr',#20,'Identity Data','',(#350))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                               \nRule If": 1,
+    "On instance:\n    #383=IfcPropertySet('1sPrhKsT5YUkg1rOXpnneT',#20,'Other','',(#339,#340,#343,#344,#345,#346,#347,#348))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^            ": 1,
+    "On instance:\n    #260=IfcPropertySet('1K41vckzbQuPLsLdjNbJ$R',#20,'Cross-Section Definition','',(#103))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                            ": 1,
+    "On instance:\n    #165=IfcPropertySet('0l8NP57v2LZyLOL6CnHROK',#20,'Cross-Section Definition','',(#103))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                            ": 1,
+    "On instance:\n    #177=IfcPropertySet('2nY7fBXxuFEROBN96ntgxS',#20,'Cross-Section Definition','',(#127,#132,#133))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                  ": 1,
+    "Attribute not optional": 1,
+    "On instance:\n    #56=IfcPropertySet('05wA4BBwrI6JIsf7rCnICC',#20,'Identity Data','',(#46,#47,#48,#49))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                              ": 1,
+    "On instance:\n    #58=IfcPropertySet('2DFVRdOscZBK8LTtpiwnZ0',#20,'Other','',(#44,#45,#50,#51,#52,#53,#54,#55))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                      ": 1
+  },
+  "roundtrip_ok": true,
+  "geometry_scope": "class_stratified_max_24_or_class_count_body_element_sample",
+  "geometry_samples": [
+    {
+      "id": 3496,
+      "class": "IfcDoor",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO3",
+      "ok": true,
+      "vertex_count": 486,
+      "triangle_count": 938,
+      "dimensions_m": [
+        1.0599999999999987,
+        0.19900000000000517,
+        2.11
+      ]
+    },
+    {
+      "id": 10731,
+      "class": "IfcRailing",
+      "guid": "3jsHqE6Q5ABwOESr$OHSRz",
+      "ok": true,
+      "vertex_count": 64,
+      "triangle_count": 96,
+      "dimensions_m": [
+        0.04999999999999982,
+        1.4400000000000004,
+        1.1
+      ]
+    },
+    {
+      "id": 4611,
+      "class": "IfcSlab",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOL",
+      "ok": true,
+      "vertex_count": 20,
+      "triangle_count": 36,
+      "dimensions_m": [
+        8.879999999999999,
+        14.32,
+        0.47000000000000003
+      ]
+    },
+    {
+      "id": 253,
+      "class": "IfcWall",
+      "guid": "3jsHqE6Q5ABwOESr$OHSRu",
+      "ok": true,
+      "vertex_count": 18,
+      "triangle_count": 32,
+      "dimensions_m": [
+        1.5200000000000005,
+        0.21500000000000163,
+        2.95
+      ]
+    },
+    {
+      "id": 80,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSR_",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.21500000000000163,
+        9.5475,
+        2.95
+      ]
+    },
+    {
+      "id": 788,
+      "class": "IfcWindow",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO6",
+      "ok": true,
+      "vertex_count": 108,
+      "triangle_count": 208,
+      "dimensions_m": [
+        0.2775000000009573,
+        1.4099999999999984,
+        1.21
+      ]
+    },
+    {
+      "id": 306,
+      "class": "IfcOpeningElement",
+      "guid": "0ADbLL$sI5mlryIsKV4sO4",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        1.799999999999999,
+        0.21499999999999986,
+        1.9999999999980456
+      ]
+    },
+    {
+      "id": 6476,
+      "class": "IfcDoor",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOc",
+      "ok": true,
+      "vertex_count": 248,
+      "triangle_count": 460,
+      "dimensions_m": [
+        0.2130000000009762,
+        0.8800000000000008,
+        2.145
+      ]
+    },
+    {
+      "id": 9751,
+      "class": "IfcDoor",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOb",
+      "ok": true,
+      "vertex_count": 248,
+      "triangle_count": 460,
+      "dimensions_m": [
+        0.2130000000009762,
+        0.879999999999999,
+        2.145
+      ]
+    },
+    {
+      "id": 10466,
+      "class": "IfcDoor",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOi",
+      "ok": true,
+      "vertex_count": 320,
+      "triangle_count": 564,
+      "dimensions_m": [
+        1.8000000000000007,
+        0.08000000000000007,
+        1.999999999998056
+      ]
+    },
+    {
+      "id": 11221,
+      "class": "IfcRailing",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO8",
+      "ok": true,
+      "vertex_count": 120,
+      "triangle_count": 180,
+      "dimensions_m": [
+        3.3599999999999994,
+        0.04999999999999982,
+        1.1
+      ]
+    },
+    {
+      "id": 4783,
+      "class": "IfcWall",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOO",
+      "ok": true,
+      "vertex_count": 15,
+      "triangle_count": 26,
+      "dimensions_m": [
+        0.129999999999999,
+        1.7974999999999977,
+        2.95
+      ]
+    },
+    {
+      "id": 293,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSRv",
+      "ok": true,
+      "vertex_count": 16,
+      "triangle_count": 32,
+      "dimensions_m": [
+        0.21500000000000163,
+        3.4399999999999995,
+        2.95
+      ]
+    },
+    {
+      "id": 936,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO4",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.21499999999999986,
+        1.5999999999999996,
+        2.95
+      ]
+    },
+    {
+      "id": 985,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO5",
+      "ok": true,
+      "vertex_count": 24,
+      "triangle_count": 48,
+      "dimensions_m": [
+        5.4399999999999995,
+        0.21499999999999986,
+        2.95
+      ]
+    },
+    {
+      "id": 3660,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO1",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        1.5199999999999996,
+        0.21499999999999986,
+        2.95
+      ]
+    },
+    {
+      "id": 4553,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOD",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        3.8924999999999983,
+        0.21499999999999986,
+        2.95
+      ]
+    },
+    {
+      "id": 6570,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOd",
+      "ok": true,
+      "vertex_count": 24,
+      "triangle_count": 44,
+      "dimensions_m": [
+        0.129999999999999,
+        7.557499999999997,
+        2.95
+      ]
+    },
+    {
+      "id": 9798,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOY",
+      "ok": true,
+      "vertex_count": 16,
+      "triangle_count": 28,
+      "dimensions_m": [
+        3.347500000000001,
+        0.129999999999999,
+        2.95
+      ]
+    },
+    {
+      "id": 10132,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOX",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        1.8274999999999988,
+        0.13000000000000256,
+        2.95
+      ]
+    },
+    {
+      "id": 10231,
+      "class": "IfcWallStandardCase",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOl",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        1.7475000000000005,
+        0.13000000000000256,
+        0.9500000000019546
+      ]
+    },
+    {
+      "id": 1383,
+      "class": "IfcWindow",
+      "guid": "3jsHqE6Q5ABwOESr$OHSO2",
+      "ok": true,
+      "vertex_count": 108,
+      "triangle_count": 208,
+      "dimensions_m": [
+        1.4100000000000001,
+        0.2775000000009591,
+        1.21
+      ]
+    },
+    {
+      "id": 4110,
+      "class": "IfcWindow",
+      "guid": "3jsHqE6Q5ABwOESr$OHSOF",
+      "ok": true,
+      "vertex_count": 108,
+      "triangle_count": 208,
+      "dimensions_m": [
+        0.2775000000009591,
+        1.4100000000000001,
+        1.21
+      ]
+    },
+    {
+      "id": 11748,
+      "class": "IfcOpeningElement",
+      "guid": "0W57qIJ7Br_F4_TkfZvbi9",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        1.360000000000003,
+        0.21499999999999986,
+        1.2100000000000009
+      ]
+    }
+  ],
+  "geometry_checked": 24,
+  "geometry_passed": 24,
+  "geometry_failed": 0,
+  "flags": [
+    "schema_validation_errors"
+  ],
+  "basic_candidate": false
+}
