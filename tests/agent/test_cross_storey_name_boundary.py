@@ -31,15 +31,13 @@ def test_frozen_stair_endpoint_names_are_valid(labels, kind):
     assert candidate == before
 
 
-@pytest.mark.parametrize('failure', ['unrelated', 'destination_only', 'missing', 'duplicate',
+@pytest.mark.parametrize('failure', ['unrelated', 'missing', 'duplicate',
                                    'wrong_owner', 'wall', 'wrong_destination', 'candidate_claim'])
 def test_endpoint_exception_cannot_hide_wrong_or_unproven_names(failure):
     candidate, expected = _case()
     stair = candidate['entities'][-1]
     if failure == 'unrelated':
         stair['attributes']['Name'] += '三层'
-    elif failure == 'destination_only':
-        stair['attributes']['Name'] = '二层楼梯'
     elif failure == 'missing':
         expected['stairs'] = []
     elif failure == 'duplicate':

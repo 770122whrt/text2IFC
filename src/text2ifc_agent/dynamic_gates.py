@@ -222,11 +222,12 @@ def _storey_name_consistency_gate(
             if len(connections) == 1 and connections[0].get("from_storey") == actual_storey:
                 destination = connections[0].get("to_storey")
                 destination_name = storey_names.get(destination)
-                if (destination_name and expected_storey_name in actual_name
-                    and destination_name in actual_name
+                if (destination != actual_storey and destination_name
                     and unique_labels.get(expected_storey_name) == actual_storey
                     and unique_labels.get(destination_name) == destination):
                     endpoint_storeys.add(destination)
+        elif entity.get('ifc_class') == 'IfcOpeningElement':
+            endpoint_storeys.update(_frozen_opening_name_context(graph, expected_facts, entity_id, actual_storey))
         for conflicting_name, conflicting_storey in sorted(unique_labels.items()):
             if (conflicting_storey == actual_storey or conflicting_storey in endpoint_storeys
                 or conflicting_name not in actual_name):
@@ -249,7 +250,7 @@ def _storey_name_consistency_gate(
         "dynamic_storey_name_consistency",
         applicability="applicable",
         status="failed" if issues else "passed",
-        basis="explicit component storey labels compared with placement-derived ownership",
+        basis="explicit component storey labels compared with placement ownership and uniquely frozen cross-storey service context; names do not certify ownership",
         issues=issues,
         source_paths=["expected-facts.json", "generator/candidate.json"],
     )
@@ -260,6 +261,51 @@ def _group_storey_names(storey_names: Mapping[str, str]) -> dict[str, list[str]]
     for storey_id, name in storey_names.items():
         grouped[name].append(storey_id)
     return grouped
+
+
+def _frozen_opening_name_context(graph, expected_facts, entity_id, actual_storey):
+    """A slab opening may describe the stair it serves. Resolve by frozen
+    identity, host and exact opening bounds, never by candidate prose/ID hints.
+    This only interprets name mentions; geometry and containment gates remain.
+    """
+    from .cross_storey_identity import floor_opening_id, slab_openings
+    matches = [(slab, opening) for slab in _records(expected_facts.get('slabs'))
+               for index, opening in enumerate(slab_openings(slab))
+               if floor_opening_id(opening, slab.get('id'), index) == entity_id]
+    if len(matches) != 1:
+        return set()
+    slab, opening = matches[0]
+    host = slab.get('id')
+    host_entity = graph.entities.get(host, {})
+    hosts = [r.get('attributes', {}).get('RelatingBuildingElement') for r in graph.relationships
+             if r.get('ifc_class') == 'IfcRelVoidsElement'
+             and r.get('attributes', {}).get('RelatedOpeningElement') == entity_id]
+    if (not host or hosts != [host] or host_entity.get('ifc_class') != 'IfcSlab'
+        or slab.get('storey') != actual_storey or graph.storey_for_entity(host) != actual_storey):
+        return set()
+    bounds = opening.get('bounds')
+    if not _valid_name_context_bounds(bounds):
+        return set()
+    stairs = [s for s in _records(expected_facts.get('stairs'))
+              if s.get('to_storey') == actual_storey and s.get('from_storey') != actual_storey
+              and _valid_name_context_bounds(s.get('opening_bounds')) and s['opening_bounds'] == bounds]
+    if len(stairs) != 1:
+        return set()
+    stair = stairs[0]
+    source = stair.get('from_storey')
+    parent = graph.entities.get(stair.get('id'), {})
+    if (not source or parent.get('ifc_class') not in {'IfcStair', 'IfcStairFlight'}
+        or graph.storey_for_entity(stair.get('id')) != source):
+        return set()
+    return {source}
+
+
+def _valid_name_context_bounds(bounds):
+    import math
+    return (isinstance(bounds, Mapping) and set(bounds) == {'x', 'y'}
+            and all(isinstance(bounds[k], list) and len(bounds[k]) == 2
+                    and all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in bounds[k])
+                    and bounds[k][0] < bounds[k][1] for k in ['x', 'y']))
 
 
 def _is_frozen_stair_child(graph, entity_id, record):
