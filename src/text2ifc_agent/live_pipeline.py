@@ -928,14 +928,14 @@ def run_repair_stage(
         provider_call_count = len(list((output/'scoped').rglob('metrics.json')))
         evidence_class = scoped.get('stage', {}).get('evidence_class', 'deterministic-no-call')
         valid = scoped['valid']
-        repair_template_id = 'bim-json-changeset.v1.3'
+        repair_template_id = 'bim-json-changeset.v1.8'
         repair_diagnostics = scoped.get('issues', [])
         if valid:
             repaired_document = scoped['candidate']
             repaired_artifact_name = 'repaired-candidate.json'
             _write_json(output/repaired_artifact_name, repaired_document)
         route = {'route':'repair_attempted' if valid else 'blocked_failure',
-            'recovery_contract':'text2ifc/early-field-recovery/1.0',
+            'recovery_contract':'text2ifc/early-field-recovery/1.1',
             'repair_attempts':[{'attempt_number': i+1, 'result_status':
                 'improved' if valid and i == provider_call_count-1 else 'blocked'}
                 for i in range(provider_call_count)],

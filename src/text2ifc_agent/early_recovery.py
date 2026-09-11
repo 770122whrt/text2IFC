@@ -17,8 +17,9 @@ _FIELD = re.compile(r'^/entities/(\d+)/attributes/([A-Za-z][A-Za-z0-9]*)$')
 def build_field_recovery_group(candidate, feedback):
     """Authorize exact scalar fields from independently reproduced validator errors.
 
-    Unique terminal-s spelling repairs preserve the original typed value. Other
-    unknown fields, geometry conflicts and missing facts remain outside this route.
+    Terminal-s spelling or unique exact enum-value matches offer a bounded rename.
+    The Provider must confirm meaning or return Draft; this is not a semantic proof.
+    No value substitution, conflicting targets or geometry edits are authorized.
     """
     blocked = {'eligible': False, 'scope': None, 'issues': []}
     if candidate.get('schema_version') != 'bim-json/2.1' or not feedback:
@@ -55,9 +56,16 @@ def build_field_recovery_group(candidate, feedback):
                 and a['name'] not in attrs and not a['derived']
                 and (field == a['name'] + 's' or field + 's' == a['name'])
                 and _attribute_type_matches(attrs[field], a)]
+            if not matches and isinstance(attrs[field], str):
+                # Closed tokens only: never infer an identity from free text,
+                # numerical type compatibility or a fuzzy spelling score.
+                matches = [a for a in declaration['attributes'] if not a['derived']
+                    and attrs[field] in offered.get(a['name'], {}).get('enum', [])]
             if len(matches) != 1:
                 return blocked
             replacement = matches[0]['name']
+            if replacement in attrs or '/attributes/' + replacement in renames.get(entity['id'], {}):
+                return blocked
             paths.append(replacement)
             renames.setdefault(entity['id'], {})['/attributes/' + replacement] = attrs[field]
         else:
