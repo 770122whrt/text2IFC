@@ -27,7 +27,7 @@ def _fixed_part(brief):
 
 def semantic_repair_eligible(brief, issues):
     """Only schema/projection defects wholly inside the two semantic fields."""
-    if not isinstance(brief, dict) or brief.get('schema_version') not in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'} or brief.get('status') != 'ready':
+    if not isinstance(brief, dict) or brief.get('schema_version') not in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'} or brief.get('status') != 'ready':
         return False
     if not issues:
         return False
@@ -69,10 +69,10 @@ def repair_semantic_brief(*, provider, output_dir, brief, case, evidence_catalog
         return report
     inputs = {'USER_REQUEST': case['user_request'], 'CONVERSATION': case['conversation'],
         'PREVIOUS_BRIEF': brief, 'VALIDATION_ISSUES': [asdict(i) for i in issues], 'DESIGN_BRIEF_SCHEMA': schema}
-    if version == 'text2ifc/design-brief/2.3':
+    if version in {'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
         from .semantic_requirements import element_appearance_schema
         inputs['ELEMENT_APPEARANCE_SCHEMA'] = element_appearance_schema()
-    rendered = render_prompt(template_id='design-brief-semantic-repair.v1.1' if version == 'text2ifc/design-brief/2.3'
+    rendered = render_prompt(template_id='design-brief-semantic-repair.v1.1' if version in {'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}
                              else 'design-brief-semantic-repair.v1.0', inputs=inputs)
     _write(root, 'prompt-render-input.json', inputs)
     _write(root, 'prompt-identity.json', rendered['metadata'])

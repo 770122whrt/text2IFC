@@ -167,9 +167,9 @@ def run_design_brief_stage(
         raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS') from None
     user_request = str(case["user_request"])
     conversation = list(case["conversation"])
-    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3'}:
+    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
         raise ValueError('Unsupported Design Brief stage contract.')
-    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'}
+    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}
     if design_review_enabled and not new_semantics:
         raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(
@@ -231,6 +231,7 @@ def run_design_brief_stage(
 
     serialized_issues = [asdict(issue) for issue in issues]
     semantic_repair = None
+    plan_repair = None
     from .brief_semantic_repair import semantic_repair_eligible, repair_semantic_brief
     if parse_status == 'ok' and not parse_diagnostics and semantic_repair_eligible(parsed, issues):
         _write_json(output / 'initial-validation.json', {'valid': False, 'issues': serialized_issues})
@@ -239,6 +240,14 @@ def run_design_brief_stage(
         serialized_issues = semantic_repair['issues']
         if semantic_repair['valid']:
             parsed = semantic_repair['brief']
+    from .brief_plan_repair import plan_repair_eligible, repair_plan_brief
+    if parse_status == 'ok' and not parse_diagnostics and plan_repair_eligible(parsed, serialized_issues):
+        _write_json(output / 'initial-plan-validation.json', {'valid': False, 'issues': serialized_issues})
+        plan_repair = repair_plan_brief(provider=provider, output_dir=output/'plan-repair',
+            brief=parsed, case=case, evidence_catalog=selection['evidence'], session_id=session_id+'-plan-repair')
+        serialized_issues = plan_repair['issues']
+        if plan_repair['valid']:
+            parsed = plan_repair['brief']
     if parse_status != "ok":
         serialized_issues = list(parse_diagnostics)
     schema_semantic_valid = parse_status == "ok" and not serialized_issues
@@ -287,6 +296,9 @@ def run_design_brief_stage(
     _write_json(output / "metrics.json", metrics)
     if semantic_repair is not None:
         metrics['semantic_repair'] = {key: value for key, value in semantic_repair.items() if key != 'brief'}
+    if plan_repair is not None:
+        metrics['plan_repair'] = {key: value for key, value in plan_repair.items() if key != 'brief'}
+    if semantic_repair is not None or plan_repair is not None:
         _write_json(output / 'metrics.json', metrics)
 
     trace_manifest = {
@@ -328,6 +340,10 @@ def run_design_brief_stage(
     if semantic_repair is not None:
         trace_manifest['artifacts']['semantic_repair'] = 'semantic-repair/'
         trace_manifest['artifacts']['initial_validation'] = 'initial-validation.json'
+    if plan_repair is not None:
+        trace_manifest['artifacts']['plan_repair'] = 'plan-repair/'
+        trace_manifest['artifacts']['initial_plan_validation'] = 'initial-plan-validation.json'
+    if semantic_repair is not None or plan_repair is not None:
         _write_json(output / 'trace-manifest.json', trace_manifest)
     return {
         "case_id": case["case_id"],

@@ -328,6 +328,25 @@ def make_openai_design_brief_invoker(
                 'issue_count': len(serialized_issues), 'issues': serialized_issues})
             if repaired['valid']:
                 parsed = repaired['brief']
+        from .brief_plan_repair import plan_repair_eligible, repair_plan_brief
+        if plan_repair_eligible(parsed, serialized_issues):
+            from .generation_budget import BudgetedProvider
+            from .openai_compat import OpenAICompatibleLiveProvider
+            _write_json(call_dir / 'initial-plan-validation.json', {'valid': False, 'issues': serialized_issues})
+            repaired = repair_plan_brief(
+                provider=BudgetedProvider(OpenAICompatibleLiveProvider(config=config, client_factory=lambda **_: client), budget),
+                output_dir=call_dir/'plan-repair', brief=parsed,
+                case={'user_request': original_request, 'conversation': transcript},
+                evidence_catalog=selection['evidence'], session_id=f'brief-{call_index}-plan-repair')
+            serialized_issues = repaired['issues']
+            issues = serialized_issues
+            metrics['plan_repair'] = {key: value for key, value in repaired.items() if key != 'brief'}
+            metrics['schema_semantic_valid'] = repaired['valid']
+            _write_json(call_dir / 'metrics.json', metrics)
+            _write_json(call_dir / 'validation.json', {'valid': repaired['valid'],
+                'issue_count': len(serialized_issues), 'issues': serialized_issues})
+            if repaired['valid']:
+                parsed = repaired['brief']
         if issues:
             raise OpenAICompatError(
                 "OpenAI-compatible Design Brief failed schema validation",
@@ -547,8 +566,8 @@ def _run_ready_session_to_ifc(
     trace_path = design_dir / "trace-manifest.json"
     brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
     if review_context is None and (
-        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13'}
-        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13'}
+        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15'}
+        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15'}
     ):
         raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))

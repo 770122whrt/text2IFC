@@ -140,6 +140,11 @@ def test_public_brief_stage_uses_new_contract_and_shared_budget(tmp_path, review
     assert json.loads((tmp_path/'brief/parsed-output.json').read_text(encoding='utf-8')) == initial
     trace = json.loads((tmp_path/'brief/trace-manifest.json').read_text(encoding='utf-8'))
     assert trace['template_id'] == ('design-brief.v2.6' if review_enabled else 'design-brief.v2.5')
+    if repair:
+        assert trace['artifacts']['semantic_repair']=='semantic-repair/'
+        assert (tmp_path/'brief'/trace['artifacts']['initial_validation']).is_file()
+        metrics=json.loads((tmp_path/'brief/metrics.json').read_text(encoding='utf-8'))
+        assert metrics['semantic_repair']['valid']
 
 
 def test_semantic_extraction_failure_routes_to_brief_not_user_or_candidate(tmp_path):

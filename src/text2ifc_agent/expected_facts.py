@@ -31,6 +31,18 @@ def build_expected_facts(
     design_brief: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Build dynamic expected facts without mutating the Design Brief."""
+    if design_brief.get('schema_version') == 'text2ifc/design-brief/2.4':
+        from jsonschema import Draft202012Validator
+        from .design_brief import load_design_brief_schema
+        from .brief_plan_constraints import validate_plan_constraints
+        # Evidence catalogs belong to the upstream extraction call. Recheck the
+        # schema and planar invariants here without falsely rejecting its refs.
+        shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+        if shape_errors or design_brief.get('status') != 'ready':
+            raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+        plan_issues = validate_plan_constraints(dict(design_brief))
+        if plan_issues:
+            raise ExpectedFactsError('; '.join(f'{i.code}@{i.path}: {i.message}' for i in plan_issues))
     known = design_brief.get("known_facts", {})
     known_facts = known if isinstance(known, Mapping) else {}
     known_facts = _migrate_legacy_single_storey_facts(known_facts)

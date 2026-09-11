@@ -10,7 +10,7 @@ from .issues import Issue, write_issues
 
 
 def _source_authority_error(code: str) -> bool:
-    return code.startswith('SEMANTIC_AUTHORITY_') or code in {
+    return code.startswith(('SEMANTIC_AUTHORITY_', 'BRIEF_PLAN_')) or code in {
         'SEMANTIC_MATERIAL_INCOMPLETE', 'SEMANTIC_PROPERTY_INCOMPLETE',
         'SEMANTIC_SCOPE_INVALID', 'SEMANTIC_TARGET_REQUIRED',
         'REQUEST_APPEARANCE_INVALID', 'REQUEST_APPEARANCE_UNSUPPORTED_FIELD',

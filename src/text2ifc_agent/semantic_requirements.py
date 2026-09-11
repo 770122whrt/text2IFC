@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'template'}
-SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}
 SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
@@ -106,7 +106,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
-        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'} and not path.startswith('/known_facts/semantic_requirements/'):
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'} and not path.startswith('/known_facts/semantic_requirements/'):
             issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
                            'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
@@ -154,7 +154,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
                             'message': '构件 appearance 只支持非空数值 RGB/透明度覆盖；主题及窗框、玻璃等部件说明不能作为整件外观字段。'})
                         continue
                 expectations.append({**base, 'kind': kind, 'value': copy.deepcopy(record[field])})
-    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3'}:
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
         review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
         for kind in sorted(SEMANTIC_KINDS):
             entry = review.get(kind, {}) if isinstance(review, Mapping) else {}

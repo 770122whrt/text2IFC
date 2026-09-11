@@ -1958,6 +1958,82 @@
         "array_index_target",
         "unauthorized_component_change"
       ]
+    },
+    {
+      "template_id": "design-brief.v2.14",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.14.md",
+      "sha256": "sha256:d4b1df93bce188a27d3f4fc7ec0ed57532543754f730bdd4e87b646a96955e7c",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.15",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.15.md",
+      "sha256": "sha256:5fee21bb0ab71c4cdaebbef709026f6c3a1d228a808a97062c1e6c1e69550cab",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-plan-repair.v1",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-plan-repair-v1.md",
+      "sha256": "sha256:5c75962ceba4ff05c24471bc2f6e0a198ecf6f772f9ebef7f96dc0f2c56acb82",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "ALLOWED_PATHS",
+        "DESIGN_BRIEF_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
     }
   ]
 }
