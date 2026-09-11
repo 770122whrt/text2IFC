@@ -222,3 +222,64 @@ def test_invalid_model_json_is_still_blocked_in_compact_mode(tmp_path, monkeypat
     result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
                                                   audit_context_mode="deduplicated")
     assert not result["valid"]
+
+
+@pytest.mark.parametrize("decision", ["retain", "revise"])
+def test_compact_audit_cannot_claim_user_decision_resolved_defect(tmp_path, monkeypatch, decision):
+    root = _public_case(tmp_path, monkeypatch)
+    _context(root, decision)
+    result = live_pipeline.run_audit_report_stage(provider=_RecordingLiveProvider(_audit("resolved")),
+                                                  case_dir=root, case_id="fixture", audit_context_mode="deduplicated")
+    assert not result["valid"]
+
+
+@pytest.mark.parametrize("review", [False, True])
+def test_compact_audit_then_public_final_acceptance_compiles_and_reopens(tmp_path, monkeypatch, review):
+    from tests.agent.test_phase6_1_live import _write_finalizable_case_dir
+    import ifcopenshell
+
+    root = _write_finalizable_case_dir(tmp_path / "case")
+    if review:
+        _context(root)
+    candidate = (root / "generator/candidate.json").read_bytes()
+    gate = live_pipeline.run_candidate_gate_stage(case_dir=root, output_dir=root, case_id="fixture")
+    assert gate["valid"]
+    geometry = json.loads((root / "geometry-feedback.json").read_text(encoding="utf-8"))
+    monkeypatch.setattr(live_pipeline, "collect_revision_audit_evidence", lambda _: {
+        "status": "passed", "geometry_result": geometry, "gate_evidence": {"global": geometry}})
+    provider = _RecordingLiveProvider(_audit() if review else _ordinary_audit())
+    result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                  audit_context_mode="deduplicated")
+    assert result["valid"]
+    assert json.loads((root / "audit/audit-context.json").read_text(encoding="utf-8"))["effective_mode"] == "deduplicated"
+    final = live_pipeline.run_final_acceptance_stage(case_dir=root, output_dir=tmp_path / "final", case_id="fixture")
+    assert final["valid"] and final["compile_reopen_success"] and final["geometry_success"]
+    assert ifcopenshell.open(final["ifc_path"]).schema == "IFC2X3"
+    assert (root / "generator/candidate.json").read_bytes() == candidate
+
+
+@pytest.mark.parametrize("damage", [None, "unsent_local_field", "request", "text"])
+def test_comparison_rejects_false_wire_baselines_and_preserves_sources(tmp_path, damage):
+    from scripts.agent.compare_audit_context import compare_case
+
+    inputs = _inputs(review=True)
+    prompt = render_prompt(template_id="audit.v3", inputs=inputs)["text"]
+    request_text = prompt + "额外内容" if damage == "request" else prompt
+    stored_text = prompt + "额外内容" if damage == "text" else prompt
+    if damage == "unsent_local_field":
+        inputs["GATE_SUMMARY"] = {"local_only": "变更这个未发送字段不影响真正基线"}
+    (tmp_path / "prompt-render-input.json").write_text(json.dumps(inputs, ensure_ascii=False), encoding="utf-8")
+    (tmp_path / "prompt-rendered.md").write_text(stored_text, encoding="utf-8")
+    (tmp_path / "request.redacted.json").write_text(json.dumps({"request": {
+        "messages": [{"role": "user", "content": request_text}]}}, ensure_ascii=False), encoding="utf-8")
+    (tmp_path / "response-metadata.json").write_text('{"response_id":"fake","usage":{}}', encoding="utf-8")
+    before = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+    if damage in ("request", "text"):
+        with pytest.raises(ValueError, match="BASELINE_WIRE_MISMATCH"):
+            compare_case(tmp_path)
+    else:
+        result = compare_case(tmp_path)
+        assert result["all_transmitted_values_preserved"]
+        assert result["candidate_usage"] is None
+        assert result["model_quality_comparison"] == "not_run"
+    assert {p.name: p.read_bytes() for p in tmp_path.iterdir()} == before

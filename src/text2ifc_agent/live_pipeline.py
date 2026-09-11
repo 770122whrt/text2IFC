@@ -22,6 +22,7 @@ from .clarification import (
 from .design_brief import design_brief_template_id, load_design_brief_schema, validate_design_brief
 from .live_trace import write_live_trace, write_provider_failure_trace
 from .audit import collect_revision_audit_evidence
+from .audit_context import render_audit_context
 from .design_review import load_design_review_context, validate_design_review_output
 from .prompt_registry import render_prompt
 from .generator import validate_generation_document
@@ -1165,8 +1166,9 @@ def run_audit_report_stage(
     session_prefix: str = "phase6.1",
     audit_call_index: int = 1,
     trace_level: str | None = "debug",
+    audit_context_mode: str = "full",
 ) -> dict[str, Any]:
-    """Run Audit, using v3 for a bound user design-review context."""
+    """Run Audit; lossless evidence deduplication is an explicit experiment."""
     root = Path(case_dir)
     output = root / "audit"
     output.mkdir(parents=True, exist_ok=True)
@@ -1270,9 +1272,14 @@ def run_audit_report_stage(
         evidence_paths.extend(["design-review-context.json", *(
             row["evidence_path"] for row in review_context["concerns"]
         )])
-    template_id = "audit.v3" if review_context is not None else AUDIT_TEMPLATE_ID
-    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+    rendered, context_record = render_audit_context(
+        inputs=renderer_inputs,
+        review_enabled=review_context is not None,
+        mode=audit_context_mode,
+    )
     _write_json(output / "prompt-render-input.json", renderer_inputs)
+    _write_json(output / "prompt-wire-input.json", rendered["inputs"])
+    _write_json(output / "audit-context.json", context_record)
     _write_text(output / "prompt-rendered.md", rendered["text"])
     result = None
     try:
@@ -1298,7 +1305,8 @@ def run_audit_report_stage(
                 break
             except FileExistsError:
                 suffix += 1
-        for name in ('prompt-render-input.json', 'prompt-rendered.md'):
+        for name in ('prompt-render-input.json', 'prompt-rendered.md',
+                     'prompt-wire-input.json', 'audit-context.json'):
             (failure_dir / name).write_bytes((output / name).read_bytes())
         if result is not None and error.live_result is None:
             error.live_result = result
@@ -1389,6 +1397,8 @@ def run_audit_report_stage(
             "artifacts": {
                 "renderer_inputs": "prompt-render-input.json",
                 "rendered_prompt": "prompt-rendered.md",
+                "wire_inputs": "prompt-wire-input.json",
+                "audit_context": "audit-context.json",
                 "model_text": "model-text.txt",
                 "parsed_output": "parsed-output.json" if parsed else None,
                 "audit_report": "audit-report.json" if parsed else None,

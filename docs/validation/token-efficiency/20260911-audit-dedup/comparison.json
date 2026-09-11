@@ -1,0 +1,198 @@
+{
+  "schema_version": "text2ifc/audit-context-comparison/1.0",
+  "evidence_class": "offline_projection_of_frozen_live_inputs",
+  "provider_calls": 0,
+  "measurement_scope": "single_user_message_text_including_reference_instructions_not_transport_overhead",
+  "estimator": "existing_ASCII_CJK_heuristic_not_actual_tokenizer_or_guaranteed_upper_bound",
+  "cases": [
+    {
+      "audit_dir": "dataset/processed/proof/generation/phase6.6/three-storey-clarification-ab-20260910/evidence/frozen/A-revise/runtime/runs/6b4c8ce023e02a07/audit",
+      "source_sha256": {
+        "prompt-render-input.json": "8180327c8856ea4198cbd6d70249d9758bc53992afa67eea68941dfb7b34bda1",
+        "prompt-rendered.md": "da0b62425e593b1754c5538cfe12e76fa302fe0f12127f373dbba658e522bd15",
+        "request.redacted.json": "9de3966792b7eb87c0924de782e9283bfdbd74ea69fe8d9cb58b78a26db6df6e",
+        "response-metadata.json": "ee42563e0c09582cc1ad783635015eda2aa4e7d288208fe7514e80d8837ab39a"
+      },
+      "baseline_matches_actual_message": true,
+      "all_transmitted_values_preserved": true,
+      "baseline_response_id": "9ca6481b-0c82-4486-8708-3c88183fd5ff",
+      "baseline_usage": {
+        "completion_tokens": 8147,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 6899,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 3328,
+        "prompt_cache_miss_tokens": 42660,
+        "prompt_tokens": 45988,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 3328
+        },
+        "total_tokens": 54135
+      },
+      "candidate_usage": null,
+      "model_quality_comparison": "not_run",
+      "comparison": {
+        "schema_version": "text2ifc/audit-context-record/1.0",
+        "requested_mode": "deduplicated",
+        "effective_mode": "full",
+        "fallback_reason": "complete_prompt_not_smaller",
+        "roundtrip_verified": true,
+        "shared_value_count": 0,
+        "baseline": {
+          "template_id": "audit.v3",
+          "prompt_sha256": "ec6977d104216e647ecfb4a34125b66bdc29c80295764af24fe1373515399481",
+          "utf8_bytes": 132858,
+          "characters": 122020,
+          "estimated_input_tokens": 34570
+        },
+        "actual_provider_tokens": null,
+        "token_measurement": "ascii_cjk_heuristic_not_provider_usage_or_guaranteed_upper_bound",
+        "source_roots_sha256": "eaac7c066220028a2679e25b1c1c5f9529712814478e0f70f95ad945f2f25ec9",
+        "candidate": {
+          "template_id": "audit.v5",
+          "prompt_sha256": "1b76b3f480571be45fdc4c11533e722d0f6ef6219ae54e02e9451c1f470d274e",
+          "utf8_bytes": 133789,
+          "characters": 122951,
+          "estimated_input_tokens": 34802
+        },
+        "selected": {
+          "template_id": "audit.v3",
+          "prompt_sha256": "ec6977d104216e647ecfb4a34125b66bdc29c80295764af24fe1373515399481",
+          "utf8_bytes": 132858,
+          "characters": 122020,
+          "estimated_input_tokens": 34570
+        }
+      }
+    },
+    {
+      "audit_dir": "dataset/processed/proof/generation/phase6.6/three-storey-clarification-ab-20260910/evidence/frozen/B-retain/runtime/runs/8b3add702299a50f/evaluation-rounds/round-01/audit",
+      "source_sha256": {
+        "prompt-render-input.json": "294369fba2dd1ef4adc11793a3d5ebe119eceff0067d3c86cc9cc879c4e9f3d5",
+        "prompt-rendered.md": "0377537cbbd3d2e871d9d0981b4e89840f084a3771a1e9013669326b2dfa0610",
+        "request.redacted.json": "54ebe709dab2c3c285835af32bdc5e5698a231309377e7ceff8928a3e8df257f",
+        "response-metadata.json": "e313c9239f24c9697efddd035019add3e7e35654603d2c9a6673b61f96824e07"
+      },
+      "baseline_matches_actual_message": true,
+      "all_transmitted_values_preserved": true,
+      "baseline_response_id": "1f37d63e-da72-4fe5-8da7-d03ad10e7735",
+      "baseline_usage": {
+        "completion_tokens": 11781,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 10755,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 3200,
+        "prompt_cache_miss_tokens": 40835,
+        "prompt_tokens": 44035,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 3200
+        },
+        "total_tokens": 55816
+      },
+      "candidate_usage": null,
+      "model_quality_comparison": "not_run",
+      "comparison": {
+        "schema_version": "text2ifc/audit-context-record/1.0",
+        "requested_mode": "deduplicated",
+        "effective_mode": "full",
+        "fallback_reason": "complete_prompt_not_smaller",
+        "roundtrip_verified": true,
+        "shared_value_count": 0,
+        "baseline": {
+          "template_id": "audit.v3",
+          "prompt_sha256": "af663adde84a657d0cb98a2ebf50df791d55ee95a6a89fa731e2545751db047a",
+          "utf8_bytes": 128098,
+          "characters": 116280,
+          "estimated_input_tokens": 33502
+        },
+        "actual_provider_tokens": null,
+        "token_measurement": "ascii_cjk_heuristic_not_provider_usage_or_guaranteed_upper_bound",
+        "source_roots_sha256": "f24062b99b3fbc24d098e55b29f6127d18c351e9f4464ee5f153377ba20f342e",
+        "candidate": {
+          "template_id": "audit.v5",
+          "prompt_sha256": "5cb8601b281af5f5310834163babcbc20b1ab11777c4068247cfd745428f5cc3",
+          "utf8_bytes": 129029,
+          "characters": 117211,
+          "estimated_input_tokens": 33735
+        },
+        "selected": {
+          "template_id": "audit.v3",
+          "prompt_sha256": "af663adde84a657d0cb98a2ebf50df791d55ee95a6a89fa731e2545751db047a",
+          "utf8_bytes": 128098,
+          "characters": 116280,
+          "estimated_input_tokens": 33502
+        }
+      }
+    },
+    {
+      "audit_dir": "dataset/processed/proof/generation/phase6.6/three-storey-clarification-ab-20260910/evidence/frozen/B-retain/runtime/runs/8b3add702299a50f/audit",
+      "source_sha256": {
+        "prompt-render-input.json": "b2f67e8ab9e0aba604b336c93f328ddfed15b0a69375e50f11f1e24f8af19df3",
+        "prompt-rendered.md": "fdc3ceb4a1850d7b13d7d8d71cce90808ea0775464208aed219529f993e7509d",
+        "request.redacted.json": "fcfc401eadec9c8fde9797990b4fbcfd375fb5952b42d7c5617916a10fe16465",
+        "response-metadata.json": "dce70d6ce6b0a8c4a023c13983217d36bb35b53a5e381b5ee2604e4fd0f400bb"
+      },
+      "baseline_matches_actual_message": true,
+      "all_transmitted_values_preserved": true,
+      "baseline_response_id": "1c906436-e70a-49e7-9743-884edae234d4",
+      "baseline_usage": {
+        "completion_tokens": 5464,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 5044,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 12032,
+        "prompt_cache_miss_tokens": 79733,
+        "prompt_tokens": 91765,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 12032
+        },
+        "total_tokens": 97229
+      },
+      "candidate_usage": null,
+      "model_quality_comparison": "not_run",
+      "comparison": {
+        "schema_version": "text2ifc/audit-context-record/1.0",
+        "requested_mode": "deduplicated",
+        "effective_mode": "deduplicated",
+        "fallback_reason": null,
+        "roundtrip_verified": true,
+        "shared_value_count": 29,
+        "baseline": {
+          "template_id": "audit.v3",
+          "prompt_sha256": "4fb5ea71a4a420aca5d8b3dbec90997c2bde67c83e59da5bb3523eab9b2d9270",
+          "utf8_bytes": 255470,
+          "characters": 242392,
+          "estimated_input_tokens": 65503
+        },
+        "actual_provider_tokens": null,
+        "token_measurement": "ascii_cjk_heuristic_not_provider_usage_or_guaranteed_upper_bound",
+        "source_roots_sha256": "3e2fde3bacab49524b76db1e1e5752da0427a0ae81ab397ea9e84cca654f5742",
+        "candidate": {
+          "template_id": "audit.v5",
+          "prompt_sha256": "50f6ccbdab633bad1e25ca4f912f39370caad1fd2cdcd1802ea6e6eda9eb6ec0",
+          "utf8_bytes": 195088,
+          "characters": 183162,
+          "estimated_input_tokens": 50263
+        },
+        "selected": {
+          "template_id": "audit.v5",
+          "prompt_sha256": "50f6ccbdab633bad1e25ca4f912f39370caad1fd2cdcd1802ea6e6eda9eb6ec0",
+          "utf8_bytes": 195088,
+          "characters": 183162,
+          "estimated_input_tokens": 50263
+        }
+      }
+    }
+  ]
+}

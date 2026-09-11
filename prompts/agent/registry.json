@@ -1763,6 +1763,65 @@
         "IfcOwnerHistory",
         "compiler_only_object"
       ]
+    },
+    {
+      "template_id": "audit.v4",
+      "role": "audit",
+      "mode": "semantic_review",
+      "path": "prompts/agent/audit-v4.md",
+      "sha256": "sha256:102576f397467cbf21166f7138a278609181638cb490413197f450b689ab0f7c",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "TERMINAL_DOCUMENT",
+        "AUDIT_EVIDENCE_CONTEXT",
+        "REPAIR_ROUTE",
+        "METRICS",
+        "EVIDENCE_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_generation",
+        "bim_json_repair",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "deterministic_gate_override"
+      ]
+    },
+    {
+      "template_id": "audit.v5",
+      "role": "audit",
+      "mode": "semantic_review",
+      "path": "prompts/agent/audit-v5.md",
+      "sha256": "sha256:25dc43707e338177bcd18c5ab4e638f542ae94b64acc8d8c48c0bf9230936bf8",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "TERMINAL_DOCUMENT",
+        "AUDIT_EVIDENCE_CONTEXT",
+        "REPAIR_ROUTE",
+        "METRICS",
+        "EVIDENCE_PATHS",
+        "DESIGN_REVIEW_CONTEXT"
+      ],
+      "forbidden_outputs": [
+        "bim_json_generation",
+        "bim_json_repair",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "deterministic_gate_override"
+      ]
     }
   ]
 }
