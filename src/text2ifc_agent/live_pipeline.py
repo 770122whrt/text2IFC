@@ -1058,8 +1058,19 @@ def run_repair_stage(
             ),
         }
 
+    assessment_scope = {
+        "geometry_feedback_supplied": geometry_feedback is not None,
+        "geometry_issue_count_basis": "supplied_feedback_only",
+        "geometry_pass_certified": False,
+        "interpretation": (
+            "This route assesses generator validation and only the geometry issues "
+            "supplied to this invocation. Zero issues/no_repair_needed is not a "
+            "geometry pass. Current compile/reopen/geometry gates remain authoritative."
+        ),
+    }
     route_record = {
-        "schema_version": "text2ifc/repair-route/1.0",
+        "schema_version": "text2ifc/repair-route/1.1",
+        "assessment_scope": assessment_scope,
         "case_id": case_id,
         "route": route["route"],
         "valid": valid,
@@ -1087,6 +1098,7 @@ def run_repair_stage(
         "case_id": case_id,
         "stage": "repair",
         "route": route_record["route"],
+        "assessment_scope": assessment_scope,
         "valid": valid,
         "evidence_class": evidence_class,
         "provider_call_count": provider_call_count,

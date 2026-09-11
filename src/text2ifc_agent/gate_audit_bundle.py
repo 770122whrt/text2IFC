@@ -305,7 +305,9 @@ def _repair_route_gate(root: Path) -> dict[str, Any]:
         "repair_route",
         applicability="applicable",
         status="passed" if passed else "blocked",
-        basis=f"repair route is {route}",
+        basis=(f"repair route is {route}; this gate checks route eligibility only, "
+               "not a geometry pass. Counts in route/metrics refer only to feedback "
+               "supplied to that routing invocation; current geometry gate is independent."),
         issues=[] if passed else [{"code": "REPAIR_ROUTE_BLOCKED", "path": "/route"}],
         source_paths=["repair/route.json"],
     )

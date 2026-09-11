@@ -523,7 +523,11 @@ def _polygon_plan_bounds_from_fact(
     value: Any,
 ) -> tuple[float, float, float, float] | None:
     if isinstance(value, Mapping):
-        value = value.get("points")
+        # Both established wrappers describe the same polygon fact. Conflicting
+        # representations cannot be resolved by silently preferring one alias.
+        if "points" in value and "polygon" in value and value["points"] != value["polygon"]:
+            return None
+        value = value.get("polygon", value.get("points"))
     if not isinstance(value, list) or len(value) < 3:
         return None
     points: list[tuple[float, float]] = []
