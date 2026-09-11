@@ -177,7 +177,7 @@ private-Gold leakage、source mutation 等零容忍指标仍为零，才可声�
 ## 4. 真实 LLM 前的逐环节与全链路门禁
 
 真实 LLM 是最后的 viability/reliability 层，不是 Debug 确定性代码的第一步。
-任何真实 Provider transport 前，都必须同时完成逐环节测试和离线全链路测试。
+任何真实 Provider transport 前，都必须由当前 Stage Admission 证明逐环节测试和离线全链路要求已经满足；阶段内普通修复只需补充与 changed scope 相匹配的验证，除非该修复使 Admission 失效。
 
 ### 4.1 每个环节的最低测试
 
@@ -215,33 +215,39 @@ API/CLI 运行完整链路，而不是直接调用内部 helper。至少包括�
 全链路成功不能由 mock 某个被测下游阶段、手写成功报告或 aggregate
 `success=true` 替代；最终评估必须重新打开产物并独立计算强制 Gate。
 
-### 4.3 Preflight 证据
+### 4.3 Preflight 与 Admission 证据
 
-活动 Phase 的 VALIDATION 必须维护“环节 -> 测试文件/命令 -> 状态”映射。Live
-runner 应在同一执行谱系内生成机器可读 preflight，至少记录：
+活动 Phase 的 VALIDATION 必须维护“环节 -> 测试文件/命令 -> 状态”映射，但验证频率分为三层，避免每次局部修改都升级成同一套大范围检查：
+
+1. **Scoped Validation（默认）**：阶段内普通开发只验证本次修改及其直接上下游风险，记录 changed scope、命令、结果和与当前 Stage Admission 的关系。
+2. **Stage Preflight（阶段首次进入或 Admission 失效时）**：第一次进入一个真实执行阶段，或者基础合同变化使既有 Stage Admission 失效时，必须重新覆盖逐环节 seam 与生产公共 API/CLI 的离线完整链路，并生成机器可读 Stage Admission。
+3. **Full / Repository-wide Preflight（单独升级）**：只有在跨阶段、仓库级发布/验收或其他明确需要全局重新证明的情况下才运行。执行前 Agent 必须先说明原因、范围和预计门禁，并获得用户明确批准；缺失、过期或无效 Admission 不能自动触发 Full Preflight，只能 fail-closed。
+
+Stage Preflight / Admission 至少记录：
 
 - commit/worktree 状态、Python/依赖和平台；
 - 每条命令、开始/结束时间、退出码、timeout、skip 和日志哈希；
-- 阶段测试、离线全链路、相关完整 regression、`compileall` 和 `git diff --check`；
+- 阶段测试、离线全链路、该阶段公共路径需要的 regression、`compileall` 和 `git diff --check`；
 - 离线矩阵、Proof/manifest/evaluator 的版本、路径和 SHA-256；
+- admission scope、创建时间、适用 stage，以及会使其失效的基础合同边界；
 - `network_transport_attempted: false` 直到所有 blocking gate 通过。
 
-默认命令形态如下，精确测试集合由活动 VALIDATION 根据公共入口实际经过的模块
-列出：
+默认 Stage Preflight 命令形态如下，精确测试集合由活动 VALIDATION 根据公共入口实际经过的模块列出：
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest <stage-specific tests> -q
-.\.venv\Scripts\python.exe -m pytest <all suites reached by the public path> -q
+.\.venv\Scripts\python.exe -m pytest <all suites reached by the stage public path> -q
 .\.venv\Scripts\python.exe -m compileall -q src tests scripts
 git diff --check
 ```
 
-失败、timeout、unexpected skip、较窄测试替代完整测试、旧日志复用或部分矩阵
-都必须 fail-closed。配置了 API key 不是跳过 preflight 的理由。
+阶段内后续普通修复不得因为“当前没有新 preflight 目录”就重跑 Stage Preflight；应优先复用仍有效的 Stage Admission，并针对 changed scope 运行最窄充分验证。若修改触及公共 API/CLI 入口、核心 schema/version、Provider transport contract、private-Gold/truth boundary、source immutability/transaction rule 或 Admission/validation contract 本身，应将 Admission 视为可能失效并重新判断是否需要 Stage Preflight。
+
+任何适用检查失败、timeout、unexpected skip、证据替代或 admission 验证失败都必须 fail-closed。配置了 API key 不是绕过 Admission 的理由。
 
 ## 5. 真实 LLM 执行和失败回流
 
-Preflight 通过后，真实运行仍须记录原始 attempt、模型标识、Prompt/Profile/
+Admission 通过后，真实运行仍须记录原始 attempt、模型标识、Prompt/Profile/
 Schema hash、实际 Stage 调用次数、correction、token/latency、fallback 状态和终端
 结果。Synthetic、cached、prerecorded、hand-authored 或 deterministic replay 只能
 作为离线证据，不能标记为 live。
@@ -251,7 +257,7 @@ Schema hash、实际 Stage 调用次数、correction、token/latency、fallback 
 1. 原样保留失败，不覆盖、不改名为成功；
 2. 分类到具体阶段和不变量；
 3. 回到离线最小复现与 Failure Family；
-4. 在 Development 数据修复并重新完成 preflight；
+4. 在 Development 数据修复并完成与改动风险相匹配的 scoped validation；若改动使 Stage Admission 失效，再重新执行 Stage Preflight；
 5. 已揭示案例只能作为 regression，不再作为 blind improvement evidence；
 6. 新的真实验收使用冻结的 sibling/holdout 或明确声明为同案例重试可靠性证据。
 
@@ -272,7 +278,7 @@ Original-case result:
 Sibling/hidden-set paired delta:
 Global capability-slice delta and uncertainty:
 Safety/cost/latency regressions:
-Offline per-stage and full-chain preflight:
+Offline scoped validation / Stage Admission evidence:
 Real Provider evidence, if authorized:
 Allowed claim: bug fixed | class robustness improved | system capability improved | inconclusive
 ```

@@ -1,0 +1,219 @@
+FFFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[unapproved] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse0')
+invalid = 'unapproved'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_branch] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse1')
+invalid = 'wrong_branch'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_hash] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse2')
+invalid = 'wrong_hash'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_prior] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse3')
+invalid = 'wrong_prior'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[calls] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse4')
+invalid = 'calls'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[time] __
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse5')
+invalid = 'time'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[lower] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse6')
+invalid = 'lower'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+_ test_invalid_extension_or_unsettled_history_cannot_create_new_budget[unsettled] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_invalid_extension_or_unse7')
+invalid = 'unsettled'
+
+    @pytest.mark.parametrize('invalid',['unapproved','wrong_branch','wrong_hash','wrong_prior','calls','time','lower','unsettled'])
+    def test_invalid_extension_or_unsettled_history_cannot_create_new_budget(tmp_path,invalid):
+        module,path,approval=history_and_approval(tmp_path)
+        if invalid=='unapproved':approval['status']='proposed'
+        elif invalid=='wrong_branch':approval['branch']='B-retain'
+        elif invalid=='wrong_hash':approval['prior_budget_sha256']='0'*64
+        elif invalid=='wrong_prior':approval['previous_limits']={**approval['previous_limits'],'max_tokens':1000000}
+        elif invalid=='calls':approval['new_limits']['max_calls']=33
+        elif invalid=='time':approval['new_limits']['max_active_seconds']=3601
+        elif invalid=='lower':approval['new_limits']['max_tokens']=1000000
+        else:
+            history=module.read(path);history['attempts'][0]['status']='reserved';module.write(path,history)
+            approval['prior_budget_sha256']=module.sha(path)
+        before=path.read_bytes()
+>       with pytest.raises(ValueError):module.prepare_budget_history(path,branch='A-revise',approval=approval)
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:45: AttributeError
+__ test_approved_extension_preserves_every_prior_attempt_and_budget_failure ___
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-budget-extension-red-20260910/test_approved_extension_preser0')
+
+    def test_approved_extension_preserves_every_prior_attempt_and_budget_failure(tmp_path):
+        from text2ifc_agent.generation_budget import BudgetLimits,GenerationBudget,GenerationBudgetExceeded
+        module,path,approval=history_and_approval(tmp_path)
+        original=module.read(path);before=path.read_bytes()
+>       unchanged=module.prepare_budget_history(path,branch='A-revise',approval=None)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: module 'approved_budget_runner' has no attribute 'prepare_budget_history'
+
+tests\agent\test_authorized_budget_extension.py:53: AttributeError
+- generated xml file: E:\code for project\bimnet\.tmp\budget-extension-red-20260910.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[unapproved]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_branch]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_hash]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_prior]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[calls]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[time]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[lower]
+FAILED tests/agent/test_authorized_budget_extension.py::test_invalid_extension_or_unsettled_history_cannot_create_new_budget[unsettled]
+FAILED tests/agent/test_authorized_budget_extension.py::test_approved_extension_preserves_every_prior_attempt_and_budget_failure
+9 failed in 0.75s

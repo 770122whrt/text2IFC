@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="4" time="0.688" timestamp="2026-09-11T14:06:03.535770+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_c_wall_join_run" name="test_exact_runner_reuses_budget_and_only_generates_when_ready[compiled]" time="0.251"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-c-wall-run-red/test_exact_runner_reuses_budge0')
+status = 'compiled'
+
+    @pytest.mark.parametrize('status', ['compiled', 'needs_clarification'])
+    def test_exact_runner_reuses_budget_and_only_generates_when_ready(tmp_path, status):
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+&gt;       m = module('c_integrated', ROOT/'c-shaped-wall-join-20260911/run_case.py')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_c_wall_join_run.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_c_wall_join_run.py:12: in module
+    spec.loader.exec_module(m)
+&lt;frozen importlib._bootstrap_external&gt;:991: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1128: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x0000021384061490&gt;
+path = 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1186: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_c_wall_join_run" name="test_exact_runner_reuses_budget_and_only_generates_when_ready[needs_clarification]" time="0.006"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-c-wall-run-red/test_exact_runner_reuses_budge1')
+status = 'needs_clarification'
+
+    @pytest.mark.parametrize('status', ['compiled', 'needs_clarification'])
+    def test_exact_runner_reuses_budget_and_only_generates_when_ready(tmp_path, status):
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+&gt;       m = module('c_integrated', ROOT/'c-shaped-wall-join-20260911/run_case.py')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_c_wall_join_run.py:24: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_c_wall_join_run.py:12: in module
+    spec.loader.exec_module(m)
+&lt;frozen importlib._bootstrap_external&gt;:991: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1128: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x0000021384421C70&gt;
+path = 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1186: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_c_wall_join_run" name="test_existing_output_stops_before_provider" time="0.003"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-c-wall-run-red/test_existing_output_stops_bef0')
+
+    def test_existing_output_stops_before_provider(tmp_path):
+&gt;       m = module('c_integrated', ROOT/'c-shaped-wall-join-20260911/run_case.py')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_c_wall_join_run.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_c_wall_join_run.py:12: in module
+    spec.loader.exec_module(m)
+&lt;frozen importlib._bootstrap_external&gt;:991: in exec_module
+    ???
+&lt;frozen importlib._bootstrap_external&gt;:1128: in get_code
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;_frozen_importlib_external.SourceFileLoader object at 0x0000021384421190&gt;
+path = 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'
+
+&gt;   ???
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\c-shaped-wall-join-20260911\\run_case.py'
+
+&lt;frozen importlib._bootstrap_external&gt;:1186: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_c_wall_join_run" name="test_only_confirmed_entrance_expectation_changes" time="0.002" /></testsuite></testsuites>

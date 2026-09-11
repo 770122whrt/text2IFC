@@ -9,6 +9,14 @@ from typing import Any, Mapping, Sequence
 from .issues import Issue, write_issues
 
 
+def _source_authority_error(code: str) -> bool:
+    return code.startswith(('SEMANTIC_AUTHORITY_', 'BRIEF_PLAN_')) or code in {
+        'SEMANTIC_MATERIAL_INCOMPLETE', 'SEMANTIC_PROPERTY_INCOMPLETE',
+        'SEMANTIC_SCOPE_INVALID', 'SEMANTIC_TARGET_REQUIRED',
+        'REQUEST_APPEARANCE_INVALID', 'REQUEST_APPEARANCE_UNSUPPORTED_FIELD',
+    }
+
+
 def normalize_validation_issues(
     diagnostics: Sequence[Mapping[str, Any]],
     *,
@@ -21,7 +29,9 @@ def normalize_validation_issues(
         code = _upper_code(diagnostic)
         path = _string_or_none(diagnostic.get("path"))
         message = _diagnostic_message(diagnostic)
-        if source == "semantic_validation" and "AUDIT" in code:
+        if _source_authority_error(code):
+            owner, issue_type, route, retryable = 'design_brief', 'semantic_mismatch', 'revise_design_brief', True
+        elif source == "semantic_validation" and "AUDIT" in code:
             owner = "provider"
             issue_type = "provider_format_error"
             route = "provider_retry"
@@ -157,17 +167,18 @@ def normalize_reopen_result(result: Mapping[str, Any]) -> list[Issue]:
         source_items = [result]
     issues: list[Issue] = []
     for index, item in enumerate(source_items, start=1):
+        authority = _source_authority_error(_upper_code(item))
         issues.append(
             Issue(
                 issue_id=f"issue_reopen_check_{index:04d}",
                 source="reopen_check",
                 severity="blocking",
-                owner="compiler",
-                issue_type="reopen_error",
+                owner="design_brief" if authority else "compiler",
+                issue_type="semantic_mismatch" if authority else "reopen_error",
                 actual_ref=_string_or_none(item.get("path")),
                 evidence=_evidence(_upper_code(item), _diagnostic_message(item)),
-                suggested_route="runtime_blocked",
-                retryable=False,
+                suggested_route="revise_design_brief" if authority else "runtime_blocked",
+                retryable=authority,
             )
         )
     return issues
@@ -179,19 +190,23 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
     root = Path(case_dir)
     issues: list[Issue] = []
     candidate_ids = _candidate_entity_ids(_read_json(root / "candidate.json"))
+    verification = _read_json(root / 'ifc-verification.json') or {}
+    native_error_codes = {_upper_code(item) for item in _list_of_dicts(verification.get('ifc_issues'))}
     geometry = _read_json(root / "geometry-feedback.json")
     if geometry and geometry.get("success") is False:
         for index, item in enumerate(_list_of_dicts(geometry.get("issues")), start=1):
             code = _upper_code(item)
+            gate_review = _gate_issue_type(code) == "gate_false_positive"
+            compiler_failure = code == 'COMPILE_REOPEN_FAILED' or code in native_error_codes
             issues.extend(
                 _targeted_issues(
                     issue_id=f"issue_geometry_gate_{index:04d}",
                     source="geometry_gate",
                     severity="blocking",
-                    owner="generator",
-                    issue_type="geometry_invalid",
-                    route="regenerate_json",
-                    retryable=True,
+                    owner="compiler" if compiler_failure else "gate" if gate_review else "generator",
+                    issue_type="reopen_error" if compiler_failure else "gate_false_positive" if gate_review else "geometry_invalid",
+                    route="runtime_blocked" if compiler_failure else "gate_issue" if gate_review else "regenerate_json",
+                    retryable=not (gate_review or compiler_failure),
                     detail=item,
                     target_ids=_existing_target_ids(item.get("entity_ids"), candidate_ids),
                 )
@@ -212,19 +227,21 @@ def normalize_gate_sidecars(case_dir: Path | str) -> list[Issue]:
                 gate_index += 1
                 code = _upper_code(detail)
                 issue_type = _gate_issue_type(str(code))
+                authority = _source_authority_error(code)
+                compiler_failure = code == 'COMPILE_REOPEN_FAILED' or code in native_error_codes
                 issues.extend(
                     _targeted_issues(
                         issue_id=f"issue_deterministic_gate_{gate_index:04d}",
                         source="deterministic_gate",
                         severity="blocking",
-                        owner="generator" if issue_type != "gate_false_positive" else "gate",
-                        issue_type=issue_type,
+                        owner="design_brief" if authority else "compiler" if compiler_failure else "generator" if issue_type != "gate_false_positive" else "gate",
+                        issue_type="semantic_mismatch" if authority else "reopen_error" if compiler_failure else issue_type,
                         route=(
-                            "gate_issue"
+                            "revise_design_brief" if authority else "runtime_blocked" if compiler_failure else "gate_issue"
                             if issue_type == "gate_false_positive"
                             else "regenerate_json"
                         ),
-                        retryable=issue_type != "gate_false_positive",
+                        retryable=not compiler_failure and issue_type != "gate_false_positive",
                         detail=detail,
                         target_ids=_existing_target_ids(
                             _structured_target_ids(detail), candidate_ids
@@ -253,7 +270,12 @@ def normalize_audit_findings(
     candidate_ids = _candidate_entity_ids(candidate)
     for index, finding in enumerate(findings, start=1):
         code = _upper_code(finding)
-        owner, issue_type, route = _audit_mapping(code)
+        # Classification is structured evidence; diagnostic prose is not a
+        # control signal and must never silently change repair ownership.
+        classification = str(finding.get("classification", "")).upper()
+        owner, issue_type, route = _audit_mapping(
+            "GATE_DISPUTE" if classification == "GATE_DISPUTE" else code
+        )
         issues.extend(
             _targeted_issues(
                 issue_id=f"issue_audit_{index:04d}",
@@ -335,6 +357,11 @@ def write_terminal_issues(
 
 def _gate_issue_type(code: str) -> str:
     upper = code.upper()
+    # The existing gate_false_positive category represents disputed gate
+    # applicability, not a claim that the candidate is correct. Fail closed
+    # pending engineering review; an incomplete evaluator cannot authorize edits.
+    if upper in {"GEOMETRY_EXPECTATION_INCOMPLETE", "GATE_DISPUTE"} or "FALSE_POSITIVE" in upper:
+        return "gate_false_positive"
     if "MISMATCH" in upper:
         return "geometry_invalid"
     if "ENTITY" in upper:
@@ -349,12 +376,12 @@ def _gate_issue_type(code: str) -> str:
         return "missing_space_boundary"
     if "STAIR" in upper or "VERTICAL" in upper:
         return "missing_vertical_connection"
-    if "FALSE_POSITIVE" in upper:
-        return "gate_false_positive"
     return "geometry_invalid"
 
 
 def _audit_mapping(code: str) -> tuple[str, str, str]:
+    if code in {"GATE_DISPUTE", "GEOMETRY_EXPECTATION_INCOMPLETE"} or "FALSE_POSITIVE" in code:
+        return "gate", "gate_false_positive", "gate_issue"
     if code == "IFC_SCHEMA_ERROR":
         return "generator", "geometry_invalid", "regenerate_json"
     if "DESIGN" in code or "ORIGINAL_REQUEST" in code:
@@ -463,6 +490,27 @@ def _targeted_issues(
 ) -> list[Issue]:
     targets = list(target_ids)
     refs = [f"entity:{target_id}#/attributes" for target_id in targets]
+    path = _string_or_none(detail.get("path"))
+    parts = path.split("/") if path else []
+    semantic_field = (
+        len(parts) >= 4 and parts[1] == "entities"
+        and parts[3] in {"materials", "property_sets", "appearance", "template"}
+    )
+    if semantic_field:
+        # Keep the field pointer. The existing scoped-loop resolver binds its
+        # collection selector to the exact candidate, including escaped keys.
+        # A diagnostic that names different targets cannot grant either scope.
+        selector = parts[2].replace("~1", "/").replace("~0", "~")
+        declared = detail.get("target_entity_ids") or detail.get("entity_ids")
+        if isinstance(declared, list) and set(declared) != {selector}:
+            refs = [None]
+            owner, issue_type, route, retryable = "gate", "gate_false_positive", "gate_issue", False
+        else:
+            refs = [path]
+    elif _upper_code(detail) in {"UNREQUESTED_TYPE", "UNREQUESTED_TYPE_ASSIGNMENT"}:
+        # A whole Type diagnostic is not permission to delete it or its graph.
+        # Exact relationship fields remain resolvable by the shared resolver.
+        refs = [path]
     if not refs:
         refs = [fallback_ref or _string_or_none(detail.get("path"))]
     return [

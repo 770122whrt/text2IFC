@@ -53,6 +53,8 @@ def write_gate_summary(
             "expected-facts.json",
             "dynamic-gates.json",
             "semantic-coverage.json",
+            "request-semantics.json",
+            "semantic-verification.json",
             "ifc-verification.json",
             "geometry-feedback.json",
             "repair/route.json",
@@ -66,6 +68,7 @@ def write_gate_summary(
         _bim_json_validation_gate(root),
         *dynamic_gates,
         _semantic_coverage_gate(root),
+        _request_semantic_gate(root),
         _ifc_compile_reopen_gate(root),
         _geometry_gate(root),
         _repair_route_gate(root),
@@ -81,6 +84,7 @@ def write_gate_summary(
         "evidence": {
             "schema_validation": _read_optional_json(root / "generator" / "validation.json"),
             "semantic_coverage": _read_optional_json(root / "semantic-coverage.json"),
+            "request_semantics": _read_optional_json(root / "semantic-verification.json"),
             "compile_reopen": _read_optional_json(root / "ifc-verification.json"),
             "geometry": _read_optional_json(root / "geometry-feedback.json"),
             "repair_history": _read_optional_json(root / "repair" / "route.json"),
@@ -153,6 +157,16 @@ def _bim_json_validation_gate(root: Path) -> dict[str, Any]:
         issues=issues,
         source_paths=["generator/validation.json"],
     )
+
+
+def _request_semantic_gate(root: Path) -> dict[str, Any]:
+    payload = _read_optional_json(root / 'semantic-verification.json')
+    return _gate('request_semantics',
+        applicability='applicable' if payload is not None else 'not_applicable',
+        status=('passed' if payload.get('valid') else 'failed') if payload is not None else 'skipped',
+        basis='independent reopened IFC/request comparison',
+        issues=payload.get('issues', []) if payload else [],
+        source_paths=['semantic-verification.json'] if payload else [])
 
 
 def _semantic_coverage_gate(root: Path) -> dict[str, Any]:
@@ -257,6 +271,13 @@ def _geometry_gate(root: Path) -> dict[str, Any]:
             basis="geometry feedback sidecar is not present",
             source_paths=[],
         )
+    verification = _read_optional_json(root / 'ifc-verification.json')
+    if (payload.get('execution_status') == 'not_run'
+        and payload.get('blocked_by') == 'ifc-verification.json'
+        and verification is not None and verification.get('success') is False):
+        return _gate('geometry', applicability='not_applicable', status='skipped',
+            basis='Geometry was not evaluated because compile/reopen verification failed.',
+            source_paths=['geometry-feedback.json', 'ifc-verification.json'])
     issues = _issues_from_payload(payload)
     return _gate(
         "geometry",
@@ -284,7 +305,9 @@ def _repair_route_gate(root: Path) -> dict[str, Any]:
         "repair_route",
         applicability="applicable",
         status="passed" if passed else "blocked",
-        basis=f"repair route is {route}",
+        basis=(f"repair route is {route}; this gate checks route eligibility only, "
+               "not a geometry pass. Counts in route/metrics refer only to feedback "
+               "supplied to that routing invocation; current geometry gate is independent."),
         issues=[] if passed else [{"code": "REPAIR_ROUTE_BLOCKED", "path": "/route"}],
         source_paths=["repair/route.json"],
     )

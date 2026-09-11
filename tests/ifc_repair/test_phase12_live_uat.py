@@ -838,6 +838,14 @@ def _guard_evidence(module: Any, **overrides: Any) -> dict[str, Any]:
     return evidence
 
 
+def _test_admission() -> dict[str, Any]:
+    return {
+        "status": "passed",
+        "mode": "test_injected_admission",
+        "network_transport_attempted": False,
+    }
+
+
 def _run(
     module: Any,
     tmp_path: Path,
@@ -847,6 +855,8 @@ def _run(
     executor: Any,
     cases: tuple[Any, ...],
     evidence_mode: str = "live",
+    use_admission: bool = True,
+    preflight_only: bool = False,
 ) -> dict[str, Any]:
     return module.run_live_uat(
         tmp_path / "run",
@@ -856,6 +866,11 @@ def _run(
         cases=cases,
         proof_root=_proof_root(tmp_path),
         evidence_mode=evidence_mode,
+        preflight_only=preflight_only,
+        admission_evidence_path=(
+            tmp_path / "test-admission.json" if use_admission else None
+        ),
+        admission_loader=lambda _path: _test_admission(),
     )
 
 
@@ -975,6 +990,8 @@ def test_cli_accepts_the_frozen_deepseek_provider_key(
             "--provider",
             "deepseek",
             "--require-green-preflight",
+            "--changed-scope-admission",
+            str(tmp_path / "admission.json"),
             "--output-root",
             str(tmp_path),
         ]
@@ -1091,6 +1108,41 @@ def test_preflight_only_returns_before_transport_construction(
     assert result["transport_calls"] == 0
     assert result["cases"] == []
     assert result["preflight"]["status"] == "passed"
+    assert transport_constructed is False
+
+
+def test_live_runner_requires_admission_without_running_preflight_or_transport(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    transport_constructed = False
+
+    def forbidden_transport() -> Any:
+        nonlocal transport_constructed
+        transport_constructed = True
+        pytest.fail("missing admission must block before Provider transport")
+
+    monkeypatch.setattr(
+        module,
+        "run_preflight",
+        lambda *_args, **_kwargs: pytest.fail(
+            "missing admission must not automatically run Full Preflight"
+        ),
+    )
+
+    result = module.run_live_uat(
+        tmp_path / "run",
+        transport_factory=forbidden_transport,
+        proof_root=_proof_root(tmp_path),
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_ADMISSION_REQUIRED"
+    assert result["preflight"]["status"] == "not_run"
+    assert result["preflight"]["mode"] == "admission_required"
+    assert result["preflight"]["network_transport_attempted"] is False
+    assert result["transport_calls"] == 0
     assert transport_constructed is False
 
 
@@ -1898,6 +1950,7 @@ def test_preflight_timeout_has_a_distinct_blocking_reason_and_zero_transport(
         case_executor=lambda *_args: pytest.fail("executor must not run"),
         cases=module.DEFAULT_CASES,
         proof_root=_proof_root(tmp_path),
+        preflight_only=True,
     )
 
     assert result["status"] == "preflight_failed"
@@ -2047,6 +2100,8 @@ def test_each_failed_preflight_gate_blocks_transport(
         runner=_GreenCommandRunner(fail=failed_gate),
         executor=executor,
         cases=(_case(module, "complete"),),
+        use_admission=False,
+        preflight_only=True,
     )
 
     assert result["status"] == "preflight_failed"
@@ -2071,6 +2126,8 @@ def test_caller_claimed_green_without_machine_artifact_is_rejected(
         runner=_GreenCommandRunner(forge=forged_gate),
         executor=lambda *_args: pytest.fail("executor must not run"),
         cases=(_case(module, "complete"),),
+        use_admission=False,
+        preflight_only=True,
     )
 
     failed = {item["name"]: item for item in result["preflight"]["checks"]}
@@ -2151,6 +2208,8 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
             "successful_artifact_publishable": False,
         },
         cases=(),
+        use_admission=False,
+        preflight_only=True,
     )
 
     checks = result["preflight"]["checks"]
@@ -2215,8 +2274,8 @@ def test_green_preflight_binds_commands_results_and_artifact_hashes(
     assert result["preflight"]["finished_at_utc"]
     assert result["preflight"]["network_transport_attempted"] is False
 
-    assert result["status"] == "blocked"
-    assert result["reason_code"] == "LIVE_CASE_MATRIX_REQUIRED"
+    assert result["status"] == "preflight_passed"
+    assert result["reason_code"] is None
     assert result["transport_calls"] == 0
 
 
@@ -2550,6 +2609,8 @@ def test_production_runner_rejects_exact_transport_class_with_mimo_config(
         case_executor=production_executor,
         cases=module.DEFAULT_CASES,
         proof_root=_proof_root(tmp_path),
+        admission_evidence_path=tmp_path / "test-admission.json",
+        admission_loader=lambda _path: _test_admission(),
     )
 
     assert result["status"] == "blocked"
@@ -2598,6 +2659,8 @@ def test_production_runner_rejects_deepseek_labels_on_a_replay_endpoint(
         case_executor=production_executor,
         cases=module.DEFAULT_CASES,
         proof_root=_proof_root(tmp_path),
+        admission_evidence_path=tmp_path / "test-admission.json",
+        admission_loader=lambda _path: _test_admission(),
     )
 
     assert result["status"] == "blocked"
@@ -2645,6 +2708,8 @@ def test_production_runner_rejects_an_injected_client_on_the_official_endpoint(
         case_executor=production_executor,
         cases=module.DEFAULT_CASES,
         proof_root=_proof_root(tmp_path),
+        admission_evidence_path=tmp_path / "test-admission.json",
+        admission_loader=lambda _path: _test_admission(),
     )
 
     assert result["status"] == "blocked"
@@ -3741,3 +3806,25 @@ def test_live_curator_binds_provider_responses_to_retained_runtime_artifacts(
             provider_draft=provider_draft,
             changeset=changeset,
         )
+
+
+def test_cli_requires_explicit_admission_for_live_execution(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module = _module()
+    monkeypatch.setattr(module, "_environment", lambda _path: {})
+    monkeypatch.setattr(
+        module,
+        "_config",
+        lambda _environment: {"status": "ready", "provider_key": "deepseek"},
+    )
+    monkeypatch.setattr(
+        module,
+        "run_live_uat",
+        lambda *_args, **_kwargs: pytest.fail("runner must not be invoked"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        module.main(["--provider", "deepseek", "--require-green-preflight"])
+
+    assert error.value.code == 2

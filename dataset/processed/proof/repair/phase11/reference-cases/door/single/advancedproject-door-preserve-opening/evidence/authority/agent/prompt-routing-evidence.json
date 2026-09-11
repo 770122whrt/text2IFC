@@ -1,0 +1,194 @@
+{
+  "operation_bindings": [
+    {
+      "operation_id": "operation-advancedproject-door-preserve-opening",
+      "operation_type": "fill_existing_opening_with_door",
+      "profile_hash": "sha256:aea25a85765334feb272148e2e455fd35d4616fcdb1190bf4d7624f790e70be3",
+      "profile_id": "door.fill-existing-opening"
+    }
+  ],
+  "schema_version": "text2ifc/phase11-prompt-routing-proof/0.1",
+  "selected": {
+    "estimated_tokens": 1007,
+    "few_shot_hashes": [
+      "sha256:2c4460c9dd6fcd001fa48fc2d2c4763f4116d3dfa8422644c836ac00b8298a7a",
+      "sha256:81f35db40c52657e811e7f11011323a3666da4a66dce8800361e0af8d4e8ed04",
+      "sha256:2d7abc4cc9f843e6bce783a9c29c02ffdabb712dbac52899b50eff4eb9dbde73",
+      "sha256:80e4dc0c4a09e0c284a408d019fd5cfbc70c548f55c56be12cf3508954711f2b"
+    ],
+    "few_shot_ids": [
+      "door.fill.clarification",
+      "door.fill.complete",
+      "door.fill.type-reuse",
+      "door.fill.unsupported"
+    ],
+    "few_shots": [
+      {
+        "case": "clarification",
+        "example_id": "door.fill.clarification",
+        "expected": {
+          "missing_slots": [
+            "target opening",
+            "/parameters/door/overall_width_mm",
+            "/parameters/door/overall_height_mm"
+          ],
+          "operation_type": "fill_existing_opening_with_door",
+          "status": "clarification_required"
+        },
+        "profile_id": "door.fill-existing-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: put a door in that opening"
+      },
+      {
+        "case": "complete",
+        "example_id": "door.fill.complete",
+        "expected": {
+          "operation_type": "fill_existing_opening_with_door",
+          "parameters": {
+            "door": {
+              "operation_type": "NOTDEFINED",
+              "overall_height_mm": 2100,
+              "overall_width_mm": 900
+            }
+          },
+          "status": "complete",
+          "target_query": {
+            "allowed_ifc_classes": [
+              "IfcOpeningElement"
+            ],
+            "global_id": "EXAMPLE_OPENING_GUID"
+          }
+        },
+        "profile_id": "door.fill-existing-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: fill Opening EXAMPLE_OPENING_GUID with a 900 mm by 2100 mm door"
+      },
+      {
+        "case": "exact_type_reuse",
+        "example_id": "door.fill.type-reuse",
+        "expected": {
+          "operation_type": "fill_existing_opening_with_door",
+          "prototype_intent": {
+            "reference": "EXAMPLE_STYLE",
+            "reference_kind": "type_name"
+          },
+          "rule": "unique exact resolution or clarification"
+        },
+        "profile_id": "door.fill-existing-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: fill the opening and reuse the exact DoorStyle named EXAMPLE_STYLE"
+      },
+      {
+        "case": "unsupported",
+        "example_id": "door.fill.unsupported",
+        "expected": {
+          "capability_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+          "operation_type": "fill_existing_opening_with_door",
+          "status": "unsupported"
+        },
+        "profile_id": "door.fill-existing-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: fill the opening with a folding door"
+      }
+    ],
+    "input_bytes": 4025,
+    "profile_hashes": [
+      "sha256:aea25a85765334feb272148e2e455fd35d4616fcdb1190bf4d7624f790e70be3"
+    ],
+    "profile_ids": [
+      "door.fill-existing-opening"
+    ],
+    "profiles": [
+      {
+        "action": "fill_existing_opening",
+        "classification_terms": [
+          "fill opening",
+          "existing opening",
+          "填门",
+          "洞口装门"
+        ],
+        "component_family": "door",
+        "conditional_slots": [
+          "/parameters/door/operation_type",
+          "/parameters/door/viewpoint",
+          "/prototype_intent"
+        ],
+        "few_shots": [
+          {
+            "example_id": "door.fill.complete",
+            "path": "prompts/agent/ifc-repair-few-shots/door-fill-complete.json",
+            "sha256": "sha256:81f35db40c52657e811e7f11011323a3666da4a66dce8800361e0af8d4e8ed04"
+          },
+          {
+            "example_id": "door.fill.clarification",
+            "path": "prompts/agent/ifc-repair-few-shots/door-fill-clarification.json",
+            "sha256": "sha256:2c4460c9dd6fcd001fa48fc2d2c4763f4116d3dfa8422644c836ac00b8298a7a"
+          },
+          {
+            "example_id": "door.fill.type-reuse",
+            "path": "prompts/agent/ifc-repair-few-shots/door-fill-type-reuse.json",
+            "sha256": "sha256:2d7abc4cc9f843e6bce783a9c29c02ffdabb712dbac52899b50eff4eb9dbde73"
+          },
+          {
+            "example_id": "door.fill.unsupported",
+            "path": "prompts/agent/ifc-repair-few-shots/door-fill-unsupported.json",
+            "sha256": "sha256:80e4dc0c4a09e0c284a408d019fd5cfbc70c548f55c56be12cf3508954711f2b"
+          }
+        ],
+        "forbidden_inferences": [
+          "opening identity",
+          "left or right swing without viewpoint",
+          "prototype similarity",
+          "resize opening"
+        ],
+        "operation_type": "fill_existing_opening_with_door",
+        "optional_slots": [
+          "/property_intents",
+          "/quantity_intents",
+          "/occurrence_reuse_intent"
+        ],
+        "profile_hash": "sha256:aea25a85765334feb272148e2e455fd35d4616fcdb1190bf4d7624f790e70be3",
+        "profile_id": "door.fill-existing-opening",
+        "profile_version": "0.1",
+        "program_derived_slots": [
+          "opening placement",
+          "host wall",
+          "GlobalIds",
+          "storey containment",
+          "door visual representation"
+        ],
+        "required_slots": [
+          "/target_query",
+          "/parameters/door/overall_width_mm",
+          "/parameters/door/overall_height_mm"
+        ],
+        "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+        "slot_summary": "Exact resolvable unfilled Opening; door overall width and height; optional exact DoorStyle or explicit single-swing operation with viewpoint.",
+        "stage2_projection_fields": [
+          "operation_id",
+          "operation_type",
+          "target",
+          "parameters",
+          "evidence_refs"
+        ],
+        "supported_capabilities": [
+          "SINGLE_SWING_LEFT",
+          "SINGLE_SWING_RIGHT",
+          "NOTDEFINED",
+          "exact_type_reuse",
+          "generated_type"
+        ],
+        "target_ifc_classes": [
+          "IfcOpeningElement"
+        ],
+        "unsupported_capabilities": [
+          "filled_opening",
+          "opening_resize",
+          "REVOLVING",
+          "FOLDING",
+          "SLIDING"
+        ]
+      }
+    ]
+  }
+}

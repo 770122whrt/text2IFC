@@ -1,0 +1,128 @@
+{
+  "archive": "Text2IFC_29RVT_IFC2X3_NoGrid_Full.zip",
+  "index": 6,
+  "member": "Text2IFC_IFC2X3_NoGrid_29/01_with_shapes_le10MiB/DynamoRevit/RVT-024__linkFile__IFC2X3_NoGrid.ifc",
+  "size_bytes": 25411,
+  "sha256": "f6fd5b9d57adf083a1c2f31bbf2a83c61544a2e67db25d6cebac19014bc88173",
+  "parse_status": "ok",
+  "license_status": "not_reviewed",
+  "human_review": "pending",
+  "ifcopenshell_version": "0.8.5",
+  "schema": "IFC2X3",
+  "entity_count": 368,
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 1,
+    "IfcElement": 2,
+    "IfcWall": 1,
+    "IfcDoor": 0,
+    "IfcWindow": 0,
+    "IfcSlab": 0,
+    "IfcRoof": 0,
+    "IfcBeam": 0,
+    "IfcColumn": 1,
+    "IfcSpace": 0,
+    "IfcGrid": 0
+  },
+  "grid_count": 0,
+  "roof_slab_count": 0,
+  "projects": [
+    {
+      "guid": "2nSdHoU33pPBarCJLpPMDa",
+      "name": "1671"
+    }
+  ],
+  "element_guids": [
+    "0OA3AfIgPAjfhhUyxUfPFY",
+    "2E5YqjOabEHPbBU5BctO6w"
+  ],
+  "duplicate_globalid_count": 3,
+  "body_elements": 2,
+  "body_by_class": {
+    "IfcColumn": 1,
+    "IfcWallStandardCase": 1
+  },
+  "external_reference_records": [],
+  "image_texture_refs": [],
+  "schema_validation_scope": "attributes_cardinality_inverse_uniqueness_no_express_rules",
+  "schema_error_count": 5,
+  "schema_error_samples": [
+    {
+      "level": "error",
+      "message": "For instance:\n    FILE_NAME('/mnt/data/DDC_RVT29_RUN/raw/RVT-024/linkFile__high.ifc','2026-09-10T11:54:53',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                                                                                                                                 ^                          \nAttribute 'originating_system' has invalid type:\n    Expected: STRING (256)\n    Current value type: NoneType\n",
+      "type": "schema"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #131=IfcPropertySet('2dUVteThQA$B1ZrSWw6zBv',#20,'Cross-Section Definition','',(#88))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                         \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #129=IfcPropertySet('2dUVteThQA$B1ZrSWw6zBv',#20,'Constraints','',(#89,#90,#99,#102,#104,#105,#106,#107,#108,#109,#110))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                                                            ",
+      "type": "schema",
+      "instance": "#131=IfcPropertySet('2dUVteThQA$B1ZrSWw6zBv',#20,'Cross-Section Definition','',(#88))"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #143=IfcPropertySet('2y6ocY6nFrbnFvtKlAyh$f',#20,'Cross-Section Definition','',(#111,#116,#117))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                                    \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #142=IfcPropertySet('2y6ocY6nFrbnFvtKlAyh$f',#20,'Construction','',(#122,#123,#127,#128))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                             ",
+      "type": "schema",
+      "instance": "#143=IfcPropertySet('2y6ocY6nFrbnFvtKlAyh$f',#20,'Cross-Section Definition','',(#111,#116,#117))"
+    },
+    {
+      "level": "error",
+      "message": "Attribute not optional",
+      "type": "schema",
+      "instance": "#70=IfcSIUnit(*,.VOLUMEUNIT.,$,$)",
+      "attribute": "IfcSIUnit.Name"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #42=IfcPropertySet('2xy_RiM42v0L9TSDMk$9GB',#20,'Other','',(#40,#41))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                          \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #313=IfcPropertySet('2xy_RiM42v0L9TSDMk$9GB',#20,'Other','',(#40,#41))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                          ",
+      "type": "schema",
+      "instance": "#42=IfcPropertySet('2xy_RiM42v0L9TSDMk$9GB',#20,'Other','',(#40,#41))",
+      "attribute": "IfcSIUnit.Name"
+    }
+  ],
+  "schema_error_categories": {
+    "For instance:\n    FILE_NAME('/mnt/data/DDC_RVT29_RUN/raw/RVT-024/linkFile__high.ifc','2026-09-10T11:54:53',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruc": 1,
+    "On instance:\n    #131=IfcPropertySet('2dUVteThQA$B1ZrSWw6zBv',#20,'Cross-Section Definition','',(#88))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                             ": 1,
+    "On instance:\n    #143=IfcPropertySet('2y6ocY6nFrbnFvtKlAyh$f',#20,'Cross-Section Definition','',(#111,#116,#117))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                  ": 1,
+    "Attribute not optional": 1,
+    "On instance:\n    #42=IfcPropertySet('2xy_RiM42v0L9TSDMk$9GB',#20,'Other','',(#40,#41))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                          \nRule IfcRoot.UR1:\n ": 1
+  },
+  "roundtrip_ok": true,
+  "geometry_scope": "class_stratified_max_24_or_class_count_body_element_sample",
+  "geometry_samples": [
+    {
+      "id": 213,
+      "class": "IfcColumn",
+      "guid": "0OA3AfIgPAjfhhUyxUfPFY",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        0.2999999999999998,
+        0.30000000000000004,
+        2.5
+      ]
+    },
+    {
+      "id": 65,
+      "class": "IfcWallStandardCase",
+      "guid": "2E5YqjOabEHPbBU5BctO6w",
+      "ok": true,
+      "vertex_count": 8,
+      "triangle_count": 12,
+      "dimensions_m": [
+        1.035580916708467,
+        2.5234619274496586,
+        3.9999999999999996
+      ]
+    }
+  ],
+  "geometry_checked": 2,
+  "geometry_passed": 2,
+  "geometry_failed": 0,
+  "flags": [
+    "schema_validation_errors"
+  ],
+  "basic_candidate": false
+}

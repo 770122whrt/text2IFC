@@ -1,0 +1,2255 @@
+{
+  "artifact_paths": {
+    "application": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/application.json",
+    "changeset": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/changeset.json",
+    "damaged": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/damaged.ifc",
+    "evaluation": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/evaluation.json",
+    "manifest": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/manifest.json",
+    "original": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/original.ifc",
+    "production_boundary": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/production-boundary.json",
+    "repaired": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/repaired.ifc",
+    "request": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/request.txt"
+  },
+  "case_id": "vvo-authority-triplet-public-repair",
+  "l0": {
+    "checks": [
+      {
+        "code": "L0_REOPEN_ORIGINAL",
+        "evidence": {
+          "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/original.ifc",
+          "schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_REOPEN_DAMAGED",
+        "evidence": {
+          "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/damaged.ifc",
+          "schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_REOPEN_REPAIRED",
+        "evidence": {
+          "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/phase11-door-authority-audit-final-2/vvo-authority-triplet-public-repair/repaired.ifc",
+          "schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "expected": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual": "sha256:ab8d3a9c5a161b70f5f5910e163e0f5e3354b2ed76f4df987b09a863163b2bf3",
+          "expected": "sha256:ab8d3a9c5a161b70f5f5910e163e0f5e3354b2ed76f4df987b09a863163b2bf3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_OPERATION_IDENTITY",
+        "evidence": {
+          "actual": [
+            "operation-window-001",
+            "operation-window-002",
+            "operation-door-001",
+            "operation-door-002"
+          ],
+          "expected": [
+            "operation-window-001",
+            "operation-window-002",
+            "operation-door-001",
+            "operation-door-002"
+          ]
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_RELATIONSHIP_INTEGRITY",
+        "evidence": {
+          "broken_fill_relationship_steps": [],
+          "broken_void_relationship_steps": [],
+          "duplicate_fill_openings": []
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_PRODUCTION_INPUT_BOUNDARY",
+        "evidence": {
+          "boundary": {
+            "changeset_canonical_sha256": "sha256:c635c4046c92c10ec451e5e2ece3cbdd8685e9f8949047e4b2d8b7c52ae51b05",
+            "damaged_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+            "deleted_object_ids_supplied": false,
+            "entrypoint": "run_phase11_public_triplet_repair.py",
+            "ifc_inputs": [
+              "damaged_ifc_path"
+            ],
+            "mutation_manifest_supplied": false,
+            "original_ifc_supplied": false,
+            "private_comparator_available_during_repair": false,
+            "public_request_bundle_sha256": "sha256:5f5e39b1b326ec2bc08ba1534e8bf765205ce0efb5f16cba96f7b9f2d5e12a28",
+            "request_inputs": [
+              "public_request_bundle"
+            ],
+            "request_sha256": "sha256:ab8d3a9c5a161b70f5f5910e163e0f5e3354b2ed76f4df987b09a863163b2bf3",
+            "resolved_target_count": 4,
+            "schema_version": "text2ifc/production-input-boundary/0.2"
+          },
+          "expected_changeset_canonical_sha256": "sha256:c635c4046c92c10ec451e5e2ece3cbdd8685e9f8949047e4b2d8b7c52ae51b05",
+          "expected_damaged_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "expected_request_sha256": "sha256:ab8d3a9c5a161b70f5f5910e163e0f5e3354b2ed76f4df987b09a863163b2bf3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "L0_SOURCE_FILES_UNCHANGED",
+        "evidence": {
+          "after": {
+            "damaged": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+            "original": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+            "repaired": "sha256:9f5200e39accb3b496ac07c2f8d6079852acc871a7675014135afca6821f429d"
+          },
+          "before": {
+            "damaged": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+            "original": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+            "repaired": "sha256:9f5200e39accb3b496ac07c2f8d6079852acc871a7675014135afca6821f429d"
+          }
+        },
+        "status": "passed"
+      }
+    ],
+    "pass": true
+  },
+  "private_original_to_damaged": {
+    "added_root_count": 0,
+    "all_expected_doors_removed": true,
+    "door_count_delta": -2,
+    "entity_count_delta": -79,
+    "opening_count_delta": -2,
+    "private_only": true,
+    "removed_door_ids": [
+      "2IUEnGd5v4Yfg1ZlPtd0qa",
+      "1B$rgWypT66viEf2CI1iIv"
+    ],
+    "removed_root_count": 34,
+    "window_count_delta": -2
+  },
+  "private_original_to_repaired": {
+    "objects": [
+      {
+        "geometry": {
+          "equivalent_within_1mm": false,
+          "opening_local_bounds_delta_mm": {
+            "x": [
+              76.0,
+              -76.0
+            ],
+            "y": [
+              80.0,
+              -80.0
+            ],
+            "z": [
+              0.0,
+              -76.0
+            ]
+          },
+          "original_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -876.0,
+                76.0
+              ],
+              "y": [
+                -185.0,
+                25.0
+              ],
+              "z": [
+                0.0,
+                2556.0
+              ]
+            },
+            "geometry_center_deviation_mm": 38.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "normal_axis_intersection_mm": 160.0,
+            "opening_bounds_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -160.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "repaired_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -105.0,
+                -55.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "geometry_center_deviation_mm": 0.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -80.0,
+                -80.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "normal_axis_intersection_mm": 50.0,
+            "opening_bounds_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -160.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          }
+        },
+        "mapping": {
+          "confidence": 1.0,
+          "evidence": {
+            "retained_opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "match_method": "mutation_manifest+application_role",
+          "original_guid": "2IUEnGd5v4Yfg1ZlPtd0qa",
+          "repaired_guid": "0M8$4_PevOhPx0XFqZZ1Po"
+        },
+        "object_class": "IfcDoor",
+        "operation_id": "operation-door-001",
+        "private_exact_fidelity_pass": false,
+        "semantics": {
+          "effective_material_match": false,
+          "host_match": true,
+          "material_provenance_match": false,
+          "occurrence_comparison": {
+            "authoring_exactness": false,
+            "counts": {
+              "matched": 1,
+              "not_in_user_text": 4,
+              "ownership_only": 2,
+              "unsupported_authoring": 0,
+              "wrong_value": 3
+            },
+            "detail_total": 10,
+            "details": [
+              {
+                "actual": {
+                  "owner_ref": "guid:0M8$4_PevOhPx0XFqZZ1Po",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC door operation-door-001",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZlPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "单扇 - 与墙齐:800x2480:255008",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:attribute:Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0M8$4_PevOhPx0XFqZZ1Po",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC generated door type operation-door-001",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZlPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "单扇 - 与墙齐:800x2480",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:attribute:ObjectType",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0M8$4_PevOhPx0XFqZZ1Po",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2480.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZlPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2480.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "door_occurrence:attribute:OverallHeight",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0M8$4_PevOhPx0XFqZZ1Po",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 800.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZlPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 800.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "door_occurrence:attribute:OverallWidth",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0M8$4_PevOhPx0XFqZZ1Po",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "operation-door-001",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZlPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "255008",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:attribute:Tag",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1XGPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": false,
+                  "value_type": "IfcBoolean"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1XGPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "800x2480",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.Reference",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1XGPtd0qa",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 3.7021,
+                  "value_type": "IfcThermalTransmittanceMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:3RdJrxHNjAt8gLu_pxZ6Yg",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "800x2480",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Pset_QuantityTakeOff.Reference",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZkLtd0qa",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "2HNE4WMQ1CXebZMaih8XoD",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:2IUEnGd5v4Yfg1ZkLtd0qa",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "2HNE4WMQ1CXebZMaih8XoD",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "fact_key": "door_occurrence:relationship:host",
+                "required": false
+              }
+            ],
+            "geometry_relationship_success": true,
+            "mapping": {
+              "actual": {
+                "entity_global_id": "0M8$4_PevOhPx0XFqZZ1Po",
+                "entity_name": "Text2IFC door operation-door-001",
+                "ifc_class": "IfcDoor",
+                "related_opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa",
+                "role": "door",
+                "scope": "door_occurrence"
+              },
+              "expected": {
+                "entity_global_id": "2IUEnGd5v4Yfg1ZlPtd0qa",
+                "entity_name": "单扇 - 与墙齐:800x2480:255008",
+                "ifc_class": "IfcDoor",
+                "related_opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa",
+                "role": "door",
+                "scope": "door_occurrence"
+              }
+            },
+            "occurrence_fidelity_success": true,
+            "schema_version": "text2ifc/ifc-occurrence-comparison/0.2",
+            "semantic_fidelity_success": true,
+            "source_hashes": {},
+            "truncated": false
+          },
+          "original_provenance": {
+            "material": {
+              "effective": {
+                "ifc_class": "IfcMaterialList",
+                "names": [
+                  "门 - 嵌板",
+                  "门 - 框架"
+                ]
+              },
+              "occurrence_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "门 - 嵌板",
+                    "门 - 框架"
+                  ]
+                }
+              ],
+              "sources": [
+                "occurrence",
+                "type"
+              ],
+              "type_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "门 - 嵌板",
+                    "门 - 框架"
+                  ]
+                }
+              ]
+            },
+            "occurrence_pset_fact_count": 4,
+            "occurrence_pset_fact_keys": [
+              "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+              "door_occurrence:pset:Pset_DoorCommon.Reference",
+              "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+              "door_occurrence:pset:Pset_QuantityTakeOff.Reference"
+            ],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "private_exact_gap_count": 7,
+          "production_required_occurrence_facts": [
+            "door_occurrence:attribute:OverallHeight",
+            "door_occurrence:attribute:OverallWidth"
+          ],
+          "repaired_provenance": {
+            "material": {
+              "effective": null,
+              "occurrence_assignments": [],
+              "sources": [],
+              "type_assignments": []
+            },
+            "occurrence_pset_fact_count": 0,
+            "occurrence_pset_fact_keys": [],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "storey_match": true,
+          "type_match": false
+        }
+      },
+      {
+        "geometry": {
+          "equivalent_within_1mm": false,
+          "opening_local_bounds_delta_mm": {
+            "x": [
+              76.0,
+              -76.0
+            ],
+            "y": [
+              135.0,
+              -135.0
+            ],
+            "z": [
+              0.0,
+              -76.0
+            ]
+          },
+          "original_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -76.0,
+                1011.0
+              ],
+              "y": [
+                -25.0,
+                295.0
+              ],
+              "z": [
+                0.0,
+                2476.0
+              ]
+            },
+            "geometry_center_deviation_mm": 38.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                0.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "normal_axis_intersection_mm": 270.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                0.0,
+                270.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "repaired_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                110.0,
+                160.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "geometry_center_deviation_mm": 0.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                135.0,
+                135.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "normal_axis_intersection_mm": 50.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                0.0,
+                270.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          }
+        },
+        "mapping": {
+          "confidence": 1.0,
+          "evidence": {
+            "retained_opening_global_id": "1B$rgWypT66viEf30I1iIv"
+          },
+          "match_method": "mutation_manifest+application_role",
+          "original_guid": "1B$rgWypT66viEf2CI1iIv",
+          "repaired_guid": "35tDlxx4nIQxHCz8RbSrF8"
+        },
+        "object_class": "IfcDoor",
+        "operation_id": "operation-door-002",
+        "private_exact_fidelity_pass": false,
+        "semantics": {
+          "effective_material_match": false,
+          "host_match": true,
+          "material_provenance_match": false,
+          "occurrence_comparison": {
+            "authoring_exactness": false,
+            "counts": {
+              "matched": 1,
+              "not_in_user_text": 4,
+              "ownership_only": 2,
+              "unsupported_authoring": 0,
+              "wrong_value": 3
+            },
+            "detail_total": 10,
+            "details": [
+              {
+                "actual": {
+                  "owner_ref": "guid:35tDlxx4nIQxHCz8RbSrF8",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC door operation-door-002",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEf2CI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "单扇 - 与墙齐:935x2400:275772",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:attribute:Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:35tDlxx4nIQxHCz8RbSrF8",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC generated door type operation-door-002",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEf2CI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "单扇 - 与墙齐:935x2400",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "door_occurrence:attribute:ObjectType",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:35tDlxx4nIQxHCz8RbSrF8",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2400.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEf2CI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2400.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "door_occurrence:attribute:OverallHeight",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:35tDlxx4nIQxHCz8RbSrF8",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 935.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEf2CI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 935.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "door_occurrence:attribute:OverallWidth",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:35tDlxx4nIQxHCz8RbSrF8",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "operation-door-002",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEf2CI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "275772",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:attribute:Tag",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEhzCI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": false,
+                  "value_type": "IfcBoolean"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEhzCI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "935x2400",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.Reference",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEhzCI1iIv",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 3.7021,
+                  "value_type": "IfcThermalTransmittanceMeasure"
+                },
+                "fact_key": "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:1hTqC0_5583escCnuPWU0k",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "935x2400",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "door_occurrence:pset:Pset_QuantityTakeOff.Reference",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1B$rgWypT66viEf30I1iIv",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "2HNE4WMQ1CXebZMaih8Xi_",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "classification": "matched",
+                "expected": {
+                  "owner_ref": "guid:1B$rgWypT66viEf30I1iIv",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "2HNE4WMQ1CXebZMaih8Xi_",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "fact_key": "door_occurrence:relationship:host",
+                "required": false
+              }
+            ],
+            "geometry_relationship_success": true,
+            "mapping": {
+              "actual": {
+                "entity_global_id": "35tDlxx4nIQxHCz8RbSrF8",
+                "entity_name": "Text2IFC door operation-door-002",
+                "ifc_class": "IfcDoor",
+                "related_opening_global_id": "1B$rgWypT66viEf30I1iIv",
+                "role": "door",
+                "scope": "door_occurrence"
+              },
+              "expected": {
+                "entity_global_id": "1B$rgWypT66viEf2CI1iIv",
+                "entity_name": "单扇 - 与墙齐:935x2400:275772",
+                "ifc_class": "IfcDoor",
+                "related_opening_global_id": "1B$rgWypT66viEf30I1iIv",
+                "role": "door",
+                "scope": "door_occurrence"
+              }
+            },
+            "occurrence_fidelity_success": true,
+            "schema_version": "text2ifc/ifc-occurrence-comparison/0.2",
+            "semantic_fidelity_success": true,
+            "source_hashes": {},
+            "truncated": false
+          },
+          "original_provenance": {
+            "material": {
+              "effective": {
+                "ifc_class": "IfcMaterialList",
+                "names": [
+                  "门 - 嵌板",
+                  "门 - 框架"
+                ]
+              },
+              "occurrence_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "门 - 嵌板",
+                    "门 - 框架"
+                  ]
+                }
+              ],
+              "sources": [
+                "occurrence",
+                "type"
+              ],
+              "type_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "门 - 嵌板",
+                    "门 - 框架"
+                  ]
+                }
+              ]
+            },
+            "occurrence_pset_fact_count": 4,
+            "occurrence_pset_fact_keys": [
+              "door_occurrence:pset:Pset_DoorCommon.IsExternal",
+              "door_occurrence:pset:Pset_DoorCommon.Reference",
+              "door_occurrence:pset:Pset_DoorCommon.ThermalTransmittance",
+              "door_occurrence:pset:Pset_QuantityTakeOff.Reference"
+            ],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "private_exact_gap_count": 7,
+          "production_required_occurrence_facts": [
+            "door_occurrence:attribute:OverallHeight",
+            "door_occurrence:attribute:OverallWidth"
+          ],
+          "repaired_provenance": {
+            "material": {
+              "effective": null,
+              "occurrence_assignments": [],
+              "sources": [],
+              "type_assignments": []
+            },
+            "occurrence_pset_fact_count": 0,
+            "occurrence_pset_fact_keys": [],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "storey_match": true,
+          "type_match": false
+        }
+      },
+      {
+        "geometry": {
+          "equivalent_within_1mm": true,
+          "opening_local_bounds_delta_mm": {
+            "x": [
+              -0.00037,
+              -0.00037
+            ],
+            "y": [
+              0.0,
+              0.0
+            ],
+            "z": [
+              0.000173,
+              0.000173
+            ]
+          }
+        },
+        "mapping": {
+          "confidence": 1.0,
+          "evidence": {
+            "host_wall_global_id": "2CsmzAChHF6O6maGXlo6yJ",
+            "original_opening_global_id": "2dYMXn0_5AKRbD_1mUIAqJ",
+            "repaired_opening_global_id": "12$UUOvW1Khuudvqr$$G$c"
+          },
+          "match_method": "mutation_manifest+application_role",
+          "original_guid": "2dYMXn0_5AKRbD_0yUIAqJ",
+          "repaired_guid": "0O9PbLwLjGQ8KCdTAJ3fqh"
+        },
+        "object_class": "IfcWindow",
+        "operation_id": "operation-window-001",
+        "private_exact_fidelity_pass": false,
+        "semantics": {
+          "effective_material_match": false,
+          "host_match": true,
+          "material_provenance_match": false,
+          "occurrence_comparison": {
+            "authoring_exactness": false,
+            "counts": {
+              "matched": 0,
+              "not_in_user_text": 6,
+              "ownership_only": 4,
+              "unsupported_authoring": 0,
+              "wrong_value": 3
+            },
+            "detail_total": 13,
+            "details": [
+              {
+                "actual": {
+                  "owner_ref": "guid:0O9PbLwLjGQ8KCdTAJ3fqh",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC window operation-window-001",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbD_0yUIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "固定:500x1180:279940",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "window_occurrence:attribute:Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0O9PbLwLjGQ8KCdTAJ3fqh",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC generated window type operation-window-001",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbD_0yUIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "固定:500x1180",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "window_occurrence:attribute:ObjectType",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0O9PbLwLjGQ8KCdTAJ3fqh",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 500.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbD_0yUIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 500.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "window_occurrence:attribute:OverallHeight",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0O9PbLwLjGQ8KCdTAJ3fqh",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 1180.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbD_0yUIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 1180.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "window_occurrence:attribute:OverallWidth",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0O9PbLwLjGQ8KCdTAJ3fqh",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "operation-window-001",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbD_0yUIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "279940",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "window_occurrence:attribute:Tag",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:0k3ch1D$L8hPUmawa8Crh9",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "500x1180",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "window_occurrence:pset:Pset_QuantityTakeOff.Reference",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0ok5AGuHfMPfGo4mIK71oj",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": true,
+                  "value_type": "IfcBoolean"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbDy$4UIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": true,
+                  "value_type": "IfcBoolean"
+                },
+                "fact_key": "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+                "required": true
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbDy$4UIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "500x1180",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "window_occurrence:pset:Pset_WindowCommon.Reference",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbDy$4UIAqJ",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 3.6886,
+                  "value_type": "IfcThermalTransmittanceMeasure"
+                },
+                "fact_key": "window_occurrence:pset:Pset_WindowCommon.ThermalTransmittance",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2aDuAs6VXPIR3_aRK9rDAx",
+                  "ownership": "occurrence_direct",
+                  "unit": "m2",
+                  "value": 590000.0,
+                  "value_type": "IfcQuantityArea"
+                },
+                "classification": "not_in_user_text",
+                "expected": null,
+                "fact_key": "window_occurrence:quantity:BaseQuantities.Area",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2aDuAs6VXPIR3_aRK9rDAx",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 500.0,
+                  "value_type": "IfcQuantityLength"
+                },
+                "classification": "not_in_user_text",
+                "expected": null,
+                "fact_key": "window_occurrence:quantity:BaseQuantities.Height",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:2aDuAs6VXPIR3_aRK9rDAx",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 1180.0,
+                  "value_type": "IfcQuantityLength"
+                },
+                "classification": "not_in_user_text",
+                "expected": null,
+                "fact_key": "window_occurrence:quantity:BaseQuantities.Width",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:12$UUOvW1Khuudvqr$$G$c",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "2CsmzAChHF6O6maGXlo6yJ",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:2dYMXn0_5AKRbD_1mUIAqJ",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "2CsmzAChHF6O6maGXlo6yJ",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "fact_key": "window_occurrence:relationship:host",
+                "required": false
+              }
+            ],
+            "geometry_relationship_success": true,
+            "mapping": {
+              "actual": {
+                "entity_global_id": "0O9PbLwLjGQ8KCdTAJ3fqh",
+                "entity_name": "Text2IFC window operation-window-001",
+                "ifc_class": "IfcWindow",
+                "related_opening_global_id": "12$UUOvW1Khuudvqr$$G$c",
+                "role": "window",
+                "scope": "window_occurrence"
+              },
+              "expected": {
+                "entity_global_id": "2dYMXn0_5AKRbD_0yUIAqJ",
+                "entity_name": "固定:500x1180:279940",
+                "ifc_class": "IfcWindow",
+                "related_opening_global_id": "2dYMXn0_5AKRbD_1mUIAqJ",
+                "role": "window",
+                "scope": "window_occurrence"
+              }
+            },
+            "occurrence_fidelity_success": true,
+            "schema_version": "text2ifc/ifc-occurrence-comparison/0.2",
+            "semantic_fidelity_success": true,
+            "source_hashes": {},
+            "truncated": false
+          },
+          "original_provenance": {
+            "material": {
+              "effective": {
+                "ifc_class": "IfcMaterialList",
+                "names": [
+                  "玻璃",
+                  "窗扇"
+                ]
+              },
+              "occurrence_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "玻璃",
+                    "窗扇"
+                  ]
+                }
+              ],
+              "sources": [
+                "occurrence",
+                "type"
+              ],
+              "type_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "玻璃",
+                    "窗扇"
+                  ]
+                }
+              ]
+            },
+            "occurrence_pset_fact_count": 4,
+            "occurrence_pset_fact_keys": [
+              "window_occurrence:pset:Pset_QuantityTakeOff.Reference",
+              "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+              "window_occurrence:pset:Pset_WindowCommon.Reference",
+              "window_occurrence:pset:Pset_WindowCommon.ThermalTransmittance"
+            ],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "private_exact_gap_count": 6,
+          "production_required_occurrence_facts": [
+            "window_occurrence:attribute:OverallHeight",
+            "window_occurrence:attribute:OverallWidth",
+            "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+            "window_occurrence:quantity:window-base.Area",
+            "window_occurrence:quantity:window-base.Height",
+            "window_occurrence:quantity:window-base.Width"
+          ],
+          "repaired_provenance": {
+            "material": {
+              "effective": null,
+              "occurrence_assignments": [],
+              "sources": [],
+              "type_assignments": []
+            },
+            "occurrence_pset_fact_count": 1,
+            "occurrence_pset_fact_keys": [
+              "window_occurrence:pset:Pset_WindowCommon.IsExternal"
+            ],
+            "quantity_fact_count": 3,
+            "quantity_fact_keys": [
+              "window_occurrence:quantity:BaseQuantities.Area",
+              "window_occurrence:quantity:BaseQuantities.Height",
+              "window_occurrence:quantity:BaseQuantities.Width"
+            ],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "storey_match": true,
+          "type_match": false
+        }
+      },
+      {
+        "geometry": {
+          "equivalent_within_1mm": true,
+          "opening_local_bounds_delta_mm": {
+            "x": [
+              0.000202,
+              0.000202
+            ],
+            "y": [
+              0.0,
+              0.0
+            ],
+            "z": [
+              0.0,
+              0.0
+            ]
+          }
+        },
+        "mapping": {
+          "confidence": 1.0,
+          "evidence": {
+            "host_wall_global_id": "0jltRti3rFigAmdXYhXxqI",
+            "original_opening_global_id": "08xWVL$9z6JRwr3piJHoAz",
+            "repaired_opening_global_id": "1DpV$86tTJkhfZgXWwvDvy"
+          },
+          "match_method": "mutation_manifest+application_role",
+          "original_guid": "08xWVL$9z6JRwr3oWJHoAz",
+          "repaired_guid": "0ZbclAWV9MVxyxw49U$qVL"
+        },
+        "object_class": "IfcWindow",
+        "operation_id": "operation-window-002",
+        "private_exact_fidelity_pass": false,
+        "semantics": {
+          "effective_material_match": false,
+          "host_match": true,
+          "material_provenance_match": false,
+          "occurrence_comparison": {
+            "authoring_exactness": false,
+            "counts": {
+              "matched": 0,
+              "not_in_user_text": 6,
+              "ownership_only": 4,
+              "unsupported_authoring": 0,
+              "wrong_value": 3
+            },
+            "detail_total": 13,
+            "details": [
+              {
+                "actual": {
+                  "owner_ref": "guid:0ZbclAWV9MVxyxw49U$qVL",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC window operation-window-002",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr3oWJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "固定:870x2370:255906",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "window_occurrence:attribute:Name",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0ZbclAWV9MVxyxw49U$qVL",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "Text2IFC generated window type operation-window-002",
+                  "value_type": "IfcLabel"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr3oWJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "固定:870x2370",
+                  "value_type": "IfcLabel"
+                },
+                "fact_key": "window_occurrence:attribute:ObjectType",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0ZbclAWV9MVxyxw49U$qVL",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2370.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr3oWJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 2370.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "window_occurrence:attribute:OverallHeight",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0ZbclAWV9MVxyxw49U$qVL",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 870.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr3oWJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 870.0,
+                  "value_type": "IfcPositiveLengthMeasure"
+                },
+                "fact_key": "window_occurrence:attribute:OverallWidth",
+                "required": true
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:0ZbclAWV9MVxyxw49U$qVL",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "operation-window-002",
+                  "value_type": "IfcIdentifier"
+                },
+                "classification": "wrong_value",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr3oWJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "255906",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "window_occurrence:attribute:Tag",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:249wk0Obz76vYrm0nPPCrk",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "870x2370",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "window_occurrence:pset:Pset_QuantityTakeOff.Reference",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1M62pTM8zNm9qVouECW8Ab",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": true,
+                  "value_type": "IfcBoolean"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr1DOJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": true,
+                  "value_type": "IfcBoolean"
+                },
+                "fact_key": "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+                "required": true
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr1DOJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": "870x2370",
+                  "value_type": "IfcIdentifier"
+                },
+                "fact_key": "window_occurrence:pset:Pset_WindowCommon.Reference",
+                "required": false
+              },
+              {
+                "actual": null,
+                "classification": "not_in_user_text",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr1DOJHoAz",
+                  "ownership": "occurrence_direct",
+                  "unit": null,
+                  "value": 3.6886,
+                  "value_type": "IfcThermalTransmittanceMeasure"
+                },
+                "fact_key": "window_occurrence:pset:Pset_WindowCommon.ThermalTransmittance",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3TOBaZC4nVuhB3fHI10jh2",
+                  "ownership": "occurrence_direct",
+                  "unit": "m2",
+                  "value": 2061900.0,
+                  "value_type": "IfcQuantityArea"
+                },
+                "classification": "not_in_user_text",
+                "expected": null,
+                "fact_key": "window_occurrence:quantity:BaseQuantities.Area",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3TOBaZC4nVuhB3fHI10jh2",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 2370.0,
+                  "value_type": "IfcQuantityLength"
+                },
+                "classification": "not_in_user_text",
+                "expected": null,
+                "fact_key": "window_occurrence:quantity:BaseQuantities.Height",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:3TOBaZC4nVuhB3fHI10jh2",
+                  "ownership": "occurrence_direct",
+                  "unit": "mm",
+                  "value": 870.0,
+                  "value_type": "IfcQuantityLength"
+                },
+                "classification": "not_in_user_text",
+                "expected": null,
+                "fact_key": "window_occurrence:quantity:BaseQuantities.Width",
+                "required": false
+              },
+              {
+                "actual": {
+                  "owner_ref": "guid:1DpV$86tTJkhfZgXWwvDvy",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "0jltRti3rFigAmdXYhXxqI",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "classification": "ownership_only",
+                "expected": {
+                  "owner_ref": "guid:08xWVL$9z6JRwr3piJHoAz",
+                  "ownership": "derived_relationship",
+                  "unit": null,
+                  "value": "0jltRti3rFigAmdXYhXxqI",
+                  "value_type": "IfcGloballyUniqueId"
+                },
+                "fact_key": "window_occurrence:relationship:host",
+                "required": false
+              }
+            ],
+            "geometry_relationship_success": true,
+            "mapping": {
+              "actual": {
+                "entity_global_id": "0ZbclAWV9MVxyxw49U$qVL",
+                "entity_name": "Text2IFC window operation-window-002",
+                "ifc_class": "IfcWindow",
+                "related_opening_global_id": "1DpV$86tTJkhfZgXWwvDvy",
+                "role": "window",
+                "scope": "window_occurrence"
+              },
+              "expected": {
+                "entity_global_id": "08xWVL$9z6JRwr3oWJHoAz",
+                "entity_name": "固定:870x2370:255906",
+                "ifc_class": "IfcWindow",
+                "related_opening_global_id": "08xWVL$9z6JRwr3piJHoAz",
+                "role": "window",
+                "scope": "window_occurrence"
+              }
+            },
+            "occurrence_fidelity_success": true,
+            "schema_version": "text2ifc/ifc-occurrence-comparison/0.2",
+            "semantic_fidelity_success": true,
+            "source_hashes": {},
+            "truncated": false
+          },
+          "original_provenance": {
+            "material": {
+              "effective": {
+                "ifc_class": "IfcMaterialList",
+                "names": [
+                  "玻璃",
+                  "窗扇"
+                ]
+              },
+              "occurrence_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "玻璃",
+                    "窗扇"
+                  ]
+                }
+              ],
+              "sources": [
+                "occurrence",
+                "type"
+              ],
+              "type_assignments": [
+                {
+                  "ifc_class": "IfcMaterialList",
+                  "names": [
+                    "玻璃",
+                    "窗扇"
+                  ]
+                }
+              ]
+            },
+            "occurrence_pset_fact_count": 4,
+            "occurrence_pset_fact_keys": [
+              "window_occurrence:pset:Pset_QuantityTakeOff.Reference",
+              "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+              "window_occurrence:pset:Pset_WindowCommon.Reference",
+              "window_occurrence:pset:Pset_WindowCommon.ThermalTransmittance"
+            ],
+            "quantity_fact_count": 0,
+            "quantity_fact_keys": [],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "private_exact_gap_count": 6,
+          "production_required_occurrence_facts": [
+            "window_occurrence:attribute:OverallHeight",
+            "window_occurrence:attribute:OverallWidth",
+            "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+            "window_occurrence:quantity:window-base.Area",
+            "window_occurrence:quantity:window-base.Height",
+            "window_occurrence:quantity:window-base.Width"
+          ],
+          "repaired_provenance": {
+            "material": {
+              "effective": null,
+              "occurrence_assignments": [],
+              "sources": [],
+              "type_assignments": []
+            },
+            "occurrence_pset_fact_count": 1,
+            "occurrence_pset_fact_keys": [
+              "window_occurrence:pset:Pset_WindowCommon.IsExternal"
+            ],
+            "quantity_fact_count": 3,
+            "quantity_fact_keys": [
+              "window_occurrence:quantity:BaseQuantities.Area",
+              "window_occurrence:quantity:BaseQuantities.Height",
+              "window_occurrence:quantity:BaseQuantities.Width"
+            ],
+            "type_inherited_pset_fact_count": 0,
+            "type_inherited_pset_fact_keys": []
+          },
+          "storey_match": true,
+          "type_match": false
+        }
+      }
+    ],
+    "private_exact_fidelity_pass": false
+  },
+  "production_damaged_to_repaired": {
+    "l1_pass": true,
+    "l2_pass": true,
+    "model_diff": {
+      "added_root_count": 28,
+      "declared_created_root_count": 28,
+      "door_count_delta": 2,
+      "entity_count_delta": 180,
+      "opening_count_delta": 2,
+      "removed_root_count": 0,
+      "undeclared_added_roots": [],
+      "window_count_delta": 2
+    },
+    "operation_checks": [
+      {
+        "checks": [
+          {
+            "code": "OPENING_VOIDS_TARGET_WALL",
+            "evidence": {
+              "center": 4701.961,
+              "height": 500.0,
+              "sill": 2670.828,
+              "width": 1180.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WINDOW_FILLS_OPENING",
+            "evidence": {
+              "center": 4701.961,
+              "height": 500.0,
+              "sill": 2670.828,
+              "width": 1180.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_GEOMETRY_MATCHES_PARAMETERS",
+            "evidence": {
+              "center": 4701.961,
+              "height": 500.0,
+              "sill": 2670.828,
+              "width": 1180.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WINDOW_DIMENSIONS_MATCH_OPENING",
+            "evidence": {
+              "center": 4701.961,
+              "height": 500.0,
+              "sill": 2670.828,
+              "width": 1180.0
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "expected": {
+            "center": 4701.961,
+            "height": 500.0,
+            "sill": 2670.828,
+            "width": 1180.0
+          },
+          "measured": {
+            "center": 4701.961,
+            "height": 500.0,
+            "sill": 2670.828,
+            "width": 1180.0
+          },
+          "opening_global_id": "12$UUOvW1Khuudvqr$$G$c",
+          "window_global_id": "0O9PbLwLjGQ8KCdTAJ3fqh"
+        },
+        "issues": [],
+        "operation_id": "operation-window-001",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "OPENING_VOIDS_TARGET_WALL",
+            "evidence": {
+              "center": 9315.561,
+              "height": 2370.0,
+              "sill": 610.0,
+              "width": 870.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WINDOW_FILLS_OPENING",
+            "evidence": {
+              "center": 9315.561,
+              "height": 2370.0,
+              "sill": 610.0,
+              "width": 870.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_GEOMETRY_MATCHES_PARAMETERS",
+            "evidence": {
+              "center": 9315.561,
+              "height": 2370.0,
+              "sill": 610.0,
+              "width": 870.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "WINDOW_DIMENSIONS_MATCH_OPENING",
+            "evidence": {
+              "center": 9315.561,
+              "height": 2370.0,
+              "sill": 610.0,
+              "width": 870.0
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "expected": {
+            "center": 9315.561,
+            "height": 2370.0,
+            "sill": 610.0,
+            "width": 870.0
+          },
+          "measured": {
+            "center": 9315.561,
+            "height": 2370.0,
+            "sill": 610.0,
+            "width": 870.0
+          },
+          "opening_global_id": "1DpV$86tTJkhfZgXWwvDvy",
+          "window_global_id": "0ZbclAWV9MVxyxw49U$qVL"
+        },
+        "issues": [],
+        "operation_id": "operation-window-002",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "DOOR_FILLS_OPENING",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_VOIDS_WALL",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_DIMENSIONS_MATCH",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+            "evidence": {
+              "axis_deviation_degrees": 0.0,
+              "door_bounds_in_opening_mm": {
+                "x": [
+                  -800.0,
+                  0.0
+                ],
+                "y": [
+                  -105.0,
+                  -55.0
+                ],
+                "z": [
+                  0.0,
+                  2480.0
+                ]
+              },
+              "geometry_center_deviation_mm": 0.0,
+              "height_deviation_mm": 0.0,
+              "nominal_center_deviation_mm": 0.0,
+              "nominal_door_bounds_mm": {
+                "x": [
+                  -800.0,
+                  0.0
+                ],
+                "y": [
+                  -80.0,
+                  -80.0
+                ],
+                "z": [
+                  0.0,
+                  2480.0
+                ]
+              },
+              "normal_axis_intersection_mm": 50.0,
+              "opening_bounds_mm": {
+                "x": [
+                  -800.0,
+                  0.0
+                ],
+                "y": [
+                  -160.0,
+                  0.0
+                ],
+                "z": [
+                  0.0,
+                  2480.0
+                ]
+              },
+              "projected_overlap_ratio": 1.0,
+              "thresholds": {
+                "maximum_axis_deviation_degrees": 0.1,
+                "maximum_center_deviation_mm": 5.0,
+                "maximum_dimension_deviation_mm": 1.0,
+                "minimum_projected_overlap_ratio": 0.95
+              },
+              "valid": true,
+              "width_deviation_mm": 0.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_STOREY_MATCHES_HOST",
+            "evidence": {
+              "actual_storey_global_ids": [
+                "1vTeahUkP60PdWqwCTjSGJ"
+              ],
+              "expected_storey_global_id": "1vTeahUkP60PdWqwCTjSGJ",
+              "resolution_error": null
+            },
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_TYPE_BOUND",
+            "evidence": {},
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "actual_storey_global_ids": [
+            "1vTeahUkP60PdWqwCTjSGJ"
+          ],
+          "door_global_id": "0M8$4_PevOhPx0XFqZZ1Po",
+          "expected_storey_global_id": "1vTeahUkP60PdWqwCTjSGJ",
+          "geometry_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -105.0,
+                -55.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "geometry_center_deviation_mm": 0.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -80.0,
+                -80.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "normal_axis_intersection_mm": 50.0,
+            "opening_bounds_mm": {
+              "x": [
+                -800.0,
+                0.0
+              ],
+              "y": [
+                -160.0,
+                0.0
+              ],
+              "z": [
+                0.0,
+                2480.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+          "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+        },
+        "issues": [],
+        "operation_id": "operation-door-001",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      },
+      {
+        "checks": [
+          {
+            "code": "DOOR_FILLS_OPENING",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "OPENING_VOIDS_WALL",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_DIMENSIONS_MATCH",
+            "evidence": {},
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_GEOMETRY_ALIGNED_WITH_OPENING",
+            "evidence": {
+              "axis_deviation_degrees": 0.0,
+              "door_bounds_in_opening_mm": {
+                "x": [
+                  0.0,
+                  935.0
+                ],
+                "y": [
+                  110.0,
+                  160.0
+                ],
+                "z": [
+                  0.0,
+                  2400.0
+                ]
+              },
+              "geometry_center_deviation_mm": 0.0,
+              "height_deviation_mm": 0.0,
+              "nominal_center_deviation_mm": 0.0,
+              "nominal_door_bounds_mm": {
+                "x": [
+                  0.0,
+                  935.0
+                ],
+                "y": [
+                  135.0,
+                  135.0
+                ],
+                "z": [
+                  0.0,
+                  2400.0
+                ]
+              },
+              "normal_axis_intersection_mm": 50.0,
+              "opening_bounds_mm": {
+                "x": [
+                  0.0,
+                  935.0
+                ],
+                "y": [
+                  0.0,
+                  270.0
+                ],
+                "z": [
+                  0.0,
+                  2400.0
+                ]
+              },
+              "projected_overlap_ratio": 1.0,
+              "thresholds": {
+                "maximum_axis_deviation_degrees": 0.1,
+                "maximum_center_deviation_mm": 5.0,
+                "maximum_dimension_deviation_mm": 1.0,
+                "minimum_projected_overlap_ratio": 0.95
+              },
+              "valid": true,
+              "width_deviation_mm": 0.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_STOREY_MATCHES_HOST",
+            "evidence": {
+              "actual_storey_global_ids": [
+                "1vTeahUkP60PdWqwCTjSGJ"
+              ],
+              "expected_storey_global_id": "1vTeahUkP60PdWqwCTjSGJ",
+              "resolution_error": null
+            },
+            "status": "passed"
+          },
+          {
+            "code": "DOOR_TYPE_BOUND",
+            "evidence": {},
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "actual_storey_global_ids": [
+            "1vTeahUkP60PdWqwCTjSGJ"
+          ],
+          "door_global_id": "35tDlxx4nIQxHCz8RbSrF8",
+          "expected_storey_global_id": "1vTeahUkP60PdWqwCTjSGJ",
+          "geometry_alignment": {
+            "axis_deviation_degrees": 0.0,
+            "door_bounds_in_opening_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                110.0,
+                160.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "geometry_center_deviation_mm": 0.0,
+            "height_deviation_mm": 0.0,
+            "nominal_center_deviation_mm": 0.0,
+            "nominal_door_bounds_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                135.0,
+                135.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "normal_axis_intersection_mm": 50.0,
+            "opening_bounds_mm": {
+              "x": [
+                0.0,
+                935.0
+              ],
+              "y": [
+                0.0,
+                270.0
+              ],
+              "z": [
+                0.0,
+                2400.0
+              ]
+            },
+            "projected_overlap_ratio": 1.0,
+            "thresholds": {
+              "maximum_axis_deviation_degrees": 0.1,
+              "maximum_center_deviation_mm": 5.0,
+              "maximum_dimension_deviation_mm": 1.0,
+              "minimum_projected_overlap_ratio": 0.95
+            },
+            "valid": true,
+            "width_deviation_mm": 0.0
+          },
+          "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
+          "opening_global_id": "1B$rgWypT66viEf30I1iIv"
+        },
+        "issues": [],
+        "operation_id": "operation-door-002",
+        "operation_type": "fill_existing_opening_with_door",
+        "valid": true
+      }
+    ]
+  },
+  "production_ground_truth_isolation": {
+    "checked_private_deleted_object_count": 4,
+    "leaked_deleted_object_ids": [],
+    "passed": true,
+    "private_comparator_started_after_repair": true,
+    "production_inputs": [
+      "02-damaged.ifc",
+      "request.txt",
+      "bound ChangeSet",
+      "authorized surviving IFC evidence"
+    ]
+  },
+  "release_decision": {
+    "blocking_findings": [],
+    "diagnostics": [
+      {
+        "code": "PRIVATE_EXACTNESS_INFORMATIONAL",
+        "message": "Private Ground Truth gaps never participate in target resolution or ChangeSet construction."
+      }
+    ],
+    "l0_pass": true,
+    "l1_pass": true,
+    "l2_pass": true,
+    "production_evaluation_status": "passed",
+    "publishable": true,
+    "schema_version": "text2ifc/ifc-repair-release-decision/0.1",
+    "warnings": [
+      {
+        "code": "PRIVATE_GROUND_TRUTH_FIDELITY_GAP",
+        "message": "Non-required original occurrence authoring facts remain different; production Manifest still passes.",
+        "operation_id": "operation-door-001"
+      },
+      {
+        "code": "PRIVATE_GROUND_TRUTH_FIDELITY_GAP",
+        "message": "Non-required original occurrence authoring facts remain different; production Manifest still passes.",
+        "operation_id": "operation-door-002"
+      },
+      {
+        "code": "PRIVATE_GROUND_TRUTH_FIDELITY_GAP",
+        "message": "Non-required original occurrence authoring facts remain different; production Manifest still passes.",
+        "operation_id": "operation-window-001"
+      },
+      {
+        "code": "PRIVATE_GROUND_TRUTH_FIDELITY_GAP",
+        "message": "Non-required original occurrence authoring facts remain different; production Manifest still passes.",
+        "operation_id": "operation-window-002"
+      }
+    ]
+  },
+  "run_fingerprints": {
+    "application_sha256": "sha256:57f6495ee246b5107f67c0ba659a545dc24fd1b2444d0b75274cd4e0665dcbd7",
+    "changeset_sha256": "sha256:91848e31a99557c458fec0a60241a31e8f4209efd7efb1930f0389dfdcc1d611",
+    "damaged_ifc_sha256": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+    "original_ifc_sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+    "production_evaluation_sha256": "sha256:6bae5f87c0d8668c5404bfd1b70a81eeee6e5aa17380e6f5d55baf01f67f78e8",
+    "repaired_ifc_sha256": "sha256:9f5200e39accb3b496ac07c2f8d6079852acc871a7675014135afca6821f429d",
+    "request_sha256": "sha256:ab8d3a9c5a161b70f5f5910e163e0f5e3354b2ed76f4df987b09a863163b2bf3"
+  },
+  "schema_version": "text2ifc/door-repair-three-way-audit/0.1",
+  "source_hashes": {
+    "damaged": "sha256:6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+    "original": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+    "repaired": "sha256:9f5200e39accb3b496ac07c2f8d6079852acc871a7675014135afca6821f429d"
+  }
+}

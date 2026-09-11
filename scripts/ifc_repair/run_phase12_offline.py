@@ -86,13 +86,15 @@ from scripts.ifc_repair.run_phase12_public_structural_repair import (  # noqa: E
 
 
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair/phase12-offline"
-D7N = ROOT / "dataset/ifc/test/d7n.ifc"
-VVO = ROOT / "dataset/ifc/train/vvo.ifc"
-FOUR_FAMILY_BASE = (
-    ROOT
-    / "dataset/processed/proof/ifc-repair-success-cases"
-    / "mixed/door-window/vvo-authority-triplet-public-repair"
-)
+D7N = ROOT / "dataset/external/bimnet/d7n.ifc"
+VVO = ROOT / "dataset/external/bimnet/vvo.ifc"
+FOUR_FAMILY_COLLECTION = ROOT / "dataset/processed/proof/repair/phase11/reference-cases"
+
+
+def _four_family_file(relative: str) -> Path:
+    from scripts.proof.package import legacy_file
+    return legacy_file(FOUR_FAMILY_COLLECTION, "mixed/door-window/vvo-authority-triplet-public-repair/" + relative)
+
 
 D7N_BEAM_ID = "1RnWak0Kr6GxkeYF4Sd_bw"
 D7N_COLUMN_ID = "3dldEzenf9LvnDJYNNzLsH"
@@ -782,7 +784,7 @@ def _mixed_private_manifest(
     *,
     structural_private: Mapping[str, Any],
 ) -> dict[str, Any]:
-    mapping = _read(FOUR_FAMILY_BASE / "private-evaluation/benchmark-mapping.json")
+    mapping = _read(_four_family_file("private-evaluation/benchmark-mapping.json"))
     model = ifcopenshell.open(str(original))
     targets: list[dict[str, Any]] = []
     for index, item in enumerate(mapping["damage"]["removed_doors"], start=1):
@@ -822,14 +824,14 @@ def _mixed_damage_report(
     structural_report: Mapping[str, Any],
 ) -> dict[str, Any]:
     base_damage = _read(
-        FOUR_FAMILY_BASE / "validation/source-run-manifest.json"
+        _four_family_file("validation/source-run-manifest.json")
     )["damage"]
     return {
         "schema_version": "text2ifc/phase12-four-family-damage-report/0.2",
         "mutation_type": "remove_door_window_beam_column",
         "source_sha256": _sha256(original),
         "base_door_window_damaged_sha256": _sha256(
-            FOUR_FAMILY_BASE / "02-damaged.ifc"
+            _four_family_file("02-damaged.ifc")
         ),
         "damaged_sha256": _sha256(damaged),
         "removed_doors": deepcopy(base_damage["removed_doors"]),
@@ -862,7 +864,7 @@ def _mixed_intent_document(
     damaged_hash: str,
     duplicate_beam: bool,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    base = _read(FOUR_FAMILY_BASE / "agent/repair-intent.json")
+    base = _read(_four_family_file("agent/repair-intent.json"))
     case_id = (
         "phase12-v2-vvo-door-window-beam-column-rollback"
         if duplicate_beam
@@ -989,12 +991,12 @@ def _run_mixed_case(
     ) as temporary:
         mutation_root = Path(temporary) / "mutation"
         remove_structural_members(
-            source_path=FOUR_FAMILY_BASE / "02-damaged.ifc",
+            source_path=_four_family_file("02-damaged.ifc"),
             output_dir=mutation_root,
             beam_global_ids=(VVO_BEAM_ID,),
             column_global_ids=(VVO_COLUMN_ID,),
             expected_source_sha256=_sha256(
-                FOUR_FAMILY_BASE / "02-damaged.ifc"
+                _four_family_file("02-damaged.ifc")
             ).removeprefix("sha256:"),
         )
         shutil.copy2(mutation_root / "damaged.ifc", damaged)
@@ -1014,7 +1016,7 @@ def _run_mixed_case(
     )
     damaged_hash = _sha256(damaged)
     base_request = (
-        FOUR_FAMILY_BASE / "input/request.txt"
+        _four_family_file("input/request.txt")
     ).read_text(encoding="utf-8").strip()
     request = (
         base_request
@@ -1073,7 +1075,7 @@ def _run_mixed_case(
     )
     manifest_name = "semantic-manifests.json"
     base_changeset = _read(
-        FOUR_FAMILY_BASE / "changeset/bound-changeset.json"
+        _four_family_file("changeset/bound-changeset.json")
     )
     structural_documents = [
         semantic_manifest_to_dict(manifest)

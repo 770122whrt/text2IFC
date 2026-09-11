@@ -1,0 +1,120 @@
+{
+  "run_id": "05c6de3a19ed20f9",
+  "status": "compiled",
+  "source_commit": "d0c39dc42c9a2b81e9127aba4ea16ecc8d9ef107",
+  "new_calls": 3,
+  "new_actual_responses": 3,
+  "new_tokens_charged": 220720,
+  "new_input_tokens": 125277,
+  "new_output_tokens_including_reasoning": 95443,
+  "new_reasoning_tokens": 60339,
+  "cumulative_calls": 20,
+  "cumulative_tokens_charged": 1597750,
+  "cumulative_active_seconds": 2628.9829999999856,
+  "fresh_attempts": [
+    {
+      "attempt": 18,
+      "stage": "design-brief",
+      "status": "completed",
+      "tokens_charged": 66469,
+      "reserved_tokens": 134896,
+      "elapsed_seconds": 167.65599999998813
+    },
+    {
+      "attempt": 19,
+      "stage": "generate",
+      "status": "completed",
+      "tokens_charged": 83023,
+      "reserved_tokens": 193699,
+      "elapsed_seconds": 125.75
+    },
+    {
+      "attempt": 20,
+      "stage": "audit",
+      "status": "completed",
+      "tokens_charged": 71228,
+      "reserved_tokens": 242342,
+      "elapsed_seconds": 39.609000000025844
+    }
+  ],
+  "responses": [
+    {
+      "response_id": "18ae9576-30e2-4eeb-9c40-7466cc8775e3",
+      "model": "deepseek-flash",
+      "usage": {
+        "completion_tokens": 8912,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 7334,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 3584,
+        "prompt_cache_miss_tokens": 58732,
+        "prompt_tokens": 62316,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 3584
+        },
+        "total_tokens": 71228
+      },
+      "paths": [
+        "live-run/runs/05c6de3a19ed20f9/audit/response-metadata.json",
+        "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/response-metadata.json"
+      ]
+    },
+    {
+      "response_id": "4f717758-f2a2-434c-b681-63900a049f9e",
+      "model": "deepseek-flash",
+      "usage": {
+        "completion_tokens": 46754,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 35821,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 19581,
+        "prompt_cache_miss_tokens": 134,
+        "prompt_tokens": 19715,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 19581
+        },
+        "total_tokens": 66469
+      },
+      "paths": [
+        "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/response-metadata.json",
+        "live-run/runs/05c6de3a19ed20f9/design-brief/response-metadata.json"
+      ]
+    },
+    {
+      "response_id": "3aaef9a4-a0d0-4fba-967b-a634c4c4b778",
+      "model": "deepseek-flash",
+      "usage": {
+        "completion_tokens": 39777,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 17184,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 2432,
+        "prompt_cache_miss_tokens": 40814,
+        "prompt_tokens": 43246,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 2432
+        },
+        "total_tokens": 83023
+      },
+      "paths": [
+        "live-run/runs/05c6de3a19ed20f9/generator/response-metadata.json"
+      ]
+    }
+  ],
+  "ledger_sha256": "b379a9af81c45e88aa919201a538b57ad68ae15209a7c55246ddb6a47d67cf8f",
+  "prior_unchanged": true,
+  "reused_old_brief_or_candidate": false,
+  "full_preflight": false
+}

@@ -1,0 +1,15 @@
+{
+  "role": "development_failure_family_not_blind_evaluation",
+  "baseline": "98994d56",
+  "invariant": "Distinguish user-supplied centerlines, physical bounds and outer outline; derived joins cannot override the original requirements.",
+  "cases": [
+    {"id":"rectangle","slice":"positive","request":"矩形外轮廓6米乘4米，墙厚200毫米，全部在轮廓内，墙端连接且不重叠。","expected":"joined_disjoint_bounds"},
+    {"id":"translated_rectangle","slice":"cross_scene","request":"矩形外轮廓X为-3到3米，Y为1到5米，墙厚200毫米，完整围合且不重复堆叠。","expected":"joined_disjoint_bounds"},
+    {"id":"l_shape","slice":"cross_scene","request":"L形轮廓(0,0),(8,0),(8,3),(3,3),(3,7),(0,7)米。墙厚200毫米、向内落墙，凹角凸角均接合且不重叠。","expected":"joined_disjoint_bounds"},
+    {"id":"c_shape","slice":"cross_scene","request":"向西开敞的C形，外围10乘14米，翼宽3米，墙厚250毫米，凹角凸角墙端相接，不叠墙。","expected":"joined_disjoint_bounds"},
+    {"id":"explicit_centerlines","slice":"boundary","request":"独立两段墙的中心线是(0,0)到(4,0)米和(4,0)到(4,3)米，均厚200毫米。端点必须保持。","expected":"preserve_explicit_centerline_no_silent_trim"},
+    {"id":"explicit_bounds","slice":"boundary","request":"水平墙X为0到6米、Y为0到0.2米；竖墙X为0到0.2米、Y为0.2到4米，不得修改范围。","expected":"preserve_bounds"},
+    {"id":"conflicting_explicit_bounds","slice":"negative","request":"两墙必须不重叠且范围不变：水平墙X为0到6米、Y为0到0.2米，竖墙X为0到0.2米、Y为0到4米。","expected":"clarify_true_user_conflict"},
+    {"id":"unknown_outline","slice":"negative","request":"做一个不重叠的转角墙，尺寸还没定。","expected":"clarify_missing_dimensions"}
+  ]
+}

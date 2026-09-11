@@ -155,6 +155,13 @@ def write_feedback_artifacts(
         current_feedback_round=round_index,
         max_feedback_rounds=max_feedback_rounds,
     )
+    current_signatures = sorted(_issue_signature(issue) for issue in round_record['issues'])
+    repeated = any(record.get('source_stage') == source_stage and
+        sorted(_issue_signature(issue) for issue in record.get('issues', [])) == current_signatures
+        for record in rounds)
+    if repeated and round_record['retry_allowed'] and round_record['route'] != 'accepted':
+        round_record.update(retry_allowed=False, attempted_action='stop_cycle', terminal_status='blocked_cycle')
+        round_record['route_decision']['retry_allowed'] = False
     route_decision_path = root / "route-decision.json"
     route_decision_path.write_text(
         json.dumps(

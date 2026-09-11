@@ -81,7 +81,7 @@ CASES = (
     },
     {
         "case_id": "vvo-door-preserve-opening",
-        "source": ROOT / "dataset/ifc/train/vvo.ifc",
+        "source": ROOT / "dataset/external/bimnet/vvo.ifc",
         "door_global_id": "2IUEnGd5v4Yfg1ZlPtd0qa",
     },
     {
@@ -94,7 +94,7 @@ CASES = (
 )
 VVO_FIVE_DOOR_CASE = {
     "case_id": "vvo-five-door-preserve-opening",
-    "source": ROOT / "dataset/ifc/train/vvo.ifc",
+    "source": ROOT / "dataset/external/bimnet/vvo.ifc",
     "door_global_ids": (
         "2IUEnGd5v4Yfg1ZlPtd0qa",
         "2IUEnGd5v4Yfg1ZlPtd0tI",
@@ -105,7 +105,7 @@ VVO_FIVE_DOOR_CASE = {
 }
 VVO_MIXED_CASE = {
     "case_id": "vvo-two-door-two-window-mixed",
-    "source": ROOT / "dataset/ifc/train/vvo.ifc",
+    "source": ROOT / "dataset/external/bimnet/vvo.ifc",
     # These two occurrences resolve their surviving Door Styles from public
     # Type name plus formal OperationType. Their private ids are fixture-only
     # and never enter the public request or RepairIntent.

@@ -46,6 +46,14 @@ class TargetQuery:
     @classmethod
     def from_dict(cls, value: Mapping[str, Any]) -> TargetQuery:
         payload = dict(value)
+        if "geometry_constraints" in payload:
+            payload["geometry_constraints"] = [
+                {
+                    **dict(item),
+                    "tolerance_mm": float(dict(item).get("tolerance_mm", 0.1)),
+                }
+                for item in payload["geometry_constraints"]
+            ]
         errors = sorted(_query_validator().iter_errors(payload), key=lambda error: list(error.path))
         if errors:
             raise ValueError(f"TARGET_QUERY_SCHEMA_INVALID: {errors[0].message}")

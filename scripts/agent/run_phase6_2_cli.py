@@ -91,6 +91,7 @@ def main(
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--stop-after", choices=("design-brief", "ifc"))
+    parser.add_argument('--design-brief-schema-version', choices=('2.1', '2.2', '2.3'), default='2.1')
     parser.add_argument("--resume")
     arguments = parser.parse_args(argv)
     load_env_file(arguments.env_file)
@@ -201,6 +202,7 @@ def _run_interactive_cli(
                         config=load_openai_compatible_runtime_config(dict(os.environ)),
                         run_dir=session.run_dir,
                         client_factory=openai_client_factory,
+                        design_brief_schema_version=f'text2ifc/design-brief/{arguments.design_brief_schema_version}',
                     )
                 result = run_design_brief_clarification_loop(
                     store=store,

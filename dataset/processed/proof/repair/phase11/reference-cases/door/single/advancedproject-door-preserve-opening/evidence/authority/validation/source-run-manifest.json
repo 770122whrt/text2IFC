@@ -1,0 +1,137 @@
+{
+  "artifacts": {
+    "AUDIT-REPORT.md": {
+      "bytes": 6168,
+      "path": "AUDIT-REPORT.md",
+      "sha256": "sha256:2849671664e4f6b877a83998bb0c25e6e8feba5ce674b82d2a0d8f68e6a56eb8"
+    },
+    "application.json": {
+      "bytes": 10321,
+      "path": "application.json",
+      "sha256": "sha256:2e3149487cddf48f31a97cccb9001bbf972f0aec19234b80f7e12f7ffc58d00a"
+    },
+    "changeset.json": {
+      "bytes": 2544,
+      "path": "changeset.json",
+      "sha256": "sha256:491950327c3b54c7480dd03db1a2bc1601a2c75e092463c3bfebb3bf279bc792"
+    },
+    "comparison.json": {
+      "bytes": 203573,
+      "path": "comparison.json",
+      "sha256": "sha256:c987f38d8b71bedaa8b8ba0597ec27dbcc768cc1046721074c4c222820422b25"
+    },
+    "damaged.ifc": {
+      "bytes": 44253766,
+      "path": "damaged.ifc",
+      "sha256": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd"
+    },
+    "evaluation-warm.json": {
+      "bytes": 44467,
+      "path": "evaluation-warm.json",
+      "sha256": "sha256:20d2a93252f32e4a8581fde92ee221847074c0414fa8a5eaf4c13a91c53b5d9c"
+    },
+    "evaluation.json": {
+      "bytes": 44467,
+      "path": "evaluation.json",
+      "sha256": "sha256:e3ad1118661ba42155e284f5da4c98588b840084149baeb220efa536f797a41d"
+    },
+    "original.ifc": {
+      "bytes": 44337371,
+      "path": "original.ifc",
+      "sha256": "sha256:86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94"
+    },
+    "production-boundary.json": {
+      "bytes": 584,
+      "path": "production-boundary.json",
+      "sha256": "sha256:a974186e50174911a45e38d0b38cb1fa3472311b0c1f567250fa5a8cb34d6e6d"
+    },
+    "release-decision.json": {
+      "bytes": 713,
+      "path": "release-decision.json",
+      "sha256": "sha256:376f32c15a8578ca1aef7831780b6434a37c08c5b08f1ca330591036bd4720cb"
+    },
+    "repaired.ifc": {
+      "bytes": 44254737,
+      "path": "repaired.ifc",
+      "sha256": "sha256:3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39"
+    },
+    "request.txt": {
+      "bytes": 427,
+      "path": "request.txt",
+      "sha256": "sha256:b84a0e99d0f7bc4f6b3f0f01c22e7f1abc929aaf6b1e7bf2c124a10c0c0a865f"
+    },
+    "three-way-audit.json": {
+      "bytes": 80627,
+      "path": "three-way-audit.json",
+      "sha256": "sha256:99b8e9afa43bd462cd89fb82c0a4fe355b8b8d60344395058f5989c8176f34f6"
+    }
+  },
+  "baseline_validation_cache": {
+    "key": {
+      "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+      "ifc_schema": "IFC2X3",
+      "ifc_sha256": "sha256:8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+      "ifcopenshell_version": "0.8.5",
+      "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+    },
+    "key_digest": "sha256:68e9fba848d9c76b8872a64ba4047b631175fc685991db18dac78e87dc405e19",
+    "mode": "read_write",
+    "reason": "entry_missing",
+    "schema_version": "text2ifc/ifc-validation-cache/0.1",
+    "status": "miss"
+  },
+  "case_id": "advancedproject-door-preserve-opening",
+  "damage": {
+    "door": {
+      "global_id": "0MOEoDTm9EnO9yKsXjjkME",
+      "name": "M_Single-Flush:Generic Door:586077",
+      "operation_type": "NOTDEFINED",
+      "overall_height_mm": 2134.0,
+      "overall_width_mm": 915.000000000034,
+      "type_global_id": "0Zs4aBjAr5AggJ3NBmSI$y",
+      "type_name": "M_Single-Flush:Generic Door"
+    },
+    "mode": "remove_door_preserve_opening",
+    "opening": {
+      "dimensions_mm": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 180.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 915.0,
+              "profile_y_dim": 2134.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "global_id": "0MOEoDTm9EnO9yKtjjjkME",
+      "name": "M_Single-Flush:Generic Door:586077:1"
+    },
+    "wall": {
+      "global_id": "0MOEoDTm9EnO9yKsXjjlBg",
+      "ifc_class": "IfcWallStandardCase",
+      "name": "Basic Wall:MockUp Interior between App:583225"
+    }
+  },
+  "operation_count": 1,
+  "performance": {
+    "application_seconds": 36.876,
+    "cold_evaluation_seconds": 129.931,
+    "cold_request_to_publication_seconds": 166.807,
+    "deadline_seconds": 180.0,
+    "preparation_seconds": 174.925,
+    "warm_evaluation_seconds": 43.516
+  },
+  "schema_version": "text2ifc/phase11-door-proof/0.1",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}

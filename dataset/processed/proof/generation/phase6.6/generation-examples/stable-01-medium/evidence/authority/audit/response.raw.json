@@ -1,0 +1,44 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\n  \"schema_version\": \"text2ifc/audit/2.0\",\n  \"recommendation\": \"accept\",\n  \"blocking\": false,\n  \"deterministic_gate_status\": \"passed\",\n  \"findings\": [],\n  \"evidence_paths\": [\n    \"design-brief/input.txt\",\n    \"design-brief/conversation.json\",\n    \"design-brief/design-brief.json\",\n    \"design-brief/response.raw.json\",\n    \"generator/candidate.json\",\n    \"generator/validation.json\",\n    \"generator/metrics.json\",\n    \"repair/route.json\",\n    \"repair/metrics.json\",\n    \"gate-summary.json\",\n    \"semantic-capabilities.json\",\n    \"semantic-coverage.json\",\n    \"semantic-geometry-expectation.json\",\n    \"ifc-verification.json\",\n    \"geometry-feedback.json\",\n    \"geometry-expectation.json\"\n  ]\n}",
+        "function_call": null,
+        "reasoning_content": "我们分析输入。所有确定性 gates 通过（bim_json_validation true, gate_summary_passed true, geometry_success true, ifc_compile_reopen true, repair_route_terminal true, semantic_coverage true）。geometry_feedback 没有 issues，且 metrics 显示所有空间、墙壁、门窗等的 bbox 符合预期。设计简报要求：走廊 12m x 2m，办公室各 4m x 4m，门、窗位置等。候选 BIM JSON 中的空间 placement 和尺寸与设计简报一致。检查 opening 和 filling 对齐：所有开口与填充的 orientation 应匹配。例如，墙 wall-corridor-offA 是沿 X 方向，开口 door-offA 放置相对于该墙，方向为 [1,0,0]，填充 door-offA 也相对于开口，方向相同，因此没问题。窗口：墙 wall-north-A 沿 X 方向，开口 window-offA 相对于墙，方向 [1,0,0]，填充窗口相同。主入口门：墙 wall-south 沿 X 方向，开口 door-main 相对于墙，方向 [1,0,0]，填充相同。因此 OPENING_FILLING_ORIENTATION_MISMATCH 不存在。垂直闭合：墙高 3200mm，空间净高 3200mm，板厚 150mm，板顶在 0，板底在 -150。墙的起始 z=0，高 3200，所以墙顶在 3200。空间顶部在 3200。板底在 -150？实际上 slab 的 bbox z: [-0.15, 0.0]（单位米），即 -150mm 到 0mm。墙的 bbox z: [0.0, 3.2] 米。墙底在 0，板底在 -0.15，但墙底与板顶接触？板顶在 0，墙底在 0，所以墙坐在板顶，没有间隙。墙顶在 3.2，但板上方没有 slab，所以墙顶是开放？实际上用户要求净高 3.2m，没有提到屋顶。所以墙顶不需要与 slab 对接。因此 VERTICAL_SLAB_WALL_GAP 不适用（因为没有上部 slab）。所有确定性 gates 通过，没有发现语义问题。因此可以 accept。\n\n输出：recommendation \"accept\", blocking false, deterministic_gate_status \"passed\", findings 空数组。",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1784195755,
+  "id": "5f963857-5b06-42ae-98ac-a0432f735566",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "stop_reason": "stop",
+  "system_fingerprint": "fp_8b330d02d0_prod0820_fp8_kvcache_20260402",
+  "usage": {
+    "completion_tokens": 732,
+    "completion_tokens_details": {
+      "accepted_prediction_tokens": null,
+      "audio_tokens": null,
+      "reasoning_tokens": 529,
+      "rejected_prediction_tokens": null
+    },
+    "prompt_cache_hit_tokens": 1152,
+    "prompt_cache_miss_tokens": 45074,
+    "prompt_tokens": 46226,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 1152
+    },
+    "total_tokens": 46958
+  }
+}

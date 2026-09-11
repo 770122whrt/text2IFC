@@ -1,0 +1,363 @@
+{
+  "branch": "A-revise",
+  "status": "exception",
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "started_at": "2026-09-10T11:25:03.763792+00:00",
+  "conversation_origin": "user-authorized scripted branch; not spontaneous live clarification",
+  "reused_design_brief": false,
+  "session_hash": "411166603facdde6",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\typed-appearance-rerun-20260910\\A-revise\\runtime\\runs\\411166603facdde6",
+  "budget_lineage": {
+    "source": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\semantic-authority-rerun-20260910\\A-revise\\runtime\\runs\\135976189dc358f9\\generation-budget.json",
+    "sha256": "9d1415373acb79110fcfe61a8dd6b1689e691c63f922f13cf9533e1127d1dad3",
+    "reused_payloads": false,
+    "reason": "Preserve prior task spend, start new Brief and candidate"
+  },
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43713,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 96.92199999999866
+      },
+      {
+        "attempt": 2,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79389,
+        "reserved_tokens": 181669,
+        "elapsed_seconds": 135.17199999999866
+      },
+      {
+        "attempt": 3,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 49206,
+        "reserved_tokens": 192448,
+        "elapsed_seconds": 27.812999999998283
+      },
+      {
+        "attempt": 4,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 45750,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 98.75
+      },
+      {
+        "attempt": 5,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 74887,
+        "reserved_tokens": 176585,
+        "elapsed_seconds": 129.875
+      },
+      {
+        "attempt": 6,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 51750,
+        "reserved_tokens": 194831,
+        "elapsed_seconds": 27.89099999999962
+      },
+      {
+        "attempt": 7,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 44067,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 102.875
+      },
+      {
+        "attempt": 8,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79232,
+        "reserved_tokens": 176564,
+        "elapsed_seconds": 139.5309999999954
+      },
+      {
+        "attempt": 9,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 50402,
+        "reserved_tokens": 189222,
+        "elapsed_seconds": 37.140999999995984
+      },
+      {
+        "attempt": 10,
+        "stage": "changeset",
+        "status": "completed",
+        "tokens_charged": 63767,
+        "reserved_tokens": 229452,
+        "elapsed_seconds": 25.25
+      },
+      {
+        "attempt": 11,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 116358,
+        "reserved_tokens": 303539,
+        "elapsed_seconds": 141.06200000000536
+      },
+      {
+        "attempt": 12,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43939,
+        "reserved_tokens": 126771,
+        "elapsed_seconds": 92.20300000000134
+      },
+      {
+        "attempt": 13,
+        "stage": "design-brief-semantic-repair",
+        "status": "completed",
+        "tokens_charged": 29038,
+        "reserved_tokens": 109176,
+        "elapsed_seconds": 39.29699999999866
+      },
+      {
+        "attempt": 14,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79793,
+        "reserved_tokens": 185630,
+        "elapsed_seconds": 127.70300000000134
+      },
+      {
+        "attempt": 15,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 58421,
+        "reserved_tokens": 199674,
+        "elapsed_seconds": 55.53100000000268
+      },
+      {
+        "attempt": 16,
+        "stage": "changeset",
+        "status": "failed",
+        "tokens_charged": 356060,
+        "reserved_tokens": 356060,
+        "elapsed_seconds": 0.031000000002677552
+      }
+    ],
+    "calls_used": 16,
+    "tokens_used_or_reserved": 1265772,
+    "active_seconds": 1277.0469999999987
+  },
+  "brief_result": {
+    "case_id": "411166603facdde6",
+    "stage": "design-brief",
+    "status": "ready",
+    "valid": true,
+    "schema_semantic_valid": true,
+    "strict_output_contract_valid": true,
+    "output_dir": "dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/typed-appearance-rerun-20260910/A-revise/runtime/runs/411166603facdde6/calls/01-design-brief",
+    "response_id": "922f6800-7e50-4f5e-88d7-334e16551dbc",
+    "evidence_class": "live"
+  },
+  "exception_type": "ProviderOutputError",
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43713,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 96.92199999999866
+      },
+      {
+        "attempt": 2,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79389,
+        "reserved_tokens": 181669,
+        "elapsed_seconds": 135.17199999999866
+      },
+      {
+        "attempt": 3,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 49206,
+        "reserved_tokens": 192448,
+        "elapsed_seconds": 27.812999999998283
+      },
+      {
+        "attempt": 4,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 45750,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 98.75
+      },
+      {
+        "attempt": 5,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 74887,
+        "reserved_tokens": 176585,
+        "elapsed_seconds": 129.875
+      },
+      {
+        "attempt": 6,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 51750,
+        "reserved_tokens": 194831,
+        "elapsed_seconds": 27.89099999999962
+      },
+      {
+        "attempt": 7,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 44067,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 102.875
+      },
+      {
+        "attempt": 8,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79232,
+        "reserved_tokens": 176564,
+        "elapsed_seconds": 139.5309999999954
+      },
+      {
+        "attempt": 9,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 50402,
+        "reserved_tokens": 189222,
+        "elapsed_seconds": 37.140999999995984
+      },
+      {
+        "attempt": 10,
+        "stage": "changeset",
+        "status": "completed",
+        "tokens_charged": 63767,
+        "reserved_tokens": 229452,
+        "elapsed_seconds": 25.25
+      },
+      {
+        "attempt": 11,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 116358,
+        "reserved_tokens": 303539,
+        "elapsed_seconds": 141.06200000000536
+      },
+      {
+        "attempt": 12,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43939,
+        "reserved_tokens": 126771,
+        "elapsed_seconds": 92.20300000000134
+      },
+      {
+        "attempt": 13,
+        "stage": "design-brief-semantic-repair",
+        "status": "completed",
+        "tokens_charged": 29038,
+        "reserved_tokens": 109176,
+        "elapsed_seconds": 39.29699999999866
+      },
+      {
+        "attempt": 14,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79793,
+        "reserved_tokens": 185630,
+        "elapsed_seconds": 127.70300000000134
+      },
+      {
+        "attempt": 15,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 58421,
+        "reserved_tokens": 199674,
+        "elapsed_seconds": 55.53100000000268
+      },
+      {
+        "attempt": 16,
+        "stage": "changeset",
+        "status": "failed",
+        "tokens_charged": 356060,
+        "reserved_tokens": 356060,
+        "elapsed_seconds": 0.031000000002677552
+      },
+      {
+        "attempt": 17,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 47584,
+        "reserved_tokens": 128692,
+        "elapsed_seconds": 98.875
+      },
+      {
+        "attempt": 18,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 81057,
+        "reserved_tokens": 185463,
+        "elapsed_seconds": 142.04699999999866
+      },
+      {
+        "attempt": 19,
+        "stage": "repair",
+        "status": "completed",
+        "tokens_charged": 69337,
+        "reserved_tokens": 212343,
+        "elapsed_seconds": 48.67200000000594
+      },
+      {
+        "attempt": 20,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 55619,
+        "reserved_tokens": 199001,
+        "elapsed_seconds": 44.26499999999942
+      },
+      {
+        "attempt": 21,
+        "stage": "changeset",
+        "status": "completed",
+        "tokens_charged": 82542,
+        "reserved_tokens": 244098,
+        "elapsed_seconds": 84.54699999999866
+      },
+      {
+        "attempt": 22,
+        "stage": "audit",
+        "status": "failed",
+        "tokens_charged": 323864,
+        "reserved_tokens": 323864,
+        "elapsed_seconds": 0.0319999999992433
+      }
+    ],
+    "calls_used": 22,
+    "tokens_used_or_reserved": 1925775,
+    "active_seconds": 1695.4850000000006
+  },
+  "finished_at": "2026-09-10T11:32:48.525869+00:00"
+}

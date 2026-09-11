@@ -19,9 +19,11 @@ from .clarification import (
     ClarificationController,
     ClarificationError,
 )
-from .design_brief import load_design_brief_schema, validate_design_brief
-from .live_trace import write_live_trace
+from .design_brief import design_brief_template_id, load_design_brief_schema, validate_design_brief
+from .live_trace import write_live_trace, write_provider_failure_trace
 from .audit import collect_revision_audit_evidence
+from .audit_context import render_audit_context
+from .design_review import load_design_review_context, validate_design_review_output
 from .prompt_registry import render_prompt
 from .generator import validate_generation_document
 from .failure_routing import route_generation_failure
@@ -31,10 +33,11 @@ from .gate_audit_bundle import (
     validate_gate_summary_binding,
     write_gate_summary,
 )
-from .providers import validate_provider_output
+from .providers import ProviderOutputError, validate_provider_output
 from .route_decision import write_route_decision
 from .run_report import build_live_run_report, resolve_final_design_brief_dir
 from .semantic_capabilities import build_semantic_capability_profile
+from .authoring_contract import build_authoring_contract
 from .semantic_coverage import (
     build_design_geometry_expectation,
     build_semantic_geometry_expectation,
@@ -43,7 +46,8 @@ from .semantic_coverage import (
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
+DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.3"
+DESIGN_REVIEW_BRIEF_TEMPLATE_ID = "design-brief.v2.4"
 GENERATOR_TEMPLATE_ID = "bim-json-generator.v2"
 REPAIR_TEMPLATE_ID = "bim-json-generator-repair.v2"
 AUDIT_TEMPLATE_ID = "audit.v2"
@@ -143,17 +147,37 @@ def run_design_brief_stage(
     output_dir: Path | str,
     case: dict[str, Any],
     trace_level: str | None = "debug",
+    design_brief_schema_version: str = 'text2ifc/design-brief/2.1',
+    design_review_enabled: bool = False,
 ) -> dict[str, Any]:
     """Run one Design Brief v2 call and preserve all input/output evidence."""
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
+    # Each directory is one attempt. Claim before rendering or transport so a
+    # resumed/concurrent caller cannot replace even an incomplete earlier trace.
+    previous = ('input.txt', 'conversation.json', 'context-selection.json',
+                'prompt-render-input.json', 'prompt-rendered.md', 'request.redacted.json',
+                'response.raw.json', 'provider-error.json', 'design-brief.json')
+    if any((output / name).exists() for name in previous):
+        raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS')
+    try:
+        with (output / '.design-brief-attempt').open('x', encoding='utf-8') as claim:
+            claim.write('This directory belongs to one Design Brief attempt.\n')
+    except FileExistsError:
+        raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS') from None
     user_request = str(case["user_request"])
     conversation = list(case["conversation"])
+    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
+        raise ValueError('Unsupported Design Brief stage contract.')
+    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}
+    if design_review_enabled and not new_semantics:
+        raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(
         user_request=user_request,
         conversation=conversation,
+        schema_version='bim-json/2.1' if new_semantics else 'bim-json/2.0',
     )
-    schema = load_design_brief_schema("text2ifc/design-brief/2.0")
+    schema = load_design_brief_schema(design_brief_schema_version)
     renderer_inputs = {
         "USER_REQUEST": user_request,
         "CONVERSATION": conversation,
@@ -162,7 +186,7 @@ def run_design_brief_stage(
         "FEW_SHOTS": selection["few_shots"],
     }
     rendered = render_prompt(
-        template_id=DESIGN_BRIEF_TEMPLATE_ID,
+        template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
         inputs=renderer_inputs,
     )
 
@@ -178,12 +202,16 @@ def run_design_brief_stage(
         if call_index is not None
         else f"phase6.1-{case['case_id']}-design-brief-v2"
     )
-    result = provider.generate_live(
-        session_id=session_id,
-        prompt=rendered["text"],
-        schema=schema,
-        state={"case_id": case["case_id"], "stage": "design-brief"},
-    )
+    try:
+        result = provider.generate_live(
+            session_id=session_id,
+            prompt=rendered["text"],
+            schema=schema,
+            state={"case_id": case["case_id"], "stage": "design-brief"},
+        )
+    except Exception as error:
+        write_provider_failure_trace(error=error, output_dir=output, stage='design-brief')
+        raise
     provider_manifest = write_live_trace(
         result=result,
         output_dir=output,
@@ -197,9 +225,29 @@ def run_design_brief_stage(
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],
+            expected_schema_version=design_brief_schema_version,
+            conversation=conversation,
         )
 
     serialized_issues = [asdict(issue) for issue in issues]
+    semantic_repair = None
+    plan_repair = None
+    from .brief_semantic_repair import semantic_repair_eligible, repair_semantic_brief
+    if parse_status == 'ok' and not parse_diagnostics and semantic_repair_eligible(parsed, issues):
+        _write_json(output / 'initial-validation.json', {'valid': False, 'issues': serialized_issues})
+        semantic_repair = repair_semantic_brief(provider=provider, output_dir=output/'semantic-repair',
+            brief=parsed, case=case, evidence_catalog=selection['evidence'], session_id=session_id+'-semantic-repair')
+        serialized_issues = semantic_repair['issues']
+        if semantic_repair['valid']:
+            parsed = semantic_repair['brief']
+    from .brief_plan_repair import plan_repair_eligible, repair_plan_brief
+    if parse_status == 'ok' and not parse_diagnostics and plan_repair_eligible(parsed, serialized_issues):
+        _write_json(output / 'initial-plan-validation.json', {'valid': False, 'issues': serialized_issues})
+        plan_repair = repair_plan_brief(provider=provider, output_dir=output/'plan-repair',
+            brief=parsed, case=case, evidence_catalog=selection['evidence'], session_id=session_id+'-plan-repair')
+        serialized_issues = plan_repair['issues']
+        if plan_repair['valid']:
+            parsed = plan_repair['brief']
     if parse_status != "ok":
         serialized_issues = list(parse_diagnostics)
     schema_semantic_valid = parse_status == "ok" and not serialized_issues
@@ -246,6 +294,12 @@ def run_design_brief_stage(
         ),
     }
     _write_json(output / "metrics.json", metrics)
+    if semantic_repair is not None:
+        metrics['semantic_repair'] = {key: value for key, value in semantic_repair.items() if key != 'brief'}
+    if plan_repair is not None:
+        metrics['plan_repair'] = {key: value for key, value in plan_repair.items() if key != 'brief'}
+    if semantic_repair is not None or plan_repair is not None:
+        _write_json(output / 'metrics.json', metrics)
 
     trace_manifest = {
         "schema_version": "text2ifc/live-stage-trace/1.0",
@@ -283,6 +337,14 @@ def run_design_brief_stage(
         },
     }
     _write_json(output / "trace-manifest.json", trace_manifest)
+    if semantic_repair is not None:
+        trace_manifest['artifacts']['semantic_repair'] = 'semantic-repair/'
+        trace_manifest['artifacts']['initial_validation'] = 'initial-validation.json'
+    if plan_repair is not None:
+        trace_manifest['artifacts']['plan_repair'] = 'plan-repair/'
+        trace_manifest['artifacts']['initial_plan_validation'] = 'initial-plan-validation.json'
+    if semantic_repair is not None or plan_repair is not None:
+        _write_json(output / 'trace-manifest.json', trace_manifest)
     return {
         "case_id": case["case_id"],
         "stage": "design-brief",
@@ -518,9 +580,17 @@ def run_generator_stage(
     )
     if design_brief.get("status") != "ready":
         raise ValueError("Generator requires a ready Design Brief")
-    formal_schema = json.loads(FORMAL_SCHEMA_PATH.read_text(encoding="utf-8"))
-    draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
+    from .semantic_requirements import generation_schema_version
+    new_semantics = generation_schema_version(design_brief) == 'bim-json/2.1'
+    formal_schema_path = PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json' if new_semantics else FORMAL_SCHEMA_PATH
+    draft_schema_path = PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json' if new_semantics else DRAFT_SCHEMA_PATH
+    formal_schema = json.loads(formal_schema_path.read_text(encoding="utf-8"))
+    draft_schema = json.loads(draft_schema_path.read_text(encoding="utf-8"))
     generator_context = _select_generator_context(design_context)
+    if new_semantics:
+        from .semantic_capabilities import build_semantic_capability_profile_v21
+        generator_context['semantic_capability_profile'] = build_semantic_capability_profile_v21()
+        generator_context['capability_profile']['semantic_capability_profile'] = generator_context['semantic_capability_profile']
     semantic_profile = generator_context["semantic_capability_profile"]
     entity_id_contract = _load_entity_id_contract(source.parent / "expected-facts.json")
     renderer_inputs = {
@@ -534,8 +604,10 @@ def run_generator_stage(
         "FEW_SHOTS": generator_context["few_shots"],
         "GENERATION_FEEDBACK": dict(generation_feedback or {}),
     }
+    if new_semantics:
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
     rendered = render_prompt(
-        template_id=GENERATOR_TEMPLATE_ID,
+        template_id='bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 
@@ -644,12 +716,12 @@ def run_generator_stage(
                 source / "design-brief.json"
             ),
             "formal_schema": {
-                "path": portable_artifact_path(FORMAL_SCHEMA_PATH),
-                "sha256": _file_sha256(FORMAL_SCHEMA_PATH),
+                "path": portable_artifact_path(formal_schema_path),
+                "sha256": _file_sha256(formal_schema_path),
             },
             "draft_schema": {
-                "path": portable_artifact_path(DRAFT_SCHEMA_PATH),
-                "sha256": _file_sha256(DRAFT_SCHEMA_PATH),
+                "path": portable_artifact_path(draft_schema_path),
+                "sha256": _file_sha256(draft_schema_path),
             },
             "provider": provider_manifest,
             "artifacts": {
@@ -830,6 +902,8 @@ def run_repair_stage(
     candidate = repair_source.document
     validation_issues = list(validation.get("issues", []))
     geometry_issues = [dict(issue) for issue in list(geometry_feedback or [])]
+    from .early_recovery import build_field_recovery_group
+    field_group = build_field_recovery_group(candidate, validation_issues) if candidate and not geometry_issues else {'eligible': False}
     route = route_generation_failure(
         previous_candidate=candidate,
         validation_feedback=validation_issues,
@@ -854,12 +928,45 @@ def run_repair_stage(
     repaired_artifact_name: str | None = None
     fact_delta: dict[str, Any] | None = None
     repair_diagnostics: list[dict[str, Any]] = []
-    if route["route"] == "no_repair_needed":
+    repair_template_id = REPAIR_TEMPLATE_ID
+    if field_group['eligible'] and prior_attempt_count < 3:
+        from .scoped_loop import run_scoped_changeset_round
+        from .expected_facts import build_expected_facts
+        expected_path = source.parent / 'expected-facts.json'
+        expected = (json.loads(expected_path.read_text(encoding='utf-8')) if expected_path.is_file()
+                    else build_expected_facts(case_id=case_id, design_brief=design_brief))
+        scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+            case_id=case_id, round_number=1, user_request=user_request, conversation=conversation,
+            design_brief=design_brief, expected_facts=expected, candidate=candidate,
+            issues=validation_issues, trace_level=trace_level, field_recovery=True,
+            max_attempts=3-prior_attempt_count)
+        # Count actual traces, including unsuccessful retries, rather than the last stage only.
+        provider_call_count = len(list((output/'scoped').rglob('metrics.json')))
+        evidence_class = scoped.get('stage', {}).get('evidence_class', 'deterministic-no-call')
+        valid = scoped['valid']
+        repair_template_id = 'bim-json-changeset.v1.8'
+        repair_diagnostics = scoped.get('issues', [])
+        if valid:
+            repaired_document = scoped['candidate']
+            repaired_artifact_name = 'repaired-candidate.json'
+            _write_json(output/repaired_artifact_name, repaired_document)
+        route = {'route':'repair_attempted' if valid else 'blocked_failure',
+            'recovery_contract':'text2ifc/early-field-recovery/1.1',
+            'repair_attempts':[{'attempt_number': i+1, 'result_status':
+                'improved' if valid and i == provider_call_count-1 else 'blocked'}
+                for i in range(provider_call_count)],
+            'scoped_evidence':'scoped', 'issues':repair_diagnostics}
+    elif route["route"] == "no_repair_needed":
         evidence_class = "live-derived-no-call"
         valid = bool(validation.get("valid")) and candidate is not None
     elif route["route"] == "repair_attempted" and candidate is not None:
-        formal_schema = json.loads(FORMAL_SCHEMA_PATH.read_text(encoding="utf-8"))
-        draft_schema = json.loads(DRAFT_SCHEMA_PATH.read_text(encoding="utf-8"))
+        from .semantic_requirements import generation_schema_version
+        new_semantics = generation_schema_version(design_brief) == 'bim-json/2.1'
+        formal_path = PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json' if new_semantics else FORMAL_SCHEMA_PATH
+        draft_path = PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json' if new_semantics else DRAFT_SCHEMA_PATH
+        formal_schema = json.loads(formal_path.read_text(encoding="utf-8"))
+        draft_schema = json.loads(draft_path.read_text(encoding="utf-8"))
+        repair_template_id = 'bim-json-generator-repair.v2.2' if new_semantics else REPAIR_TEMPLATE_ID
         repair_issues = [*validation_issues, *geometry_issues]
         allowed_change_paths = _repair_allowed_change_paths(
             repair_issues,
@@ -882,8 +989,10 @@ def run_repair_stage(
             "ALLOWED_CHANGE_PATHS": allowed_change_paths,
             "EVIDENCE_BY_PATH": evidence_by_path,
         }
+        if new_semantics:
+            renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
         rendered = render_prompt(
-            template_id=REPAIR_TEMPLATE_ID,
+            template_id=repair_template_id,
             inputs=renderer_inputs,
         )
         _write_json(output / "prompt-render-input.json", renderer_inputs)
@@ -965,8 +1074,19 @@ def run_repair_stage(
             ),
         }
 
+    assessment_scope = {
+        "geometry_feedback_supplied": geometry_feedback is not None,
+        "geometry_issue_count_basis": "supplied_feedback_only",
+        "geometry_pass_certified": False,
+        "interpretation": (
+            "This route assesses generator validation and only the geometry issues "
+            "supplied to this invocation. Zero issues/no_repair_needed is not a "
+            "geometry pass. Current compile/reopen/geometry gates remain authoritative."
+        ),
+    }
     route_record = {
-        "schema_version": "text2ifc/repair-route/1.0",
+        "schema_version": "text2ifc/repair-route/1.1",
+        "assessment_scope": assessment_scope,
         "case_id": case_id,
         "route": route["route"],
         "valid": valid,
@@ -994,6 +1114,7 @@ def run_repair_stage(
         "case_id": case_id,
         "stage": "repair",
         "route": route_record["route"],
+        "assessment_scope": assessment_scope,
         "valid": valid,
         "evidence_class": evidence_class,
         "provider_call_count": provider_call_count,
@@ -1017,7 +1138,7 @@ def run_repair_stage(
             "schema_version": "text2ifc/live-stage-trace/1.0",
             "case_id": case_id,
             "stage": "repair",
-            "template_id": REPAIR_TEMPLATE_ID,
+            "template_id": repair_template_id,
             "source_generator": portable_artifact_path(source),
             "provider": provider_manifest,
             "provider_call_count": provider_call_count,
@@ -1073,8 +1194,9 @@ def run_audit_report_stage(
     session_prefix: str = "phase6.1",
     audit_call_index: int = 1,
     trace_level: str | None = "debug",
+    audit_context_mode: str = "full",
 ) -> dict[str, Any]:
-    """Run real Audit v2 and generate the case report from sidecars."""
+    """Run Audit; lossless evidence deduplication is an explicit experiment."""
     root = Path(case_dir)
     output = root / "audit"
     output.mkdir(parents=True, exist_ok=True)
@@ -1084,6 +1206,11 @@ def run_audit_report_stage(
     user_request = (design / "input.txt").read_text(encoding="utf-8").rstrip("\r\n")
     conversation = json.loads(
         (design / "conversation.json").read_text(encoding="utf-8")
+    )
+    review_context = load_design_review_context(root, design / "conversation.json")
+    review_context_sha256 = (
+        hashlib.sha256((root / "design-review-context.json").read_bytes()).hexdigest()
+        if review_context is not None else None
     )
     design_brief = json.loads(
         (design / "design-brief.json").read_text(encoding="utf-8")
@@ -1139,6 +1266,9 @@ def run_audit_report_stage(
         "ifc_compile_reopen": bool(ifc_verification.get("success"))
         if ifc_verification is not None
         else True,
+        "ifc_verification_feedback": ifc_verification
+        if ifc_verification is not None
+        else {"success": None, "input_issues": [], "ifc_issues": [], "skip_reason": "not_run"},
         "geometry_success": bool(geometry_feedback.get("success"))
         if geometry_feedback is not None
         else True,
@@ -1165,16 +1295,53 @@ def run_audit_report_stage(
         },
         "EVIDENCE_PATHS": evidence_paths,
     }
-    rendered = render_prompt(template_id=AUDIT_TEMPLATE_ID, inputs=renderer_inputs)
-    _write_json(output / "prompt-render-input.json", renderer_inputs)
-    _write_text(output / "prompt-rendered.md", rendered["text"])
-    result = provider.generate_live(
-        session_id=f"{session_prefix}-{case_id}-audit-{audit_call_index:02d}",
-        prompt=rendered["text"],
-        schema={"schema_version": "text2ifc/audit/2.0"},
-        state={"case_id": case_id, "stage": "audit"},
+    if review_context is not None:
+        renderer_inputs["DESIGN_REVIEW_CONTEXT"] = review_context
+        evidence_paths.extend(["design-review-context.json", *(
+            row["evidence_path"] for row in review_context["concerns"]
+        )])
+    rendered, context_record = render_audit_context(
+        inputs=renderer_inputs,
+        review_enabled=review_context is not None,
+        mode=audit_context_mode,
     )
-    validate_provider_output(result.output)
+    _write_json(output / "prompt-render-input.json", renderer_inputs)
+    _write_json(output / "prompt-wire-input.json", rendered["inputs"])
+    _write_json(output / "audit-context.json", context_record)
+    _write_text(output / "prompt-rendered.md", rendered["text"])
+    result = None
+    try:
+        result = provider.generate_live(
+            session_id=f"{session_prefix}-{case_id}-audit-{audit_call_index:02d}",
+            prompt=rendered["text"],
+            schema={"schema_version": "text2ifc/audit/3.0" if review_context is not None else "text2ifc/audit/2.0"},
+            state={"case_id": case_id, "stage": "audit"},
+        )
+        validate_provider_output(result.output)
+    except ProviderOutputError as error:
+        from .live_trace import write_provider_failure_trace
+        # A failed later Audit must not borrow the previous round's response or
+        # overwrite any earlier failure when a session is resumed.
+        attempt_root = root / 'audit-failures'
+        attempt_root.mkdir(exist_ok=True)
+        suffix = 0
+        while True:
+            name = f'attempt-{audit_call_index:02d}' + (f'-retry-{suffix:02d}' if suffix else '')
+            failure_dir = attempt_root / name
+            try:
+                failure_dir.mkdir()
+                break
+            except FileExistsError:
+                suffix += 1
+        for name in ('prompt-render-input.json', 'prompt-rendered.md',
+                     'prompt-wire-input.json', 'audit-context.json'):
+            (failure_dir / name).write_bytes((output / name).read_bytes())
+        if result is not None and error.live_result is None:
+            error.live_result = result
+        write_provider_failure_trace(error=error, output_dir=failure_dir, stage='audit')
+        error._text2ifc_stage = 'audit'
+        error._text2ifc_failure_artifact = (failure_dir / 'provider-error.json').relative_to(root).as_posix()
+        raise
     provider_manifest = write_live_trace(
         result=result,
         output_dir=output,
@@ -1189,6 +1356,7 @@ def run_audit_report_stage(
             parsed,
             case_dir=root,
             deterministic_gates=deterministic_gates,
+            review_context=review_context,
         )
     else:
         issues = list(normalization_diagnostics)
@@ -1228,6 +1396,7 @@ def run_audit_report_stage(
     metrics = {
         "case_id": case_id,
         "stage": "audit",
+        "design_review_context_sha256": review_context_sha256,
         "valid": valid,
         "route_decision": route_decision["route"],
         "route_owner_stage": route_decision["owner_stage"],
@@ -1256,6 +1425,8 @@ def run_audit_report_stage(
             "artifacts": {
                 "renderer_inputs": "prompt-render-input.json",
                 "rendered_prompt": "prompt-rendered.md",
+                "wire_inputs": "prompt-wire-input.json",
+                "audit_context": "audit-context.json",
                 "model_text": "model-text.txt",
                 "parsed_output": "parsed-output.json" if parsed else None,
                 "audit_report": "audit-report.json" if parsed else None,
@@ -1314,6 +1485,15 @@ def run_final_acceptance_stage(
         raise ValueError("Final acceptance requires a non-blocking accepted audit")
     if audit_metrics.get("strict_output_contract_valid") is not True:
         raise ValueError("Final acceptance requires strict Audit output contract")
+    review_context = load_design_review_context(
+        case_root, resolve_final_design_brief_dir(case_root) / "conversation.json"
+    )
+    if audit_report.get("schema_version") == "text2ifc/audit/3.0" or audit_metrics.get("design_review_context_sha256") is not None or review_context is not None:
+        if review_context is None or audit_metrics.get("design_review_context_sha256") != hashlib.sha256((case_root / "design-review-context.json").read_bytes()).hexdigest():
+            raise ValueError("DESIGN_REVIEW_FINAL_CONTEXT_CHANGED")
+        review_errors = validate_design_review_output(audit_report, review_context, case_root)
+        if review_errors or audit_metrics.get("valid") is not True:
+            raise ValueError("DESIGN_REVIEW_FINAL_ACCEPTANCE_BLOCKED")
 
     gate_result = run_candidate_gate_stage(
         case_dir=case_root,
@@ -1391,7 +1571,41 @@ def run_candidate_gate_stage(
     candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
 
     output_ifc = output / "output.ifc"
-    compilation = compile_document(candidate, output_ifc)
+    from .semantic_requirements import bind_semantic_targets, request_semantics_for_case, unauthorized_candidate_semantics, request_contract_issues
+    from text2ifc_compiler.compiler import CompilationResult
+    from text2ifc_contract.validation import ValidationIssue
+    request_semantics = bind_semantic_targets(candidate, request_semantics_for_case(case_root))
+    if candidate.get('schema_version') == 'bim-json/2.1' and not request_semantics['authority_declared']:
+        if not any(i['code'] == 'SEMANTIC_AUTHORITY_INCOMPLETE' for i in request_semantics['issues']):
+            request_semantics['issues'].append({'code': 'SEMANTIC_AUTHORITY_INCOMPLETE',
+                'path': '/known_facts/semantic_requirements',
+                'message': '缺少独立于候选的明确语义清单，不能发布或据此清理候选。'})
+    semantic_expectations = request_semantics['expectations']
+    if not request_semantics['issues']:
+        request_semantics['issues'].extend(unauthorized_candidate_semantics(candidate, semantic_expectations))
+    request_semantics['issues'].extend(request_contract_issues(candidate, request_semantics))
+    request_semantics['valid'] = not request_semantics['issues']
+    _write_json(output / 'request-semantics.json', request_semantics)
+    if request_semantics['issues']:
+        compilation = CompilationResult(input_issues=tuple(
+            ValidationIssue(**issue) for issue in request_semantics['issues']))
+    elif semantic_expectations:
+        compilation = compile_document(candidate, output_ifc,
+                                       semantic_expectations=semantic_expectations)
+    else:
+        compilation = compile_document(candidate, output_ifc)
+    semantic_verification = {
+        'schema_version': 'text2ifc/request-semantic-verification/1.0',
+        'valid': compilation.success,
+        'basis': 'request expectations independently compared with reopened IFC before atomic publication',
+        'expectations': semantic_expectations,
+        'issues': [*[_issue_to_dict(i) for i in compilation.input_issues], *[_issue_to_dict(i) for i in compilation.ifc_issues]],
+    }
+    _write_json(output / 'semantic-verification.json', semantic_verification)
+    from .semantic_report import write_semantic_report
+    write_semantic_report(output / 'semantic-report.md', output_ifc if compilation.success else None,
+                          semantic_expectations, semantic_verification['issues'],
+                          appearance_notes=request_semantics.get('appearance_notes', []))
     ifc_verification = {
         "success": compilation.success,
         "output_path": str(output_ifc) if compilation.success else None,
@@ -1421,13 +1635,9 @@ def run_candidate_gate_stage(
     else:
         geometry_feedback = {
             "success": False,
-            "issues": [
-                {
-                    "code": "COMPILE_REOPEN_FAILED",
-                    "path": "/output.ifc",
-                    "message": "IFC compilation or reopen verification failed.",
-                }
-            ],
+            "execution_status": "not_run",
+            "blocked_by": "ifc-verification.json",
+            "issues": [],
             "metrics": {},
             "expectation_source": expectation_for_check.get("source", "candidate"),
         }
@@ -1455,6 +1665,7 @@ def run_candidate_gate_stage(
         "ifc_verification": ifc_verification,
         "geometry_feedback": geometry_feedback,
         "semantic_geometry_expectation": semantic_expectation,
+        "semantic_verification": semantic_verification,
     }
 
 
@@ -1514,6 +1725,7 @@ def _semantic_geometry_expectation_from_case(
     if not isinstance(design_brief, dict):
         return None
     expected_facts_path = case_root / "expected-facts.json"
+    expected_facts = {}
     if expected_facts_path.is_file():
         expected_facts = json.loads(expected_facts_path.read_text(encoding="utf-8"))
         if isinstance(expected_facts, dict):
@@ -1533,12 +1745,17 @@ def _semantic_geometry_expectation_from_case(
                     "products",
                 )
             ):
-                return design_expectation
-    return build_semantic_geometry_expectation(
+                from .semantic_requirements import bind_geometry_targets
+                return bind_geometry_targets(candidate, expected_facts, design_expectation)
+    geometry = build_semantic_geometry_expectation(
         case_id=case_id,
         design_brief=design_brief,
         candidate=candidate,
     )
+    if geometry is not None and isinstance(expected_facts, dict):
+        from .semantic_requirements import bind_geometry_targets
+        return bind_geometry_targets(candidate, expected_facts, geometry)
+    return geometry
 
 
 def _find_design_brief_path(case_root: Path) -> Path | None:
@@ -1622,7 +1839,7 @@ def _resolve_repair_source(
         and validation.get("valid") is False
     ):
         parsed = json.loads(parsed_path.read_text(encoding="utf-8"))
-        if isinstance(parsed, dict) and parsed.get("schema_version") == "bim-json/2.0":
+        if isinstance(parsed, dict) and parsed.get("schema_version") in {"bim-json/2.0", "bim-json/2.1"}:
             return RepairSource(
                 document=parsed,
                 kind="invalid_formal",
@@ -1739,14 +1956,18 @@ def _validate_live_audit_output(
     *,
     case_dir: Path,
     deterministic_gates: dict[str, Any],
+    review_context: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     issues: list[dict[str, Any]] = []
-    if payload.get("schema_version") != "text2ifc/audit/2.0":
+    expected_version = "text2ifc/audit/3.0" if review_context is not None else "text2ifc/audit/2.0"
+    if review_context is not None:
+        issues.extend(validate_design_review_output(payload, review_context, case_dir))
+    if payload.get("schema_version") != expected_version:
         issues.append(
             {
                 "code": "UNSUPPORTED_AUDIT_VERSION",
                 "path": "/schema_version",
-                "message": "Audit output must use text2ifc/audit/2.0.",
+                "message": f"Audit output must use {expected_version}.",
             }
         )
     if payload.get("recommendation") not in {"accept", "revise", "reject"}:

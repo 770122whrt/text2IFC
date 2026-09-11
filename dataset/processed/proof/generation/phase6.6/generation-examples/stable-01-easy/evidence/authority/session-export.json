@@ -1,0 +1,1510 @@
+{
+  "agent_calls": [
+    {
+      "created_at": "2026-07-16T07:57:58+00:00",
+      "payload": {
+        "artifact_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\calls\\01-design-brief",
+        "call_index": 1,
+        "prompt_template_hash": "sha256:27ce32755a39a0be0a28d835eeb4469bdbb06bc9f2cf623f46f96b2469770255",
+        "prompt_template_id": "design-brief.v2.1",
+        "response_id": "1824e40a-7fce-4db9-a503-3e262fc2c0eb",
+        "role": "design_brief",
+        "status": "ready"
+      }
+    }
+  ],
+  "artifacts": [
+    {
+      "created_at": "2026-07-16T07:57:58+00:00",
+      "kind": "design_brief",
+      "path": "runs/d2f86855a9738b50/design-brief.json"
+    },
+    {
+      "created_at": "2026-07-16T07:57:58+00:00",
+      "kind": "session_export",
+      "path": "runs/d2f86855a9738b50/session-export.json"
+    },
+    {
+      "created_at": "2026-07-16T07:57:58+00:00",
+      "kind": "expected_facts",
+      "path": "runs/d2f86855a9738b50/expected-facts.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "kind": "candidate",
+      "path": "runs/d2f86855a9738b50/candidate.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "kind": "candidate_revision",
+      "path": "runs/d2f86855a9738b50/candidate-revision.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "kind": "component_preservation",
+      "path": "runs/d2f86855a9738b50/component-preservation.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "kind": "semantic_coverage",
+      "path": "runs/d2f86855a9738b50/semantic-coverage.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "issues",
+      "path": "runs/d2f86855a9738b50/issues.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "route_decision",
+      "path": "runs/d2f86855a9738b50/route-decision.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "feedback_rounds",
+      "path": "runs/d2f86855a9738b50/feedback-rounds.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "ifc",
+      "path": "runs/d2f86855a9738b50/output.ifc"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "report",
+      "path": "runs/d2f86855a9738b50/report.md"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "session_export",
+      "path": "runs/d2f86855a9738b50/session-export.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "case_result",
+      "path": "runs/d2f86855a9738b50/case-result.json"
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "kind": "session_export",
+      "path": "runs/d2f86855a9738b50/session-export.json"
+    }
+  ],
+  "events": [
+    {
+      "created_at": "2026-07-16T07:57:25+00:00",
+      "event_index": 0,
+      "event_type": "repl_session_started",
+      "payload": {
+        "input_source": "terminal",
+        "interaction_mode": "human_repl_live",
+        "terminal_encoding": {
+          "stderr_encoding": "utf-8",
+          "stdin_encoding": "utf-8",
+          "stdout_encoding": null
+        }
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "event_index": 1,
+      "event_type": "generator_completed",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "classification": "formal",
+        "contract_valid": true,
+        "evidence_class": "provider-backed-staged",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\generator",
+        "response_id": "d042331c-8b80-49c3-859d-ce9306667a8f",
+        "stage": "generate",
+        "status": "formal",
+        "strict_output_contract_valid": true,
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "event_index": 2,
+      "event_type": "semantic_coverage_completed",
+      "payload": {
+        "blocking_fact_count": 0,
+        "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+        "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+        "case_id": "d2f86855a9738b50",
+        "coverage": {
+          "blocking_facts": [],
+          "candidate_entity_count": 14,
+          "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+          "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+          "case_id": "d2f86855a9738b50",
+          "custom_property_policy": {
+            "counts_as_semantic_support": false,
+            "state": "preserved_text_only"
+          },
+          "facts": [
+            {
+              "coverage_state": "represented",
+              "path": "/known_facts/floor_slabs",
+              "reason": "Fact is inside the current supported semantic profile.",
+              "value": [
+                {
+                  "id": "floor-slab-1",
+                  "owning_storey": "storey-1",
+                  "thickness_mm": 150,
+                  "top_elevation_mm": 0
+                }
+              ]
+            },
+            {
+              "coverage_state": "represented",
+              "path": "/known_facts/storeys",
+              "reason": "Fact is inside the current supported semantic profile.",
+              "value": [
+                {
+                  "doors": [
+                    {
+                      "alignment": "host_centerline",
+                      "height_mm": 2100,
+                      "host_wall": "wall-south",
+                      "id": "door-south",
+                      "open_direction": "inside",
+                      "width_mm": 900
+                    }
+                  ],
+                  "elevation_mm": 0,
+                  "id": "storey-1",
+                  "net_height_mm": 3000,
+                  "spaces": [
+                    {
+                      "bounds": {
+                        "x": [
+                          0,
+                          6000
+                        ],
+                        "y": [
+                          0,
+                          4000
+                        ]
+                      },
+                      "id": "space-room",
+                      "shape": "rectangle"
+                    }
+                  ],
+                  "walls": {
+                    "exterior": [
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-south",
+                        "side": "south",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-north",
+                        "side": "north",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-west",
+                        "side": "west",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-east",
+                        "side": "east",
+                        "thickness_mm": 200
+                      }
+                    ],
+                    "interior": []
+                  },
+                  "windows": [
+                    {
+                      "alignment": "host_centerline",
+                      "height_mm": 1200,
+                      "host_wall": "wall-north",
+                      "id": "window-north",
+                      "sill_height_mm": 900,
+                      "width_mm": 1500
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "schema_version": "text2ifc/semantic-coverage/1.0",
+          "valid": true
+        },
+        "fact_count": 2,
+        "stage": "semantic-coverage",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "event_index": 3,
+      "event_type": "repair_completed",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "evidence_class": "live-derived-no-call",
+        "output_dir": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "no_repair_needed",
+        "source_generator_response_id": "d042331c-8b80-49c3-859d-ce9306667a8f",
+        "stage": "repair",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:18+00:00",
+      "event_index": 4,
+      "event_type": "candidate_gates_completed",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "compile_reopen_success": true,
+        "deterministic_gates_passed": true,
+        "gate_summary": {
+          "artifact_hashes": {
+            "dynamic-gates.json": "3fb3a31b0b2af57fd31cbaf917b1f05e35b22b19616b38fb6a13011d387a9a8d",
+            "expected-facts.json": "6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+            "generator/candidate.json": "10e6e5de23aa2e7d2401840751b4bdfd230ae15234df7d78aef7afd9966a24ce",
+            "generator/validation.json": "6be6595f4f77090199203073905e3755e4015ff1a83b3412d64571cd872b4c41",
+            "geometry-feedback.json": "e32a6ad439f4b85c72f3b350af6091371d3fa1c83edbaae34defa8c177cda56e",
+            "ifc-verification.json": "dbf5ddd78f247ccb44a4ad6675b5721c23893e57d28b125e1f40d2f2da2896b6",
+            "repair/route.json": "07df707a8b4e65e31d777ee7cefc8ca2bd9046a1c5010ff8bb1f4504e1fce644",
+            "semantic-coverage.json": "a548ae303fbedb18cc9203661bfffa06dc06a4f87a72591794ae2c9701add15c"
+          },
+          "candidate_hash": "10e6e5de23aa2e7d2401840751b4bdfd230ae15234df7d78aef7afd9966a24ce",
+          "candidate_path": "generator/candidate.json",
+          "case_id": "d2f86855a9738b50",
+          "evidence": {
+            "compile_reopen": {
+              "ifc_issues": [],
+              "input_issues": [],
+              "output_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+              "success": true
+            },
+            "geometry": {
+              "expectation_source": "candidate",
+              "issues": [],
+              "metrics": {
+                "case_id": "d2f86855a9738b50",
+                "floor_openings": {},
+                "roof": {},
+                "slabs": {},
+                "spaces": {},
+                "stairs": {},
+                "wall_set_convention": "primary",
+                "walls": {
+                  "wall-east": {
+                    "axis": "y",
+                    "bbox": {
+                      "x": [
+                        6.000000000000001,
+                        6.2
+                      ],
+                      "y": [
+                        0.0,
+                        4.0
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  },
+                  "wall-north": {
+                    "axis": "x",
+                    "bbox": {
+                      "x": [
+                        0.0,
+                        6.0
+                      ],
+                      "y": [
+                        3.9999999999999996,
+                        4.199999999999999
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  },
+                  "wall-south": {
+                    "axis": "x",
+                    "bbox": {
+                      "x": [
+                        0.0,
+                        6.0
+                      ],
+                      "y": [
+                        -0.2,
+                        0.0
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  },
+                  "wall-west": {
+                    "axis": "y",
+                    "bbox": {
+                      "x": [
+                        -0.2,
+                        0.0
+                      ],
+                      "y": [
+                        0.0,
+                        4.0
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  }
+                }
+              },
+              "success": true
+            },
+            "repair_history": {
+              "case_id": "d2f86855a9738b50",
+              "fact_delta": null,
+              "geometry_issue_count": 0,
+              "provider_call_count": 0,
+              "repair_attempts": [],
+              "repair_diagnostics": [],
+              "repair_source_artifact": "candidate.json",
+              "route": "no_repair_needed",
+              "schema_version": "text2ifc/repair-route/1.0",
+              "source_document_kind": "candidate",
+              "source_document_path": "candidate.json",
+              "source_generator_dir": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50/generator",
+              "source_generator_response_id": "d042331c-8b80-49c3-859d-ce9306667a8f",
+              "valid": true,
+              "validation_issue_count": 0
+            },
+            "schema_validation": {
+              "issue_count": 0,
+              "issues": [],
+              "valid": true
+            },
+            "semantic_coverage": {
+              "blocking_facts": [],
+              "candidate_entity_count": 14,
+              "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+              "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+              "case_id": "d2f86855a9738b50",
+              "custom_property_policy": {
+                "counts_as_semantic_support": false,
+                "state": "preserved_text_only"
+              },
+              "facts": [
+                {
+                  "coverage_state": "represented",
+                  "path": "/known_facts/floor_slabs",
+                  "reason": "Fact is inside the current supported semantic profile.",
+                  "value": [
+                    {
+                      "id": "floor-slab-1",
+                      "owning_storey": "storey-1",
+                      "thickness_mm": 150,
+                      "top_elevation_mm": 0
+                    }
+                  ]
+                },
+                {
+                  "coverage_state": "represented",
+                  "path": "/known_facts/storeys",
+                  "reason": "Fact is inside the current supported semantic profile.",
+                  "value": [
+                    {
+                      "doors": [
+                        {
+                          "alignment": "host_centerline",
+                          "height_mm": 2100,
+                          "host_wall": "wall-south",
+                          "id": "door-south",
+                          "open_direction": "inside",
+                          "width_mm": 900
+                        }
+                      ],
+                      "elevation_mm": 0,
+                      "id": "storey-1",
+                      "net_height_mm": 3000,
+                      "spaces": [
+                        {
+                          "bounds": {
+                            "x": [
+                              0,
+                              6000
+                            ],
+                            "y": [
+                              0,
+                              4000
+                            ]
+                          },
+                          "id": "space-room",
+                          "shape": "rectangle"
+                        }
+                      ],
+                      "walls": {
+                        "exterior": [
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-south",
+                            "side": "south",
+                            "thickness_mm": 200
+                          },
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-north",
+                            "side": "north",
+                            "thickness_mm": 200
+                          },
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-west",
+                            "side": "west",
+                            "thickness_mm": 200
+                          },
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-east",
+                            "side": "east",
+                            "thickness_mm": 200
+                          }
+                        ],
+                        "interior": []
+                      },
+                      "windows": [
+                        {
+                          "alignment": "host_centerline",
+                          "height_mm": 1200,
+                          "host_wall": "wall-north",
+                          "id": "window-north",
+                          "sill_height_mm": 900,
+                          "width_mm": 1500
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "schema_version": "text2ifc/semantic-coverage/1.0",
+              "valid": true
+            }
+          },
+          "expected_facts_hash": "6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+          "expected_facts_path": "expected-facts.json",
+          "gates": [
+            {
+              "applicability": "applicable",
+              "basis": "generator validation sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "bim_json_validation",
+              "source_paths": [
+                "generator/validation.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "expected-facts total_counts compared with candidate entities",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_entity_completeness",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "expected storey and host-wall facts compared with candidate placement/void-fill graph",
+              "entity_matches": [
+                {
+                  "candidate_id": "door-south",
+                  "collection": "doors",
+                  "expected_id": "door-south",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "space-room",
+                  "collection": "spaces",
+                  "expected_id": "space-room",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-south",
+                  "collection": "walls",
+                  "expected_id": "wall-south",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-north",
+                  "collection": "walls",
+                  "expected_id": "wall-north",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-west",
+                  "collection": "walls",
+                  "expected_id": "wall-west",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-east",
+                  "collection": "walls",
+                  "expected_id": "wall-east",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "window-north",
+                  "collection": "windows",
+                  "expected_id": "window-north",
+                  "match_basis": "exact_brief_id"
+                }
+              ],
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_storey_containment",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "not_applicable",
+              "basis": "expected facts contain fewer than two unique explicit storey names",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_storey_name_consistency",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "skipped"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "expected opening/fill obligations compared with IfcRelVoidsElement and IfcRelFillsElement",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_opening_fill",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "semantic coverage sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "semantic_coverage",
+              "source_paths": [
+                "semantic-coverage.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "IFC compile/reopen sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "ifc_compile_reopen",
+              "source_paths": [
+                "ifc-verification.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "geometry feedback sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "geometry",
+              "source_paths": [
+                "geometry-feedback.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "repair route is no_repair_needed",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "repair_route",
+              "source_paths": [
+                "repair/route.json"
+              ],
+              "status": "passed"
+            }
+          ],
+          "overall_status": "passed",
+          "schema_version": "text2ifc/gate-summary/1.0"
+        },
+        "geometry_feedback": {
+          "expectation_source": "candidate",
+          "issues": [],
+          "metrics": {
+            "case_id": "d2f86855a9738b50",
+            "floor_openings": {},
+            "roof": {},
+            "slabs": {},
+            "spaces": {},
+            "stairs": {},
+            "wall_set_convention": "primary",
+            "walls": {
+              "wall-east": {
+                "axis": "y",
+                "bbox": {
+                  "x": [
+                    6.000000000000001,
+                    6.2
+                  ],
+                  "y": [
+                    0.0,
+                    4.0
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              },
+              "wall-north": {
+                "axis": "x",
+                "bbox": {
+                  "x": [
+                    0.0,
+                    6.0
+                  ],
+                  "y": [
+                    3.9999999999999996,
+                    4.199999999999999
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              },
+              "wall-south": {
+                "axis": "x",
+                "bbox": {
+                  "x": [
+                    0.0,
+                    6.0
+                  ],
+                  "y": [
+                    -0.2,
+                    0.0
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              },
+              "wall-west": {
+                "axis": "y",
+                "bbox": {
+                  "x": [
+                    -0.2,
+                    0.0
+                  ],
+                  "y": [
+                    0.0,
+                    4.0
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              }
+            }
+          },
+          "success": true
+        },
+        "geometry_success": true,
+        "ifc_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+        "ifc_verification": {
+          "ifc_issues": [],
+          "input_issues": [],
+          "output_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+          "success": true
+        },
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50",
+        "semantic_geometry_expectation": null,
+        "stage": "candidate-gates",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:37+00:00",
+      "event_index": 5,
+      "event_type": "audit_completed",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50",
+        "report_path": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50/report.md",
+        "response_id": "d4b9c09e-2dae-4093-a5f1-ed743de504a3",
+        "route_decision": "accept",
+        "route_owner_stage": "none",
+        "stage": "audit-report",
+        "status": "accepted",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "event_index": 6,
+      "event_type": "final_acceptance_completed",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "compile_reopen_success": true,
+        "geometry_success": true,
+        "ifc_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50",
+        "report_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\report.md",
+        "secret_finding_count": 0,
+        "stage": "final-acceptance",
+        "valid": true
+      }
+    }
+  ],
+  "gates": [],
+  "metrics": [
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "classification": "formal",
+        "contract_valid": true,
+        "evidence_class": "provider-backed-staged",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\generator",
+        "response_id": "d042331c-8b80-49c3-859d-ce9306667a8f",
+        "stage": "generate",
+        "status": "formal",
+        "strict_output_contract_valid": true,
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "payload": {
+        "blocking_fact_count": 0,
+        "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+        "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+        "case_id": "d2f86855a9738b50",
+        "coverage": {
+          "blocking_facts": [],
+          "candidate_entity_count": 14,
+          "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+          "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+          "case_id": "d2f86855a9738b50",
+          "custom_property_policy": {
+            "counts_as_semantic_support": false,
+            "state": "preserved_text_only"
+          },
+          "facts": [
+            {
+              "coverage_state": "represented",
+              "path": "/known_facts/floor_slabs",
+              "reason": "Fact is inside the current supported semantic profile.",
+              "value": [
+                {
+                  "id": "floor-slab-1",
+                  "owning_storey": "storey-1",
+                  "thickness_mm": 150,
+                  "top_elevation_mm": 0
+                }
+              ]
+            },
+            {
+              "coverage_state": "represented",
+              "path": "/known_facts/storeys",
+              "reason": "Fact is inside the current supported semantic profile.",
+              "value": [
+                {
+                  "doors": [
+                    {
+                      "alignment": "host_centerline",
+                      "height_mm": 2100,
+                      "host_wall": "wall-south",
+                      "id": "door-south",
+                      "open_direction": "inside",
+                      "width_mm": 900
+                    }
+                  ],
+                  "elevation_mm": 0,
+                  "id": "storey-1",
+                  "net_height_mm": 3000,
+                  "spaces": [
+                    {
+                      "bounds": {
+                        "x": [
+                          0,
+                          6000
+                        ],
+                        "y": [
+                          0,
+                          4000
+                        ]
+                      },
+                      "id": "space-room",
+                      "shape": "rectangle"
+                    }
+                  ],
+                  "walls": {
+                    "exterior": [
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-south",
+                        "side": "south",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-north",
+                        "side": "north",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-west",
+                        "side": "west",
+                        "thickness_mm": 200
+                      },
+                      {
+                        "height_mm": 3000,
+                        "id": "wall-east",
+                        "side": "east",
+                        "thickness_mm": 200
+                      }
+                    ],
+                    "interior": []
+                  },
+                  "windows": [
+                    {
+                      "alignment": "host_centerline",
+                      "height_mm": 1200,
+                      "host_wall": "wall-north",
+                      "id": "window-north",
+                      "sill_height_mm": 900,
+                      "width_mm": 1500
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "schema_version": "text2ifc/semantic-coverage/1.0",
+          "valid": true
+        },
+        "fact_count": 2,
+        "stage": "semantic-coverage",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:15+00:00",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "evidence_class": "live-derived-no-call",
+        "output_dir": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50/repair",
+        "provider_call_count": 0,
+        "repair_attempts": [],
+        "route": "no_repair_needed",
+        "source_generator_response_id": "d042331c-8b80-49c3-859d-ce9306667a8f",
+        "stage": "repair",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:18+00:00",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "compile_reopen_success": true,
+        "deterministic_gates_passed": true,
+        "gate_summary": {
+          "artifact_hashes": {
+            "dynamic-gates.json": "3fb3a31b0b2af57fd31cbaf917b1f05e35b22b19616b38fb6a13011d387a9a8d",
+            "expected-facts.json": "6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+            "generator/candidate.json": "10e6e5de23aa2e7d2401840751b4bdfd230ae15234df7d78aef7afd9966a24ce",
+            "generator/validation.json": "6be6595f4f77090199203073905e3755e4015ff1a83b3412d64571cd872b4c41",
+            "geometry-feedback.json": "e32a6ad439f4b85c72f3b350af6091371d3fa1c83edbaae34defa8c177cda56e",
+            "ifc-verification.json": "dbf5ddd78f247ccb44a4ad6675b5721c23893e57d28b125e1f40d2f2da2896b6",
+            "repair/route.json": "07df707a8b4e65e31d777ee7cefc8ca2bd9046a1c5010ff8bb1f4504e1fce644",
+            "semantic-coverage.json": "a548ae303fbedb18cc9203661bfffa06dc06a4f87a72591794ae2c9701add15c"
+          },
+          "candidate_hash": "10e6e5de23aa2e7d2401840751b4bdfd230ae15234df7d78aef7afd9966a24ce",
+          "candidate_path": "generator/candidate.json",
+          "case_id": "d2f86855a9738b50",
+          "evidence": {
+            "compile_reopen": {
+              "ifc_issues": [],
+              "input_issues": [],
+              "output_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+              "success": true
+            },
+            "geometry": {
+              "expectation_source": "candidate",
+              "issues": [],
+              "metrics": {
+                "case_id": "d2f86855a9738b50",
+                "floor_openings": {},
+                "roof": {},
+                "slabs": {},
+                "spaces": {},
+                "stairs": {},
+                "wall_set_convention": "primary",
+                "walls": {
+                  "wall-east": {
+                    "axis": "y",
+                    "bbox": {
+                      "x": [
+                        6.000000000000001,
+                        6.2
+                      ],
+                      "y": [
+                        0.0,
+                        4.0
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  },
+                  "wall-north": {
+                    "axis": "x",
+                    "bbox": {
+                      "x": [
+                        0.0,
+                        6.0
+                      ],
+                      "y": [
+                        3.9999999999999996,
+                        4.199999999999999
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  },
+                  "wall-south": {
+                    "axis": "x",
+                    "bbox": {
+                      "x": [
+                        0.0,
+                        6.0
+                      ],
+                      "y": [
+                        -0.2,
+                        0.0
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  },
+                  "wall-west": {
+                    "axis": "y",
+                    "bbox": {
+                      "x": [
+                        -0.2,
+                        0.0
+                      ],
+                      "y": [
+                        0.0,
+                        4.0
+                      ],
+                      "z": [
+                        0.0,
+                        3.0
+                      ]
+                    },
+                    "ifc_class": "IfcWall"
+                  }
+                }
+              },
+              "success": true
+            },
+            "repair_history": {
+              "case_id": "d2f86855a9738b50",
+              "fact_delta": null,
+              "geometry_issue_count": 0,
+              "provider_call_count": 0,
+              "repair_attempts": [],
+              "repair_diagnostics": [],
+              "repair_source_artifact": "candidate.json",
+              "route": "no_repair_needed",
+              "schema_version": "text2ifc/repair-route/1.0",
+              "source_document_kind": "candidate",
+              "source_document_path": "candidate.json",
+              "source_generator_dir": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50/generator",
+              "source_generator_response_id": "d042331c-8b80-49c3-859d-ce9306667a8f",
+              "valid": true,
+              "validation_issue_count": 0
+            },
+            "schema_validation": {
+              "issue_count": 0,
+              "issues": [],
+              "valid": true
+            },
+            "semantic_coverage": {
+              "blocking_facts": [],
+              "candidate_entity_count": 14,
+              "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+              "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+              "case_id": "d2f86855a9738b50",
+              "custom_property_policy": {
+                "counts_as_semantic_support": false,
+                "state": "preserved_text_only"
+              },
+              "facts": [
+                {
+                  "coverage_state": "represented",
+                  "path": "/known_facts/floor_slabs",
+                  "reason": "Fact is inside the current supported semantic profile.",
+                  "value": [
+                    {
+                      "id": "floor-slab-1",
+                      "owning_storey": "storey-1",
+                      "thickness_mm": 150,
+                      "top_elevation_mm": 0
+                    }
+                  ]
+                },
+                {
+                  "coverage_state": "represented",
+                  "path": "/known_facts/storeys",
+                  "reason": "Fact is inside the current supported semantic profile.",
+                  "value": [
+                    {
+                      "doors": [
+                        {
+                          "alignment": "host_centerline",
+                          "height_mm": 2100,
+                          "host_wall": "wall-south",
+                          "id": "door-south",
+                          "open_direction": "inside",
+                          "width_mm": 900
+                        }
+                      ],
+                      "elevation_mm": 0,
+                      "id": "storey-1",
+                      "net_height_mm": 3000,
+                      "spaces": [
+                        {
+                          "bounds": {
+                            "x": [
+                              0,
+                              6000
+                            ],
+                            "y": [
+                              0,
+                              4000
+                            ]
+                          },
+                          "id": "space-room",
+                          "shape": "rectangle"
+                        }
+                      ],
+                      "walls": {
+                        "exterior": [
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-south",
+                            "side": "south",
+                            "thickness_mm": 200
+                          },
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-north",
+                            "side": "north",
+                            "thickness_mm": 200
+                          },
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-west",
+                            "side": "west",
+                            "thickness_mm": 200
+                          },
+                          {
+                            "height_mm": 3000,
+                            "id": "wall-east",
+                            "side": "east",
+                            "thickness_mm": 200
+                          }
+                        ],
+                        "interior": []
+                      },
+                      "windows": [
+                        {
+                          "alignment": "host_centerline",
+                          "height_mm": 1200,
+                          "host_wall": "wall-north",
+                          "id": "window-north",
+                          "sill_height_mm": 900,
+                          "width_mm": 1500
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ],
+              "schema_version": "text2ifc/semantic-coverage/1.0",
+              "valid": true
+            }
+          },
+          "expected_facts_hash": "6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+          "expected_facts_path": "expected-facts.json",
+          "gates": [
+            {
+              "applicability": "applicable",
+              "basis": "generator validation sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "bim_json_validation",
+              "source_paths": [
+                "generator/validation.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "expected-facts total_counts compared with candidate entities",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_entity_completeness",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "expected storey and host-wall facts compared with candidate placement/void-fill graph",
+              "entity_matches": [
+                {
+                  "candidate_id": "door-south",
+                  "collection": "doors",
+                  "expected_id": "door-south",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "space-room",
+                  "collection": "spaces",
+                  "expected_id": "space-room",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-south",
+                  "collection": "walls",
+                  "expected_id": "wall-south",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-north",
+                  "collection": "walls",
+                  "expected_id": "wall-north",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-west",
+                  "collection": "walls",
+                  "expected_id": "wall-west",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "wall-east",
+                  "collection": "walls",
+                  "expected_id": "wall-east",
+                  "match_basis": "exact_brief_id"
+                },
+                {
+                  "candidate_id": "window-north",
+                  "collection": "windows",
+                  "expected_id": "window-north",
+                  "match_basis": "exact_brief_id"
+                }
+              ],
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_storey_containment",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "not_applicable",
+              "basis": "expected facts contain fewer than two unique explicit storey names",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_storey_name_consistency",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "skipped"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "expected opening/fill obligations compared with IfcRelVoidsElement and IfcRelFillsElement",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "dynamic_opening_fill",
+              "source_paths": [
+                "expected-facts.json",
+                "generator/candidate.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "semantic coverage sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "semantic_coverage",
+              "source_paths": [
+                "semantic-coverage.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "IFC compile/reopen sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "ifc_compile_reopen",
+              "source_paths": [
+                "ifc-verification.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "geometry feedback sidecar",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "geometry",
+              "source_paths": [
+                "geometry-feedback.json"
+              ],
+              "status": "passed"
+            },
+            {
+              "applicability": "applicable",
+              "basis": "repair route is no_repair_needed",
+              "issue_codes": [],
+              "issue_count": 0,
+              "issues": [],
+              "name": "repair_route",
+              "source_paths": [
+                "repair/route.json"
+              ],
+              "status": "passed"
+            }
+          ],
+          "overall_status": "passed",
+          "schema_version": "text2ifc/gate-summary/1.0"
+        },
+        "geometry_feedback": {
+          "expectation_source": "candidate",
+          "issues": [],
+          "metrics": {
+            "case_id": "d2f86855a9738b50",
+            "floor_openings": {},
+            "roof": {},
+            "slabs": {},
+            "spaces": {},
+            "stairs": {},
+            "wall_set_convention": "primary",
+            "walls": {
+              "wall-east": {
+                "axis": "y",
+                "bbox": {
+                  "x": [
+                    6.000000000000001,
+                    6.2
+                  ],
+                  "y": [
+                    0.0,
+                    4.0
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              },
+              "wall-north": {
+                "axis": "x",
+                "bbox": {
+                  "x": [
+                    0.0,
+                    6.0
+                  ],
+                  "y": [
+                    3.9999999999999996,
+                    4.199999999999999
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              },
+              "wall-south": {
+                "axis": "x",
+                "bbox": {
+                  "x": [
+                    0.0,
+                    6.0
+                  ],
+                  "y": [
+                    -0.2,
+                    0.0
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              },
+              "wall-west": {
+                "axis": "y",
+                "bbox": {
+                  "x": [
+                    -0.2,
+                    0.0
+                  ],
+                  "y": [
+                    0.0,
+                    4.0
+                  ],
+                  "z": [
+                    0.0,
+                    3.0
+                  ]
+                },
+                "ifc_class": "IfcWall"
+              }
+            }
+          },
+          "success": true
+        },
+        "geometry_success": true,
+        "ifc_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+        "ifc_verification": {
+          "ifc_issues": [],
+          "input_issues": [],
+          "output_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+          "success": true
+        },
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50",
+        "semantic_geometry_expectation": null,
+        "stage": "candidate-gates",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:37+00:00",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "evidence_class": "live",
+        "output_dir": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50",
+        "report_path": "dataset/processed/agent-demo/phase6.5-wave10-easy-live/runs/d2f86855a9738b50/report.md",
+        "response_id": "d4b9c09e-2dae-4093-a5f1-ed743de504a3",
+        "route_decision": "accept",
+        "route_owner_stage": "none",
+        "stage": "audit-report",
+        "status": "accepted",
+        "valid": true
+      }
+    },
+    {
+      "created_at": "2026-07-16T08:00:39+00:00",
+      "payload": {
+        "case_id": "d2f86855a9738b50",
+        "compile_reopen_success": true,
+        "geometry_success": true,
+        "ifc_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\output.ifc",
+        "output_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50",
+        "report_path": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50\\report.md",
+        "secret_finding_count": 0,
+        "stage": "final-acceptance",
+        "valid": true
+      }
+    }
+  ],
+  "prompts": [],
+  "responses": [],
+  "schema_version": "text2ifc/phase6.2-session-export-v1",
+  "session": {
+    "created_at": "2026-07-16T07:57:23+00:00",
+    "original_input": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+    "run_dir": "dataset\\processed\\agent-demo\\phase6.5-wave10-easy-live\\runs\\d2f86855a9738b50",
+    "session_hash": "d2f86855a9738b50",
+    "session_id": "phase6.2-8ff0d83ba9c54df69a53c33ef98e946b",
+    "status": "compiled",
+    "updated_at": "2026-07-16T08:00:39+00:00"
+  },
+  "turns": [
+    {
+      "created_at": "2026-07-16T07:57:23+00:00",
+      "role": "user",
+      "text": "## 2.2 Easy：单个矩形房间\n\n创建一个单层矩形房间，房间净尺寸为东西方向 6 米、南北方向 4 米，净高 3 米。\n\n墙厚 200 毫米，地板厚 150 毫米。\n\n在南侧外墙中央设置一樘外门，门宽 0.9 米、高 2.1 米，向室内开启。\n\n在北侧外墙中央设置一扇窗，窗宽 1.5 米、高 1.2 米，窗台距地面 0.9 米。\n\n生成楼层、房间空间、四面墙、地板、门和窗，并确保门窗正确依附在对应墙体中。房间应生成对应的 `IfcSpace`。",
+      "turn_index": 0
+    }
+  ]
+}

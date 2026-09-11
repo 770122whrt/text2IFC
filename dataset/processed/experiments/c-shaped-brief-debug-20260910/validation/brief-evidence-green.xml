@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="219" time="290.516" timestamp="2026-09-10T22:01:30.249886+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-truncated]" time="0.474" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-no_choices]" time="0.348" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-forbidden]" time="0.298" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[True-connection]" time="0.333" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-truncated]" time="0.261" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-no_choices]" time="0.278" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-forbidden]" time="0.302" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_exception_evidence_survives_public_brief_stage[False-connection]" time="0.265" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[input.txt]" time="0.017" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[response.raw.json]" time="0.011" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[request.redacted.json]" time="0.013" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[provider-error.json]" time="0.016" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[design-brief.json]" time="0.017" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_existing_attempt_is_immutable_before_transport[.design-brief-attempt]" time="0.020" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_invalid_returned_content_keeps_existing_rejection[empty]" time="0.258" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_invalid_returned_content_keeps_existing_rejection[malformed]" time="0.141" /><testcase classname="tests.agent.test_public_brief_failure_evidence" name="test_budget_rejection_remains_nontransport_failure" time="0.191" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[non_json]" time="0.242" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[truncated]" time="0.218" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[empty]" time="0.204" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[auth]" time="0.185" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[timeout]" time="0.183" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[response.raw.json]" time="0.018" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[request.redacted.json]" time="0.008" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[transport-failure.json]" time="0.008" /><testcase classname="tests.agent.test_phase6_1_live" name="test_repository_artifact_paths_are_portable" time="0.002" /><testcase classname="tests.agent.test_phase6_1_live" name="test_complete_room_case_preserves_real_conversation_without_supervisor_decisions" time="0.000" /><testcase classname="tests.agent.test_phase6_1_live" name="test_design_brief_stage_writes_reproducible_unedited_trace" time="0.198" /><testcase classname="tests.agent.test_phase6_1_live" name="test_design_brief_stage_records_invalid_model_output_without_editing_it" time="0.145" /><testcase classname="tests.agent.test_phase6_1_live" name="test_design_brief_stage_blocks_fenced_live_text_even_when_json_is_valid" time="0.153" /><testcase classname="tests.agent.test_phase6_1_live" name="test_v1_v2_comparison_is_derived_from_trace_artifacts" time="0.217" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_runs_design_brief_case_through_injected_provider" time="0.227"><failure message="assert 2 == 0">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-green/test_live_cli_runs_design_brie0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x000001F47E823680&gt;
+
+    def test_live_cli_runs_design_brief_case_through_injected_provider(
+        tmp_path: Path, capsys
+    ):
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        assert script_path.is_file(), "Phase 6.1 live CLI is missing"
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        case = complete_room_case()
+        payload = _valid_ready_brief(case)
+        payload["schema_version"] = "text2ifc/design-brief/2.1"
+        provider = _RecordingLiveProvider(payload)
+    
+        exit_code = module.main(
+            [
+                "--stage",
+                "design-brief",
+                "--case",
+                "complete-room",
+                "--live",
+                "--output-dir",
+                str(tmp_path),
+            ],
+            provider_factory=lambda: provider,
+        )
+    
+        output = json.loads(capsys.readouterr().out)
+&gt;       assert exit_code == 0
+E       assert 2 == 0
+
+tests\agent\test_phase6_1_live.py:372: AssertionError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_clarification_run_preserves_two_provider_calls_and_all_turns" time="0.386"><failure message="text2ifc_agent.clarification.ClarificationError: live Design Brief call failed acceptance gates: blocked_prompt_defect">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-green/test_live_clarification_run_pr0')
+
+    def test_live_clarification_run_preserves_two_provider_calls_and_all_turns(
+        tmp_path: Path,
+    ):
+        case = clarified_room_case()
+        first = _valid_ready_brief(complete_room_case())
+        first["schema_version"] = "text2ifc/design-brief/2.1"
+        first["original_request"] = case["user_request"]
+        first["status"] = "needs_clarification"
+        first["known_facts"]["walls"].pop("thickness_mm")
+        first["user_corrections"] = []
+        first["missing_facts"] = [
+            {
+                "id": "mf-wall-thickness",
+                "code": "WALL_THICKNESS_MISSING",
+                "path": "/known_facts/walls/thickness_mm",
+                "message": "墙体厚度尚未提供。",
+                "reason": "生成用户要求的实体墙体需要明确厚度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+        first["clarification_questions"] = [
+            {
+                "id": "q-wall-thickness",
+                "text": "请问墙体厚度是多少毫米？",
+                "targets": ["mf-wall-thickness"],
+                "reason": "缺少厚度时不能生成所要求的实体墙体。",
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+            }
+        ]
+        for fact_source in first["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+        first["provenance"]["source_turns"] = ["turn-user-001"]
+        second = json.loads(json.dumps(first, ensure_ascii=False))
+        second["status"] = "ready"
+        second["known_facts"]["walls"]["thickness_mm"] = 300
+        second["missing_facts"] = []
+        second["clarification_questions"] = []
+        for fact_source in second["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+            if fact_source["path"] == "/known_facts/walls":
+                fact_source["source_turns"].append("turn-user-003")
+        second["provenance"]["source_turns"] = [
+            "turn-user-001",
+            "turn-user-003",
+        ]
+        provider = _SequenceLiveProvider([first, second])
+    
+&gt;       result = run_clarification_case(
+            provider=provider,
+            output_dir=tmp_path,
+            case=case,
+            answers=["墙体厚度为300毫米。"],
+        )
+
+tests\agent\test_phase6_1_live.py:427: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:448: in run_clarification_case
+    controller = controller.answer_and_rerun(
+src\text2ifc_agent\clarification.py:179: in answer_and_rerun
+    next_call = invoke_design_brief(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+transcript = [{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'question_ids': [],...nt-002'}, {'content': '墙体厚度为300毫米。', 'question_ids': ['q-wall-thickness'], 'role': 'user', 'turn_id': 'turn-user-003'}]
+call_index = 2
+
+    def invoke(transcript: list[dict[str, Any]], call_index: int) -&gt; ClarificationCall:
+        call_dir = calls_dir / f"{call_index:02d}-design-brief"
+        _append_event(
+            event_path,
+            {
+                "event": "design_brief_call_started",
+                "case_id": case["case_id"],
+                "call_index": call_index,
+                "turn_count": len(transcript),
+            },
+        )
+        stage_result = run_design_brief_stage(
+            provider=provider,
+            output_dir=call_dir,
+            case={
+                "case_id": case["case_id"],
+                "call_index": call_index,
+                "user_request": user_request,
+                "conversation": transcript,
+            },
+        )
+        _append_event(
+            event_path,
+            {
+                "event": "design_brief_call_completed",
+                "case_id": case["case_id"],
+                "call_index": call_index,
+                "response_id": stage_result.get("response_id"),
+                "status": stage_result.get("status"),
+                "schema_semantic_valid": stage_result.get(
+                    "schema_semantic_valid"
+                ),
+                "strict_output_contract_valid": stage_result.get(
+                    "strict_output_contract_valid"
+                ),
+            },
+        )
+        if not stage_result["valid"]:
+&gt;           raise ClarificationError(
+                "live Design Brief call failed acceptance gates: "
+                + str(stage_result["status"])
+            )
+E           text2ifc_agent.clarification.ClarificationError: live Design Brief call failed acceptance gates: blocked_prompt_defect
+
+src\text2ifc_agent\live_pipeline.py:408: ClarificationError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_clarification_cli_consumes_answer_file_with_injected_provider" time="0.537"><failure message="assert 2 == 0">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-green/test_live_clarification_cli_co0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x000001F47E809EB0&gt;
+
+    def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
+        tmp_path: Path, capsys
+    ):
+        case = clarified_room_case()
+        first = _valid_ready_brief(complete_room_case())
+        first["schema_version"] = "text2ifc/design-brief/2.1"
+        first["original_request"] = case["user_request"]
+        first["status"] = "needs_clarification"
+        first["known_facts"]["walls"].pop("thickness_mm")
+        first["user_corrections"] = []
+        first["missing_facts"] = [
+            {
+                "id": "mf-wall-thickness",
+                "code": "WALL_THICKNESS_MISSING",
+                "path": "/known_facts/walls/thickness_mm",
+                "message": "墙体厚度尚未提供。",
+                "reason": "生成实体墙体需要明确厚度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+        first["clarification_questions"] = [
+            {
+                "id": "q-wall-thickness",
+                "text": "请问墙体厚度是多少毫米？",
+                "targets": ["mf-wall-thickness"],
+                "reason": "缺少厚度时不能生成实体墙体。",
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+            }
+        ]
+        for fact_source in first["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+        first["provenance"]["source_turns"] = ["turn-user-001"]
+        second = json.loads(json.dumps(first, ensure_ascii=False))
+        second["status"] = "ready"
+        second["known_facts"]["walls"]["thickness_mm"] = 300
+        second["missing_facts"] = []
+        second["clarification_questions"] = []
+        for fact_source in second["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+            if fact_source["path"] == "/known_facts/walls":
+                fact_source["source_turns"].append("turn-user-003")
+        second["provenance"]["source_turns"] = [
+            "turn-user-001",
+            "turn-user-003",
+        ]
+        provider = _SequenceLiveProvider([first, second])
+        answer_file = tmp_path / "answers.json"
+        answer_file.write_text(
+            json.dumps({"answers": ["墙体厚度为300毫米。"]}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live_clarify", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        output_dir = tmp_path / "output"
+    
+        exit_code = module.main(
+            [
+                "--stage",
+                "clarify",
+                "--case",
+                "clarified-room",
+                "--answers",
+                str(answer_file),
+                "--live",
+                "--output-dir",
+                str(output_dir),
+            ],
+            provider_factory=lambda: provider,
+        )
+    
+        summary = json.loads(capsys.readouterr().out)
+&gt;       assert exit_code == 0
+E       assert 2 == 0
+
+tests\agent\test_phase6_1_live.py:542: AssertionError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_runs_unknown_answer_case_to_draft_without_ifc" time="0.563" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_generator_stage_renders_exact_contracts_and_routes_formal" time="0.562" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_generator_stage_blocks_unknown_contract_without_editing_output" time="0.198" /><testcase classname="tests.agent.test_phase6_1_live" name="test_invalid_contract_replay_cli_blocks_without_provider_or_ifc" time="0.025" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_generator_cli_uses_injected_provider_and_design_source" time="0.481" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_uses_stable_generator_directory_name" time="0.004" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_uses_phase_root_finalize_directory" time="0.004" /><testcase classname="tests.agent.test_phase6_1_live" name="test_successful_first_pass_repair_stage_never_creates_provider" time="0.096" /><testcase classname="tests.agent.test_phase6_1_live" name="test_repair_stage_calls_provider_once_for_eligible_contract_failure" time="0.594" /><testcase classname="tests.agent.test_phase6_1_live" name="test_repair_cli_records_zero_calls_for_live_first_pass_success" time="0.077" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_report_stage_calls_provider_and_generates_report" time="0.429" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_validation_normalizes_root_relative_evidence_paths" time="0.040" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_report_stage_accepts_clarified_final_design_brief_layout" time="0.431" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_report_stage_blocks_fenced_output_contract" time="0.322" /><testcase classname="tests.agent.test_phase6_1_live" name="test_audit_report_cli_uses_injected_provider_and_case_dir" time="0.439" /><testcase classname="tests.agent.test_phase6_1_live" name="test_final_acceptance_stage_writes_geometry_checked_ifc_and_root_report" time="2.082" /><testcase classname="tests.agent.test_phase6_1_live" name="test_finalize_cli_writes_canonical_ifc_and_report" time="1.735" /><testcase classname="tests.agent.test_phase6_1_live" name="test_phase6_1_artifact_verifier_accepts_finalized_root" time="2.520" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[materials-missing]" time="0.055" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[materials-notes]" time="0.005" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[materials-nested]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[property_sets-missing]" time="0.005" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[property_sets-notes]" time="0.005" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[property_sets-nested]" time="0.007" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[appearance-missing]" time="0.005" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[appearance-notes]" time="0.005" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[appearance-nested]" time="0.005" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_explicit_legacy_empty_array_remains_distinct_from_missing" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[missing_review]" time="0.002" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[missing_category]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[unresolved]" time="0.002" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[false_none]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[false_specified]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[outside_canonical]" time="0.002" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_preserves_canonical_values_and_does_not_read_candidate" time="0.003" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[none]" time="0.239" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[geometry]" time="0.181" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[original_request]" time="0.205" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[unknown_source]" time="0.174" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[still_missing]" time="0.184" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[False-False]" time="0.393" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[False-True]" time="0.303" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[True-False]" time="0.485" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[True-True]" time="0.520" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_semantic_extraction_failure_routes_to_brief_not_user_or_candidate" time="0.023" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trace[2.2]" time="0.562" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trace[2.3]" time="0.507" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_brief_repair_must_keep_previously_structured_semantics" time="0.129" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_candidate_without_any_request_authority_cannot_publish" time="0.103" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[None]" time="0.187" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[payload1]" time="0.160" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[payload2]" time="0.133" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[truncated {]" time="0.156" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_brief_repair_cannot_reset_or_exceed_shared_call_budget" time="0.420" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_brief_clarification_preserves_user_turns_and_resumes" time="0.176" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[ready]" time="0.007" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[needs_clarification]" time="0.006" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[None]" time="0.009" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_new_design_call_cannot_silently_return_old_contract" time="0.167" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.1-legacy_full]" time="3.293" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.1-staged]" time="3.918" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.2-legacy_full]" time="2.264" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.2-staged]" time="4.126" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.3-legacy_full]" time="2.727" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.3-staged]" time="3.925" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.1-legacy_full]" time="3.270" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.1-staged]" time="5.045" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.2-legacy_full]" time="3.015" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.2-staged]" time="3.809" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.3-legacy_full]" time="2.351" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.3-staged]" time="3.241" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.1-legacy_full]" time="2.434" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.1-staged]" time="4.565" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.2-legacy_full]" time="2.992" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.2-staged]" time="4.575" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.3-legacy_full]" time="3.466" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.3-staged]" time="4.489" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.1-legacy_full]" time="2.373" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.1-staged]" time="3.213" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.2-legacy_full]" time="2.263" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.2-staged]" time="3.135" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.3-legacy_full]" time="2.230" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.3-staged]" time="3.033" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_new_schema_compilation_cli" time="1.489" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_staged_shared_type_is_authored_once_after_instances" time="2.920" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-False-False-False]" time="6.010" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-False-False-True]" time="6.588" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-False-True-False]" time="5.860" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-False-True-True]" time="5.900" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-True-False-False]" time="8.798" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-True-False-True]" time="9.405" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-True-True-False]" time="9.211" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.1-True-True-True]" time="9.377" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-False-False-False]" time="5.752" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-False-False-True]" time="6.159" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-False-True-False]" time="5.930" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-False-True-True]" time="5.663" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-True-False-False]" time="8.773" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-True-False-True]" time="9.803" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-True-True-False]" time="8.994" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.2-True-True-True]" time="9.139" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-False-False-False]" time="5.760" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-False-False-True]" time="6.277" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-False-True-False]" time="5.612" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-False-True-True]" time="5.832" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-True-False-False]" time="8.711" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-True-False-True]" time="8.996" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-True-True-False]" time="8.436" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.3-True-True-True]" time="8.760" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value0-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value0-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value0-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value1-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value1-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value1-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value2-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value2-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value2-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value3-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value3-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value3-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value4-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value4-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value4-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value5-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value5-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value5-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value6-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value6-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value6-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value7-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value7-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value7-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value8-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value8-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value8-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value0]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value1]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value2]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value3]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[False-False]" time="0.155" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[False-True]" time="0.148" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[True-False]" time="0.283" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[True-True]" time="0.261" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value0-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value0-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value0-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[None-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[None-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[None-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value2-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value2-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value2-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value3-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value3-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value3-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value4-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value4-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value4-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value5-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value5-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value5-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value6-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value6-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value6-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value7-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value7-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value7-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value8-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value8-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value8-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value9-wall-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value9-door-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_malformed_material_is_not_frozen[value9-slab-elsewhere]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_valid_single_and_layered_material_values_are_preserved[value0-material]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_valid_single_and_layered_material_values_are_preserved[value0-materials]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_valid_single_and_layered_material_values_are_preserved[value1-material]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_valid_single_and_layered_material_values_are_preserved[value1-materials]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_valid_single_and_layered_material_values_are_preserved[value2-material]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_valid_single_and_layered_material_values_are_preserved[value2-materials]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_legacy_assignment_array_cannot_hide_incomplete_or_multiple_values[assignments0]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_legacy_assignment_array_cannot_hide_incomplete_or_multiple_values[assignments1]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_legacy_assignment_array_cannot_hide_incomplete_or_multiple_values[assignments2]" time="0.001" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement[False]" time="0.280" /><testcase classname="tests.agent.test_brief_material_grammar" name="test_public_brief_repair_can_remove_invalid_material_without_erasing_valid_requirement[True]" time="0.247" /></testsuite></testsuites>

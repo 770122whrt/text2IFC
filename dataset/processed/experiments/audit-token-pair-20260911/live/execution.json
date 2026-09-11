@@ -1,0 +1,184 @@
+{
+  "status": "completed",
+  "evidence_class": "live",
+  "started_at": "2026-09-11T03:22:13.469460+00:00",
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 2,
+      "max_tokens": 500000,
+      "max_active_seconds": 900
+    },
+    "attempts": [],
+    "calls_used": 0,
+    "tokens_used_or_reserved": 0,
+    "active_seconds": 0
+  },
+  "arms": [
+    {
+      "mode": "deduplicated",
+      "valid": true,
+      "usage": {
+        "completion_tokens": 4160,
+        "prompt_tokens": 69558,
+        "total_tokens": 73718,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 3251,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 69558
+      },
+      "status": "completed",
+      "response_id": "2524062e-0bd4-414b-a764-c10381762bd1",
+      "recommendation": "accept",
+      "design_review": {
+        "scope": "limited_review_not_code_compliance",
+        "concerns": [
+          {
+            "id": "reference-stair-walking-clearance",
+            "status": "retained_known_issue",
+            "description": "首层通往二层的直跑楼梯（stair-1）接近二层北端换向平台时，被正上方的反向直跑楼梯（stair-2）遮挡，两段梯段共用同一平面范围 X=8200～9400、Y=1500～6900，局部净空为零，该楼梯无法作为正常通行楼梯使用。用户已在 turn-user-003 明确知悉该缺陷并决定忠实建模、保留原始尺寸、位置、方向、楼板洞口与关系，不移动楼梯、不修改大厅/分隔墙/门窗来消除问题；候选模型已按该决定生成，此问题按保留的已知缺陷记录，不代表建模合理性或建筑规范检查通过。",
+            "evidence_paths": [
+              "design-review-context.json"
+            ]
+          }
+        ],
+        "limitations": [
+          "未进行完整建筑规范审查。"
+        ]
+      },
+      "budget_after": {
+        "schema_version": "text2ifc/generation-budget/1.0",
+        "limits": {
+          "max_calls": 2,
+          "max_tokens": 500000,
+          "max_active_seconds": 900
+        },
+        "attempts": [
+          {
+            "attempt": 1,
+            "stage": "audit",
+            "status": "completed",
+            "tokens_charged": 73718,
+            "reserved_tokens": 260624,
+            "elapsed_seconds": 24.281000000002678
+          }
+        ],
+        "calls_used": 1,
+        "tokens_used_or_reserved": 73718,
+        "active_seconds": 24.281000000002678
+      }
+    },
+    {
+      "mode": "full",
+      "valid": true,
+      "usage": {
+        "completion_tokens": 6033,
+        "prompt_tokens": 91765,
+        "total_tokens": 97798,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 5452,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 91520
+        },
+        "prompt_cache_hit_tokens": 91520,
+        "prompt_cache_miss_tokens": 245
+      },
+      "status": "completed",
+      "response_id": "6509e3d3-5656-4c19-b3d4-f349ead59276",
+      "recommendation": "accept",
+      "design_review": {
+        "scope": "limited_review_not_code_compliance",
+        "concerns": [
+          {
+            "id": "reference-stair-walking-clearance",
+            "status": "retained_known_issue",
+            "description": "两段直跑楼梯共用同一平面范围 X=8200～9400、Y=1500～6900：第一段（首层至二层，标高0→3150）与第二段（二层至三层，标高3150→6300）上下重叠，在接近二层北端平台（Y≈6900）处局部通行净空为零，该楼梯不能作为满足正常通行净空的楼梯使用。用户 turn-user-003 已确认知悉该缺陷，明确要求严格保留原始尺寸、位置、方向、洞口与关系，不移动楼梯、不修改大厅/分隔墙/门窗来消除问题，并要求在 Audit 与交付报告中记录问题位置、影响与保留决定，不得写成合理性或建筑规范检查通过。当前候选忠实保留了该条件：stair-1 与 stair-2 均为 X 8.2～9.4、Y 1.5～6.9，stair-2 位于 stair-1 正上方（z 3.15～6.3 对 z 0～3.15），故该保留缺陷在本 IFC 中真实存在而非仅见于参考模型。此项为用户保留的已知问题，不作为本轮几何修复项，也不代表合理性或规范检查通过。",
+            "evidence_paths": [
+              "design-review-context.json",
+              "reference-review.json",
+              "design-brief/design-brief.json"
+            ]
+          }
+        ],
+        "limitations": [
+          "未进行完整建筑规范审查。",
+          "本 Audit 仅核验请求语义、关系完整性、几何一致性与确定性 Gate；楼梯通行净空属已确认的保留缺陷，未做规范合规判定。",
+          "参考模型发现与当前候选之间的关系仅依据本轮证据路径比对，未做独立工程验算。"
+        ]
+      },
+      "budget_after": {
+        "schema_version": "text2ifc/generation-budget/1.0",
+        "limits": {
+          "max_calls": 2,
+          "max_tokens": 500000,
+          "max_active_seconds": 900
+        },
+        "attempts": [
+          {
+            "attempt": 1,
+            "stage": "audit",
+            "status": "completed",
+            "tokens_charged": 73718,
+            "reserved_tokens": 260624,
+            "elapsed_seconds": 24.281000000002678
+          },
+          {
+            "attempt": 2,
+            "stage": "audit",
+            "status": "completed",
+            "tokens_charged": 97798,
+            "reserved_tokens": 321006,
+            "elapsed_seconds": 28.562999999994645
+          }
+        ],
+        "calls_used": 2,
+        "tokens_used_or_reserved": 171516,
+        "active_seconds": 52.84399999999732
+      }
+    }
+  ],
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 2,
+      "max_tokens": 500000,
+      "max_active_seconds": 900
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 73718,
+        "reserved_tokens": 260624,
+        "elapsed_seconds": 24.281000000002678
+      },
+      {
+        "attempt": 2,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 97798,
+        "reserved_tokens": 321006,
+        "elapsed_seconds": 28.562999999994645
+      }
+    ],
+    "calls_used": 2,
+    "tokens_used_or_reserved": 171516,
+    "active_seconds": 52.84399999999732
+  },
+  "finished_at": "2026-09-11T03:23:15.337558+00:00",
+  "source_unchanged": true
+}

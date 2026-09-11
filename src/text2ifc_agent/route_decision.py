@@ -371,6 +371,12 @@ def _choose_v2_route(issues: list[dict[str, Any]]) -> tuple[str, str]:
     fatal_runtime = _first_issue(issues, owner="runtime", issue_type="runtime_error")
     if fatal_runtime is not None:
         return "runtime_blocked", "runtime"
+    # A disputed/incomplete gate invalidates the repair objective. Keep all
+    # issues as evidence, but do not launch unrelated edits or provider retries
+    # while the evaluator itself needs review.
+    gate_issue = _first_issue(issues, owner="gate", issue_type="gate_false_positive")
+    if gate_issue is not None:
+        return "gate_issue", "gate"
     provider_truncation = _first_issue(issues, owner="provider", issue_type="provider_truncation")
     if provider_truncation is not None:
         return "provider_retry", "provider"
@@ -427,9 +433,6 @@ def _choose_v2_route(issues: list[dict[str, Any]]) -> tuple[str, str]:
     )
     if generator_issue is not None:
         return "regenerate_json", "generator"
-    gate_issue = _first_issue(issues, owner="gate", issue_type="gate_false_positive")
-    if gate_issue is not None:
-        return "gate_issue", "gate"
     suggested = _first_suggested_route(issues)
     if suggested is not None:
         return suggested, _target_stage_for_v2_route(suggested, issues[0])

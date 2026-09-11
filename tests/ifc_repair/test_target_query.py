@@ -59,6 +59,38 @@ def test_target_schemas_freeze_exact_versions() -> None:
     assert resolution_schema["properties"]["schema_version"]["const"] == "text2ifc/ifc-target-resolution/0.1"
 
 
+def test_target_query_defaults_missing_geometry_tolerance_to_point_one_mm() -> None:
+    TargetQuery = _api()["TargetQuery"]
+    query = TargetQuery.from_dict(
+        {
+            "schema_version": "text2ifc/ifc-target-query/0.1",
+            "allowed_ifc_classes": ["IfcWall"],
+            "geometry_constraints": [
+                {"field": "wall_length_mm", "value": 17765.292}
+            ],
+        }
+    )
+    assert query.geometry_constraints[0]["tolerance_mm"] == 0.1
+
+
+def test_target_query_preserves_explicit_zero_geometry_tolerance() -> None:
+    TargetQuery = _api()["TargetQuery"]
+    query = TargetQuery.from_dict(
+        {
+            "schema_version": "text2ifc/ifc-target-query/0.1",
+            "allowed_ifc_classes": ["IfcWall"],
+            "geometry_constraints": [
+                {
+                    "field": "wall_length_mm",
+                    "value": 17765.292,
+                    "tolerance_mm": 0,
+                }
+            ],
+        }
+    )
+    assert query.geometry_constraints[0]["tolerance_mm"] == 0.0
+
+
 def test_exact_guid_resolves_with_schema_valid_audit_evidence(tmp_path: Path) -> None:
     api = _api(); target = _record("0AAAAAAAAAAAAAAAAAAAAA", "Outside wall")
     database = _repository(tmp_path, [target])

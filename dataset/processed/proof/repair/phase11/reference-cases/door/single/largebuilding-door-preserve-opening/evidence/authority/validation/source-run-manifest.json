@@ -1,0 +1,119 @@
+{
+  "artifacts": {
+    "AUDIT-REPORT.md": {
+      "bytes": 6138,
+      "path": "AUDIT-REPORT.md",
+      "sha256": "sha256:9539e0d6dfb713b8275593f6a5f607c8240d851653643832bfac019ae992c657"
+    },
+    "application.json": {
+      "bytes": 10346,
+      "path": "application.json",
+      "sha256": "sha256:efda89a6e7a4393b419ec7fa94056258437c78d321cb5436c85c278d1ae756e9"
+    },
+    "changeset.json": {
+      "bytes": 2530,
+      "path": "changeset.json",
+      "sha256": "sha256:89d270c190658bee793fc44d067268ddb6345abc9ee16f7fd70d72e88acf7d8c"
+    },
+    "comparison.json": {
+      "bytes": 26353,
+      "path": "comparison.json",
+      "sha256": "sha256:345ef67feae87aa17784e1e3770ba8288b97592ceb38531eb9d0b82e8786de57"
+    },
+    "damaged.ifc": {
+      "bytes": 1287831,
+      "path": "damaged.ifc",
+      "sha256": "sha256:37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390"
+    },
+    "evaluation.json": {
+      "bytes": 44361,
+      "path": "evaluation.json",
+      "sha256": "sha256:07d7c0692c279ca659ae4548005c5d17f704ff65ba0aecf0cdf5c2c8f35fd3b6"
+    },
+    "original.ifc": {
+      "bytes": 1292595,
+      "path": "original.ifc",
+      "sha256": "sha256:102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725"
+    },
+    "production-boundary.json": {
+      "bytes": 584,
+      "path": "production-boundary.json",
+      "sha256": "sha256:15b59f625a410082bca9169e36bc14876f34c5a41b54dcf7748f58b8042bf59b"
+    },
+    "release-decision.json": {
+      "bytes": 711,
+      "path": "release-decision.json",
+      "sha256": "sha256:0307fae5eee91993574ab79a789904924605e8a1331b87701b305dc6af76443c"
+    },
+    "repaired.ifc": {
+      "bytes": 1288722,
+      "path": "repaired.ifc",
+      "sha256": "sha256:8afaaaf28769909b5b865a89fc8eb9dac2ab907ac851bfb47776d3d5261cced9"
+    },
+    "request.txt": {
+      "bytes": 405,
+      "path": "request.txt",
+      "sha256": "sha256:295b4b280c4ed1385a5c66d7aac1a9fb2a430c6ff057eb6cf4fd285ff328c62d"
+    },
+    "three-way-audit.json": {
+      "bytes": 79769,
+      "path": "three-way-audit.json",
+      "sha256": "sha256:9067f3c8cfc6be1e34836587abe4d305088431e19bce2ec78d81f7cbd7ff5b8e"
+    }
+  },
+  "baseline_validation_cache": null,
+  "case_id": "largebuilding-door-preserve-opening",
+  "damage": {
+    "door": {
+      "global_id": "2cXV28XOjE6f6irgi0COhu",
+      "name": "M_Single-Flush:Inside Door:353172",
+      "operation_type": "SINGLE_SWING_RIGHT",
+      "overall_height_mm": 2134.0,
+      "overall_width_mm": 915.0,
+      "type_global_id": "2cXV28XOjE6f6irhu0COgZ",
+      "type_name": "M_Single-Flush:Inside Door"
+    },
+    "mode": "remove_door_preserve_opening",
+    "opening": {
+      "dimensions_mm": [
+        {
+          "identifier": "Body",
+          "items": [
+            {
+              "depth": 200.0,
+              "extruded_direction": [
+                0.0,
+                0.0,
+                1.0
+              ],
+              "ifc_class": "IfcExtrudedAreaSolid",
+              "profile_ifc_class": "IfcRectangleProfileDef",
+              "profile_x_dim": 915.0,
+              "profile_y_dim": 2134.0
+            }
+          ],
+          "type": "SweptSolid"
+        }
+      ],
+      "global_id": "2cXV28XOjE6f6irhW0COhu",
+      "name": "M_Single-Flush:Inside Door:353172:1"
+    },
+    "wall": {
+      "global_id": "2cXV28XOjE6f6irgi0COfF",
+      "ifc_class": "IfcWallStandardCase",
+      "name": "Basic Wall:Outside wall:353059"
+    }
+  },
+  "operation_count": 1,
+  "performance": {
+    "application_seconds": 1.233,
+    "cold_evaluation_seconds": 4.651,
+    "cold_request_to_publication_seconds": 5.884,
+    "deadline_seconds": null,
+    "preparation_seconds": 1.562,
+    "warm_evaluation_seconds": null
+  },
+  "schema_version": "text2ifc/phase11-door-proof/0.1",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}

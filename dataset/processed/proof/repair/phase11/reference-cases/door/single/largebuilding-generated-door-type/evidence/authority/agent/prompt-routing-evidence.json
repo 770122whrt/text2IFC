@@ -1,0 +1,197 @@
+{
+  "operation_bindings": [
+    {
+      "operation_id": "operation-generated-door-001",
+      "operation_type": "add_door_with_opening_to_wall",
+      "profile_hash": "sha256:7fa4d80429ce46089a940db35a0a0fbb8effaacca4bbfac7b766245ee6d0c370",
+      "profile_id": "door.add-with-opening"
+    }
+  ],
+  "schema_version": "text2ifc/phase11-prompt-routing-proof/0.1",
+  "selected": {
+    "estimated_tokens": 1004,
+    "few_shot_hashes": [
+      "sha256:059ae585e397766dcc17575f23f29a45812449782b1dc1f4ea9ee96c5d2254fe",
+      "sha256:73bdffe592df1d3015cc8e6e06e03dfda36abd9a582cb150bef8b5c1a9d75dc9",
+      "sha256:7391c7550716d63830ac7b65f1926f6bf48803c0d0f76fde589e9cee485d2e87",
+      "sha256:a249b65958b5562f0f19ff22ac84767e8bfbd427e180486ef0a74e05f69c7186"
+    ],
+    "few_shot_ids": [
+      "door.add.clarification",
+      "door.add.complete",
+      "door.add.type-reuse",
+      "door.add.unsupported"
+    ],
+    "few_shots": [
+      {
+        "case": "clarification",
+        "example_id": "door.add.clarification",
+        "expected": {
+          "missing_slots": [
+            "/parameters/opening/width_mm",
+            "/parameters/opening/height_mm",
+            "/parameters/position"
+          ],
+          "operation_type": "add_door_with_opening_to_wall",
+          "status": "clarification_required"
+        },
+        "profile_id": "door.add-with-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add a door to the named wall"
+      },
+      {
+        "case": "complete",
+        "example_id": "door.add.complete",
+        "expected": {
+          "operation_type": "add_door_with_opening_to_wall",
+          "parameters": {
+            "door": {
+              "operation_type": "SINGLE_SWING_LEFT"
+            },
+            "opening": {
+              "height_mm": 2100,
+              "sill_height_mm": 0,
+              "width_mm": 900
+            },
+            "position": {
+              "reference": "wall_midpoint"
+            }
+          },
+          "status": "complete"
+        },
+        "profile_id": "door.add-with-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add a 900 mm by 2100 mm single-swing door at wall midpoint; viewpoint is corridor toward room and hinge is left"
+      },
+      {
+        "case": "exact_type_reuse",
+        "example_id": "door.add.type-reuse",
+        "expected": {
+          "operation_type": "add_door_with_opening_to_wall",
+          "prototype_intent": {
+            "reference": "EXAMPLE_STYLE_GUID",
+            "reference_kind": "global_id"
+          },
+          "rule": "do_not_scale_or_correct_reused_type"
+        },
+        "profile_id": "door.add-with-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add the door and reuse DoorStyle EXAMPLE_STYLE_GUID exactly"
+      },
+      {
+        "case": "unsupported",
+        "example_id": "door.add.unsupported",
+        "expected": {
+          "capability_code": "DOOR_OPERATION_TYPE_UNSUPPORTED",
+          "operation_type": "add_door_with_opening_to_wall",
+          "status": "unsupported"
+        },
+        "profile_id": "door.add-with-opening",
+        "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+        "user_text": "EXAMPLE_ONLY: add a revolving door"
+      }
+    ],
+    "input_bytes": 4016,
+    "profile_hashes": [
+      "sha256:7fa4d80429ce46089a940db35a0a0fbb8effaacca4bbfac7b766245ee6d0c370"
+    ],
+    "profile_ids": [
+      "door.add-with-opening"
+    ],
+    "profiles": [
+      {
+        "action": "add_with_opening",
+        "classification_terms": [
+          "door",
+          "门",
+          "add door",
+          "repair door",
+          "single swing"
+        ],
+        "component_family": "door",
+        "conditional_slots": [
+          "/parameters/door/operation_type",
+          "/parameters/door/viewpoint",
+          "/prototype_intent"
+        ],
+        "few_shots": [
+          {
+            "example_id": "door.add.complete",
+            "path": "prompts/agent/ifc-repair-few-shots/door-add-complete.json",
+            "sha256": "sha256:73bdffe592df1d3015cc8e6e06e03dfda36abd9a582cb150bef8b5c1a9d75dc9"
+          },
+          {
+            "example_id": "door.add.clarification",
+            "path": "prompts/agent/ifc-repair-few-shots/door-add-clarification.json",
+            "sha256": "sha256:059ae585e397766dcc17575f23f29a45812449782b1dc1f4ea9ee96c5d2254fe"
+          },
+          {
+            "example_id": "door.add.type-reuse",
+            "path": "prompts/agent/ifc-repair-few-shots/door-add-type-reuse.json",
+            "sha256": "sha256:7391c7550716d63830ac7b65f1926f6bf48803c0d0f76fde589e9cee485d2e87"
+          },
+          {
+            "example_id": "door.add.unsupported",
+            "path": "prompts/agent/ifc-repair-few-shots/door-add-unsupported.json",
+            "sha256": "sha256:a249b65958b5562f0f19ff22ac84767e8bfbd427e180486ef0a74e05f69c7186"
+          }
+        ],
+        "forbidden_inferences": [
+          "clear width from nominal width",
+          "left or right swing without viewpoint",
+          "prototype similarity",
+          "material or transom"
+        ],
+        "operation_type": "add_door_with_opening_to_wall",
+        "optional_slots": [
+          "/property_intents",
+          "/quantity_intents",
+          "/occurrence_reuse_intent"
+        ],
+        "profile_hash": "sha256:7fa4d80429ce46089a940db35a0a0fbb8effaacca4bbfac7b766245ee6d0c370",
+        "profile_id": "door.add-with-opening",
+        "profile_version": "0.1",
+        "program_derived_slots": [
+          "/parameters/opening/sill_height_mm",
+          "opening depth",
+          "GlobalIds",
+          "storey containment",
+          "door visual representation"
+        ],
+        "required_slots": [
+          "/target_query",
+          "/parameters/position",
+          "/parameters/opening/width_mm",
+          "/parameters/opening/height_mm"
+        ],
+        "schema_version": "text2ifc/ifc-repair-prompt-profile/0.1",
+        "slot_summary": "Target Wall; wall-local position; overall opening width and height; optional exact DoorStyle or explicit single-swing operation with viewpoint.",
+        "stage2_projection_fields": [
+          "operation_id",
+          "operation_type",
+          "target",
+          "parameters",
+          "evidence_refs"
+        ],
+        "supported_capabilities": [
+          "straight_wall",
+          "SINGLE_SWING_LEFT",
+          "SINGLE_SWING_RIGHT",
+          "NOTDEFINED",
+          "exact_type_reuse",
+          "generated_type"
+        ],
+        "target_ifc_classes": [
+          "IfcWall"
+        ],
+        "unsupported_capabilities": [
+          "REVOLVING",
+          "FOLDING",
+          "SLIDING",
+          "DOUBLE_DOOR",
+          "curved_wall"
+        ]
+      }
+    ]
+  }
+}

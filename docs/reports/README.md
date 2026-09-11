@@ -7,6 +7,7 @@
 ## 项目总结
 
 - [项目研究思路与 Pipeline 总结](project-research-summary.md)
+- [LLM Generation / IFC Repair / Demo Paper 后续方向记录（2026-09-03）](llm-generation-repair-demo-next-direction-2026-09-03.md)
 
 ## 周报
 

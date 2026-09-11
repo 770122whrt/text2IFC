@@ -1,0 +1,1035 @@
+{
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
+  "collection_id": "c-shaped-teaching-20260911",
+  "workflow": "generation",
+  "status": "accepted",
+  "human_review_status": "accepted",
+  "human_review_date": "2026-09-11",
+  "scope": "User-accepted faithful Generation; not full engineering/code-compliance certification.",
+  "cases": [
+    {
+      "case_id": "C-teaching",
+      "path": "C-teaching",
+      "status": "accepted",
+      "outcome": "generated",
+      "human_review_status": "accepted",
+      "evidence_mode": "live_generation_with_independent_ifc_and_human_review",
+      "provider_calls": 3,
+      "run_id": "05c6de3a19ed20f9",
+      "authority": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/acceptance-metrics.json",
+      "original_role": null,
+      "ifccompare": "N/A: Generation",
+      "artifacts": {
+        "request.txt": {
+          "sha256": "32b2ba205339134d1ba8077b4d8f477ae520816780e8df080d0b4993b48bb233",
+          "size_bytes": 4373,
+          "source": "evidence/frozen/request.txt"
+        },
+        "conversation.json": {
+          "sha256": "59fe326528076ae5bc440f4c86177f2d32df4f87204d4034316b8d87a5313d22",
+          "size_bytes": 4999,
+          "source": "evidence/frozen/conversation.json"
+        },
+        "CLARIFICATIONS.md": {
+          "sha256": "6ea8a61ba34a2d0e81625c4bc2391d1ebd66670d5b9a2609d3d4b133ad92fe3e",
+          "size_bytes": 698,
+          "source": "evidence/frozen/CLARIFICATIONS.md"
+        },
+        "generated.ifc": {
+          "sha256": "52c3e24856775152f62d2179e6c1efd0855da6d9b6d6cfb32a73fab3fbbe81ff",
+          "size_bytes": 380594,
+          "source": "evidence/frozen/generated.ifc"
+        },
+        "model.json": {
+          "sha256": "d4af5f282869a4aa26b1c117bdf3a7f99db0534adecfae113e97ed08b5167486",
+          "size_bytes": 143399,
+          "source": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/candidate.json"
+        },
+        "independent-ifc-check.json": {
+          "sha256": "84273e0cb1cfa24c2afcbd4c32c45c7491b054bf3caadb77f4099733bfabec72",
+          "size_bytes": 22440,
+          "source": "evidence/frozen/independent-ifc-check.json"
+        },
+        "usage-summary.json": {
+          "sha256": "f4ba759895492fab7cc4b784ee324d40bcf08f7d3edbd9edde0945115a9d3640",
+          "size_bytes": 3746,
+          "source": "evidence/frozen/usage-summary.json"
+        },
+        "views/ground-floor-mesh.json": {
+          "sha256": "b73c1a00bcf10e34804c497254cd055ef107e4207be55d5fdc5ac6e20e0d3a48",
+          "size_bytes": 32945,
+          "source": "evidence/frozen/views/ground-floor-mesh.json"
+        },
+        "views/ground-floor.png": {
+          "sha256": "eb782a714e1e787d75e493c512e1b86f3401d0db7fbc764273d227d075af5007",
+          "size_bytes": 7209,
+          "source": "evidence/frozen/views/ground-floor.png"
+        },
+        "views/IfcDoor-mesh.json": {
+          "sha256": "8ed712d2e33f6714ba46351f7594b25e9cb4ac337e9943ce2f027d519397e6fc",
+          "size_bytes": 4443,
+          "source": "evidence/frozen/views/IfcDoor-mesh.json"
+        },
+        "views/IfcDoor.png": {
+          "sha256": "89a2bb23bc084ffad51582b70c20eeadea8de7928038ad457dc09aec46297cc2",
+          "size_bytes": 8382,
+          "source": "evidence/frozen/views/IfcDoor.png"
+        },
+        "views/IfcWindow-mesh.json": {
+          "sha256": "51315c225558fa8cf88676498cba547ff0bbf13ca869858d9c7a154ff3747d17",
+          "size_bytes": 7144,
+          "source": "evidence/frozen/views/IfcWindow-mesh.json"
+        },
+        "views/IfcWindow.png": {
+          "sha256": "407b977a69442083be7f66f635081453dca4ab35566c688954b7a97fa469804d",
+          "size_bytes": 12668,
+          "source": "evidence/frozen/views/IfcWindow.png"
+        },
+        "views/overall-mesh.json": {
+          "sha256": "a60d553acaa75148b477707900c57cd3aceb94fe7c9a64d80170fac3bd8da9be",
+          "size_bytes": 238026,
+          "source": "evidence/frozen/views/overall-mesh.json"
+        },
+        "views/overall.png": {
+          "sha256": "464ce8e74fe27fc3edf3b6d3f45213805d5dd361bf82428a332b02085b9db09a",
+          "size_bytes": 22692,
+          "source": "evidence/frozen/views/overall.png"
+        },
+        "views/viewer.html": {
+          "sha256": "520b5994dcf1b07f9c011cb6ad57e0323e5fbd6860282fca22fc184474d052eb",
+          "size_bytes": 244441,
+          "source": "evidence/frozen/views/viewer.html"
+        }
+      }
+    }
+  ],
+  "legacy_bundles": [
+    {
+      "id": "frozen",
+      "old_root": "dataset/processed/ifc-presentation-validation/c-shaped-current-provider-20260911",
+      "entries": [
+        {
+          "legacy_path": ".gitattributes",
+          "path": "evidence/frozen/.gitattributes",
+          "sha256": "48747480eddba024928d03be9bf83dc579e5515768647507a767e8187a85c9ab",
+          "size_bytes": 9
+        },
+        {
+          "legacy_path": "admission.json",
+          "path": "evidence/frozen/admission.json",
+          "sha256": "f1ae16fd2d5774baf98f9293bb649831226cb0604f15ed7c21e4a3cb5a78cc34",
+          "size_bytes": 288670
+        },
+        {
+          "legacy_path": "artifact-validation.json",
+          "path": "evidence/frozen/artifact-validation.json",
+          "sha256": "f6e1e3bedc4176b69638c12986ab7246179468040a0d46351844c3591afb8328",
+          "size_bytes": 671
+        },
+        {
+          "legacy_path": "authorization.json",
+          "path": "evidence/frozen/authorization.json",
+          "sha256": "0694a50e90953951086894a1f096d1fec59059bfff384af4fde69b1dbe82f87c",
+          "size_bytes": 548
+        },
+        {
+          "legacy_path": "CLARIFICATIONS.md",
+          "path": "evidence/frozen/CLARIFICATIONS.md",
+          "sha256": "6ea8a61ba34a2d0e81625c4bc2391d1ebd66670d5b9a2609d3d4b133ad92fe3e",
+          "size_bytes": 698
+        },
+        {
+          "legacy_path": "conversation.json",
+          "path": "evidence/frozen/conversation.json",
+          "sha256": "59fe326528076ae5bc440f4c86177f2d32df4f87204d4034316b8d87a5313d22",
+          "size_bytes": 4999
+        },
+        {
+          "legacy_path": "freeze.py",
+          "path": "evidence/frozen/freeze.py",
+          "sha256": "7eb4b85a63b0fa5d1e6fcf88df3b64dc7739136cc82c6c2d1a1b136bd75c2ec3",
+          "size_bytes": 2332
+        },
+        {
+          "legacy_path": "generated.ifc",
+          "path": "evidence/frozen/generated.ifc",
+          "sha256": "52c3e24856775152f62d2179e6c1efd0855da6d9b6d6cfb32a73fab3fbbe81ff",
+          "size_bytes": 380594
+        },
+        {
+          "legacy_path": "independent-ifc-check.json",
+          "path": "evidence/frozen/independent-ifc-check.json",
+          "sha256": "84273e0cb1cfa24c2afcbd4c32c45c7491b054bf3caadb77f4099733bfabec72",
+          "size_bytes": 22440
+        },
+        {
+          "legacy_path": "live-run/execution.json",
+          "path": "evidence/frozen/live-run/execution.json",
+          "sha256": "74f2c7a55133cfad900256bf1832d8e8b5d319258944ba38b400881f218a65bc",
+          "size_bytes": 10758
+        },
+        {
+          "legacy_path": "live-run/final-acceptance.json",
+          "path": "evidence/frozen/live-run/final-acceptance.json",
+          "sha256": "cbaee4873c1f1fdd6f8719b9685a1999c4dffb346655c9cb3f01dbc91a2244c3",
+          "size_bytes": 382
+        },
+        {
+          "legacy_path": "live-run/run.log",
+          "path": "evidence/frozen/live-run/run.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/acceptance-metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/acceptance-metrics.json",
+          "sha256": "07f915b001613eaea46ccb1f20d990a1159ccd7e53e5353ec948f5261972bac3",
+          "size_bytes": 618
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/audit-context.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/audit-context.json",
+          "sha256": "92461455795fa26976c973c75c3fa30224528a4c563a61cc3c5c08a943fecb72",
+          "size_bytes": 807
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/audit-report.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/audit-report.json",
+          "sha256": "68968d5075b9edf2a726d1609fbc7f7c5cfee391af5ab0f6d02da89de93b6a1a",
+          "size_bytes": 6133
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/events.jsonl",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/events.jsonl",
+          "sha256": "9abe8524136a158ed78ad92f3f1c5641f990f8ff411ac0889c32b7e119c24012",
+          "size_bytes": 31414
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/metrics.json",
+          "sha256": "39e3da13fa6eefe1c1568eaa3174d6271b07d1c3329166944537a2bdb2c1a416",
+          "size_bytes": 932
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/model-text.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/model-text.txt",
+          "sha256": "7d7adc435da0d38ad3d601c3852b6562f6b07f039735b1622632f10db4be38d8",
+          "size_bytes": 5236
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/parsed-output.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/parsed-output.json",
+          "sha256": "68968d5075b9edf2a726d1609fbc7f7c5cfee391af5ab0f6d02da89de93b6a1a",
+          "size_bytes": 6133
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/prompt-render-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/prompt-render-input.json",
+          "sha256": "142bdbc68a9793806e02a677822ba7aec3ecc093ab50a58b2543033d396fd920",
+          "size_bytes": 515592
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/prompt-rendered.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/prompt-rendered.md",
+          "sha256": "0358df68a3b40cde3d74e09f1374cd12ec70a63d956ad993432486caf9671abe",
+          "size_bytes": 176975
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/prompt-wire-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/prompt-wire-input.json",
+          "sha256": "2873eece9f0cc8593aae39c936201ca433d2ecd40ee638d68cea5585be8220bc",
+          "size_bytes": 341951
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/request.redacted.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/request.redacted.json",
+          "sha256": "b4ad361d8c979bd1457363294c503c46577dceb3db9bb0e6108398fb59fa25c0",
+          "size_bytes": 194020
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/response-metadata.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/response-metadata.json",
+          "sha256": "2aa3990ae612b1c22315d5535d6052436c7a5a4aa0046dc03c8c33c2a830a108",
+          "size_bytes": 767
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/response.raw.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/response.raw.json",
+          "sha256": "1574a74a95a06d402d8a2f5545d6a9264d56585447fbc4af171fd9a972bb5b4e",
+          "size_bytes": 31742
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/trace-manifest.json",
+          "sha256": "8dc7f47b20eaf66b8e1d3ab7863bd661bba4b5a59afb74c89a686b312da8bafe",
+          "size_bytes": 1894
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/audit/validation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/audit/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/.design-brief-attempt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/.design-brief-attempt",
+          "sha256": "70c6080b59edef3a82f748b1921ef73ea123ebed76be44d2fd30cbea6c8dd214",
+          "size_bytes": 53
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/context-selection.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/context-selection.json",
+          "sha256": "9ee1212c30fb03f4abcda7e5d4b0851cf35f279b5416a92ea3d1798a5e1383bd",
+          "size_bytes": 46681
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/conversation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/conversation.json",
+          "sha256": "50be8e74d2576832b92eb65a440935ce5ddae736041418c09f2aa5f3e1eced2b",
+          "size_bytes": 4999
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/design-brief.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/design-brief.json",
+          "sha256": "436cf5e4e534af978e31f6d043899cc479966b8f899736a5407cad7c3c171602",
+          "size_bytes": 66260
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/events.jsonl",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/events.jsonl",
+          "sha256": "c0133e8135b3cc469bb0ab5b8d20401c732290bc11dec3976116ba9ee6961ce6",
+          "size_bytes": 158984
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/input.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/input.txt",
+          "sha256": "e25993a9f1a94ef989e5141febe4a698168a2776d82203ada685a6b8178e3998",
+          "size_bytes": 4396
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/metrics.json",
+          "sha256": "5a01421203b12885c46e3d80c510d82863a1feaab3a8d76c1e44efe62b49ef09",
+          "size_bytes": 875
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/model-text.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/model-text.txt",
+          "sha256": "d1d5c92fd9ff0bed1b1976a0d9c1b8b616ba72e147a34ad08b816430a2a0503e",
+          "size_bytes": 34105
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/parsed-output.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/parsed-output.json",
+          "sha256": "436cf5e4e534af978e31f6d043899cc479966b8f899736a5407cad7c3c171602",
+          "size_bytes": 66260
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/prompt-render-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/prompt-render-input.json",
+          "sha256": "b298329317dd2775b5a284f57c6c79366bb47fa4ae47d9cee8cf91cd0e05bab5",
+          "size_bytes": 73120
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/prompt-rendered.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/prompt-rendered.md",
+          "sha256": "2564a97a1a57a92f1d7e9321bc72481a029e5da75c2b72104949d1c5964462a5",
+          "size_bytes": 69614
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/request.redacted.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/request.redacted.json",
+          "sha256": "6136715878ad2ad0a3fd0adb8ea79ac051dfe7c52eccdc8252897358fd0288e5",
+          "size_bytes": 74105
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/response-metadata.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/response-metadata.json",
+          "sha256": "38cb3847e428805cf81df3f8671729a182d2966a8aebc9079f3f4ec60ad2a3fa",
+          "size_bytes": 776
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/response.raw.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/response.raw.json",
+          "sha256": "8c89fc6bf7959cb5a0ca5660fb182e5c399ddb85d4670d7f599e44a123246f43",
+          "size_bytes": 159313
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/trace-manifest.json",
+          "sha256": "8764b40c98a0c75e7c8b181a7273f84904394ce9941fd3816626f847190c86a9",
+          "size_bytes": 7304
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/validation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/calls/01-design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/candidate-origin.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/candidate-origin.json",
+          "sha256": "3868bd52d77c567ac987bb54869f639438e0fd1f7592bf0ceae5e082355ad423",
+          "size_bytes": 143
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/candidate.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/candidate.json",
+          "sha256": "d4af5f282869a4aa26b1c117bdf3a7f99db0534adecfae113e97ed08b5167486",
+          "size_bytes": 143399
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/case-result.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/case-result.json",
+          "sha256": "87da503e3c4d7263eb5c62f573b6f88b36a3b6c9778844238f2980198135b10b",
+          "size_bytes": 808
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/.design-brief-attempt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/.design-brief-attempt",
+          "sha256": "70c6080b59edef3a82f748b1921ef73ea123ebed76be44d2fd30cbea6c8dd214",
+          "size_bytes": 53
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/context-selection.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/context-selection.json",
+          "sha256": "9ee1212c30fb03f4abcda7e5d4b0851cf35f279b5416a92ea3d1798a5e1383bd",
+          "size_bytes": 46681
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/conversation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/conversation.json",
+          "sha256": "50be8e74d2576832b92eb65a440935ce5ddae736041418c09f2aa5f3e1eced2b",
+          "size_bytes": 4999
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/design-brief.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/design-brief.json",
+          "sha256": "436cf5e4e534af978e31f6d043899cc479966b8f899736a5407cad7c3c171602",
+          "size_bytes": 66260
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/events.jsonl",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/events.jsonl",
+          "sha256": "c0133e8135b3cc469bb0ab5b8d20401c732290bc11dec3976116ba9ee6961ce6",
+          "size_bytes": 158984
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/input.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/input.txt",
+          "sha256": "e25993a9f1a94ef989e5141febe4a698168a2776d82203ada685a6b8178e3998",
+          "size_bytes": 4396
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/metrics.json",
+          "sha256": "5a01421203b12885c46e3d80c510d82863a1feaab3a8d76c1e44efe62b49ef09",
+          "size_bytes": 875
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/model-text.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/model-text.txt",
+          "sha256": "d1d5c92fd9ff0bed1b1976a0d9c1b8b616ba72e147a34ad08b816430a2a0503e",
+          "size_bytes": 34105
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/parsed-output.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/parsed-output.json",
+          "sha256": "436cf5e4e534af978e31f6d043899cc479966b8f899736a5407cad7c3c171602",
+          "size_bytes": 66260
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/prompt-render-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/prompt-render-input.json",
+          "sha256": "b298329317dd2775b5a284f57c6c79366bb47fa4ae47d9cee8cf91cd0e05bab5",
+          "size_bytes": 73120
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/prompt-rendered.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/prompt-rendered.md",
+          "sha256": "2564a97a1a57a92f1d7e9321bc72481a029e5da75c2b72104949d1c5964462a5",
+          "size_bytes": 69614
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/request.redacted.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/request.redacted.json",
+          "sha256": "6136715878ad2ad0a3fd0adb8ea79ac051dfe7c52eccdc8252897358fd0288e5",
+          "size_bytes": 74105
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/response-metadata.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/response-metadata.json",
+          "sha256": "38cb3847e428805cf81df3f8671729a182d2966a8aebc9079f3f4ec60ad2a3fa",
+          "size_bytes": 776
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/response.raw.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/response.raw.json",
+          "sha256": "8c89fc6bf7959cb5a0ca5660fb182e5c399ddb85d4670d7f599e44a123246f43",
+          "size_bytes": 159313
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/trace-manifest.json",
+          "sha256": "8764b40c98a0c75e7c8b181a7273f84904394ce9941fd3816626f847190c86a9",
+          "size_bytes": 7304
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/design-brief/validation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/dynamic-gates.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/dynamic-gates.json",
+          "sha256": "8922e189db11d39a9979e1aead74c023cbf2a27686a15811a743a55dd82f19a1",
+          "size_bytes": 11958
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/audit-context.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/audit-context.json",
+          "sha256": "92461455795fa26976c973c75c3fa30224528a4c563a61cc3c5c08a943fecb72",
+          "size_bytes": 807
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/audit-report.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/audit-report.json",
+          "sha256": "68968d5075b9edf2a726d1609fbc7f7c5cfee391af5ab0f6d02da89de93b6a1a",
+          "size_bytes": 6133
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/events.jsonl",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/events.jsonl",
+          "sha256": "9abe8524136a158ed78ad92f3f1c5641f990f8ff411ac0889c32b7e119c24012",
+          "size_bytes": 31414
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/metrics.json",
+          "sha256": "39e3da13fa6eefe1c1568eaa3174d6271b07d1c3329166944537a2bdb2c1a416",
+          "size_bytes": 932
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/model-text.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/model-text.txt",
+          "sha256": "7d7adc435da0d38ad3d601c3852b6562f6b07f039735b1622632f10db4be38d8",
+          "size_bytes": 5236
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/parsed-output.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/parsed-output.json",
+          "sha256": "68968d5075b9edf2a726d1609fbc7f7c5cfee391af5ab0f6d02da89de93b6a1a",
+          "size_bytes": 6133
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/prompt-render-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/prompt-render-input.json",
+          "sha256": "142bdbc68a9793806e02a677822ba7aec3ecc093ab50a58b2543033d396fd920",
+          "size_bytes": 515592
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/prompt-rendered.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/prompt-rendered.md",
+          "sha256": "0358df68a3b40cde3d74e09f1374cd12ec70a63d956ad993432486caf9671abe",
+          "size_bytes": 176975
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/prompt-wire-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/prompt-wire-input.json",
+          "sha256": "2873eece9f0cc8593aae39c936201ca433d2ecd40ee638d68cea5585be8220bc",
+          "size_bytes": 341951
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/request.redacted.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/request.redacted.json",
+          "sha256": "b4ad361d8c979bd1457363294c503c46577dceb3db9bb0e6108398fb59fa25c0",
+          "size_bytes": 194020
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/response-metadata.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/response-metadata.json",
+          "sha256": "2aa3990ae612b1c22315d5535d6052436c7a5a4aa0046dc03c8c33c2a830a108",
+          "size_bytes": 767
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/response.raw.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/response.raw.json",
+          "sha256": "1574a74a95a06d402d8a2f5545d6a9264d56585447fbc4af171fd9a972bb5b4e",
+          "size_bytes": 31742
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/trace-manifest.json",
+          "sha256": "8dc7f47b20eaf66b8e1d3ab7863bd661bba4b5a59afb74c89a686b312da8bafe",
+          "size_bytes": 1894
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/validation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/audit/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/candidate.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/candidate.json",
+          "sha256": "d4af5f282869a4aa26b1c117bdf3a7f99db0534adecfae113e97ed08b5167486",
+          "size_bytes": 143399
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/dynamic-gates.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/dynamic-gates.json",
+          "sha256": "8922e189db11d39a9979e1aead74c023cbf2a27686a15811a743a55dd82f19a1",
+          "size_bytes": 11958
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/gate-summary.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/gate-summary.json",
+          "sha256": "d463aed0359f1f6c425500d7ffad19d9a6948509758390834c0ba80725acc640",
+          "size_bytes": 81587
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/geometry-feedback.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/geometry-feedback.json",
+          "sha256": "3107d3fc8a29bf82af3feb634f062789fa351a2f7e821830704dcc1356ca766e",
+          "size_bytes": 17762
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/ifc-verification.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/ifc-verification.json",
+          "sha256": "e02495036c1db85a42636939b394d5733af906882013ed10fb9f5a7b7fe96ec5",
+          "size_bytes": 250
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/semantic-coverage.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/evaluation-rounds/round-01/semantic-coverage.json",
+          "sha256": "ab116ff04305fe214f8e37e63c9ab397a95f3ea648f78ca5ec9314d64ea2065e",
+          "size_bytes": 67640
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/expected-facts.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/expected-facts.json",
+          "sha256": "33cf46d9451b3f370603480258fb2e8ad15e85b14ac899e8030747e2fe26f715",
+          "size_bytes": 76151
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/feedback-rounds.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/feedback-rounds.json",
+          "sha256": "ae36cc365edf35355593cbcbaf1b5a552451cfd25e2e685d5f172e7b187bbc76",
+          "size_bytes": 988
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/gate-summary.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/gate-summary.json",
+          "sha256": "d463aed0359f1f6c425500d7ffad19d9a6948509758390834c0ba80725acc640",
+          "size_bytes": 81587
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generation-budget.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generation-budget.json",
+          "sha256": "b379a9af81c45e88aa919201a538b57ad68ae15209a7c55246ddb6a47d67cf8f",
+          "size_bytes": 4115
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generation-strategy.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generation-strategy.json",
+          "sha256": "bec09b87b85f46a4b6f66fd0eb798979837e67b9a0aaf6ef4415e6c4f8ae56f5",
+          "size_bytes": 119
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/candidate.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/candidate.json",
+          "sha256": "d4af5f282869a4aa26b1c117bdf3a7f99db0534adecfae113e97ed08b5167486",
+          "size_bytes": 143399
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/classification.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/conversation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/conversation.json",
+          "sha256": "50be8e74d2576832b92eb65a440935ce5ddae736041418c09f2aa5f3e1eced2b",
+          "size_bytes": 4999
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/design-brief.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/design-brief.json",
+          "sha256": "436cf5e4e534af978e31f6d043899cc479966b8f899736a5407cad7c3c171602",
+          "size_bytes": 66260
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/events.jsonl",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/events.jsonl",
+          "sha256": "c04c4b97a64e827308583bcd73e580e0a7bdb3935dab402e050ef5f9afcc8236",
+          "size_bytes": 135335
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/generator-context.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/generator-context.json",
+          "sha256": "67fbf71f3e4c88d53a6874b762c4d60619d61fd76bd67ca933e7709ba2daaa13",
+          "size_bytes": 50745
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/input.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/input.txt",
+          "sha256": "dab3c23ef44efb883678cae72c43370dcefc3f703e6ca761dfe49820196383cd",
+          "size_bytes": 4394
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/metrics.json",
+          "sha256": "6eceb9e9c8b0256a6a846a433de0facfe2c20b698e7f262d634a6e27f3e2eeb1",
+          "size_bytes": 962
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/model-text.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/model-text.txt",
+          "sha256": "fc5d8616821ff07e89a5e893cfee73a18715e6abf9e40fc4dae011aed13ef294",
+          "size_bytes": 70442
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/parsed-output.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/parsed-output.json",
+          "sha256": "d4af5f282869a4aa26b1c117bdf3a7f99db0534adecfae113e97ed08b5167486",
+          "size_bytes": 143399
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/prompt-render-input.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/prompt-render-input.json",
+          "sha256": "9edfc8f2e081d6b7df1bf1ee00ee5621877aaff6275ab028d6c8624fd684b263",
+          "size_bytes": 217380
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/prompt-rendered.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/prompt-rendered.md",
+          "sha256": "b1c9715fcbfa68469499cef901e8cea5012a6b89abb831fb0d7bc1b34e85687c",
+          "size_bytes": 128212
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/request.redacted.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/request.redacted.json",
+          "sha256": "727b2768b92c990edbbc483561671a3fbabab3b4544eb9f7864e21026732844d",
+          "size_bytes": 140525
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/response-metadata.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/response-metadata.json",
+          "sha256": "7a2f7eaac84fa9c8f32725d8b6c3dfa8c46c89f282082c197735449e68a682a5",
+          "size_bytes": 773
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/response.raw.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/response.raw.json",
+          "sha256": "76a1b4e322f9d27e56eac5798ef8d7e3aa12f543e06c285d43437edac2130651",
+          "size_bytes": 135664
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/semantic-capabilities.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/trace-manifest.json",
+          "sha256": "4b7c4590200a4c36fee8b5e1fa16c250b6e81daeed19e1b8df78851f16e081f2",
+          "size_bytes": 1847
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/generator/validation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/geometry-expectation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/geometry-expectation.json",
+          "sha256": "4415d952ce2223efb1e5e0f4eb9a217f3f4ec85a18275004d079ebce14f5e4c3",
+          "size_bytes": 8513
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/geometry-feedback.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/geometry-feedback.json",
+          "sha256": "3107d3fc8a29bf82af3feb634f062789fa351a2f7e821830704dcc1356ca766e",
+          "size_bytes": 17762
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/ifc-verification.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/ifc-verification.json",
+          "sha256": "e02495036c1db85a42636939b394d5733af906882013ed10fb9f5a7b7fe96ec5",
+          "size_bytes": 250
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/issues.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/issues.json",
+          "sha256": "4e37fd6d18d09b0a040da95857f114a9b33db70b3128f9e89a0ccb4c2a9e13ca",
+          "size_bytes": 66
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/output.ifc",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/output.ifc",
+          "sha256": "52c3e24856775152f62d2179e6c1efd0855da6d9b6d6cfb32a73fab3fbbe81ff",
+          "size_bytes": 380594
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/candidate.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/candidate.json",
+          "sha256": "d4af5f282869a4aa26b1c117bdf3a7f99db0534adecfae113e97ed08b5167486",
+          "size_bytes": 143399
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/conversation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/conversation.json",
+          "sha256": "50be8e74d2576832b92eb65a440935ce5ddae736041418c09f2aa5f3e1eced2b",
+          "size_bytes": 4999
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/design-brief.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/design-brief.json",
+          "sha256": "436cf5e4e534af978e31f6d043899cc479966b8f899736a5407cad7c3c171602",
+          "size_bytes": 66260
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/generator-context.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/generator-context.json",
+          "sha256": "67fbf71f3e4c88d53a6874b762c4d60619d61fd76bd67ca933e7709ba2daaa13",
+          "size_bytes": 50745
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/input.txt",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/input.txt",
+          "sha256": "dab3c23ef44efb883678cae72c43370dcefc3f703e6ca761dfe49820196383cd",
+          "size_bytes": 4394
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/metrics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/metrics.json",
+          "sha256": "de9126e4d8b03bc656bcc405ea38465baf40073fc973ec894be1a8eaa479e41c",
+          "size_bytes": 1073
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/repair-attempts.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/repair-attempts.json",
+          "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+          "size_bytes": 4
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/route.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/route.json",
+          "sha256": "77ace3e9e8b78fc41229ada6097c6f2242c41c2d17a8e81cbb6d617aca03c1e2",
+          "size_bytes": 1077
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/source-validation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/source-validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/repair/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/repair/trace-manifest.json",
+          "sha256": "aaa53d1a02e9c3ccf8171f54636ca89572700b8d4c42f116718e289645efce15",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/report.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/report.md",
+          "sha256": "d80eaa71e878b62cb0f88b5b6c30f4394d0bc0affe136b86db4226d09abe06f6",
+          "size_bytes": 391139
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/request-semantics.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/request-semantics.json",
+          "sha256": "c0280a766ef6f5854333ef0279ed7e5c2d564494e714b68abc5125fd55f338c4",
+          "size_bytes": 50982
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/route-decision.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/route-decision.json",
+          "sha256": "065d40f2c07ff4192826d8f9eeb80b172e427905d83e3825f07df77157324b9b",
+          "size_bytes": 349
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/secret-scan.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/secret-scan.json",
+          "sha256": "4636bc92277d576e4671e1484b346ab211dd7901133bb2f41ecc99bfc8bb6067",
+          "size_bytes": 303
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/semantic-capabilities.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/semantic-coverage.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/semantic-coverage.json",
+          "sha256": "ab116ff04305fe214f8e37e63c9ab397a95f3ea648f78ca5ec9314d64ea2065e",
+          "size_bytes": 67640
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/semantic-geometry-expectation.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/semantic-geometry-expectation.json",
+          "sha256": "6fee43b7af8916ba958633427fe057b47d3b5d1a1daec6a5679f10af04f4fe27",
+          "size_bytes": 22186
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/semantic-report.md",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/semantic-report.md",
+          "sha256": "ca368c616668fbc5f79808fb659e201c2816251cea4129945cf0394eda33c910",
+          "size_bytes": 48841
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/semantic-verification.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/semantic-verification.json",
+          "sha256": "67d78af0b706675b71aaedc81a5aaf8862547ff03970fc2075c62eed964d01a4",
+          "size_bytes": 37388
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/session-export.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/session-export.json",
+          "sha256": "de66f2592d6f3934f4b667e3b8a96808be775cac2b3462e565edb568f36a7264",
+          "size_bytes": 808717
+        },
+        {
+          "legacy_path": "live-run/runs/05c6de3a19ed20f9/trace-manifest.json",
+          "path": "evidence/frozen/live-run/runs/05c6de3a19ed20f9/trace-manifest.json",
+          "sha256": "729fdd8d6856a29bb6ee8cad37badc752a9f6e575b3d84e2a7c9cca256c935ec",
+          "size_bytes": 10551
+        },
+        {
+          "legacy_path": "live-run/sessions.sqlite",
+          "path": "evidence/frozen/live-run/sessions.sqlite",
+          "sha256": "79b2937c20fd9d98a146f53e43c5b8584ed58c66e1a35852510f4d3dbe222863",
+          "size_bytes": 425984
+        },
+        {
+          "legacy_path": "payload-preview.json",
+          "path": "evidence/frozen/payload-preview.json",
+          "sha256": "36db22702d96fa81f757497a3cde2c0aa63dba07864a122cd8abc771dd05ad6a",
+          "size_bytes": 10293
+        },
+        {
+          "legacy_path": "prepare.py",
+          "path": "evidence/frozen/prepare.py",
+          "sha256": "4ae970108e5cb8d1ff29cc89babae47f282b9e57b41f2c36da0311fc4963dac4",
+          "size_bytes": 4333
+        },
+        {
+          "legacy_path": "REPORT.md",
+          "path": "evidence/frozen/REPORT.md",
+          "sha256": "4f757fa8d59e1c8ce550a98b431d558c7f6a7fc2910d562c3ecb707e1205d614",
+          "size_bytes": 3391
+        },
+        {
+          "legacy_path": "request.txt",
+          "path": "evidence/frozen/request.txt",
+          "sha256": "32b2ba205339134d1ba8077b4d8f477ae520816780e8df080d0b4993b48bb233",
+          "size_bytes": 4373
+        },
+        {
+          "legacy_path": "run_case.py",
+          "path": "evidence/frozen/run_case.py",
+          "sha256": "d30684b683f33eca0c26169da87223b1db50ec14024e9a5ebf16a843b8633aa9",
+          "size_bytes": 6140
+        },
+        {
+          "legacy_path": "summarize.py",
+          "path": "evidence/frozen/summarize.py",
+          "sha256": "d3cb81b50102e8b77f1749b14dbc7ff9a6e17ff2d1ae4bae5d58485c9a5dc6c6",
+          "size_bytes": 3157
+        },
+        {
+          "legacy_path": "test_runner.py",
+          "path": "evidence/frozen/test_runner.py",
+          "sha256": "f957dc307583f97ce298d2d7774cc4b0cd0871d734cdf7f49ee8ea5f16368cdd",
+          "size_bytes": 1291
+        },
+        {
+          "legacy_path": "usage-summary.json",
+          "path": "evidence/frozen/usage-summary.json",
+          "sha256": "f4ba759895492fab7cc4b784ee324d40bcf08f7d3edbd9edde0945115a9d3640",
+          "size_bytes": 3746
+        },
+        {
+          "legacy_path": "validation/c-current-runner.xml",
+          "path": "evidence/frozen/validation/c-current-runner.xml",
+          "sha256": "c2af21a4bbbe9512d0f82945477971ca789a23250cf69a1bbfb960b5de2be975",
+          "size_bytes": 616
+        },
+        {
+          "legacy_path": "validation/name-context-final.xml",
+          "path": "evidence/frozen/validation/name-context-final.xml",
+          "sha256": "ce81a71e81cd04d62256518a7ab761c35033287fabd3096520a83f837896dd6e",
+          "size_bytes": 15855
+        },
+        {
+          "legacy_path": "views/ground-floor-mesh.json",
+          "path": "evidence/frozen/views/ground-floor-mesh.json",
+          "sha256": "b73c1a00bcf10e34804c497254cd055ef107e4207be55d5fdc5ac6e20e0d3a48",
+          "size_bytes": 32945
+        },
+        {
+          "legacy_path": "views/ground-floor.png",
+          "path": "evidence/frozen/views/ground-floor.png",
+          "sha256": "eb782a714e1e787d75e493c512e1b86f3401d0db7fbc764273d227d075af5007",
+          "size_bytes": 7209
+        },
+        {
+          "legacy_path": "views/IfcDoor-mesh.json",
+          "path": "evidence/frozen/views/IfcDoor-mesh.json",
+          "sha256": "8ed712d2e33f6714ba46351f7594b25e9cb4ac337e9943ce2f027d519397e6fc",
+          "size_bytes": 4443
+        },
+        {
+          "legacy_path": "views/IfcDoor.png",
+          "path": "evidence/frozen/views/IfcDoor.png",
+          "sha256": "89a2bb23bc084ffad51582b70c20eeadea8de7928038ad457dc09aec46297cc2",
+          "size_bytes": 8382
+        },
+        {
+          "legacy_path": "views/IfcWindow-mesh.json",
+          "path": "evidence/frozen/views/IfcWindow-mesh.json",
+          "sha256": "51315c225558fa8cf88676498cba547ff0bbf13ca869858d9c7a154ff3747d17",
+          "size_bytes": 7144
+        },
+        {
+          "legacy_path": "views/IfcWindow.png",
+          "path": "evidence/frozen/views/IfcWindow.png",
+          "sha256": "407b977a69442083be7f66f635081453dca4ab35566c688954b7a97fa469804d",
+          "size_bytes": 12668
+        },
+        {
+          "legacy_path": "views/overall-mesh.json",
+          "path": "evidence/frozen/views/overall-mesh.json",
+          "sha256": "a60d553acaa75148b477707900c57cd3aceb94fe7c9a64d80170fac3bd8da9be",
+          "size_bytes": 238026
+        },
+        {
+          "legacy_path": "views/overall.png",
+          "path": "evidence/frozen/views/overall.png",
+          "sha256": "464ce8e74fe27fc3edf3b6d3f45213805d5dd361bf82428a332b02085b9db09a",
+          "size_bytes": 22692
+        },
+        {
+          "legacy_path": "views/viewer.html",
+          "path": "evidence/frozen/views/viewer.html",
+          "sha256": "520b5994dcf1b07f9c011cb6ad57e0323e5fbd6860282fca22fc184474d052eb",
+          "size_bytes": 244441
+        },
+        {
+          "legacy_path": "FILES.json",
+          "path": "evidence/frozen/FILES.json",
+          "sha256": "625d832e44762aaf37a835e362db438df2532b744adf139be0f57acd4f6a0f69",
+          "size_bytes": 29504
+        }
+      ]
+    }
+  ],
+  "source_user_renames": {
+    "generated.ifc": "generated-C.ifc"
+  }
+}

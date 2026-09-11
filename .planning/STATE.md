@@ -14,6 +14,21 @@ progress:
 
 # Project State
 
+## 当前工作：仓库清理与 main 整合（2026-09-12）
+
+已批准保守清理、隔离整合 main/Zcode/当前分支，以及完整离线Full Preflight。执行与阻断记录见 `docs/reports/main-integration-20260912/REPORT.md`；未调用Provider，未合main。下方C验收及Phase记录保持历史原义。
+
+## 当前增量工作：C 型 Generation（2026-09-11）
+
+**当前：用户已验收最新C（run 05c6de3a19ed20f9），已收纳 `dataset/processed/proof/generation/phase6.6/c-shaped-teaching-20260911/REPORT.md`。9组历史实验独立归档至 `dataset/processed/experiments/README.md`；旧运行目录退役结果以 `docs/reports/c-proof-archive-20260911/REPORT.md` 为准。下文是原运行和调试检查点，不再代表待人工审查。**
+
+
+最新C：代码d0c39dc4上run `05c6de3a19ed20f9`，3次真实调用首次通过，无修复loop，独立IFC485/485。新增220720 token；C累计20次/1597750 token/2628.983秒。最新账本位于Proof的 `evidence/frozen/live-run/runs/05c6de3a19ed20f9/generation-budget.json`。本次收纳只做确定性复核，不追加Provider。Audit“每层9空间”口误保留原响应，报告说明实际每层3个、全楼9个。
+
+历史开发结果保存在 `dataset/processed/experiments/`：`c-shaped-wall-join-20260911`保留丢聚合关系的失败，`c-shaped-plan-constraints-20260911`保留前一轮IFC及名称误报修复，其他失败和token实验由该目录README串联。它们不自动晋升为第二份accepted Proof。旧admission仅为历史快照，新调用必须重新判断准入。
+
+下一步按 `docs/architecture/token-efficiency-plan.md` 讨论A/B/C同代码、同冻结输入、同评价器的token开发实验，保持Proof字节；当前不运行新实验，不把单例或测试数当作系统能力提升。语义/外观唯一计划仍为 `docs/architecture/semantic-appearance-plan.md`，下方Phase/R1状态保持历史原义。
+
 ## Codex Task Pilot Checkpoint — 2026-07-31
 
 ```text

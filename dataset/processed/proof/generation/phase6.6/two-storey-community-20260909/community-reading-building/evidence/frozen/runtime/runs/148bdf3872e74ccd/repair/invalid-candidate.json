@@ -1,0 +1,2766 @@
+{
+  "appearance": {
+    "profile": "warm-residential"
+  },
+  "entities": [
+    {
+      "attributes": {
+        "Name": "小型社区阅读与活动楼"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 0,
+        "Name": "首层",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 3150,
+        "Name": "二层",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            3150
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-2",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "接待阅览厅",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                6800,
+                0
+              ],
+              [
+                6800,
+                8000
+              ],
+              [
+                0,
+                8000
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-1-space-reading-lobby",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "楼梯间",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                7000,
+                0
+              ],
+              [
+                9000,
+                0
+              ],
+              [
+                9000,
+                8000
+              ],
+              [
+                7000,
+                8000
+              ],
+              [
+                7000,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-1-space-stair-hall-1",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "多功能活动厅",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                6800,
+                0
+              ],
+              [
+                6800,
+                8000
+              ],
+              [
+                0,
+                8000
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-2-space-activity-hall",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "北端楼梯平台",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                7000,
+                6600
+              ],
+              [
+                9000,
+                6600
+              ],
+              [
+                9000,
+                8000
+              ],
+              [
+                7000,
+                8000
+              ],
+              [
+                7000,
+                6600
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-2-space-stair-platform-2",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "地坪",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            -200,
+            -150
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "PredefinedType": "FLOOR",
+        "Representation": {
+          "depth": 150,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 8400
+          }
+        }
+      },
+      "id": "ground-slab",
+      "ifc_class": "IfcSlab",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "混凝土"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层楼板",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            -200,
+            -150
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "PredefinedType": "FLOOR",
+        "Representation": {
+          "depth": 150,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 8400
+          }
+        }
+      },
+      "id": "second-floor-slab",
+      "ifc_class": "IfcSlab",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "混凝土"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "楼梯洞口",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            7400,
+            1400,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "second-floor-slab"
+        },
+        "Representation": {
+          "depth": 150,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1600,
+            "y": 5400
+          }
+        }
+      },
+      "id": "opening-second-floor-slab-stair",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "平屋面",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            -200,
+            3000
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "PredefinedType": "ROOF",
+        "Representation": {
+          "depth": 150,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 8400
+          }
+        }
+      },
+      "id": "roof-slab",
+      "ifc_class": "IfcSlab",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "混凝土"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层南外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            -200,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-1-storey-1-wall-south",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层北外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            8000,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-1-storey-1-wall-north",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层西外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            -200,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-1-storey-1-wall-west",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层东外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            9000,
+            8200,
+            0
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-1-storey-1-wall-east",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层分隔墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            7000,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-1-storey-1-wall-partition",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层南外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            -200,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-2-storey-2-wall-south",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层北外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            -200,
+            8000,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 9400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-2-storey-2-wall-north",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层西外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            -200,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-2-storey-2-wall-west",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层东外墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            9000,
+            8200,
+            0
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8400,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-2-storey-2-wall-east",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层分隔墙",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            7000,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-2"
+        },
+        "Representation": {
+          "depth": 3000,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000,
+            "y": 200
+          }
+        }
+      },
+      "id": "wall-storey-2-storey-2-wall-partition",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "砖"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层主入口洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3000,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-south"
+        },
+        "Representation": {
+          "depth": 2400,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1200,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-main",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层南窗1洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            800,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-south"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1800,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-window-south-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层南窗2洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            4600,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-south"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1800,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-window-south-2",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层北窗洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            2400,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-north"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 2400,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-window-north-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层西窗洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3300,
+            0,
+            900
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-west"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1800,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-window-west-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层东窗洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3750,
+            0,
+            600
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-east"
+        },
+        "Representation": {
+          "depth": 1800,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-window-east-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层分隔墙门洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            150,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "wall-storey-1-storey-1-wall-partition"
+        },
+        "Representation": {
+          "depth": 2100,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-ground-partition",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层南窗1洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            800,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-2-storey-2-wall-south"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1800,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-second-window-south-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层南窗2洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            4600,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-2-storey-2-wall-south"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1800,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-second-window-south-2",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层北窗洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            2400,
+            0,
+            900
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "wall-storey-2-storey-2-wall-north"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 2400,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-second-window-north-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层西窗洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3300,
+            0,
+            900
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "wall-storey-2-storey-2-wall-west"
+        },
+        "Representation": {
+          "depth": 1500,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1800,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-second-window-west-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层东窗洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            3750,
+            0,
+            600
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "wall-storey-2-storey-2-wall-east"
+        },
+        "Representation": {
+          "depth": 1800,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-second-window-east-1",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层分隔墙门洞",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            6850,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "wall-storey-2-storey-2-wall-partition"
+        },
+        "Representation": {
+          "depth": 2100,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 900,
+            "y": 200
+          }
+        }
+      },
+      "id": "opening-second-partition",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "主入口门",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-ground-main"
+        },
+        "OverallHeight": 2400,
+        "OverallWidth": 1200,
+        "Representation": {
+          "depth": 200,
+          "height": 2400,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1200
+        }
+      },
+      "id": "door-storey-1-door-ground-main",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层分隔门",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-ground-partition"
+        },
+        "OverallHeight": 2100,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 2100,
+          "kind": "basic_filling",
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "door-storey-1-door-ground-partition",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层分隔门",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-second-partition"
+        },
+        "OverallHeight": 2100,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 2100,
+          "kind": "basic_filling",
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "door-storey-2-door-second-partition",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层南窗1",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-ground-window-south-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-1-window-ground-south-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层南窗2",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-ground-window-south-2"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-1-window-ground-south-2",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层北窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-ground-window-north-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 2400,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 2400
+        }
+      },
+      "id": "window-storey-1-window-ground-north-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层西窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-ground-window-west-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-1-window-ground-west-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "首层东窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "opening-ground-window-east-1"
+        },
+        "OverallHeight": 1800,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 1800,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "window-storey-1-window-ground-east-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层南窗1",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-second-window-south-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-2-window-second-south-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层南窗2",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-second-window-south-2"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-2-window-second-south-2",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层北窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-second-window-north-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 2400,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 2400
+        }
+      },
+      "id": "window-storey-2-window-second-north-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层西窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-second-window-west-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-2-window-second-west-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "二层东窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            -1,
+            0
+          ],
+          "relative_to": "opening-second-window-east-1"
+        },
+        "OverallHeight": 1800,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 1800,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "window-storey-2-window-second-east-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "主楼梯",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            7400,
+            1200,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "ShapeType": "STRAIGHT_RUN_STAIR"
+      },
+      "id": "stair-1",
+      "ifc_class": "IfcStair",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "直跑梯段",
+        "NumberOfRiser": 18,
+        "NumberOfTreads": 18,
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "stair-1"
+        },
+        "Representation": {
+          "depth": 1200,
+          "direction": [
+            1,
+            0,
+            0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                1200
+              ],
+              [
+                300,
+                1200
+              ],
+              [
+                300,
+                175
+              ],
+              [
+                600,
+                175
+              ],
+              [
+                600,
+                350
+              ],
+              [
+                900,
+                350
+              ],
+              [
+                900,
+                525
+              ],
+              [
+                1200,
+                525
+              ],
+              [
+                1200,
+                700
+              ],
+              [
+                1500,
+                700
+              ],
+              [
+                1500,
+                875
+              ],
+              [
+                1800,
+                875
+              ],
+              [
+                1800,
+                1050
+              ],
+              [
+                2100,
+                1050
+              ],
+              [
+                2100,
+                1225
+              ],
+              [
+                2400,
+                1225
+              ],
+              [
+                2400,
+                1400
+              ],
+              [
+                2700,
+                1400
+              ],
+              [
+                2700,
+                1575
+              ],
+              [
+                3000,
+                1575
+              ],
+              [
+                3000,
+                1750
+              ],
+              [
+                3300,
+                1750
+              ],
+              [
+                3300,
+                1925
+              ],
+              [
+                3600,
+                1925
+              ],
+              [
+                3600,
+                2100
+              ],
+              [
+                3900,
+                2100
+              ],
+              [
+                3900,
+                2275
+              ],
+              [
+                4200,
+                2275
+              ],
+              [
+                4200,
+                2450
+              ],
+              [
+                4500,
+                2450
+              ],
+              [
+                4500,
+                2625
+              ],
+              [
+                4800,
+                2625
+              ],
+              [
+                4800,
+                2800
+              ],
+              [
+                5100,
+                2800
+              ],
+              [
+                5100,
+                2975
+              ],
+              [
+                5400,
+                2975
+              ],
+              [
+                5400,
+                3150
+              ],
+              [
+                0,
+                3150
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "RiserHeight": 175,
+        "TreadLength": 300
+      },
+      "id": "stair-flight-1",
+      "ifc_class": "IfcStairFlight",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "source": "turn-user-001"
+  },
+  "relationships": [
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "site-1"
+        ],
+        "RelatingObject": "project-1"
+      },
+      "id": "rel-aggregate-project-site",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "building-1"
+        ],
+        "RelatingObject": "site-1"
+      },
+      "id": "rel-aggregate-site-building",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "storey-1",
+          "storey-2"
+        ],
+        "RelatingObject": "building-1"
+      },
+      "id": "rel-aggregate-building-storeys",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "space-storey-1-space-reading-lobby",
+          "space-storey-1-space-stair-hall-1"
+        ],
+        "RelatingObject": "storey-1"
+      },
+      "id": "rel-aggregate-storey1-spaces",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "space-storey-2-space-activity-hall",
+          "space-storey-2-space-stair-platform-2"
+        ],
+        "RelatingObject": "storey-2"
+      },
+      "id": "rel-aggregate-storey2-spaces",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-floor-slab-stair",
+        "RelatingBuildingElement": "second-floor-slab"
+      },
+      "id": "rel-void-second-floor-stair",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-main",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-south"
+      },
+      "id": "rel-void-main-door",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-window-south-1",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-south"
+      },
+      "id": "rel-void-ground-south-window-1",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-window-south-2",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-south"
+      },
+      "id": "rel-void-ground-south-window-2",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-window-north-1",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-north"
+      },
+      "id": "rel-void-ground-north-window",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-window-west-1",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-west"
+      },
+      "id": "rel-void-ground-west-window",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-window-east-1",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-east"
+      },
+      "id": "rel-void-ground-east-window",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-ground-partition",
+        "RelatingBuildingElement": "wall-storey-1-storey-1-wall-partition"
+      },
+      "id": "rel-void-ground-partition-door",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-window-south-1",
+        "RelatingBuildingElement": "wall-storey-2-storey-2-wall-south"
+      },
+      "id": "rel-void-second-south-window-1",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-window-south-2",
+        "RelatingBuildingElement": "wall-storey-2-storey-2-wall-south"
+      },
+      "id": "rel-void-second-south-window-2",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-window-north-1",
+        "RelatingBuildingElement": "wall-storey-2-storey-2-wall-north"
+      },
+      "id": "rel-void-second-north-window",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-window-west-1",
+        "RelatingBuildingElement": "wall-storey-2-storey-2-wall-west"
+      },
+      "id": "rel-void-second-west-window",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-window-east-1",
+        "RelatingBuildingElement": "wall-storey-2-storey-2-wall-east"
+      },
+      "id": "rel-void-second-east-window",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-second-partition",
+        "RelatingBuildingElement": "wall-storey-2-storey-2-wall-partition"
+      },
+      "id": "rel-void-second-partition-door",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-1-door-ground-main",
+        "RelatingOpeningElement": "opening-ground-main"
+      },
+      "id": "rel-fill-main-door",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-1-window-ground-south-1",
+        "RelatingOpeningElement": "opening-ground-window-south-1"
+      },
+      "id": "rel-fill-ground-south-window-1",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-1-window-ground-south-2",
+        "RelatingOpeningElement": "opening-ground-window-south-2"
+      },
+      "id": "rel-fill-ground-south-window-2",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-1-window-ground-north-1",
+        "RelatingOpeningElement": "opening-ground-window-north-1"
+      },
+      "id": "rel-fill-ground-north-window",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-1-window-ground-west-1",
+        "RelatingOpeningElement": "opening-ground-window-west-1"
+      },
+      "id": "rel-fill-ground-west-window",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-1-window-ground-east-1",
+        "RelatingOpeningElement": "opening-ground-window-east-1"
+      },
+      "id": "rel-fill-ground-east-window",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-1-door-ground-partition",
+        "RelatingOpeningElement": "opening-ground-partition"
+      },
+      "id": "rel-fill-ground-partition-door",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-2-window-second-south-1",
+        "RelatingOpeningElement": "opening-second-window-south-1"
+      },
+      "id": "rel-fill-second-south-window-1",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-2-window-second-south-2",
+        "RelatingOpeningElement": "opening-second-window-south-2"
+      },
+      "id": "rel-fill-second-south-window-2",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-2-window-second-north-1",
+        "RelatingOpeningElement": "opening-second-window-north-1"
+      },
+      "id": "rel-fill-second-north-window",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-2-window-second-west-1",
+        "RelatingOpeningElement": "opening-second-window-west-1"
+      },
+      "id": "rel-fill-second-west-window",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-2-window-second-east-1",
+        "RelatingOpeningElement": "opening-second-window-east-1"
+      },
+      "id": "rel-fill-second-east-window",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-2-door-second-partition",
+        "RelatingOpeningElement": "opening-second-partition"
+      },
+      "id": "rel-fill-second-partition-door",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedObjects": [
+          "stair-flight-1"
+        ],
+        "RelatingObject": "stair-1"
+      },
+      "id": "rel-aggregate-stair-flight",
+      "ifc_class": "IfcRelAggregates",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    }
+  ],
+  "schema_version": "bim-json/2.1",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

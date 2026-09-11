@@ -1,0 +1,93 @@
+{
+  "checked_at": "2026-09-09T12:32:55.511843+00:00",
+  "status": "engineering_blocked_not_ready_for_human_acceptance",
+  "publication_verified": false,
+  "process_observation": "read-only elevated Win32_Process query returned no python.exe process; old PTY session unavailable",
+  "runtime_observation": "execution.json remains running; final reserved ChangeSet has no saved response; interruption cause unknown",
+  "gate_overall_status": "failed",
+  "gates": [
+    {
+      "name": "bim_json_validation",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "dynamic_entity_completeness",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "dynamic_storey_containment",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "dynamic_storey_name_consistency",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "dynamic_opening_fill",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "semantic_coverage",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "request_semantics",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "ifc_compile_reopen",
+      "status": "passed",
+      "issue_count": 0
+    },
+    {
+      "name": "geometry",
+      "status": "failed",
+      "issue_count": 3
+    },
+    {
+      "name": "repair_route",
+      "status": "passed",
+      "issue_count": 0
+    }
+  ],
+  "audit_blocking": true,
+  "completed_calls_in_inherited_budget": 6,
+  "reported_tokens_completed": 331538,
+  "provider_seconds_completed": 1178.234999999986,
+  "unresolved_reserved_attempts": [
+    {
+      "attempt": 7,
+      "stage": "changeset",
+      "status": "reserved",
+      "tokens_charged": 172003,
+      "reserved_tokens": 172003,
+      "elapsed_seconds": 0
+    }
+  ],
+  "reserved_token_amount_is_not_reported_usage": true,
+  "independent_check_count": 167,
+  "independent_failed": [],
+  "ifc_sha256": "e000c6da3a9c355aab47db0a6862b3d9e8977e556ca6df38a7dd089f01929059",
+  "request_sha256": "9c927ce50a7c1fa3ab3cb2d4879d5fcc2a76aad8235b43d720fa2a48caf72780",
+  "represented_physical_products": 27,
+  "mesh_failures": [],
+  "proof_installed": false,
+  "new_provider_calls": 0,
+  "source_artifacts_sha256": {
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/runs/5cd2006f0891913f/gate-summary.json": "04ba050a3be64088e2cdad448cb4695a69fa3125fc6d1027103d241ff77f0f9b",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/runs/5cd2006f0891913f/audit/parsed-output.json": "fd3f1a9f349e30ec863007831c6be7aea97f984a9ff6a57d364a447a5f4acc91",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/runs/5cd2006f0891913f/generation-budget.json": "ff91d710fa5313094b301d855413ab38f3dcb35eb82638c79c877ced3ab8b551",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/runs/5cd2006f0891913f/output.ifc": "e000c6da3a9c355aab47db0a6862b3d9e8977e556ca6df38a7dd089f01929059",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/runs/5cd2006f0891913f/candidate.json": "70d3d3806bbab7e353a6808a43058c3c441ebb696e526e841c1457978fba49ed",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/request.txt": "9c927ce50a7c1fa3ab3cb2d4879d5fcc2a76aad8235b43d720fa2a48caf72780",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/execution.json": "3f501c5f574d0be2a8302846ac082d78466135c9b97ea603adff92c3d25200cc",
+    "dataset/processed/ifc-presentation-validation/two-storey-human-review-20260909/geometry-continuation/completion-recheck-independent.json": "24f84db43c6b69963f1522cc1aa9460428a20d11cf1cbd9b5bec1d0361759f77"
+  }
+}

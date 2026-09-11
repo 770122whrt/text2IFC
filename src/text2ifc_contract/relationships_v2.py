@@ -33,6 +33,17 @@ SUPPORTED_RELATIONSHIPS = {
 }
 CONNECTION_TYPES = {"ATPATH", "ATSTART", "ATEND", "NOTDEFINED"}
 
+# IFC2X3 uses styles for doors/windows. Do not infer compatibility from the
+# common IfcTypeObject parent or from coincident names/dimensions.
+TYPE_FAMILIES = {
+    'IfcWall': 'IfcWallType', 'IfcWallStandardCase': 'IfcWallType',
+    'IfcDoor': 'IfcDoorStyle', 'IfcWindow': 'IfcWindowStyle',
+    **{f'Ifc{name}': f'Ifc{name}Type' for name in (
+        'Beam', 'Column', 'Slab', 'Plate', 'Covering', 'Member', 'Railing',
+        'Stair', 'StairFlight', 'CurtainWall', 'Roof',
+    )},
+}
+
 
 def _issue(code: str, path: str, message: str) -> ValidationIssue:
     return ValidationIssue(code=code, path=path, message=message)
@@ -55,6 +66,7 @@ def validate_relationships(
         if isinstance(record, dict) and isinstance(record.get("id"), str)
     }
     issues: list[ValidationIssue] = []
+    type_assignments: dict[str, str] = {}
 
     for index, relation in enumerate(document.get("relationships", [])):
         ifc_class = relation["ifc_class"]
@@ -70,6 +82,25 @@ def validate_relationships(
             )
             continue
         attributes = relation["attributes"]
+        if ifc_class == 'IfcRelDefinesByType':
+            type_id = attributes.get('RelatingType')
+            type_record = entities.get(type_id) if isinstance(type_id, str) else None
+            related = attributes.get('RelatedObjects')
+            if isinstance(related, list):
+                for object_id in related:
+                    if not isinstance(object_id, str):
+                        continue
+                    path = f'{base}/attributes/RelatedObjects'
+                    if object_id in type_assignments:
+                        issues.append(_issue('MULTIPLE_TYPE_ASSIGNMENTS', path,
+                            f'{object_id!r} already has a Type relationship at {type_assignments[object_id]}.'))
+                    type_assignments[object_id] = base
+                    occurrence = entities.get(object_id)
+                    if occurrence is not None and type_record is not None:
+                        expected = TYPE_FAMILIES.get(occurrence['ifc_class'])
+                        if type_record['ifc_class'] != expected:
+                            issues.append(_issue('TYPE_FAMILY_MISMATCH', path,
+                                f"{occurrence['ifc_class']} requires {expected or 'a supported family Type'}, not {type_record['ifc_class']}."))
         if ifc_class == "IfcRelConnectsPathElements":
             issues.extend(_validate_path_connection_attributes(base, attributes))
         for attribute, expected_class in endpoint_types.items():

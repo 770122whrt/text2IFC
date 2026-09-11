@@ -7,22 +7,36 @@
 
 | 目的 | 入口 |
 |---|---|
+| 首次由 Agent 或开发者接管项目 | [首次接管 text2IFC 项目](how-to/agent-takeover.md) |
 | 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，以及后续 Phase 安排 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
-| 了解当前系统如何运行 | [当前工作流与数据流](architecture/current-workflow-and-data-flow.md) |
+| 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
 | 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
 | 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md) |
-| 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md) |
+| 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md) |
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
 | 查看研究总结和周报 | [Reports Index](reports/README.md) |
 | 查看项目计划和当前状态 | [`.planning/`](../.planning/PROJECT.md) |
 
+## 仓库整理入口
+
+- [按工作流与 Phase 阅读 Proof](../dataset/processed/proof/README.md)
+- [目录瘦身与后续重构方案](architecture/repository-organization-refactor.md)
+- [归档的 CLI 终端记录](reports/terminal-session-history.md)
+- [专项技术 handoffs](handoffs/) 与 [网页交叉讨论 context-handoff](context-handoff/CONTEXT-HANDOFF-RULES.md) 按各自职责保留。
+
 ## 当前重点
 
+- [Type、材质、属性和外观的接续计划](architecture/semantic-appearance-plan.md)
+  - A/B/C 已人工验收，C与实验已分别收纳；项目内 Type 按需组织，内置小型参数化模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
+- [Token 效率与质量保全计划](architecture/token-efficiency-plan.md)
+  - 一次真实 Audit 配对已完成并记录实际 token；[C与实验归档](../dataset/processed/experiments/README.md)已整理，后续优化按独立计划小步推进。
+- [首次接管 text2IFC 项目](how-to/agent-takeover.md)
+  - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
 - [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
   - 面向后续接手者说明项目分层、Repair Pipeline、关键代码、证据入口、已知风险和接续顺序。
-- [Plan 07 人工 Proof 入口](../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)
+- [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md)
   - 直接查看 9 份 repaired IFC、1 个正确无输出 guard，以及各案例的人读报告。
 - [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md)
   - 参考成功案例文档排布，完整说明已实现 Repair Pipeline、放行证据、失败路由
@@ -31,8 +45,8 @@
   - 既有 IFC 局部修改、紧凑 LLM Context、可扩展 Operation Registry。
 - [IFC2X3 Local ChangeSet 实施 Prompt](validation/ifc2x3-changeset/implementation-prompt.md)
   - 实施顺序、离线测试和真实 Provider UAT。
-- [当前 text2IFC 工作流与数据流](architecture/current-workflow-and-data-flow.md)
-  - 多 Agent、BIM JSON、Gate、IFC 编译、ChangeSet 和报告链路。
+- [text2IFC Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md)
+  - 两种生成策略、多 Agent、BIM JSON、Gate、IFC 编译、ChangeSet 和报告链路。
 
 ## 文档分区
 
@@ -59,8 +73,9 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 
 ### How-to
 
-目录：[`docs/how-to/`](how-to/publish-to-github.md)
+目录：[`docs/how-to/`](how-to/README.md)
 
+- [首次接管 text2IFC 项目](how-to/agent-takeover.md)
 - [发布到 GitHub](how-to/publish-to-github.md)
 
 保存面向具体任务的操作步骤。
@@ -87,6 +102,8 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 - [BIM JSON 1.0 Contract Reference](reference/bim-json-1.0.md)
 - [Dataset Organization](../dataset/data_organization.md)
 - [External Data Source Catalog](../dataset/sources/CATALOG.md)
+- [外部 IFC 候选池、筛选状态与准入边界](../dataset/manifests/candidates/README.md)
+- [Repair Type/材质与 Generation 外观接续状态](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)
 - [Processed Dataset 与 Proof 分层](../dataset/processed/README.md)
 - [Dataset Manifest Format](../dataset/manifests/README.md)
 - [Authorized BIMNet IFC2X3 Manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)
@@ -114,3 +131,5 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 3. 只有当前重点或主要入口才同时加入本页；
 4. Prompt 必须引用设计权威，不能复制并独立演化设计决定；
 5. 移动文档后运行本地链接检查，避免 Path drift。
+
+- [材质与外观修复：三个真实运行的中文报告](../dataset/processed/proof/repair/phase12/presentation-cases/REPORT.md)（运行 PASS，人工待审）。

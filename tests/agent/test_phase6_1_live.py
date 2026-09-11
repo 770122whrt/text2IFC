@@ -197,6 +197,7 @@ def test_design_brief_stage_writes_reproducible_unedited_trace(tmp_path: Path):
     provider = _RecordingLiveProvider(payload)
 
     result = run_design_brief_stage(
+        design_brief_schema_version="text2ifc/design-brief/2.0",
         provider=provider,
         output_dir=tmp_path,
         case=case,
@@ -247,6 +248,7 @@ def test_design_brief_stage_records_invalid_model_output_without_editing_it(tmp_
     provider = _RecordingLiveProvider(payload)
 
     result = run_design_brief_stage(
+        design_brief_schema_version="text2ifc/design-brief/2.0",
         provider=provider,
         output_dir=tmp_path,
         case=case,
@@ -267,6 +269,7 @@ def test_design_brief_stage_blocks_fenced_live_text_even_when_json_is_valid(
     provider = _RecordingLiveProvider(_valid_ready_brief(case), fenced=True)
 
     result = run_design_brief_stage(
+        design_brief_schema_version="text2ifc/design-brief/2.0",
         provider=provider,
         output_dir=tmp_path,
         case=case,
@@ -315,7 +318,7 @@ def test_v1_v2_comparison_is_derived_from_trace_artifacts(tmp_path: Path):
         encoding="utf-8",
     )
     provider = _RecordingLiveProvider(_valid_ready_brief(case))
-    run_design_brief_stage(provider=provider, output_dir=v2_dir, case=case)
+    run_design_brief_stage(provider=provider, output_dir=v2_dir, case=case, design_brief_schema_version="text2ifc/design-brief/2.0")
 
     comparison = compare_design_brief_runs(
         v1_dir=v1_dir,
@@ -348,7 +351,10 @@ def test_live_cli_runs_design_brief_case_through_injected_provider(
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     case = complete_room_case()
-    provider = _RecordingLiveProvider(_valid_ready_brief(case))
+    payload = _valid_ready_brief(case)
+    payload["schema_version"] = "text2ifc/design-brief/2.1"
+    payload["known_facts"]["semantic_requirements"] = []
+    provider = _RecordingLiveProvider(payload)
 
     exit_code = module.main(
         [
@@ -375,6 +381,8 @@ def test_live_clarification_run_preserves_two_provider_calls_and_all_turns(
 ):
     case = clarified_room_case()
     first = _valid_ready_brief(complete_room_case())
+    first["schema_version"] = "text2ifc/design-brief/2.1"
+    first["known_facts"]["semantic_requirements"] = []
     first["original_request"] = case["user_request"]
     first["status"] = "needs_clarification"
     first["known_facts"]["walls"].pop("thickness_mm")
@@ -462,6 +470,8 @@ def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
 ):
     case = clarified_room_case()
     first = _valid_ready_brief(complete_room_case())
+    first["schema_version"] = "text2ifc/design-brief/2.1"
+    first["known_facts"]["semantic_requirements"] = []
     first["original_request"] = case["user_request"]
     first["status"] = "needs_clarification"
     first["known_facts"]["walls"].pop("thickness_mm")
@@ -542,6 +552,8 @@ def test_live_cli_runs_unknown_answer_case_to_draft_without_ifc(
 ):
     case = clarified_room_case()
     first = _valid_ready_brief(complete_room_case())
+    first["schema_version"] = "text2ifc/design-brief/2.1"
+    first["known_facts"]["semantic_requirements"] = []
     first["original_request"] = case["user_request"]
     first["status"] = "needs_clarification"
     first["known_facts"]["walls"].pop("thickness_mm")

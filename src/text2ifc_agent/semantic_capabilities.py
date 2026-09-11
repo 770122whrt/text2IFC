@@ -66,3 +66,18 @@ def _profile_hash(profile: dict[str, Any]) -> str:
         separators=(",", ":"),
     ).encode("utf-8")
     return "sha256:" + hashlib.sha256(encoded).hexdigest()
+
+
+def build_semantic_capability_profile_v21() -> dict[str, Any]:
+    profile = build_semantic_capability_profile()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.1/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.1/schema.json'
+    profile['supported_fact_prefixes'].append('/known_facts/semantic_requirements')
+    profile['basic_filling_templates'] = ['window-single', 'window-double-vertical', 'door-left', 'door-right']
+    profile['unsupported_facts'][0]['reason'] = 'Room-relative swing direction requires spatial authorization; left/right handing is supported through the basic_filling template contract.'
+    profile['unsupported_facts'][0]['current_ifc_boundary'] = 'Basic filling authors SINGLE_SWING_LEFT/RIGHT DoorStyle; room-relative opening direction is not inferred.'
+    profile['material_policy'] = 'explicit_only; single material or supported complete layers; reopened verification required'
+    profile['type_policy'] = 'project_local_request_groups_only'
+    profile['appearance_policy'] = 'explicit_user_then_type_then_material_then_coordinated_default'
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile

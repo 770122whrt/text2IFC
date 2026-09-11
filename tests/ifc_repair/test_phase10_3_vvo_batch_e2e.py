@@ -27,7 +27,7 @@ from text2ifc_ifc_repair.semantic_authoring import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE = ROOT / "dataset" / "ifc" / "train" / "vvo.ifc"
+SOURCE = ROOT / "dataset" / "external" / "bimnet" / "vvo.ifc"
 SOURCE_SHA256 = "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
 CASE = json.loads(
     (

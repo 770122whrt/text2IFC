@@ -1,0 +1,1599 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="24" skipped="0" tests="38" time="21.272" timestamp="2026-09-10T22:15:51.921952+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_prompt_registry" name="test_registry_hash_is_invariant_to_windows_line_endings" time="0.030" /><testcase classname="tests.agent.test_prompt_registry" name="test_prompt_trace_requires_template_identity" time="0.001" /><testcase classname="tests.agent.test_prompt_registry" name="test_registry_loads_and_renders_versioned_generator_prompt" time="0.116"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_registry_loads_and_renders_versioned_generator_prompt():
+        module_name = "text2ifc_agent.prompt_registry"
+        assert importlib.util.find_spec(module_name) is not None, (
+            "prompt registry implementation is missing"
+        )
+        prompt_registry = importlib.import_module(module_name)
+    
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v1_registry_hash_remains_historical" time="0.071"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_design_brief_v1_registry_hash_remains_historical():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v2_registry_hash_remains_live_attempt_history" time="0.070"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_design_brief_v2_registry_hash_remains_live_attempt_history():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:98: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_registry_renders_evidence_grounded_design_brief_v2_prompt" time="0.110"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_registry_renders_evidence_grounded_design_brief_v2_prompt():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+        selector = importlib.import_module("text2ifc_agent.context_selection")
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:108: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v2_1_strengthens_live_bare_json_contract" time="0.065"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_design_brief_v2_1_strengthens_live_bare_json_contract():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:155: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_generator_v1_registry_hash_remains_historical" time="0.066"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_generator_v1_registry_hash_remains_historical():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_generator_v2_renders_both_exact_canonical_contracts" time="0.069"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_generator_v2_renders_both_exact_canonical_contracts():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+&gt;       registry = prompt_registry.load_prompt_registry()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_prompt_registry.py:185: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_prompt_registry" name="test_generator_context_includes_standard_two_storey_few_shot" time="0.008" /><testcase classname="tests.agent.test_prompt_registry" name="test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract" time="0.229"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">def test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract():
+        prompt_registry = importlib.import_module("text2ifc_agent.prompt_registry")
+    
+&gt;       rendered = prompt_registry.render_prompt(
+            template_id="bim-json-generator-repair.v2",
+            inputs={
+                "USER_REQUEST": "创建一个房间。",
+                "CONVERSATION": [],
+                "DESIGN_BRIEF": {"status": "ready"},
+                "CANDIDATE": {"schema_version": "bim-json/2.0"},
+                "FORMAL_SCHEMA": {"$id": "formal", "type": "object"},
+                "DRAFT_SCHEMA": {"$id": "draft", "type": "object"},
+                "CAPABILITY_PROFILE": [],
+                "VALIDATION_FEEDBACK": [{"code": "INVALID_ENUM"}],
+                "GEOMETRY_FEEDBACK": [],
+                "ALLOWED_CHANGE_PATHS": ["/entities/0/attributes/PredefinedType"],
+                "EVIDENCE_BY_PATH": {
+                    "/entities/0/attributes/PredefinedType": ["schema:formal"]
+                },
+            },
+        )
+
+tests\agent\test_prompt_registry.py:266: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_repository_artifact_paths_are_portable" time="0.008" /><testcase classname="tests.agent.test_phase6_1_live" name="test_complete_room_case_preserves_real_conversation_without_supervisor_decisions" time="0.010" /><testcase classname="tests.agent.test_phase6_1_live" name="test_design_brief_stage_writes_reproducible_unedited_trace" time="0.390"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_design_brief_stage_writes0')
+
+    def test_design_brief_stage_writes_reproducible_unedited_trace(tmp_path: Path):
+        case = complete_room_case()
+        payload = _valid_ready_brief(case)
+        provider = _RecordingLiveProvider(payload)
+    
+&gt;       result = run_design_brief_stage(
+            design_brief_schema_version="text2ifc/design-brief/2.0",
+            provider=provider,
+            output_dir=tmp_path,
+            case=case,
+        )
+
+tests\agent\test_phase6_1_live.py:199: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_design_brief_stage_records_invalid_model_output_without_editing_it" time="0.265"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_design_brief_stage_record0')
+
+    def test_design_brief_stage_records_invalid_model_output_without_editing_it(tmp_path: Path):
+        case = complete_room_case()
+        payload = _valid_ready_brief(case)
+        payload["schema_version"] = "text2ifc/design-brief/9.9"
+        provider = _RecordingLiveProvider(payload)
+    
+&gt;       result = run_design_brief_stage(
+            design_brief_schema_version="text2ifc/design-brief/2.0",
+            provider=provider,
+            output_dir=tmp_path,
+            case=case,
+        )
+
+tests\agent\test_phase6_1_live.py:250: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_design_brief_stage_blocks_fenced_live_text_even_when_json_is_valid" time="0.305"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_design_brief_stage_blocks0')
+
+    def test_design_brief_stage_blocks_fenced_live_text_even_when_json_is_valid(
+        tmp_path: Path,
+    ):
+        case = complete_room_case()
+        provider = _RecordingLiveProvider(_valid_ready_brief(case), fenced=True)
+    
+&gt;       result = run_design_brief_stage(
+            design_brief_schema_version="text2ifc/design-brief/2.0",
+            provider=provider,
+            output_dir=tmp_path,
+            case=case,
+        )
+
+tests\agent\test_phase6_1_live.py:271: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_v1_v2_comparison_is_derived_from_trace_artifacts" time="0.372"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_v1_v2_comparison_is_deriv0')
+
+    def test_v1_v2_comparison_is_derived_from_trace_artifacts(tmp_path: Path):
+        case = complete_room_case()
+        v1_dir = tmp_path / "v1"
+        v2_dir = tmp_path / "v2"
+        v1_dir.mkdir()
+        v1_payload = {
+            "schema_version": "text2ifc/design-brief/1.0",
+            "language": "zh-CN",
+            "original_request": case["user_request"],
+            "known_facts": {},
+            "missing_facts": [],
+            "ambiguities": [],
+            "user_corrections": [],
+            "clarification_questions": ["墙体厚度是多少？"],
+            "provenance": {"source": "user_request"},
+        }
+        (v1_dir / "model-text.txt").write_text(
+            "```json\n" + json.dumps(v1_payload, ensure_ascii=False) + "\n```",
+            encoding="utf-8",
+        )
+        (v1_dir / "response-metadata.json").write_text(
+            json.dumps(
+                {
+                    "id": "msg_v1",
+                    "model": "mimo-v2.5-pro",
+                    "stop_reason": "end_turn",
+                }
+            ),
+            encoding="utf-8",
+        )
+        provider = _RecordingLiveProvider(_valid_ready_brief(case))
+&gt;       run_design_brief_stage(provider=provider, output_dir=v2_dir, case=case, design_brief_schema_version="text2ifc/design-brief/2.0")
+
+tests\agent\test_phase6_1_live.py:321: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_runs_design_brief_case_through_injected_provider" time="0.389"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_cli_runs_design_brie0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x0000014AF45050D0&gt;
+
+    def test_live_cli_runs_design_brief_case_through_injected_provider(
+        tmp_path: Path, capsys
+    ):
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        assert script_path.is_file(), "Phase 6.1 live CLI is missing"
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        case = complete_room_case()
+        payload = _valid_ready_brief(case)
+        payload["schema_version"] = "text2ifc/design-brief/2.1"
+        payload["known_facts"]["semantic_requirements"] = []
+        provider = _RecordingLiveProvider(payload)
+    
+&gt;       exit_code = module.main(
+            [
+                "--stage",
+                "design-brief",
+                "--case",
+                "complete-room",
+                "--live",
+                "--output-dir",
+                str(tmp_path),
+            ],
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_phase6_1_live.py:359: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_1_live.py:201: in main
+    result = run_design_brief_stage(
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_clarification_run_preserves_two_provider_calls_and_all_turns" time="0.325"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_clarification_run_pr0')
+
+    def test_live_clarification_run_preserves_two_provider_calls_and_all_turns(
+        tmp_path: Path,
+    ):
+        case = clarified_room_case()
+        first = _valid_ready_brief(complete_room_case())
+        first["schema_version"] = "text2ifc/design-brief/2.1"
+        first["known_facts"]["semantic_requirements"] = []
+        first["original_request"] = case["user_request"]
+        first["status"] = "needs_clarification"
+        first["known_facts"]["walls"].pop("thickness_mm")
+        first["user_corrections"] = []
+        first["missing_facts"] = [
+            {
+                "id": "mf-wall-thickness",
+                "code": "WALL_THICKNESS_MISSING",
+                "path": "/known_facts/walls/thickness_mm",
+                "message": "墙体厚度尚未提供。",
+                "reason": "生成用户要求的实体墙体需要明确厚度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+        first["clarification_questions"] = [
+            {
+                "id": "q-wall-thickness",
+                "text": "请问墙体厚度是多少毫米？",
+                "targets": ["mf-wall-thickness"],
+                "reason": "缺少厚度时不能生成所要求的实体墙体。",
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+            }
+        ]
+        for fact_source in first["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+        first["provenance"]["source_turns"] = ["turn-user-001"]
+        second = json.loads(json.dumps(first, ensure_ascii=False))
+        second["status"] = "ready"
+        second["known_facts"]["walls"]["thickness_mm"] = 300
+        second["missing_facts"] = []
+        second["clarification_questions"] = []
+        for fact_source in second["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+            if fact_source["path"] == "/known_facts/walls":
+                fact_source["source_turns"].append("turn-user-003")
+        second["provenance"]["source_turns"] = [
+            "turn-user-001",
+            "turn-user-003",
+        ]
+        provider = _SequenceLiveProvider([first, second])
+    
+&gt;       result = run_clarification_case(
+            provider=provider,
+            output_dir=tmp_path,
+            case=case,
+            answers=["墙体厚度为300毫米。"],
+        )
+
+tests\agent\test_phase6_1_live.py:429: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:431: in run_clarification_case
+    first_call = invoke(controller.transcript_dicts(), 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\live_pipeline.py:381: in invoke
+    stage_result = run_design_brief_stage(
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_clarification_cli_consumes_answer_file_with_injected_provider" time="0.347"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_clarification_cli_co0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x0000014AF45EFCE0&gt;
+
+    def test_live_clarification_cli_consumes_answer_file_with_injected_provider(
+        tmp_path: Path, capsys
+    ):
+        case = clarified_room_case()
+        first = _valid_ready_brief(complete_room_case())
+        first["schema_version"] = "text2ifc/design-brief/2.1"
+        first["known_facts"]["semantic_requirements"] = []
+        first["original_request"] = case["user_request"]
+        first["status"] = "needs_clarification"
+        first["known_facts"]["walls"].pop("thickness_mm")
+        first["user_corrections"] = []
+        first["missing_facts"] = [
+            {
+                "id": "mf-wall-thickness",
+                "code": "WALL_THICKNESS_MISSING",
+                "path": "/known_facts/walls/thickness_mm",
+                "message": "墙体厚度尚未提供。",
+                "reason": "生成实体墙体需要明确厚度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+        first["clarification_questions"] = [
+            {
+                "id": "q-wall-thickness",
+                "text": "请问墙体厚度是多少毫米？",
+                "targets": ["mf-wall-thickness"],
+                "reason": "缺少厚度时不能生成实体墙体。",
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+            }
+        ]
+        for fact_source in first["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+        first["provenance"]["source_turns"] = ["turn-user-001"]
+        second = json.loads(json.dumps(first, ensure_ascii=False))
+        second["status"] = "ready"
+        second["known_facts"]["walls"]["thickness_mm"] = 300
+        second["missing_facts"] = []
+        second["clarification_questions"] = []
+        for fact_source in second["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+            if fact_source["path"] == "/known_facts/walls":
+                fact_source["source_turns"].append("turn-user-003")
+        second["provenance"]["source_turns"] = [
+            "turn-user-001",
+            "turn-user-003",
+        ]
+        provider = _SequenceLiveProvider([first, second])
+        answer_file = tmp_path / "answers.json"
+        answer_file.write_text(
+            json.dumps({"answers": ["墙体厚度为300毫米。"]}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live_clarify", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        output_dir = tmp_path / "output"
+    
+&gt;       exit_code = module.main(
+            [
+                "--stage",
+                "clarify",
+                "--case",
+                "clarified-room",
+                "--answers",
+                str(answer_file),
+                "--live",
+                "--output-dir",
+                str(output_dir),
+            ],
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_phase6_1_live.py:529: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_1_live.py:153: in main
+    result = run_clarification_case(
+src\text2ifc_agent\live_pipeline.py:431: in run_clarification_case
+    first_call = invoke(controller.transcript_dicts(), 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\live_pipeline.py:381: in invoke
+    stage_result = run_design_brief_stage(
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_runs_unknown_answer_case_to_draft_without_ifc" time="0.372"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_cli_runs_unknown_ans0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x0000014AF46665A0&gt;
+
+    def test_live_cli_runs_unknown_answer_case_to_draft_without_ifc(
+        tmp_path: Path, capsys
+    ):
+        case = clarified_room_case()
+        first = _valid_ready_brief(complete_room_case())
+        first["schema_version"] = "text2ifc/design-brief/2.1"
+        first["known_facts"]["semantic_requirements"] = []
+        first["original_request"] = case["user_request"]
+        first["status"] = "needs_clarification"
+        first["known_facts"]["walls"].pop("thickness_mm")
+        first["user_corrections"] = []
+        first["missing_facts"] = [
+            {
+                "id": "mf-wall-thickness",
+                "code": "WALL_THICKNESS_MISSING",
+                "path": "/known_facts/walls/thickness_mm",
+                "message": "墙体厚度尚未提供。",
+                "reason": "生成实体墙体需要明确厚度。",
+                "blocking": True,
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+                "source_turns": ["turn-user-001"],
+            }
+        ]
+        first["clarification_questions"] = [
+            {
+                "id": "q-wall-thickness",
+                "text": "请问墙体厚度是多少毫米？",
+                "targets": ["mf-wall-thickness"],
+                "reason": "缺少厚度时不能生成实体墙体。",
+                "evidence_refs": ["schema:bim-json-v2:representation"],
+            }
+        ]
+        for fact_source in first["fact_sources"]:
+            fact_source["source_turns"] = ["turn-user-001"]
+        first["provenance"]["source_turns"] = ["turn-user-001"]
+        second = json.loads(json.dumps(first, ensure_ascii=False))
+        second["status"] = "draft_required"
+        second["missing_facts"] = [
+            {
+                **first["missing_facts"][0],
+                "source_turns": ["turn-user-001", "turn-user-003"],
+            }
+        ]
+        second["clarification_questions"] = []
+        second["user_corrections"] = []
+        second["provenance"]["source_turns"] = ["turn-user-001", "turn-user-003"]
+        provider = _SequenceLiveProvider([first, second])
+        answer_file = tmp_path / "answers.json"
+        answer_file.write_text(
+            json.dumps({"answers": ["我不知道。"]}, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live_unknown", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        output_dir = tmp_path / "unknown-answer"
+    
+&gt;       exit_code = module.main(
+            [
+                "--stage",
+                "clarify",
+                "--case",
+                "unknown-answer",
+                "--answers",
+                str(answer_file),
+                "--output-dir",
+                str(output_dir),
+                "--live",
+            ],
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_phase6_1_live.py:609: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_1_live.py:153: in main
+    result = run_clarification_case(
+src\text2ifc_agent\live_pipeline.py:431: in run_clarification_case
+    first_call = invoke(controller.transcript_dicts(), 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\live_pipeline.py:381: in invoke
+    stage_result = run_design_brief_stage(
+src\text2ifc_agent\live_pipeline.py:187: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_generator_stage_renders_exact_contracts_and_routes_formal" time="0.347"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_generator_stage_rend0')
+
+    def test_live_generator_stage_renders_exact_contracts_and_routes_formal(
+        tmp_path: Path,
+    ):
+        source_dir = _write_ready_design_source(tmp_path / "design-source")
+        formal = json.loads(
+            Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+        )
+        provider = _RecordingLiveProvider(formal)
+        output_dir = tmp_path / "generator"
+    
+&gt;       result = run_generator_stage(
+            provider=provider,
+            output_dir=output_dir,
+            design_source_dir=source_dir,
+            case_id="complete-room",
+        )
+
+tests\agent\test_phase6_1_live.py:668: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:592: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_generator_stage_blocks_unknown_contract_without_editing_output" time="0.347"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_generator_stage_bloc0')
+
+    def test_live_generator_stage_blocks_unknown_contract_without_editing_output(
+        tmp_path: Path,
+    ):
+        source_dir = _write_ready_design_source(tmp_path / "design-source")
+        unknown = {
+            "draft_version": "text2ifc/draft-envelope/1.0",
+            "target_schema_version": "bim-json/2.0",
+            "partial_document": {},
+        }
+        provider = _RecordingLiveProvider(unknown)
+        output_dir = tmp_path / "generator"
+    
+&gt;       result = run_generator_stage(
+            provider=provider,
+            output_dir=output_dir,
+            design_source_dir=source_dir,
+            case_id="complete-room",
+        )
+
+tests\agent\test_phase6_1_live.py:731: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:592: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_invalid_contract_replay_cli_blocks_without_provider_or_ifc" time="0.057" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_generator_cli_uses_injected_provider_and_design_source" time="0.361"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_generator_cli_uses_i0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x0000014AF46A68D0&gt;
+
+    def test_live_generator_cli_uses_injected_provider_and_design_source(
+        tmp_path: Path, capsys
+    ):
+        source_dir = _write_ready_design_source(tmp_path / "design-source")
+        formal = json.loads(
+            Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+        )
+        provider = _RecordingLiveProvider(formal)
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live_generate", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        output_dir = tmp_path / "generator"
+    
+&gt;       exit_code = module.main(
+            [
+                "--stage",
+                "generate",
+                "--case",
+                "complete-room",
+                "--design-source-dir",
+                str(source_dir),
+                "--live",
+                "--output-dir",
+                str(output_dir),
+            ],
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_phase6_1_live.py:807: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_1_live.py:166: in main
+    result = run_generator_stage(
+src\text2ifc_agent\live_pipeline.py:592: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_uses_stable_generator_directory_name" time="0.009" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_cli_uses_phase_root_finalize_directory" time="0.008" /><testcase classname="tests.agent.test_phase6_1_live" name="test_successful_first_pass_repair_stage_never_creates_provider" time="0.192" /><testcase classname="tests.agent.test_phase6_1_live" name="test_repair_stage_calls_provider_once_for_eligible_contract_failure" time="0.345"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_repair_stage_calls_provid0')
+
+    def test_repair_stage_calls_provider_once_for_eligible_contract_failure(
+        tmp_path: Path,
+    ):
+        source_dir = _write_repairable_generator_source(tmp_path / "generator")
+        repaired = json.loads(
+            Path("tests/contract_v2/fixtures/minimal.json").read_text(encoding="utf-8")
+        )
+        repaired["entities"][0]["ifc_class"] = "IfcProject"
+        provider = _RecordingLiveProvider(repaired)
+        created = []
+    
+        def provider_factory():
+            created.append("created")
+            return provider
+    
+        output_dir = tmp_path / "repair"
+&gt;       result = run_repair_stage(
+            provider_factory=provider_factory,
+            output_dir=output_dir,
+            generator_source_dir=source_dir,
+            case_id="complete-room",
+        )
+
+tests\agent\test_phase6_1_live.py:1097: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:977: in run_repair_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_repair_cli_records_zero_calls_for_live_first_pass_success" time="0.136" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_report_stage_calls_provider_and_generates_report" time="0.352"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_audit_report_stage_c0')
+
+    def test_live_audit_report_stage_calls_provider_and_generates_report(
+        tmp_path: Path,
+    ):
+        case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+        payload = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _RecordingLiveProvider(payload)
+    
+&gt;       result = run_audit_report_stage(
+            provider=provider,
+            case_dir=case_dir,
+            case_id="complete-room",
+        )
+
+tests\agent\test_phase6_1_live.py:1174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:1274: in run_audit_report_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_validation_normalizes_root_relative_evidence_paths" time="0.082" /><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_report_stage_accepts_clarified_final_design_brief_layout" time="0.361"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_audit_report_stage_a0')
+
+    def test_live_audit_report_stage_accepts_clarified_final_design_brief_layout(
+        tmp_path: Path,
+    ):
+        case_dir = _write_auditable_case_dir(tmp_path / "clarified-room")
+        calls_dir = case_dir / "calls"
+        calls_dir.mkdir()
+        (case_dir / "design-brief").rename(calls_dir / "02-design-brief")
+        payload = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "calls/02-design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _RecordingLiveProvider(payload)
+    
+&gt;       result = run_audit_report_stage(
+            provider=provider,
+            case_dir=case_dir,
+            case_id="clarified-room",
+        )
+
+tests\agent\test_phase6_1_live.py:1253: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:1274: in run_audit_report_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_live_audit_report_stage_blocks_fenced_output_contract" time="0.351"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_live_audit_report_stage_b0')
+
+    def test_live_audit_report_stage_blocks_fenced_output_contract(tmp_path: Path):
+        case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+        payload = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _RecordingLiveProvider(payload, fenced=True)
+    
+&gt;       result = run_audit_report_stage(
+            provider=provider,
+            case_dir=case_dir,
+            case_id="complete-room",
+        )
+
+tests\agent\test_phase6_1_live.py:1282: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:1274: in run_audit_report_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_audit_report_cli_uses_injected_provider_and_case_dir" time="0.365"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-registry-final/test_audit_report_cli_uses_inj0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x0000014AF46A70E0&gt;
+
+    def test_audit_report_cli_uses_injected_provider_and_case_dir(
+        tmp_path: Path,
+        capsys,
+    ):
+        case_dir = _write_auditable_case_dir(tmp_path / "complete-room")
+        payload = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _RecordingLiveProvider(payload)
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live_audit", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+    
+&gt;       exit_code = module.main(
+            [
+                "--stage",
+                "audit-report",
+                "--case",
+                "complete-room",
+                "--case-dir",
+                str(case_dir),
+                "--live",
+            ],
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_phase6_1_live.py:1319: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_1_live.py:187: in main
+    result = run_audit_report_stage(
+src\text2ifc_agent\live_pipeline.py:1274: in run_audit_report_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.9: sha256:782e45341b96a985fe597728362c569f64bf600e1653f28b2c49402f8d3078d2
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_phase6_1_live" name="test_final_acceptance_stage_writes_geometry_checked_ifc_and_root_report" time="3.394" /><testcase classname="tests.agent.test_phase6_1_live" name="test_finalize_cli_writes_canonical_ifc_and_report" time="3.094" /><testcase classname="tests.agent.test_phase6_1_live" name="test_phase6_1_artifact_verifier_accepts_finalized_root" time="3.560" /></testsuite></testsuites>

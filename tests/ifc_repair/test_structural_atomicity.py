@@ -42,14 +42,14 @@ from text2ifc_ifc_repair.semantic_facts import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-D7N = ROOT / "dataset" / "ifc" / "test" / "d7n.ifc"
+D7N = ROOT / "dataset" / "external" / "bimnet" / "d7n.ifc"
 D7N_STOREY_ID = "0K_MqVdrL0JOCMi_GblRwJ"
 FOUR_FAMILY_CASE = (
     ROOT
     / "dataset"
     / "processed"
     / "proof"
-    / "ifc-repair-success-cases"
+    / "repair" / "phase11" / "reference-cases"
     / "mixed"
     / "door-window"
     / "vvo-authority-triplet-public-repair"
@@ -522,11 +522,11 @@ def test_real_window_door_beam_column_changeset_publishes_once(
 ) -> None:
     damaged = FOUR_FAMILY_CASE / "02-damaged.ifc"
     request = (
-        (FOUR_FAMILY_CASE / "input" / "request.txt").read_text(encoding="utf-8")
+        (FOUR_FAMILY_CASE / "request.txt").read_text(encoding="utf-8")
         + "\nAdd one Beam and one Column on the exact authorized Storey."
     )
     changeset = json.loads(
-        (FOUR_FAMILY_CASE / "changeset" / "bound-changeset.json").read_text(
+        (FOUR_FAMILY_CASE / "evidence" / "authority" / "changeset" / "bound-changeset.json").read_text(
             encoding="utf-8"
         )
     )

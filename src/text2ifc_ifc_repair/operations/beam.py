@@ -447,6 +447,7 @@ def _applicator(
         expected_ifc_class="IfcBeamType",
         generated_type_factory=create_generated_beam_type,
         factory_context={"section": frame["section"]},
+        appearance=operation.get("appearance"),
     )
     containment = list(storey.ContainsElements)
     created: list[dict[str, str]] = [

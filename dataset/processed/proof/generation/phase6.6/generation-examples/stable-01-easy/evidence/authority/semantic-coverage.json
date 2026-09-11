@@ -1,0 +1,105 @@
+{
+  "blocking_facts": [],
+  "candidate_entity_count": 14,
+  "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+  "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+  "case_id": "d2f86855a9738b50",
+  "custom_property_policy": {
+    "counts_as_semantic_support": false,
+    "state": "preserved_text_only"
+  },
+  "facts": [
+    {
+      "coverage_state": "represented",
+      "path": "/known_facts/floor_slabs",
+      "reason": "Fact is inside the current supported semantic profile.",
+      "value": [
+        {
+          "id": "floor-slab-1",
+          "owning_storey": "storey-1",
+          "thickness_mm": 150,
+          "top_elevation_mm": 0
+        }
+      ]
+    },
+    {
+      "coverage_state": "represented",
+      "path": "/known_facts/storeys",
+      "reason": "Fact is inside the current supported semantic profile.",
+      "value": [
+        {
+          "doors": [
+            {
+              "alignment": "host_centerline",
+              "height_mm": 2100,
+              "host_wall": "wall-south",
+              "id": "door-south",
+              "open_direction": "inside",
+              "width_mm": 900
+            }
+          ],
+          "elevation_mm": 0,
+          "id": "storey-1",
+          "net_height_mm": 3000,
+          "spaces": [
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  6000
+                ],
+                "y": [
+                  0,
+                  4000
+                ]
+              },
+              "id": "space-room",
+              "shape": "rectangle"
+            }
+          ],
+          "walls": {
+            "exterior": [
+              {
+                "height_mm": 3000,
+                "id": "wall-south",
+                "side": "south",
+                "thickness_mm": 200
+              },
+              {
+                "height_mm": 3000,
+                "id": "wall-north",
+                "side": "north",
+                "thickness_mm": 200
+              },
+              {
+                "height_mm": 3000,
+                "id": "wall-west",
+                "side": "west",
+                "thickness_mm": 200
+              },
+              {
+                "height_mm": 3000,
+                "id": "wall-east",
+                "side": "east",
+                "thickness_mm": 200
+              }
+            ],
+            "interior": []
+          },
+          "windows": [
+            {
+              "alignment": "host_centerline",
+              "height_mm": 1200,
+              "host_wall": "wall-north",
+              "id": "window-north",
+              "sill_height_mm": 900,
+              "width_mm": 1500
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "schema_version": "text2ifc/semantic-coverage/1.0",
+  "valid": true
+}

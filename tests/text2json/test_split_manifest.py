@@ -144,3 +144,21 @@ def test_split_checker_rejects_family_leakage() -> None:
 
     with pytest.raises(SplitManifestError, match="scene_family"):
         check_scene_family_splits(leaked_payload)
+
+
+def test_bimnet_splits_ignore_other_sources_in_unified_manifest(tmp_path: Path) -> None:
+    from text2ifc_text.splits import load_bimnet_manifest
+    records = _read_jsonl(MANIFEST_PATH)
+    path = _write_jsonl(tmp_path / "unified.jsonl", records + [
+        {"id": "external-test-model", "source_id": "external", "training_eligible": False}
+    ])
+    assert load_bimnet_manifest(path) == records
+
+
+def test_bimnet_loader_rejects_manifest_without_bimnet(tmp_path: Path) -> None:
+    from text2ifc_text.splits import load_bimnet_manifest
+    path = _write_jsonl(tmp_path / "external.jsonl", [
+        {"id": "external-test-model", "source_id": "external"}
+    ])
+    with pytest.raises(SplitManifestError, match="no BIMNet records"):
+        load_bimnet_manifest(path)

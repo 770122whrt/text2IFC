@@ -28,6 +28,7 @@ _REFERENCE_FIELDS = {
     "RelatingOpeningElement",
     "RelatedBuildingElement",
     "RelatedOpeningElement",
+    "RelatingType",
 }
 
 
@@ -122,6 +123,11 @@ def validate_package_changeset(
         for component_id, value in values.items():
             if not str(value.get("ifc_class", "")).startswith("IfcRel") and value.get("ifc_class") not in _CROSS_CLASSES:
                 issues.append(_issue("PACKAGE_CROSS_COMPONENT_INVALID", f"/{component_id}/ifc_class", component_id))
+    elif kind == 'semantic_types':
+        from text2ifc_contract.relationships_v2 import TYPE_FAMILIES
+        for component_id, value in values.items():
+            if value.get('ifc_class') not in {*TYPE_FAMILIES.values(), 'IfcRelDefinesByType'}:
+                issues.append(_issue('PACKAGE_SEMANTIC_TYPE_INVALID', f'/{component_id}/ifc_class', component_id))
     return _result(issues)
 
 

@@ -1,4 +1,8 @@
-# Data Organization
+# BIMNet 上游数据结构与当前仓库位置
+
+本页下方说明 BIMNet 上游发布结构，不代表 text2IFC 当前磁盘目录。当前 25 份 BIMNet Source IFC 位于 `dataset/external/bimnet/`；实验划分继续由 `dataset/splits/bimnet-scene-splits.json` 管理，物理位置不表达训练划分。
+
+当前入口：[external](external/README.md)、[manifest](manifests/README.md)、[processed/Proof](processed/README.md)。
 
 ## File Structure
 
@@ -54,7 +58,7 @@ We provide an `.ifc` format BIM model for each scan. All `.ifc` files are direct
 
 ## obj and obj_wall_filled
 We provide the OBJ model corresponding to each IFC. Each component is a separate `.obj` file and includes a `.mtl` texture file. We offer two different versions of the OBJ models: **obj** and **obj_wall_filled**. Specifically, the **obj_wall_filled** version fills in all openings on wall components. You can choose to use the version that best suits your needs.
-![obj_difference](obj_difference.jpg)
+原上游说明引用的 obj_difference.jpg 未包含在当前 checkout；此处不提供失效本地图片链接。
 
 ## mat_pc2obj
 The registration matrix can be used to align the point cloud to the OBJ model.

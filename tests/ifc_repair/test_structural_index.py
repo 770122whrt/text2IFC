@@ -13,8 +13,8 @@ from text2ifc_ifc_repair.indexer import EXTRACTOR_VERSION, build_ifc_index
 
 
 ROOT = Path(__file__).resolve().parents[2]
-D7N = ROOT / "dataset" / "ifc" / "test" / "d7n.ifc"
-VVO = ROOT / "dataset" / "ifc" / "train" / "vvo.ifc"
+D7N = ROOT / "dataset" / "external" / "bimnet" / "d7n.ifc"
+VVO = ROOT / "dataset" / "external" / "bimnet" / "vvo.ifc"
 
 
 @pytest.mark.parametrize(

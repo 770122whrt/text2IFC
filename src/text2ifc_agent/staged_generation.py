@@ -50,7 +50,7 @@ def build_skeleton_workspace(expected_facts: Mapping[str, Any]) -> dict[str, Any
         ),
     ]
     return {
-        "schema_version": "bim-json/2.0",
+        "schema_version": expected_facts.get('generation_schema_version', 'bim-json/2.0'),
         "ifc_schema": "IFC2X3",
         "units": {"length": "MILLIMETRE"},
         "entities": entities,
@@ -79,6 +79,8 @@ def run_staged_generation(
     if manifest.get("status") != "ready":
         return _blocked("draft_required", manifest.get("issues", []), [])
     workspace = copy.deepcopy(dict(skeleton))
+    if workspace.get('schema_version') == 'bim-json/2.1' and expected_facts.get('appearance'):
+        workspace['appearance'] = copy.deepcopy(expected_facts['appearance'])
     revision = _revision(
         candidate=workspace,
         expected_facts=expected_facts,
@@ -145,7 +147,25 @@ def run_staged_generation(
                 scope=scope,
                 issues=[*base_issues, *retry_feedback],
                 trace_level=trace_level,
+                generation_package=package,
             )
+            from .changeset_stage import retry_candidate_key
+            if stage.get('classification') == 'provider_failed':
+                package_records.append({'package_id': package_id,
+                    'artifact_dir': active_dir.relative_to(output).as_posix(),
+                    'status': 'provider_failed', 'attempt_count': attempt_count})
+                _write_json(output/'package-records.json', {'packages': package_records})
+                return _blocked('provider_failed', stage.get('diagnostics', []), package_records)
+            retry_key = (stage.get('classification'), hash_json_value(stage.get('diagnostics', [])),
+                         retry_candidate_key(active_dir))
+            if attempt_count == 1:
+                seen_candidates = set()
+            if retry_key in seen_candidates:
+                gate = {'valid':False, 'issues':[{'code':'CHANGESET_REPEATED_CANDIDATE',
+                    'path':'/operations', 'message':'The same failed package was returned for the unchanged workspace.'}]}
+                _write_json(active_dir/'retry-decision.json', gate)
+                break
+            seen_candidates.add(retry_key)
             if stage.get("classification") == "draft" and stage.get("valid") is True:
                 record = {
                     "package_id": package_id,

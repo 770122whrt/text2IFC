@@ -5,6 +5,7 @@ from pathlib import Path
 import subprocess
 import sys
 
+import pytest
 from scripts.ifc_repair import run_phase12_live_uat_v2 as live_v2
 
 
@@ -29,6 +30,37 @@ def test_v2_live_runner_is_directly_executable() -> None:
 
     assert completed.returncode == 0, completed.stderr
     assert "--require-green-preflight" in completed.stdout
+
+
+def test_v2_live_runner_requires_admission_without_running_preflight_or_transport(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    transport_constructed = False
+
+    def forbidden_transport() -> object:
+        nonlocal transport_constructed
+        transport_constructed = True
+        pytest.fail("missing admission must block before Provider transport")
+
+    monkeypatch.setattr(
+        live_v2.base,
+        "run_preflight",
+        lambda *_args, **_kwargs: pytest.fail(
+            "V2 missing admission must not automatically run Full Preflight"
+        ),
+    )
+
+    result = live_v2.run_live_uat_v2(
+        tmp_path / "run",
+        transport_factory=forbidden_transport,
+    )
+
+    assert result["status"] == "blocked"
+    assert result["reason_code"] == "LIVE_ADMISSION_REQUIRED"
+    assert result["preflight"]["status"] == "not_run"
+    assert result["transport_calls"] == 0
+    assert transport_constructed is False
 
 
 def test_v2_changed_scope_admission_binds_current_zero_network_evidence() -> None:
@@ -91,3 +123,22 @@ def test_v2_live_contract_is_versioned_and_uses_real_vvo_geometry() -> None:
     assert live_v2._case_matrix_sha256(live_v2.DEFAULT_CASES) == (
         live_v2.FROZEN_CASE_MATRIX_SHA256
     )
+def test_v2_cli_requires_explicit_admission_for_live_execution(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(live_v2.base, "_environment", lambda _path: {})
+    monkeypatch.setattr(
+        live_v2,
+        "_config_ready",
+        lambda _environment: {"status": "ready"},
+    )
+    monkeypatch.setattr(
+        live_v2,
+        "run_live_uat_v2",
+        lambda *_args, **_kwargs: pytest.fail("runner must not be invoked"),
+    )
+
+    with pytest.raises(SystemExit) as error:
+        live_v2.main(["--require-green-preflight"])
+
+    assert error.value.code == 2

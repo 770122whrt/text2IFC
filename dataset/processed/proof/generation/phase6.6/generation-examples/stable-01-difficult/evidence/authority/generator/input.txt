@@ -1,0 +1,141 @@
+## STD-D-MUL-04 Difficult 修订输入：显式室内墙、门宿主与无穿墙楼梯
+
+创建一栋两层住宅。采用毫米和右手坐标系：X 轴向东，Y 轴向北，Z 轴向上。室内净轮廓为 `x=0..12000, y=0..8000`。
+
+### 建筑、楼层与普通墙
+
+- 首层 `storey-1` 标高为 0，二层 `storey-2` 标高为 3300；
+- 两层净高均为 3000；
+- 所有普通墙厚 200、高 3000；
+- 两层分别生成南、北、西、东四段连续外墙，ID 为 `storey-{n}-wall-south`、`storey-{n}-wall-north`、`storey-{n}-wall-west`、`storey-{n}-wall-east`；
+- 南墙从 `[0,0]` 到 `[12000,0]`，北墙从 `[0,8000]` 到 `[12000,8000]`，西墙从 `[0,0]` 到 `[0,8000]`，东墙从 `[12000,0]` 到 `[12000,8000]`；
+- 首层和二层墙分别归属对应楼层，不得跨层、重复或从空间边界自动增加未列出的墙。
+
+### 楼板和两个独立开口
+
+生成两块 `IfcSlab`：
+
+- `ground-floor-slab` 归属 `storey-1`，顶标高 0，厚 300，平面为 `[[0,0],[12000,0],[12000,8000],[0,8000],[0,0]]`；
+- `first-floor-slab` 归属 `storey-2`，顶标高 3300，厚 300，平面同上。
+
+`first-floor-slab` 必须有两个彼此独立的开口，不得合并：
+
+- 中庭开口 `opening-first-floor-slab-atrium`：`x=6000..12000, y=0..3000`；
+- 楼梯开口 `opening-first-floor-slab-stair`：`x=9900..11100, y=4000..7750`。
+
+每个开口分别生成 `IfcOpeningElement` 和各自的 `IfcRelVoidsElement`。开口范围内不得生成楼板实体。
+
+### 首层空间和九段室内墙
+
+为以下每个矩形生成独立 `IfcSpace`：
+
+- 客厅 `space-storey-1-living`：`x=0..7000, y=0..3000`；
+- 餐厅 `space-storey-1-dining`：`x=7000..12000, y=0..3000`；
+- 走廊 `space-storey-1-corridor`：`x=0..10000, y=3000..5000`；
+- 厨房 `space-storey-1-kitchen`：`x=0..5000, y=5000..8000`；
+- 卫生间 `space-storey-1-bathroom`：`x=5000..7000, y=5000..8000`；
+- 楼梯厅 `space-storey-1-stair-hall`：`x=7000..12000, y=5000..8000`。
+
+首层只生成以下九段室内墙，每段各生成一次：
+
+- `wall-living-dining-storey1`：从 `[7000,0]` 到 `[7000,3000]`；
+- `wall-living-corridor-storey1`：从 `[0,3000]` 到 `[7000,3000]`；
+- `wall-dining-corridor-storey1`：从 `[7000,3000]` 到 `[10000,3000]`；
+- `wall-kitchen-corridor-storey1`：从 `[0,5000]` 到 `[5000,5000]`；
+- `wall-bathroom-corridor-storey1`：从 `[5000,5000]` 到 `[7000,5000]`；
+- `wall-stairhall-corridor-west-storey1`：从 `[7000,5000]` 到 `[9900,5000]`；
+- `wall-stairhall-corridor-east-storey1`：从 `[11100,5000]` 到 `[12000,5000]`；
+- `wall-kitchen-bathroom-storey1`：从 `[5000,5000]` 到 `[5000,8000]`；
+- `wall-bathroom-stairhall-storey1`：从 `[7000,5000]` 到 `[7000,8000]`。
+
+`x=9900..11100, y=5000` 是宽 1200 的开放楼梯通道。该通道内不得生成墙、门、填充构件或其他封堵实体。
+
+### 二层空间、六段室内墙、中庭和到达区
+
+为以下每个矩形生成独立 `IfcSpace`：
+
+- 走廊 `space-storey-2-corridor`：`x=0..9900, y=3000..5000`；
+- 卧室一 `space-storey-2-bedroom-1`：`x=0..5000, y=5000..8000`；
+- 卫生间 `space-storey-2-bathroom`：`x=5000..7000, y=5000..8000`；
+- 卧室二 `space-storey-2-bedroom-2`：`x=7000..9900, y=5000..8000`；
+- 卧室三 `space-storey-2-bedroom-3`：`x=0..6000, y=0..3000`。
+
+二层只生成以下六段室内墙，每段各生成一次：
+
+- `wall-bedroom3-corridor-storey2`：从 `[0,3000]` 到 `[6000,3000]`；
+- `wall-bedroom1-corridor-storey2`：从 `[0,5000]` 到 `[5000,5000]`；
+- `wall-bathroom-corridor-storey2`：从 `[5000,5000]` 到 `[7000,5000]`；
+- `wall-bedroom2-corridor-storey2`：从 `[7000,5000]` 到 `[9900,5000]`；
+- `wall-bedroom1-bathroom-storey2`：从 `[5000,5000]` 到 `[5000,8000]`；
+- `wall-bathroom-bedroom2-storey2`：从 `[7000,5000]` 到 `[7000,8000]`。
+
+中庭挑空范围为 `x=6000..12000, y=0..3000`。楼梯开口范围为 `x=9900..11100, y=4000..7750`。这两个区域均不得生成二层 `IfcSpace`。`x=9900..11100, y=3000..4000` 保留为二层楼梯到达区，必须保留楼板实体。中庭北边和西边不得生成普通封闭墙。
+
+### 不穿墙的直跑楼梯
+
+生成一部由 `IfcStair` 和一个 `IfcStairFlight` 组成的直跑楼梯，不使用双跑、平台或转折：
+
+- `stair-1` 从 `storey-1` 连接到 `storey-2`；
+- 平面 bounds 为 `x=10000..11000, y=4000..7750`；
+- 起跑点为全局 `[11000,7750,0]`，沿 `-Y` 方向运行，梯段宽度向西展开 1000；
+- 起点标高 0，终点标高 3300，总高差 3300；
+- 18 个踢面、17 个踏面；
+- 踢面高为 `3300/18` 毫米，踏面深为 `3750/17` 毫米，总水平投影长 3750 毫米；
+- 楼梯完整位于楼梯开口平面范围内，东西两侧各保留 100 毫米净空；
+- 楼梯北端到北外墙内表面至少保留 150 毫米净空；
+- 楼梯不得与任何普通内墙或外墙产生正体积相交，必须从上述 1200 毫米开放通道穿过。
+
+### 五段洞口防护栏杆
+
+生成且只生成以下五段简化实体 `IfcRailing`，均归属 `storey-2`：
+
+- `railing-atrium-north`：从 `[6000,3000,3300]` 到 `[12000,3000,3300]`；
+- `railing-atrium-west`：从 `[6000,0,3300]` 到 `[6000,3000,3300]`；
+- `railing-stair-opening-west`：从 `[9900,4000,3300]` 到 `[9900,7750,3300]`；
+- `railing-stair-opening-east`：从 `[11100,4000,3300]` 到 `[11100,7750,3300]`；
+- `railing-stair-opening-north`：从 `[9900,7750,3300]` 到 `[11100,7750,3300]`。
+
+五段栏杆高度均为 1100，简化实体厚度均为 50，底标高均为 3300。楼梯洞口西、东、北边必须受防护；南边 `y=4000` 是楼梯到达口，保持开放，不得增加横向栏杆。不得把栏杆改成普通墙，也不得自行增加立柱、材料、栏杆类型或沿梯段倾斜的扶手。
+
+### 十扇门及其明确宿主
+
+所有普通室内门高 2100；卫生间门宽 800，其余室内门宽 900。每扇门的中心和宿主墙如下：
+
+- `door-living-corridor-storey1`：中心 `[3500,3000]`，宿主 `wall-living-corridor-storey1`；
+- `door-dining-corridor-storey1`：中心 `[8500,3000]`，宿主 `wall-dining-corridor-storey1`；
+- `door-kitchen-corridor-storey1`：中心 `[2500,5000]`，宿主 `wall-kitchen-corridor-storey1`；
+- `door-bathroom-corridor-storey1`：中心 `[6000,5000]`，宽 800，宿主 `wall-bathroom-corridor-storey1`；
+- `door-stairhall-corridor-storey1`：中心 `[8500,5000]`，宿主 `wall-stairhall-corridor-west-storey1`；
+- `door-main-entrance`：中心 `[0,4000]`，宽 1000，宿主 `storey-1-wall-west`；
+- `door-bedroom1-corridor-storey2`：中心 `[2500,5000]`，宿主 `wall-bedroom1-corridor-storey2`；
+- `door-bathroom-corridor-storey2`：中心 `[6000,5000]`，宽 800，宿主 `wall-bathroom-corridor-storey2`；
+- `door-bedroom2-corridor-storey2`：中心 `[8450,5000]`，宿主 `wall-bedroom2-corridor-storey2`；
+- `door-bedroom3-corridor-storey2`：中心 `[3000,3000]`，宿主 `wall-bedroom3-corridor-storey2`。
+
+每扇门分别生成自己的 `IfcOpeningElement`、`IfcRelVoidsElement` 和 `IfcRelFillsElement`，不得共用开口或改绑到其他墙。
+
+### 窗
+
+普通窗宽 1500、高 1200、窗台高 900：
+
+- 首层客厅南外墙中心 `[2333,0]` 和 `[4667,0]`，宿主 `storey-1-wall-south`；
+- 首层餐厅南外墙中心 `[8250,0]` 和 `[10750,0]`，宿主 `storey-1-wall-south`；
+- 首层厨房北外墙中心 `[2500,8000]`，宿主 `storey-1-wall-north`；
+- 二层卧室一北外墙中心 `[2500,8000]`，宿主 `storey-2-wall-north`；
+- 二层卧室二北外墙中心 `[8450,8000]`，宿主 `storey-2-wall-north`；
+- 二层卧室三南外墙中心 `[3000,0]`，宿主 `storey-2-wall-south`。
+
+两个卫生间各有一扇高窗，宽 800、高 600、窗台高 1600：首层中心 `[6000,8000]`，宿主 `storey-1-wall-north`；二层中心 `[6000,8000]`，宿主 `storey-2-wall-north`。每扇窗分别生成自己的开口和填充关系，同一宿主墙上的多个窗不得重叠。
+
+### IFC 验收要求
+
+- BIM JSON 2.0 必须通过正式 Schema 校验后才编译；
+- IFC2X3 必须可编译、可重开且无 EXPRESS 错误；
+- 必须有 2 个 `IfcBuildingStorey`、11 个 `IfcSpace`、23 个 `IfcWall`、2 个 `IfcSlab`、1 个 `IfcStair`、1 个 `IfcStairFlight` 和 5 个 `IfcRailing`；
+- 两个楼板开口必须独立存在且范围正确；
+- 五段栏杆必须归属二层，并匹配明确中心线、1100 高度和 50 厚度；
+- 楼梯与全部普通墙的正体积相交数量必须为 0；
+- 楼梯必须通过 `x=9900..11100` 的开放通道，且不得进入北外墙；
+- 中庭、楼梯开口和到达区不得互相合并或错误切除；
+- 10 扇门必须绑定上述明确宿主，并分别具有独立开口和填充关系；
+- 只生成上述 23 段普通墙；共享墙不得重复，外墙转角不得留缝，所有空间和构件必须归属正确楼层。

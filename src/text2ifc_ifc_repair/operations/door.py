@@ -31,6 +31,7 @@ from text2ifc_ifc_repair.geometry import (
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistryError
 from text2ifc_ifc_repair.semantic_facts import SemanticFact
 from text2ifc_ifc_repair.type_templates import ensure_bound_type
+from text2ifc_presentation import apply_repair_appearance_on_occurrence
 
 from .hosted_opening import (
     add_to_containment,
@@ -608,6 +609,14 @@ def _create_door(
             "global_id": str(containment.GlobalId),
         }
     )
+    appearance_result = apply_repair_appearance_on_occurrence(
+        model,
+        type_object=door_style,
+        occurrence=door,
+        explicit_appearance=(
+            None if operation.get("appearance") is None else dict(operation["appearance"])
+        ),
+    )
     created = [
         *(
             [
@@ -695,6 +704,7 @@ def _create_door(
             "storey_global_id": str(
                 containment.RelatingStructure.GlobalId
             ),
+            "appearance": appearance_result,
         },
     }
 
@@ -1058,6 +1068,28 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
         "fills_relationship": "IfcRelFillsElement",
         "generated_door_type": "IfcDoorStyle",
         "door_type_relationship": "IfcRelDefinesByType",
+        "semantic_door_pset": "IfcPropertySet",
+        "semantic_door_pset_relationship": "IfcRelDefinesByProperties",
+        "semantic_door_quantities": "IfcElementQuantity",
+        "semantic_door_quantity_relationship": "IfcRelDefinesByProperties",
+        "semantic_door_material_relationship": "IfcRelAssociatesMaterial",
+        "semantic_door_classification_relationship": "IfcRelAssociatesClassification",
+        **{
+            f"semantic_door_material_relationship_{index}": "IfcRelAssociatesMaterial"
+            for index in range(2, 65)
+        },
+        **{
+            f"semantic_door_classification_relationship_{index}": "IfcRelAssociatesClassification"
+            for index in range(2, 65)
+        },
+        **{
+            f"semantic_door_pset_{index}": "IfcPropertySet"
+            for index in range(2, 65)
+        },
+        **{
+            f"semantic_door_pset_relationship_{index}": "IfcRelDefinesByProperties"
+            for index in range(2, 65)
+        },
     }
     if creates_opening:
         created.update(
@@ -1107,6 +1139,43 @@ def _l1_authorization(*, creates_opening: bool) -> dict[str, Any]:
             "spatial_containment": {
                 "ifc_class": "IfcRelContainedInSpatialStructure",
                 "added_endpoint_roles": ("door",),
+            },
+            "semantic_door_pset_relationship": {
+                "ifc_class": "IfcRelDefinesByProperties",
+                "added_endpoint_roles": ("door",),
+            },
+            "semantic_door_quantity_relationship": {
+                "ifc_class": "IfcRelDefinesByProperties",
+                "added_endpoint_roles": ("door",),
+            },
+            "semantic_door_material_relationship": {
+                "ifc_class": "IfcRelAssociatesMaterial",
+                "added_endpoint_roles": ("door",),
+            },
+            "semantic_door_classification_relationship": {
+                "ifc_class": "IfcRelAssociatesClassification",
+                "added_endpoint_roles": ("door",),
+            },
+            **{
+                f"semantic_door_material_relationship_{index}": {
+                    "ifc_class": "IfcRelAssociatesMaterial",
+                    "added_endpoint_roles": ("door",),
+                }
+                for index in range(2, 65)
+            },
+            **{
+                f"semantic_door_classification_relationship_{index}": {
+                    "ifc_class": "IfcRelAssociatesClassification",
+                    "added_endpoint_roles": ("door",),
+                }
+                for index in range(2, 65)
+            },
+            **{
+                f"semantic_door_pset_relationship_{index}": {
+                    "ifc_class": "IfcRelDefinesByProperties",
+                    "added_endpoint_roles": ("door",),
+                }
+                for index in range(2, 65)
             },
         },
     }

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.614" timestamp="2026-09-11T15:14:30.149026+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_brief_plan_constraints" name="test_plan_issues_keep_upstream_owner_in_public_normalizer" time="0.001"><failure message="AssertionError: assert ('repair' == 'design_brief'&#10;  &#10;  - design_brief&#10;  + repair)">def test_plan_issues_keep_upstream_owner_in_public_normalizer():
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        rows=normalize_validation_issues([{'code':'BRIEF_PLAN_GEOMETRY','path':'/known_facts/plan_constraints/0','message':'outside'}],source='semantic_validation')
+&gt;       assert rows[0].owner=='design_brief' and rows[0].suggested_route=='revise_design_brief'
+E       AssertionError: assert ('repair' == 'design_brief'
+E         
+E         - design_brief
+E         + repair)
+
+tests\agent\test_brief_plan_constraints.py:156: AssertionError</failure></testcase></testsuite></testsuites>

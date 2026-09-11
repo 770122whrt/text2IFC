@@ -1,0 +1,101 @@
+{
+  "branch": "B-retain",
+  "status": "compiled",
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "started_at": "2026-09-10T12:32:45.732422+00:00",
+  "conversation_origin": "user-authorized scripted branch; not spontaneous live clarification",
+  "reused_design_brief": false,
+  "session_hash": "8b3add702299a50f",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\failure-recovery-rerun-20260910\\B-retain\\runtime\\runs\\8b3add702299a50f",
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [],
+    "calls_used": 0,
+    "tokens_used_or_reserved": 0,
+    "active_seconds": 0
+  },
+  "brief_result": {
+    "case_id": "8b3add702299a50f",
+    "stage": "design-brief",
+    "status": "ready",
+    "valid": true,
+    "schema_semantic_valid": true,
+    "strict_output_contract_valid": true,
+    "output_dir": "dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/failure-recovery-rerun-20260910/B-retain/runtime/runs/8b3add702299a50f/calls/01-design-brief",
+    "response_id": "24c7528f-0c56-4eb2-99af-3a6c8a03c2f3",
+    "evidence_class": "live"
+  },
+  "result": {
+    "session_id": "phase6.2-93f97fc690264ddebd1b8bd13e536441",
+    "session_hash": "8b3add702299a50f",
+    "status": "compiled",
+    "generator_status": "changeset_applied",
+    "repair_route": "no_repair_needed",
+    "audit_status": "accepted",
+    "ifc_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\failure-recovery-rerun-20260910\\B-retain\\runtime\\runs\\8b3add702299a50f\\output.ifc",
+    "report_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\failure-recovery-rerun-20260910\\B-retain\\runtime\\runs\\8b3add702299a50f\\report.md"
+  },
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 42287,
+        "reserved_tokens": 128083,
+        "elapsed_seconds": 90.82800000000134
+      },
+      {
+        "attempt": 2,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 78741,
+        "reserved_tokens": 177529,
+        "elapsed_seconds": 143.23400000000402
+      },
+      {
+        "attempt": 3,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 55816,
+        "reserved_tokens": 193634,
+        "elapsed_seconds": 51.26499999999942
+      },
+      {
+        "attempt": 4,
+        "stage": "changeset",
+        "status": "completed",
+        "tokens_charged": 50431,
+        "reserved_tokens": 201448,
+        "elapsed_seconds": 17.10899999999674
+      },
+      {
+        "attempt": 5,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 97229,
+        "reserved_tokens": 321006,
+        "elapsed_seconds": 25.39100000000326
+      }
+    ],
+    "calls_used": 5,
+    "tokens_used_or_reserved": 324504,
+    "active_seconds": 327.8270000000048
+  },
+  "finished_at": "2026-09-10T12:39:20.668497+00:00"
+}

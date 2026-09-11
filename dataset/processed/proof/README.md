@@ -1,63 +1,35 @@
-# BimNet Proof 证据根目录
+# text2IFC Proof
 
-本目录只收纳已经冻结、可追溯的 Proof 或历史证据包。“已收纳”不等于所有目录具有相同证据等级；每个集合必须以自己的 manifest、validator 和报告为准。失败运行继续保留在 dataset/processed/ifc-repair-runs，不会混入成功 Proof。
+先选择工作流：[Generation](generation/README.md) · [Repair](repair/README.md)。案例根目录直接提供请求、IFC 和中文结论，过程材料集中在 evidence。
 
-机器可读总索引见 [PROOF-INVENTORY.json](PROOF-INVENTORY.json)。人类可读收纳标准见 [IFC Repair Proof 人类可读收纳规范](../../../docs/validation/ifc-repair-proof-format.md)。
+| 集合 | 状态 | 案例 |
+|---|---|---:|
+| [generation/phase6.6/generation-examples](generation/phase6.6/generation-examples/REPORT.md) | accepted | 6 |
+| [generation/phase6.6/three-storey-clarification-ab-20260910](generation/phase6.6/three-storey-clarification-ab-20260910/REPORT.md) | accepted；人工已验收，B保留已知问题 | 2 |
+| [三层C型教学楼](generation/phase6.6/c-shaped-teaching-20260911/REPORT.md) | accepted；人工已验收 | 1 |
+| [repair/phase11/live-uat](repair/phase11/live-uat/REPORT.md) | historical | 1 |
+| [repair/phase11/reference-cases](repair/phase11/reference-cases/REPORT.md) | accepted | 16 |
+| [repair/phase12/plan07-v2](repair/phase12/plan07-v2/REPORT.md) | accepted | 10 |
+| [repair/phase12/presentation-cases](repair/phase12/presentation-cases/REPORT.md) | pending_human_review | 3 |
+| [repair/phase12.1/r1](repair/phase12.1/r1/REPORT.md) | accepted | 12 |
 
-## 当前权威集合
+共 51 个直接展示案例。历史 live UAT 另引用 reference-cases 的两个成功案，不重复收纳。Plan07 已经用户人工审查通过；材质外观集合等待人工审查；整理不关闭 Phase、不提升模型能力结论。
 
-| 目录 | 证据类型 | 当前用途 |
-|---|---|---|
-| ifc-repair-success-cases/ | 已接受历史案例，以及独立 plan07-manifest.json 管理的 Plan 07 待人工检查批次 | IFCCompare、跨版本回归、Plan 07 人工验收入口；不能把 review manifest 当作主 manifest accepted |
-| ifc-repair-success-cases-v2-plan07-staging/ | Plan 07 v2 隔离机器权威；含 6 个离线 restoration case 和 genuine run bundle | 为人读 Plan 07 案例提供 Provider/runtime/ChangeSet/验证追溯；不会自动安装进主 accepted manifest |
-| repair-milestone-r1/ | [人类入口](repair-milestone-r1/README.md) + `r1-20260902T152701658266Z-curated/` 机器权威 | R1 12 案报告、直接可见 IFC 与 Proof 0.3 |
-| phase11-live-uat/ | Phase 11 历史 live UAT 包 | 历史追溯，不用于提升 R1 结论 |
-| text2ifc-success-cases/ | Text-to-IFC 生成成功案例 | 生成链路证据，不是 repair 三元组证据 |
+另有[双层社区阅读活动楼的人工验收记录](generation/phase6.6/two-storey-community-20260909/REPORT.md)：用户于 2026-09-09 验收模型与展示，工程门禁仍为 blocked，未完成终端发布。该独立 review 集合不计入上述 51 案或 accepted machine 索引。
 
-## IFC 三种角色
+## 如何读案例
 
-合法三元组必须在运行前已经具有以下角色和边界：
+- repair：request.txt、02-damaged.ifc、03-repaired.ifc；正确无输出案使用 NO-REPAIR.md。
+- original 仅沿用已声明的物理对照/私有评估角色；R1 没有 original，IFCCompare 为 N/A。
+- generation：request.txt、model.json、generated.ifc，不使用修复三元组。
+- 每个案例 evidence/README.md 提供机器材料入口。人读和机器材料描述同一案例，不是 original/repaired 的区别。
 
-1. original / pristine：损伤前的 evaluator-only Ground Truth；
-2. damaged：唯一允许进入 repair production path 的 IFC 输入；
-3. repaired：由 damaged 输入实际生成并通过 reopen、L0/L1/L2、preservation 与发布门槛的输出。
+## 证据迁移与验证
 
-不能在看到 repaired 结果以后再指定某个文件为 original，也不能根据结果补写 mutation truth。这样得到的“Gold”会发生数据泄漏，不能用于独立 IFCCompare。
+用户批准将旧根目录权威集中到工作流集合。新 manifest 使用 text2ifc/workflow-proof-package/0.1：legacy_bundles 逐文件记录旧路径、现位置、SHA-256 和大小；原 FILES、合同、报告字节保持不变，重复 IFC 复用案例根文件。旧报告内的历史路径以该映射解释。
 
-## 为什么 R1 没有 12 组三元组
+验证入口：scripts/proof/validate_human_views.py --root <collection>。冻结完整验证可用 scripts/proof/materialize_frozen_bundle.py 在临时目录还原旧布局后调用原 validator；不改写旧 schema。迁移验收与现行代码重验结果见 [整理记录](../../../docs/architecture/repository-organization-refactor.md)。
 
-R1 的 E1-A1 是 frozen diversity/request-contract 案例。它们从真实 source.ifc/damaged 输入出发，验证 property authority、target resolution、clarification identity、atomicity、preservation、reopen 和 L0/L1/L2；它们不是由一份预先冻结的 pristine IFC 按 private mutation recipe 制造出来的 benchmark。
+参考集合中的五个旧 Window 案仍有原有证据局限。撤回前 24 案的校验快照保留于 [历史记录](repair/phase11/reference-cases/evidence/history/IFC-REPAIR-COLLECTION-VALIDATION-20260903.json)，不能作为当前 16 案的验收结果。
 
-因此 R1 的合法 artifact 形态是：
-
-- 11 案：source.ifc → repaired.ifc；
-- H4：source.ifc → no output，并证明零 mutation、零 publish；
-- 0/12 案拥有可用于独立 IFCCompare 的 R1 private triplet。
-
-这不是执行证据缺失，而是评估设计不同。为 R1 事后补造 original 会降低证据可信度，所以明确标记 IFCCompare 为 N/A。真正具备 pre-declared private truth 的三元组继续由 ifc-repair-success-cases/ 承担。
-
-## 本次整理做了什么
-
-- 保持既有 accepted Proof append-only，不移动、不重命名；
-- 为所有顶层 Proof 集合建立统一索引；
-- 将修正后的 6 个离线 case、3 个 genuine repaired case 和 1 个 no-output guard 组织到统一的人读入口；
-- 每个 Plan 07 案例直接展示 request、IFC、REPORT.md，并通过 evidence/README.md 回链隔离的机器权威；
-- 明确人读 Plan 07 manifest 仍为 pending_human_review、r1_included=false，且与主 accepted manifest 零重叠。
-
-## 人类阅读入口
-
-- [Phase 12 Plan 07 待人工检查矩阵](ifc-repair-success-cases/PLAN07-REPORT.md)
-- [Plan 07 v2 机器权威说明](ifc-repair-success-cases-v2-plan07-staging/README.md)
-- [Repair Milestone R1 总报告](repair-milestone-r1/REPORT.md)
-
-成功案的 repaired IFC 直接放在各自案例根目录。Plan 07 新视图使用 operation family / case kind / case-id；R1 与旧 final-code 集合使用各自已发布的布局。H4 和 program-guard 没有 repaired IFC 是冻结安全合同的正确结果，并在各自 NO-REPAIR.md 中解释。
-
-## 校验入口
-
-    .venv\Scripts\python scripts\ifc_repair\validate_success_cases.py --json
-    .venv\Scripts\python scripts\ifc_repair\install_plan07_human_proof.py --validate-only
-    .venv\Scripts\python scripts\ifc_repair\assemble_repair_milestone_r1_proof.py --help
-    .venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py --root dataset\processed\proof\repair-milestone-r1 --json
-    .venv\Scripts\python -m pytest tests\ifc_repair\test_target_query_filling_geometry.py -q
-
-根据变更风险选择验证器；README 或导航更新不自动要求重复 curator。各集合的完成声明仍必须来自适用的冻结合同与对应 validator，而不是本索引本身。
+[机器索引](PROOF-INVENTORY.json) · [展示规范](../../../docs/validation/ifc-repair-proof-format.md)

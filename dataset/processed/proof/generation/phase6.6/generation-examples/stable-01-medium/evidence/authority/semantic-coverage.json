@@ -1,0 +1,341 @@
+{
+  "blocking_facts": [],
+  "candidate_entity_count": 34,
+  "capability_profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+  "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+  "case_id": "8c8ef9a111e326d7",
+  "custom_property_policy": {
+    "counts_as_semantic_support": false,
+    "state": "preserved_text_only"
+  },
+  "facts": [
+    {
+      "coverage_state": "represented",
+      "path": "/known_facts/floor_slabs",
+      "reason": "Fact is inside the current supported semantic profile.",
+      "value": [
+        {
+          "id": "ground-floor-slab",
+          "polygon": [
+            [
+              0,
+              0
+            ],
+            [
+              12000,
+              0
+            ],
+            [
+              12000,
+              6000
+            ],
+            [
+              0,
+              6000
+            ],
+            [
+              0,
+              0
+            ]
+          ],
+          "storey": "storey-1",
+          "thickness_mm": 150,
+          "top_elevation_mm": 0
+        }
+      ]
+    },
+    {
+      "coverage_state": "represented",
+      "path": "/known_facts/storeys",
+      "reason": "Fact is inside the current supported semantic profile.",
+      "value": [
+        {
+          "doors": [
+            {
+              "alignment": "host_centerline",
+              "height_mm": 2100,
+              "host_wall": "wall-corridor-offA",
+              "id": "door-offA",
+              "width_mm": 900
+            },
+            {
+              "alignment": "host_centerline",
+              "height_mm": 2100,
+              "host_wall": "wall-corridor-offB",
+              "id": "door-offB",
+              "width_mm": 900
+            },
+            {
+              "alignment": "host_centerline",
+              "height_mm": 2100,
+              "host_wall": "wall-corridor-offC",
+              "id": "door-offC",
+              "width_mm": 900
+            },
+            {
+              "alignment": "host_centerline",
+              "height_mm": 2200,
+              "host_wall": "wall-south",
+              "id": "door-main",
+              "width_mm": 1600
+            }
+          ],
+          "elevation_mm": 0,
+          "id": "storey-1",
+          "net_height_mm": 3200,
+          "spaces": [
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  12000
+                ],
+                "y": [
+                  0,
+                  2000
+                ]
+              },
+              "id": "space-corridor"
+            },
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  4000
+                ],
+                "y": [
+                  2000,
+                  6000
+                ]
+              },
+              "id": "space-officeA"
+            },
+            {
+              "bounds": {
+                "x": [
+                  4000,
+                  8000
+                ],
+                "y": [
+                  2000,
+                  6000
+                ]
+              },
+              "id": "space-officeB"
+            },
+            {
+              "bounds": {
+                "x": [
+                  8000,
+                  12000
+                ],
+                "y": [
+                  2000,
+                  6000
+                ]
+              },
+              "id": "space-officeC"
+            }
+          ],
+          "walls": {
+            "exterior": [
+              {
+                "end_mm": [
+                  0,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-west",
+                "start_mm": [
+                  0,
+                  0
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "end_mm": [
+                  12000,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-east",
+                "start_mm": [
+                  12000,
+                  0
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "end_mm": [
+                  12000,
+                  0
+                ],
+                "height_mm": 3200,
+                "id": "wall-south",
+                "start_mm": [
+                  0,
+                  0
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "end_mm": [
+                  4000,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-north-A",
+                "start_mm": [
+                  0,
+                  6000
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "end_mm": [
+                  8000,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-north-B",
+                "start_mm": [
+                  4000,
+                  6000
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "end_mm": [
+                  12000,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-north-C",
+                "start_mm": [
+                  8000,
+                  6000
+                ],
+                "thickness_mm": 200
+              }
+            ],
+            "interior": [
+              {
+                "connects": [
+                  "space-corridor",
+                  "space-officeA"
+                ],
+                "end_mm": [
+                  4000,
+                  2000
+                ],
+                "height_mm": 3200,
+                "id": "wall-corridor-offA",
+                "start_mm": [
+                  0,
+                  2000
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "connects": [
+                  "space-corridor",
+                  "space-officeB"
+                ],
+                "end_mm": [
+                  8000,
+                  2000
+                ],
+                "height_mm": 3200,
+                "id": "wall-corridor-offB",
+                "start_mm": [
+                  4000,
+                  2000
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "connects": [
+                  "space-corridor",
+                  "space-officeC"
+                ],
+                "end_mm": [
+                  12000,
+                  2000
+                ],
+                "height_mm": 3200,
+                "id": "wall-corridor-offC",
+                "start_mm": [
+                  8000,
+                  2000
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "connects": [
+                  "space-officeA",
+                  "space-officeB"
+                ],
+                "end_mm": [
+                  4000,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-offA-offB",
+                "start_mm": [
+                  4000,
+                  2000
+                ],
+                "thickness_mm": 200
+              },
+              {
+                "connects": [
+                  "space-officeB",
+                  "space-officeC"
+                ],
+                "end_mm": [
+                  8000,
+                  6000
+                ],
+                "height_mm": 3200,
+                "id": "wall-offB-offC",
+                "start_mm": [
+                  8000,
+                  2000
+                ],
+                "thickness_mm": 200
+              }
+            ]
+          },
+          "windows": [
+            {
+              "alignment": "host_centerline",
+              "height_mm": 1200,
+              "host_wall": "wall-north-A",
+              "id": "window-offA",
+              "sill_height_mm": 900,
+              "width_mm": 1800
+            },
+            {
+              "alignment": "host_centerline",
+              "height_mm": 1200,
+              "host_wall": "wall-north-B",
+              "id": "window-offB",
+              "sill_height_mm": 900,
+              "width_mm": 1800
+            },
+            {
+              "alignment": "host_centerline",
+              "height_mm": 1200,
+              "host_wall": "wall-north-C",
+              "id": "window-offC",
+              "sill_height_mm": 900,
+              "width_mm": 1800
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "schema_version": "text2ifc/semantic-coverage/1.0",
+  "valid": true
+}

@@ -33,11 +33,12 @@ def _brief(*, original_request: str, status: str, source_turns=None):
         "source_turns": ["turn-user-001"],
     }
     return {
-        "schema_version": "text2ifc/design-brief/2.0",
+        "schema_version": "text2ifc/design-brief/2.1",
         "language": "zh-CN",
         "original_request": original_request,
         "status": status,
         "known_facts": {
+            "semantic_requirements": [],
             "space": {"length_mm": 6000, "width_mm": 4000, "height_mm": 3000},
             "walls": {"count": 4, "enclosure": "closed"},
         },
@@ -81,8 +82,8 @@ def _call(index, *, original_request, status, source_turns=None):
     return ClarificationCall(
         call_index=index,
         response_id=f"msg_phase62_{index}",
-        prompt_template_id="design-brief.v2.1",
-        prompt_template_hash="sha256:prompt-v2.1",
+        prompt_template_id="design-brief.v2.2",
+        prompt_template_hash="sha256:prompt-v2.2",
         artifact_dir=f"calls/{index:02d}-design-brief",
         brief=_brief(
             original_request=original_request,
@@ -357,12 +358,12 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
     )
 
     assert call.response_id == "chatcmpl-design-001"
-    assert call.prompt_template_id == "design-brief.v2.1"
+    assert call.prompt_template_id == "design-brief.v2.3"
     assert call.brief == brief
     assert captured["model"] == "mimo-v2.5-pro"
     assert captured["max_completion_tokens"] == 131072
     assert captured["response_format"] == {"type": "json_object"}
-    assert "text2ifc/design-brief/2.0" in captured["messages"][0]["content"]
+    assert "text2ifc/design-brief/2.1" in captured["messages"][0]["content"]
     assert (tmp_path / "calls" / "01-design-brief" / "prompt-rendered.md").is_file()
     assert (tmp_path / "calls" / "01-design-brief" / "response.raw.json").is_file()
     metrics = json.loads(
@@ -376,7 +377,7 @@ def test_openai_design_brief_invoker_writes_trace_and_returns_call(tmp_path):
 
 def test_openai_design_brief_invoker_preserves_schema_failure_evidence(tmp_path):
     invalid_brief = {
-        "schema_version": "text2ifc/design-brief/2.0",
+        "schema_version": "text2ifc/design-brief/2.1",
         "language": "zh-CN",
         "status": "ready",
     }

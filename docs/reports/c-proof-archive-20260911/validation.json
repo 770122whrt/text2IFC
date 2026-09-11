@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "pytest": {
+    "command": ".venv/Scripts/python.exe -m pytest tests/agent/test_c_integrated_run.py tests/agent/test_c_wall_join_run.py tests/agent/test_c_clarified_entry_run.py tests/agent/test_c_plan_run.py tests/agent/test_audit_token_pair_experiment.py tests/agent/test_public_brief_failure_evidence.py -q -p no:cacheprovider --basetemp=.tmp/c-archive-path-tests-20260911",
+    "passed": 37,
+    "seconds": 235.15,
+    "scope": "Migrated fixture paths, fake public loops including legacy_full/staged; not real Provider"
+  },
+  "human_view": {
+    "status": "passed",
+    "checked_copy_count": 16,
+    "reopened_ifc_count": 1
+  },
+  "presentation_links": {
+    "checked": 38,
+    "errors": []
+  },
+  "provider_calls": 0,
+  "full_preflight": false,
+  "post_retirement_final_acceptance": {
+    "valid": true,
+    "compile_reopen_success": true,
+    "geometry_success": true,
+    "secret_finding_count": 0,
+    "metrics": "post-retirement-final-acceptance/acceptance-metrics.json"
+  },
+  "post_retirement_pytest": {
+    "passed": 37,
+    "seconds": 301.23,
+    "log": "post-retirement-pytest.txt",
+    "log_sha256": "922dc52844990b77ea1b7035f891cb954c02c15b1fc498509b0d3a57902aa3c3",
+    "note": "Same 37 tests repeated after removing old source directories; not 74 distinct tests. No real Provider."
+  }
+}

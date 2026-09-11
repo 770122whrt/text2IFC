@@ -1,0 +1,108 @@
+{
+  "case_id": "vvo-five-door-authority-public-repair",
+  "files": [
+    {
+      "path": "01-original.ifc",
+      "role": "original_ground_truth",
+      "sha256": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+      "size_bytes": 2409268
+    },
+    {
+      "path": "02-damaged.ifc",
+      "role": "repair_input_ifc",
+      "sha256": "sha256:d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+      "size_bytes": 2431185
+    },
+    {
+      "path": "03-repaired.ifc",
+      "role": "published_repair_output",
+      "sha256": "sha256:a7e085242452f8b312173eb8aa11b08115971a4140f0a724e9850f5550270e03",
+      "size_bytes": 2440941
+    },
+    {
+      "path": "agent/prompt-routing-evidence.json",
+      "role": "prompt_profile_evidence",
+      "sha256": "sha256:4966d33a18baf23c8f4b982a35aa631a4d389154cfb632a954e0f04e337fbba5",
+      "size_bytes": 8126
+    },
+    {
+      "path": "agent/repair-intent.json",
+      "role": "guid_free_repair_intent",
+      "sha256": "sha256:057e3eb32e389f9702aa38c9c72b301f711f84514cecc19f1c48d67d5d959d95",
+      "size_bytes": 10002
+    },
+    {
+      "path": "agent/target-resolution.json",
+      "role": "deterministic_target_resolution",
+      "sha256": "sha256:f8d0139454e5c2d650bc7d1c40e6fc337e2696288b5c779370726248250a0419",
+      "size_bytes": 42305
+    },
+    {
+      "path": "changeset/bound-changeset.json",
+      "role": "bound_changeset",
+      "sha256": "sha256:92dfc67819d52e3caf6f12f2cd391d90c2e3838765bcf215ed09027d7f188d86",
+      "size_bytes": 16305
+    },
+    {
+      "path": "input/request.txt",
+      "role": "user_request",
+      "sha256": "sha256:197fd3f1085413f433843ed8839deb263df6dcf05225fc2dc5ee54c8ad811333",
+      "size_bytes": 966
+    },
+    {
+      "path": "private-evaluation/benchmark-mapping.json",
+      "role": "private_post_repair_benchmark_mapping",
+      "sha256": "sha256:dcbf9555ff9eb0c7e261a230a6b23c1507a05f4e3e08d81d63b6fb71a5bd19b0",
+      "size_bytes": 1269
+    },
+    {
+      "path": "validation/AUDIT-REPORT.md",
+      "role": "human_readable_three_way_audit",
+      "sha256": "sha256:0e7ff92e5502fd182f7b31e3107aab789b88f7cb94b1a2ad60ae3803e922ec3d",
+      "size_bytes": 8061
+    },
+    {
+      "path": "validation/application.json",
+      "role": "application_result",
+      "sha256": "sha256:eaa24fefbbbcf203547e596ecfe976a46b5febfa7c4908d246b640298b085279",
+      "size_bytes": 46995
+    },
+    {
+      "path": "validation/ifc-comparison.json",
+      "role": "ifc_comparison",
+      "sha256": "sha256:2d1d601fdfd35ace2d542cf082e11c9f84c669888bdf6dc11dcc2f689a1842a1",
+      "size_bytes": 28833
+    },
+    {
+      "path": "validation/production-boundary.json",
+      "role": "production_input_boundary",
+      "sha256": "sha256:40b6b5847219b84f14887bd108f89738a43015a69659d84d3cfe207ccaed35d0",
+      "size_bytes": 849
+    },
+    {
+      "path": "validation/production-evaluation.json",
+      "role": "production_evaluation",
+      "sha256": "sha256:0e23263b94f6fb73ac9ce64b4b0d5a1ff1a6e598550440ab46c49846a6846df5",
+      "size_bytes": 477658
+    },
+    {
+      "path": "validation/release-decision.json",
+      "role": "l0_l1_l2_release_decision",
+      "sha256": "sha256:094bc095f5bca027cde0fb772e6a70a4df40977977137ebe6fca5e91850ff427",
+      "size_bytes": 1616
+    },
+    {
+      "path": "validation/source-run-manifest.json",
+      "role": "source_run_manifest",
+      "sha256": "sha256:4d7303766710e21427d06cd3894260bb47e4df6eff3b5d0d014eb10783e97026",
+      "size_bytes": 5446
+    },
+    {
+      "path": "validation/three-way-audit.json",
+      "role": "three_way_l0_l1_l2_audit",
+      "sha256": "sha256:27573299b1380ae2ad6cf247ed272f20ee7e1f099366552fc268fd0b56393b93",
+      "size_bytes": 109215
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-proof-files/0.2"
+}

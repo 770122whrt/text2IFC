@@ -1,0 +1,85 @@
+{
+  "branch": "A-revise",
+  "status": "audit_blocked",
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "started_at": "2026-09-10T07:47:32.042469+00:00",
+  "conversation_origin": "user-authorized scripted branch; not spontaneous live clarification",
+  "reused_design_brief": false,
+  "session_hash": "026823cac75af845",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\A-revise\\runtime\\runs\\026823cac75af845",
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [],
+    "calls_used": 0,
+    "tokens_used_or_reserved": 0,
+    "active_seconds": 0
+  },
+  "brief_result": {
+    "case_id": "026823cac75af845",
+    "stage": "design-brief",
+    "status": "ready",
+    "valid": true,
+    "schema_semantic_valid": true,
+    "strict_output_contract_valid": true,
+    "output_dir": "dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/rerun-20260910/A-revise/runtime/runs/026823cac75af845/calls/01-design-brief",
+    "response_id": "c1a525e8-5c06-452f-9cc9-9d7ef0b14441",
+    "evidence_class": "live"
+  },
+  "result": {
+    "session_id": "phase6.2-dff6fee859bb4373a5c1053df3dc66bc",
+    "session_hash": "026823cac75af845",
+    "status": "audit_blocked",
+    "generator_status": "scope_unresolved",
+    "repair_route": "no_repair_needed",
+    "audit_status": "blocked",
+    "ifc_path": null,
+    "report_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\three-storey-clarification-branches-20260910\\rerun-20260910\\A-revise\\runtime\\runs\\026823cac75af845\\report.md"
+  },
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 43713,
+        "reserved_tokens": 123537,
+        "elapsed_seconds": 96.92199999999866
+      },
+      {
+        "attempt": 2,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 79389,
+        "reserved_tokens": 181669,
+        "elapsed_seconds": 135.17199999999866
+      },
+      {
+        "attempt": 3,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 49206,
+        "reserved_tokens": 192448,
+        "elapsed_seconds": 27.812999999998283
+      }
+    ],
+    "calls_used": 3,
+    "tokens_used_or_reserved": 172308,
+    "active_seconds": 259.9069999999956
+  },
+  "finished_at": "2026-09-10T07:52:04.912150+00:00"
+}

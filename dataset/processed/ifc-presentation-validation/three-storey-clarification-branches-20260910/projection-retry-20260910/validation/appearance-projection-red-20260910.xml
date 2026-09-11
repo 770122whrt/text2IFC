@@ -1,0 +1,1606 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="36" skipped="0" tests="50" time="92.061" timestamp="2026-09-10T16:06:21.336501+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[False-None-neutral-architectural]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[False-None-warm-residential]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[False-\u6d45\u6696\u5899\u4e0e\u6df1\u8272\u6846\uff0c\u989c\u8272\u4e0d\u4ee3\u8868\u7269\u7406\u6750\u6599\u3002-neutral-architectural]" time="0.001"><failure message="AssertionError: assert True == False&#10; +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])">profile = 'neutral-architectural', note = '浅暖墙与深色框，颜色不代表物理材料。'
+wrong_profile = False
+
+    @pytest.mark.parametrize('profile', ['neutral-architectural', 'warm-residential'])
+    @pytest.mark.parametrize('note', [None, '浅暖墙与深色框，颜色不代表物理材料。', 'Coordinated facade; no material inference.'])
+    @pytest.mark.parametrize('wrong_profile', [False, True])
+    def test_narrative_does_not_override_or_invalidate_structured_choice(profile, note, wrong_profile):
+        selection = {'profile': profile}
+        if note is not None:
+            selection['style_notes'] = note
+        alternate = 'warm-residential' if profile == 'neutral-architectural' else 'neutral-architectural'
+        candidate = {'appearance': {'profile': alternate if wrong_profile else profile}}
+        request = {'appearance_requests': [selection]}
+        original = copy.deepcopy((candidate, request))
+        issues = request_contract_issues(candidate, request)
+&gt;       assert bool(issues) == wrong_profile
+E       AssertionError: assert True == False
+E        +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])
+
+tests\agent\test_appearance_request_projection.py:22: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[False-\u6d45\u6696\u5899\u4e0e\u6df1\u8272\u6846\uff0c\u989c\u8272\u4e0d\u4ee3\u8868\u7269\u7406\u6750\u6599\u3002-warm-residential]" time="0.001"><failure message="AssertionError: assert True == False&#10; +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])">profile = 'warm-residential', note = '浅暖墙与深色框，颜色不代表物理材料。', wrong_profile = False
+
+    @pytest.mark.parametrize('profile', ['neutral-architectural', 'warm-residential'])
+    @pytest.mark.parametrize('note', [None, '浅暖墙与深色框，颜色不代表物理材料。', 'Coordinated facade; no material inference.'])
+    @pytest.mark.parametrize('wrong_profile', [False, True])
+    def test_narrative_does_not_override_or_invalidate_structured_choice(profile, note, wrong_profile):
+        selection = {'profile': profile}
+        if note is not None:
+            selection['style_notes'] = note
+        alternate = 'warm-residential' if profile == 'neutral-architectural' else 'neutral-architectural'
+        candidate = {'appearance': {'profile': alternate if wrong_profile else profile}}
+        request = {'appearance_requests': [selection]}
+        original = copy.deepcopy((candidate, request))
+        issues = request_contract_issues(candidate, request)
+&gt;       assert bool(issues) == wrong_profile
+E       AssertionError: assert True == False
+E        +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])
+
+tests\agent\test_appearance_request_projection.py:22: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[False-Coordinated facade; no material inference.-neutral-architectural]" time="0.001"><failure message="AssertionError: assert True == False&#10; +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])">profile = 'neutral-architectural'
+note = 'Coordinated facade; no material inference.', wrong_profile = False
+
+    @pytest.mark.parametrize('profile', ['neutral-architectural', 'warm-residential'])
+    @pytest.mark.parametrize('note', [None, '浅暖墙与深色框，颜色不代表物理材料。', 'Coordinated facade; no material inference.'])
+    @pytest.mark.parametrize('wrong_profile', [False, True])
+    def test_narrative_does_not_override_or_invalidate_structured_choice(profile, note, wrong_profile):
+        selection = {'profile': profile}
+        if note is not None:
+            selection['style_notes'] = note
+        alternate = 'warm-residential' if profile == 'neutral-architectural' else 'neutral-architectural'
+        candidate = {'appearance': {'profile': alternate if wrong_profile else profile}}
+        request = {'appearance_requests': [selection]}
+        original = copy.deepcopy((candidate, request))
+        issues = request_contract_issues(candidate, request)
+&gt;       assert bool(issues) == wrong_profile
+E       AssertionError: assert True == False
+E        +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])
+
+tests\agent\test_appearance_request_projection.py:22: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[False-Coordinated facade; no material inference.-warm-residential]" time="0.001"><failure message="AssertionError: assert True == False&#10; +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])">profile = 'warm-residential'
+note = 'Coordinated facade; no material inference.', wrong_profile = False
+
+    @pytest.mark.parametrize('profile', ['neutral-architectural', 'warm-residential'])
+    @pytest.mark.parametrize('note', [None, '浅暖墙与深色框，颜色不代表物理材料。', 'Coordinated facade; no material inference.'])
+    @pytest.mark.parametrize('wrong_profile', [False, True])
+    def test_narrative_does_not_override_or_invalidate_structured_choice(profile, note, wrong_profile):
+        selection = {'profile': profile}
+        if note is not None:
+            selection['style_notes'] = note
+        alternate = 'warm-residential' if profile == 'neutral-architectural' else 'neutral-architectural'
+        candidate = {'appearance': {'profile': alternate if wrong_profile else profile}}
+        request = {'appearance_requests': [selection]}
+        original = copy.deepcopy((candidate, request))
+        issues = request_contract_issues(candidate, request)
+&gt;       assert bool(issues) == wrong_profile
+E       AssertionError: assert True == False
+E        +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])
+
+tests\agent\test_appearance_request_projection.py:22: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[True-None-neutral-architectural]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[True-None-warm-residential]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[True-\u6d45\u6696\u5899\u4e0e\u6df1\u8272\u6846\uff0c\u989c\u8272\u4e0d\u4ee3\u8868\u7269\u7406\u6750\u6599\u3002-neutral-architectural]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[True-\u6d45\u6696\u5899\u4e0e\u6df1\u8272\u6846\uff0c\u989c\u8272\u4e0d\u4ee3\u8868\u7269\u7406\u6750\u6599\u3002-warm-residential]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[True-Coordinated facade; no material inference.-neutral-architectural]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_narrative_does_not_override_or_invalidate_structured_choice[True-Coordinated facade; no material inference.-warm-residential]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_explicit_seed_is_still_required[frozen]" time="0.001"><failure message="AssertionError: assert True == ('frozen' != 'frozen')&#10; +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])">actual = 'frozen'
+
+    @pytest.mark.parametrize('actual', ['frozen', 'changed', None])
+    def test_explicit_seed_is_still_required(actual):
+        candidate = {'appearance': {'profile': 'warm-residential'}}
+        if actual is not None:
+            candidate['appearance']['seed'] = actual
+        issues = request_contract_issues(candidate, {'appearance_requests': [
+            {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '协调配色'}]})
+&gt;       assert bool(issues) == (actual != 'frozen')
+E       AssertionError: assert True == ('frozen' != 'frozen')
+E        +  where True = bool([{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}])
+
+tests\agent\test_appearance_request_projection.py:33: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_explicit_seed_is_still_required[changed]" time="0.000" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_explicit_seed_is_still_required[None]" time="0.000" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection0]" time="0.001"><failure message="assert []">selection = {'profile': 'unregistered-theme'}
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+        issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+&gt;       assert issues
+E       assert []
+
+tests\agent\test_appearance_request_projection.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection1]" time="0.001"><failure message="assert []">selection = {'seed': 0}
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+        issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+&gt;       assert issues
+E       assert []
+
+tests\agent\test_appearance_request_projection.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection2]" time="0.001"><failure message="assert []">selection = {'seed': None}
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+        issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+&gt;       assert issues
+E       assert []
+
+tests\agent\test_appearance_request_projection.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection3]" time="0.001"><failure message="assert []">selection = {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}}
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+        issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+&gt;       assert issues
+E       assert []
+
+tests\agent\test_appearance_request_projection.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection4]" time="0.001"><failure message="assert []">selection = {'color': [1, 0, 0], 'profile': 'warm-residential'}
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+        issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+&gt;       assert issues
+E       assert []
+
+tests\agent\test_appearance_request_projection.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection5]" time="0.001"><failure message="assert []">selection = {'frame_width': 65, 'profile': 'warm-residential'}
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+        issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+&gt;       assert issues
+E       assert []
+
+tests\agent\test_appearance_request_projection.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[selection6]" time="0.001"><failure message="AttributeError: 'list' object has no attribute 'items'">selection = []
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+&gt;       issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+
+tests\agent\test_appearance_request_projection.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = {'appearance': []}, request = {'appearance_requests': [[]]}
+
+    def request_contract_issues(candidate, request):
+        issues = []
+        if request.get('minimum_schema_version') and candidate.get('schema_version') != request['minimum_schema_version']:
+            issues.append({'code':'REQUEST_CONTRACT_DOWNGRADE','path':'/schema_version', 'message':'新请求必须保留其 Generation 语义合同。'})
+        for selection in request.get('appearance_requests', []):
+&gt;           if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
+                                                                                       ^^^^^^^^^^^^^^^
+E           AttributeError: 'list' object has no attribute 'items'
+
+src\text2ifc_agent\semantic_requirements.py:194: AttributeError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unknown_structured_or_malformed_selection_cannot_silently_pass[None]" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'items'">selection = None
+
+    @pytest.mark.parametrize('selection', [
+        {'profile': 'unregistered-theme'}, {'seed': 0}, {'seed': None},
+        {'profile': 'warm-residential', 'style_notes': {'color': [1, 0, 0]}},
+        {'profile': 'warm-residential', 'color': [1, 0, 0]},
+        {'profile': 'warm-residential', 'frame_width': 65},
+        [], None,
+    ])
+    def test_unknown_structured_or_malformed_selection_cannot_silently_pass(selection):
+        # Matching malformed candidate values must not make an invalid request valid.
+&gt;       issues = request_contract_issues({'appearance': copy.deepcopy(selection)},
+                                        {'appearance_requests': [selection]})
+
+tests\agent\test_appearance_request_projection.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = {'appearance': None}, request = {'appearance_requests': [None]}
+
+    def request_contract_issues(candidate, request):
+        issues = []
+        if request.get('minimum_schema_version') and candidate.get('schema_version') != request['minimum_schema_version']:
+            issues.append({'code':'REQUEST_CONTRACT_DOWNGRADE','path':'/schema_version', 'message':'新请求必须保留其 Generation 语义合同。'})
+        for selection in request.get('appearance_requests', []):
+&gt;           if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
+                                                                                       ^^^^^^^^^^^^^^^
+E           AttributeError: 'NoneType' object has no attribute 'items'
+
+src\text2ifc_agent\semantic_requirements.py:194: AttributeError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_missing_or_malformed_candidate_is_structured_failure[candidate0]" time="0.001"><failure message="AttributeError: 'NoneType' object has no attribute 'get'">candidate = {'appearance': None}
+
+    @pytest.mark.parametrize('candidate', [{'appearance': None}, {'appearance': []}, {}])
+    def test_missing_or_malformed_candidate_is_structured_failure(candidate):
+&gt;       issues = request_contract_issues(candidate, {'appearance_requests': [{'profile': 'warm-residential'}]})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_appearance_request_projection.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\semantic_requirements.py:194: in request_contract_issues
+    if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = &lt;dict_itemiterator object at 0x00000193843BA020&gt;
+
+&gt;   if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'get'
+
+src\text2ifc_agent\semantic_requirements.py:194: AttributeError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_missing_or_malformed_candidate_is_structured_failure[candidate1]" time="0.001"><failure message="AttributeError: 'list' object has no attribute 'get'">candidate = {'appearance': []}
+
+    @pytest.mark.parametrize('candidate', [{'appearance': None}, {'appearance': []}, {}])
+    def test_missing_or_malformed_candidate_is_structured_failure(candidate):
+&gt;       issues = request_contract_issues(candidate, {'appearance_requests': [{'profile': 'warm-residential'}]})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_appearance_request_projection.py:53: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\semantic_requirements.py:194: in request_contract_issues
+    if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = &lt;dict_itemiterator object at 0x00000193843B9EE0&gt;
+
+&gt;   if any(candidate.get('appearance', {}).get(key) != value for key, value in selection.items()):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'list' object has no attribute 'get'
+
+src\text2ifc_agent\semantic_requirements.py:194: AttributeError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_missing_or_malformed_candidate_is_structured_failure[candidate2]" time="0.001" /><testcase classname="tests.agent.test_appearance_request_projection" name="test_resume_keeps_saved_choices_and_narrative_provenance[None]" time="0.039"><failure message="assert False&#10; +  where False = all(&lt;generator object test_resume_keeps_saved_choices_and_narrative_provenance.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000019384448E10&gt;)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_resume_keeps_saved_choice0')
+changed = None
+
+    @pytest.mark.parametrize('changed', [None, 'profile', 'seed'])
+    def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
+        frozen = {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '原说明：浅墙深框。'}
+        later = {**frozen, 'style_notes': '追加说明：需要人工看近景。'}
+        if changed:
+            later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
+        write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
+                                              'known_facts': {'appearance': later}})
+        write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
+        original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+        request = request_semantics_for_case(tmp_path)
+        assert request['valid']
+&gt;       assert all('style_notes' not in item for item in request['appearance_requests'])
+E       assert False
+E        +  where False = all(&lt;generator object test_resume_keeps_saved_choices_and_narrative_provenance.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000019384448E10&gt;)
+
+tests\agent\test_appearance_request_projection.py:73: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_resume_keeps_saved_choices_and_narrative_provenance[profile]" time="0.020"><failure message="assert False&#10; +  where False = all(&lt;generator object test_resume_keeps_saved_choices_and_narrative_provenance.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000193843A5220&gt;)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_resume_keeps_saved_choice1')
+changed = 'profile'
+
+    @pytest.mark.parametrize('changed', [None, 'profile', 'seed'])
+    def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
+        frozen = {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '原说明：浅墙深框。'}
+        later = {**frozen, 'style_notes': '追加说明：需要人工看近景。'}
+        if changed:
+            later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
+        write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
+                                              'known_facts': {'appearance': later}})
+        write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
+        original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+        request = request_semantics_for_case(tmp_path)
+        assert request['valid']
+&gt;       assert all('style_notes' not in item for item in request['appearance_requests'])
+E       assert False
+E        +  where False = all(&lt;generator object test_resume_keeps_saved_choices_and_narrative_provenance.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000193843A5220&gt;)
+
+tests\agent\test_appearance_request_projection.py:73: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_resume_keeps_saved_choices_and_narrative_provenance[seed]" time="0.019"><failure message="assert False&#10; +  where False = all(&lt;generator object test_resume_keeps_saved_choices_and_narrative_provenance.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000193843A5B10&gt;)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_resume_keeps_saved_choice2')
+changed = 'seed'
+
+    @pytest.mark.parametrize('changed', [None, 'profile', 'seed'])
+    def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
+        frozen = {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '原说明：浅墙深框。'}
+        later = {**frozen, 'style_notes': '追加说明：需要人工看近景。'}
+        if changed:
+            later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
+        write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
+                                              'known_facts': {'appearance': later}})
+        write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
+        original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+        request = request_semantics_for_case(tmp_path)
+        assert request['valid']
+&gt;       assert all('style_notes' not in item for item in request['appearance_requests'])
+E       assert False
+E        +  where False = all(&lt;generator object test_resume_keeps_saved_choices_and_narrative_provenance.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000193843A5B10&gt;)
+
+tests\agent\test_appearance_request_projection.py:73: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_notes_only_do_not_create_a_theme_requirement" time="0.019"><failure message="AssertionError: assert (True and [{'style_note...、整洁，需要视觉检查。'}] == []&#10;  &#10;  Left contains one more item: {'style_notes': '协调、整洁，需要视觉检查。'}&#10;  Use -v to get more diff)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_notes_only_do_not_create_0')
+
+    def test_notes_only_do_not_create_a_theme_requirement(tmp_path):
+        write(tmp_path / 'design-brief.json', {'known_facts': {'appearance': {'style_notes': '协调、整洁，需要视觉检查。'}}})
+        request = request_semantics_for_case(tmp_path)
+&gt;       assert request['valid'] and request['appearance_requests'] == []
+E       AssertionError: assert (True and [{'style_note...、整洁，需要视觉检查。'}] == []
+E         
+E         Left contains one more item: {'style_notes': '协调、整洁，需要视觉检查。'}
+E         Use -v to get more diff)
+
+tests\agent\test_appearance_request_projection.py:84: AssertionError</failure></testcase><testcase classname="tests.agent.test_appearance_request_projection" name="test_unsupported_appearance_is_retained_and_blocks_projection" time="0.022"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_unsupported_appearance_is0')
+
+    def test_unsupported_appearance_is_retained_and_blocks_projection(tmp_path):
+        write(tmp_path / 'design-brief.json', {'known_facts': {'appearance': {'color': [1, 0, 0]}}})
+        original = (tmp_path / 'design-brief.json').read_bytes()
+        request = request_semantics_for_case(tmp_path)
+&gt;       assert not request['valid']
+E       assert not True
+
+tests\agent\test_appearance_request_projection.py:93: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_new_design_call_cannot_silently_return_old_contract" time="0.528" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-legacy_full]" time="1.371"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv0')
+strategy = 'legacy_full', template = 'window-single'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-staged]" time="3.317"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv1')
+strategy = 'staged', template = 'window-single'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-legacy_full]" time="1.307"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv2')
+strategy = 'legacy_full', template = 'window-double-vertical'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-staged]" time="3.330"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv3')
+strategy = 'staged', template = 'window-double-vertical'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-legacy_full]" time="1.477"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv4')
+strategy = 'legacy_full', template = 'door-left'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-staged]" time="3.731"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv5')
+strategy = 'staged', template = 'door-left'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-legacy_full]" time="1.297"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv6')
+strategy = 'legacy_full', template = 'door-right'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-staged]" time="3.486"><failure message="AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_public_strategies_preserv7')
+strategy = 'staged', template = 'door-right'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+            result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+            assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
+            assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
+        (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
+&gt;       assert gates['compile_reopen_success'], gates['ifc_verification']
+E       AssertionError: {'ifc_issues': [], 'input_issues': [{'code': 'REQUEST_APPEARANCE_MISMATCH', 'message': '候选遗漏或改变了冻结请求的主题/seed。', 'path': '/appearance'}], 'output_path': None, 'success': False}
+E       assert False
+
+tests\agent\test_semantic_public_paths.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_new_schema_compilation_cli" time="3.110" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_staged_shared_type_is_authored_once_after_instances" time="6.088" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-False-False]" time="5.000"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-19cdc789111b4b0e8716b72a39972e56', session_hash='ccb9a1caa50e75e4', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai0\\runs\\ccb9a1caa50e75e4\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai0')
+detailed = False, canonical_ids = False, recover_field = False
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-19cdc789111b4b0e8716b72a39972e56', session_hash='ccb9a1caa50e75e4', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai0\\runs\\ccb9a1caa50e75e4\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-False-True]" time="4.525"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-18d490e9bef0437a8d0a4046c75e4c73', session_hash='3238931ae42d7cce', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai1\\runs\\3238931ae42d7cce\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai1')
+detailed = True, canonical_ids = False, recover_field = False
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-18d490e9bef0437a8d0a4046c75e4c73', session_hash='3238931ae42d7cce', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai1\\runs\\3238931ae42d7cce\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-True-False]" time="4.248"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-1d0872545fb047f99b569d21dbeb62ad', session_hash='08c2b94f3211e26e', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai2\\runs\\08c2b94f3211e26e\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai2')
+detailed = False, canonical_ids = True, recover_field = False
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-1d0872545fb047f99b569d21dbeb62ad', session_hash='08c2b94f3211e26e', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai2\\runs\\08c2b94f3211e26e\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-True-True]" time="4.473"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-17cbde8c04f24a44a28a8f5b75ae9dd7', session_hash='f99eef58a92eee2e', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai3\\runs\\f99eef58a92eee2e\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai3')
+detailed = True, canonical_ids = True, recover_field = False
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-17cbde8c04f24a44a28a8f5b75ae9dd7', session_hash='f99eef58a92eee2e', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai3\\runs\\f99eef58a92eee2e\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-False-False]" time="10.331"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-2fa9b8a5ee45457ea5ad42f589a279c7', session_hash='1d9899d3e59b59c3', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai4\\runs\\1d9899d3e59b59c3\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai4')
+detailed = False, canonical_ids = False, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-2fa9b8a5ee45457ea5ad42f589a279c7', session_hash='1d9899d3e59b59c3', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai4\\runs\\1d9899d3e59b59c3\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-False-True]" time="10.108"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-503ec1c6fb2c41e7ba0bdfbf4b8e68a5', session_hash='8031a9c2f65cab23', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai5\\runs\\8031a9c2f65cab23\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai5')
+detailed = True, canonical_ids = False, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-503ec1c6fb2c41e7ba0bdfbf4b8e68a5', session_hash='8031a9c2f65cab23', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai5\\runs\\8031a9c2f65cab23\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-True-False]" time="10.224"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-9d53c6f75f524be682031abc1e5ad2b5', session_hash='61bda2cca222ee79', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai6\\runs\\61bda2cca222ee79\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai6')
+detailed = False, canonical_ids = True, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-9d53c6f75f524be682031abc1e5ad2b5', session_hash='61bda2cca222ee79', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai6\\runs\\61bda2cca222ee79\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-True-True]" time="11.389"><failure message="AssertionError: SessionIfcResult(session_id='phase6.2-7f292ec2dc7e430f9597abe4d4fb4b49', session_hash='e5bb56ce84e17465', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai7\\runs\\e5bb56ce84e17465\\report.md')&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-projection-red-20260910/test_ready_session_public_chai7')
+detailed = True, canonical_ids = True, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_agent.candidate_index import build_candidate_index
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            operation = {'operation_id':'fix-space-enum', 'op':'update_entity', 'target_id':space['id'],
+                'target_component_hash':build_candidate_index(broken)['component_hashes'][space['id']],
+                'changes':{'/attributes/InteriorOrExteriorSpace':'INTERNAL'},
+                'evidence_refs':[i+':/actual' for i in group['scope']['source_issue_ids']]}
+            correction = _changeset(broken, frozen, operation=operation)
+            correction['source_issue_ids'] = group['scope']['source_issue_ids']
+            payloads = [broken, correction, audit]
+        provider=SequenceProvider(payloads)
+        result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+&gt;       assert result.status=='compiled', result
+E       AssertionError: SessionIfcResult(session_id='phase6.2-7f292ec2dc7e430f9597abe4d4fb4b49', session_hash='e5bb56ce84e17465', status='audi...\\.tmp\\pytest-appearance-projection-red-20260910\\test_ready_session_public_chai7\\runs\\e5bb56ce84e17465\\report.md')
+E       assert 'audit_blocked' == 'compiled'
+E         
+E         - compiled
+E         + audit_blocked
+
+tests\agent\test_semantic_public_paths.py:218: AssertionError</failure></testcase></testsuite></testsuites>

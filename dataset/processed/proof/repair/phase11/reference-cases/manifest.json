@@ -1,0 +1,2303 @@
+{
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
+  "collection_id": "reference-cases",
+  "workflow": "repair",
+  "status": "accepted",
+  "cases": [
+    {
+      "case_id": "largebuilding-full-replication",
+      "path": "window/single/largebuilding-full-replication",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "deepseek-openai-compatible",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "window/single/largebuilding-full-replication/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595,
+          "source": "window/single/largebuilding-full-replication/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+          "size_bytes": 1287030,
+          "source": "window/single/largebuilding-full-replication/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "2f26f1801ce666d61244fde7337aed2e7b3c0a835e768ac15a34e30fc5123b00",
+          "size_bytes": 1292245,
+          "source": "window/single/largebuilding-full-replication/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "a4e1146cea90e9228174b0d811a7e26d7afb07b6214f3b03caf0154db8f28afb",
+          "size_bytes": 3058,
+          "source": "window/single/largebuilding-full-replication/evidence/authority/input/request.json",
+          "field": "text"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-full-replication"
+    },
+    {
+      "case_id": "largebuilding-r22-repeat",
+      "path": "window/single/largebuilding-r22-repeat",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "window/single/largebuilding-r22-repeat/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595,
+          "source": "window/single/largebuilding-r22-repeat/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+          "size_bytes": 1287030,
+          "source": "window/single/largebuilding-r22-repeat/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "be464c323a3b956fa3e039e7e185bcc46f7b9a7e633dec069b7a6c32ebf3cb19",
+          "size_bytes": 1292695,
+          "source": "window/single/largebuilding-r22-repeat/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "774c569f28173084cd694c4994ad319ba8663709d0042b0b7d54e1afdd067727",
+          "size_bytes": 3575,
+          "source": "window/single/largebuilding-r22-repeat/evidence/authority/input/request.json",
+          "field": "text"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/window/single/largebuilding-r22-repeat"
+    },
+    {
+      "case_id": "vvo-five-window",
+      "path": "window/batch/vvo-five-window",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "deepseek-openai-compatible",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "window/batch/vvo-five-window/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "window/batch/vvo-five-window/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "7e0d474840ae2313fe4bdb56a903c8d04a2edca9f42c7591f212f8b7114aa904",
+          "size_bytes": 2428418,
+          "source": "window/batch/vvo-five-window/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "e24e7f1b0f34bad45cd8160799a28589d03eb954793d5c353fa1c3ce5420ef93",
+          "size_bytes": 2441976,
+          "source": "window/batch/vvo-five-window/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "3943cec87601175556944deb7f6d0d5f3cc07585adaa96295c70a25400203545",
+          "size_bytes": 2543,
+          "source": "window/batch/vvo-five-window/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/window/batch/vvo-five-window"
+    },
+    {
+      "case_id": "advancedproject-five-window",
+      "path": "window/batch/advancedproject-five-window",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "saved_live_output_deterministic_replay",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "window/batch/advancedproject-five-window/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+          "size_bytes": 44337371,
+          "source": "window/batch/advancedproject-five-window/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb",
+          "size_bytes": 44228167,
+          "source": "window/batch/advancedproject-five-window/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "91e5295b0487389546bc575d294038c2669f052d41edef3813734234638c3a2a",
+          "size_bytes": 44242439,
+          "source": "window/batch/advancedproject-five-window/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "84d139182480491227e3c1060a5aecbca054ead590184d0497d81017a1a500be",
+          "size_bytes": 2833,
+          "source": "window/batch/advancedproject-five-window/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/window/batch/advancedproject-five-window"
+    },
+    {
+      "case_id": "px4-five-window",
+      "path": "window/batch/px4-five-window",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "window/batch/px4-five-window/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；本案属于 5 个 legacy_unverifiable 历史 Window 案，不得当作新的完整 Proof",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "8c336ee9af66a55fb4cac26b608bef11ace5a3a0a490931205045e4f87b4c46d",
+          "size_bytes": 24868218,
+          "source": "window/batch/px4-five-window/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "0630c9bd509bde693c3c3368bcea9e041a3af8d5d1c34d6f797c0f41fb7d0e6c",
+          "size_bytes": 25255202,
+          "source": "window/batch/px4-five-window/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "7f5cc6c61b0007ff1616a9f567c545762a593f0df5b764c230337e514de0eb4a",
+          "size_bytes": 25270886,
+          "source": "window/batch/px4-five-window/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "430c29d42b302bcb49c00f50c8caf9525f5391e97ea786b8765b0c7eeec99815",
+          "size_bytes": 3361,
+          "source": "window/batch/px4-five-window/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/window/batch/px4-five-window"
+    },
+    {
+      "case_id": "largebuilding-door-preserve-opening",
+      "path": "door/single/largebuilding-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "door/single/largebuilding-door-preserve-opening/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595,
+          "source": "door/single/largebuilding-door-preserve-opening/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831,
+          "source": "door/single/largebuilding-door-preserve-opening/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "8afaaaf28769909b5b865a89fc8eb9dac2ab907ac851bfb47776d3d5261cced9",
+          "size_bytes": 1288722,
+          "source": "door/single/largebuilding-door-preserve-opening/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "295b4b280c4ed1385a5c66d7aac1a9fb2a430c6ff057eb6cf4fd285ff328c62d",
+          "size_bytes": 405,
+          "source": "door/single/largebuilding-door-preserve-opening/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-door-preserve-opening"
+    },
+    {
+      "case_id": "vvo-door-preserve-opening",
+      "path": "door/single/vvo-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "door/single/vvo-door-preserve-opening/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "door/single/vvo-door-preserve-opening/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+          "size_bytes": 2436322,
+          "source": "door/single/vvo-door-preserve-opening/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "43ef5af0ad9de74b3c7a36b2e94f5a51323190c1033cf4c1375d4fd96e3a6d43",
+          "size_bytes": 2437248,
+          "source": "door/single/vvo-door-preserve-opening/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "1803f6127c89bd43b8721b46a6cc54a7b752ca0f61eb9c8e853386ca204bf3ba",
+          "size_bytes": 387,
+          "source": "door/single/vvo-door-preserve-opening/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/vvo-door-preserve-opening"
+    },
+    {
+      "case_id": "advancedproject-door-preserve-opening",
+      "path": "door/single/advancedproject-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "door/single/advancedproject-door-preserve-opening/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+          "size_bytes": 44337371,
+          "source": "door/single/advancedproject-door-preserve-opening/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+          "size_bytes": 44253766,
+          "source": "door/single/advancedproject-door-preserve-opening/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39",
+          "size_bytes": 44254737,
+          "source": "door/single/advancedproject-door-preserve-opening/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "b84a0e99d0f7bc4f6b3f0f01c22e7f1abc929aaf6b1e7bf2c124a10c0c0a865f",
+          "size_bytes": 427,
+          "source": "door/single/advancedproject-door-preserve-opening/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/advancedproject-door-preserve-opening"
+    },
+    {
+      "case_id": "largebuilding-generated-door-type",
+      "path": "door/single/largebuilding-generated-door-type",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "door/single/largebuilding-generated-door-type/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595,
+          "source": "door/single/largebuilding-generated-door-type/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "fed14afd7b68fa79afee817b4f73e3fe391415e2e515b7a329744ba78aeeb10f",
+          "size_bytes": 1286939,
+          "source": "door/single/largebuilding-generated-door-type/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "2af345dc8edd0b986b22b669ced51a8fd6812e1756f79dd76bb3e78ca0ba3858",
+          "size_bytes": 1290037,
+          "source": "door/single/largebuilding-generated-door-type/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "d2b4160003bc95ace75f2f74a80ad302686ded595e1b2d63fdb4498ee61665cb",
+          "size_bytes": 330,
+          "source": "door/single/largebuilding-generated-door-type/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/single/largebuilding-generated-door-type"
+    },
+    {
+      "case_id": "vvo-five-door-preserve-opening",
+      "path": "door/batch/vvo-five-door-preserve-opening",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "door/batch/vvo-five-door-preserve-opening/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "door/batch/vvo-five-door-preserve-opening/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "size_bytes": 2431185,
+          "source": "door/batch/vvo-five-door-preserve-opening/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "116316ce50e8731f2b43993a157b11344af6d426707e29bdc8b9a45eea78db7d",
+          "size_bytes": 2435579,
+          "source": "door/batch/vvo-five-door-preserve-opening/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "00afaae7570c3c4bc1dbb067e6b32c04679ba464de7f80bdf4065f5b5b3f13eb",
+          "size_bytes": 1996,
+          "source": "door/batch/vvo-five-door-preserve-opening/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-preserve-opening"
+    },
+    {
+      "case_id": "vvo-two-door-two-window-mixed",
+      "path": "mixed/door-window/vvo-two-door-two-window-mixed",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "mixed/door-window/vvo-two-door-two-window-mixed/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "size_bytes": 2431536,
+          "source": "mixed/door-window/vvo-two-door-two-window-mixed/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "de8ebc1aa849b4968ffa54f19fb3dcfce44a83968b2548104beb63b1c18336cf",
+          "size_bytes": 2438425,
+          "source": "mixed/door-window/vvo-two-door-two-window-mixed/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "26a8e917886e9d172a6d8c172b84b0e7d80357888eab68f40b38d67500cc2c44",
+          "size_bytes": 1501,
+          "source": "mixed/door-window/vvo-two-door-two-window-mixed/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-two-door-two-window-mixed"
+    },
+    {
+      "case_id": "vvo-authority-triplet-public-repair",
+      "path": "mixed/door-window/vvo-authority-triplet-public-repair",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "mixed/door-window/vvo-authority-triplet-public-repair/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "size_bytes": 2431536,
+          "source": "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "9f5200e39accb3b496ac07c2f8d6079852acc871a7675014135afca6821f429d",
+          "size_bytes": 2441605,
+          "source": "mixed/door-window/vvo-authority-triplet-public-repair/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "1d139ce33c73f15d3311a33a6afb5ff37f5289627df00b94b14b200e6731d38b",
+          "size_bytes": 1255,
+          "source": "mixed/door-window/vvo-authority-triplet-public-repair/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/vvo-authority-triplet-public-repair"
+    },
+    {
+      "case_id": "vvo-five-door-authority-public-repair",
+      "path": "door/batch/vvo-five-door-authority-public-repair",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "door/batch/vvo-five-door-authority-public-repair/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "size_bytes": 2431185,
+          "source": "door/batch/vvo-five-door-authority-public-repair/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "a7e085242452f8b312173eb8aa11b08115971a4140f0a724e9850f5550270e03",
+          "size_bytes": 2440941,
+          "source": "door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "197fd3f1085413f433843ed8839deb263df6dcf05225fc2dc5ee54c8ad811333",
+          "size_bytes": 966,
+          "source": "door/batch/vvo-five-door-authority-public-repair/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/batch/vvo-five-door-authority-public-repair"
+    },
+    {
+      "case_id": "dental-clinic-two-door-two-window-geometry-targeted",
+      "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "offline_bound_deterministic",
+      "provider_calls": 0,
+      "run_id": "N/A（离线确定性）",
+      "authority": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "b90fe57b8aa9329d762a564770e697d4f7357677484e3a78ede4ab6d2163c0c0",
+          "size_bytes": 13208096,
+          "source": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+          "size_bytes": 13373985,
+          "source": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "7c5db7ccaaa57d1f44aa7ba664b3fe2487ace816ab5b36f4290f197f81c8be29",
+          "size_bytes": 13387418,
+          "source": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "b241ba0fcfdff94b2ef2c5137e4fce80f64aec690071abb364f7994c05328079",
+          "size_bytes": 1679,
+          "source": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted"
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-complete-door",
+      "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-complete-door/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-complete-door/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "2f6544e7eb9d8529705778851554565cc3bb20e33c6cc7d3fb1d4eb9c100dc71",
+          "size_bytes": 1288644,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-complete-door/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "7b3f49f654ef9529601717541fd8d53f05ad93fa412920ce0f85e18fe01532fc",
+          "size_bytes": 269,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-complete-door/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door"
+    },
+    {
+      "case_id": "largebuilding-live-deepseek-clarified-door",
+      "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door",
+      "status": "accepted",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": "未知；见原 Provider evidence",
+      "run_id": "未知；见原 authority 的 source-run / Provider 记录",
+      "authority": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/REPORT.md",
+      "original_role": "private_ground_truth",
+      "ifccompare": "沿用原案例评估；三元组角色按原冻结记录，不在本轮重新计算 IFCCompare",
+      "artifacts": {
+        "01-original.ifc": {
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "221224d1eca4cab303484c2d1c92b6d352301c7f42c2a8ade01fecbcbc0dadaa",
+          "size_bytes": 1288672,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/03-repaired.ifc"
+        },
+        "request.txt": {
+          "sha256": "b25f88a349a8cfc85c2e0f3b438ae19b56dfce3c73d9e7d6d605500c0d7bc062",
+          "size_bytes": 291,
+          "source": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/request.txt"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door"
+    }
+  ],
+  "references": [],
+  "scope": "storage consolidation; original acceptance unchanged; frozen bytes reconstructable",
+  "legacy_bundles": [
+    {
+      "id": "frozen",
+      "old_root": "dataset/processed/proof/ifc-repair-success-cases",
+      "entries": [
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/01-original.ifc",
+          "path": "door/batch/vvo-five-door-authority-public-repair/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/02-damaged.ifc",
+          "path": "door/batch/vvo-five-door-authority-public-repair/02-damaged.ifc",
+          "sha256": "d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "size_bytes": 2431185
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc",
+          "path": "door/batch/vvo-five-door-authority-public-repair/03-repaired.ifc",
+          "sha256": "a7e085242452f8b312173eb8aa11b08115971a4140f0a724e9850f5550270e03",
+          "size_bytes": 2440941
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/agent/prompt-routing-evidence.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "4966d33a18baf23c8f4b982a35aa631a4d389154cfb632a954e0f04e337fbba5",
+          "size_bytes": 8126
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/agent/repair-intent.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/agent/repair-intent.json",
+          "sha256": "057e3eb32e389f9702aa38c9c72b301f711f84514cecc19f1c48d67d5d959d95",
+          "size_bytes": 10002
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/agent/target-resolution.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/agent/target-resolution.json",
+          "sha256": "f8d0139454e5c2d650bc7d1c40e6fc337e2696288b5c779370726248250a0419",
+          "size_bytes": 42305
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/changeset/bound-changeset.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "92dfc67819d52e3caf6f12f2cd391d90c2e3838765bcf215ed09027d7f188d86",
+          "size_bytes": 16305
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/FILES.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/FILES.json",
+          "sha256": "ac586c6c048c8f3821ecfdcb65bc2f07f78d853d6ef103236077d0af7c84019d",
+          "size_bytes": 3910
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/input/request.txt",
+          "path": "door/batch/vvo-five-door-authority-public-repair/request.txt",
+          "sha256": "197fd3f1085413f433843ed8839deb263df6dcf05225fc2dc5ee54c8ad811333",
+          "size_bytes": 966
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/private-evaluation/benchmark-mapping.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/private-evaluation/benchmark-mapping.json",
+          "sha256": "dcbf9555ff9eb0c7e261a230a6b23c1507a05f4e3e08d81d63b6fb71a5bd19b0",
+          "size_bytes": 1269
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/REPORT.md",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/REPORT.md",
+          "sha256": "aa7f6e1b417e069a6ba5fdc0d95ea1121f86d9556d94e4aea9fa5cf30c2c8064",
+          "size_bytes": 1387
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/application.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/application.json",
+          "sha256": "eaa24fefbbbcf203547e596ecfe976a46b5febfa7c4908d246b640298b085279",
+          "size_bytes": 46995
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/AUDIT-REPORT.md",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "0e7ff92e5502fd182f7b31e3107aab789b88f7cb94b1a2ad60ae3803e922ec3d",
+          "size_bytes": 8061
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/ifc-comparison.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "2d1d601fdfd35ace2d542cf082e11c9f84c669888bdf6dc11dcc2f689a1842a1",
+          "size_bytes": 28833
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/production-boundary.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/production-boundary.json",
+          "sha256": "40b6b5847219b84f14887bd108f89738a43015a69659d84d3cfe207ccaed35d0",
+          "size_bytes": 849
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/production-evaluation.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/production-evaluation.json",
+          "sha256": "0e23263b94f6fb73ac9ce64b4b0d5a1ff1a6e598550440ab46c49846a6846df5",
+          "size_bytes": 477658
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/release-decision.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/release-decision.json",
+          "sha256": "094bc095f5bca027cde0fb772e6a70a4df40977977137ebe6fca5e91850ff427",
+          "size_bytes": 1616
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/source-run-manifest.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "4d7303766710e21427d06cd3894260bb47e4df6eff3b5d0d014eb10783e97026",
+          "size_bytes": 5446
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-authority-public-repair/validation/three-way-audit.json",
+          "path": "door/batch/vvo-five-door-authority-public-repair/evidence/authority/validation/three-way-audit.json",
+          "sha256": "27573299b1380ae2ad6cf247ed272f20ee7e1f099366552fc268fd0b56393b93",
+          "size_bytes": 109215
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/01-original.ifc",
+          "path": "door/batch/vvo-five-door-preserve-opening/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/02-damaged.ifc",
+          "path": "door/batch/vvo-five-door-preserve-opening/02-damaged.ifc",
+          "sha256": "d91addae033f50c564cb3dfefaa7df496212ddd20da86d91bdd1ea256eb7373f",
+          "size_bytes": 2431185
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/03-repaired.ifc",
+          "path": "door/batch/vvo-five-door-preserve-opening/03-repaired.ifc",
+          "sha256": "116316ce50e8731f2b43993a157b11344af6d426707e29bdc8b9a45eea78db7d",
+          "size_bytes": 2435579
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/agent/prompt-routing-evidence.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "4966d33a18baf23c8f4b982a35aa631a4d389154cfb632a954e0f04e337fbba5",
+          "size_bytes": 8126
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/changeset/bound-changeset.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "9547816614992d66c0fbe3c0ca94932ac5820641f95035234a4882e027c8f910",
+          "size_bytes": 9162
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/FILES.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/FILES.json",
+          "sha256": "cb4e74a4b5c273594ee4d76a41116c4971a320bbf32ba7abe46b432e5d92533d",
+          "size_bytes": 3687
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/input/request.txt",
+          "path": "door/batch/vvo-five-door-preserve-opening/request.txt",
+          "sha256": "00afaae7570c3c4bc1dbb067e6b32c04679ba464de7f80bdf4065f5b5b3f13eb",
+          "size_bytes": 1996
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/REPORT.md",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/REPORT.md",
+          "sha256": "62f681d51d871825e4f8fdf5721afed99c8c5aa1278925a4695aac1fcd995783",
+          "size_bytes": 1158
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/application.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/application.json",
+          "sha256": "cf79aa8f21a70d4ac06f9b15efd027ed5b17db52376e29a37b3ead11fbddb4a3",
+          "size_bytes": 46166
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/AUDIT-REPORT.md",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "e1291488d41f7d57b076458ddb9da276edbbab2412bda2804a340c078f61c93e",
+          "size_bytes": 7937
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/ifc-comparison.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "8c7a50a16de6f0694dbfad88f5456a04e44e10899a95c2b179b5b9a4321860ad",
+          "size_bytes": 28460
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/injected-failure-application.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/injected-failure-application.json",
+          "sha256": "7e8706e7a35fe37d7f52fa2461d40c9c2e4fa77b73b1fa589b858532878b4776",
+          "size_bytes": 5437
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/injected-failure-changeset.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/injected-failure-changeset.json",
+          "sha256": "52b518c775623150e51ab60bccfecbc0437c0a917ce77d7671994c4a2fde0c63",
+          "size_bytes": 10835
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/production-boundary.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/production-boundary.json",
+          "sha256": "00c9c290d0a62dfc0a912930f60090245615a57763632ff5560b225ea536110b",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/production-evaluation.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/production-evaluation.json",
+          "sha256": "373fc90dd1aca75d5213b67e36cde957147153ce7158bed6fcd505021c171a97",
+          "size_bytes": 430820
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/release-decision.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/release-decision.json",
+          "sha256": "094bc095f5bca027cde0fb772e6a70a4df40977977137ebe6fca5e91850ff427",
+          "size_bytes": 1616
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/source-run-manifest.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "706560a7615473c7db6560a6d80c3e317a20389a2afb3ee9963d0007ddba40b5",
+          "size_bytes": 4672
+        },
+        {
+          "legacy_path": "door/batch/vvo-five-door-preserve-opening/validation/three-way-audit.json",
+          "path": "door/batch/vvo-five-door-preserve-opening/evidence/authority/validation/three-way-audit.json",
+          "sha256": "45b1359928c4070c9c50a714073d82c6a92516e85fb6e05efd054371f2c4cf08",
+          "size_bytes": 110809
+        },
+        {
+          "legacy_path": "door/README.md",
+          "path": "evidence/frozen/door/README.md",
+          "sha256": "5a770d8cab94d8c4f967eac8e34fe6a9691882361495a299bd309acb9c1ece21",
+          "size_bytes": 1207
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/01-original.ifc",
+          "path": "door/single/advancedproject-door-preserve-opening/01-original.ifc",
+          "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+          "size_bytes": 44337371
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/02-damaged.ifc",
+          "path": "door/single/advancedproject-door-preserve-opening/02-damaged.ifc",
+          "sha256": "8e187d9a9ce07067f276c8afb056e294d83b08098371f619ac3b76577f5576bd",
+          "size_bytes": 44253766
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/03-repaired.ifc",
+          "path": "door/single/advancedproject-door-preserve-opening/03-repaired.ifc",
+          "sha256": "3809fd67e3141f4adb506a98f58c8cae141b4e30f16aa3a9aa2ca229e7e17c39",
+          "size_bytes": 44254737
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/agent/prompt-routing-evidence.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "a501c8456775bad7bb08dc0a998a28c1cb5622a8909a33293ce6d5689b146515",
+          "size_bytes": 7083
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/changeset/bound-changeset.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "491950327c3b54c7480dd03db1a2bc1601a2c75e092463c3bfebb3bf279bc792",
+          "size_bytes": 2544
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/FILES.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/FILES.json",
+          "sha256": "2195461969c17c48eab8bfada60a97aa0467194b564a3b488c5cb42b228f161f",
+          "size_bytes": 3440
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/input/request.txt",
+          "path": "door/single/advancedproject-door-preserve-opening/request.txt",
+          "sha256": "b84a0e99d0f7bc4f6b3f0f01c22e7f1abc929aaf6b1e7bf2c124a10c0c0a865f",
+          "size_bytes": 427
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/REPORT.md",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/REPORT.md",
+          "sha256": "693ffcba8a9af2b4983fbad78b536a35361d9b9d901cdf723e44543c89ec2523",
+          "size_bytes": 903
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/application.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/application.json",
+          "sha256": "2e3149487cddf48f31a97cccb9001bbf972f0aec19234b80f7e12f7ffc58d00a",
+          "size_bytes": 10321
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/AUDIT-REPORT.md",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "2849671664e4f6b877a83998bb0c25e6e8feba5ce674b82d2a0d8f68e6a56eb8",
+          "size_bytes": 6168
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/evaluation-warm.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/evaluation-warm.json",
+          "sha256": "20d2a93252f32e4a8581fde92ee221847074c0414fa8a5eaf4c13a91c53b5d9c",
+          "size_bytes": 44467
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/ifc-comparison.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "c987f38d8b71bedaa8b8ba0597ec27dbcc768cc1046721074c4c222820422b25",
+          "size_bytes": 203573
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/production-boundary.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/production-boundary.json",
+          "sha256": "a974186e50174911a45e38d0b38cb1fa3472311b0c1f567250fa5a8cb34d6e6d",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/production-evaluation.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/production-evaluation.json",
+          "sha256": "e3ad1118661ba42155e284f5da4c98588b840084149baeb220efa536f797a41d",
+          "size_bytes": 44467
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/release-decision.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/release-decision.json",
+          "sha256": "376f32c15a8578ca1aef7831780b6434a37c08c5b08f1ca330591036bd4720cb",
+          "size_bytes": 713
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/source-run-manifest.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "7ad041a5d859e000df1edac874d81bfce51f7b819fc11e579433082b78791281",
+          "size_bytes": 4733
+        },
+        {
+          "legacy_path": "door/single/advancedproject-door-preserve-opening/validation/three-way-audit.json",
+          "path": "door/single/advancedproject-door-preserve-opening/evidence/authority/validation/three-way-audit.json",
+          "sha256": "99b8e9afa43bd462cd89fb82c0a4fe355b8b8d60344395058f5989c8176f34f6",
+          "size_bytes": 80627
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/01-original.ifc",
+          "path": "door/single/largebuilding-door-preserve-opening/01-original.ifc",
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/02-damaged.ifc",
+          "path": "door/single/largebuilding-door-preserve-opening/02-damaged.ifc",
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/03-repaired.ifc",
+          "path": "door/single/largebuilding-door-preserve-opening/03-repaired.ifc",
+          "sha256": "8afaaaf28769909b5b865a89fc8eb9dac2ab907ac851bfb47776d3d5261cced9",
+          "size_bytes": 1288722
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/agent/prompt-routing-evidence.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "66e90c738885770970060024c44ac1f6e55ea8b5149e4397d9e76d1998fec150",
+          "size_bytes": 7081
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/changeset/bound-changeset.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "89d270c190658bee793fc44d067268ddb6345abc9ee16f7fd70d72e88acf7d8c",
+          "size_bytes": 2530
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/FILES.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/FILES.json",
+          "sha256": "9ff4a28d4eb78d4b45be56cfaecf5699ce9413b79656729c5d20352be0dde7f7",
+          "size_bytes": 3205
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/input/request.txt",
+          "path": "door/single/largebuilding-door-preserve-opening/request.txt",
+          "sha256": "295b4b280c4ed1385a5c66d7aac1a9fb2a430c6ff057eb6cf4fd285ff328c62d",
+          "size_bytes": 405
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/REPORT.md",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/REPORT.md",
+          "sha256": "77ff5890d27dadf2fc403d715ffbf6766d5c2af81739e646b382436d4df61ffc",
+          "size_bytes": 900
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/application.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/application.json",
+          "sha256": "efda89a6e7a4393b419ec7fa94056258437c78d321cb5436c85c278d1ae756e9",
+          "size_bytes": 10346
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/AUDIT-REPORT.md",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "9539e0d6dfb713b8275593f6a5f607c8240d851653643832bfac019ae992c657",
+          "size_bytes": 6138
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/ifc-comparison.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "345ef67feae87aa17784e1e3770ba8288b97592ceb38531eb9d0b82e8786de57",
+          "size_bytes": 26353
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/production-boundary.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/production-boundary.json",
+          "sha256": "15b59f625a410082bca9169e36bc14876f34c5a41b54dcf7748f58b8042bf59b",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/production-evaluation.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/production-evaluation.json",
+          "sha256": "07d7c0692c279ca659ae4548005c5d17f704ff65ba0aecf0cdf5c2c8f35fd3b6",
+          "size_bytes": 44361
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/release-decision.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/release-decision.json",
+          "sha256": "0307fae5eee91993574ab79a789904924605e8a1331b87701b305dc6af76443c",
+          "size_bytes": 711
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/source-run-manifest.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "0b55b768297a42536f530e9548484803cce8c41e49e9a6cd2c367b96a2b2c3c7",
+          "size_bytes": 3930
+        },
+        {
+          "legacy_path": "door/single/largebuilding-door-preserve-opening/validation/three-way-audit.json",
+          "path": "door/single/largebuilding-door-preserve-opening/evidence/authority/validation/three-way-audit.json",
+          "sha256": "9067f3c8cfc6be1e34836587abe4d305088431e19bce2ec78d81f7cbd7ff5b8e",
+          "size_bytes": 79769
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/01-original.ifc",
+          "path": "door/single/largebuilding-generated-door-type/01-original.ifc",
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/02-damaged.ifc",
+          "path": "door/single/largebuilding-generated-door-type/02-damaged.ifc",
+          "sha256": "fed14afd7b68fa79afee817b4f73e3fe391415e2e515b7a329744ba78aeeb10f",
+          "size_bytes": 1286939
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/03-repaired.ifc",
+          "path": "door/single/largebuilding-generated-door-type/03-repaired.ifc",
+          "sha256": "2af345dc8edd0b986b22b669ced51a8fd6812e1756f79dd76bb3e78ca0ba3858",
+          "size_bytes": 1290037
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/agent/prompt-routing-evidence.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "25089629a1fbcd626cc45db60738ab57c80d5d05c141b51078b98add5d3ffe36",
+          "size_bytes": 7079
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/changeset/bound-changeset.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "4ce1b1219898c4e3d90f8fd1728a0b91f66bb8a9f90f5d1cd3cdb05bf50b83bd",
+          "size_bytes": 3332
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/FILES.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/FILES.json",
+          "sha256": "a809a36624bd74fafb6483c1a4bb1302b22411ea2945b0ff5bb27fff6e5651ac",
+          "size_bytes": 3203
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/input/request.txt",
+          "path": "door/single/largebuilding-generated-door-type/request.txt",
+          "sha256": "d2b4160003bc95ace75f2f74a80ad302686ded595e1b2d63fdb4498ee61665cb",
+          "size_bytes": 330
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/REPORT.md",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/REPORT.md",
+          "sha256": "bf7652d78557db0cd117c29cfb60fbea3291dbc4bc7bf57d4f8cbf84fb24fcfc",
+          "size_bytes": 896
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/application.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/application.json",
+          "sha256": "3fa704c54d3c8c1d269a9895f11a33b947c963fe9825edfac87f66a9df6219f4",
+          "size_bytes": 15154
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/AUDIT-REPORT.md",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "787192651302457f7e0d25a6db35ae8f61a3322f072ed9e64ff6e8b0b5d05685",
+          "size_bytes": 6034
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/ifc-comparison.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "027277e0222d9e0a7e457499344d38e62bf07d7c5cd718d4378aa9612f4bc70d",
+          "size_bytes": 23304
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/production-boundary.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/production-boundary.json",
+          "sha256": "ae6200a8391bd0fe8a18fe1ed4e545677f6151c3a36851acb330082394760214",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/production-evaluation.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/production-evaluation.json",
+          "sha256": "b49ef8669137d1b7c0543d891b0b1fb3ae9f1d7c0f7784e4460da1694d99fca5",
+          "size_bytes": 49160
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/release-decision.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/release-decision.json",
+          "sha256": "4b91229cc87f8aecb77a68afb3477fb26c794bfb20c500cdeee2cb344fe41b67",
+          "size_bytes": 694
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/source-run-manifest.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "40345e942bdda8c7b680336085c7a5f4757b37498f371599bbcf748fa00551d1",
+          "size_bytes": 3761
+        },
+        {
+          "legacy_path": "door/single/largebuilding-generated-door-type/validation/three-way-audit.json",
+          "path": "door/single/largebuilding-generated-door-type/evidence/authority/validation/three-way-audit.json",
+          "sha256": "d99ff696d3fc0b9d2579bb7826267136669e1916bb49ca526a6f1c95cf9ccd8e",
+          "size_bytes": 64654
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/01-original.ifc",
+          "path": "door/single/vvo-door-preserve-opening/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/02-damaged.ifc",
+          "path": "door/single/vvo-door-preserve-opening/02-damaged.ifc",
+          "sha256": "a8558c195d1dba8277e9bcd9b0ee047e145658d3d1068b9aea0f1affac0c68c6",
+          "size_bytes": 2436322
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/03-repaired.ifc",
+          "path": "door/single/vvo-door-preserve-opening/03-repaired.ifc",
+          "sha256": "43ef5af0ad9de74b3c7a36b2e94f5a51323190c1033cf4c1375d4fd96e3a6d43",
+          "size_bytes": 2437248
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/agent/prompt-routing-evidence.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "5873c411d4978bff39a629b16585ddf5260f31293cde0ae968baded6447cde31",
+          "size_bytes": 7071
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/changeset/bound-changeset.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "2563f51c90863fa4d1e98b0adf8f0d64a10b4d020d743aef883e068a187b0e9a",
+          "size_bytes": 2500
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/FILES.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/FILES.json",
+          "sha256": "d93ce6118e2c52c05d9ab9564f107f36edcd15109920ff23ace5f06930715ecf",
+          "size_bytes": 3195
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/input/request.txt",
+          "path": "door/single/vvo-door-preserve-opening/request.txt",
+          "sha256": "1803f6127c89bd43b8721b46a6cc54a7b752ca0f61eb9c8e853386ca204bf3ba",
+          "size_bytes": 387
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/REPORT.md",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/REPORT.md",
+          "sha256": "515c3e28540a684d7cb2acc1855f08a545d7a1efb2d993ac7c348915d3315f95",
+          "size_bytes": 891
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/application.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/application.json",
+          "sha256": "da04df9d8753ad030206b06e4a23fc51755f088f92b56d02aa40483393e8aa9b",
+          "size_bytes": 10355
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/AUDIT-REPORT.md",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "46610ca6584c72d19aa8174b4dd53c5c95aa729d9bf92e5ffd988775b80b263f",
+          "size_bytes": 5985
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/ifc-comparison.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "5bd4568d3782db3d5277aea2c7ba0c1de94d230aac8aa088451cb5e8e8ac7676",
+          "size_bytes": 28048
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/production-boundary.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/production-boundary.json",
+          "sha256": "86237bbb58a721e01fd62f74dffcc6d3e03f9b375a09b7eeba33ce594679a717",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/production-evaluation.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/production-evaluation.json",
+          "sha256": "446cebf55201fe942f4c18bd7e58b6885490e7b27f2ae8f340424161f932603c",
+          "size_bytes": 43567
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/release-decision.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/release-decision.json",
+          "sha256": "ee6af6d1456738b397781759b19a3888f04614b250393083cc91635e72c9365a",
+          "size_bytes": 701
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/source-run-manifest.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "bb501428fe82180eced76a42dd43876ede2cf19b5d202dfb73b0e230ae0b56bd",
+          "size_bytes": 3894
+        },
+        {
+          "legacy_path": "door/single/vvo-door-preserve-opening/validation/three-way-audit.json",
+          "path": "door/single/vvo-door-preserve-opening/evidence/authority/validation/three-way-audit.json",
+          "sha256": "4c97dfdfec02383f5537cfdb7720d3633744333764e6c161eb146ea44ab67a36",
+          "size_bytes": 28933
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/01-original.ifc",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/01-original.ifc",
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/02-damaged.ifc",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/02-damaged.ifc",
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/03-repaired.ifc",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/03-repaired.ifc",
+          "sha256": "221224d1eca4cab303484c2d1c92b6d352301c7f42c2a8ade01fecbcbc0dadaa",
+          "size_bytes": 1288672
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/agent/repair-intent.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/agent/repair-intent.json",
+          "sha256": "4f13ee59432ef934e7d0d774b1fbe44d9576050ed2c562d2db834a96a75d52bd",
+          "size_bytes": 2694
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/agent/semantic-manifest-door-fill-existing-1.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/agent/semantic-manifest-door-fill-existing-1.json",
+          "sha256": "bd8daeedb3e7bacde093bf6f071947b434dbaa202189231d1aaf47616b1796be",
+          "size_bytes": 35262
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/agent/target-resolution.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/agent/target-resolution.json",
+          "sha256": "01c3ebe5ad9510c9a9e55488402eec77a48524aa4cc4b6638b71e63362d4b82c",
+          "size_bytes": 4123
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/changeset/bound-changeset.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "48672c5cd2abe07c119210dc7d4be4f1fbfbc82c711b478afb2e4921d9259141",
+          "size_bytes": 51693
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/FILES.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/FILES.json",
+          "sha256": "9f32eb279461eeaf40541543baf3b94bdfcaee835f76f6e30fbffcc9b2f4a76b",
+          "size_bytes": 4182
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/input/request.txt",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/request.txt",
+          "sha256": "b25f88a349a8cfc85c2e0f3b438ae19b56dfce3c73d9e7d6d605500c0d7bc062",
+          "size_bytes": 291
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/provider-evidence/live-case-result.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/provider-evidence/live-case-result.json",
+          "sha256": "aced4a5273f6e89b0a2ddeaea9ed8809d2e5064117e749da943d03b52a58c53c",
+          "size_bytes": 9480
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/provider-evidence/prompt-profile-selection.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/provider-evidence/prompt-profile-selection.json",
+          "sha256": "b705befa22b7a823d33d0fd3e0e6008df3cf6f0750147032253d39379b793db2",
+          "size_bytes": 6884
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/provider-evidence/provider-attempts.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/provider-evidence/provider-attempts.json",
+          "sha256": "22c2a6a15dd65a8cdec8b9cfb605b43edc9316f4751f954c782d6f40685064e9",
+          "size_bytes": 7797
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/REPORT.md",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/REPORT.md",
+          "sha256": "db8768debbc0f023695dd3967364f16064da8239b519e435896067439a14b81a",
+          "size_bytes": 415
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/application.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/application.json",
+          "sha256": "eca1646c85e14310703f48bade32cba38c29e237ca14f034e9a111dca1f9e123",
+          "size_bytes": 15368
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/production-boundary.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/production-boundary.json",
+          "sha256": "20b272ef53161eb727f3edd9dc345bd382fedf8cd3ee7d3e6b781368e71e1daf",
+          "size_bytes": 651
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/production-evaluation.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/production-evaluation.json",
+          "sha256": "6750ca31c1cfcda05138fe66cb801eed9f0807fe868b9e908d04a1e05fb67cbf",
+          "size_bytes": 23242
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/release-decision.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/release-decision.json",
+          "sha256": "9c17a0379c8416bfa320c375ab597b183993b488fe2f39fc22cf2ed3d10845e9",
+          "size_bytes": 686
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/source-run-manifest.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "c3971bb36b07685c1eac0714f2bc87f5084a883fac2e4f0416b79d56e4ab9b71",
+          "size_bytes": 1654
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/strict-reopen-verification.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/strict-reopen-verification.json",
+          "sha256": "2ccbe1d9c39c938a726a52d89402f94dbdf8ecb7af5a3bece4109039d8208023",
+          "size_bytes": 507
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/validation/three-way-audit.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-clarified-door/evidence/authority/validation/three-way-audit.json",
+          "sha256": "1ee5c48c71438c5faa2c640edb1bf492ee3cec7c8cd2158680b73776af35dc71",
+          "size_bytes": 83006
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/01-original.ifc",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/01-original.ifc",
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/02-damaged.ifc",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/02-damaged.ifc",
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/03-repaired.ifc",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/03-repaired.ifc",
+          "sha256": "2f6544e7eb9d8529705778851554565cc3bb20e33c6cc7d3fb1d4eb9c100dc71",
+          "size_bytes": 1288644
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/agent/repair-intent.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/agent/repair-intent.json",
+          "sha256": "3617694a916c2bd2745c488f5b3618718f07f913e9e711731a66ee6ac3de2915",
+          "size_bytes": 2599
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/agent/semantic-manifest-door-1.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/agent/semantic-manifest-door-1.json",
+          "sha256": "0db0f7309a75b3c3f198777991f321d49eb8e18048173c8667b4989eda274df1",
+          "size_bytes": 33708
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/agent/target-resolution.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/agent/target-resolution.json",
+          "sha256": "850eded118fd5a1c302bf3a29b80bc80c2b124e448623b7db57b938004f51c24",
+          "size_bytes": 4077
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/changeset/bound-changeset.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "654028ffe0b998413760aab86d34940be62317dd1192eb2088e3ec65fdf84e5a",
+          "size_bytes": 49953
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/FILES.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/FILES.json",
+          "sha256": "71e6c7a280ce5ede3c3cf904683f9dd87bf8ad1c13b6e6d1e789ed398009bc8b",
+          "size_bytes": 4167
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/input/request.txt",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/request.txt",
+          "sha256": "7b3f49f654ef9529601717541fd8d53f05ad93fa412920ce0f85e18fe01532fc",
+          "size_bytes": 269
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/provider-evidence/live-case-result.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/provider-evidence/live-case-result.json",
+          "sha256": "8689074d279cd01d63cf999cc11f803157ac6e74595931903d47afd47afe0e65",
+          "size_bytes": 7658
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/provider-evidence/prompt-profile-selection.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/provider-evidence/prompt-profile-selection.json",
+          "sha256": "b705befa22b7a823d33d0fd3e0e6008df3cf6f0750147032253d39379b793db2",
+          "size_bytes": 6884
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/provider-evidence/provider-attempts.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/provider-evidence/provider-attempts.json",
+          "sha256": "3d3a97fdde089519107b919bfccb5d38ad7e356b180e3e204a3e17399171fa36",
+          "size_bytes": 4033
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/REPORT.md",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/REPORT.md",
+          "sha256": "4de9f8dc05d6f35a43510f4a66b7e31fe68b63e7e0ad76ff65da31543e8ef3a9",
+          "size_bytes": 414
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/application.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/application.json",
+          "sha256": "6762ac1db00b9069d5bb75a83a20b1f650e6237b94323579595286dd35e79497",
+          "size_bytes": 15315
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/production-boundary.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/production-boundary.json",
+          "sha256": "75649b8e08e8323cc61620baf847ed70b4c119e30a7ae04182feefbb5d4fd9a5",
+          "size_bytes": 651
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/production-evaluation.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/production-evaluation.json",
+          "sha256": "d29a7207bd8261fa7d8271fe3592050ff656500e02f67a26f55a008d574d21d6",
+          "size_bytes": 23228
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/release-decision.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/release-decision.json",
+          "sha256": "5b4beccf8b7390f6d135f28240fa9aedecf8207b8db0ff6599c5855418a465b6",
+          "size_bytes": 672
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/source-run-manifest.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "ac61878607884347f8b565393932d7950d30cd27bdd977b3372653e11cddf846",
+          "size_bytes": 1653
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/strict-reopen-verification.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/strict-reopen-verification.json",
+          "sha256": "66c8816996177f37d098b39092bd36a9c93f247db91f45b18a4636abe7cdc0ef",
+          "size_bytes": 507
+        },
+        {
+          "legacy_path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/validation/three-way-audit.json",
+          "path": "door/surviving-opening/largebuilding-live-deepseek-complete-door/evidence/authority/validation/three-way-audit.json",
+          "sha256": "70614b4fe352803dcee3ae44818ebcdba2537fdb9ba613d486b3434073e1bc38",
+          "size_bytes": 82881
+        },
+        {
+          "legacy_path": "manifest.json",
+          "path": "evidence/frozen/manifest.json",
+          "sha256": "cb5b32f02500d06d1fbcda35aaec7fb3fefa277a4ed5d62e7b96a39d1821077c",
+          "size_bytes": 14126
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/01-original.ifc",
+          "sha256": "b90fe57b8aa9329d762a564770e697d4f7357677484e3a78ede4ab6d2163c0c0",
+          "size_bytes": 13208096
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/02-damaged.ifc",
+          "sha256": "c51b4dc754f7e4f462806c8f2579f791a064022976231e72077e6768c4eef878",
+          "size_bytes": 13373985
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/03-repaired.ifc",
+          "sha256": "7c5db7ccaaa57d1f44aa7ba664b3fe2487ace816ab5b36f4290f197f81c8be29",
+          "size_bytes": 13387418
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/agent/prompt-routing-evidence.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "6bcd5fff5c71ce509468e1a6961d7e9ab2dcdfb727900d6adbb4fdaab63e9542",
+          "size_bytes": 10027
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/agent/repair-intent.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/agent/repair-intent.json",
+          "sha256": "8a462386493029dbe59857c1a4580311f0b3b810894c03e6859f20be50fe9bb3",
+          "size_bytes": 10397
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/agent/target-resolution.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/agent/target-resolution.json",
+          "sha256": "1101c32aca7ca51115bb4fbc8e16480fc0881ffb734d8464966a176c2aaa36f9",
+          "size_bytes": 35938
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/changeset/bound-changeset.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "bdfc1e66ef9a2e269cdb221466f42eac6286a10258bbea62084790cbaa363b79",
+          "size_bytes": 17115
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/FILES.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/FILES.json",
+          "sha256": "a6f0d0709915429676ebdefb516f782d2ef538c26e11d154ed0c8950e257387b",
+          "size_bytes": 3681
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/input/request.txt",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/request.txt",
+          "sha256": "b241ba0fcfdff94b2ef2c5137e4fce80f64aec690071abb364f7994c05328079",
+          "size_bytes": 1679
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/REPORT.md",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/REPORT.md",
+          "sha256": "2c57fc823719da4676a5f79f8bdbe278393053f8233ef3423407735b075bb7a7",
+          "size_bytes": 1500
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/application.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/application.json",
+          "sha256": "e36390b692aaff47e566c7a612585428d63d5e4a025362c87cdc8ce805d86972",
+          "size_bytes": 42281
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/AUDIT-REPORT.md",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "6dec6d6e309fced629cbbf93fea6f5ecb1c619684e9ffc7bb274cb3adbd40f91",
+          "size_bytes": 7784
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/ifc-comparison.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "a87bf1f7c10366d42b1d30b0dbeffff2015343f61e5a43d9268a8cee0a727345",
+          "size_bytes": 437065
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/production-boundary.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/production-boundary.json",
+          "sha256": "befc976713acf86f01c739b31208794a275aee902c19f1cbe2dbf3d0c9e8b36e",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/production-evaluation.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/production-evaluation.json",
+          "sha256": "42f6502cf0e914945e8010f245c306796ceabc03dbe0afd0c46cd93d575ecbf3",
+          "size_bytes": 506124
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/release-decision.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/release-decision.json",
+          "sha256": "6e4dc41b5f92925ddb6ecc189ab86282dfca8bf8b6fa9db0a99aff492ef4debd",
+          "size_bytes": 1387
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/source-run-manifest.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "20a7ee7c4057d28a87d1636cfbd0e484e0ff2bb6ae2aaac43b913607e17731b5",
+          "size_bytes": 4862
+        },
+        {
+          "legacy_path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/validation/three-way-audit.json",
+          "path": "mixed/door-window/dental-clinic-two-door-two-window-geometry-targeted/evidence/authority/validation/three-way-audit.json",
+          "sha256": "754f6224094329d41782f94903dc81430a146df397ad16189ce5a51ac042cf6c",
+          "size_bytes": 220094
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/01-original.ifc",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/02-damaged.ifc",
+          "sha256": "6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "size_bytes": 2431536
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/03-repaired.ifc",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/03-repaired.ifc",
+          "sha256": "9f5200e39accb3b496ac07c2f8d6079852acc871a7675014135afca6821f429d",
+          "size_bytes": 2441605
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/agent/prompt-routing-evidence.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "1fa24fc203bc56dfe20794bc07f9d96edd747008d2832f24f3b7495083df7e3d",
+          "size_bytes": 10019
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/agent/repair-intent.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/agent/repair-intent.json",
+          "sha256": "d83421f6159139daa1e9147d3c80c7212ce9c68ac240494221d416d94fd5a1e8",
+          "size_bytes": 8689
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/agent/target-resolution.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/agent/target-resolution.json",
+          "sha256": "65a148e16ef0ff45e820afdc847ef314fc50b796684b62e4b2f866c7b35560b7",
+          "size_bytes": 34387
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/changeset/bound-changeset.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "91848e31a99557c458fec0a60241a31e8f4209efd7efb1930f0389dfdcc1d611",
+          "size_bytes": 17195
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/FILES.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/FILES.json",
+          "sha256": "0ea76c4129c0cfa8c21b8058922172b571e56fa0e2c8b55b807376850fe11184",
+          "size_bytes": 3907
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/input/request.txt",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/request.txt",
+          "sha256": "1d139ce33c73f15d3311a33a6afb5ff37f5289627df00b94b14b200e6731d38b",
+          "size_bytes": 1255
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/private-evaluation/benchmark-mapping.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/private-evaluation/benchmark-mapping.json",
+          "sha256": "9d7ec07b80e16818ca538269b88c237856ee93816c7cda4db02fbe5964bddf4c",
+          "size_bytes": 995
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/REPORT.md",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/REPORT.md",
+          "sha256": "c6d08189b5d96c236bc1333da7ce6d81589600b0c827ddad5f9ccad4e7b27e26",
+          "size_bytes": 1290
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/application.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/application.json",
+          "sha256": "57f6495ee246b5107f67c0ba659a545dc24fd1b2444d0b75274cd4e0665dcbd7",
+          "size_bytes": 37592
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/AUDIT-REPORT.md",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "43d8963f1fe3b74c9ca8a96bef8c6b34087e4617aec22f7c4702bcf280671b33",
+          "size_bytes": 7607
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/ifc-comparison.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "fe6e0d50629f787c05cc132d3fcfda1b03c995a66f822b2d8b400c7901e49f4b",
+          "size_bytes": 29355
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/production-boundary.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/production-boundary.json",
+          "sha256": "620471d4fb173df78e9f250449254746fcadbef910faf26c8e476a737dc7ab15",
+          "size_bytes": 849
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/production-evaluation.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/production-evaluation.json",
+          "sha256": "6bae5f87c0d8668c5404bfd1b70a81eeee6e5aa17380e6f5d55baf01f67f78e8",
+          "size_bytes": 466872
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/release-decision.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/release-decision.json",
+          "sha256": "6e4dc41b5f92925ddb6ecc189ab86282dfca8bf8b6fa9db0a99aff492ef4debd",
+          "size_bytes": 1387
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/source-run-manifest.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "eac117362fbe6acd709500fb5c7862880e50af505de7e7bbd2fec8e7fcda86f9",
+          "size_bytes": 5131
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-authority-triplet-public-repair/validation/three-way-audit.json",
+          "path": "mixed/door-window/vvo-authority-triplet-public-repair/evidence/authority/validation/three-way-audit.json",
+          "sha256": "dc52af7a29146d5bb4a2f66b12a23a3346a8f2f95354ce50055bbd3925077492",
+          "size_bytes": 81551
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/01-original.ifc",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/02-damaged.ifc",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/02-damaged.ifc",
+          "sha256": "6824086b4171cce034acaa23ad51c3020d87ed44c0aead62979a4b4ad17c4db3",
+          "size_bytes": 2431536
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/03-repaired.ifc",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/03-repaired.ifc",
+          "sha256": "de8ebc1aa849b4968ffa54f19fb3dcfce44a83968b2548104beb63b1c18336cf",
+          "size_bytes": 2438425
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/agent/prompt-routing-evidence.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/agent/prompt-routing-evidence.json",
+          "sha256": "1fa24fc203bc56dfe20794bc07f9d96edd747008d2832f24f3b7495083df7e3d",
+          "size_bytes": 10019
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/agent/repair-intent.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/agent/repair-intent.json",
+          "sha256": "57a104ec56b47de59d7a52f9b8037a108f50d1e6cf9eafe97b6e262b5405cbed",
+          "size_bytes": 9884
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/agent/target-resolution.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/agent/target-resolution.json",
+          "sha256": "9068226c130c3ec4d5e5c8dc46977c9eace0d2fd3b244f123e5c4bffbeec3243",
+          "size_bytes": 27040
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/changeset/bound-changeset.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "e402daa51d7cb77fc853927d72a49e8e9297874006558519b3fa2c4d12270801",
+          "size_bytes": 13886
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/FILES.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/FILES.json",
+          "sha256": "521b60ff28a66d592cb96b22e3e5e880b6723261dfc4af47ba80a74a33be0e61",
+          "size_bytes": 3653
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/input/request.txt",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/request.txt",
+          "sha256": "26a8e917886e9d172a6d8c172b84b0e7d80357888eab68f40b38d67500cc2c44",
+          "size_bytes": 1501
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/REPORT.md",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/REPORT.md",
+          "sha256": "44de19cd8fa4697af96620daced4e8630874edef727308c2097c71e328703f12",
+          "size_bytes": 1220
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/application.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/application.json",
+          "sha256": "d79a62184393f14cd5abba0233f7bf5cea781dd0b1bacbd3468fda8a38d5ca45",
+          "size_bytes": 36951
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/AUDIT-REPORT.md",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/AUDIT-REPORT.md",
+          "sha256": "9d844a1e16b4c3c00147274a3a974f9238fd2d622c9bea535c4e89da5f1d0d27",
+          "size_bytes": 7493
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/ifc-comparison.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "28217cc5f0d299cc2b1934f03373c49b5352aff3025fcf9f465ed999aa126186",
+          "size_bytes": 31599
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/production-boundary.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/production-boundary.json",
+          "sha256": "9af491045156a669ddd31634f69222770c5f86db5e41640483de798486234de8",
+          "size_bytes": 584
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/production-evaluation.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/production-evaluation.json",
+          "sha256": "12953ce01c16afb01d572a97876002ef3940f30831d71e786a96bdacf468287c",
+          "size_bytes": 444194
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/release-decision.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/release-decision.json",
+          "sha256": "6e4dc41b5f92925ddb6ecc189ab86282dfca8bf8b6fa9db0a99aff492ef4debd",
+          "size_bytes": 1387
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/source-run-manifest.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/source-run-manifest.json",
+          "sha256": "fc98023694dbd9bedfe7eedc033f32d522f06af3b543204e0e8347602f8a17ce",
+          "size_bytes": 4465
+        },
+        {
+          "legacy_path": "mixed/door-window/vvo-two-door-two-window-mixed/validation/three-way-audit.json",
+          "path": "mixed/door-window/vvo-two-door-two-window-mixed/evidence/authority/validation/three-way-audit.json",
+          "sha256": "3493883594a13c6d663101b5b10f54e2e73ba42dfe3395f185b89a13cf57e62b",
+          "size_bytes": 82699
+        },
+        {
+          "legacy_path": "mixed/README.md",
+          "path": "evidence/frozen/mixed/README.md",
+          "sha256": "a598a9fc54f33becf06f6a6f38db7843da706b2206d5ebb7c090c0403ea0ad44",
+          "size_bytes": 719
+        },
+        {
+          "legacy_path": "plan07-manifest.json",
+          "path": "evidence/frozen/plan07-manifest.json",
+          "sha256": "bbd28c1bd79242e1990a74b0dd99c9a52d85b2fae61ce85c3750c40e314e249f",
+          "size_bytes": 6017
+        },
+        {
+          "legacy_path": "PLAN07-REPORT.md",
+          "path": "evidence/frozen/PLAN07-REPORT.md",
+          "sha256": "2a3f373f1ede831783a7c3a36a1e93851f1bc361317ec46a1fb5c24dfe9f34d6",
+          "size_bytes": 268
+        },
+        {
+          "legacy_path": "README.md",
+          "path": "evidence/frozen/README.md",
+          "sha256": "15c1363a2f56101a59b1c0ea6d2a3ba890048e97468a6e48752858f32d48f998",
+          "size_bytes": 7780
+        },
+        {
+          "legacy_path": "VALIDATION.md",
+          "path": "evidence/frozen/VALIDATION.md",
+          "sha256": "6e857299957c52ab417b856e335ab8e92241332e045fb1309e42cfe91452739f",
+          "size_bytes": 2843
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/01-original.ifc",
+          "path": "window/batch/advancedproject-five-window/01-original.ifc",
+          "sha256": "86b068a7ca6947e398c1daaa8bede9d31048c3990adc308429faeb56ee01db94",
+          "size_bytes": 44337371
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/02-damaged.ifc",
+          "path": "window/batch/advancedproject-five-window/02-damaged.ifc",
+          "sha256": "65b576a99174d413eeed9c0517592a0f31a9b6f5fb68bd4d006d94ed18a4adcb",
+          "size_bytes": 44228167
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/03-repaired.ifc",
+          "path": "window/batch/advancedproject-five-window/03-repaired.ifc",
+          "sha256": "91e5295b0487389546bc575d294038c2669f052d41edef3813734234638c3a2a",
+          "size_bytes": 44242439
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/agent/provider-draft.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/agent/provider-draft.json",
+          "sha256": "4a51e8b52d4c5548003945ab6fabdaed0356a3dc2a4f8229794f16a6c71e8baa",
+          "size_bytes": 4559
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/agent/provider-metadata-stage2.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/agent/provider-metadata-stage2.json",
+          "sha256": "846f136b29b1efd6a27766a45f6fd79a67c0b95ca4254c137bd78ea2e83e0b83",
+          "size_bytes": 646
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/agent/repair-intent.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/agent/repair-intent.json",
+          "sha256": "8f0090c2c94de558f6e41bd392c16ac295f14c788d2fbf47eb284feb1dcaf9f3",
+          "size_bytes": 16617
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/changeset/bound-changeset.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "f2d38413df4d4d9adfacd2fbd4bcd72ead3b93b3292651e17834e2125468582b",
+          "size_bytes": 330884
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/changeset/semantic-manifests.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/changeset/semantic-manifests.json",
+          "sha256": "394adc6174f0485d417eef26331f1615f158cb5f6c657c0f705a99bfc402a849",
+          "size_bytes": 329263
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/FILES.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/FILES.json",
+          "sha256": "2d760fe02cd40e7811034f3b8df2be10be79720836651a3f8c7af5ab63ee8ac4",
+          "size_bytes": 5630
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/input/request.txt",
+          "path": "window/batch/advancedproject-five-window/request.txt",
+          "sha256": "84d139182480491227e3c1060a5aecbca054ead590184d0497d81017a1a500be",
+          "size_bytes": 2833
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/REPORT.md",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/REPORT.md",
+          "sha256": "3554629d8de97352308043ed48a8e475b67ef8d0e8abcd55df9cf6f685e0b6b8",
+          "size_bytes": 4980
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/validation/application.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/validation/application.json",
+          "sha256": "09fb48f4753f65f7070c00975250f24a043edd221f1f3b20930e188f1c21b186",
+          "size_bytes": 56875
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/validation/comparator-benchmark.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/validation/comparator-benchmark.json",
+          "sha256": "97bcd454480359fd4e068244ada07783dac5e0bd512d55989d8a702d6ba233f0",
+          "size_bytes": 5681
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/validation/mutation-manifest.private.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/validation/mutation-manifest.private.json",
+          "sha256": "4623d1096125523d6b021d9bf99c8a285e8b0fb47af5320ac10c59bb1c81dd45",
+          "size_bytes": 14358
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/validation/mutation-report.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/validation/mutation-report.json",
+          "sha256": "6b1d3c1b7abc958a53f7707e78419150622ea5606a36b62204b3745618f6227f",
+          "size_bytes": 3485
+        },
+        {
+          "legacy_path": "window/batch/advancedproject-five-window/validation/production-evaluation.json",
+          "path": "window/batch/advancedproject-five-window/evidence/authority/validation/production-evaluation.json",
+          "sha256": "efcf4a9c8f5755605f0cee45716baa0e05182ad5c3a27046789d982560124816",
+          "size_bytes": 948017
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/01-original.ifc",
+          "path": "window/batch/px4-five-window/01-original.ifc",
+          "sha256": "8c336ee9af66a55fb4cac26b608bef11ace5a3a0a490931205045e4f87b4c46d",
+          "size_bytes": 24868218
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/02-damaged.ifc",
+          "path": "window/batch/px4-five-window/02-damaged.ifc",
+          "sha256": "0630c9bd509bde693c3c3368bcea9e041a3af8d5d1c34d6f797c0f41fb7d0e6c",
+          "size_bytes": 25255202
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/03-repaired.ifc",
+          "path": "window/batch/px4-five-window/03-repaired.ifc",
+          "sha256": "7f5cc6c61b0007ff1616a9f567c545762a593f0df5b764c230337e514de0eb4a",
+          "size_bytes": 25270886
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/agent/provider-draft.json",
+          "path": "window/batch/px4-five-window/evidence/authority/agent/provider-draft.json",
+          "sha256": "c0a5fa6a612d3dfc339dedca2ec80e274ce825fbb66bdd9ecc00f9b76cd1f4a9",
+          "size_bytes": 4588
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/agent/repair-intent.json",
+          "path": "window/batch/px4-five-window/evidence/authority/agent/repair-intent.json",
+          "sha256": "35e33950fe046008314f026dd1392915704ea30713c182c4d2add6376fe399b4",
+          "size_bytes": 20915
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/changeset/bound-changeset.json",
+          "path": "window/batch/px4-five-window/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "fce2fabb431f18377353210ec6b55573e01efa637ed705a2b723e94989da0f03",
+          "size_bytes": 71854
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/changeset/semantic-manifests.json",
+          "path": "window/batch/px4-five-window/evidence/authority/changeset/semantic-manifests.json",
+          "sha256": "0aedcf0d6f137a9656648d996ecfbfffae48d801ccd355ab7f1ea64e7a306050",
+          "size_bytes": 49205
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/FILES.json",
+          "path": "window/batch/px4-five-window/evidence/authority/FILES.json",
+          "sha256": "98a696132e274628700bc748b51c57043c835655a120b18162be499e43884ffa",
+          "size_bytes": 2844
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/input/request.txt",
+          "path": "window/batch/px4-five-window/request.txt",
+          "sha256": "430c29d42b302bcb49c00f50c8caf9525f5391e97ea786b8765b0c7eeec99815",
+          "size_bytes": 3361
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/REPORT.md",
+          "path": "window/batch/px4-five-window/evidence/authority/REPORT.md",
+          "sha256": "317afc3125dcc02e3025b792b33705260e3da66009f9379ea7f8d432a1490415",
+          "size_bytes": 2713
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/validation/benchmark-result.json",
+          "path": "window/batch/px4-five-window/evidence/authority/validation/benchmark-result.json",
+          "sha256": "2a790898c143553348aae8422115f2172034bdcd679187704413896619a5d377",
+          "size_bytes": 901
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/validation/mutation-manifest.private.json",
+          "path": "window/batch/px4-five-window/evidence/authority/validation/mutation-manifest.private.json",
+          "sha256": "11b28604bc252433ee8e5b7bef82ddf6673861a80275849649bb65b50ed909f6",
+          "size_bytes": 16996
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/validation/mutation-report.json",
+          "path": "window/batch/px4-five-window/evidence/authority/validation/mutation-report.json",
+          "sha256": "8aff5941e66e3e7b53b89f66ddae8a219a056f27e46fa552de9eb4cfea86e116",
+          "size_bytes": 3961
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/validation/private-ground-truth-evaluation.json",
+          "path": "window/batch/px4-five-window/evidence/authority/validation/private-ground-truth-evaluation.json",
+          "sha256": "e0fc854e8ec8ff4cd4f3ec1778a4cbb47dd4ac1f543fc8c91ebc7174128ea1a4",
+          "size_bytes": 1133215
+        },
+        {
+          "legacy_path": "window/batch/px4-five-window/validation/production-evaluation.json",
+          "path": "window/batch/px4-five-window/evidence/authority/validation/production-evaluation.json",
+          "sha256": "04b2c7f00e5d1ca909423c35476a2bad90c94cc4c3c95b90f6f8c9b5aa4806bb",
+          "size_bytes": 121959
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/01-original.ifc",
+          "path": "window/batch/vvo-five-window/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/02-damaged.ifc",
+          "path": "window/batch/vvo-five-window/02-damaged.ifc",
+          "sha256": "7e0d474840ae2313fe4bdb56a903c8d04a2edca9f42c7591f212f8b7114aa904",
+          "size_bytes": 2428418
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/03-repaired.ifc",
+          "path": "window/batch/vvo-five-window/03-repaired.ifc",
+          "sha256": "e24e7f1b0f34bad45cd8160799a28589d03eb954793d5c353fa1c3ce5420ef93",
+          "size_bytes": 2441976
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/agent/provider-draft.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/agent/provider-draft.json",
+          "sha256": "dcd4ef54af888dd89df724d1d77d68d2b3eefc61f1673870049bc1f7204052a8",
+          "size_bytes": 4411
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/agent/provider-metadata-stage2.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/agent/provider-metadata-stage2.json",
+          "sha256": "532f9696ba4bf27a90d6667c0c15ab373df4cc636396136ed99cea2733d18490",
+          "size_bytes": 646
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/agent/repair-intent.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/agent/repair-intent.json",
+          "sha256": "af7ee7934ea32058a146b33666fa9399ae782ca91c02d7789528d4cd1cf9e33a",
+          "size_bytes": 16338
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/changeset/bound-changeset.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "4ab3b451796f4f3f796f4ea18adf803f423c66e003ccbb71e00d75331cc0b90f",
+          "size_bytes": 55083
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/FILES.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/FILES.json",
+          "sha256": "e5ab04a5a7293b9e3720585f2d66422742e208db0d510c60626293017a499f85",
+          "size_bytes": 5136
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/input/request.txt",
+          "path": "window/batch/vvo-five-window/request.txt",
+          "sha256": "3943cec87601175556944deb7f6d0d5f3cc07585adaa96295c70a25400203545",
+          "size_bytes": 2543
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/REPORT.md",
+          "path": "window/batch/vvo-five-window/evidence/authority/REPORT.md",
+          "sha256": "97d44c5bec2cf786434d8a2efd441e0c1e572291a05a14a8e9777c75927f32bf",
+          "size_bytes": 4239
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/validation/ifc-comparison.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "4c6c67a299e55bb4abb448353016bd218173112557a4e4bcff85d364713b7755",
+          "size_bytes": 35810
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/validation/mutation-manifest.private.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/validation/mutation-manifest.private.json",
+          "sha256": "970786e1dd16f6ad9b0cc8fdb3d25d2ba671966c7ccdd49b9f63eddf0f967340",
+          "size_bytes": 14007
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/validation/mutation-report.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/validation/mutation-report.json",
+          "sha256": "ad7c870eb7cd537002c7e9663ada2c39ebd9be4509694312ccc2e1dd48330aa0",
+          "size_bytes": 3412
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/validation/production-evaluation.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/validation/production-evaluation.json",
+          "sha256": "1b8b42237238268c91bb1e0f0c8464070f20b0c72beb56d4982bf62efe7571d4",
+          "size_bytes": 113654
+        },
+        {
+          "legacy_path": "window/batch/vvo-five-window/validation/run-summary.json",
+          "path": "window/batch/vvo-five-window/evidence/authority/validation/run-summary.json",
+          "sha256": "9a448f611f22e92b5835def4145d29ab9da33ffa02aabb2edb16fbf6cadf0084",
+          "size_bytes": 691
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/01-original.ifc",
+          "path": "window/single/largebuilding-full-replication/01-original.ifc",
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/02-damaged.ifc",
+          "path": "window/single/largebuilding-full-replication/02-damaged.ifc",
+          "sha256": "ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+          "size_bytes": 1287030
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/03-repaired.ifc",
+          "path": "window/single/largebuilding-full-replication/03-repaired.ifc",
+          "sha256": "2f26f1801ce666d61244fde7337aed2e7b3c0a835e768ac15a34e30fc5123b00",
+          "size_bytes": 1292245
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/agent/provider-draft.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/agent/provider-draft.json",
+          "sha256": "3f68b0e00b501e2cae9520d35d96cd6772bffb242f7d8cad0bd8d8fe7a42db63",
+          "size_bytes": 1688
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/agent/provider-metadata-stage2.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/agent/provider-metadata-stage2.json",
+          "sha256": "a1fbc1f5e93797ad69085ee77575159ac5911053fded587806732e8fed9a3efa",
+          "size_bytes": 646
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/agent/repair-intent.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/agent/repair-intent.json",
+          "sha256": "b02b57b416b24d9ad2ab202df6ee4bcc1b1e18e85fa148058bfcb01f39b6b69a",
+          "size_bytes": 12298
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/changeset/bound-changeset.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "bf44900693720869c35937e06b9bce1d155c1a74716f585bef653baf09ccdcb0",
+          "size_bytes": 109508
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/FILES.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/FILES.json",
+          "sha256": "d73fa4534618669f06bc4fba8f63dcbecf5bb39a24c0a5e38a29ddf9ce013cce",
+          "size_bytes": 6182
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/input/request.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/input/request.json",
+          "sha256": "2c6d548d7b706a9485565fa662ffad477a00b2f5c79ed668fff506bd6eefddc5",
+          "size_bytes": 3442
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/REPORT.md",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/REPORT.md",
+          "sha256": "591753660a3604805727fad0699b475f7d002a96eaa46e82116bbcc5e6db7c01",
+          "size_bytes": 5298
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/ifc-comparison.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "102aa5a7b93304d7946977ac57bc42020d2b392aa116a22f2b0b0619372da786",
+          "size_bytes": 6957
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/mutation-manifest.private.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/mutation-manifest.private.json",
+          "sha256": "c65b02ce0f87311d75369e8cd2f11ec88cb56a0a6e7d84f667eb78a217468dcf",
+          "size_bytes": 2905
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/mutation-report.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/mutation-report.json",
+          "sha256": "2523790f7d71d22cf0ee6fd8dea0e44cb88e08196c4811d653988cdaeee5662c",
+          "size_bytes": 1458
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/private-ground-truth-evaluation.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/private-ground-truth-evaluation.json",
+          "sha256": "efa9fddcc9a761da9b8d4ad0703c65a3caaf8998038d0e0bcaf8b9387e5b6619",
+          "size_bytes": 49184
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/production-evaluation.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/production-evaluation.json",
+          "sha256": "f52deb4e273d39abd8321f505a0c390d2dc8a8bd3a8b327b480605ba926da7da",
+          "size_bytes": 11292
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/run-summary.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/run-summary.json",
+          "sha256": "8d4d3c18f2f2253756281ef5684cdc173b91dccc953704628829bd53f3fb6ba9",
+          "size_bytes": 1335
+        },
+        {
+          "legacy_path": "window/single/largebuilding-full-replication/validation/window-comparison.json",
+          "path": "window/single/largebuilding-full-replication/evidence/authority/validation/window-comparison.json",
+          "sha256": "0811fa2ebfbb6248d6653ef74a26ab24546201af88013cc14699a6588c22b7da",
+          "size_bytes": 1589
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/01-original.ifc",
+          "path": "window/single/largebuilding-r22-repeat/01-original.ifc",
+          "sha256": "102f8123f85eae5e237d7f6a9dcbc364bd5f1c0cfb94b40a7eeb2d7eac9bb725",
+          "size_bytes": 1292595
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/02-damaged.ifc",
+          "path": "window/single/largebuilding-r22-repeat/02-damaged.ifc",
+          "sha256": "ca703845ddf4a434eea0317498fb29893877f87d66047cf6c890a61cd2844933",
+          "size_bytes": 1287030
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/03-repaired.ifc",
+          "path": "window/single/largebuilding-r22-repeat/03-repaired.ifc",
+          "sha256": "be464c323a3b956fa3e039e7e185bcc46f7b9a7e633dec069b7a6c32ebf3cb19",
+          "size_bytes": 1292695
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/agent/provider-draft.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/agent/provider-draft.json",
+          "sha256": "2b6f117191ba9b85c582ae5a8dd7b4969c8ef753004d4b16f2a6f9e4b0819238",
+          "size_bytes": 2992
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/agent/repair-intent.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/agent/repair-intent.json",
+          "sha256": "072bc05f7d3da07d08bfb69779b01f99215c92c7cd359c471467d936f5829d78",
+          "size_bytes": 13683
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/agent/stage1-response.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/agent/stage1-response.json",
+          "sha256": "59b549265ec6921cec2490941b0b9cc045e64112381addd519c2ae7c4d31c18d",
+          "size_bytes": 5589
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/agent/stage2-response.txt",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/agent/stage2-response.txt",
+          "sha256": "91eb4d3c4e41e9e4635124bc745d8f95801bb39b16135acc5f4ae35d58950325",
+          "size_bytes": 2979
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/changeset/bound-changeset.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/changeset/bound-changeset.json",
+          "sha256": "fd15223b8f8b26d9e450d69ef541e871f1a7f7717d11054af600c2736f278684",
+          "size_bytes": 117708
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/FILES.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/FILES.json",
+          "sha256": "34c2ee9ab3fb187aa64f8c63503d805fa520860f7368341241f2e1ede2e7214c",
+          "size_bytes": 3608
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/input/request.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/input/request.json",
+          "sha256": "5c36e3e8f6bbbede9ae5f46148dcae1cbbde17180ca49ec72fe7b7d655d918fd",
+          "size_bytes": 4029
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/REPORT.md",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/REPORT.md",
+          "sha256": "3f4e358f69a78f3b4cb5dac0f81d7f2427e30c43c794f33cb062257aa9b27ec5",
+          "size_bytes": 3287
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/ifc-comparison.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/ifc-comparison.json",
+          "sha256": "29b932eaffda3e70d3f39e4921e38b2e1a5543e2388cbc91bf7b627f7aef0d2b",
+          "size_bytes": 6957
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/mutation-manifest.private.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/mutation-manifest.private.json",
+          "sha256": "c65b02ce0f87311d75369e8cd2f11ec88cb56a0a6e7d84f667eb78a217468dcf",
+          "size_bytes": 2905
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/mutation-report.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/mutation-report.json",
+          "sha256": "de412e6a1511b028b3d850ad9969735a784494b4b31492f657521af65c1adc6a",
+          "size_bytes": 1583
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/phase10.5-uat-result.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/phase10.5-uat-result.json",
+          "sha256": "c6d2a0104eb7efe847364ace245ec3a97bf900040b9cb85b5276ca0023833b50",
+          "size_bytes": 11664
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/private-ground-truth-evaluation.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/private-ground-truth-evaluation.json",
+          "sha256": "e4e43eebbe4ea7941411184246c7e23e96c74f1088e7e890ffb197899f5134f7",
+          "size_bytes": 114303
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/production-evaluation.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/production-evaluation.json",
+          "sha256": "3374bc0e2273049eb85b580c2fda2c0985812982497f51fa9900d4d42ca0ce7a",
+          "size_bytes": 12311
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/run-summary.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/run-summary.json",
+          "sha256": "0a24faa015bbb1e9e88d868afc6530c45adae6e50ab166b5f7e3c220cf7618a9",
+          "size_bytes": 1863
+        },
+        {
+          "legacy_path": "window/single/largebuilding-r22-repeat/validation/window-comparison.json",
+          "path": "window/single/largebuilding-r22-repeat/evidence/authority/validation/window-comparison.json",
+          "sha256": "22e9a2d8f3a9f0b4e64c89fc984a749d16735b9406c09faa2bb04b08d69f138e",
+          "size_bytes": 1585
+        },
+        {
+          "legacy_path": "WINDOW-CASES-SUMMARY.md",
+          "path": "evidence/frozen/WINDOW-CASES-SUMMARY.md",
+          "sha256": "a482cb440f568b344c02a2bce1e8b7eb1770966565ac5205b0719ac1a1899d1c",
+          "size_bytes": 5501
+        }
+      ]
+    }
+  ],
+  "legacy_authority": "dataset/processed/proof/ifc-repair-success-cases"
+}

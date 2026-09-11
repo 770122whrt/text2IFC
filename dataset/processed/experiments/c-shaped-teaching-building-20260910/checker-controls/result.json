@@ -1,0 +1,56 @@
+{
+  "status": "passed",
+  "positive_check_count": 485,
+  "negative_controls": [
+    {
+      "case": "filled_courtyard",
+      "status": "expected_rejection",
+      "required_failure": "plate_3:native_volume",
+      "observed": [
+        "plate_3:native_volume",
+        "plate_3:coverage:6.0:6.0",
+        "plate_3:coverage:6.0:9.0",
+        "plate_3:coverage:9.0:6.0",
+        "plate_3:coverage:9.0:9.0",
+        "plate_3:coverage:12.0:6.0",
+        "plate_3:coverage:12.0:9.0"
+      ]
+    },
+    {
+      "case": "missing_floor_void",
+      "status": "expected_rejection",
+      "required_failure": "plate_1:opening_count",
+      "observed": [
+        "plate_1:native_volume",
+        "plate_1:coverage:1.0:6.0",
+        "plate_1:coverage:1.0:9.0",
+        "plate_1:opening_count"
+      ]
+    },
+    {
+      "case": "wrong_material",
+      "status": "expected_rejection",
+      "required_failure": "wall_material",
+      "observed": [
+        "wall_material"
+      ]
+    },
+    {
+      "case": "wrong_door_operation",
+      "status": "expected_rejection",
+      "required_failure": "all_doors_match",
+      "observed": [
+        "all_doors_match"
+      ]
+    },
+    {
+      "case": "unrequested_property",
+      "status": "expected_rejection",
+      "required_failure": "no_unsolicited_properties",
+      "observed": [
+        "no_unsolicited_properties"
+      ]
+    }
+  ],
+  "evidence_class": "offline_evaluator_controls_not_provider"
+}

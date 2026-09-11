@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="9" time="19.059" timestamp="2026-09-09T11:24:40.737732+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_prints_mimo_question_before_reading_user_answer" time="1.247" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_quit_records_incomplete_without_ifc" time="0.395" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_reprompts_empty_clarification_answer" time="0.507" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_acknowledges_answer_before_rerunning_design_brief" time="0.533" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_ready_session_compiles_ifc_with_fix_acceptance_report" time="1.025"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\repl-repro-20260909\\test_live_repl_ready_session_c0\\phase6.2-fix-repl\\final-acceptance.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/repl-repro-20260909/test_live_repl_ready_session_c0')
+
+    def test_live_repl_ready_session_compiles_ifc_with_fix_acceptance_report(tmp_path):
+        from scripts.agent import run_text2ifc_chat
+    
+        root = tmp_path / "phase6.2-fix-repl"
+        output = io.StringIO()
+        answers = iter([ORIGINAL_REQUEST, ANSWER_TEXT])
+    
+        def invoke(transcript, call_index):
+            if call_index == 1:
+                call = _call(
+                    call_index,
+                    original_request=transcript[0]["content"],
+                    status="needs_clarification",
+                )
+            else:
+                call = _call(
+                    call_index,
+                    original_request=transcript[0]["content"],
+                    status="ready",
+                    source_turns=["turn-user-001", "turn-user-003"],
+                )
+            _write_design_brief_trace_fixture(root, call_index, transcript, call.brief)
+            return call
+    
+        candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        audit = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _SequenceLiveProvider([candidate, audit])
+    
+        exit_code = run_text2ifc_chat.main(
+            [
+                "--live",
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            design_brief_invoker=invoke,
+            live_provider_factory=lambda: provider,
+            input_func=lambda prompt: next(answers),
+            stdout=output,
+        )
+    
+&gt;       final = json.loads((root / "final-acceptance.json").read_text(encoding="utf-8"))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_phase6_2_fix_repl_cli.py:313: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/repl-repro-20260909/test_live_repl_ready_session_c0/phase6.2-fix-repl/final-acceptance.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\repl-repro-20260909\\test_live_repl_ready_session_c0\\phase6.2-fix-repl\\final-acceptance.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_repl_chat_script_path_help_runs_from_repo_root" time="1.457" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_default_live_repl_design_brief_trace_is_session_scoped" time="10.275" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_routes_geometry_failure_through_audit_before_final_status" time="0.981"><failure message="assert 2 == 0">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/repl-repro-20260909/test_live_repl_routes_geometry0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000271FA243D10&gt;
+
+    def test_live_repl_routes_geometry_failure_through_audit_before_final_status(
+        tmp_path, monkeypatch
+    ):
+        from scripts.agent import run_text2ifc_chat
+    
+        root = tmp_path / "phase6.2-fix-repl"
+        output = io.StringIO()
+        answers = iter([ORIGINAL_REQUEST, ANSWER_TEXT])
+    
+        def invoke(transcript, call_index):
+            if call_index == 1:
+                call = _call(
+                    call_index,
+                    original_request=transcript[0]["content"],
+                    status="needs_clarification",
+                )
+            else:
+                call = _call(
+                    call_index,
+                    original_request=transcript[0]["content"],
+                    status="ready",
+                    source_turns=["turn-user-001", "turn-user-003"],
+                )
+            _write_design_brief_trace_fixture(root, call_index, transcript, call.brief)
+            return call
+    
+        candidate = _geometry_blocked_candidate()
+        regenerated_candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        audit = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _SequenceLiveProvider([candidate, audit, audit])
+        _install_scoped_result(monkeypatch, regenerated_candidate)
+    
+        exit_code = run_text2ifc_chat.main(
+            [
+                "--live",
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            design_brief_invoker=invoke,
+            live_provider_factory=lambda: provider,
+            input_func=lambda prompt: next(answers),
+            stdout=output,
+        )
+    
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        try:
+            session = store.list_sessions()[0]
+        finally:
+            store.close()
+        rendered = output.getvalue()
+        run_dir = root / "runs" / session.session_hash
+    
+&gt;       assert exit_code == 0
+E       assert 2 == 0
+
+tests\agent\test_phase6_2_fix_repl_cli.py:495: AssertionError</failure></testcase><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_records_provider_failure_without_traceback" time="0.803"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\repl-repro-20260909\\test_live_repl_records_provide0\\phase6.2-fix-repl\\runs\\9f569cabfe438182\\generator\\provider-error.json'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/repl-repro-20260909/test_live_repl_records_provide0')
+
+    def test_live_repl_records_provider_failure_without_traceback(tmp_path):
+        from scripts.agent import run_text2ifc_chat
+    
+        root = tmp_path / "phase6.2-fix-repl"
+        output = io.StringIO()
+    
+        def invoke(transcript, call_index):
+            call = _call(
+                call_index,
+                original_request=transcript[0]["content"],
+                status="ready",
+                source_turns=["turn-user-001"],
+            )
+            _write_design_brief_trace_fixture(root, call_index, transcript, call.brief)
+            return call
+    
+        class FailingProvider:
+            def generate_live(self, *, session_id, prompt, schema, state):
+                del prompt, schema, state
+                raise ProviderOutputError(
+                    "OpenAI-compatible live request failed for generator: RuntimeError",
+                    details={
+                        "provider": "deepseek-openai-compatible",
+                        "failure_class": "provider_connection_error",
+                        "exception_type": "RuntimeError",
+                        "session_id": session_id,
+                        "request": {"model": "deepseek-v4-flash", "max_tokens": 8192},
+                    },
+                )
+    
+        exit_code = run_text2ifc_chat.main(
+            [
+                "--live",
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            design_brief_invoker=invoke,
+            live_provider_factory=FailingProvider,
+            input_func=lambda prompt: ORIGINAL_REQUEST,
+            stdout=output,
+        )
+    
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        try:
+            session = store.list_sessions()[0]
+            export = store.session_export_payload(session.session_id)
+        finally:
+            store.close()
+        run_dir = root / "runs" / session.session_hash
+        provider_error = json.loads(
+&gt;           (run_dir / "generator" / "provider-error.json").read_text(encoding="utf-8")
+        )
+
+tests\agent\test_phase6_2_fix_repl_cli.py:599: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/repl-repro-20260909/test_live_repl_records_provide0/phase6.2-fix-repl/runs/9f569cabfe438182/generator/provider-error.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\repl-repro-20260909\\test_live_repl_records_provide0\\phase6.2-fix-repl\\runs\\9f569cabfe438182\\generator\\provider-error.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase></testsuite></testsuites>

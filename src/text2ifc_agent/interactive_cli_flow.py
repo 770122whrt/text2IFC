@@ -51,7 +51,8 @@ from .staged_generation import build_skeleton_workspace, run_staged_generation
 from .state import redact_metadata
 
 
-DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.1"
+DESIGN_BRIEF_TEMPLATE_ID = "design-brief.v2.3"
+DESIGN_REVIEW_BRIEF_TEMPLATE_ID = "design-brief.v2.4"
 SCAFFOLD_ELIGIBLE_DYNAMIC_ISSUES = {
     "EXPECTED_ENTITY_MISSING",
     "OPENING_FILL_RELATIONSHIP_MISSING",
@@ -142,23 +143,33 @@ def make_openai_design_brief_invoker(
     config: OpenAICompatRuntimeConfig,
     run_dir: Path | str,
     client_factory: Callable[..., Any] | None = None,
+    design_review_enabled: bool = False,
+    design_brief_schema_version: str = 'text2ifc/design-brief/2.1',
 ) -> DesignBriefInvoker:
     """Create a Design Brief invoker backed by OpenAI-compatible Chat Completions."""
 
     root = Path(run_dir)
     client = _openai_client(config=config, client_factory=client_factory)
+    from .generation_budget import GenerationBudget
 
     def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
         if not transcript:
             raise ValueError("Design Brief invocation requires transcript")
         original_request = str(transcript[0].get("content", ""))
         call_dir = root / "calls" / f"{call_index:02d}-design-brief"
-        call_dir.mkdir(parents=True, exist_ok=True)
+        try:
+            call_dir.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            raise OpenAICompatError("DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS",
+                                    evidence={"call_index": call_index, "transport_attempted": False}) from None
+        budget = GenerationBudget(root)
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
+            schema_version="bim-json/2.1",
         )
-        schema = load_design_brief_schema("text2ifc/design-brief/2.0")
+        from .design_brief import design_brief_template_id
+        schema = load_design_brief_schema(design_brief_schema_version)
         renderer_inputs = {
             "USER_REQUEST": original_request,
             "CONVERSATION": transcript,
@@ -167,7 +178,7 @@ def make_openai_design_brief_invoker(
             "FEW_SHOTS": selection["few_shots"],
         }
         rendered = render_prompt(
-            template_id=DESIGN_BRIEF_TEMPLATE_ID,
+            template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
             inputs=renderer_inputs,
         )
         request = {
@@ -177,8 +188,28 @@ def make_openai_design_brief_invoker(
             "response_format": {"type": "json_object"},
         }
         request.update(token_limit_request(config))
-        response = client.chat.completions.create(**request)
+        # Persist the attempt before transport/parsing: even an unusable response
+        # is real evidence, and must not disappear from the review lineage.
+        _write_json(call_dir / "conversation.json", transcript)
+        _write_json(call_dir / "context-selection.json", selection)
+        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
+        _write_json(call_dir / "request.redacted.json", request)
+        import time
+        reservation = budget.reserve(stage='design_brief',
+            reserved_tokens=len(rendered['text'].encode('utf-8')) + config.max_completion_tokens)
+        started = time.monotonic()
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception as error:
+            budget.settle(reservation, elapsed_seconds=time.monotonic()-started, failed=True)
+            failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
+            _write_json(call_dir / "transport-failure.json", failure)
+            # Provider exceptions may contain credentials or private endpoint URLs.
+            raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
         payload = _object_to_dict(response)
+        _write_json(call_dir / "response.raw.json", payload)
+        budget.settle(reservation, usage=payload.get('usage', {}), elapsed_seconds=time.monotonic()-started)
         evidence = parse_chat_completion_evidence(
             payload,
             request=request,
@@ -237,6 +268,8 @@ def make_openai_design_brief_invoker(
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],
+            expected_schema_version=design_brief_schema_version,
+            conversation=transcript,
         )
         serialized_issues = [
             {
@@ -276,6 +309,44 @@ def make_openai_design_brief_invoker(
             },
             metrics=metrics,
         )
+        from .brief_semantic_repair import semantic_repair_eligible, repair_semantic_brief
+        if semantic_repair_eligible(parsed, issues):
+            from .generation_budget import BudgetedProvider
+            from .openai_compat import OpenAICompatibleLiveProvider
+            _write_json(call_dir / 'initial-validation.json', {'valid': False, 'issues': serialized_issues})
+            repaired = repair_semantic_brief(
+                provider=BudgetedProvider(OpenAICompatibleLiveProvider(config=config, client_factory=lambda **_: client), budget),
+                output_dir=call_dir/'semantic-repair', brief=parsed,
+                case={'user_request': original_request, 'conversation': transcript},
+                evidence_catalog=selection['evidence'], session_id=f'brief-{call_index}-semantic-repair')
+            serialized_issues = repaired['issues']
+            issues = serialized_issues
+            metrics['semantic_repair'] = {key: value for key, value in repaired.items() if key != 'brief'}
+            metrics['schema_semantic_valid'] = repaired['valid']
+            _write_json(call_dir / 'metrics.json', metrics)
+            _write_json(call_dir / 'validation.json', {'valid': repaired['valid'],
+                'issue_count': len(serialized_issues), 'issues': serialized_issues})
+            if repaired['valid']:
+                parsed = repaired['brief']
+        from .brief_plan_repair import plan_repair_eligible, repair_plan_brief
+        if plan_repair_eligible(parsed, serialized_issues):
+            from .generation_budget import BudgetedProvider
+            from .openai_compat import OpenAICompatibleLiveProvider
+            _write_json(call_dir / 'initial-plan-validation.json', {'valid': False, 'issues': serialized_issues})
+            repaired = repair_plan_brief(
+                provider=BudgetedProvider(OpenAICompatibleLiveProvider(config=config, client_factory=lambda **_: client), budget),
+                output_dir=call_dir/'plan-repair', brief=parsed,
+                case={'user_request': original_request, 'conversation': transcript},
+                evidence_catalog=selection['evidence'], session_id=f'brief-{call_index}-plan-repair')
+            serialized_issues = repaired['issues']
+            issues = serialized_issues
+            metrics['plan_repair'] = {key: value for key, value in repaired.items() if key != 'brief'}
+            metrics['schema_semantic_valid'] = repaired['valid']
+            _write_json(call_dir / 'metrics.json', metrics)
+            _write_json(call_dir / 'validation.json', {'valid': repaired['valid'],
+                'issue_count': len(serialized_issues), 'issues': serialized_issues})
+            if repaired['valid']:
+                parsed = repaired['brief']
         if issues:
             raise OpenAICompatError(
                 "OpenAI-compatible Design Brief failed schema validation",
@@ -338,9 +409,27 @@ def run_design_brief_clarification_loop(
     )
     persisted_turn_count = 1
 
-    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
-    controller = controller.record_model_call(first_call)
-    _record_call(store, stored_session.session_id, first_call)
+    saved_calls = [row["payload"] for row in store.session_export_payload(session)["agent_calls"]
+                   if row["payload"].get("role") == "design_brief"]
+    if saved_calls:
+        stored_turns = store.list_turns(session)
+        for row in saved_calls:
+            call = _restore_design_brief_call(row, stored_session.run_dir)
+            if not controller.calls:
+                controller = controller.record_model_call(call)
+            else:
+                answer = stored_turns[len(controller.transcript)]
+                if answer.role != "user":
+                    raise ValueError("CLARIFICATION_RESUME_TRANSCRIPT_MISMATCH")
+                controller = controller.answer_and_rerun(
+                    answer=answer.text, invoke_design_brief=lambda _turns, _index: call)
+        if [(t.role, t.content) for t in controller.transcript] != [(t.role, t.text) for t in stored_turns]:
+            raise ValueError("CLARIFICATION_RESUME_TRANSCRIPT_MISMATCH")
+        persisted_turn_count = len(stored_turns)
+    else:
+        first_call = invoke_design_brief(controller.transcript_dicts(), 1)
+        controller = controller.record_model_call(first_call)
+        _record_call(store, stored_session.session_id, first_call)
     persisted_turn_count = _persist_new_turns(
         store=store,
         session_id=stored_session.session_id,
@@ -412,6 +501,52 @@ def run_ready_session_to_ifc(
     trace_level: str | None = "debug",
     progress: Callable[[str, dict[str, Any]], None] | None = None,
     generation_strategy: str = "legacy_full",
+    budget_limits: Any = None,
+) -> SessionIfcResult:
+    """Run the public chain, returning a non-publishing terminal budget result."""
+    from .generation_budget import GenerationBudgetExceeded
+    try:
+        return _run_ready_session_to_ifc(store=store, session=session,
+            provider_factory=provider_factory, trace_level=trace_level, progress=progress,
+            generation_strategy=generation_strategy, budget_limits=budget_limits)
+    except GenerationBudgetExceeded as error:
+        stored = store.get_session(session)
+        _write_json(stored.run_dir/'generation-budget-decision.json', {
+            'schema_version':'text2ifc/generation-budget-decision/1.0',
+            'status':'budget_blocked', 'publication_permitted':False,
+            'reason':str(error), 'evidence':error.evidence})
+        store.mark_session_status(stored.session_id, 'budget_blocked')
+        store.export_session(stored.session_id)
+        return SessionIfcResult(session_id=stored.session_id, session_hash=stored.session_hash,
+            status='budget_blocked', generator_status='budget_blocked',
+            repair_route='blocked_failure', audit_status='not_accepted', ifc_path=None, report_path=None)
+    except ProviderOutputError as error:
+        stored = store.get_session(session)
+        stage = getattr(error, '_text2ifc_stage', 'provider')
+        failure = _record_provider_failure(store=store, stored_session=stored, stage=stage, exc=error)
+        artifact = getattr(error, '_text2ifc_failure_artifact', None)
+        if artifact is not None:
+            store.record_artifact(stored.session_id, kind='provider_failure_attempt',
+                path=Path('runs') / stored.session_hash / artifact)
+        _write_provider_failure_issues(store=store, stored_session=stored,
+            stage=stage, error_payload=failure)
+        store.export_session(stored.session_id)
+        metrics = _read_optional_json(stored.run_dir / 'generator/metrics.json') or {}
+        return SessionIfcResult(session_id=stored.session_id, session_hash=stored.session_hash,
+            status='provider_failed', generator_status=str(metrics.get('status', 'not_reported')),
+            repair_route='blocked_failure', audit_status='provider_failed' if stage == 'audit' else 'not_accepted',
+            ifc_path=None, report_path=None)
+
+
+def _run_ready_session_to_ifc(
+    *,
+    store: SessionStore,
+    session: str,
+    provider_factory: Callable[[], Any],
+    trace_level: str | None = "debug",
+    progress: Callable[[str, dict[str, Any]], None] | None = None,
+    generation_strategy: str = "legacy_full",
+    budget_limits: Any = None,
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
 
@@ -419,7 +554,22 @@ def run_ready_session_to_ifc(
     if stored_session.status != "ready":
         raise ValueError("Phase 6.2 IFC generation requires a ready session")
 
+    from .generation_budget import GenerationBudget, BudgetedProvider
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+    raw_provider_factory = provider_factory
+    provider_factory = lambda: BudgetedProvider(raw_provider_factory(), budget)
+
     design_dir = _prepare_design_source(stored_session)
+    from .design_review import load_design_review_context
+    review_context = load_design_review_context(stored_session.run_dir, design_dir / "conversation.json")
+    brief_metrics = _read_required_json(design_dir / "metrics.json")
+    trace_path = design_dir / "trace-manifest.json"
+    brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
+    if review_context is None and (
+        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15'}
+        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15'}
+    ):
+        raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
     expected_facts_path = write_expected_facts(
         case_dir=stored_session.run_dir,
@@ -864,6 +1014,7 @@ def run_ready_session_to_ifc(
         )
 
     _emit_progress(progress, "final_acceptance", {"status": "started"})
+    budget.assert_publishable()
     final = run_final_acceptance_stage(
         case_dir=stored_session.run_dir,
         output_dir=stored_session.run_dir,
@@ -1203,6 +1354,15 @@ def _attempt_geometry_repair_after_audit(
     repair_attempt_count: int,
 ) -> dict[str, Any] | None:
     run_dir = stored_session.run_dir
+    # None from the scoped loop can mean a deliberate refusal, not "try a
+    # different repair mechanism". Honor the current persisted decision before
+    # the legacy fallback can reserve budget or instantiate a provider.
+    decision = _read_optional_json(run_dir / "route-decision.json")
+    if decision is not None and (
+        decision.get("retry_allowed") is not True
+        or decision.get("route") not in {"regenerate_json", "repair_json"}
+    ):
+        return None
     audit_report_path = run_dir / "audit" / "audit-report.json"
     geometry_feedback_path = run_dir / "geometry-feedback.json"
     if not audit_report_path.is_file() or not geometry_feedback_path.is_file():
@@ -1311,7 +1471,7 @@ def _run_staged_initial_generation(
             "status": classification,
             "contract_status": classification,
             "classification": classification,
-            "schema_version": "bim-json/2.0" if classification == "formal" else None,
+            "schema_version": result['candidate'].get('schema_version') if classification == "formal" else None,
             "diagnostics": diagnostics,
         },
     )
@@ -2103,6 +2263,24 @@ def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None
     _write_json(metrics_path, metrics)
 
 
+def _restore_design_brief_call(row: Mapping[str, Any], run_dir: Path) -> ClarificationCall:
+    """Rebuild a persisted call without invoking Provider or overwriting evidence."""
+    if isinstance(row.get("call"), Mapping):
+        return ClarificationCall(**row["call"])
+    directory = Path(str(row["artifact_dir"]))
+    if not directory.is_absolute():
+        directory = run_dir / directory
+    directory = directory.resolve()
+    if not directory.is_relative_to(run_dir.resolve()):
+        raise ValueError("CLARIFICATION_RESUME_ARTIFACT_OUTSIDE_SESSION")
+    brief = _read_required_json(directory / "design-brief.json")
+    selection = _read_required_json(directory / "context-selection.json")
+    return ClarificationCall(
+        call_index=int(row["call_index"]), response_id=str(row["response_id"]),
+        prompt_template_id=str(row["prompt_template_id"]), prompt_template_hash=str(row["prompt_template_hash"]),
+        artifact_dir=str(directory), brief=brief, evidence_catalog=selection["evidence"])
+
+
 def _record_call(store: SessionStore, session_id: str, call: ClarificationCall) -> None:
     store.record_agent_call(
         session_id,
@@ -2114,6 +2292,7 @@ def _record_call(store: SessionStore, session_id: str, call: ClarificationCall) 
             "prompt_template_hash": call.prompt_template_hash,
             "artifact_dir": call.artifact_dir,
             "status": call.brief.get("status"),
+            "call": call.to_dict(),
         },
     )
 
@@ -2394,6 +2573,8 @@ def _write_phase6_2_session_report(
         _json_block(artifacts),
         "",
     ]
+    from .design_review import design_review_report_lines
+    lines.extend(design_review_report_lines(session.run_dir))
     (session.run_dir / "report.md").write_text("\n".join(lines), encoding="utf-8")
 
 

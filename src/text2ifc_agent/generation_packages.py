@@ -133,14 +133,8 @@ def build_generation_package_manifest(
                 for opening_index, opening in enumerate(openings):
                     if not isinstance(opening.get("bounds"), Mapping):
                         continue
-                    opening_id = _component_id(
-                        opening,
-                        (
-                            f"opening-{component_id}-stair"
-                            if opening_index == 0
-                            else f"opening-{component_id}-stair-{opening_index + 1}"
-                        ),
-                    )
+                    from .cross_storey_identity import floor_opening_id
+                    opening_id = floor_opening_id(opening, component_id, opening_index)
                     cross_components.append(opening_id)
                     relationship_id = (
                         f"rel-voids-{component_id}"
@@ -221,6 +215,14 @@ def build_generation_package_manifest(
                 "allowed_reference_ids": sorted({*storey_ids, *cross_refs}),
             }
         )
+    type_expectations = [e for e in expected_facts.get('semantic_expectations', []) if e.get('kind') == 'type']
+    if type_expectations:
+        packages.append({
+            'package_id': 'package-semantic-types', 'kind': 'semantic_types', 'storey_id': None,
+            'owned_component_ids': sorted({e['value'] for e in type_expectations}),
+            'owned_relationship_ids': sorted({f"rel-type-{e['entity_id']}" for e in type_expectations}),
+            'allowed_reference_ids': sorted({e['entity_id'] for e in type_expectations}),
+        })
     return {
         "schema_version": MANIFEST_VERSION,
         "status": "ready",
@@ -243,10 +245,8 @@ def _slab_openings(record: Mapping[str, Any]) -> list[dict[str, Any]]:
 
 
 def _stair_flight_ids(record: Mapping[str, Any], stair_id: str) -> list[str]:
-    explicit = record.get("flight_ids")
-    if isinstance(explicit, list) and explicit:
-        return _ordered_unique([str(item) for item in explicit if str(item)])
-    return [stair_id.replace("stair-", "stair-flight-", 1)]
+    from .cross_storey_identity import stair_flight_ids
+    return stair_flight_ids(record, stair_id)
 
 
 def _valid_linear_product_geometry(value: Any) -> bool:

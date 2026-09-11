@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="0.714" timestamp="2026-09-10T22:13:37.296930+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_brief_prompt_output_version" name="test_current_brief_final_instruction_matches_its_schema[False]" time="0.094"><failure message="AssertionError: assert ['text2ifc/design-brief/2.0'] == ['text2ifc/design-brief/2.3']&#10;  &#10;  At index 0 diff: 'text2ifc/design-brief/2.0' != 'text2ifc/design-brief/2.3'&#10;  Use -v to get more diff">design_review_enabled = False
+
+    @pytest.mark.parametrize('design_review_enabled', [False, True])
+    def test_current_brief_final_instruction_matches_its_schema(design_review_enabled):
+        version = 'text2ifc/design-brief/2.3'
+        template = design_brief_template_id(version, design_review_enabled=design_review_enabled)
+        result = render_prompt(template_id=template, inputs={
+            'USER_REQUEST': '创建一间教室。', 'CONVERSATION': [],
+            'DESIGN_BRIEF_SCHEMA': {'properties': {'schema_version': {'const': version}}},
+            'EVIDENCE_CATALOG': [], 'FEW_SHOTS': []})
+        instructions = re.findall(r'现在只返回一个满足 (\S+) Schema', result['text'])
+&gt;       assert instructions == [version]
+E       AssertionError: assert ['text2ifc/design-brief/2.0'] == ['text2ifc/design-brief/2.3']
+E         
+E         At index 0 diff: 'text2ifc/design-brief/2.0' != 'text2ifc/design-brief/2.3'
+E         Use -v to get more diff
+
+tests\agent\test_brief_prompt_output_version.py:19: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_prompt_output_version" name="test_current_brief_final_instruction_matches_its_schema[True]" time="0.066" /></testsuite></testsuites>

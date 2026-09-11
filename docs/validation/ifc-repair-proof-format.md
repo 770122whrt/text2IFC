@@ -1,8 +1,18 @@
 # IFC Repair Proof 人类可读收纳规范
 
-本文定义 BimNet 已接受 IFC repair Proof 的标准展示格式。它解决两个问题：人应当能在几次点击内找到请求、输入、输出和结论；机器仍应能从不可变的权威包复算完整证据。
+本文定义 text2IFC 已接受 IFC repair Proof 的标准展示格式。它解决两个问题：人应当能在几次点击内找到请求、输入、输出和结论；机器仍应能从不可变的权威包复算完整证据。
 
 本规范不替代 phase SPEC、冻结 acceptance contract、Proof validator 或 `docs/validation/agent-capability-evaluation.md`。发生冲突时，适用的冻结合同和验证协议优先。
+
+## 当前人读入口与路径约定
+
+人读视图统一放在 `dataset/processed/proof/{generation,repair}/<phase>/<collection>/`，集合状态保存在索引中。经用户批准的集中迁移采用 `text2ifc/workflow-proof-package/0.1`：案例根 IFC 与 evidence 共享一份内容，legacy_bundles 映射旧路径并保存原始哈希和大小。冻结机器合同与验收状态不改写。
+
+新视图采用 additive `text2ifc/workflow-human-proof/0.1` 索引：artifacts 绑定仓库内明确 evidence roots 的文件，request 从 JSON 字段提取时显式记录 field。复制文件保留原字节；generation 不使用 repair 三元组。旧 schema 和机器 FILES 不改写。
+
+每案根目录直接放 `request.txt`、编号 IFC 和 `REPORT.md`。旧人读报告／FILES 如需保留放在 evidence/prior-*，其中旧相对路径属于历史上下文，当前导航以 evidence/README.md 为准。
+
+新视图验证：`scripts/proof/validate_human_views.py --root <collection>`。旧 `validate_human_proof_layout.py` 继续只验证其原 0.1 本地 authority 合同，不用于跨目录新视图。以下旧布局说明作为兼容背景保留。
 
 ## 1. 两层证据模型
 
@@ -11,7 +21,7 @@
 1. **人类可读视图**：集合根目录的 `README.md`、`REPORT.md`、`manifest.json`，以及按 `family/kind/case-id` 分类的案例目录。它负责导航、解释、直接展示必要 IFC。
 2. **机器权威包**：既有 curator/proof/run package。它保存 Provider attempts、Prompt/profile、intent、resolution、candidate/admissibility、ChangeSet、apply、terminal、evaluation、hash 和独立复算结果。
 
-人类视图是 additive discovery layer，不移动、不重命名、不改写 accepted machine authority。二者若有差异，必须停止发布并调查；不能靠修改报告掩盖差异。
+普通展示维护仍为 additive discovery layer，不迁移或改写 accepted machine authority。已批准的集中包迁移是明确例外，必须保留逐字节还原索引并完成适用冻结验证。二者若有差异，必须停止发布并调查；不能靠修改报告掩盖差异。
 
 ## 2. 标准目录
 
@@ -52,7 +62,7 @@
 ### 案例级文件
 
 - `REPORT.md`：结论、Provider call count、语义结果、确定性执行、产物、Proof 结论和限制。
-- `input/request.txt`：实际公共 repair request；不含 private Gold、mutation truth 或 pristine-only facts。
+- `request.txt`：实际公共 repair request（旧视图保留 `input/request.txt` 来源副本）；不含 private Gold、mutation truth 或 pristine-only facts。
 - `02-damaged.ifc`：实际进入 production repair path 的输入。
 - `03-repaired.ifc`：成功发布并可 reopen 的修复输出。成功案必须直接可见。
 - `01-original.ifc`：可选。只有 original 角色合法且明确时才允许出现。
@@ -116,7 +126,7 @@ full curator 的典型触发条件只有：新 accepted run 安装、re-curation
 ## 8. 当前验证入口
 
 ```powershell
-.venv\Scripts\python scripts\ifc_repair\validate_human_proof_layout.py --root dataset\processed\proof\repair-milestone-r1 --json
+.venv\Scripts\python scripts\proof\validate_human_views.py --root dataset\processed\proof\repair\phase12.1\r1
 .venv\Scripts\python scripts\ifc_repair\install_plan07_human_proof.py --validate-only
 .venv\Scripts\python -m pytest tests\ifc_repair\test_plan07_human_proof_install.py -q
 ```

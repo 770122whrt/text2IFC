@@ -1,0 +1,15 @@
+请一次性修复以下共 5 扇窗，并作为一个统一 ChangeSet 原子执行：
+1. 在 标高 1 的墙“基本墙:常规 - 240:222380”（GlobalId: 03SCVysybE5QR$e8dtXVfQ）上，以wall_local_start 为基准，沿墙 Axis 正方向 758.105 mm 处设置洞口中心；洞口宽 840 mm、高 1775 mm，窗台高 345 mm；复用损伤 IFC 中仍存在的窗型“840x1775”（GlobalId: 1F2LRTmm9Cq8Zp5i$s9Iwy），窗完整填充洞口。
+   属性要求：Pset_QuantityTakeOff.Reference="840x1775" (IfcIdentifier)、Pset_WindowCommon.IsExternal=true (IfcBoolean)、Pset_WindowCommon.Reference="840x1775" (IfcIdentifier)、Pset_WindowCommon.ThermalTransmittance=3.6886 (IfcThermalTransmittanceMeasure)
+2. 在 标高 1 的墙“基本墙:常规 - 240:217762”（GlobalId: 1aUf$RNz1A_AvssKHMHdxj）上，以wall_local_start 为基准，沿墙 Axis 正方向 605 mm 处设置洞口中心；洞口宽 370 mm、高 370 mm，窗台高 1939.76 mm；复用损伤 IFC 中仍存在的窗型“370x370”（GlobalId: 0k_GWa30P01vUfZ2sLomsk），窗完整填充洞口。
+   属性要求：Pset_QuantityTakeOff.Reference="370x370" (IfcIdentifier)、Pset_WindowCommon.IsExternal=true (IfcBoolean)、Pset_WindowCommon.Reference="370x370" (IfcIdentifier)、Pset_WindowCommon.ThermalTransmittance=3.6886 (IfcThermalTransmittanceMeasure)
+3. 在 标高 1 的墙“基本墙:常规 - 240:217762”（GlobalId: 1aUf$RNz1A_AvssKHMHdxj）上，以wall_local_start 为基准，沿墙 Axis 正方向 605 mm 处设置洞口中心；洞口宽 370 mm、高 370 mm，窗台高 1339.76 mm；复用损伤 IFC 中仍存在的窗型“370x370”（GlobalId: 0k_GWa30P01vUfZ2sLomsk），窗完整填充洞口。
+   属性要求：Pset_QuantityTakeOff.Reference="370x370" (IfcIdentifier)、Pset_WindowCommon.IsExternal=true (IfcBoolean)、Pset_WindowCommon.Reference="370x370" (IfcIdentifier)、Pset_WindowCommon.ThermalTransmittance=3.6886 (IfcThermalTransmittanceMeasure)
+4. 在 标高 1 的墙“基本墙:常规 - 240:220926”（GlobalId: 03SCVysybE5QR$e8dtXS08）上，以wall_local_start 为基准，沿墙 Axis 正方向 2118.79 mm 处设置洞口中心；洞口宽 3600 mm、高 2360 mm，窗台高 280 mm；复用损伤 IFC 中仍存在的窗型“DSC2415”（GlobalId: 0k_GWa30P01vUfZ2sLp9En），窗完整填充洞口。
+   属性要求：Pset_QuantityTakeOff.Reference="DSC2415" (IfcIdentifier)、Pset_WindowCommon.IsExternal=true (IfcBoolean)、Pset_WindowCommon.Reference="DSC2415" (IfcIdentifier)
+5. 在 标高 1 的墙“基本墙:常规 - 240:222078”（GlobalId: 03SCVysybE5QR$e8dtXVs8）上，以wall_local_start 为基准，沿墙 Axis 正方向 573.824 mm 处设置洞口中心；洞口宽 1100 mm、高 1875 mm，窗台高 412.716 mm；复用损伤 IFC 中仍存在的窗型“1100x1875”（GlobalId: 380TAK7Qb3SBeU4fuddWHf），窗完整填充洞口。
+   属性要求：Pset_QuantityTakeOff.Reference="1100x1875" (IfcIdentifier)、Pset_WindowCommon.IsExternal=true (IfcBoolean)、Pset_WindowCommon.Reference="1100x1875" (IfcIdentifier)、Pset_WindowCommon.ThermalTransmittance=3.6886 (IfcThermalTransmittanceMeasure)
+约束：
+- 保持五面宿主墙的身份、放置、材质、类型和既有属性不变
+- 保持楼层、空间布局和所有非目标构件不变
+- 任何一项不能安全完成时整批失败，不发布部分成功 IFC

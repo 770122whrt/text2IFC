@@ -1,0 +1,36 @@
+{
+  "compiler_generated_fact_prefixes": [
+    "/compiler_generated/owner_history",
+    "/compiler_generated/local_placement_helpers",
+    "/compiler_generated/void_fill_low_level_ifc"
+  ],
+  "custom_property_policy": {
+    "counts_as_semantic_support": false,
+    "state": "preserved_text_only"
+  },
+  "ifc_schema": "IFC2X3",
+  "profile_hash": "sha256:1a9b5d81e65c07e3b578782744596bd9a56eb1ecf9702c94dbde5fd91681bbb5",
+  "profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.0/1.0",
+  "schema_version": "text2ifc/semantic-capability-profile/1.0",
+  "structural_truth": "schemas/bim-json/2.0/schema.json",
+  "supported_fact_prefixes": [
+    "/known_facts/building",
+    "/known_facts/space",
+    "/known_facts/walls",
+    "/known_facts/slab",
+    "/known_facts/door/host",
+    "/known_facts/door/alignment",
+    "/known_facts/door/height_mm",
+    "/known_facts/door/width_mm",
+    "/known_facts/window"
+  ],
+  "unsupported_facts": [
+    {
+      "current_ifc_boundary": "IfcDoorStyle.OperationType is not generated",
+      "draft_required_unless_waived": true,
+      "path": "/known_facts/door/opening_direction",
+      "reason": "Current BIM JSON 2.0 generation profile supports IfcDoor dimensions and placement, but does not generate IfcDoorStyle OperationType or door swing semantics.",
+      "state": "unsupported"
+    }
+  ]
+}

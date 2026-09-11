@@ -102,7 +102,7 @@ PROPERTY_RESOLUTION_TEMPLATE_HASH = str(
     load_prompt_registry()[PROPERTY_RESOLUTION_TEMPLATE_ID]["sha256"]
 )
 DEFAULT_COLLECTION = (
-    ROOT / "dataset" / "processed" / "proof" / "ifc-repair-success-cases"
+    ROOT / "dataset" / "processed" / "proof" / "repair" / "phase11" / "reference-cases"
 )
 MANDATORY_LEVELS = ("L1", "L2")
 BOUND_CHANGESET_ROLES = ("bound_changeset", "bound_changeset_replayed")
@@ -146,11 +146,11 @@ STRUCTURAL_TYPE_CLASS = {
     "column": "IfcColumnType",
 }
 _PHASE12_SOURCE_CONTRACTS = {
-    "dataset/ifc/test/d7n.ifc": (
+    "dataset/external/bimnet/d7n.ifc": (
         "43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
         3_293_724,
     ),
-    "dataset/ifc/train/vvo.ifc": (
+    "dataset/external/bimnet/vvo.ifc": (
         "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
         2_409_268,
     ),
@@ -764,6 +764,13 @@ def validate_r1_proof_collection(
     root = Path(collection_root).resolve()
     result = ProofValidationResultV03(status="failed", collection_root=root.as_posix())
     try:
+        try:
+            from scripts.proof.package import projection_for_validation
+        except ModuleNotFoundError:
+            import sys
+            sys.path.insert(0, str(ROOT))
+            from scripts.proof.package import projection_for_validation
+        root = projection_for_validation(root, ROOT / ".tmp/proof-validation")
         collection = _read_json(root / "manifest.json")
         collection_schema = _read_json(PROOF_COLLECTION_SCHEMA_V02)
         Draft202012Validator.check_schema(collection_schema)
@@ -1435,6 +1442,13 @@ def validate_success_case_collection(
     root = Path(collection_root).resolve()
     result = ProofValidationResult(status="failed", collection_root=root.as_posix())
     try:
+        try:
+            from scripts.proof.package import projection_for_validation
+        except ModuleNotFoundError:
+            import sys
+            sys.path.insert(0, str(ROOT))
+            from scripts.proof.package import projection_for_validation
+        root = projection_for_validation(root, ROOT / ".tmp/proof-validation")
         collection = _read_json(root / "manifest.json")
         cases = collection.get("cases")
         if not isinstance(cases, list):
@@ -7128,6 +7142,13 @@ def main(argv: Iterable[str] | None = None) -> int:
         if manifest_path.is_file()
         else {}
     )
+    if manifest.get("schema_version") == "text2ifc/workflow-proof-package/0.1":
+        import sys
+        if str(ROOT) not in sys.path:
+            sys.path.insert(0, str(ROOT))
+        from scripts.proof.package import projection_for_validation
+        args.collection_root = projection_for_validation(args.collection_root.resolve(), ROOT / ".tmp/proof-validation")
+        manifest = _read_json(args.collection_root / "manifest.json")
     if manifest.get("schema_version") == "text2ifc/ifc-repair-proof-collection/0.2":
         result = validate_r1_proof_collection(args.collection_root)
         document = result.to_dict()

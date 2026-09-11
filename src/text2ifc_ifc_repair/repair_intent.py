@@ -94,6 +94,20 @@ REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8 = (
 REPAIR_INTENT_BODY_SCHEMA_PATH_0_8 = Path(
     "schemas/agent/ifc-repair-intent-body-0.8.schema.json"
 )
+REPAIR_INTENT_SCHEMA_VERSION_0_9 = "text2ifc/ifc-repair-intent/0.9"
+REPAIR_INTENT_SCHEMA_PATH_0_9 = Path(
+    "schemas/agent/ifc-repair-intent-0.9.schema.json"
+)
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_9 = (
+    "text2ifc/ifc-repair-intent-body/0.9"
+)
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_9 = Path(
+    "schemas/agent/ifc-repair-intent-body-0.9.schema.json"
+)
+REPAIR_INTENT_SCHEMA_VERSION_0_10 = "text2ifc/ifc-repair-intent/0.10"
+REPAIR_INTENT_SCHEMA_PATH_0_10 = Path("schemas/agent/ifc-repair-intent-0.10.schema.json")
+REPAIR_INTENT_BODY_SCHEMA_VERSION_0_10 = "text2ifc/ifc-repair-intent-body/0.10"
+REPAIR_INTENT_BODY_SCHEMA_PATH_0_10 = Path("schemas/agent/ifc-repair-intent-body-0.10.schema.json")
 _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION: REPAIR_INTENT_SCHEMA_PATH,
     REPAIR_INTENT_SCHEMA_VERSION_0_2: REPAIR_INTENT_SCHEMA_PATH_0_2,
@@ -103,6 +117,8 @@ _SCHEMA_PATHS = {
     REPAIR_INTENT_SCHEMA_VERSION_0_6: REPAIR_INTENT_SCHEMA_PATH_0_6,
     REPAIR_INTENT_SCHEMA_VERSION_0_7: REPAIR_INTENT_SCHEMA_PATH_0_7,
     REPAIR_INTENT_SCHEMA_VERSION_0_8: REPAIR_INTENT_SCHEMA_PATH_0_8,
+    REPAIR_INTENT_SCHEMA_VERSION_0_9: REPAIR_INTENT_SCHEMA_PATH_0_9,
+    REPAIR_INTENT_SCHEMA_VERSION_0_10: REPAIR_INTENT_SCHEMA_PATH_0_10,
 }
 _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION: REPAIR_INTENT_BODY_SCHEMA_PATH,
@@ -113,6 +129,8 @@ _BODY_SCHEMA_PATHS = {
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_6: REPAIR_INTENT_BODY_SCHEMA_PATH_0_6,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7: REPAIR_INTENT_BODY_SCHEMA_PATH_0_7,
     REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8: REPAIR_INTENT_BODY_SCHEMA_PATH_0_8,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_9: REPAIR_INTENT_BODY_SCHEMA_PATH_0_9,
+    REPAIR_INTENT_BODY_SCHEMA_VERSION_0_10: REPAIR_INTENT_BODY_SCHEMA_PATH_0_10,
 }
 
 
@@ -287,6 +305,34 @@ class AttributeIntent:
 
 
 @dataclass(frozen=True)
+class AppearanceIntent:
+    intent_kind: str
+    red: float
+    green: float
+    blue: float
+    source: PublicProvenance
+
+    @classmethod
+    def from_dict(cls, value: Mapping[str, Any]) -> "AppearanceIntent":
+        return cls(
+            intent_kind=str(value["intent_kind"]),
+            red=float(value["red"]),
+            green=float(value["green"]),
+            blue=float(value["blue"]),
+            source=PublicProvenance.from_dict(value["source"]),
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "intent_kind": self.intent_kind,
+            "red": self.red,
+            "green": self.green,
+            "blue": self.blue,
+            "source": self.source.to_dict(),
+        }
+
+
+@dataclass(frozen=True)
 class PrototypeIntent:
     reference_kind: str
     reference: str
@@ -422,6 +468,8 @@ class OperationIntent:
     quantity_intents: tuple[QuantityIntent, ...] = ()
     occurrence_reuse_intent: OccurrenceReuseIntent | None = None
     _has_occurrence_semantics_fields: bool = False
+    appearance_intent: AppearanceIntent | None = None
+    _has_appearance_intent_field: bool = False
     routing_intent: RoutingIntent | None = None
 
     @classmethod
@@ -459,6 +507,12 @@ class OperationIntent:
             occurrence_reuse_intent=(
                 None if reuse is None else OccurrenceReuseIntent.from_dict(reuse)
             ),
+            appearance_intent=(
+                None
+                if value.get("appearance_intent") is None
+                else AppearanceIntent.from_dict(value["appearance_intent"])
+            ),
+            _has_appearance_intent_field="appearance_intent" in value,
             _has_occurrence_semantics_fields=(
                 "semantic_bundle_refs" in value
                 or "quantity_intents" in value
@@ -496,6 +550,12 @@ class OperationIntent:
                 None
                 if self.occurrence_reuse_intent is None
                 else self.occurrence_reuse_intent.to_dict()
+            )
+        if self._has_appearance_intent_field:
+            payload["appearance_intent"] = (
+                None
+                if self.appearance_intent is None
+                else self.appearance_intent.to_dict()
             )
         if self.routing_intent is not None:
             payload["routing_intent"] = self.routing_intent.to_dict()
@@ -595,6 +655,8 @@ class RepairIntent:
                 REPAIR_INTENT_SCHEMA_VERSION_0_6,
                 REPAIR_INTENT_SCHEMA_VERSION_0_7,
                 REPAIR_INTENT_SCHEMA_VERSION_0_8,
+                REPAIR_INTENT_SCHEMA_VERSION_0_9,
+                REPAIR_INTENT_SCHEMA_VERSION_0_10,
             }:
                 target_issues = registry.validate_intent_target(raw_operation)
                 if target_issues:
@@ -873,6 +935,7 @@ def _pointer(parts: Any) -> str:
 
 
 __all__ = [
+    "AppearanceIntent",
     "AttributeIntent",
     "DEFAULT_REPAIR_INTENT_LIMITS",
     "MAX_OPERATIONS",
@@ -899,6 +962,8 @@ __all__ = [
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_7",
     "REPAIR_INTENT_BODY_SCHEMA_PATH_0_8",
     "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_8",
+    "REPAIR_INTENT_BODY_SCHEMA_PATH_0_9",
+    "REPAIR_INTENT_BODY_SCHEMA_VERSION_0_9",
     "REPAIR_INTENT_SCHEMA_PATH",
     "REPAIR_INTENT_SCHEMA_PATH_0_2",
     "REPAIR_INTENT_SCHEMA_VERSION",
@@ -915,6 +980,8 @@ __all__ = [
     "REPAIR_INTENT_SCHEMA_VERSION_0_7",
     "REPAIR_INTENT_SCHEMA_PATH_0_8",
     "REPAIR_INTENT_SCHEMA_VERSION_0_8",
+    "REPAIR_INTENT_SCHEMA_PATH_0_9",
+    "REPAIR_INTENT_SCHEMA_VERSION_0_9",
     "RepairIntent",
     "RepairIntentCode",
     "RepairIntentError",

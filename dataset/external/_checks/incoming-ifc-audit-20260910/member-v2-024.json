@@ -1,0 +1,90 @@
+{
+  "archive": "Text2IFC_29RVT_IFC2X3_NoGrid_Full.zip",
+  "index": 24,
+  "member": "Text2IFC_IFC2X3_NoGrid_29/03_empty_or_no_native_shape/ADN/RVT-002__ModelCreation__IFC2X3_NoGrid.ifc",
+  "size_bytes": 8534,
+  "sha256": "19cdcc0cb6aaa5f9610cfdb69e2f08183ec486c30c608e51753fbfbd8987e86b",
+  "parse_status": "ok",
+  "license_status": "not_reviewed",
+  "human_review": "pending",
+  "ifcopenshell_version": "0.8.5",
+  "schema": "IFC2X3",
+  "entity_count": 121,
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 2,
+    "IfcElement": 0,
+    "IfcWall": 0,
+    "IfcDoor": 0,
+    "IfcWindow": 0,
+    "IfcSlab": 0,
+    "IfcRoof": 0,
+    "IfcBeam": 0,
+    "IfcColumn": 0,
+    "IfcSpace": 0,
+    "IfcGrid": 0
+  },
+  "grid_count": 0,
+  "roof_slab_count": 0,
+  "projects": [
+    {
+      "guid": "1qSZbaDtCoTUDnOtLnSkHs",
+      "name": "Project Number"
+    }
+  ],
+  "element_guids": [],
+  "duplicate_globalid_count": 2,
+  "body_elements": 0,
+  "body_by_class": {},
+  "external_reference_records": [],
+  "image_texture_refs": [],
+  "schema_validation_scope": "attributes_cardinality_inverse_uniqueness_no_express_rules",
+  "schema_error_count": 4,
+  "schema_error_samples": [
+    {
+      "level": "error",
+      "message": "For instance:\n    FILE_NAME('Project Number','2026-09-10T11:50:16',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                                                                                         ^                          \nAttribute 'originating_system' has invalid type:\n    Expected: STRING (256)\n    Current value type: NoneType\n",
+      "type": "schema"
+    },
+    {
+      "level": "error",
+      "message": "Attribute not optional",
+      "type": "schema",
+      "instance": "#60=IfcSIUnit(*,.VOLUMEUNIT.,$,$)",
+      "attribute": "IfcSIUnit.Name"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #113=IfcPropertySet('0F6j8zzTyoyxyD0NsB6lE_',#20,'Identity Data','',(#109,#110,#111,#112))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                              \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #56=IfcPropertySet('0F6j8zzTyoyxyD0NsB6lE_',#20,'Identity Data','',(#46,#47,#48,#49))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                                          ",
+      "type": "schema",
+      "instance": "#113=IfcPropertySet('0F6j8zzTyoyxyD0NsB6lE_',#20,'Identity Data','',(#109,#110,#111,#112))",
+      "attribute": "IfcSIUnit.Name"
+    },
+    {
+      "level": "error",
+      "message": "On instance:\n    #115=IfcPropertySet('39A2UtSzAKqrfWLIScOduo',#20,'Other','',(#44,#45,#50,#51,#52,#53,#54,#55))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                                                  \nRule IfcRoot.UR1:\n    The attribute GlobalId should be unique\nViolated by:\n    #58=IfcPropertySet('39A2UtSzAKqrfWLIScOduo',#20,'Other','',(#44,#45,#50,#51,#52,#53,#54,#55))\n                       ^^^^^^^^^^^^^^^^^^^^^^^^                                                  ",
+      "type": "schema",
+      "instance": "#115=IfcPropertySet('39A2UtSzAKqrfWLIScOduo',#20,'Other','',(#44,#45,#50,#51,#52,#53,#54,#55))",
+      "attribute": "IfcSIUnit.Name"
+    }
+  ],
+  "schema_error_categories": {
+    "For instance:\n    FILE_NAME('Project Number','2026-09-10T11:50:16',('User'),('DataDrivenConstruction'),'ODA SDAI 27.2',$,'DataDrivenConstruction')\n                                 ": 1,
+    "Attribute not optional": 1,
+    "On instance:\n    #113=IfcPropertySet('0F6j8zzTyoyxyD0NsB6lE_',#20,'Identity Data','',(#109,#110,#111,#112))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                        ": 1,
+    "On instance:\n    #115=IfcPropertySet('39A2UtSzAKqrfWLIScOduo',#20,'Other','',(#44,#45,#50,#51,#52,#53,#54,#55))\n                        ^^^^^^^^^^^^^^^^^^^^^^^^                    ": 1
+  },
+  "roundtrip_ok": true,
+  "geometry_scope": "class_stratified_max_24_or_class_count_body_element_sample",
+  "geometry_samples": [],
+  "geometry_checked": 0,
+  "geometry_passed": 0,
+  "geometry_failed": 0,
+  "flags": [
+    "no_body_representation",
+    "schema_validation_errors"
+  ],
+  "basic_candidate": false
+}

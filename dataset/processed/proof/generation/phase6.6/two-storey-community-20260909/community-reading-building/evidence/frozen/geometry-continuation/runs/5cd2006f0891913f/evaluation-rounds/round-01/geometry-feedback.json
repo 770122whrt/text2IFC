@@ -1,0 +1,200 @@
+{
+  "expectation_source": "design_brief_expected_facts",
+  "issues": [
+    {
+      "code": "MISSING_STAIR_OPENING",
+      "entity_ids": [
+        "opening-second-floor-slab-stair"
+      ],
+      "message": "Expected component 'opening-second-floor-slab-stair' was not found in the IFC.",
+      "path": "/floor_openings/opening-second-floor-slab-stair",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/openings/0"
+      ]
+    },
+    {
+      "actual": {
+        "reason": "shared_boundary_not_unique_or_wall_thickness_missing"
+      },
+      "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+      "message": "Required geometry could not be derived from confirmed facts.",
+      "path": "/known_facts/storeys/0/walls/interior/0",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/0",
+        "/known_facts/storeys/0/spaces/1",
+        "/known_facts/storeys/0/walls/interior/0"
+      ]
+    },
+    {
+      "actual": {
+        "reason": "shared_boundary_not_unique_or_wall_thickness_missing"
+      },
+      "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+      "message": "Required geometry could not be derived from confirmed facts.",
+      "path": "/known_facts/storeys/1/walls/interior/0",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/0",
+        "/known_facts/storeys/1/spaces/1",
+        "/known_facts/storeys/1/walls/interior/0"
+      ]
+    }
+  ],
+  "metrics": {
+    "case_id": "5cd2006f0891913f",
+    "expectation_complete": false,
+    "floor_openings": {},
+    "products": {},
+    "roof": {
+      "roof-slab": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            9.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.2
+          ],
+          "z": [
+            6.15,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      }
+    },
+    "slabs": {
+      "ground-slab": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            9.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.2
+          ],
+          "z": [
+            -0.15,
+            0.0
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      },
+      "second-floor-slab": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            9.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.2
+          ],
+          "z": [
+            3.0,
+            3.15
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      }
+    },
+    "spaces": {
+      "space-storey-1-space-reading-lobby": {
+        "bbox": {
+          "x": [
+            0.0,
+            6.8
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-space-stair-hall-1": {
+        "bbox": {
+          "x": [
+            7.0,
+            9.0
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-space-activity-hall": {
+        "bbox": {
+          "x": [
+            0.0,
+            6.8
+          ],
+          "y": [
+            0.0,
+            8.0
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-space-stair-platform-2": {
+        "bbox": {
+          "x": [
+            7.0,
+            9.0
+          ],
+          "y": [
+            6.6,
+            8.0
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      }
+    },
+    "stairs": {
+      "stair-1": {
+        "bbox": {
+          "x": [
+            7.4,
+            8.6
+          ],
+          "y": [
+            1.2,
+            6.6000000000000005
+          ],
+          "z": [
+            0.0,
+            3.15
+          ]
+        },
+        "flight_ids": [
+          "stair-flight-1"
+        ],
+        "has_stepped_profile": true,
+        "wall_intersections": []
+      }
+    },
+    "unresolved_expectation_count": 2,
+    "wall_set_convention": "primary",
+    "walls": {}
+  },
+  "success": false
+}

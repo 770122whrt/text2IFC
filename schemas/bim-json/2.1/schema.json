@@ -1,0 +1,517 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/bim-json/2.1/schema.json",
+  "title": "text2IFC BIM JSON 2.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ifc_schema",
+    "units",
+    "entities",
+    "relationships",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "bim-json/2.1"
+    },
+    "ifc_schema": {
+      "const": "IFC2X3"
+    },
+    "units": {
+      "$ref": "#/$defs/units"
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      }
+    },
+    "relationships": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relationship"
+      }
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "appearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "profile": {
+          "enum": [
+            "neutral-architectural",
+            "warm-residential"
+          ]
+        },
+        "seed": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "units": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "length"
+      ],
+      "properties": {
+        "length": {
+          "const": "MILLIMETRE"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "minProperties": 1
+    },
+    "vector3": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "number"
+      }
+    },
+    "objectPlacement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "relative_to",
+        "origin",
+        "axis",
+        "ref_direction"
+      ],
+      "properties": {
+        "relative_to": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "origin": {
+          "$ref": "#/$defs/vector3"
+        },
+        "axis": {
+          "$ref": "#/$defs/vector3"
+        },
+        "ref_direction": {
+          "$ref": "#/$defs/vector3"
+        }
+      }
+    },
+    "localPosition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "origin",
+        "axis",
+        "ref_direction"
+      ],
+      "properties": {
+        "origin": {
+          "$ref": "#/$defs/vector3"
+        },
+        "axis": {
+          "$ref": "#/$defs/vector3"
+        },
+        "ref_direction": {
+          "$ref": "#/$defs/vector3"
+        }
+      }
+    },
+    "point2": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "number"
+      }
+    },
+    "profile": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/point2"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "rectangle"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "x",
+              "y"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "polygon"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "points"
+            ]
+          }
+        }
+      ]
+    },
+    "representation": {
+      "type": "object",
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string"
+        },
+        "profile": {
+          "$ref": "#/$defs/profile"
+        },
+        "depth": {
+          "type": "number"
+        },
+        "direction": {
+          "$ref": "#/$defs/vector3"
+        },
+        "position": {
+          "$ref": "#/$defs/localPosition"
+        },
+        "template_id": {
+          "enum": [
+            "window-single",
+            "window-double-vertical",
+            "door-left",
+            "door-right"
+          ]
+        },
+        "template_version": {
+          "const": "text2ifc/basic-filling/1.0"
+        },
+        "width": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "height": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "frame_width": {
+              "type": "number"
+            },
+            "frame_depth": {
+              "type": "number"
+            },
+            "panel_thickness": {
+              "type": "number"
+            },
+            "split_ratio": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "extruded_profile"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "profile",
+              "depth",
+              "direction"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "basic_filling"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "template_id",
+              "template_version",
+              "width",
+              "height",
+              "depth"
+            ]
+          }
+        }
+      ]
+    },
+    "materialLayer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "thickness"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "thickness": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "materialAssignment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/materialLayerSetUsage"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "name"
+          ],
+          "properties": {
+            "kind": {
+              "const": "single_material"
+            },
+            "name": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "layer_set_name",
+            "layers"
+          ],
+          "properties": {
+            "kind": {
+              "const": "material_layer_set"
+            },
+            "layer_set_name": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "layers": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/materialLayer"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "attributes": {
+      "type": "object",
+      "properties": {
+        "ObjectPlacement": {
+          "$ref": "#/$defs/objectPlacement"
+        },
+        "Representation": {
+          "$ref": "#/$defs/representation"
+        }
+      }
+    },
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ifc_class",
+        "attributes",
+        "property_sets",
+        "provenance"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "ifc_class": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "global_id": {},
+        "attributes": {
+          "$ref": "#/$defs/attributes"
+        },
+        "materials": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/materialAssignment"
+          },
+          "maxItems": 1
+        },
+        "property_sets": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        },
+        "appearance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "type": "array",
+              "minItems": 3,
+              "maxItems": 3,
+              "items": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            },
+            "transparency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        }
+      }
+    },
+    "relationship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "ifc_class",
+        "attributes",
+        "provenance"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "ifc_class": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "global_id": {},
+        "attributes": {
+          "type": "object"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      }
+    },
+    "materialLayerSetUsage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "layer_set_name",
+        "direction",
+        "direction_sense",
+        "offset_from_reference_line",
+        "layers"
+      ],
+      "properties": {
+        "kind": {
+          "const": "material_layer_set_usage"
+        },
+        "layer_set_name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "direction": {
+          "enum": [
+            "AXIS1",
+            "AXIS2",
+            "AXIS3"
+          ]
+        },
+        "direction_sense": {
+          "enum": [
+            "POSITIVE",
+            "NEGATIVE"
+          ]
+        },
+        "offset_from_reference_line": {
+          "type": "number"
+        },
+        "layers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/materialLayer"
+          }
+        }
+      }
+    }
+  },
+  "x-generation-type-capabilities": {
+    "IfcWallType": "generate",
+    "IfcSlabType": "generate",
+    "IfcPlateType": "generate",
+    "IfcCoveringType": "generate",
+    "IfcBeamType": "generate",
+    "IfcColumnType": "generate",
+    "IfcDoorStyle": "generate",
+    "IfcWindowStyle": "generate",
+    "IfcMemberType": "generate",
+    "IfcRailingType": "generate",
+    "IfcStairFlightType": "generate",
+    "IfcCurtainWallType": "generate"
+  }
+}

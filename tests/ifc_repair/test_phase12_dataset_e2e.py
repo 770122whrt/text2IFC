@@ -294,7 +294,7 @@ def test_public_runner_does_not_publish_before_all_final_gates_pass(
 
     with pytest.raises(error_type):
         structural_runner.run_public_repair(
-            damaged_ifc=Path("dataset/ifc/test/d7n.ifc"),
+            damaged_ifc=Path("dataset/external/bimnet/d7n.ifc"),
             public_request_bundle=bundle,
             output_root=output,
         )

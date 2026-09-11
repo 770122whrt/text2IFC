@@ -1,0 +1,170 @@
+{
+  "artifacts": {
+    "context_selection": "context-selection.json",
+    "conversation": "conversation.json",
+    "design_brief": "design-brief.json",
+    "input": "input.txt",
+    "metrics": "metrics.json",
+    "model_text": "model-text.txt",
+    "parsed_output": "parsed-output.json",
+    "rendered_prompt": "prompt-rendered.md",
+    "renderer_inputs": "prompt-render-input.json",
+    "validation": "validation.json"
+  },
+  "case_id": "916d8afe752160e3",
+  "few_shot_ids": [
+    "design-brief-v2.complete-room-openings",
+    "design-brief-v2.incomplete-room",
+    "design-brief-v2.standard-two-storey-building"
+  ],
+  "provider": {
+    "artifacts": {
+      "events": "events.jsonl",
+      "metadata": "response-metadata.json",
+      "request": "request.redacted.json",
+      "response": "response.raw.json",
+      "text": "model-text.txt"
+    },
+    "deep_evidence": {},
+    "deferred_artifacts": {},
+    "evidence_class": "live",
+    "provider": "deepseek-openai-compatible",
+    "response_id": "bc2a5b69-3b0e-4af9-945c-1272df91ee85",
+    "session_id": "phase6.1-916d8afe752160e3-design-brief-01",
+    "stop_reason": "stop",
+    "trace_level": "debug"
+  },
+  "request_sha256": "sha256:32b2ba205339134d1ba8077b4d8f477ae520816780e8df080d0b4993b48bb233",
+  "schema_version": "text2ifc/live-stage-trace/1.0",
+  "selected_evidence": [
+    {
+      "evidence_id": "schema:bim-json-v2:root",
+      "json_pointer": "/",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:entity",
+      "json_pointer": "/$defs/entity",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:attributes",
+      "json_pointer": "/$defs/attributes",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:representation",
+      "json_pointer": "/$defs/representation",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:profile",
+      "json_pointer": "/$defs/profile",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:object-placement",
+      "json_pointer": "/$defs/objectPlacement",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "schema:bim-json-v2:relationship",
+      "json_pointer": "/$defs/relationship",
+      "source_path": "schemas/bim-json/2.1/schema.json",
+      "source_sha256": "sha256:842e2a2451c2240a919fbf3c09912ed25a06fa4f4ef512d89d8d6a2d1e7ee691"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcBuilding",
+      "json_pointer": "/entities/IfcBuilding",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcSpace",
+      "json_pointer": "/entities/IfcSpace",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcWall",
+      "json_pointer": "/entities/IfcWall",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcDoor",
+      "json_pointer": "/entities/IfcDoor",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcWindow",
+      "json_pointer": "/entities/IfcWindow",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcOpeningElement",
+      "json_pointer": "/entities/IfcOpeningElement",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcBuildingStorey",
+      "json_pointer": "/entities/IfcBuildingStorey",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcSlab",
+      "json_pointer": "/entities/IfcSlab",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcRoof",
+      "json_pointer": "/entities/IfcRoof",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcStair",
+      "json_pointer": "/entities/IfcStair",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcRailing",
+      "json_pointer": "/entities/IfcRailing",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcRelVoidsElement",
+      "json_pointer": "/entities/IfcRelVoidsElement",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "capability:IFC2X3:IfcRelFillsElement",
+      "json_pointer": "/entities/IfcRelFillsElement",
+      "source_path": "schemas/ifc/capabilities/IFC2X3.json",
+      "source_sha256": "sha256:9b071f0a2ee21de04f834479aa22bfaf85df20ec4f73fbe8db79664fb5b8ba99"
+    },
+    {
+      "evidence_id": "registry:IFC2X3:manifest",
+      "json_pointer": "/",
+      "source_path": "schemas/ifc/generated/IFC2X3/registry-manifest.json",
+      "source_sha256": "sha256:aca93c3c5c7953546b0d8001ba3b0a8344c0ebe827f02641b6101c364393749a"
+    }
+  ],
+  "stage": "design-brief",
+  "template_hash": "sha256:756e198c23cf7137bce12129c23457a8e5efb4e96ea6d7d15950d2580981988e",
+  "template_id": "design-brief.v2.12"
+}

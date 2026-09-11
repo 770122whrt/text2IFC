@@ -19,7 +19,10 @@ from .changesets import (
     BOUND_CHANGESET_SCHEMA_VERSION_0_3,
     BOUND_CHANGESET_SCHEMA_VERSION_0_4,
     BOUND_CHANGESET_SCHEMA_VERSION_0_5,
+    BOUND_CHANGESET_SCHEMA_VERSION_0_6,
+    DRAFT_CHANGESET_SCHEMA_VERSION,
     DRAFT_CHANGESET_SCHEMA_VERSION_0_3,
+    DRAFT_CHANGESET_SCHEMA_VERSION_0_4,
     bind_repair_changeset,
     load_changeset_draft_schema,
     load_changeset_schema,
@@ -35,12 +38,26 @@ BOUND_TEMPLATE_ID = "ifc-repair-changeset.v0.2"
 BOUND_TEMPLATE_ID_0_3 = "ifc-repair-changeset.v0.3"
 BOUND_TEMPLATE_ID_0_4 = "ifc-repair-changeset.v0.4"
 BOUND_TEMPLATE_ID_0_5 = "ifc-repair-changeset.v0.5"
+BOUND_TEMPLATE_ID_0_6 = "ifc-repair-changeset.v0.6"
 _PRIVATE_CANARIES = (
     "private_original",
     "mutation_manifest",
     "benchmark_gold",
     "iso-10303-21;",
 )
+
+
+def _bound_template_id(
+    *, appearance_contract: bool, semantic_contract_v03: bool,
+    semantic_contract_v02: bool,
+) -> str:
+    if appearance_contract:
+        return BOUND_TEMPLATE_ID_0_6
+    if semantic_contract_v03:
+        return BOUND_TEMPLATE_ID_0_5
+    if semantic_contract_v02:
+        return BOUND_TEMPLATE_ID_0_3
+    return BOUND_TEMPLATE_ID
 
 
 def generate_bound_changeset(
@@ -127,18 +144,28 @@ def generate_bound_changeset(
         and "text2ifc/ifc-repair-semantic-manifest/0.2" in manifest_versions
     )
     mixed_semantic_contract = len(manifest_versions) > 1
+    appearance_contract = any(operation.get("appearance") is not None for operation in operations)
     manifest_hash = (
         manifest_hashes.get(manifests[0].operation_id, "") if compact_mode else ""
     )
-    provider_schema = (
-        load_changeset_draft_schema(DRAFT_CHANGESET_SCHEMA_VERSION_0_3)
+    draft_schema_version = (
+        DRAFT_CHANGESET_SCHEMA_VERSION_0_4
+        if appearance_contract
+        else DRAFT_CHANGESET_SCHEMA_VERSION_0_3
         if structural_compact_mode
-        else load_changeset_draft_schema()
+        else DRAFT_CHANGESET_SCHEMA_VERSION
+    )
+    provider_schema = (
+        load_changeset_draft_schema(draft_schema_version)
         if compact_mode
         else load_changeset_schema()
     )
     resolved_authority = (
-        _structural_draft_authority(operations, registry=registry)
+        _structural_draft_authority(
+            operations,
+            registry=registry,
+            include_appearance=appearance_contract,
+        )
         if compact_mode
         else None
     )
@@ -173,12 +200,10 @@ def generate_bound_changeset(
             "EXPLICIT_REQUEST_SLOT_REFS": explicit_slot_refs,
         }
         rendered = render_prompt(
-            template_id=(
-                BOUND_TEMPLATE_ID_0_5
-                if semantic_contract_v03
-                else BOUND_TEMPLATE_ID_0_3
-                if semantic_contract_v02
-                else BOUND_TEMPLATE_ID
+            template_id=_bound_template_id(
+                appearance_contract=appearance_contract,
+                semantic_contract_v03=semantic_contract_v03,
+                semantic_contract_v02=semantic_contract_v02,
             ),
             inputs=renderer_input,
         )
@@ -234,11 +259,7 @@ def generate_bound_changeset(
             contract_issues = (
                 validate_changeset_draft(
                     parsed,
-                    expected_version=(
-                        DRAFT_CHANGESET_SCHEMA_VERSION_0_3
-                        if structural_compact_mode
-                        else None
-                    ),
+                    expected_version=draft_schema_version,
                 )
                 if compact_mode
                 else validate_changeset(parsed)
@@ -257,7 +278,9 @@ def generate_bound_changeset(
                             source_request_hash=source_request_hash,
                             base_model_fingerprint=base_fingerprint,
                             bound_schema_version=(
-                                BOUND_CHANGESET_SCHEMA_VERSION_0_5
+                                BOUND_CHANGESET_SCHEMA_VERSION_0_6
+                                if appearance_contract
+                                else BOUND_CHANGESET_SCHEMA_VERSION_0_5
                                 if mixed_semantic_contract
                                 else BOUND_CHANGESET_SCHEMA_VERSION_0_4
                                 if semantic_contract_v03
@@ -332,29 +355,33 @@ def _structural_draft_authority(
     operations: list[dict[str, Any]],
     *,
     registry: OperationRegistry,
+    include_appearance: bool = False,
 ) -> dict[str, Any]:
     projected_operations = []
     for operation in operations:
-        projected_operations.append(
-            {
-                "operation_id": str(operation["operation_id"]),
-                "operation_type": str(operation["operation_type"]),
-                "target": registry.bind_resolved_target(
-                    str(operation["operation_type"]),
-                    operation.get("target_global_id"),
-                ),
-                "parameters": json.loads(
-                    json.dumps(
-                        operation["parameters"],
-                        ensure_ascii=False,
-                        allow_nan=False,
-                    )
-                ),
-                "evidence_refs": [
-                    str(item) for item in operation["evidence_pointers"]
-                ],
-            }
-        )
+        projected = {
+            "operation_id": str(operation["operation_id"]),
+            "operation_type": str(operation["operation_type"]),
+            "target": registry.bind_resolved_target(
+                str(operation["operation_type"]),
+                operation.get("target_global_id"),
+            ),
+            "parameters": json.loads(
+                json.dumps(
+                    operation["parameters"],
+                    ensure_ascii=False,
+                    allow_nan=False,
+                )
+            ),
+            "evidence_refs": [
+                str(item) for item in operation["evidence_pointers"]
+            ],
+        }
+        if include_appearance:
+            projected["appearance"] = json.loads(
+                json.dumps(operation.get("appearance"), ensure_ascii=False, allow_nan=False)
+            )
+        projected_operations.append(projected)
     return {
         "scope": {
             "target_ids": sorted(

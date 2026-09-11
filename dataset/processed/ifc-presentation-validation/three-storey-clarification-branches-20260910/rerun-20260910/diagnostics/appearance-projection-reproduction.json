@@ -1,0 +1,239 @@
+{
+  "evidence_class": "offline diagnostic reproduction of current production request comparator; not a new live run",
+  "candidate_sha256": "9b366a017b4410b1a9a9e9114b4a5f51f0a6e94fc22393d2944d82f7ddd3dc0e",
+  "source_sha256": "7c21322087a86147fe758aa3fbc0d83d1bcfddb89cd23117abd734f130b45556",
+  "actual_candidate_appearance": {
+    "profile": "warm-residential",
+    "seed": "community-reading-warm-residential"
+  },
+  "actual_frozen_appearance_requests": [
+    {
+      "profile": "warm-residential",
+      "style_notes": "浅暖色墙面配深色细框，玻璃透明，入口清楚，门窗上下对齐；外观为协调风格，不推断或替代物理材料、强度、耐火或热工性能"
+    },
+    {
+      "profile": "warm-residential",
+      "style_notes": "浅暖色墙面配深色细框，玻璃透明，入口清楚，门窗上下对齐；外观为协调风格，不推断或替代物理材料、强度、耐火或热工性能"
+    }
+  ],
+  "actual_issues": [
+    {
+      "code": "REQUEST_APPEARANCE_MISMATCH",
+      "path": "/appearance",
+      "message": "候选遗漏或改变了冻结请求的主题/seed。"
+    },
+    {
+      "code": "REQUEST_APPEARANCE_MISMATCH",
+      "path": "/appearance",
+      "message": "候选遗漏或改变了冻结请求的主题/seed。"
+    }
+  ],
+  "remove_candidate_seed_only_issues": [
+    {
+      "code": "REQUEST_APPEARANCE_MISMATCH",
+      "path": "/appearance",
+      "message": "候选遗漏或改变了冻结请求的主题/seed。"
+    },
+    {
+      "code": "REQUEST_APPEARANCE_MISMATCH",
+      "path": "/appearance",
+      "message": "候选遗漏或改变了冻结请求的主题/seed。"
+    }
+  ],
+  "exclude_narrative_from_machine_comparison_only_issues": [],
+  "schema_appearance": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "profile": {
+        "enum": [
+          "neutral-architectural",
+          "warm-residential"
+        ]
+      },
+      "seed": {
+        "type": "string"
+      }
+    }
+  },
+  "family": [
+    {
+      "requested": {
+        "profile": "neutral-architectural"
+      },
+      "candidate": {
+        "profile": "neutral-architectural"
+      },
+      "expected_pass": true,
+      "actual_pass": true,
+      "issue_codes": []
+    },
+    {
+      "requested": {
+        "profile": "neutral-architectural"
+      },
+      "candidate": {
+        "profile": "warm-residential"
+      },
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "neutral-architectural",
+        "style_notes": "浅暖墙面与深框，不能推断物理材料。"
+      },
+      "candidate": {
+        "profile": "neutral-architectural"
+      },
+      "expected_pass": true,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "neutral-architectural",
+        "style_notes": "浅暖墙面与深框，不能推断物理材料。"
+      },
+      "candidate": {
+        "profile": "warm-residential"
+      },
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "neutral-architectural",
+        "style_notes": "Coordinated facade; narrative evidence only."
+      },
+      "candidate": {
+        "profile": "neutral-architectural"
+      },
+      "expected_pass": true,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "neutral-architectural",
+        "style_notes": "Coordinated facade; narrative evidence only."
+      },
+      "candidate": {
+        "profile": "warm-residential"
+      },
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "warm-residential"
+      },
+      "candidate": {
+        "profile": "warm-residential"
+      },
+      "expected_pass": true,
+      "actual_pass": true,
+      "issue_codes": []
+    },
+    {
+      "requested": {
+        "profile": "warm-residential"
+      },
+      "candidate": {
+        "profile": "neutral-architectural"
+      },
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "warm-residential",
+        "style_notes": "浅暖墙面与深框，不能推断物理材料。"
+      },
+      "candidate": {
+        "profile": "warm-residential"
+      },
+      "expected_pass": true,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "warm-residential",
+        "style_notes": "浅暖墙面与深框，不能推断物理材料。"
+      },
+      "candidate": {
+        "profile": "neutral-architectural"
+      },
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "warm-residential",
+        "style_notes": "Coordinated facade; narrative evidence only."
+      },
+      "candidate": {
+        "profile": "warm-residential"
+      },
+      "expected_pass": true,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested": {
+        "profile": "warm-residential",
+        "style_notes": "Coordinated facade; narrative evidence only."
+      },
+      "candidate": {
+        "profile": "neutral-architectural"
+      },
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    },
+    {
+      "requested_seed": "frozen-seed",
+      "candidate_seed": "frozen-seed",
+      "expected_pass": true,
+      "actual_pass": true,
+      "issue_codes": []
+    },
+    {
+      "requested_seed": "frozen-seed",
+      "candidate_seed": "different-seed",
+      "expected_pass": false,
+      "actual_pass": false,
+      "issue_codes": [
+        "REQUEST_APPEARANCE_MISMATCH"
+      ]
+    }
+  ],
+  "family_mismatches": 4,
+  "limits": "Counterfactuals are memory-only copies for localization. No frozen request/candidate or published schema was edited. Passing this comparator alone does not prove IFC conformance or visual quality."
+}

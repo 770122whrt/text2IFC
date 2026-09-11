@@ -51,7 +51,7 @@ def main() -> int:
         "case_id": "vvo-five-window-001",
         "status": state["stage"],
         "operation_count": 5,
-        "source_ifc": "dataset/ifc/train/vvo.ifc",
+        "source_ifc": "dataset/external/bimnet/vvo.ifc",
         "source_sha256": (
             "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
         ),

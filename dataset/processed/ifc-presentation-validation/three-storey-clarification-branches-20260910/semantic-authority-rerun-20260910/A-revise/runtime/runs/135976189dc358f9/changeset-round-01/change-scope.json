@@ -1,0 +1,206 @@
+{
+  "allowed_paths": {
+    "aggregate-stair-flight-1": [
+      "/attributes"
+    ],
+    "aggregate-stair-flight-2": [
+      "/attributes"
+    ],
+    "stair-flight-1": [
+      "/attributes"
+    ],
+    "stair-flight-2": [
+      "/attributes"
+    ],
+    "stair-flight-flight-1": [
+      "/attributes"
+    ],
+    "stair-flight-flight-2": [
+      "/attributes"
+    ],
+    "storey-2-slab-opening-stair": [
+      "/attributes"
+    ],
+    "storey-3-slab-opening-stair": [
+      "/attributes"
+    ],
+    "void-storey-2-slab-opening-stair": [
+      "/attributes"
+    ],
+    "void-storey-3-slab-opening-stair": [
+      "/attributes"
+    ]
+  },
+  "base_revision_id": "revision-00",
+  "dependencies": [
+    {
+      "dependency_id": "aggregate-stair-flight-1",
+      "reason": "IfcRelAggregates references an allowed component.",
+      "relationship_type": "IfcRelAggregates",
+      "target_id": "stair-flight-1"
+    },
+    {
+      "dependency_id": "aggregate-stair-flight-2",
+      "reason": "IfcRelAggregates references an allowed component.",
+      "relationship_type": "IfcRelAggregates",
+      "target_id": "stair-flight-2"
+    },
+    {
+      "dependency_id": "void-storey-2-slab-opening-stair",
+      "reason": "IfcRelVoidsElement references an allowed component.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "storey-2-slab-opening-stair"
+    },
+    {
+      "dependency_id": "void-storey-3-slab-opening-stair",
+      "reason": "IfcRelVoidsElement references an allowed component.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "storey-3-slab-opening-stair"
+    },
+    {
+      "dependency_id": "floor-slab-2",
+      "reason": "floor-slab-2 is an endpoint of void-storey-2-slab-opening-stair.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "void-storey-2-slab-opening-stair"
+    },
+    {
+      "dependency_id": "floor-slab-3",
+      "reason": "floor-slab-3 is an endpoint of void-storey-3-slab-opening-stair.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "void-storey-3-slab-opening-stair"
+    }
+  ],
+  "entity_ids": [
+    "floor-slab-2",
+    "floor-slab-3",
+    "stair-flight-1",
+    "stair-flight-2",
+    "stair-flight-flight-1",
+    "stair-flight-flight-2",
+    "storey-2-slab-opening-stair",
+    "storey-3-slab-opening-stair"
+  ],
+  "forbidden_ids": [
+    "building-1",
+    "door-storey-1-storey-1-door-main",
+    "door-storey-1-storey-1-door-partition",
+    "door-storey-2-storey-2-door-partition",
+    "door-storey-3-storey-3-door-partition",
+    "fill-door-storey-1-storey-1-door-main",
+    "fill-door-storey-1-storey-1-door-partition",
+    "fill-door-storey-2-storey-2-door-partition",
+    "fill-door-storey-3-storey-3-door-partition",
+    "fill-window-storey-1-storey-1-window-east",
+    "fill-window-storey-1-storey-1-window-north",
+    "fill-window-storey-1-storey-1-window-south-1",
+    "fill-window-storey-1-storey-1-window-south-2",
+    "fill-window-storey-1-storey-1-window-west",
+    "fill-window-storey-2-storey-2-window-east",
+    "fill-window-storey-2-storey-2-window-north",
+    "fill-window-storey-2-storey-2-window-south-1",
+    "fill-window-storey-2-storey-2-window-south-2",
+    "fill-window-storey-2-storey-2-window-west",
+    "fill-window-storey-3-storey-3-window-east",
+    "fill-window-storey-3-storey-3-window-north",
+    "fill-window-storey-3-storey-3-window-south-1",
+    "fill-window-storey-3-storey-3-window-south-2",
+    "fill-window-storey-3-storey-3-window-west",
+    "floor-slab-1",
+    "opening-door-storey-1-storey-1-door-main",
+    "opening-door-storey-1-storey-1-door-partition",
+    "opening-door-storey-2-storey-2-door-partition",
+    "opening-door-storey-3-storey-3-door-partition",
+    "opening-window-storey-1-storey-1-window-east",
+    "opening-window-storey-1-storey-1-window-north",
+    "opening-window-storey-1-storey-1-window-south-1",
+    "opening-window-storey-1-storey-1-window-south-2",
+    "opening-window-storey-1-storey-1-window-west",
+    "opening-window-storey-2-storey-2-window-east",
+    "opening-window-storey-2-storey-2-window-north",
+    "opening-window-storey-2-storey-2-window-south-1",
+    "opening-window-storey-2-storey-2-window-south-2",
+    "opening-window-storey-2-storey-2-window-west",
+    "opening-window-storey-3-storey-3-window-east",
+    "opening-window-storey-3-storey-3-window-north",
+    "opening-window-storey-3-storey-3-window-south-1",
+    "opening-window-storey-3-storey-3-window-south-2",
+    "opening-window-storey-3-storey-3-window-west",
+    "project-1",
+    "roof-slab",
+    "site-1",
+    "space-storey-1-storey-1-space-hall",
+    "space-storey-1-storey-1-space-stairwell",
+    "space-storey-2-storey-2-space-hall",
+    "space-storey-2-storey-2-space-platform",
+    "space-storey-3-storey-3-space-hall",
+    "space-storey-3-storey-3-space-platform",
+    "storey-1",
+    "storey-2",
+    "storey-3",
+    "void-door-storey-1-storey-1-door-main",
+    "void-door-storey-1-storey-1-door-partition",
+    "void-door-storey-2-storey-2-door-partition",
+    "void-door-storey-3-storey-3-door-partition",
+    "void-window-storey-1-storey-1-window-east",
+    "void-window-storey-1-storey-1-window-north",
+    "void-window-storey-1-storey-1-window-south-1",
+    "void-window-storey-1-storey-1-window-south-2",
+    "void-window-storey-1-storey-1-window-west",
+    "void-window-storey-2-storey-2-window-east",
+    "void-window-storey-2-storey-2-window-north",
+    "void-window-storey-2-storey-2-window-south-1",
+    "void-window-storey-2-storey-2-window-south-2",
+    "void-window-storey-2-storey-2-window-west",
+    "void-window-storey-3-storey-3-window-east",
+    "void-window-storey-3-storey-3-window-north",
+    "void-window-storey-3-storey-3-window-south-1",
+    "void-window-storey-3-storey-3-window-south-2",
+    "void-window-storey-3-storey-3-window-west",
+    "wall-storey-1-storey-1-wall-east",
+    "wall-storey-1-storey-1-wall-north",
+    "wall-storey-1-storey-1-wall-partition",
+    "wall-storey-1-storey-1-wall-south",
+    "wall-storey-1-storey-1-wall-west",
+    "wall-storey-2-storey-2-wall-east",
+    "wall-storey-2-storey-2-wall-north",
+    "wall-storey-2-storey-2-wall-partition",
+    "wall-storey-2-storey-2-wall-south",
+    "wall-storey-2-storey-2-wall-west",
+    "wall-storey-3-storey-3-wall-east",
+    "wall-storey-3-storey-3-wall-north",
+    "wall-storey-3-storey-3-wall-partition",
+    "wall-storey-3-storey-3-wall-south",
+    "wall-storey-3-storey-3-wall-west",
+    "window-storey-1-storey-1-window-east",
+    "window-storey-1-storey-1-window-north",
+    "window-storey-1-storey-1-window-south-1",
+    "window-storey-1-storey-1-window-south-2",
+    "window-storey-1-storey-1-window-west",
+    "window-storey-2-storey-2-window-east",
+    "window-storey-2-storey-2-window-north",
+    "window-storey-2-storey-2-window-south-1",
+    "window-storey-2-storey-2-window-south-2",
+    "window-storey-2-storey-2-window-west",
+    "window-storey-3-storey-3-window-east",
+    "window-storey-3-storey-3-window-north",
+    "window-storey-3-storey-3-window-south-1",
+    "window-storey-3-storey-3-window-south-2",
+    "window-storey-3-storey-3-window-west"
+  ],
+  "relationship_ids": [
+    "aggregate-stair-flight-1",
+    "aggregate-stair-flight-2",
+    "void-storey-2-slab-opening-stair",
+    "void-storey-3-slab-opening-stair"
+  ],
+  "schema_version": "text2ifc/change-scope/1.0",
+  "scope_id": "scope-revision-01",
+  "source_issue_ids": [
+    "issue_audit_0001_01",
+    "issue_audit_0001_02",
+    "issue_audit_0001_03",
+    "issue_audit_0001_04",
+    "issue_audit_0001_05",
+    "issue_audit_0001_06"
+  ]
+}

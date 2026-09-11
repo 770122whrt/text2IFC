@@ -1,0 +1,24 @@
+On IfcWall GlobalId 1F6umJ5H50aeL3A1As_wTm, restore the missing window.
+Create a 915 mm wide and 1830 mm high window, with a 305 mm sill. Its center offset is 3042.5 mm from wall_local_start.
+Reuse the existing Window Type named 'M_Fixed:0915 x 1830mm'.
+The following occurrence-direct IfcPropertySingleValue facts are explicitly authorized. Preserve set/property spelling exactly:
+- {"set_name":"Constraints","property_name":"Level","value":"Level: Level 1","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Constraints","property_name":"Sill Height","value":305.000000000004,"requested_value_type":"IfcLengthMeasure","requested_unit":"mm","scope":"occurrence_direct"}
+- {"set_name":"Custom_Pset","property_name":"NetArea","value":3.17875400000013,"requested_value_type":"IfcAreaMeasure","requested_unit":"mm2","scope":"occurrence_direct"}
+- {"set_name":"Custom_Pset","property_name":"SillHeight","value":305.000000000004,"requested_value_type":"IfcLengthMeasure","requested_unit":"mm","scope":"occurrence_direct"}
+- {"set_name":"Custom_Pset","property_name":"StatusConstruction","value":"New Construction","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Custom_Pset","property_name":"StoreyName","value":"Level: Level 1","requested_value_type":"IfcText","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Dimensions","property_name":"Area","value":3.17875400000013,"requested_value_type":"IfcAreaMeasure","requested_unit":"mm2","scope":"occurrence_direct"}
+- {"set_name":"Dimensions","property_name":"Volume","value":0.0561146700000025,"requested_value_type":"IfcVolumeMeasure","requested_unit":"mm3","scope":"occurrence_direct"}
+- {"set_name":"Identity Data","property_name":"Mark","value":"7","requested_value_type":"IfcText","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Other","property_name":"Family","value":"M_Fixed: 0915 x 1830mm","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Other","property_name":"Family and Type","value":"M_Fixed: 0915 x 1830mm","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Other","property_name":"Head Height","value":2135.0,"requested_value_type":"IfcLengthMeasure","requested_unit":"mm","scope":"occurrence_direct"}
+- {"set_name":"Other","property_name":"Host Id","value":"Basic Wall: Outside wall","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Other","property_name":"Type","value":"M_Fixed: 0915 x 1830mm","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Other","property_name":"Type Id","value":"M_Fixed: 0915 x 1830mm","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+- {"set_name":"Phasing","property_name":"Phase Created","value":"New Construction","requested_value_type":"IfcLabel","requested_unit":null,"scope":"occurrence_direct"}
+Also author these exact BaseQuantities on the new IfcOpeningElement occurrence:
+- {"scope":"opening_occurrence","set_name":"BaseQuantities","quantity_name":"Depth","value":200.0,"value_type":"IfcQuantityLength","unit":"mm"}
+- {"scope":"opening_occurrence","set_name":"BaseQuantities","quantity_name":"Height","value":915.0,"value_type":"IfcQuantityLength","unit":"mm"}
+- {"scope":"opening_occurrence","set_name":"BaseQuantities","quantity_name":"Width","value":1830.0,"value_type":"IfcQuantityLength","unit":"mm"}

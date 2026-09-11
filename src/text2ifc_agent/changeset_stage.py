@@ -9,9 +9,10 @@ from pathlib import Path
 from typing import Any, Mapping
 
 from text2ifc_contract.draft import validate_draft
-from text2ifc_contract.schema import load_draft_schema
+from text2ifc_contract.schema import load_draft_schema, _load_schema_path
 
 from .candidate_index import build_candidate_index
+from .authoring_contract import build_authoring_contract
 from .changesets import load_changeset_schema, validate_changeset
 from .live_trace import write_live_trace
 from .prompt_registry import render_prompt
@@ -48,13 +49,21 @@ def run_changeset_stage(
     issues: list[dict[str, Any]],
     context_issues: list[dict[str, Any]] | None = None,
     trace_level: str | None = "debug",
+    field_recovery: bool = False,
+    generation_package: Mapping[str, Any] | None = None,
+    semantic_correction: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Ask the provider for a ChangeSet or canonical Draft and validate its binding."""
 
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    changeset_schema = load_changeset_schema()
+    field_removal = any(e.get('remove_paths') for e in (semantic_correction or {}).get('edits', {}).values())
+    changeset_version = 'text2ifc/bim-json-changeset/1.1' if field_removal else 'text2ifc/bim-json-changeset/1.0'
+    changeset_schema = load_changeset_schema(changeset_version)
     draft_schema = load_draft_schema()
+    new_semantics = candidate.get('schema_version') == 'bim-json/2.1'
+    if new_semantics:
+        draft_schema = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json')
     renderer_inputs = {
         "USER_REQUEST": user_request,
         "CONVERSATION": conversation,
@@ -69,17 +78,54 @@ def run_changeset_stage(
         "DRAFT_SCHEMA": draft_schema,
         "FEW_SHOTS": [_read_json(path) for path in FEW_SHOT_PATHS],
     }
-    rendered = render_prompt(template_id=CHANGESET_TEMPLATE_ID, inputs=renderer_inputs)
+    if new_semantics:
+        renderer_inputs['FORMAL_SCHEMA'] = _load_schema_path(PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json')
+        from .changeset_context import select_changeset_context
+        selection = select_changeset_context(candidate=candidate, scope=scope,
+            field_recovery=field_recovery, package=generation_package)
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = selection['authoring_contract']
+        renderer_inputs['READ_ONLY_COMPONENTS'] = selection['read_only_components']
+        renderer_inputs['FEW_SHOTS'] = [_read_json(PROJECT_ROOT/'prompts/agent/few-shot'/name)
+                                       for name in selection['few_shot_names']]
+        _write_json(output/'context-selection.json', selection)
+    if semantic_correction:
+        renderer_inputs['SEMANTIC_CORRECTION'] = dict(semantic_correction)
+    template_id = ('bim-json-changeset.v1.7' if field_removal else
+                   'bim-json-changeset.v1.6' if semantic_correction else
+                   'bim-json-changeset.v1.8' if field_recovery else
+                   'bim-json-changeset.v1.5' if new_semantics else CHANGESET_TEMPLATE_ID)
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
 
-    result = provider.generate_live(
-        session_id=f"phase6.5-{case_id}-changeset-{call_index:02d}",
-        prompt=rendered["text"],
-        schema=changeset_schema,
-        state={"case_id": case_id, "stage": "changeset", "call_index": call_index},
-    )
-    validate_provider_output(result.output)
+    from .openai_compat import OpenAICompatError
+    from .providers import ProviderOutputError
+    from .generation_budget import GenerationBudgetExceeded
+    result = None
+    try:
+        result = provider.generate_live(
+            session_id=f"phase6.5-{case_id}-changeset-{call_index:02d}",
+            prompt=rendered["text"], schema=changeset_schema,
+            state={"case_id": case_id, "stage": "changeset", "call_index": call_index},
+        )
+        validate_provider_output(result.output)
+    except GenerationBudgetExceeded:
+        raise
+    except (OpenAICompatError, ProviderOutputError) as error:
+        if result is not None and isinstance(error, ProviderOutputError):
+            error.live_result = result
+        from .live_trace import write_provider_failure_trace
+        failure = write_provider_failure_trace(error=error, output_dir=output, stage='changeset')
+        diagnostics = [_diagnostic('CHANGESET_PROVIDER_FAILED', '/',
+                                  f"Provider response unavailable or unusable: {failure['failure_class']}.")]
+        result = {'case_id': case_id, 'stage': 'changeset', 'call_index': call_index,
+            'classification': 'provider_failed', 'valid': False, 'diagnostics': diagnostics,
+            'response_id': failure['details'].get('response_id'),
+            'evidence_class': failure['details'].get('evidence_class', 'unavailable'),
+            'output_dir': str(output), 'usage': failure['details'].get('usage', {})}
+        _write_json(output/'validation.json', {'valid': False, 'issues': diagnostics})
+        _write_json(output/'metrics.json', result)
+        return result
     provider_manifest = write_live_trace(
         result=result,
         output_dir=output,
@@ -89,7 +135,7 @@ def run_changeset_stage(
     parse_status, parsed, parse_diagnostics = result.output.parse_json()
     provider_parsed = copy.deepcopy(parsed)
     control_normalizations: list[dict[str, str]] = []
-    if isinstance(parsed, Mapping) and parsed.get("schema_version") == "text2ifc/bim-json-changeset/1.0":
+    if isinstance(parsed, Mapping) and parsed.get("schema_version") == changeset_version:
         parsed, control_normalizations = _bind_malformed_hashes(parsed, base_revision)
     normalization_diagnostics = [*parse_diagnostics, *control_normalizations]
     diagnostics = list(parse_diagnostics)
@@ -100,7 +146,7 @@ def run_changeset_stage(
         diagnostics.append(
             _diagnostic("CHANGESET_OUTPUT_CONTRACT_ERROR", "/", "Output is not a JSON object.")
         )
-    elif parsed.get("schema_version") == "text2ifc/bim-json-changeset/1.0":
+    elif parsed.get("schema_version") == changeset_version:
         contract_issues = [_issue_payload(issue) for issue in validate_changeset(parsed)]
         diagnostics.extend(contract_issues)
         if not contract_issues:
@@ -108,7 +154,7 @@ def run_changeset_stage(
         if not diagnostics:
             classification = "changeset"
             artifact_name = "changeset.json"
-    elif parsed.get("draft_version") == "bim-json-draft/1.0":
+    elif parsed.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1"}:
         diagnostics.extend(_issue_payload(issue) for issue in validate_draft(parsed))
         if not diagnostics:
             classification = "draft"
@@ -201,6 +247,21 @@ def _scoped_components(
         if component_id in index["relationships"]:
             components[component_id] = index["relationships"][component_id]
     return components
+
+
+def retry_candidate_key(output_dir):
+    """Ignore new trace/operation IDs when detecting the same failed patch."""
+    from .revisions import hash_json_value
+    root = Path(output_dir)
+    parsed = root/'parsed-output.json'
+    if parsed.is_file():
+        value = _read_json(parsed)
+        if isinstance(value, dict) and isinstance(value.get('operations'), list):
+            value = [{k:v for k,v in op.items() if k not in {'operation_id', 'evidence_refs'}}
+                     if isinstance(op, dict) else op for op in value['operations']]
+        return hash_json_value(value)
+    text_path = root/'model-text.txt'
+    return hash_json_value(text_path.read_text(encoding='utf-8') if text_path.is_file() else None)
 
 
 def _binding_diagnostics(

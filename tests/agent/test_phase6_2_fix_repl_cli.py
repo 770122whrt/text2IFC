@@ -364,6 +364,8 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
     )
     output = io.StringIO()
     ready_brief = _brief(original_request=ORIGINAL_REQUEST, status="ready")
+    ready_brief["schema_version"] = "text2ifc/design-brief/2.1"
+    ready_brief['known_facts']['semantic_requirements'] = []
     selection = select_design_brief_context(
         user_request=ORIGINAL_REQUEST,
         conversation=[
@@ -378,6 +380,10 @@ def test_default_live_repl_design_brief_trace_is_session_scoped(tmp_path):
             encoding="utf-8"
         )
     )
+    candidate["schema_version"] = "bim-json/2.1"
+    for entity in candidate["entities"]:
+        entity["property_sets"] = {}
+        entity.pop("materials", None)
     audit = {
         "schema_version": "text2ifc/audit/2.0",
         "recommendation": "accept",
@@ -875,7 +881,12 @@ def _write_design_brief_trace_fixture(
         "conversation.json": transcript,
         "context-selection.json": {"evidence": EVIDENCE, "few_shots": []},
         "request.redacted.json": {"model": "mimo-v2.5-pro"},
-        "response.raw.json": {"id": f"msg_phase62_fix_{call_index}"},
+        "response.raw.json": {
+            "id": f"msg_phase62_fix_{call_index}",
+            # This is a completed fake call, including its simulated usage.
+            # Missing historical usage intentionally blocks budget admission.
+            "usage": {"input_tokens": 100, "output_tokens": 200},
+        },
         "design-brief.json": brief,
         "validation.json": {"valid": True, "issue_count": 0, "issues": []},
         "metrics.json": {"response_id": f"msg_phase62_fix_{call_index}"},

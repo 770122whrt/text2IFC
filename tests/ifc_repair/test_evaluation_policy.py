@@ -16,6 +16,7 @@ from text2ifc_ifc_repair.evaluation_policy import (
     SemanticFactSpec,
 )
 from text2ifc_ifc_repair.index_models import ElementRecord, PropertyFact
+from text2ifc_ifc_repair.operations.door import _l1_authorization as door_l1_authorization
 from text2ifc_ifc_repair.operations.window import window_operation_definition
 from text2ifc_ifc_repair.registry import (
     OperationDefinition,
@@ -237,6 +238,42 @@ def test_window_policy_declares_required_and_conditional_semantic_contract() -> 
         spec.fact_pattern in {"label:Name", "label:Tag", "label:Mark"}
         for spec in policy.semantic_facts
     )
+
+
+def test_door_l1_authorization_covers_scoped_semantic_relationships() -> None:
+    authorization = door_l1_authorization(creates_opening=False)
+
+    expected_created = {
+        "semantic_door_pset": "IfcPropertySet",
+        "semantic_door_pset_relationship": "IfcRelDefinesByProperties",
+        "semantic_door_quantities": "IfcElementQuantity",
+        "semantic_door_quantity_relationship": "IfcRelDefinesByProperties",
+        "semantic_door_material_relationship": "IfcRelAssociatesMaterial",
+        "semantic_door_classification_relationship": "IfcRelAssociatesClassification",
+    }
+    for role, ifc_class in expected_created.items():
+        assert authorization["created"][role] == ifc_class
+
+    for role, ifc_class in (
+        ("semantic_door_pset_relationship", "IfcRelDefinesByProperties"),
+        ("semantic_door_quantity_relationship", "IfcRelDefinesByProperties"),
+        ("semantic_door_material_relationship", "IfcRelAssociatesMaterial"),
+        (
+            "semantic_door_classification_relationship",
+            "IfcRelAssociatesClassification",
+        ),
+    ):
+        relation = authorization["relations"][role]
+        assert relation["ifc_class"] == ifc_class
+        assert relation["added_endpoint_roles"] == ("door",)
+
+    for index in (2, 64):
+        assert authorization["created"][f"semantic_door_material_relationship_{index}"] == (
+            "IfcRelAssociatesMaterial"
+        )
+        assert authorization["relations"][f"semantic_door_material_relationship_{index}"][
+            "added_endpoint_roles"
+        ] == ("door",)
 
 
 def test_window_policy_0_1_is_frozen_as_historical_contract() -> None:

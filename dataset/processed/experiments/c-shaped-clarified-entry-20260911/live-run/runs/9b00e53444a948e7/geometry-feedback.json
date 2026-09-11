@@ -1,0 +1,906 @@
+{
+  "expectation_source": "design_brief_expected_facts",
+  "issues": [
+    {
+      "actual": {
+        "x": [
+          4.6000000000000005,
+          4.8
+        ],
+        "y": [
+          5.2,
+          12.600000000000001
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "code": "WALL_SEGMENT_MISMATCH",
+      "entity_ids": [
+        "wall-storey-1-storey-1-wall-notch-west"
+      ],
+      "expected": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          4.7,
+          12.1
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "message": "Wall 'wall-storey-1-storey-1-wall-notch-west' world bounding box is outside tolerance.",
+      "path": "/walls/storey-1-wall-notch-west",
+      "source_fact_refs": [
+        "/known_facts/walls/3"
+      ]
+    },
+    {
+      "actual": {
+        "x": [
+          4.6000000000000005,
+          4.8
+        ],
+        "y": [
+          5.2,
+          12.600000000000001
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "code": "WALL_SEGMENT_MISMATCH",
+      "entity_ids": [
+        "wall-storey-2-storey-2-wall-notch-west"
+      ],
+      "expected": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          4.7,
+          12.1
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "message": "Wall 'wall-storey-2-storey-2-wall-notch-west' world bounding box is outside tolerance.",
+      "path": "/walls/storey-2-wall-notch-west",
+      "source_fact_refs": [
+        "/known_facts/walls/13"
+      ]
+    },
+    {
+      "actual": {
+        "x": [
+          4.6000000000000005,
+          4.8
+        ],
+        "y": [
+          5.2,
+          12.600000000000001
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "code": "WALL_SEGMENT_MISMATCH",
+      "entity_ids": [
+        "wall-storey-3-storey-3-wall-notch-west"
+      ],
+      "expected": {
+        "x": [
+          4.6,
+          4.8
+        ],
+        "y": [
+          4.7,
+          12.1
+        ],
+        "z": [
+          6.3,
+          9.3
+        ]
+      },
+      "message": "Wall 'wall-storey-3-storey-3-wall-notch-west' world bounding box is outside tolerance.",
+      "path": "/walls/storey-3-wall-notch-west",
+      "source_fact_refs": [
+        "/known_facts/walls/23"
+      ]
+    },
+    {
+      "code": "ROOM_ENCLOSURE_OPEN",
+      "message": "Expected wall geometry does not form the required room enclosure.",
+      "path": "/walls"
+    },
+    {
+      "actual": {
+        "reason": "floor_slab_geometry_missing"
+      },
+      "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+      "message": "Required geometry could not be derived from confirmed facts.",
+      "path": "/known_facts/floor_slabs/0",
+      "source_fact_refs": []
+    },
+    {
+      "actual": {
+        "reason": "floor_slab_geometry_missing"
+      },
+      "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+      "message": "Required geometry could not be derived from confirmed facts.",
+      "path": "/known_facts/floor_slabs/1",
+      "source_fact_refs": []
+    },
+    {
+      "actual": {
+        "reason": "floor_slab_geometry_missing"
+      },
+      "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+      "message": "Required geometry could not be derived from confirmed facts.",
+      "path": "/known_facts/floor_slabs/2",
+      "source_fact_refs": []
+    }
+  ],
+  "metrics": {
+    "case_id": "9b00e53444a948e7",
+    "expectation_complete": false,
+    "floor_openings": {},
+    "products": {},
+    "roof": {},
+    "slabs": {},
+    "spaces": {
+      "space-storey-1-storey-1-space-circulation": {
+        "bbox": {
+          "x": [
+            0.2,
+            4.6000000000000005
+          ],
+          "y": [
+            0.2,
+            16.6
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-storey-1-space-north-classroom": {
+        "bbox": {
+          "x": [
+            4.8,
+            13.0
+          ],
+          "y": [
+            12.200000000000001,
+            16.6
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-storey-1-space-south-classroom": {
+        "bbox": {
+          "x": [
+            4.8,
+            13.0
+          ],
+          "y": [
+            0.2,
+            4.6000000000000005
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-storey-2-space-circulation": {
+        "bbox": {
+          "x": [
+            0.2,
+            4.6000000000000005
+          ],
+          "y": [
+            0.2,
+            16.6
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-storey-2-space-north-classroom": {
+        "bbox": {
+          "x": [
+            4.8,
+            13.0
+          ],
+          "y": [
+            12.200000000000001,
+            16.6
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-storey-2-space-south-classroom": {
+        "bbox": {
+          "x": [
+            4.8,
+            13.0
+          ],
+          "y": [
+            0.2,
+            4.6000000000000005
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-3-storey-3-space-circulation": {
+        "bbox": {
+          "x": [
+            0.2,
+            4.6000000000000005
+          ],
+          "y": [
+            0.2,
+            16.6
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-3-storey-3-space-north-classroom": {
+        "bbox": {
+          "x": [
+            4.8,
+            13.0
+          ],
+          "y": [
+            12.200000000000001,
+            16.6
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-3-storey-3-space-south-classroom": {
+        "bbox": {
+          "x": [
+            4.8,
+            13.0
+          ],
+          "y": [
+            0.2,
+            4.6000000000000005
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      }
+    },
+    "stairs": {
+      "stair-flight-1": {
+        "bbox": {
+          "x": [
+            0.4,
+            1.6
+          ],
+          "y": [
+            5.4,
+            10.8
+          ],
+          "z": [
+            0.0,
+            3.15
+          ]
+        },
+        "flight_ids": [
+          "stair-flight-flight-1"
+        ],
+        "has_stepped_profile": true,
+        "wall_intersections": []
+      },
+      "stair-flight-2": {
+        "bbox": {
+          "x": [
+            2.8000000000000003,
+            4.0
+          ],
+          "y": [
+            5.4,
+            10.8
+          ],
+          "z": [
+            3.15,
+            6.3
+          ]
+        },
+        "flight_ids": [
+          "stair-flight-flight-2"
+        ],
+        "has_stepped_profile": true,
+        "wall_intersections": []
+      }
+    },
+    "unresolved_expectation_count": 3,
+    "wall_set_convention": "primary",
+    "walls": {
+      "wall-storey-1-storey-1-wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.10000000000000053,
+            13.100000000000001
+          ],
+          "y": [
+            16.599999999999998,
+            16.8
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-northwing-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            13.0,
+            13.2
+          ],
+          "y": [
+            12.1,
+            16.7
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-notch-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            4.7,
+            13.100000000000001
+          ],
+          "y": [
+            12.0,
+            12.2
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-notch-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            4.7,
+            13.100000000000001
+          ],
+          "y": [
+            4.6000000000000005,
+            4.8
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-notch-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            5.2,
+            12.600000000000001
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-partition-north": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            12.0,
+            16.6
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-partition-south": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            0.19999999999999973,
+            4.800000000000001
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.10000000000000053,
+            13.100000000000001
+          ],
+          "y": [
+            0.0,
+            0.2
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-southwing-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            13.0,
+            13.2
+          ],
+          "y": [
+            0.09999999999999964,
+            4.7
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-1-storey-1-wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            0.0,
+            0.2
+          ],
+          "y": [
+            0.09999999999999964,
+            16.700000000000003
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.10000000000000053,
+            13.100000000000001
+          ],
+          "y": [
+            16.599999999999998,
+            16.8
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-northwing-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            13.0,
+            13.2
+          ],
+          "y": [
+            12.1,
+            16.7
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-notch-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            4.7,
+            13.100000000000001
+          ],
+          "y": [
+            12.0,
+            12.2
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-notch-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            4.7,
+            13.100000000000001
+          ],
+          "y": [
+            4.6000000000000005,
+            4.8
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-notch-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            5.2,
+            12.600000000000001
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-partition-north": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            12.0,
+            16.6
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-partition-south": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            0.19999999999999973,
+            4.800000000000001
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.10000000000000053,
+            13.100000000000001
+          ],
+          "y": [
+            0.0,
+            0.2
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-southwing-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            13.0,
+            13.2
+          ],
+          "y": [
+            0.09999999999999964,
+            4.7
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-2-storey-2-wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            0.0,
+            0.2
+          ],
+          "y": [
+            0.09999999999999964,
+            16.700000000000003
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.10000000000000053,
+            13.100000000000001
+          ],
+          "y": [
+            16.599999999999998,
+            16.8
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-northwing-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            13.0,
+            13.2
+          ],
+          "y": [
+            12.1,
+            16.7
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-notch-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            4.7,
+            13.100000000000001
+          ],
+          "y": [
+            12.0,
+            12.2
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-notch-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            4.7,
+            13.100000000000001
+          ],
+          "y": [
+            4.6000000000000005,
+            4.8
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-notch-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            5.2,
+            12.600000000000001
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-partition-north": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            12.0,
+            16.6
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-partition-south": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            4.6000000000000005,
+            4.8
+          ],
+          "y": [
+            0.19999999999999973,
+            4.800000000000001
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.10000000000000053,
+            13.100000000000001
+          ],
+          "y": [
+            0.0,
+            0.2
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-southwing-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            13.0,
+            13.2
+          ],
+          "y": [
+            0.09999999999999964,
+            4.7
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      },
+      "wall-storey-3-storey-3-wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            0.0,
+            0.2
+          ],
+          "y": [
+            0.09999999999999964,
+            16.700000000000003
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWallStandardCase"
+      }
+    }
+  },
+  "success": false
+}

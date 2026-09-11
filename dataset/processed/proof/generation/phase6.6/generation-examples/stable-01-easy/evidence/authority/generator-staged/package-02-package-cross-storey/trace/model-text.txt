@@ -1,0 +1,44 @@
+{
+  "schema_version": "text2ifc/bim-json-changeset/1.0",
+  "changeset_id": "changeset-package-cross-storey-floor-slab",
+  "base_revision_id": "revision-01",
+  "base_candidate_hash": "sha256:f5647d469ca56fbb75d62adbe47d0a652dbd9be921cebff7a15639f3d28cc33d",
+  "expected_facts_hash": "sha256:6dcfd1caa280cbc5ab0c125125d2b001f23fc7983f6d560a3e1cd8a41c605fe2",
+  "source_issue_ids": ["issue-package-cross-storey"],
+  "scope_id": "scope-package-2",
+  "operations": [
+    {
+      "op": "add_entity",
+      "operation_id": "add-floor-slab-1",
+      "target_id": "floor-slab-1",
+      "value": {
+        "id": "floor-slab-1",
+        "ifc_class": "IfcSlab",
+        "attributes": {
+          "Name": "Floor Slab",
+          "ObjectPlacement": {
+            "axis": [0, 0, 1],
+            "origin": [3000, 2000, -150],
+            "ref_direction": [1, 0, 0],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 6000,
+              "y": 4000
+            },
+            "depth": 150,
+            "direction": [0, 0, 1]
+          }
+        },
+        "property_sets": {},
+        "provenance": {
+          "source": "issue-package-cross-storey"
+        }
+      },
+      "evidence_refs": ["issue-package-cross-storey:/expected"]
+    }
+  ]
+}

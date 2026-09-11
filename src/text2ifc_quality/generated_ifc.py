@@ -61,6 +61,7 @@ def check_generated_ifc(
         wall_result=selected_result,
     )
     result = _check_roof_stairs_and_openings(
+        model=model,
         products_by_id=products_by_id,
         tolerance=tolerance,
         expectation=expectation,
@@ -103,6 +104,7 @@ def check_generated_ifc(
 
 def _check_roof_stairs_and_openings(
     *,
+    model: Any,
     products_by_id: Mapping[str, Any],
     tolerance: float,
     expectation: Mapping[str, Any],
@@ -128,15 +130,21 @@ def _check_roof_stairs_and_openings(
         path_prefix="roof",
         issues=issues,
     )
-    metrics["floor_openings"] = _check_component_bboxes(
-        products_by_id=products_by_id,
-        expected_components=expectation.get("floor_openings"),
-        tolerance=tolerance,
-        missing_code="MISSING_STAIR_OPENING",
-        mismatch_code="STAIR_OPENING_BBOX_MISMATCH",
-        path_prefix="floor_openings",
-        issues=issues,
-    )
+    if expectation.get("schema_version") == "text2ifc/design-geometry-expectation/1.1":
+        from .floor_openings import check_floor_openings
+        metrics["floor_openings"] = check_floor_openings(
+            model=model, expected=expectation.get("floor_openings"),
+            tolerance=tolerance, issues=issues)
+    else:
+        metrics["floor_openings"] = _check_component_bboxes(
+            products_by_id=products_by_id,
+            expected_components=expectation.get("floor_openings"),
+            tolerance=tolerance,
+            missing_code="MISSING_STAIR_OPENING",
+            mismatch_code="STAIR_OPENING_BBOX_MISMATCH",
+            path_prefix="floor_openings",
+            issues=issues,
+        )
     metrics["products"] = _check_component_bboxes(
         products_by_id=products_by_id,
         expected_components=expectation.get("products"),

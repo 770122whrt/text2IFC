@@ -1,0 +1,181 @@
+{
+  "allowed_paths": {
+    "fill-door-ground-partition": [
+      "/attributes"
+    ],
+    "fill-door-second-partition": [
+      "/attributes"
+    ],
+    "opening-second-floor-stair-void": [
+      "/attributes"
+    ],
+    "second-floor-slab": [
+      "/attributes"
+    ],
+    "void-door-ground-partition": [
+      "/attributes"
+    ],
+    "void-door-second-partition": [
+      "/attributes"
+    ],
+    "void-second-floor-stair-opening": [
+      "/attributes"
+    ],
+    "wall-storey-1-storey-1-wall-partition": [
+      "/attributes"
+    ],
+    "wall-storey-2-storey-2-wall-partition": [
+      "/attributes"
+    ]
+  },
+  "base_revision_id": "revision-00",
+  "dependencies": [
+    {
+      "dependency_id": "door-storey-1-door-ground-partition",
+      "reason": "door-storey-1-door-ground-partition is an endpoint of fill-door-ground-partition.",
+      "relationship_type": "IfcRelFillsElement",
+      "target_id": "fill-door-ground-partition"
+    },
+    {
+      "dependency_id": "door-storey-2-door-second-partition",
+      "reason": "door-storey-2-door-second-partition is an endpoint of fill-door-second-partition.",
+      "relationship_type": "IfcRelFillsElement",
+      "target_id": "fill-door-second-partition"
+    },
+    {
+      "dependency_id": "void-second-floor-stair-opening",
+      "reason": "IfcRelVoidsElement references an allowed component.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "opening-second-floor-stair-void"
+    },
+    {
+      "dependency_id": "fill-door-ground-partition",
+      "reason": "IfcRelFillsElement references an allowed component.",
+      "relationship_type": "IfcRelFillsElement",
+      "target_id": "opening-storey-1-door-ground-partition"
+    },
+    {
+      "dependency_id": "fill-door-second-partition",
+      "reason": "IfcRelFillsElement references an allowed component.",
+      "relationship_type": "IfcRelFillsElement",
+      "target_id": "opening-storey-2-door-second-partition"
+    },
+    {
+      "dependency_id": "opening-storey-1-door-ground-partition",
+      "reason": "opening-storey-1-door-ground-partition is an endpoint of void-door-ground-partition.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "void-door-ground-partition"
+    },
+    {
+      "dependency_id": "opening-storey-2-door-second-partition",
+      "reason": "opening-storey-2-door-second-partition is an endpoint of void-door-second-partition.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "void-door-second-partition"
+    },
+    {
+      "dependency_id": "void-door-ground-partition",
+      "reason": "IfcRelVoidsElement references an allowed component.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "wall-storey-1-storey-1-wall-partition"
+    },
+    {
+      "dependency_id": "void-door-second-partition",
+      "reason": "IfcRelVoidsElement references an allowed component.",
+      "relationship_type": "IfcRelVoidsElement",
+      "target_id": "wall-storey-2-storey-2-wall-partition"
+    }
+  ],
+  "entity_ids": [
+    "door-storey-1-door-ground-partition",
+    "door-storey-2-door-second-partition",
+    "opening-second-floor-stair-void",
+    "opening-storey-1-door-ground-partition",
+    "opening-storey-2-door-second-partition",
+    "second-floor-slab",
+    "wall-storey-1-storey-1-wall-partition",
+    "wall-storey-2-storey-2-wall-partition"
+  ],
+  "forbidden_ids": [
+    "aggregate-main-stair-flight",
+    "building-1",
+    "door-storey-1-door-ground-main",
+    "fill-door-ground-main",
+    "fill-window-ground-east-1",
+    "fill-window-ground-north-1",
+    "fill-window-ground-south-1",
+    "fill-window-ground-south-2",
+    "fill-window-ground-west-1",
+    "fill-window-second-east-1",
+    "fill-window-second-north-1",
+    "fill-window-second-south-1",
+    "fill-window-second-south-2",
+    "fill-window-second-west-1",
+    "ground-slab",
+    "opening-storey-1-door-ground-main",
+    "opening-storey-1-window-ground-east-1",
+    "opening-storey-1-window-ground-north-1",
+    "opening-storey-1-window-ground-south-1",
+    "opening-storey-1-window-ground-south-2",
+    "opening-storey-1-window-ground-west-1",
+    "opening-storey-2-window-second-east-1",
+    "opening-storey-2-window-second-north-1",
+    "opening-storey-2-window-second-south-1",
+    "opening-storey-2-window-second-south-2",
+    "opening-storey-2-window-second-west-1",
+    "project-1",
+    "roof-slab",
+    "site-1",
+    "space-storey-1-space-reading-lobby",
+    "space-storey-1-space-stair-hall-1",
+    "space-storey-2-space-activity-hall",
+    "space-storey-2-space-stair-platform-2",
+    "stair-1",
+    "stair-flight-1",
+    "storey-1",
+    "storey-2",
+    "void-door-ground-main",
+    "void-window-ground-east-1",
+    "void-window-ground-north-1",
+    "void-window-ground-south-1",
+    "void-window-ground-south-2",
+    "void-window-ground-west-1",
+    "void-window-second-east-1",
+    "void-window-second-north-1",
+    "void-window-second-south-1",
+    "void-window-second-south-2",
+    "void-window-second-west-1",
+    "wall-storey-1-storey-1-wall-east",
+    "wall-storey-1-storey-1-wall-north",
+    "wall-storey-1-storey-1-wall-south",
+    "wall-storey-1-storey-1-wall-west",
+    "wall-storey-2-storey-2-wall-east",
+    "wall-storey-2-storey-2-wall-north",
+    "wall-storey-2-storey-2-wall-south",
+    "wall-storey-2-storey-2-wall-west",
+    "window-storey-1-window-ground-east-1",
+    "window-storey-1-window-ground-north-1",
+    "window-storey-1-window-ground-south-1",
+    "window-storey-1-window-ground-south-2",
+    "window-storey-1-window-ground-west-1",
+    "window-storey-2-window-second-east-1",
+    "window-storey-2-window-second-north-1",
+    "window-storey-2-window-second-south-1",
+    "window-storey-2-window-second-south-2",
+    "window-storey-2-window-second-west-1"
+  ],
+  "relationship_ids": [
+    "fill-door-ground-partition",
+    "fill-door-second-partition",
+    "void-door-ground-partition",
+    "void-door-second-partition",
+    "void-second-floor-stair-opening"
+  ],
+  "schema_version": "text2ifc/change-scope/1.0",
+  "scope_id": "scope-revision-01",
+  "source_issue_ids": [
+    "issue_audit_0001_01",
+    "issue_audit_0001_02",
+    "issue_audit_0002_01",
+    "issue_audit_0002_02"
+  ]
+}

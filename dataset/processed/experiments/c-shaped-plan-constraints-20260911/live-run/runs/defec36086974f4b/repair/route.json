@@ -1,0 +1,34 @@
+{
+  "assessment_scope": {
+    "geometry_feedback_supplied": false,
+    "geometry_issue_count_basis": "supplied_feedback_only",
+    "geometry_pass_certified": false,
+    "interpretation": "This route assesses generator validation and only the geometry issues supplied to this invocation. Zero issues/no_repair_needed is not a geometry pass. Current compile/reopen/geometry gates remain authoritative."
+  },
+  "case_id": "defec36086974f4b",
+  "fact_delta": "fact-delta.json",
+  "geometry_issue_count": 0,
+  "provider_call_count": 1,
+  "repair_attempts": [
+    {
+      "attempt_number": 1,
+      "fixed_issue_codes": [
+        "INVALID_IFC_ATTRIBUTE"
+      ],
+      "input_issue_count": 1,
+      "output_issue_count": 0,
+      "remaining_issue_codes": [],
+      "result_status": "improved"
+    }
+  ],
+  "repair_diagnostics": [],
+  "repair_source_artifact": "invalid-candidate.json",
+  "route": "repair_attempted",
+  "schema_version": "text2ifc/repair-route/1.1",
+  "source_document_kind": "invalid_formal",
+  "source_document_path": "parsed-output.json",
+  "source_generator_dir": "dataset/processed/ifc-presentation-validation/c-shaped-plan-constraints-20260911/live-run/runs/defec36086974f4b/generator",
+  "source_generator_response_id": "666b0dcf-3b06-45ad-aad5-9d7341914325",
+  "valid": true,
+  "validation_issue_count": 1
+}

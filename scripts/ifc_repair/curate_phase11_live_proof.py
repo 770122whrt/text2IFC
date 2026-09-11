@@ -24,8 +24,8 @@ SOURCE_IFC = (
     ROOT
     / "dataset/external/bim-whale-ifc-samples/LargeBuilding/IFC/LargeBuilding.ifc"
 )
-DEFAULT_COLLECTION = ROOT / "dataset/processed/proof/ifc-repair-success-cases"
-DEFAULT_LIVE_PROOF = ROOT / "dataset/processed/proof/phase11-live-uat"
+DEFAULT_COLLECTION = ROOT / "dataset/processed/ifc-repair-runs/curation-staging/phase11-reference"
+DEFAULT_LIVE_PROOF = ROOT / "dataset/processed/ifc-repair-runs/curation-staging/phase11-live-uat"
 SUCCESS_CASES = {
     "complete-door": "largebuilding-live-deepseek-complete-door",
     "incomplete-then-feedback": (

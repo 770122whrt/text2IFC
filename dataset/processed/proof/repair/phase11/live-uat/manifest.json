@@ -1,0 +1,276 @@
+{
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
+  "collection_id": "live-uat",
+  "workflow": "repair",
+  "status": "historical",
+  "cases": [
+    {
+      "case_id": "unsupported-complex-door",
+      "path": "unsupported-complex-door",
+      "status": "historical",
+      "outcome": "no_output",
+      "evidence_mode": "live",
+      "provider_calls": "1/0 (Stage 1/2)",
+      "run_id": "repair-091d667e6d334857aa364e8038ffd8e9",
+      "authority": "unsupported-complex-door/evidence/authority/case-result.json",
+      "original_role": null,
+      "ifccompare": "N/A：unsupported 无输出",
+      "artifacts": {
+        "request.txt": {
+          "sha256": "2156b3de97de36ad30306c035aedc2fb5fd05ff587b188ec062f2bc37ef732bf",
+          "size_bytes": 167,
+          "source": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/api-context.json",
+          "field": "repair_text"
+        },
+        "02-damaged.ifc": {
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831,
+          "source": "unsupported-complex-door/02-damaged.ifc"
+        }
+      },
+      "legacy_authority": "dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z/unsupported"
+    }
+  ],
+  "references": [
+    "- [largebuilding-live-deepseek-complete-door](<../reference-cases/door/surviving-opening/largebuilding-live-deepseek-complete-door/REPORT.md>)",
+    "- [largebuilding-live-deepseek-clarified-door](<../reference-cases/door/surviving-opening/largebuilding-live-deepseek-clarified-door/REPORT.md>)"
+  ],
+  "scope": "storage consolidation; original acceptance unchanged; frozen bytes reconstructable",
+  "legacy_bundles": [
+    {
+      "id": "frozen",
+      "old_root": "dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z",
+      "entries": [
+        {
+          "legacy_path": "FILES.json",
+          "path": "evidence/frozen/FILES.json",
+          "sha256": "8688591342b63e2fc464714a5b00c056ba007396db7a48ce2caf4a584c6ee3fd",
+          "size_bytes": 1437
+        },
+        {
+          "legacy_path": "live-uat-result.json",
+          "path": "evidence/frozen/live-uat-result.json",
+          "sha256": "a1d8732cd1c5760faf7f292b352da2439381c091cc61e201153f3b6dd375e895",
+          "size_bytes": 22474
+        },
+        {
+          "legacy_path": "README.md",
+          "path": "evidence/frozen/README.md",
+          "sha256": "13a54bcf8b9d3aed580e34a09e77730b4038e0480cac2fd193daaf7106c59fbc",
+          "size_bytes": 198
+        },
+        {
+          "legacy_path": "unsupported/case-result.json",
+          "path": "unsupported-complex-door/evidence/authority/case-result.json",
+          "sha256": "9e7ae178a6e557eda1cd952c8baa08b0ebe0bdd8746b59ed04f206ddde6491e7",
+          "size_bytes": 4019
+        },
+        {
+          "legacy_path": "unsupported/provider-attempts.json",
+          "path": "unsupported-complex-door/evidence/authority/provider-attempts.json",
+          "sha256": "52dd30229fa727fdaa43f0adcfa876e9331a81ff0aac67db1cc0828a0c011d42",
+          "size_bytes": 3166
+        },
+        {
+          "legacy_path": "unsupported/repair-intent.json",
+          "path": "unsupported-complex-door/evidence/authority/repair-intent.json",
+          "sha256": "9f516ef0ab054f5420aaee1aaaf1867343074184acccd71653dab1494ba08f71",
+          "size_bytes": 2063
+        },
+        {
+          "legacy_path": "unsupported/state.json",
+          "path": "unsupported-complex-door/evidence/authority/state.json",
+          "sha256": "2a8369dde975b211ef6078395deb5c9c5ab275b5a682260eedd0c03aaf783783",
+          "size_bytes": 5022
+        }
+      ]
+    },
+    {
+      "id": "guard-run",
+      "old_root": "dataset/processed/ifc-repair/phase11-live-uat/uat-20260731T224900289758Z/unsupported-complex-door",
+      "entries": [
+        {
+          "legacy_path": "case-result.json",
+          "path": "evidence/guard-run/case-result.json",
+          "sha256": "9e7ae178a6e557eda1cd952c8baa08b0ebe0bdd8746b59ed04f206ddde6491e7",
+          "size_bytes": 4019
+        },
+        {
+          "legacy_path": "fixture/damaged.ifc",
+          "path": "unsupported-complex-door/02-damaged.ifc",
+          "sha256": "37c395b695f2efad78598811b643987e53a347fb0f33c07698eff29818629390",
+          "size_bytes": 1287831
+        },
+        {
+          "legacy_path": "fixture/mutation_manifest.private.json",
+          "path": "evidence/guard-run/fixture/mutation_manifest.private.json",
+          "sha256": "4481cd7e47ba3b7da3bddf693bf67b855b1058bb3e4a74fee44259905f7d8ee6",
+          "size_bytes": 2369
+        },
+        {
+          "legacy_path": "fixture/mutation_report.json",
+          "path": "evidence/guard-run/fixture/mutation_report.json",
+          "sha256": "3f2f4d836b1204c7b5aaeb3f266a974972838c601a6b7d01449ae17c0efa14a5",
+          "size_bytes": 1493
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.terminal-bundles/a56d468537004497b4cf086028a07f88/evaluation/public-evaluation.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.terminal-bundles/a56d468537004497b4cf086028a07f88/evaluation/public-evaluation.json",
+          "sha256": "86df8090e8e7e46da47539f13cbc4d7fa28eebaef6aa7157d70545e42709f971",
+          "size_bytes": 517
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.terminal-bundles/a56d468537004497b4cf086028a07f88/manifest.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.terminal-bundles/a56d468537004497b4cf086028a07f88/manifest.json",
+          "sha256": "1c6ce58e632d2479525c61fa38f78001acd006ea849dc4156a3ad2c94b423b43",
+          "size_bytes": 497
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.terminal-bundles/a56d468537004497b4cf086028a07f88/terminal/evidence.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.terminal-bundles/a56d468537004497b4cf086028a07f88/terminal/evidence.json",
+          "sha256": "82488021fbff85b03fced9428964ab7cf24b9a9e9f7f7c7df62a45d2469b6326",
+          "size_bytes": 118
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.transition.lock",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/.transition.lock",
+          "sha256": "7dea8761dad1cf8f02b8e4bd9447081c8e7cf539f361bd3e8dab8f01089dd499",
+          "size_bytes": 51
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/api-context.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/api-context.json",
+          "sha256": "e8823d5aaed546db07928b01df92d387869a5b9392a43f91c8a6e6f1bfb0cd7b",
+          "size_bytes": 1886
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/index/targets.sqlite",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/index/targets.sqlite",
+          "sha256": "8a495bf47bd2b48dc87fdd8b00b7ff8f35eb03a93b9bbdefc482d47330e78c75",
+          "size_bytes": 2134016
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/attempt-001.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/attempt-001.json",
+          "sha256": "4ad9f90063987e2243b376de792bf284c1493f8e0552329fdd4fbec856c87a3f",
+          "size_bytes": 2764
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/live-attempt-001.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/live-attempt-001.json",
+          "sha256": "e8222734c6cdc689d2c48ef6efc048e65e46d06f61461d6aa8b5e9fb689994ef",
+          "size_bytes": 74456
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/rendered-prompt.md",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/rendered-prompt.md",
+          "sha256": "c6680d5532e5513f8df971e7fe260acc8a86bd374428aca0515346f9f1696360",
+          "size_bytes": 24541
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/renderer-input.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/renderer-input.json",
+          "sha256": "7d8c2261d929b85a2cca75db76b758b726ff7119ef3a554b787d689f536627fd",
+          "size_bytes": 32831
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/repair-intent-completeness.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/repair-intent-completeness.json",
+          "sha256": "457db755dd97b398e6d44abdb28f1e90cda0ab7480159d13b9b0534a6550b488",
+          "size_bytes": 287
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/repair-intent.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/intent/repair-intent.json",
+          "sha256": "9f516ef0ab054f5420aaee1aaaf1867343074184acccd71653dab1494ba08f71",
+          "size_bytes": 2063
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/state.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/state.json",
+          "sha256": "2a8369dde975b211ef6078395deb5c9c5ab275b5a682260eedd0c03aaf783783",
+          "size_bytes": 5022
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000000.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000000.json",
+          "sha256": "909ff55938b6822789943e5fe585e16027ed6a4ab537aecc176b260ac69fb586",
+          "size_bytes": 720
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000001.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000001.json",
+          "sha256": "b79509eddfd1802a3123874f4556272e4fa08c8e87bd79afd587a8d822ef2a4b",
+          "size_bytes": 736
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000002.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000002.json",
+          "sha256": "a0c6e88ef0b6ef5af3706bc5fb0bd1291c75efd1258f82e0a76bc90216914509",
+          "size_bytes": 912
+        },
+        {
+          "legacy_path": "runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000003.json",
+          "path": "evidence/guard-run/runtime/runs/repair-091d667e6d334857aa364e8038ffd8e9/transitions/000003.json",
+          "sha256": "80ea78a82f920946358888bfbc926b3533af3116cba78a87847cc053162a73cf",
+          "size_bytes": 1245
+        },
+        {
+          "legacy_path": "strict-reopen-verification.json",
+          "path": "evidence/guard-run/strict-reopen-verification.json",
+          "sha256": "53bf55658318ce1e4b00acd4f4b2c7e8b3b7e1eb7a8e5d45f5fac381e6dfc036",
+          "size_bytes": 96
+        }
+      ]
+    },
+    {
+      "id": "legacy-root",
+      "old_root": "dataset/processed/proof/phase11-live-uat",
+      "entries": [
+        {
+          "legacy_path": "uat-20260731T224900289758Z/FILES.json",
+          "path": "evidence/frozen/FILES.json",
+          "sha256": "8688591342b63e2fc464714a5b00c056ba007396db7a48ce2caf4a584c6ee3fd",
+          "size_bytes": 1437
+        },
+        {
+          "legacy_path": "uat-20260731T224900289758Z/live-uat-result.json",
+          "path": "evidence/frozen/live-uat-result.json",
+          "sha256": "a1d8732cd1c5760faf7f292b352da2439381c091cc61e201153f3b6dd375e895",
+          "size_bytes": 22474
+        },
+        {
+          "legacy_path": "uat-20260731T224900289758Z/README.md",
+          "path": "evidence/frozen/README.md",
+          "sha256": "13a54bcf8b9d3aed580e34a09e77730b4038e0480cac2fd193daaf7106c59fbc",
+          "size_bytes": 198
+        },
+        {
+          "legacy_path": "uat-20260731T224900289758Z/unsupported/case-result.json",
+          "path": "unsupported-complex-door/evidence/authority/case-result.json",
+          "sha256": "9e7ae178a6e557eda1cd952c8baa08b0ebe0bdd8746b59ed04f206ddde6491e7",
+          "size_bytes": 4019
+        },
+        {
+          "legacy_path": "uat-20260731T224900289758Z/unsupported/provider-attempts.json",
+          "path": "unsupported-complex-door/evidence/authority/provider-attempts.json",
+          "sha256": "52dd30229fa727fdaa43f0adcfa876e9331a81ff0aac67db1cc0828a0c011d42",
+          "size_bytes": 3166
+        },
+        {
+          "legacy_path": "uat-20260731T224900289758Z/unsupported/repair-intent.json",
+          "path": "unsupported-complex-door/evidence/authority/repair-intent.json",
+          "sha256": "9f516ef0ab054f5420aaee1aaaf1867343074184acccd71653dab1494ba08f71",
+          "size_bytes": 2063
+        },
+        {
+          "legacy_path": "uat-20260731T224900289758Z/unsupported/state.json",
+          "path": "unsupported-complex-door/evidence/authority/state.json",
+          "sha256": "2a8369dde975b211ef6078395deb5c9c5ab275b5a682260eedd0c03aaf783783",
+          "size_bytes": 5022
+        }
+      ]
+    }
+  ],
+  "legacy_authority": "dataset/processed/proof/phase11-live-uat/uat-20260731T224900289758Z"
+}

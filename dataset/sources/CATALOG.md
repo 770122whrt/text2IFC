@@ -1,5 +1,7 @@
 # External Data Source Catalog
 
+当前完整来源登记以 [ifc-sources.json](../manifests/ifc-sources.json) 与 [ifc-files.jsonl](../manifests/ifc-files.jsonl) 为入口；下文保留初始来源审查记录。新增来源的存在不自动意味着训练或再分发许可。BIMNet 当前位置为 `dataset/external/bimnet/`，授权边界不变。
+
 This catalog records sources considered for text2IFC data expansion. A public
 download URL alone does not make a source suitable for training. Each source
 must have a reviewed license, provenance, validation status, and intended use.

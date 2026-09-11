@@ -19,7 +19,7 @@ OLD_OFFSITE_CASE = (
     ROOT
     / "tests/fixtures/ifc_repair/phase12-plan07-offsite-known-failure"
 )
-VVO = ROOT / "dataset/ifc/train/vvo.ifc"
+VVO = ROOT / "dataset/external/bimnet/vvo.ifc"
 VVO_BEAM_ID = "17tPjyQtf2L9JnbXXmcTUF"
 VVO_COLUMN_ID = "1rsYNObuDC4euALdw6WUK4"
 VVO_ATOMIC_CASE_ID = "phase12-v2-vvo-beam-column-atomic-restoration"

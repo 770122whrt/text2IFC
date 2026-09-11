@@ -152,8 +152,13 @@ def _storey_containment_gate(
 
             expected_host = _string(record.get("host_wall"))
             if expected_host and collection in {"doors", "windows"}:
+                host_match = _resolve_expected_entity(
+                    graph=graph, expected_facts=expected_facts, collection="walls",
+                    record={"id": expected_host, "storey": expected_storey},
+                )
+                resolved_host = host_match["candidate_id"] if host_match else expected_host
                 actual_host = graph.host_wall_for_opening_element(candidate_id) if candidate_id else None
-                if actual_host != expected_host:
+                if actual_host != resolved_host:
                     issues.append(
                         {
                             "code": "HOST_WALL_MISMATCH",
@@ -207,8 +212,25 @@ def _storey_name_consistency_gate(
         actual_name = _string(attributes.get("Name")) if isinstance(attributes, Mapping) else None
         if not actual_storey or not expected_storey_name or not actual_name:
             continue
+        endpoint_storeys = set()
+        if entity.get("ifc_class") in {"IfcStair", "IfcStairFlight"}:
+            # Only a uniquely identified frozen connection can explain a
+            # destination label. Candidate prose cannot authorize new floors.
+            connections = [record for record in _records(expected_facts.get("stairs"))
+                           if record.get("id") == entity_id
+                           or _is_frozen_stair_child(graph, entity_id, record)]
+            if len(connections) == 1 and connections[0].get("from_storey") == actual_storey:
+                destination = connections[0].get("to_storey")
+                destination_name = storey_names.get(destination)
+                if (destination != actual_storey and destination_name
+                    and unique_labels.get(expected_storey_name) == actual_storey
+                    and unique_labels.get(destination_name) == destination):
+                    endpoint_storeys.add(destination)
+        elif entity.get('ifc_class') == 'IfcOpeningElement':
+            endpoint_storeys.update(_frozen_opening_name_context(graph, expected_facts, entity_id, actual_storey))
         for conflicting_name, conflicting_storey in sorted(unique_labels.items()):
-            if conflicting_storey == actual_storey or conflicting_name not in actual_name:
+            if (conflicting_storey == actual_storey or conflicting_storey in endpoint_storeys
+                or conflicting_name not in actual_name):
                 continue
             issues.append(
                 {
@@ -228,7 +250,7 @@ def _storey_name_consistency_gate(
         "dynamic_storey_name_consistency",
         applicability="applicable",
         status="failed" if issues else "passed",
-        basis="explicit component storey labels compared with placement-derived ownership",
+        basis="explicit component storey labels compared with placement ownership and uniquely frozen cross-storey service context; names do not certify ownership",
         issues=issues,
         source_paths=["expected-facts.json", "generator/candidate.json"],
     )
@@ -239,6 +261,68 @@ def _group_storey_names(storey_names: Mapping[str, str]) -> dict[str, list[str]]
     for storey_id, name in storey_names.items():
         grouped[name].append(storey_id)
     return grouped
+
+
+def _frozen_opening_name_context(graph, expected_facts, entity_id, actual_storey):
+    """A slab opening may describe the stair it serves. Resolve by frozen
+    identity, host and exact opening bounds, never by candidate prose/ID hints.
+    This only interprets name mentions; geometry and containment gates remain.
+    """
+    from .cross_storey_identity import floor_opening_id, slab_openings
+    matches = [(slab, opening) for slab in _records(expected_facts.get('slabs'))
+               for index, opening in enumerate(slab_openings(slab))
+               if floor_opening_id(opening, slab.get('id'), index) == entity_id]
+    if len(matches) != 1:
+        return set()
+    slab, opening = matches[0]
+    host = slab.get('id')
+    host_entity = graph.entities.get(host, {})
+    hosts = [r.get('attributes', {}).get('RelatingBuildingElement') for r in graph.relationships
+             if r.get('ifc_class') == 'IfcRelVoidsElement'
+             and r.get('attributes', {}).get('RelatedOpeningElement') == entity_id]
+    if (not host or hosts != [host] or host_entity.get('ifc_class') != 'IfcSlab'
+        or slab.get('storey') != actual_storey or graph.storey_for_entity(host) != actual_storey):
+        return set()
+    bounds = opening.get('bounds')
+    if not _valid_name_context_bounds(bounds):
+        return set()
+    stairs = [s for s in _records(expected_facts.get('stairs'))
+              if s.get('to_storey') == actual_storey and s.get('from_storey') != actual_storey
+              and _valid_name_context_bounds(s.get('opening_bounds')) and s['opening_bounds'] == bounds]
+    if len(stairs) != 1:
+        return set()
+    stair = stairs[0]
+    source = stair.get('from_storey')
+    parent = graph.entities.get(stair.get('id'), {})
+    if (not source or parent.get('ifc_class') not in {'IfcStair', 'IfcStairFlight'}
+        or graph.storey_for_entity(stair.get('id')) != source):
+        return set()
+    return {source}
+
+
+def _valid_name_context_bounds(bounds):
+    import math
+    return (isinstance(bounds, Mapping) and set(bounds) == {'x', 'y'}
+            and all(isinstance(bounds[k], list) and len(bounds[k]) == 2
+                    and all(isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v) for v in bounds[k])
+                    and bounds[k][0] < bounds[k][1] for k in ['x', 'y']))
+
+
+def _is_frozen_stair_child(graph, entity_id, record):
+    from .cross_storey_identity import stair_flight_ids
+    parent_id = record.get('id')
+    if not isinstance(parent_id, str) or not parent_id:
+        return False
+    child = graph.entities.get(entity_id, {})
+    parent = graph.entities.get(parent_id, {})
+    if (child.get('ifc_class') != 'IfcStairFlight' or parent.get('ifc_class') != 'IfcStair'
+        or entity_id not in stair_flight_ids(record, parent_id)
+        or graph.storey_for_entity(parent_id) != record.get('from_storey')):
+        return False
+    parents = [relation.get('attributes', {}).get('RelatingObject')
+               for relation in graph.relationships if relation.get('ifc_class') == 'IfcRelAggregates'
+               and entity_id in relation.get('attributes', {}).get('RelatedObjects', [])]
+    return parents == [parent_id]
 
 
 def _resolve_expected_entity(
@@ -258,19 +342,25 @@ def _resolve_expected_entity(
         expected_id=expected_id,
         expected_storey=expected_storey,
     )
-    if canonical_id and graph.entity(canonical_id) is not None:
+    contract = expected_facts.get("entity_id_contract", {})
+    offered = [item for item in _records(contract.get(collection, []))
+               if item.get("brief_id") == expected_id and item.get("storey") == expected_storey]
+    if len({item.get("entity_id") for item in offered}) > 1:
+        return None
+    exact_ids = {identity for identity in (canonical_id, expected_id)
+                 if identity and graph.entity(identity) is not None}
+    if len(exact_ids) > 1:
+        return None
+    if exact_ids:
+        candidate_id = next(iter(exact_ids))
+        ifc_class = _expected_record_ifc_class(collection, record)
+        if candidate_id not in graph.ids_by_class(ifc_class):
+            return None
         return {
             "collection": collection,
             "expected_id": expected_id,
-            "candidate_id": canonical_id,
-            "match_basis": "canonical_entity_id",
-        }
-    if graph.entity(expected_id) is not None:
-        return {
-            "collection": collection,
-            "expected_id": expected_id,
-            "candidate_id": expected_id,
-            "match_basis": "exact_brief_id",
+            "candidate_id": candidate_id,
+            "match_basis": "canonical_entity_id" if candidate_id == canonical_id else "exact_brief_id",
         }
 
     expected_tokens = set(_entity_id_tokens(expected_id))
@@ -659,6 +749,7 @@ class _CandidateGraph:
             entity_id
             for entity_id, entity in self.entities.items()
             if entity.get("ifc_class") == ifc_class
+            or ifc_class == "IfcWall" and entity.get("ifc_class") == "IfcWallStandardCase"
         ]
 
     def count_collection_by_storey(self, ifc_class: str) -> dict[str, int]:

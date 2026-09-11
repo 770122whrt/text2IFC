@@ -1,0 +1,72 @@
+{
+  "archive": "Text2IFC_29RVT_IFC2X3_NoGrid_Full.zip",
+  "index": 1,
+  "member": "Text2IFC_IFC2X3_NoGrid_29/01_with_shapes_le10MiB/APS Check Models/RVT-018__FindColumns-Basic__IFC2X3_NoGrid.ifc",
+  "size_bytes": 311866,
+  "sha256": "5a440c81b5b018ed46526ceb4ab0ab1a37c03d62972b61ab7e5deb80f5d7ff21",
+  "parse_status": "ok",
+  "license_status": "not_reviewed",
+  "human_review": "pending",
+  "ifcopenshell_version": "0.8.5",
+  "schema": "IFC2X3",
+  "entity_count": 6409,
+  "entity_counts": {
+    "IfcProject": 1,
+    "IfcSite": 1,
+    "IfcBuilding": 1,
+    "IfcBuildingStorey": 2,
+    "IfcElement": 24,
+    "IfcWall": 2,
+    "IfcDoor": 0,
+    "IfcWindow": 0,
+    "IfcSlab": 0,
+    "IfcRoof": 0,
+    "IfcBeam": 0,
+    "IfcColumn": 22,
+    "IfcSpace": 0,
+    "IfcGrid": 0
+  },
+  "grid_count": 0,
+  "roof_slab_count": 0,
+  "projects": [
+    {
+      "guid": "1oT30tj7LpPJ3quJbmD3Hc",
+      "name": "Project Number"
+    }
+  ],
+  "element_guids": [
+    "0k7npBjEb09ehB_mAtD1QD",
+    "1X3TiAyvzBs8T7g2DxsVQv",
+    "1X3TiAyvzBs8T7g2DxsVRo",
+    "1X3TiAyvzBs8T7g2DxsVat",
+    "1Zer3gSJHF18RDL1Eb1pQ$",
+    "1Zer3gSJHF18RDL1Eb1pSs",
+    "2HuOm76wv9IQ2JuAHLAVMI",
+    "2HuOm76wv9IQ2JuAHLAVPf",
+    "2HuOm76wv9IQ2JuAHLAVRZ",
+    "2IMheDybL61Qzga4ooSzeq",
+    "2pPoSGHnL2cA0JWubeic9v",
+    "2pPoSGHnL2cA0JWubeicBz",
+    "3ALsAr3qPABuMP7HfTqz07",
+    "3ALsAr3qPABuMP7HfTqz14",
+    "3ALsAr3qPABuMP7HfTqz1t",
+    "3ALsAr3qPABuMP7HfTqz4D",
+    "3ALsAr3qPABuMP7HfTqz5K",
+    "3ALsAr3qPABuMP7HfTqz76",
+    "3ALsAr3qPABuMP7HfTqzDT",
+    "3ALsAr3qPABuMP7HfTqzDi",
+    "3ALsAr3qPABuMP7HfTqzO9",
+    "3ALsAr3qPABuMP7HfTqzPQ",
+    "3ALsAr3qPABuMP7HfTqzS2",
+    "3ALsAr3qPABuMP7HfTqzUp"
+  ],
+  "duplicate_globalid_count": 3,
+  "body_elements": 24,
+  "body_by_class": {
+    "IfcColumn": 22,
+    "IfcWall": 2
+  },
+  "check_error": "Traceback (most recent call last):\n  File \"E:\\code for project\\bimnet\\scripts\\dataset\\check_incoming_ifc_archives.py\", line 182, in inspect_ifc\n    row[\"external_geometry_refs\"] = [{\"id\": e.id(), \"url\": e.URLReference} for e in model.by_type(\"IfcExternallyDefinedSurface\")]\n                                                                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"E:\\code for project\\bimnet\\.venv\\Lib\\site-packages\\ifcopenshell\\file.py\", line 879, in by_type\n    return [entity_instance(e, self) for e in self.wrapped_data.by_type(type)]\n                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"E:\\code for project\\bimnet\\.venv\\Lib\\site-packages\\ifcopenshell\\ifcopenshell_wrapper.py\", line 5837, in by_type\n    return _ifcopenshell_wrapper.file_by_type(self, *args)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: Entity with name 'IfcExternallyDefinedSurface' not found in schema 'IFC2X3'\n",
+  "flags": [],
+  "basic_candidate": false
+}

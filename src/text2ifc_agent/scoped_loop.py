@@ -7,12 +7,13 @@ import re
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
-from .candidate_index import build_candidate_index
+from .candidate_index import CandidateIndexError, build_candidate_index
 from .change_scope import derive_change_scope
 from .changeset_apply import apply_changeset
-from .changeset_stage import run_changeset_stage
+from .changeset_stage import run_changeset_stage, retry_candidate_key
 from .issues import Issue
 from .revisions import hash_json_value
+from .semantic_correction import build_semantic_correction, extend_semantic_scope
 
 
 _COLLECTION_REF = re.compile(
@@ -68,26 +69,54 @@ def run_scoped_changeset_round(
     issues: Sequence[Issue | Mapping[str, Any]],
     trace_level: str | None = "debug",
     base_revision: Mapping[str, Any] | None = None,
+    field_recovery: bool = False,
+    max_attempts: int = MAX_CHANGESET_ATTEMPTS,
 ) -> dict[str, Any]:
     """Generate, validate, and transactionally apply one bounded ChangeSet."""
 
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
-    revision = dict(base_revision or _initial_revision(candidate, expected_facts))
-    resolved = resolve_issue_component_refs(candidate=candidate, issues=issues)
+    try:
+        initial_revision = _initial_revision(candidate, expected_facts)
+    except CandidateIndexError as error:
+        return _blocked('scope_unresolved', [{'code': 'CHANGESET_BASE_CANDIDATE_INVALID',
+            'path': '/candidate', 'message': str(error)}])
+    revision = dict(base_revision or initial_revision)
+    recovery = None
+    if field_recovery:
+        from .early_recovery import build_field_recovery_group
+        recovery = build_field_recovery_group(candidate, issues)
+        if not recovery['eligible'] or base_revision is not None:
+            return _blocked('scope_unresolved', [{'code':'EARLY_RECOVERY_UNPROVEN', 'path':'/',
+                'message':'Early field recovery requires one independently reproduced, bounded error group.'}])
+        issues = recovery['issues']
+    correction = build_semantic_correction(candidate=candidate, design_brief=design_brief,
+        expected_facts=expected_facts, issues=issues) if not field_recovery else None
+    if correction and correction['source_issue_ids']:
+        _write_json(output / 'semantic-correction.json', correction)
+        if correction['issues']:
+            return _blocked('semantic_correction_blocked', correction['issues'])
+    else:
+        correction = None
+    corrected_issues = [i.to_dict() if isinstance(i, Issue) else dict(i) for i in issues
+                        if (i.issue_id if isinstance(i, Issue) else i.get('issue_id'))
+                        in (correction or {}).get('source_issue_ids', [])]
+    remaining = [i for i in issues if (i.issue_id if isinstance(i, Issue) else i.get('issue_id'))
+                 not in (correction or {}).get('source_issue_ids', [])]
+    resolved = resolve_issue_component_refs(candidate=candidate, issues=remaining)
     _write_json(
         output / "scope-resolution.json",
         {
             "actionable_issue_ids": [
                 issue.get("issue_id") for issue in resolved["resolved"]
-            ],
+            ] + (correction or {}).get('source_issue_ids', []),
             "context_issue_ids": [
                 issue.get("issue_id") for issue in resolved["context"]
             ],
             "issues": resolved["issues"],
         },
     )
-    if resolved["issues"] or not resolved["resolved"]:
+    if resolved["issues"] or (not resolved["resolved"] and not correction):
         diagnostics = resolved["issues"] or [
             {
                 "code": "CHANGESET_TARGET_UNRESOLVED",
@@ -103,10 +132,15 @@ def run_scoped_changeset_round(
         issues=resolved["resolved"],
         scope_id=f"scope-revision-{next_sequence:02d}",
         base_revision_id=str(revision["revision_id"]),
-    )
-    if scope_result["scope"] is None:
+        traverse_dependencies=not field_recovery,
+    ) if resolved['resolved'] else {'scope': None, 'issues': []}
+    if scope_result['issues']:
         return _blocked("scope_unresolved", scope_result["issues"])
     scope = scope_result["scope"]
+    if correction:
+        scope = extend_semantic_scope(candidate=candidate, scope=scope, correction=correction,
+            scope_id=f'scope-revision-{next_sequence:02d}', base_revision_id=str(revision['revision_id']))
+        resolved['resolved'].extend(corrected_issues)
     _write_json(output / "base-revision.json", revision)
     _write_json(output / "resolved-issues.json", {"issues": resolved["resolved"]})
     _write_json(output / "change-scope.json", scope)
@@ -115,7 +149,9 @@ def run_scoped_changeset_round(
     changeset: dict[str, Any] = {}
     applied: dict[str, Any] = {}
     application_feedback: list[dict[str, Any]] = []
-    for attempt in range(1, MAX_CHANGESET_ATTEMPTS + 1):
+    max_attempts = max(1, min(max_attempts, MAX_CHANGESET_ATTEMPTS))
+    seen_candidates = set()
+    for attempt in range(1, max_attempts + 1):
         active_output = output if attempt == 1 else output / f"attempt-{attempt:02d}"
         stage = run_changeset_stage(
             provider=provider,
@@ -132,10 +168,20 @@ def run_scoped_changeset_round(
             issues=resolved["resolved"],
             context_issues=[*resolved["context"], *application_feedback],
             trace_level=trace_level,
+            field_recovery=field_recovery,
+            semantic_correction=correction,
         )
+        retry_key = (stage.get('classification'), hash_json_value(stage.get('diagnostics', [])),
+                     retry_candidate_key(active_output))
+        if retry_key in seen_candidates:
+            diagnostics = [{'code':'CHANGESET_REPEATED_CANDIDATE', 'path':'/operations',
+                            'message':'The same failed patch was returned for the unchanged base.'}]
+            _write_json(active_output/'retry-decision.json', {'retry_allowed':False, 'issues':diagnostics})
+            return {**_blocked('repeated_candidate', diagnostics), 'stage':stage, 'scope':scope}
+        seen_candidates.add(retry_key)
         if (
             stage["classification"] == "invalid"
-            and attempt < MAX_CHANGESET_ATTEMPTS
+            and attempt < max_attempts
         ):
             application_feedback = _changeset_validation_feedback(
                 stage["diagnostics"]
@@ -155,6 +201,9 @@ def run_scoped_changeset_round(
             scope=scope,
             base_revision=revision,
             expected_facts=expected_facts,
+            allow_field_containers=field_recovery,
+            required_field_values=recovery['required_field_values'] if recovery else None,
+            semantic_correction=correction,
         )
         application_payload = {
             "valid": applied["valid"],
@@ -168,7 +217,7 @@ def run_scoped_changeset_round(
                 _write_json(output / "changeset.json", changeset)
                 _write_json(output / "application.json", application_payload)
             break
-        if attempt == MAX_CHANGESET_ATTEMPTS:
+        if attempt == max_attempts:
             return {
                 **_blocked("application_blocked", applied["issues"]),
                 "stage": stage,

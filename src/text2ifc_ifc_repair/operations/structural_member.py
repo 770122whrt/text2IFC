@@ -20,6 +20,7 @@ from text2ifc_ifc_repair.operations.hosted_opening import (
     sorted_roots,
 )
 from text2ifc_ifc_repair.type_templates import ensure_bound_type
+from text2ifc_presentation import apply_repair_appearance_on_occurrence
 
 
 STRUCTURAL_TYPE_TEMPLATE_VERSION = "0.1"
@@ -404,6 +405,7 @@ def bind_structural_type(
     expected_ifc_class: str,
     generated_type_factory: Any,
     factory_context: Mapping[str, Any],
+    appearance: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Bind one exact/generated structural Type without copying semantics.
 
@@ -474,12 +476,19 @@ def bind_structural_type(
                 "global_id": str(bound_type.GlobalId),
             },
         )
+    appearance_result = apply_repair_appearance_on_occurrence(
+        model,
+        type_object=bound_type,
+        occurrence=occurrence,
+        explicit_appearance=(None if appearance is None else dict(appearance)),
+    )
     return {
         "type": bound_type,
         "relationship": relationship,
         "generated": generated,
         "created": created,
         "modified": modified,
+        "appearance": appearance_result,
         "semantic_target_role": expected_occurrence_class.removeprefix("Ifc").lower(),
     }
 

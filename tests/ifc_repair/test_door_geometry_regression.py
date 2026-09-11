@@ -47,6 +47,11 @@ KNOWN_FAILURE = (
 )
 
 
+@pytest.fixture(autouse=True)
+def _bind_consolidated_proof(phase11_frozen_proof, monkeypatch):
+    monkeypatch.setattr(__import__(__name__, fromlist=["PROOF_ROOT"]), "PROOF_ROOT", phase11_frozen_proof)
+
+
 def _check_proof_operation(
     case: Path,
     operation_id: str,

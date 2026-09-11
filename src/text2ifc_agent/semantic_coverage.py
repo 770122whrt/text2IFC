@@ -16,8 +16,11 @@ def build_design_geometry_expectation(
     case_id: str,
     design_brief: Mapping[str, Any],
     expected_facts: Mapping[str, Any],
+    schema_version: str = "text2ifc/design-geometry-expectation/1.1",
 ) -> dict[str, Any]:
     """Derive checkable geometry only from confirmed Design Brief facts."""
+    if schema_version not in {"text2ifc/design-geometry-expectation/1.0", "text2ifc/design-geometry-expectation/1.1"}:
+        raise ValueError(f"Unsupported design geometry expectation: {schema_version}")
     known = design_brief.get("known_facts")
     known_facts = known if isinstance(known, Mapping) else {}
     building = known_facts.get("building")
@@ -131,12 +134,17 @@ def build_design_geometry_expectation(
             openings.insert(0, dict(slab["opening"]))
         for opening_index, opening in enumerate(openings):
             opening_bounds = _plan_bounds(opening.get("bounds"))
+            singular = isinstance(slab.get("opening"), Mapping)
+            source_path = (f"{path}/opening" if singular and opening_index == 0
+                           else f"{path}/openings/{opening_index - int(singular)}")
+            if opening_bounds is None and schema_version == "text2ifc/design-geometry-expectation/1.1":
+                unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_bounds_missing"))
             if opening_bounds is not None:
-                opening_id = _string(opening.get("id")) or (
-                    f"opening-{slab_id}-stair"
-                    if opening_index == 0
-                    else f"opening-{slab_id}-stair-{opening_index + 1}"
-                )
+                from .cross_storey_identity import floor_opening_id
+                opening_id = floor_opening_id(opening, slab_id, opening_index)
+                if opening_id in floor_openings and schema_version == "text2ifc/design-geometry-expectation/1.1":
+                    unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_identity_duplicate"))
+                    continue
                 floor_openings[opening_id] = {
                     "bbox": _bbox(
                         opening_bounds[0],
@@ -150,6 +158,11 @@ def build_design_geometry_expectation(
                     "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
                     "source_fact_refs": [f"{path}/openings/{opening_index}"],
                 }
+                if schema_version == "text2ifc/design-geometry-expectation/1.1":
+                    floor_openings[opening_id].update(
+                        identity_source="explicit" if _string(opening.get("id")) else "derived",
+                        source_fact_refs=[source_path],
+                    )
 
     roof_record = expected_facts.get("roof")
     if isinstance(roof_record, Mapping):
@@ -194,9 +207,8 @@ def build_design_geometry_expectation(
                     source_fact_refs=[path],
                 )
             )
-        flight_ids = stair.get("flight_ids")
-        if not isinstance(flight_ids, list) or not flight_ids:
-            flight_ids = [stair_id.replace("stair-", "stair-flight-", 1)]
+        from .cross_storey_identity import stair_flight_ids
+        flight_ids = stair_flight_ids(stair, stair_id)
         stairs[stair_id] = {
             "flight_ids": [str(item) for item in flight_ids],
             "bbox": _bbox(bounds[0], bounds[1], bounds[2], bounds[3], start, end),
@@ -395,7 +407,7 @@ def build_design_geometry_expectation(
         )
 
     return {
-        "schema_version": "text2ifc/design-geometry-expectation/1.0",
+        "schema_version": schema_version,
         "case_id": case_id,
         "source": "design_brief_expected_facts",
         "units": "METRE",
@@ -511,7 +523,11 @@ def _polygon_plan_bounds_from_fact(
     value: Any,
 ) -> tuple[float, float, float, float] | None:
     if isinstance(value, Mapping):
-        value = value.get("points")
+        # Both established wrappers describe the same polygon fact. Conflicting
+        # representations cannot be resolved by silently preferring one alias.
+        if "points" in value and "polygon" in value and value["points"] != value["polygon"]:
+            return None
+        value = value.get("polygon", value.get("points"))
     if not isinstance(value, list) or len(value) < 3:
         return None
     points: list[tuple[float, float]] = []

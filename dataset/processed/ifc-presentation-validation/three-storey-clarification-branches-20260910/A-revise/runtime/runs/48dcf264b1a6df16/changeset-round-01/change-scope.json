@@ -1,0 +1,336 @@
+{
+  "allowed_paths": {
+    "aggregate-stair-1-flight": [
+      "/attributes"
+    ],
+    "aggregate-stair-2-flight": [
+      "/attributes"
+    ],
+    "slabtype-slab-ground": [
+      "/attributes"
+    ],
+    "slabtype-slab-storey-2": [
+      "/attributes"
+    ],
+    "slabtype-slab-storey-3": [
+      "/attributes"
+    ],
+    "stair-1": [
+      "/attributes"
+    ],
+    "stair-2": [
+      "/attributes"
+    ],
+    "walltype-storey-1-wall-divider": [
+      "/attributes"
+    ],
+    "walltype-storey-1-wall-east": [
+      "/attributes"
+    ],
+    "walltype-storey-1-wall-north": [
+      "/attributes"
+    ],
+    "walltype-storey-1-wall-south": [
+      "/attributes"
+    ],
+    "walltype-storey-1-wall-west": [
+      "/attributes"
+    ],
+    "walltype-storey-2-wall-divider": [
+      "/attributes"
+    ],
+    "walltype-storey-2-wall-east": [
+      "/attributes"
+    ],
+    "walltype-storey-2-wall-north": [
+      "/attributes"
+    ],
+    "walltype-storey-2-wall-south": [
+      "/attributes"
+    ],
+    "walltype-storey-2-wall-west": [
+      "/attributes"
+    ],
+    "walltype-storey-3-wall-divider": [
+      "/attributes"
+    ],
+    "walltype-storey-3-wall-east": [
+      "/attributes"
+    ],
+    "walltype-storey-3-wall-north": [
+      "/attributes"
+    ],
+    "walltype-storey-3-wall-south": [
+      "/attributes"
+    ],
+    "walltype-storey-3-wall-west": [
+      "/attributes"
+    ]
+  },
+  "base_revision_id": "revision-00",
+  "dependencies": [
+    {
+      "dependency_id": "stair-1-flight",
+      "reason": "stair-1-flight is an endpoint of aggregate-stair-1-flight.",
+      "relationship_type": "IfcRelAggregates",
+      "target_id": "aggregate-stair-1-flight"
+    },
+    {
+      "dependency_id": "stair-2-flight",
+      "reason": "stair-2-flight is an endpoint of aggregate-stair-2-flight.",
+      "relationship_type": "IfcRelAggregates",
+      "target_id": "aggregate-stair-2-flight"
+    },
+    {
+      "dependency_id": "aggregate-stair-1-flight",
+      "reason": "IfcRelAggregates references an allowed component.",
+      "relationship_type": "IfcRelAggregates",
+      "target_id": "stair-1"
+    },
+    {
+      "dependency_id": "aggregate-stair-2-flight",
+      "reason": "IfcRelAggregates references an allowed component.",
+      "relationship_type": "IfcRelAggregates",
+      "target_id": "stair-2"
+    }
+  ],
+  "entity_ids": [
+    "slabtype-slab-ground",
+    "slabtype-slab-storey-2",
+    "slabtype-slab-storey-3",
+    "stair-1",
+    "stair-1-flight",
+    "stair-2",
+    "stair-2-flight",
+    "walltype-storey-1-wall-divider",
+    "walltype-storey-1-wall-east",
+    "walltype-storey-1-wall-north",
+    "walltype-storey-1-wall-south",
+    "walltype-storey-1-wall-west",
+    "walltype-storey-2-wall-divider",
+    "walltype-storey-2-wall-east",
+    "walltype-storey-2-wall-north",
+    "walltype-storey-2-wall-south",
+    "walltype-storey-2-wall-west",
+    "walltype-storey-3-wall-divider",
+    "walltype-storey-3-wall-east",
+    "walltype-storey-3-wall-north",
+    "walltype-storey-3-wall-south",
+    "walltype-storey-3-wall-west"
+  ],
+  "forbidden_ids": [
+    "building-1",
+    "definestype-slab-ground",
+    "definestype-slab-storey-2",
+    "definestype-slab-storey-3",
+    "definestype-storey-1-door-divider",
+    "definestype-storey-1-door-entrance",
+    "definestype-storey-1-window-east",
+    "definestype-storey-1-window-north",
+    "definestype-storey-1-window-south-1",
+    "definestype-storey-1-window-south-2",
+    "definestype-storey-1-window-west",
+    "definestype-storey-2-door-divider",
+    "definestype-storey-2-window-east",
+    "definestype-storey-2-window-north",
+    "definestype-storey-2-window-south-1",
+    "definestype-storey-2-window-south-2",
+    "definestype-storey-2-window-west",
+    "definestype-storey-3-door-divider",
+    "definestype-storey-3-window-east",
+    "definestype-storey-3-window-north",
+    "definestype-storey-3-window-south-1",
+    "definestype-storey-3-window-south-2",
+    "definestype-storey-3-window-west",
+    "definestype-wall-storey-1-wall-divider",
+    "definestype-wall-storey-1-wall-east",
+    "definestype-wall-storey-1-wall-north",
+    "definestype-wall-storey-1-wall-south",
+    "definestype-wall-storey-1-wall-west",
+    "definestype-wall-storey-2-wall-divider",
+    "definestype-wall-storey-2-wall-east",
+    "definestype-wall-storey-2-wall-north",
+    "definestype-wall-storey-2-wall-south",
+    "definestype-wall-storey-2-wall-west",
+    "definestype-wall-storey-3-wall-divider",
+    "definestype-wall-storey-3-wall-east",
+    "definestype-wall-storey-3-wall-north",
+    "definestype-wall-storey-3-wall-south",
+    "definestype-wall-storey-3-wall-west",
+    "door-storey-1-storey-1-door-divider",
+    "door-storey-1-storey-1-door-entrance",
+    "door-storey-2-storey-2-door-divider",
+    "door-storey-3-storey-3-door-divider",
+    "doorstyle-storey-1-door-divider",
+    "doorstyle-storey-1-door-entrance",
+    "doorstyle-storey-2-door-divider",
+    "doorstyle-storey-3-door-divider",
+    "fill-storey-1-door-divider",
+    "fill-storey-1-door-entrance",
+    "fill-storey-1-window-east",
+    "fill-storey-1-window-north",
+    "fill-storey-1-window-south-1",
+    "fill-storey-1-window-south-2",
+    "fill-storey-1-window-west",
+    "fill-storey-2-door-divider",
+    "fill-storey-2-window-east",
+    "fill-storey-2-window-north",
+    "fill-storey-2-window-south-1",
+    "fill-storey-2-window-south-2",
+    "fill-storey-2-window-west",
+    "fill-storey-3-door-divider",
+    "fill-storey-3-window-east",
+    "fill-storey-3-window-north",
+    "fill-storey-3-window-south-1",
+    "fill-storey-3-window-south-2",
+    "fill-storey-3-window-west",
+    "opening-slab-storey-2",
+    "opening-slab-storey-3",
+    "opening-storey-1-door-divider",
+    "opening-storey-1-door-entrance",
+    "opening-storey-1-window-east",
+    "opening-storey-1-window-north",
+    "opening-storey-1-window-south-1",
+    "opening-storey-1-window-south-2",
+    "opening-storey-1-window-west",
+    "opening-storey-2-door-divider",
+    "opening-storey-2-window-east",
+    "opening-storey-2-window-north",
+    "opening-storey-2-window-south-1",
+    "opening-storey-2-window-south-2",
+    "opening-storey-2-window-west",
+    "opening-storey-3-door-divider",
+    "opening-storey-3-window-east",
+    "opening-storey-3-window-north",
+    "opening-storey-3-window-south-1",
+    "opening-storey-3-window-south-2",
+    "opening-storey-3-window-west",
+    "project-1",
+    "roof-slab",
+    "site-1",
+    "slab-ground",
+    "slab-storey-2",
+    "slab-storey-3",
+    "space-storey-1-storey-1-space-hall",
+    "space-storey-1-storey-1-space-stair",
+    "space-storey-2-storey-2-space-hall",
+    "space-storey-2-storey-2-space-landing",
+    "space-storey-3-storey-3-space-hall",
+    "space-storey-3-storey-3-space-landing",
+    "storey-1",
+    "storey-2",
+    "storey-3",
+    "void-slab-storey-2-stair",
+    "void-slab-storey-3-stair",
+    "void-storey-1-door-divider",
+    "void-storey-1-door-entrance",
+    "void-storey-1-window-east",
+    "void-storey-1-window-north",
+    "void-storey-1-window-south-1",
+    "void-storey-1-window-south-2",
+    "void-storey-1-window-west",
+    "void-storey-2-door-divider",
+    "void-storey-2-window-east",
+    "void-storey-2-window-north",
+    "void-storey-2-window-south-1",
+    "void-storey-2-window-south-2",
+    "void-storey-2-window-west",
+    "void-storey-3-door-divider",
+    "void-storey-3-window-east",
+    "void-storey-3-window-north",
+    "void-storey-3-window-south-1",
+    "void-storey-3-window-south-2",
+    "void-storey-3-window-west",
+    "wall-storey-1-storey-1-wall-divider",
+    "wall-storey-1-storey-1-wall-east",
+    "wall-storey-1-storey-1-wall-north",
+    "wall-storey-1-storey-1-wall-south",
+    "wall-storey-1-storey-1-wall-west",
+    "wall-storey-2-storey-2-wall-divider",
+    "wall-storey-2-storey-2-wall-east",
+    "wall-storey-2-storey-2-wall-north",
+    "wall-storey-2-storey-2-wall-south",
+    "wall-storey-2-storey-2-wall-west",
+    "wall-storey-3-storey-3-wall-divider",
+    "wall-storey-3-storey-3-wall-east",
+    "wall-storey-3-storey-3-wall-north",
+    "wall-storey-3-storey-3-wall-south",
+    "wall-storey-3-storey-3-wall-west",
+    "window-storey-1-storey-1-window-east",
+    "window-storey-1-storey-1-window-north",
+    "window-storey-1-storey-1-window-south-1",
+    "window-storey-1-storey-1-window-south-2",
+    "window-storey-1-storey-1-window-west",
+    "window-storey-2-storey-2-window-east",
+    "window-storey-2-storey-2-window-north",
+    "window-storey-2-storey-2-window-south-1",
+    "window-storey-2-storey-2-window-south-2",
+    "window-storey-2-storey-2-window-west",
+    "window-storey-3-storey-3-window-east",
+    "window-storey-3-storey-3-window-north",
+    "window-storey-3-storey-3-window-south-1",
+    "window-storey-3-storey-3-window-south-2",
+    "window-storey-3-storey-3-window-west",
+    "windowstyle-storey-1-window-east",
+    "windowstyle-storey-1-window-north",
+    "windowstyle-storey-1-window-south-1",
+    "windowstyle-storey-1-window-south-2",
+    "windowstyle-storey-1-window-west",
+    "windowstyle-storey-2-window-east",
+    "windowstyle-storey-2-window-north",
+    "windowstyle-storey-2-window-south-1",
+    "windowstyle-storey-2-window-south-2",
+    "windowstyle-storey-2-window-west",
+    "windowstyle-storey-3-window-east",
+    "windowstyle-storey-3-window-north",
+    "windowstyle-storey-3-window-south-1",
+    "windowstyle-storey-3-window-south-2",
+    "windowstyle-storey-3-window-west"
+  ],
+  "relationship_ids": [
+    "aggregate-stair-1-flight",
+    "aggregate-stair-2-flight"
+  ],
+  "schema_version": "text2ifc/change-scope/1.0",
+  "scope_id": "scope-revision-01",
+  "source_issue_ids": [
+    "issue_deterministic_gate_0001",
+    "issue_deterministic_gate_0002",
+    "issue_deterministic_gate_0003",
+    "issue_deterministic_gate_0004",
+    "issue_deterministic_gate_0005",
+    "issue_deterministic_gate_0006",
+    "issue_deterministic_gate_0007",
+    "issue_deterministic_gate_0008",
+    "issue_deterministic_gate_0009",
+    "issue_deterministic_gate_0010",
+    "issue_deterministic_gate_0011",
+    "issue_deterministic_gate_0012",
+    "issue_deterministic_gate_0013",
+    "issue_deterministic_gate_0014",
+    "issue_deterministic_gate_0015",
+    "issue_deterministic_gate_0016",
+    "issue_deterministic_gate_0017",
+    "issue_deterministic_gate_0018",
+    "issue_deterministic_gate_0019",
+    "issue_deterministic_gate_0020",
+    "issue_deterministic_gate_0021",
+    "issue_deterministic_gate_0022",
+    "issue_deterministic_gate_0023",
+    "issue_deterministic_gate_0024",
+    "issue_deterministic_gate_0025",
+    "issue_deterministic_gate_0026",
+    "issue_deterministic_gate_0027",
+    "issue_deterministic_gate_0028",
+    "issue_deterministic_gate_0029",
+    "issue_deterministic_gate_0030",
+    "issue_deterministic_gate_0031",
+    "issue_deterministic_gate_0032",
+    "issue_deterministic_gate_0033",
+    "issue_deterministic_gate_0034",
+    "issue_deterministic_gate_0035",
+    "issue_deterministic_gate_0036",
+    "issue_deterministic_gate_0037",
+    "issue_deterministic_gate_0038"
+  ]
+}

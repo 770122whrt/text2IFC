@@ -1,0 +1,52 @@
+{
+  "issues": [
+    {
+      "actual_ref": "entity:second-floor-slab#/attributes",
+      "evidence": "MISSING_STAIR_OPENING: The deterministic geometry gate failed because the expected floor opening 'opening-second-floor-slab-stair' was not found in the geometry feedback. The candidate declares void 'opening-second-floor-stair-void' against 'second-floor-slab', but the floor opening metrics remain empty. This must be revised so the stair opening is recognized under the deterministic geometry expectation; audit wording cannot override this gate failure. Evidence: {\"classification\": \"candidate_geometry_issue\", \"component_ids\": [\"second-floor-slab\", \"opening-second-floor-stair-void\"], \"evidence_paths\": [\"gate-summary.json\", \"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"generator/candidate.json\", \"generator/metrics.json\"]}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_01",
+      "issue_type": "geometry_invalid",
+      "owner": "generator",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "regenerate_json"
+    },
+    {
+      "actual_ref": "entity:opening-second-floor-stair-void#/attributes",
+      "evidence": "MISSING_STAIR_OPENING: The deterministic geometry gate failed because the expected floor opening 'opening-second-floor-slab-stair' was not found in the geometry feedback. The candidate declares void 'opening-second-floor-stair-void' against 'second-floor-slab', but the floor opening metrics remain empty. This must be revised so the stair opening is recognized under the deterministic geometry expectation; audit wording cannot override this gate failure. Evidence: {\"classification\": \"candidate_geometry_issue\", \"component_ids\": [\"second-floor-slab\", \"opening-second-floor-stair-void\"], \"evidence_paths\": [\"gate-summary.json\", \"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"generator/candidate.json\", \"generator/metrics.json\"]}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0001_02",
+      "issue_type": "geometry_invalid",
+      "owner": "generator",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "regenerate_json"
+    },
+    {
+      "actual_ref": "entity:wall-storey-1-storey-1-wall-partition#/attributes",
+      "evidence": "GATE_DISPUTE: The deterministic geometry gate also reports GEOMETRY_EXPECTATION_INCOMPLETE for the interior partition walls at /known_facts/storeys/0/walls/interior/0 and /known_facts/storeys/1/walls/interior/0 because it cannot derive a unique shared-boundary/thickness expectation. The candidate appears to contain the intended single partition wall on each storey, but the gate evidence is underspecified. This is a gate_dispute and remains blocking pending human/developer review; it cannot be accepted by audit. Evidence: {\"classification\": \"gate_dispute\", \"component_ids\": [\"wall-storey-1-storey-1-wall-partition\", \"wall-storey-2-storey-2-wall-partition\"], \"evidence_paths\": [\"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"design-brief/design-brief.json\", \"gate-summary.json\"]}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0002_01",
+      "issue_type": "semantic_mismatch",
+      "owner": "audit",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "revise_design_brief"
+    },
+    {
+      "actual_ref": "entity:wall-storey-2-storey-2-wall-partition#/attributes",
+      "evidence": "GATE_DISPUTE: The deterministic geometry gate also reports GEOMETRY_EXPECTATION_INCOMPLETE for the interior partition walls at /known_facts/storeys/0/walls/interior/0 and /known_facts/storeys/1/walls/interior/0 because it cannot derive a unique shared-boundary/thickness expectation. The candidate appears to contain the intended single partition wall on each storey, but the gate evidence is underspecified. This is a gate_dispute and remains blocking pending human/developer review; it cannot be accepted by audit. Evidence: {\"classification\": \"gate_dispute\", \"component_ids\": [\"wall-storey-1-storey-1-wall-partition\", \"wall-storey-2-storey-2-wall-partition\"], \"evidence_paths\": [\"geometry-feedback.json\", \"semantic-geometry-expectation.json\", \"design-brief/design-brief.json\", \"gate-summary.json\"]}",
+      "expected_fact_ref": null,
+      "issue_id": "issue_audit_0002_02",
+      "issue_type": "semantic_mismatch",
+      "owner": "audit",
+      "retryable": true,
+      "severity": "blocking",
+      "source": "audit",
+      "suggested_route": "revise_design_brief"
+    }
+  ]
+}

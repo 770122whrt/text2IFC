@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="0.521" timestamp="2026-09-10T16:16:37.331593+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_appearance_request_projection" name="test_note_source_identifies_the_selected_final_brief" time="0.193"><failure message="AssertionError: assert [{'source_pat...ext': '最终说明'}] == [{'source_pat...ext': '最终说明'}]&#10;  &#10;  At index 0 diff: {'text': '最终说明', 'source_path': 'design-brief.json#/known_facts/appearance/style_notes'} != {'text': '最终说明', 'source_path': 'design-brief/design-brief.json#/known_facts/appearance/style_notes'}&#10;  Use -v to get more diff">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-appearance-provenance-red-20260910/test_note_source_identifies_th0')
+
+    def test_note_source_identifies_the_selected_final_brief(tmp_path):
+        write(tmp_path / 'design-brief.json', {'known_facts': {'appearance': {'style_notes': '旧副本'}}})
+        final = tmp_path / 'design-brief'
+        final.mkdir()
+        write(final / 'design-brief.json', {'known_facts': {'appearance': {'style_notes': '最终说明'}}})
+        request = request_semantics_for_case(tmp_path)
+&gt;       assert request['appearance_notes'] == [{
+            'text': '最终说明', 'source_path': 'design-brief/design-brief.json#/known_facts/appearance/style_notes'}]
+E       AssertionError: assert [{'source_pat...ext': '最终说明'}] == [{'source_pat...ext': '最终说明'}]
+E         
+E         At index 0 diff: {'text': '最终说明', 'source_path': 'design-brief.json#/known_facts/appearance/style_notes'} != {'text': '最终说明', 'source_path': 'design-brief/design-brief.json#/known_facts/appearance/style_notes'}
+E         Use -v to get more diff
+
+tests\agent\test_appearance_request_projection.py:104: AssertionError</failure></testcase></testsuite></testsuites>

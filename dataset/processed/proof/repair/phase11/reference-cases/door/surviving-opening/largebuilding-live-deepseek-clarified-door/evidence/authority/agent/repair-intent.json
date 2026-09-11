@@ -1,0 +1,72 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "door-fill-existing-1",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "fit_existing_opening": true
+      },
+      "property_intents": [],
+      "prototype_intent": {
+        "reference": "2cXV28XOjE6f6irhu0COgZ",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "补充说明：明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）。",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门。",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        },
+        {
+          "excerpt": "补充说明：明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）。",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "fill_existing_opening",
+        "component_family": "door",
+        "operation_profile": "door.fill-existing-opening.v0.2",
+        "source": {
+          "excerpt": "在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门。",
+          "reference": "request:/text",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcOpeningElement"
+        ],
+        "global_id": "2cXV28XOjE6f6irhW0COhu",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:e04f5b4f66f3c566f0f8008767cdcb80ea7aae8655e9de0f7f7bfdd8bc1379ac",
+  "provenance": [
+    {
+      "excerpt": "在已有洞口 2cXV28XOjE6f6irhW0COhu 中安装一扇门。",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    },
+    {
+      "excerpt": "补充说明：明确复用现有 DoorStyle “M_Single-Flush:Inside Door”（GlobalId 2cXV28XOjE6f6irhu0COgZ）。",
+      "reference": "request:/text",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-66f3d97219d520ac",
+  "schema_version": "text2ifc/ifc-repair-intent/0.5",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:6334e31552b981850176b342bbe439ccc0aaa1612fdf3ceace30d6a8c7eb690b"
+}

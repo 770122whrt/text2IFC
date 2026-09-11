@@ -1,5 +1,8 @@
 # Phase 12 Plan 07 收尾与 IFC Repair 技术 Handover
 
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+
+
 日期：2026-09-03
 
 分支：codex/workflow-dataset-links
@@ -8,7 +11,7 @@
 
 ## 1. 当前结论和阅读顺序
 
-Plan 07 修正后的证据已按人读优先结构放入 [Plan 07 人工 Proof 入口](../../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)。该 review manifest 当前仍是 pending_human_review；它没有被写入成功案例集合的主 accepted manifest，也不包含 R1。
+Plan 07 修正后的证据已按人读优先结构放入 [Plan 07 人工 Proof 入口](../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/PLAN07-REPORT.md)。该冻结历史 review manifest 当时仍是 pending_human_review；它没有被写入成功案例集合的主 accepted manifest，也不包含 R1。
 
 建议按以下顺序接手：
 
@@ -122,20 +125,20 @@ run_artifacts.publish_terminal_artifacts 只有在 successful_artifact_publishab
 
 人工入口：
 
-- [Plan 07 总矩阵](../../dataset/processed/proof/ifc-repair-success-cases/PLAN07-REPORT.md)
-- [Plan 07 review manifest](../../dataset/processed/proof/ifc-repair-success-cases/plan07-manifest.json)
+- [Plan 07 总矩阵](../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/PLAN07-REPORT.md)
+- [Plan 07 review manifest](../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/plan07-manifest.json)
 
 代表性案例：
 
-- [Live Beam + Column complete](../../dataset/processed/proof/ifc-repair-success-cases/structural/batch/phase12-plan07-live-beam-column-complete/REPORT.md)
-- [Offline Beam restoration](../../dataset/processed/proof/ifc-repair-success-cases/structural/single/phase12-v2-vvo-beam-loadbearing-restoration/REPORT.md)
-- [Unsupported program guard](../../dataset/processed/proof/ifc-repair-success-cases/guard/unsupported/phase12-plan07-live-structural-program-guard/REPORT.md)
+- [Live Beam + Column complete](../../dataset/processed/proof/repair/phase12/plan07-v2/live-complete/REPORT.md)
+- [Offline Beam restoration](../../dataset/processed/proof/repair/phase12/plan07-v2/beam-loadbearing/REPORT.md)
+- [Unsupported program guard](../../dataset/processed/proof/repair/phase12/plan07-v2/program-guard/REPORT.md)
 
 成功案根目录直接放 01-original.ifc、02-damaged.ifc、03-repaired.ifc、REPORT.md 和 FILES.json。Guard 只有 02-damaged.ifc 与 NO-REPAIR.md，故意没有 repaired IFC。
 
 离线 case 的 original 是运行前冻结的 damage truth，可用于相应 restoration comparison。Live case 的 original 只标为 physical_fixture_non_private_audit，不能事后冒充 case-specific private Gold；因此其 private IFCCompare 为 N/A，但 genuine execution、reopen 与 case-local L0/L1/L2 仍可独立检查。
 
-完整 machine authority 继续保留在 dataset/processed/proof/ifc-repair-success-cases-v2-plan07-staging/ 和对应 raw run，不因人读视图而移动或改写。
+2026-09-03 的交接要求保留原 machine authority。2026-09-07 用户批准集中迁移后，完整字节与旧路径映射保存在 dataset/processed/proof/repair/phase12/plan07-v2/；冻结历史 manifest 的 pending 字段不改写，当前人工审批见新集合 manifest。
 
 ## 6. 已发生的严重错误与通用修正
 
