@@ -17,8 +17,7 @@ ChangeSet and an L1/L2-validated IFC result without model-authored STEP text.
 
 **v1.0 Supported Text2IFC Baseline shipped on 2026-07-16.**
 
-**v1.1 IFC ChangeSet Repair Pipeline is in implementation; Phases 7 through 10,
-including inserted Phase 09.1, are complete and Phase 10.1 is planned.**
+**The later Phase 12/12.1 and R1 execution status is maintained in STATE.md and ROADMAP.md. Generation A/B/C have separate user-accepted Proof; this does not change the historical v1.0 validation below or declare a new full release.**
 
 The shipped supported-scope chain is:
 

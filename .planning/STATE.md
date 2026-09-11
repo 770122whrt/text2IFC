@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前工作：仓库清理与 main 整合（2026-09-12）
+
+已批准保守清理、隔离整合 main/Zcode/当前分支，以及完整离线Full Preflight。执行与阻断记录见 `docs/reports/main-integration-20260912/REPORT.md`；未调用Provider，未合main。下方C验收及Phase记录保持历史原义。
+
 ## 当前增量工作：C 型 Generation（2026-09-11）
 
 **当前：用户已验收最新C（run 05c6de3a19ed20f9），已收纳 `dataset/processed/proof/generation/phase6.6/c-shaped-teaching-20260911/REPORT.md`。9组历史实验独立归档至 `dataset/processed/experiments/README.md`；旧运行目录退役结果以 `docs/reports/c-proof-archive-20260911/REPORT.md` 为准。下文是原运行和调试检查点，不再代表待人工审查。**
