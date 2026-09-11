@@ -152,7 +152,7 @@ def test_retained_design_problem_never_overrides_a_failed_hard_gate(tmp_path):
     assert any(issue["code"] == "AUDIT_OVERRIDE_ATTEMPT" for issue in issues)
 
 
-@pytest.mark.parametrize('template_id', ['design-brief.v2.4', 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11'])
+@pytest.mark.parametrize('template_id', ['design-brief.v2.4', 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13'])
 def test_review_brief_cannot_generate_without_bound_decision_context(tmp_path, template_id):
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
     from text2ifc_agent.session_store import SessionStore
