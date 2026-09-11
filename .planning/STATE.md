@@ -16,7 +16,7 @@ progress:
 
 ## 当前增量工作：C 型 Generation（2026-09-11）
 
-最新实施依据为 `docs/architecture/semantic-appearance-plan.md`，token实验单独见 `docs/architecture/token-efficiency-plan.md`。已按真实用户澄清将入口中心南移至4.2米；真实C候选能编译重开，但Audit与独立IFC检查仍阻断，尚非待验收Proof。轮廓包装读取和路由评估范围已局部修复；新发现Brief墙体端点本身造成转角重叠/缺口，先定位并修复该合同再恢复Provider。C最新账本为 `c-shaped-clarified-entry-20260911/live-run/runs/9b00e53444a948e7/generation-budget.json`，累计8次/583435 token/1375.654秒，不能复用旧账本。完整报告见 `dataset/processed/ifc-presentation-validation/c-shaped-gate-debug-20260911/REPORT.md`。下方Phase/R1历史状态及accepted Proof保持原义。
+最新实施依据为 `docs/architecture/semantic-appearance-plan.md`，token实验单独见 `docs/architecture/token-efficiency-plan.md`。入口中心4.2米真实澄清不变。新墙边界 Prompt 后真实run `916d8afe752160e3` 因完整JSON Repair漏掉两条楼梯聚合关系停止，无新IFC/无Audit/非待验收Proof；旧可重开诊断IFC保持。已转入唯一闭集枚举字段的局部ChangeSet恢复，范围外关系/原值冻结，离线验证不等于真实修复成功。Brief仍有凹口墙落在轮廓外，下一步先处理明确轮廓约束与派生边界的一致性，再准入继续Provider。C最新账本为 `c-shaped-wall-join-20260911/live-run/runs/916d8afe752160e3/generation-budget.json`，累计11次/831626 token/1793.529秒；原32次/200万token/3600秒不变，不复用旧账本或当前已变化的准入。完整报告见 `dataset/processed/ifc-presentation-validation/c-shaped-wall-join-20260911/REPORT.md`。C完成后再做A/B/C同代码、同输入、同评价器的token开发实验；下方Phase/R1历史状态及accepted Proof保持原义。
 
 ## Codex Task Pilot Checkpoint — 2026-07-31
 

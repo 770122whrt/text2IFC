@@ -1,0 +1,47 @@
+{
+  "assessment_scope": {
+    "geometry_feedback_supplied": false,
+    "geometry_issue_count_basis": "supplied_feedback_only",
+    "geometry_pass_certified": false,
+    "interpretation": "This route assesses generator validation and only the geometry issues supplied to this invocation. Zero issues/no_repair_needed is not a geometry pass. Current compile/reopen/geometry gates remain authoritative."
+  },
+  "case_id": "916d8afe752160e3",
+  "fact_delta": null,
+  "geometry_issue_count": 0,
+  "provider_call_count": 1,
+  "repair_attempts": [
+    {
+      "attempt_number": 1,
+      "fixed_issue_codes": [
+        "INVALID_IFC_ATTRIBUTE"
+      ],
+      "input_issue_count": 9,
+      "output_issue_count": null,
+      "remaining_issue_codes": [
+        "MISSING_REPRESENTATION"
+      ],
+      "result_status": "pending"
+    }
+  ],
+  "repair_diagnostics": [
+    {
+      "code": "MISSING_REPRESENTATION",
+      "message": "IfcStair requires semantic geometry.",
+      "path": "/entities/107/attributes/Representation"
+    },
+    {
+      "code": "MISSING_REPRESENTATION",
+      "message": "IfcStair requires semantic geometry.",
+      "path": "/entities/109/attributes/Representation"
+    }
+  ],
+  "repair_source_artifact": "invalid-candidate.json",
+  "route": "repair_attempted",
+  "schema_version": "text2ifc/repair-route/1.1",
+  "source_document_kind": "invalid_formal",
+  "source_document_path": "parsed-output.json",
+  "source_generator_dir": "dataset/processed/ifc-presentation-validation/c-shaped-wall-join-20260911/live-run/runs/916d8afe752160e3/generator",
+  "source_generator_response_id": "3d9086af-07db-4f1b-abd8-7a3caeea4c4c",
+  "valid": false,
+  "validation_issue_count": 9
+}
