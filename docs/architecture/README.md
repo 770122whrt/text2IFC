@@ -21,7 +21,9 @@
 ## 专题设计与决策
 
 - [Repair 与 Generation 的 Type、材质、属性和外观计划](semantic-appearance-plan.md)
-  - 离线实施与验证已落地，人工视觉审查待进行：项目内 Type 按需组织，小型内置模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
+  - A/B 已人工验收，当前优先完成 C 型教学楼；项目内 Type 按需组织，小型内置模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
+- [Token 效率与质量保全计划](token-efficiency-plan.md)
+  - 一次有界 Audit 真实配对已完成；其他研究后置，主线回到 C 型教学楼。
 - [Feedback Routing Design](feedback-routing/design.md)
 - [Feedback Routing Implementation Prompt](feedback-routing/implementation-prompt.md)
 - [Text-to-JSON RAG、Fine-tune 与 Agent 决策](text2json-rag-finetune-decision.md)
