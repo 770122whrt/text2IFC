@@ -1,0 +1,16 @@
+{
+  "baseline": "fbaf235f",
+  "stage": "Design Brief prompt conflict reasoning",
+  "invariant": "A functional space may contain the requested stair and opening; positive plan overlap alone does not prove solid collision or authorize changing user geometry.",
+  "reproduction": "Historical C 64k and 96k Brief responses both cite STAIR_OPENING_SPACE_COLLISION; unchanged v2.9 contains the unconditional rule. Tests validate instruction selection, not live model judgments.",
+  "cases": [
+    {"id":"hall-stair", "slice":"positive", "request":"两层楼每层独立楼梯厅；明确将楼梯及洞口范围计入对应楼梯厅功能空间。", "expected":"no_overlap_only_blocker"},
+    {"id":"C-circulation", "slice":"positive", "request":"每层西侧交通/楼梯空间内布置梯段；同层楼板洞口按梯段范围开设，空间仍按各层独立表达。", "expected":"no_overlap_only_blocker"},
+    {"id":"classroom-floor", "slice":"negative", "request":"该教室整个矩形必须有连续可使用楼面，同时在矩形内部开通层楼梯洞口。", "expected":"needs_clarification"},
+    {"id":"unknown-purpose", "slice":"negative", "request":"把这个矩形建成房间，洞口也在内部；未说明这是楼梯厅还是要求完整楼面的活动室。", "expected":"needs_clarification"},
+    {"id":"edge-contact", "slice":"boundary", "request":"教学室边界和洞口边界相接，无正面积重叠。", "expected":"no_overlap_only_blocker"},
+    {"id":"library-atrium", "slice":"cross_scene", "request":"阅览馆每层独立交通厅的功能范围明确包含中庭洞口，但不把它作为实体楼面，也不宣称可行走。", "expected":"no_overlap_only_blocker"},
+    {"id":"occupied-office", "slice":"cross_scene", "request":"办公室这一整块指定净使用面积不能缺楼板，但楼梯洞口占了其中一部分。", "expected":"needs_clarification"}
+  ],
+  "quality_claim": "Development family frozen before prompt edits; no unseen or statistical quality claim. C is a known-case retry. Other cases are unexecuted live probes."
+}
