@@ -9,11 +9,13 @@
 - 只删除下列10个已完整收纳的原目录；不扩大到整个ifc-presentation-validation、其他Proof、旧A/B、其他任务或全局临时目录。本次没有Provider调用，也没有生产行为改动。
 - 原始报告、FILES、运行admission和数据库内历史路径不重写。通过归档索引可还原旧布局。新人工验收状态在独立human-review.json记录。
 
+**收纳备份提交 `687d94dc` 已推送；10个原目录已实际删除完成。** [删除结果](deletion-result.json) · [删除后证据复核](post-retirement-integrity.json)。
+
 ## 验证与删除
 
 Proof已重新执行完整Generation确定性Final Acceptance，通过Schema、语义、几何、编译重读、Audit绑定及secret scan；人读验证16份绑定副本、1次IFC重开通过。用户验收的IFC字节未替换为复算文件。冻结原记录153份，实验归档1476份/81,335,214字节，复制后SHA-256一致。
 
-回归测试只调整5个测试文件的夹具路径，涵盖受影响的6个测试模块；结果见validation.json。运行器与评价器保持原字节。相关计划和Proof索引已更新，直接展示案例50→51。
+回归测试只调整5个测试文件的夹具路径，涵盖受影响的6个测试模块；删除前37 passed（235.15秒），删除后同37项再次通过（301.23秒）；[验证记录](validation.json)与[删除后原始日志](post-retirement-pytest.txt)可查，不累计为74个不同测试。运行器与评价器保持原字节。删除后再次从Proof运行 [完整确定性Final Acceptance](post-retirement-final-acceptance/acceptance-metrics.json)，仍valid=true、编译重开与几何通过、secret scan为0，证明不需要已删除的源目录。该复算IFC仅用于验证，人工验收文件不替换。相关计划和Proof索引已更新，直接展示案例50→51。
 
 准确源父目录：`E:\code for project\bimnet\dataset\processed\ifc-presentation-validation`。
 
@@ -32,7 +34,7 @@ Proof已重新执行完整Generation确定性Final Acceptance，通过Schema、�
 
 总计10目录、1652文件、91,540,529字节（约87.3 MiB）。1629份证据文件均有哈希一致的保留位置；23份.pyc为可重建缓存。[逐文件清单](deletion-proposal.json)记录完整源路径、保留位置、大小和哈希。执行前再次检查完整文件集合、所有源与副本哈希、路径边界及reparse point。
 
-删除是否实际完成以 deletion-result.json 为准；清单本身不代表已删除。先提交保留证据，后执行删除，删除后的检查结果另记。归档与Proof扫描使用既有secret-pattern检查，不能声称通用安全审计。
+已先提交并推送保留证据，再执行删除；[删除结果](deletion-result.json)记录10个目录全部移除，归档副本保持。删除前后测试结果分别记录，不相加为不同案例。归档与Proof扫描使用既有secret-pattern检查，不能声称通用安全审计。
 
 ## 后续工作边界
 

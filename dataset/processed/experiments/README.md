@@ -2,6 +2,8 @@
 
 本目录独立保存实验和调试历史，含成功、失败、原始Provider响应、token账本、配置、脚本和验证记录。它们不因最终C被验收而自动成为accepted Proof。旧报告中的“下一步”和pending为当时状态，原字节不改。旧路径至当前路径、大小与SHA-256见 [归档索引](c-token-archive-20260911.json)。不收纳可重建的 __pycache__。
 
+原目录已于2026-09-11在备份推送后退役，见 [整理与删除记录](../../../docs/reports/c-proof-archive-20260911/REPORT.md)。归档索引中的source_directories_deleted=false是复制时快照，实际删除状态以该记录为准。
+
 ## 阅读顺序
 
 | 内容 | 原记录 | 结论 |

@@ -16,5 +16,19 @@
     "errors": []
   },
   "provider_calls": 0,
-  "full_preflight": false
+  "full_preflight": false,
+  "post_retirement_final_acceptance": {
+    "valid": true,
+    "compile_reopen_success": true,
+    "geometry_success": true,
+    "secret_finding_count": 0,
+    "metrics": "post-retirement-final-acceptance/acceptance-metrics.json"
+  },
+  "post_retirement_pytest": {
+    "passed": 37,
+    "seconds": 301.23,
+    "log": "post-retirement-pytest.txt",
+    "log_sha256": "922dc52844990b77ea1b7035f891cb954c02c15b1fc498509b0d3a57902aa3c3",
+    "note": "Same 37 tests repeated after removing old source directories; not 74 distinct tests. No real Provider."
+  }
 }
