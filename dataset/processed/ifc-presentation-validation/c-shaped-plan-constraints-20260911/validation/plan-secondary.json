@@ -1,0 +1,110 @@
+{
+  "evidence_class": "offline_secondary_analytic_check",
+  "fixture_method": "Shapely polygon minus mitred inward buffer; rectangular row decomposition; independent of production checker. Cases designed after development, not blind holdout.",
+  "provider_calls": 0,
+  "cases": [
+    {
+      "scene_family": "u_court",
+      "fault": null,
+      "result": "accepted",
+      "issues": [],
+      "fixture_sha256": "e01e318692ae8587ef847c25fdd320ab162a4fa7f71e7373572033f7d9a28798"
+    },
+    {
+      "scene_family": "u_court",
+      "fault": "outside",
+      "result": "blocked",
+      "issues": [
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "outside: {'cell_mm': [0, 200, -200, 0], 'wall_ids': ['wall-0']}; correct only declared derived wall bounds; preserve all explicit facts."
+        },
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "gap: {'cell_mm': [0, 200, 0, 200], 'wall_ids': []}; correct only declared derived wall bounds; preserve all explicit facts."
+        }
+      ],
+      "fixture_sha256": "2fe3fb016386ac4afcff17ab2a80d8746229e2335e6e819b0458ffa38118974f"
+    },
+    {
+      "scene_family": "u_court",
+      "fault": "overlap",
+      "result": "blocked",
+      "issues": [
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "overlap: {'cell_mm': [0, 200, 0, 200], 'wall_ids': ['wall-0', 'extra-wall']}; correct only declared derived wall bounds; preserve all explicit facts."
+        }
+      ],
+      "fixture_sha256": "58182dce01e5a315e0747ccd14c01f3740486db2434df7d72b7cd5337b23456a"
+    },
+    {
+      "scene_family": "u_court",
+      "fault": "gap",
+      "result": "blocked",
+      "issues": [
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "gap: {'cell_mm': [0, 100, 0, 200], 'wall_ids': []}; correct only declared derived wall bounds; preserve all explicit facts."
+        }
+      ],
+      "fixture_sha256": "86f875691dc781a3b968702371e75b58c6533ec46c1cadce6906853e4576293b"
+    },
+    {
+      "scene_family": "stepped_wing",
+      "fault": null,
+      "result": "accepted",
+      "issues": [],
+      "fixture_sha256": "3e023d78c23b48934f3650775a4aa7ce837e39422215150f4df3d7847ae6496b"
+    },
+    {
+      "scene_family": "stepped_wing",
+      "fault": "outside",
+      "result": "blocked",
+      "issues": [
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "outside: {'cell_mm': [0, 200, -200, 0], 'wall_ids': ['wall-0']}; correct only declared derived wall bounds; preserve all explicit facts."
+        },
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "gap: {'cell_mm': [0, 200, 0, 200], 'wall_ids': []}; correct only declared derived wall bounds; preserve all explicit facts."
+        }
+      ],
+      "fixture_sha256": "30a8858cf1dc063e29bfa118609fd31d05139351ed091a48e5e5705646a8049a"
+    },
+    {
+      "scene_family": "stepped_wing",
+      "fault": "overlap",
+      "result": "blocked",
+      "issues": [
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "overlap: {'cell_mm': [0, 200, 0, 200], 'wall_ids': ['wall-0', 'extra-wall']}; correct only declared derived wall bounds; preserve all explicit facts."
+        }
+      ],
+      "fixture_sha256": "291002db62188c0ed29528c4b46c6cddebb18fd053b43b810989d8e48c6f1603"
+    },
+    {
+      "scene_family": "stepped_wing",
+      "fault": "gap",
+      "result": "blocked",
+      "issues": [
+        {
+          "code": "BRIEF_PLAN_GEOMETRY",
+          "path": "/known_facts/plan_constraints/0",
+          "message": "gap: {'cell_mm': [0, 100, 0, 200], 'wall_ids': []}; correct only declared derived wall bounds; preserve all explicit facts."
+        }
+      ],
+      "fixture_sha256": "842feabfedc64576f28aea6da5722d48d6bc4942ea630b71501dd25425322504"
+    }
+  ],
+  "claim": "bounded geometry mechanism check, not system capability evaluation"
+}

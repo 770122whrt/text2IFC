@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="0" tests="41" time="0.613" timestamp="2026-09-11T15:48:26.182882+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[synonym-IfcStair-labels0]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('首层', '二层', '三层'), kind = 'IfcStair', wording = 'synonym'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[synonym-IfcStair-labels1]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('Ground', 'Upper', 'Roof'), kind = 'IfcStair', wording = 'synonym'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[synonym-IfcStair-labels2]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('地下', '夹层', '屋顶'), kind = 'IfcStair', wording = 'synonym'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[synonym-IfcStairFlight-labels0]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('首层', '二层', '三层'), kind = 'IfcStairFlight', wording = 'synonym'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[synonym-IfcStairFlight-labels1]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('Ground', 'Upper', 'Roof'), kind = 'IfcStairFlight'
+wording = 'synonym'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[synonym-IfcStairFlight-labels2]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('地下', '夹层', '屋顶'), kind = 'IfcStairFlight', wording = 'synonym'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[destination_only-IfcStair-labels0]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('首层', '二层', '三层'), kind = 'IfcStair', wording = 'destination_only'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[destination_only-IfcStair-labels1]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('Ground', 'Upper', 'Roof'), kind = 'IfcStair'
+wording = 'destination_only'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[destination_only-IfcStair-labels2]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('地下', '夹层', '屋顶'), kind = 'IfcStair', wording = 'destination_only'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[destination_only-IfcStairFlight-labels0]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('首层', '二层', '三层'), kind = 'IfcStairFlight'
+wording = 'destination_only'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[destination_only-IfcStairFlight-labels1]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('Ground', 'Upper', 'Roof'), kind = 'IfcStairFlight'
+wording = 'destination_only'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_proven_endpoint_does_not_require_literal_owner_name[destination_only-IfcStairFlight-labels2]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('地下', '夹层', '屋顶'), kind = 'IfcStairFlight'
+wording = 'destination_only'
+
+    @pytest.mark.parametrize('labels',[('首层','二层','三层'),('Ground','Upper','Roof'),('地下','夹层','屋顶')])
+    @pytest.mark.parametrize('kind',['IfcStair','IfcStairFlight'])
+    @pytest.mark.parametrize('wording',['synonym','destination_only'])
+    def test_proven_endpoint_does_not_require_literal_owner_name(labels,kind,wording):
+        candidate,expected=_case(labels,kind)
+        candidate['entities'][-1]['attributes']['Name']=(f'从起点到{labels[1]}的楼梯' if wording=='synonym' else f'{labels[1]}楼梯')
+        before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:14: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_frozen_opening_service_context_is_not_wrong_ownership[labels0]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('下层', '平台层', '屋面层')
+
+    @pytest.mark.parametrize('labels',[('下层','平台层','屋面层'),('Base','Mezzanine','Roof'),('Niveau A','Niveau B','Niveau C')])
+    def test_frozen_opening_service_context_is_not_wrong_ownership(labels):
+        candidate,expected=opening_case(labels);before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:33: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_frozen_opening_service_context_is_not_wrong_ownership[labels1]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('Base', 'Mezzanine', 'Roof')
+
+    @pytest.mark.parametrize('labels',[('下层','平台层','屋面层'),('Base','Mezzanine','Roof'),('Niveau A','Niveau B','Niveau C')])
+    def test_frozen_opening_service_context_is_not_wrong_ownership(labels):
+        candidate,expected=opening_case(labels);before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:33: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_frozen_opening_service_context_is_not_wrong_ownership[labels2]" time="0.001"><failure message="AssertionError: assert 'failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed">labels = ('Niveau A', 'Niveau B', 'Niveau C')
+
+    @pytest.mark.parametrize('labels',[('下层','平台层','屋面层'),('Base','Mezzanine','Roof'),('Niveau A','Niveau B','Niveau C')])
+    def test_frozen_opening_service_context_is_not_wrong_ownership(labels):
+        candidate,expected=opening_case(labels);before=copy.deepcopy(candidate)
+&gt;       assert _gate(candidate,expected)['status']=='passed'
+E       AssertionError: assert 'failed' == 'passed'
+E         
+E         - passed
+E         + failed
+
+tests\agent\test_storey_name_context.py:33: AssertionError</failure></testcase><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[missing_stair]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[duplicate_stair]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[wrong_destination]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[wrong_bounds]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[missing_bounds]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[missing_void]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[duplicate_void]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[wrong_host]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[wrong_host_storey]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[duplicate_opening]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[ordinary_wall]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[unrelated_level]" time="0.001" /><testcase classname="tests.agent.test_storey_name_context" name="test_opening_context_requires_unique_frozen_relationship[candidate_only]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_frozen_stair_endpoint_names_are_valid[IfcStair-labels0]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_frozen_stair_endpoint_names_are_valid[IfcStair-labels1]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_frozen_stair_endpoint_names_are_valid[IfcStair-labels2]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_frozen_stair_endpoint_names_are_valid[IfcStairFlight-labels0]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_frozen_stair_endpoint_names_are_valid[IfcStairFlight-labels1]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_frozen_stair_endpoint_names_are_valid[IfcStairFlight-labels2]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[unrelated]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[missing]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[duplicate]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[wrong_owner]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[wall]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[wrong_destination]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_name_boundary" name="test_endpoint_exception_cannot_hide_wrong_or_unproven_names[candidate_claim]" time="0.001" /></testsuite></testsuites>
