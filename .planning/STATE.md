@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前增量工作：C 型 Generation（2026-09-11）
+
+最新实施依据为 `docs/architecture/semantic-appearance-plan.md`，token实验单独见 `docs/architecture/token-efficiency-plan.md`。已按真实用户澄清将入口中心南移至4.2米；真实C候选能编译重开，但Audit与独立IFC检查仍阻断，尚非待验收Proof。轮廓包装读取和路由评估范围已局部修复；新发现Brief墙体端点本身造成转角重叠/缺口，先定位并修复该合同再恢复Provider。C最新账本为 `c-shaped-clarified-entry-20260911/live-run/runs/9b00e53444a948e7/generation-budget.json`，累计8次/583435 token/1375.654秒，不能复用旧账本。完整报告见 `dataset/processed/ifc-presentation-validation/c-shaped-gate-debug-20260911/REPORT.md`。下方Phase/R1历史状态及accepted Proof保持原义。
+
 ## Codex Task Pilot Checkpoint — 2026-07-31
 
 ```text
