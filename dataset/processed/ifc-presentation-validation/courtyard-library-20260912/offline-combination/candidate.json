@@ -1,0 +1,607 @@
+{
+  "schema_version": "bim-json/2.1",
+  "ifc_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "entities": [
+    {
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "attributes": {
+        "Name": "project-1"
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "attributes": {
+        "Name": "site-1",
+        "ObjectPlacement": {
+          "relative_to": "project-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "attributes": {
+        "Name": "building-1",
+        "ObjectPlacement": {
+          "relative_to": "site-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "storey-1",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Elevation": 0
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "storey-2",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "storey-2",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            0,
+            0,
+            3600
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Elevation": 3600
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "upper",
+      "ifc_class": "IfcSlab",
+      "attributes": {
+        "Name": "upper",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            12000.0,
+            9000.0,
+            3400
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 24000,
+            "y": 18000
+          },
+          "depth": 200,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      },
+      "materials": [
+        {
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "concrete-mortar",
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "offset_from_reference_line": 0,
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 180
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "upper-courtyard",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "upper-courtyard",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            12000.0,
+            9000.0,
+            3400
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000,
+            "y": 6000
+          },
+          "depth": 200,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      }
+    },
+    {
+      "id": "roof",
+      "ifc_class": "IfcSlab",
+      "attributes": {
+        "Name": "roof",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            12000.0,
+            9000.0,
+            7000
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 24000,
+            "y": 18000
+          },
+          "depth": 200,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      },
+      "materials": [
+        {
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "concrete-mortar",
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "offset_from_reference_line": 0,
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 180
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "roof-courtyard",
+      "ifc_class": "IfcOpeningElement",
+      "attributes": {
+        "Name": "roof-courtyard",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            12000.0,
+            9000.0,
+            7000
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8000,
+            "y": 6000
+          },
+          "depth": 200,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      }
+    },
+    {
+      "id": "south",
+      "ifc_class": "IfcRailing",
+      "attributes": {
+        "Name": "south",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            12000.0,
+            5990.0,
+            3600
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8040,
+            "y": 20
+          },
+          "depth": 1100,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      },
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "玻璃"
+        }
+      ],
+      "appearance": {
+        "color": [
+          0.85,
+          0.9,
+          0.9
+        ],
+        "transparency": 0.75
+      }
+    },
+    {
+      "id": "north",
+      "ifc_class": "IfcRailing",
+      "attributes": {
+        "Name": "north",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            12000.0,
+            12010.0,
+            3600
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 8040,
+            "y": 20
+          },
+          "depth": 1100,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      },
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "玻璃"
+        }
+      ],
+      "appearance": {
+        "color": [
+          0.85,
+          0.9,
+          0.9
+        ],
+        "transparency": 0.75
+      }
+    },
+    {
+      "id": "west",
+      "ifc_class": "IfcRailing",
+      "attributes": {
+        "Name": "west",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            7990.0,
+            9000.0,
+            3600
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 20,
+            "y": 6000
+          },
+          "depth": 1100,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      },
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "玻璃"
+        }
+      ],
+      "appearance": {
+        "color": [
+          0.85,
+          0.9,
+          0.9
+        ],
+        "transparency": 0.75
+      }
+    },
+    {
+      "id": "east",
+      "ifc_class": "IfcRailing",
+      "attributes": {
+        "Name": "east",
+        "ObjectPlacement": {
+          "relative_to": "building-1",
+          "origin": [
+            16010.0,
+            9000.0,
+            3600
+          ],
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ]
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 20,
+            "y": 6000
+          },
+          "depth": 1100,
+          "direction": [
+            0,
+            0,
+            1
+          ]
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "offline-authoring-probe"
+      },
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "玻璃"
+        }
+      ],
+      "appearance": {
+        "color": [
+          0.85,
+          0.9,
+          0.9
+        ],
+        "transparency": 0.75
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "id": "void-upper",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "upper",
+        "RelatedOpeningElement": "upper-courtyard"
+      },
+      "provenance": {
+        "source": "offline-authoring-probe"
+      }
+    },
+    {
+      "id": "void-roof",
+      "ifc_class": "IfcRelVoidsElement",
+      "attributes": {
+        "RelatingBuildingElement": "roof",
+        "RelatedOpeningElement": "roof-courtyard"
+      },
+      "provenance": {
+        "source": "offline-authoring-probe"
+      }
+    }
+  ],
+  "provenance": {
+    "source": "test"
+  },
+  "appearance": {
+    "profile": "warm-residential",
+    "seed": "courtyard"
+  }
+}

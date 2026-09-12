@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.682" timestamp="2026-09-12T13:49:12.981475+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_brief_semantic_roles" name="test_local_geometry_names_are_not_global_semantic_targets_until_referenced" time="0.023"><failure message="assert False">def test_local_geometry_names_are_not_global_semantic_targets_until_referenced():
+        b=brief_with_roles();k=b['known_facts']
+        upper=copy.deepcopy(k['storeys'][0]);upper['id']='upper';upper['doors']=[];upper['windows']=[]
+        k['storeys'].append(upper)
+&gt;       assert project_semantic_requirements(b)['valid']
+E       assert False
+
+tests\agent\test_brief_semantic_roles.py:72: AssertionError</failure></testcase></testsuite></testsuites>

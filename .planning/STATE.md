@@ -14,7 +14,13 @@ progress:
 
 # Project State
 
-## 当前工作：仓库清理与 main 整合（2026-09-12）
+## 当前工作：光庭阅读馆 Generation（2026-09-12）
+
+用户要求开启 goal 完成光庭 IFC。`ff2e23cd`（Brief语义角色和受限恢复）与 `e390c046`（屋盖洞口投影／重开验证）已推送当前 `codex/workflow-dataset-links` 分支。新运行器完成3项预算继承／公共完成／失败阻断离线检查，局部准入已准备。真实启动被自动审批要求具体载荷与 api.deepseek.com 的明确授权而拦截；当前没有新 Provider attempt，累计仍1次／71,204 token。原始失败、预算和已有Proof保留，尚无光庭整栋IFC，不登记Proof。
+
+执行入口与证据：[光庭设计](../docs/architecture/courtyard-library-design.md)、[运行报告](../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/REPORT.md)。A/B/C历史验收结论不变；下方清理与Phase记录是旧检查点。
+
+## 历史工作：仓库清理与 main 整合（2026-09-12）
 
 已批准保守清理、隔离整合 main/Zcode/当前分支，以及完整离线Full Preflight。执行与阻断记录见 `docs/reports/main-integration-20260912/REPORT.md`；未调用Provider，未合main。下方C验收及Phase记录保持历史原义。
 
