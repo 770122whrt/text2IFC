@@ -69,7 +69,7 @@ def test_invalid_transcript_stops_before_transport_and_budget(tmp_path, entry, k
     assert rows == before
 
 
-@pytest.mark.parametrize("version", ["2.0", "2.1", "2.2", "2.3", "2.4"])
+@pytest.mark.parametrize("version", ["2.0", "2.1", "2.2", "2.3", "2.4", "2.5"])
 @pytest.mark.parametrize("multi", [False, True])
 def test_valid_arbitrary_ids_reach_provider_without_renumbering(tmp_path, version, multi):
     rows = turns()

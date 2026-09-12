@@ -295,7 +295,8 @@ def test_ready_session_semantic_loop_publishes_and_resume_does_not_recall(tmp_pa
     store = SessionStore.open(tmp_path/'sessions.sqlite', artifact_root=tmp_path)
     session = store.create_session(original_input=brief['original_request'])
     result = run_design_brief_stage(provider=SequenceProvider([brief]),
-        case={'case_id':session.session_hash, 'user_request':brief['original_request'], 'conversation':[]},
+        case={'case_id':session.session_hash, 'user_request':brief['original_request'],
+              'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
         output_dir=session.run_dir/'design-brief')
     assert result['valid'], result
     _write(session.run_dir/'design-brief.json', brief)

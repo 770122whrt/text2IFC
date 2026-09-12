@@ -498,7 +498,7 @@ def _targeted_issues(
     parts = path.split("/") if path else []
     semantic_field = (
         len(parts) >= 4 and parts[1] == "entities"
-        and parts[3] in {"materials", "property_sets", "appearance", "template"}
+        and parts[3] in {"materials", "property_sets", "appearance", "part_appearance", "template"}
     )
     if semantic_field:
         # Keep the field pointer. The existing scoped-loop resolver binds its

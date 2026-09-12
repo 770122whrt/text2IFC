@@ -111,6 +111,11 @@ def verify_semantic_expectations(ifc_file_or_path, expectations: Sequence[Mappin
                 actual = signatures
                 if items and all(len(values) == 1 and all(math.isclose(values[0][key], value, abs_tol=1e-6) for key, value in zip(('red','green','blue','transparency'), [*wanted.get('color', []), wanted.get('transparency', 0.0)])) for values in signatures) and len(wanted.get('color', [])) == 3:
                     actual = wanted
+            elif kind == 'part_appearance':
+                from text2ifc_presentation.part_readback import part_request_matches
+                wanted = expected.get('value', {})
+                if entity and scope != 'inherited' and part_request_matches(entity, wanted):
+                    actual = wanted
             elif kind == 'template':
                 from .basic_filling import verify_basic_filling
                 import ifcopenshell.util.unit

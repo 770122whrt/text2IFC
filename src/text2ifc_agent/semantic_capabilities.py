@@ -81,3 +81,14 @@ def build_semantic_capability_profile_v21() -> dict[str, Any]:
     profile['appearance_policy'] = 'explicit_user_then_type_then_material_then_coordinated_default'
     profile['profile_hash'] = _profile_hash(profile)
     return profile
+
+
+def build_semantic_capability_profile_v22() -> dict[str, Any]:
+    profile = build_semantic_capability_profile_v21()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.2/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.2/schema.json'
+    profile['part_appearance'] = {'IfcDoor': ['frame', 'panel'], 'IfcWindow': ['frame', 'glazing'],
+        'channels': ['color', 'transparency'], 'scope': 'explicit basic_filling occurrence only',
+        'unspecified': 'theme defaults', 'whole_appearance_conflict': 'clarification_required'}
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile

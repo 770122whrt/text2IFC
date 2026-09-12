@@ -31,7 +31,7 @@ def build_expected_facts(
     design_brief: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Build dynamic expected facts without mutating the Design Brief."""
-    if design_brief.get('schema_version') == 'text2ifc/design-brief/2.4':
+    if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
         from jsonschema import Draft202012Validator
         from .design_brief import load_design_brief_schema
         from .brief_plan_constraints import validate_plan_constraints
@@ -260,8 +260,8 @@ def build_expected_facts(
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
     from .semantic_requirements import project_semantic_requirements, generation_schema_version
     semantics = project_semantic_requirements(design_brief)
-    if generation_schema_version(design_brief) == 'bim-json/2.1':
-        payload['generation_schema_version'] = 'bim-json/2.1'
+    if generation_schema_version(design_brief) in {'bim-json/2.1', 'bim-json/2.2'}:
+        payload['generation_schema_version'] = generation_schema_version(design_brief)
         payload['semantic_authority_declared'] = semantics['authority_declared']
     if semantics['expectations'] or semantics['issues']:
         payload['semantic_expectations'] = semantics['expectations']

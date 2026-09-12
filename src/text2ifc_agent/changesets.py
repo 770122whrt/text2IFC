@@ -23,7 +23,8 @@ CHANGESET_SCHEMA_PATH = (
 @lru_cache(maxsize=2)
 def _cached_changeset_schema(version=CHANGESET_SCHEMA_VERSION) -> dict[str, Any]:
     paths = {CHANGESET_SCHEMA_VERSION: CHANGESET_SCHEMA_PATH,
-             'text2ifc/bim-json-changeset/1.1': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.1.schema.json')}
+             'text2ifc/bim-json-changeset/1.1': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.1.schema.json'),
+             'text2ifc/bim-json-changeset/1.2': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.2.schema.json')}
     schema = json.loads(paths[version].read_text(encoding="utf-8"))
     _assert_local_references(schema)
     Draft202012Validator.check_schema(schema)
@@ -41,7 +42,7 @@ def validate_changeset(document: Any) -> list[ValidationIssue]:
 
     version = document.get('schema_version') if isinstance(document, dict) else None
     validator = Draft202012Validator(_cached_changeset_schema(
-        version if version == 'text2ifc/bim-json-changeset/1.1' else CHANGESET_SCHEMA_VERSION))
+        version if version in {'text2ifc/bim-json-changeset/1.1', 'text2ifc/bim-json-changeset/1.2'} else CHANGESET_SCHEMA_VERSION))
     issues = [
         ValidationIssue(
             code="SCHEMA_VALIDATION_ERROR",

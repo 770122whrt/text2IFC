@@ -148,7 +148,7 @@ def _value_paths(value: Any, base: str = "") -> set[str]:
 
 
 def _is_draft(candidate: Mapping[str, Any]) -> bool:
-    return candidate.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1"}
+    return candidate.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2"}
 
 
 def assess_repair_eligibility(

@@ -9,6 +9,7 @@ import math
 from text2ifc_contract.validation import ValidationIssue
 
 VERSION = 'text2ifc/design-brief/2.4'
+VERSIONS = {VERSION, 'text2ifc/design-brief/2.5'}
 EPS = 1e-6  # Numerical equality in millimetres; not a mesh acceptance tolerance.
 
 
@@ -121,7 +122,7 @@ def _failures(points,edges,records,thickness):
 
 
 def validate_plan_constraints(brief, conversation=None):
-    if brief.get('schema_version') != VERSION:return []
+    if brief.get('schema_version') not in VERSIONS:return []
     constraints=brief.get('known_facts',{}).get('plan_constraints',[])
     issues=[];seen=set();storeys=set()
     user_turns=None if conversation is None else {t.get('turn_id') for t in conversation if t.get('role')=='user'}

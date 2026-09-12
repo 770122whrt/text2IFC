@@ -24,7 +24,7 @@ def test_new_design_call_cannot_silently_return_old_contract(tmp_path):
 
 
 @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
-@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4'])
+@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5'])
 @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
 def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
     skeleton, manifest, expected, values = _fixture(1)
@@ -50,9 +50,16 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
         'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
                                   'property_sets':wall['property_sets']},
             {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
-    if brief_version in {'2.2', '2.3', '2.4'}:
+    if brief_version in {'2.2', '2.3', '2.4', '2.5'}:
         from tests.agent.test_semantic_authority_completeness import review
         brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+    if brief_version == '2.5':
+        skeleton['schema_version'] = 'bim-json/2.2'
+        filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+        brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+        brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+        brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+        expected['generation_schema_version'] = 'bim-json/2.2'
     if strategy == 'staged':
         provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
         result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
@@ -60,7 +67,7 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
             expected_facts=expected,skeleton=skeleton,manifest=manifest)
         assert result['valid'], result
         candidate = result['candidate']
-        assert all('2.1' in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        assert all(('2.2' if brief_version == '2.5' else '2.1') in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
     else:
         candidate = copy.deepcopy(skeleton)
         for group in values:
@@ -73,7 +80,7 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
         provider = SequenceProvider([candidate])
         result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
         assert result['valid'], json.loads((tmp_path/'generator/validation.json').read_text(encoding='utf-8'))
-        assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.1'
+        assert provider.calls[0]['schema']['properties']['schema_version']['const']==('bim-json/2.2' if brief_version == '2.5' else 'bim-json/2.1')
     (tmp_path/'generator/candidate.json').write_text(json.dumps(candidate),encoding='utf-8')
     (tmp_path/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
     gates = run_candidate_gate_stage(case_dir=tmp_path,output_dir=tmp_path,case_id='public')
@@ -133,7 +140,7 @@ def test_staged_shared_type_is_authored_once_after_instances(tmp_path):
 @pytest.mark.parametrize('detailed', [False, True])
 @pytest.mark.parametrize('canonical_ids', [False, True])
 @pytest.mark.parametrize('recover_field', [False, True])
-@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4'])
+@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5'])
 def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
     from text2ifc_agent.live_pipeline import run_design_brief_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
@@ -141,7 +148,7 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
     from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
     brief = _outside_boundary_design_brief()
     brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
-    if brief_version == '2.4':
+    if brief_version in {'2.4', '2.5'}:
         brief['known_facts']['plan_constraints'] = []
     brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
     brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
@@ -172,13 +179,21 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
         if record['id']=='wall-south':
             record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
             record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+    if brief_version == '2.5':
+        candidate['schema_version'] = 'bim-json/2.2'
+        if detailed:
+            by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+            by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+            for identity in ('door-1', 'window-1'):
+                brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
     store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
     session=store.create_session(original_input=brief['original_request'])
-    if brief_version in {'2.2', '2.3', '2.4'}:
+    if brief_version in {'2.2', '2.3', '2.4', '2.5'}:
         from tests.agent.test_semantic_authority_completeness import review
         declared = {'material': True, 'property': True}
         if detailed:
             declared['template'] = True
+            if brief_version == '2.5': declared['appearance'] = True
         brief['known_facts']['semantic_review'] = review(**declared)
     design = run_design_brief_stage(provider=SequenceProvider([brief]),
         case={'case_id':session.session_hash,'user_request':brief['original_request'],

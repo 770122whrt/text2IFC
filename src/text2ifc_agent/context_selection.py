@@ -62,7 +62,7 @@ def select_design_brief_context(
         if isinstance(turn, dict)
     )
     evidence: list[dict[str, Any]] = []
-    schema_path = PROJECT_ROOT / "schemas/bim-json/2.1/schema.json" if schema_version == "bim-json/2.1" else BIM_JSON_SCHEMA_PATH
+    schema_path = PROJECT_ROOT / f"schemas/{schema_version}/schema.json" if schema_version in {"bim-json/2.1", "bim-json/2.2"} else BIM_JSON_SCHEMA_PATH
     for evidence_id, pointer in _COMMON_SCHEMA_FRAGMENTS:
         evidence.append(
             _evidence_record(

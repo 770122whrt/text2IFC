@@ -235,7 +235,7 @@ def _preflight_issues(
         collection = entities if is_entity else relationships
         allowed = allowed_entities if is_entity else allowed_relationships
         path = f"/operations/{index}"
-        if candidate.get('schema_version') == 'bim-json/2.1' and op.startswith('remove_') and target_id in collection:
+        if candidate.get('schema_version') in {'bim-json/2.1', 'bim-json/2.2'} and op.startswith('remove_') and target_id in collection:
             from .semantic_correction import protected_semantic_removal
             planned = (semantic_correction or {}).get('edits', {}).get(target_id, {})
             if protected_semantic_removal(collection[target_id], scope['allowed_paths'].get(target_id, [])) and planned.get('op') != op:
@@ -291,10 +291,11 @@ def _preflight_issues(
             permitted = scope["allowed_paths"].get(target_id, [])
             for remove_path in operation.get('remove_paths', []):
                 planned = (semantic_correction or {}).get('edits', {}).get(target_id, {})
-                if (candidate.get('schema_version') != 'bim-json/2.1' or allow_field_containers
+                if (candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2'} or allow_field_containers
                         or remove_path not in planned.get('remove_paths', [])
-                        or remove_path not in permitted or remove_path != '/appearance'
-                        or 'appearance' not in collection[target_id]):
+                        or remove_path not in permitted
+                        or remove_path not in ({'/appearance', '/part_appearance'} if candidate.get('schema_version') == 'bim-json/2.2' else {'/appearance'})
+                        or remove_path.lstrip('/') not in collection[target_id]):
                     issues.append(_issue('CHANGESET_SCOPE_VIOLATION', path,
                         'Optional field removal requires an exact request-owned semantic correction, current field and scope.'))
             for change_path in operation.get("changes", {}):
