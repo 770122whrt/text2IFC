@@ -1,0 +1,1144 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="35" skipped="0" tests="35" time="9.386" timestamp="2026-09-12T16:15:23.663114+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.1-window-single]" time="0.305"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-single', version = '2.1', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.1-window-double-vertical]" time="0.009"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-double-vertical', version = '2.1', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.1-door-left]" time="0.008"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-left', version = '2.1', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.1-door-right]" time="0.010"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-right', version = '2.1', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.2-window-single]" time="0.009"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-single', version = '2.2', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.2-window-double-vertical]" time="0.007"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-double-vertical', version = '2.2', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.2-door-left]" time="0.005"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-left', version = '2.2', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[fill-2.2-door-right]" time="0.008"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-right', version = '2.2', missing = 'fill'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.1-window-single]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-single', version = '2.1', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.1-window-double-vertical]" time="0.009"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-double-vertical', version = '2.1', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.1-door-left]" time="0.008"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-left', version = '2.1', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.1-door-right]" time="0.013"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-right', version = '2.1', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.2-window-single]" time="0.009"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-single', version = '2.2', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.2-window-double-vertical]" time="0.008"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-double-vertical', version = '2.2', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.2-door-left]" time="0.009"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-left', version = '2.2', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[void-2.2-door-right]" time="0.011"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-right', version = '2.2', missing = 'void'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.1-window-single]" time="0.017"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-single', version = '2.1', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.1-window-double-vertical]" time="0.005"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-double-vertical', version = '2.1', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.1-door-left]" time="0.005"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-left', version = '2.1', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.1-door-right]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-right', version = '2.1', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.2-window-single]" time="0.017"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-single', version = '2.2', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.2-window-double-vertical]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'window-double-vertical', version = '2.2', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.2-door-left]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-left', version = '2.2', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_missing_explicit_relationships_recover_without_other_edits[both-2.2-door-right]" time="0.008"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">template = 'door-right', version = '2.2', missing = 'both'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    @pytest.mark.parametrize('version', ['2.1', '2.2'])
+    @pytest.mark.parametrize('missing', ['fill', 'void', 'both'])
+    def test_missing_explicit_relationships_recover_without_other_edits(template, version, missing):
+&gt;       doc, brief, _ = fixture(template, version, missing)
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:54: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[no_brief]" time="0.010"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'no_brief'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[wrong_host]" time="0.011"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'wrong_host'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[wrong_parent]" time="0.008"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'wrong_parent'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[duplicate_id]" time="0.010"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'duplicate_id'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[duplicate_fill]" time="0.012"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'duplicate_fill'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[wrong_fill]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'wrong_fill'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[geometry]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'geometry'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[unknown_version]" time="0.005"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'unknown_version'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[shared_opening]" time="0.006"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'shared_opening'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_ambiguous_or_inconsistent_authority_never_mutates_candidate[missing_entity]" time="0.011"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">attack = 'missing_entity'
+
+    @pytest.mark.parametrize('attack', ['no_brief', 'wrong_host', 'wrong_parent', 'duplicate_id',
+        'duplicate_fill', 'wrong_fill', 'geometry', 'unknown_version', 'shared_opening', 'missing_entity'])
+    def test_ambiguous_or_inconsistent_authority_never_mutates_candidate(attack):
+&gt;       doc, brief, eid = fixture(missing='none' if attack in {'duplicate_fill','wrong_fill','shared_opening'} else 'both')
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_public_repair_seam_uses_no_provider_and_preserves_source" time="0.253"><failure message="text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-courtyard-rel-red/test_public_repair_seam_uses_n0')
+
+    def test_public_repair_seam_uses_no_provider_and_preserves_source(tmp_path):
+        from text2ifc_agent.live_pipeline import run_repair_stage
+&gt;       doc, brief, _ = fixture()
+                        ^^^^^^^^^
+
+tests\agent\test_filling_relationship_recovery.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_filling_relationship_recovery.py:28: in fixture
+    expected = build_expected_facts(case_id='family', design_brief=brief)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def build_expected_facts(
+        *,
+        case_id: str,
+        design_brief: Mapping[str, Any],
+    ) -&gt; dict[str, Any]:
+        """Build dynamic expected facts without mutating the Design Brief."""
+        if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+            from jsonschema import Draft202012Validator
+            from .design_brief import load_design_brief_schema
+            from .brief_plan_constraints import validate_plan_constraints
+            # Evidence catalogs belong to the upstream extraction call. Recheck the
+            # schema and planar invariants here without falsely rejecting its refs.
+            shape_errors = list(Draft202012Validator(load_design_brief_schema(design_brief['schema_version'])).iter_errors(design_brief))
+            if shape_errors or design_brief.get('status') != 'ready':
+&gt;               raise ExpectedFactsError('BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.')
+E               text2ifc_agent.expected_facts.ExpectedFactsError: BRIEF_PLAN_CONTRACT: expected a structurally valid ready Brief.
+
+src\text2ifc_agent\expected_facts.py:42: ExpectedFactsError</failure></testcase></testsuite></testsuites>

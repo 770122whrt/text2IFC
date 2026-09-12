@@ -1,5 +1,7 @@
 # 两层光庭阅读馆设计
 
+> 2026-09-12 后续状态：第一版已完成真实 Generator、确定性关系恢复、真实 Audit 和最终 IFC 发布，详见[保留报告](../../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/continuation-01/REPORT.md)。用户指出概念偏差并要求保留旧模型，按概念图右上角重新准备。下文为第一版历史设计依据，不再作为下一版的完整围合、封闭楼梯间或整片玻璃栏板要求。用户未验收第一版设计；真实 Audit 的 accept 与人工状态分开。
+
 2026-09-12。状态：按用户授权确定的建模设计方案，尚未完成整栋几何验证。用户确认露天矩形光庭与二层围庭回廊，随后明确“具体没有要求，但是尽可能美观好看，系统支持的能力都要做在里面”，授权本例由 Agent 决定未指定的尺寸、布局和材料搭配。本轮未生成 IFC、未调用 Provider，不改既有 Proof。
 
 本设计承接 [语义与外观计划第16节](semantic-appearance-plan.md#16-下一例-generation-与论文图已批准设计方向)，第18节的一般澄清原则保留；本例新增授权允许 Agent 决定未指定设计自由度，不再逐项询问尺寸、配色或布局。具体参数记录为受委托的设计选择，不伪称用户逐字指定；真实合同冲突和技术范围外的选择仍须说明。当前工作分支是 codex/workflow-dataset-links；与 main 对比，本设计涉及的 Generation、Compiler、Contract 实现没有差异。

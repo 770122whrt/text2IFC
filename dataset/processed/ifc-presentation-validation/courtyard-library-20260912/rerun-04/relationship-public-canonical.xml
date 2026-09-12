@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="2" time="33.503" timestamp="2026-09-12T16:25:21.640783+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_public_loop_reopens_recovered_ifc_and_keeps_parts[legacy_full]" time="29.351" /><testcase classname="tests.agent.test_filling_relationship_recovery" name="test_public_loop_reopens_recovered_ifc_and_keeps_parts[staged]" time="1.985"><failure message="KeyError: 'wall-1-south'">tests\agent\test_filling_relationship_recovery.py:176: in test_public_loop_reopens_recovered_ifc_and_keeps_parts
+    result = runner.execute(output=tmp_path/'run', provider_factory=lambda:provider,
+dataset\processed\ifc-presentation-validation\courtyard-library-20260912\rerun-04\run_case.py:57: in execute
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=provider_factory,
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:603: in _run_ready_session_to_ifc
+    generator = _run_staged_initial_generation(
+src\text2ifc_agent\interactive_cli_flow.py:1431: in _run_staged_initial_generation
+    result = run_staged_generation(
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:109: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_filling_relationship_recovery.py:172: in generate_live
+    return super().generate_live(**kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_c_plan_run.py:54: in generate_live
+    value=copy.deepcopy(records[target])
+                        ^^^^^^^^^^^^^^^
+E   KeyError: 'wall-1-south'</failure></testcase></testsuite></testsuites>
