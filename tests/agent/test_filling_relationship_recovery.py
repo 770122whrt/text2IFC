@@ -136,12 +136,9 @@ def test_batch_is_atomic_when_one_target_conflicts(bad_second):
 
 @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
 def test_public_loop_reopens_recovered_ifc_and_keeps_parts(tmp_path, strategy):
-    import importlib.util
     from pathlib import Path
     import shutil
-    path = Path('dataset/processed/ifc-presentation-validation/courtyard-library-20260912/rerun-04/test_runner.py')
-    spec = importlib.util.spec_from_file_location('attachment_public_fixture', path)
-    module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+    from tests.agent import filling_recovery_support as module
     brief, candidate = module.fixture()
     # Old C test assets use legacy raw IDs. Freeze a canonical-ID variant for
     # this new bounded recovery contract; do not add aliases to production.
