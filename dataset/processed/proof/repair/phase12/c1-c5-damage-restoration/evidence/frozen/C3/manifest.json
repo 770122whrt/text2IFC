@@ -1,0 +1,106 @@
+{
+  "schema_version": "text2ifc/damage-restoration-proof/0.3",
+  "case_id": "C3",
+  "status": "passed",
+  "provider_evidence_mode": "genuine_live_provider",
+  "synthetic_fallback_used": false,
+  "claim_level": "case_viability_and_reliability_only",
+  "source_batch": "batch-02",
+  "damage_reconstruction_guid_trace": [
+    {
+      "role": "beam-1",
+      "repaired_tag": "beam-1-add",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "1RnWak0Kr6GxkeYF4Sd_XV",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "3dDCGbVHnS5x2DfaUPs0PK"
+    },
+    {
+      "role": "beam-2",
+      "repaired_tag": "beam-2-add",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "1RnWak0Kr6GxkeYF4Sd_ld",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "2s$OZ3oVLG3eDAzPS5FPE1"
+    },
+    {
+      "role": "column-1",
+      "repaired_tag": "column-1-add",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcColumn",
+      "original_global_id": "1Wn_dXmF1DSBE14cb07uXX",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcColumn",
+      "repaired_global_id": "3YQzfCl9nGSPdxvRjxCPkl"
+    },
+    {
+      "role": "door-1",
+      "repaired_tag": "door-1-fill",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcDoor",
+      "original_global_id": "08DlcJHzb8WfJZDS4ZFHLL",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcDoor",
+      "repaired_global_id": "0Z4jXh_NbPVx9uMW5zayxl"
+    },
+    {
+      "role": "door-opening-1",
+      "repaired_tag": null,
+      "damage_action": "retained",
+      "original_ifc_class": "IfcOpeningElement",
+      "original_global_id": "08DlcJHzb8WfJZDT8ZFHLL",
+      "repair_action": "reused",
+      "repaired_ifc_class": "IfcOpeningElement",
+      "repaired_global_id": "08DlcJHzb8WfJZDT8ZFHLL"
+    }
+  ],
+  "focused_ifccompare_status": "passed",
+  "generic_ifccompare_summary": {
+    "created_root_count": 29,
+    "modified_root_count": 4,
+    "removed_root_count": 41,
+    "changed_product_count": 8,
+    "changed_product_classes": {
+      "IfcBeam": 4,
+      "IfcColumn": 2,
+      "IfcDoor": 2
+    }
+  },
+  "whole_model_identity_equivalent": false,
+  "damage": {
+    "beams_removed": 2,
+    "columns_removed": 1,
+    "doors_removed": 1,
+    "windows_removed": 0
+  },
+  "artifacts": [
+    "01-original.ifc",
+    "02-damaged.ifc",
+    "03-repaired.ifc",
+    "REPORT.md",
+    "agent/intent-renderer-input.json",
+    "agent/live-attempts.json",
+    "agent/rendered-intent-prompt.md",
+    "agent/repair-intent.json",
+    "changeset/bound-changeset.json",
+    "changeset/prompt-profile-selection.json",
+    "changeset/semantic-manifest-beam-1-add.json",
+    "changeset/semantic-manifest-beam-2-add.json",
+    "changeset/semantic-manifest-column-1-add.json",
+    "changeset/semantic-manifest-door-1-fill.json",
+    "changeset/semantic-manifests.json",
+    "input/frozen-request.txt",
+    "input/request.txt",
+    "terminal/evidence.json",
+    "terminal/state.json",
+    "validation/case-result.json",
+    "validation/damage-reconstruction-guid-trace.json",
+    "validation/generic-ifccompare.json",
+    "validation/ifccompare-geometry-property-debug.json",
+    "validation/public-evaluation.json"
+  ]
+}

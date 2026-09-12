@@ -1,0 +1,72 @@
+{
+  "schema_version": "text2ifc/damage-restoration-c1-c5-execution-result/0.1",
+  "created_utc": "2026-09-04T09:29:29.707177+00:00",
+  "freeze_sha256": "sha256:75030c659ca73688a5da0f303cd82666286eea2e2f7232921bed958ab07a3504",
+  "semantics": "Damage-restoration: original (members exist) -> damage (deterministic removal) -> repair (restore at the removed members own exact storey-local centre-axis geometry and reuse each surviving original Type) -> repaired compared with original (class counts, geometry, Type bindings, properties, host relationships and preservation).",
+  "status": "completed",
+  "cases": [
+    {
+      "case_id": "C1",
+      "status": "succeeded",
+      "reason_code": null,
+      "case_result": "cases/C1/case-result.json",
+      "genuine_provider_calls": 12
+    },
+    {
+      "case_id": "C2",
+      "status": "succeeded",
+      "reason_code": null,
+      "case_result": "cases/C2/case-result.json",
+      "genuine_provider_calls": 2
+    }
+  ],
+  "preflight_fingerprint": "clean",
+  "preflight": {
+    "status": "passed",
+    "mode": "c1_c5_light_preflight_evidence_reuse",
+    "evidence_path": "dataset/processed/ifc-repair-runs/c1c5-light-preflight-20260904-v9/preflight.json",
+    "evidence_file_sha256": "sha256:613a7643bb7dac5c866ce3737fbc64ce4a2ebc62a5c531dbedfc19725b22891d",
+    "network_transport_attempted": false,
+    "checks": [
+      {
+        "name": "baseline",
+        "status": "passed",
+        "result_sha256": "sha256:2937e05cedca09e46469b8618419b84db173714d7e3d4cbecb272c0531be4127"
+      },
+      {
+        "name": "property-runtime",
+        "status": "passed",
+        "result_sha256": "sha256:836ea82fe3e8163728a0501b9088ff4d2ec6e91a86dcdb2c5d3f3d4babdcad7c"
+      },
+      {
+        "name": "focused",
+        "status": "passed",
+        "result_sha256": "sha256:3385715d6ddcc049df121f7fcd5ef870cf590f9e3e0982c6db5f5d024dca7d8f"
+      },
+      {
+        "name": "compile",
+        "status": "passed",
+        "result_sha256": "sha256:691ca3274805737639aa5dc665be95e15e4cb96d7bf6b6adbf677ff65ee0f584"
+      },
+      {
+        "name": "diff",
+        "status": "passed",
+        "result_sha256": "sha256:eeb3b5b50f1b3745fd1f9e3b41f4ece4113264ed516947e4109bdeaea0ab36f2"
+      }
+    ]
+  },
+  "property_runtime": {
+    "status": "ready",
+    "reason_code": null,
+    "runtime_mode": "production",
+    "acceptance_eligible": true,
+    "corpus_version": "ifc2x3-property-records/0.2",
+    "embedding_model_id": "BAAI/bge-m3",
+    "embedding_model_version": "BAAI-bge-m3-local/phase12.1",
+    "document_renderer_version": "property-record-text/0.1",
+    "collection_version": "ifc2x3-property-vector/0.2",
+    "collection_status": "reused",
+    "record_count": 488
+  },
+  "transport_calls": 14
+}

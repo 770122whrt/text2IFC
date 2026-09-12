@@ -1,0 +1,18 @@
+F
+================================== FAILURES ===================================
+________ test_stage1_routes_and_extracts_in_exactly_one_provider_call _________
+tests\ifc_repair\test_selected_provider_profiles.py:158: in test_stage1_routes_and_extracts_in_exactly_one_provider_call
+    assert {item["profile_id"] for item in catalog} == {
+E   AssertionError: assert {'beam.add', ...to-wall', ...} == {'beam.add', ...to-wall', ...}
+E     
+E     Extra items in the left set:
+E     'door.fill-existing-opening.v0.4'
+E     'door.add-with-opening.v0.4'
+E     Extra items in the right set:
+E     'door.fill-existing-opening.v0.3'
+E     'door.add-with-opening.v0.3'
+E     Use -v to get more diff
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_selected_provider_profiles.py::test_stage1_routes_and_extracts_in_exactly_one_provider_call
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed in 2.04s

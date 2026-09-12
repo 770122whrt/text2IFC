@@ -1,0 +1,83 @@
+FFFF                                                                     [100%]
+================================== FAILURES ===================================
+_ test_current_profile_preserves_explicit_tolerance[add_door_with_opening_to_wall-door.add-with-opening.v0.4] _
+
+operation = 'add_door_with_opening_to_wall'
+profile_id = 'door.add-with-opening.v0.4'
+
+    @pytest.mark.parametrize("operation,profile_id", [
+        ("add_door_with_opening_to_wall", "door.add-with-opening.v0.4"),
+        ("fill_existing_opening_with_door", "door.fill-existing-opening.v0.4"),
+        ("add_window_with_opening_to_wall", "window.add-with-opening.v0.3"),
+    ])
+    def test_current_profile_preserves_explicit_tolerance(operation, profile_id):
+        selected = create_default_registry().require(operation).prompt_profile_id
+>       assert selected == profile_id
+E       AssertionError: assert 'door.add-with-opening.v0.3' == 'door.add-with-opening.v0.4'
+E         
+E         - door.add-with-opening.v0.4
+E         ?                          ^
+E         + door.add-with-opening.v0.3
+E         ?                          ^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:17: AssertionError
+_ test_current_profile_preserves_explicit_tolerance[fill_existing_opening_with_door-door.fill-existing-opening.v0.4] _
+
+operation = 'fill_existing_opening_with_door'
+profile_id = 'door.fill-existing-opening.v0.4'
+
+    @pytest.mark.parametrize("operation,profile_id", [
+        ("add_door_with_opening_to_wall", "door.add-with-opening.v0.4"),
+        ("fill_existing_opening_with_door", "door.fill-existing-opening.v0.4"),
+        ("add_window_with_opening_to_wall", "window.add-with-opening.v0.3"),
+    ])
+    def test_current_profile_preserves_explicit_tolerance(operation, profile_id):
+        selected = create_default_registry().require(operation).prompt_profile_id
+>       assert selected == profile_id
+E       AssertionError: assert 'door.fill-ex...-opening.v0.3' == 'door.fill-ex...-opening.v0.4'
+E         
+E         - door.fill-existing-opening.v0.4
+E         ?                               ^
+E         + door.fill-existing-opening.v0.3
+E         ?                               ^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:17: AssertionError
+_ test_current_profile_preserves_explicit_tolerance[add_window_with_opening_to_wall-window.add-with-opening.v0.3] _
+
+operation = 'add_window_with_opening_to_wall'
+profile_id = 'window.add-with-opening.v0.3'
+
+    @pytest.mark.parametrize("operation,profile_id", [
+        ("add_door_with_opening_to_wall", "door.add-with-opening.v0.4"),
+        ("fill_existing_opening_with_door", "door.fill-existing-opening.v0.4"),
+        ("add_window_with_opening_to_wall", "window.add-with-opening.v0.3"),
+    ])
+    def test_current_profile_preserves_explicit_tolerance(operation, profile_id):
+        selected = create_default_registry().require(operation).prompt_profile_id
+>       assert selected == profile_id
+E       AssertionError: assert 'window.add-with-opening.v0.2' == 'window.add-with-opening.v0.3'
+E         
+E         - window.add-with-opening.v0.3
+E         ?                            ^
+E         + window.add-with-opening.v0.2
+E         ?                            ^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:17: AssertionError
+____________ test_schema_08_and_09_keep_distinct_published_prompts ____________
+
+    def test_schema_08_and_09_keep_distinct_published_prompts():
+>       assert _INTENT_CONTRACTS[REPAIR_INTENT_SCHEMA_VERSION_0_8][1] == "ifc-repair-intent.v0.11"
+E       AssertionError: assert 'ifc-repair-intent.v0.12' == 'ifc-repair-intent.v0.11'
+E         
+E         - ifc-repair-intent.v0.11
+E         ?                       ^
+E         + ifc-repair-intent.v0.12
+E         ?                       ^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:27: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[add_door_with_opening_to_wall-door.add-with-opening.v0.4]
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[fill_existing_opening_with_door-door.fill-existing-opening.v0.4]
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[add_window_with_opening_to_wall-window.add-with-opening.v0.3]
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_schema_08_and_09_keep_distinct_published_prompts
+4 failed in 2.27s

@@ -1,0 +1,610 @@
+# Phase 6.1 Final Acceptance Report
+
+Generated from live trace sidecars and deterministic IFC gates.
+
+## Accepted Live Case
+
+- case_id: `A-revise`
+- source_case_dir: `.tmp/generation-recheck-01/A-revise`
+- case_report: [A-revise/report.md](A-revise/report.md)
+
+## Final IFC
+
+- [output.ifc](output.ifc)
+- [ifc-verification.json](ifc-verification.json)
+- [geometry-feedback.json](geometry-feedback.json)
+
+## Acceptance Metrics
+
+```json
+{
+  "audit_evidence_class": "live",
+  "audit_response_id": "9ca6481b-0c82-4486-8708-3c88183fd5ff",
+  "audit_strict_output_contract_valid": true,
+  "candidate_origin": "live_model_generator",
+  "case_id": "A-revise",
+  "compile_reopen_success": true,
+  "deterministic_gates_passed": true,
+  "geometry_success": true,
+  "ifc_path": "output.ifc",
+  "live_acceptance_eligible": true,
+  "secret_finding_count": 0,
+  "source_case_dir": ".tmp/generation-recheck-01/A-revise",
+  "stage": "final-acceptance",
+  "valid": true
+}
+```
+
+## IFC Verification
+
+```json
+{
+  "ifc_issues": [],
+  "input_issues": [],
+  "output_path": "E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\docs\\reports\\main-integration-20260912\\generation-recheck-01\\A-revise\\output.ifc",
+  "success": true
+}
+```
+
+## Geometry Feedback
+
+```json
+{
+  "expectation_source": "design_brief_expected_facts",
+  "issues": [],
+  "metrics": {
+    "case_id": "A-revise",
+    "floor_openings": {
+      "slab-2-opening-stair": {
+        "bbox": {
+          "x": [
+            7.5,
+            8.7
+          ],
+          "y": [
+            1.5,
+            6.9
+          ],
+          "z": [
+            3.0,
+            3.15
+          ]
+        },
+        "binding_basis": "explicit_identity",
+        "host_slab_id": "slab-2-floor",
+        "ifc_class": "IfcOpeningElement",
+        "resolved_bim_json_id": "slab-2-opening-stair",
+        "resolved_global_id": "3yJXyx64vR29o9_0jBgP1x"
+      },
+      "slab-3-opening-stair": {
+        "bbox": {
+          "x": [
+            8.8,
+            10.0
+          ],
+          "y": [
+            1.5,
+            6.9
+          ],
+          "z": [
+            6.15,
+            6.300000000000001
+          ]
+        },
+        "binding_basis": "explicit_identity",
+        "host_slab_id": "slab-3-floor",
+        "ifc_class": "IfcOpeningElement",
+        "resolved_bim_json_id": "slab-3-opening-stair",
+        "resolved_global_id": "02F6JPumPPnBs3NSjutSdN"
+      }
+    },
+    "products": {},
+    "roof": {
+      "roof-slab": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.600000000000001
+          ],
+          "z": [
+            9.3,
+            9.450000000000001
+          ]
+        },
+        "ifc_class": "IfcRoof"
+      }
+    },
+    "slabs": {
+      "slab-2-floor": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.600000000000001
+          ],
+          "z": [
+            3.0,
+            3.15
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      },
+      "slab-3-floor": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.600000000000001
+          ],
+          "z": [
+            6.15,
+            6.300000000000001
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      },
+      "slab-ground": {
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.20000000000000018,
+            8.600000000000001
+          ],
+          "z": [
+            -0.15,
+            0.0
+          ]
+        },
+        "ifc_class": "IfcSlab"
+      }
+    },
+    "spaces": {
+      "space-storey-1-space-1-hall": {
+        "bbox": {
+          "x": [
+            0.0,
+            7.3
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-1-space-1-stair-room": {
+        "bbox": {
+          "x": [
+            7.5,
+            10.0
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-space-2-hall": {
+        "bbox": {
+          "x": [
+            0.0,
+            7.3
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-2-space-2-platform-north": {
+        "bbox": {
+          "x": [
+            7.5,
+            10.0
+          ],
+          "y": [
+            6.9,
+            8.4
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-3-space-3-hall": {
+        "bbox": {
+          "x": [
+            0.0,
+            7.3
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      },
+      "space-storey-3-space-3-platform-south": {
+        "bbox": {
+          "x": [
+            7.5,
+            10.0
+          ],
+          "y": [
+            0.0,
+            1.5
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcSpace"
+      }
+    },
+    "stairs": {
+      "stair-1": {
+        "bbox": {
+          "x": [
+            7.5,
+            8.7
+          ],
+          "y": [
+            1.5,
+            6.9
+          ],
+          "z": [
+            0.0,
+            3.15
+          ]
+        },
+        "flight_ids": [
+          "stair-flight-1"
+        ],
+        "has_stepped_profile": true,
+        "wall_intersections": []
+      },
+      "stair-2": {
+        "bbox": {
+          "x": [
+            8.8,
+            10.0
+          ],
+          "y": [
+            1.5,
+            6.9
+          ],
+          "z": [
+            3.15,
+            6.3
+          ]
+        },
+        "flight_ids": [
+          "stair-flight-2"
+        ],
+        "has_stepped_profile": true,
+        "wall_intersections": []
+      }
+    },
+    "wall_set_convention": "primary",
+    "walls": {
+      "wall-storey-1-storey-1-wall-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            10.0,
+            10.2
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-storey-1-wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            8.4,
+            8.6
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-storey-1-wall-partition": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            7.300000000000001,
+            7.5
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-storey-1-wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.2,
+            0.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-1-storey-1-wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            -0.2,
+            0.0
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-storey-2-wall-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            10.0,
+            10.2
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-storey-2-wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            8.4,
+            8.6
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-storey-2-wall-partition": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            7.300000000000001,
+            7.5
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-storey-2-wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.2,
+            0.0
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-2-storey-2-wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            -0.2,
+            0.0
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            3.15,
+            6.15
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-3-storey-3-wall-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            10.0,
+            10.2
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-3-storey-3-wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            8.4,
+            8.6
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-3-storey-3-wall-partition": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            7.300000000000001,
+            7.5
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-3-storey-3-wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            -0.20000000000000018,
+            10.2
+          ],
+          "y": [
+            -0.2,
+            0.0
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWall"
+      },
+      "wall-storey-3-storey-3-wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            -0.2,
+            0.0
+          ],
+          "y": [
+            0.0,
+            8.4
+          ],
+          "z": [
+            6.3,
+            9.3
+          ]
+        },
+        "ifc_class": "IfcWall"
+      }
+    }
+  },
+  "success": true
+}
+```
+
+## Secret Scan
+
+```json
+{
+  "finding_count": 0,
+  "findings": [],
+  "scanned_file_count": 8,
+  "scanned_path": "E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\docs\\reports\\main-integration-20260912\\generation-recheck-01\\A-revise",
+  "schema_version": "text2ifc/agent-artifact-scan-v1"
+}
+```

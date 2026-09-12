@@ -1,0 +1,37 @@
+....F..FF................................F.............................. [ 56%]
+.......................................................                  [100%]
+================================== FAILURES ===================================
+_ test_live_runner_requires_admission_without_running_preflight_or_transport __
+tests\ifc_repair\test_phase12_live_uat.py:1155: in test_live_runner_requires_admission_without_running_preflight_or_transport
+    assert result["reason_code"] == "LIVE_ADMISSION_REQUIRED"
+E   AssertionError: assert 'LIVE_TEST_SE...UST_BE_PAIRED' == 'LIVE_ADMISSION_REQUIRED'
+E     
+E     - LIVE_ADMISSION_REQUIRED
+E     + LIVE_TEST_SEAMS_MUST_BE_PAIRED
+_ test_live_runner_uses_changed_scope_admission_without_running_full_preflight _
+tests\ifc_repair\test_phase12_live_uat.py:1241: in test_live_runner_uses_changed_scope_admission_without_running_full_preflight
+    assert result["status"] == "preflight_passed"
+E   AssertionError: assert 'blocked' == 'preflight_passed'
+E     
+E     - preflight_passed
+E     + blocked
+______ test_production_preflight_opens_and_closes_ready_property_runtime ______
+tests\ifc_repair\test_phase12_live_uat.py:1292: in test_production_preflight_opens_and_closes_ready_property_runtime
+    assert result["status"] == "preflight_passed"
+E   AssertionError: assert 'blocked' == 'preflight_passed'
+E     
+E     - preflight_passed
+E     + blocked
+________ test_injected_preflight_cannot_unlock_the_production_executor ________
+tests\ifc_repair\test_phase12_live_uat.py:2161: in test_injected_preflight_cannot_unlock_the_production_executor
+    assert result["reason_code"] == "LIVE_TEST_SEAMS_MUST_BE_PAIRED"
+E   AssertionError: assert 'LIVE_ADMISSION_REQUIRED' == 'LIVE_TEST_SE...UST_BE_PAIRED'
+E     
+E     - LIVE_TEST_SEAMS_MUST_BE_PAIRED
+E     + LIVE_ADMISSION_REQUIRED
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_runner_requires_admission_without_running_preflight_or_transport
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_runner_uses_changed_scope_admission_without_running_full_preflight
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_production_preflight_opens_and_closes_ready_property_runtime
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_injected_preflight_cannot_unlock_the_production_executor
+4 failed, 123 passed in 280.83s (0:04:40)

@@ -1,0 +1,52 @@
+F.....................F.F.FF                                             [100%]
+================================== FAILURES ===================================
+_______________ test_compact_catalog_omits_full_few_shot_bodies _______________
+tests\ifc_repair\test_operation_prompt_profiles.py:25: in test_compact_catalog_omits_full_few_shot_bodies
+    assert len(compact) == 16
+E   AssertionError: assert 19 == 16
+E    +  where 19 = len(({'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], '...olumn', 'conditional_slots': ['/parameters/section/orientation', '/prototype_intent', '/attribute_intents'], ...}, ...))
+________ test_default_registry_binds_current_structural_profiles_only _________
+tests\ifc_repair\test_repair_intent_v07.py:357: in test_default_registry_binds_current_structural_profiles_only
+    assert registry.require("add_door_with_opening_to_wall").prompt_profile_id == (
+E   AssertionError: assert 'door.add-with-opening.v0.4' == 'door.add-with-opening.v0.3'
+E     
+E     - door.add-with-opening.v0.3
+E     ?                          ^
+E     + door.add-with-opening.v0.4
+E     ?                          ^
+_________ test_v08_is_append_only_and_has_the_same_json_shape_as_v07 __________
+tests\ifc_repair\test_repair_intent_v08.py:192: in test_v08_is_append_only_and_has_the_same_json_shape_as_v07
+    assert _sha256(
+E   AssertionError: assert 'sha256:d2d18...95b8917fc1aa6' == 'sha256:8658f...e36c32c6a412d'
+E     
+E     - sha256:8658fa486b44513bdb2fd14a36c01e1657f47e879ed0f25b3a7e36c32c6a412d
+E     + sha256:d2d18077a48e5cbaab24cbb150acd3d38428cb34c1e39541d8995b8917fc1aa6
+__ test_v08_stage1_uses_every_current_compact_profile_without_full_fewshots ___
+tests\ifc_repair\test_repair_intent_v08.py:271: in test_v08_stage1_uses_every_current_compact_profile_without_full_fewshots
+    assert {item["profile_id"] for item in catalog} == CURRENT_PROFILE_IDS
+E   AssertionError: assert {'beam.add.v0...to-wall', ...} == {'beam.add.v0...to-wall', ...}
+E     
+E     Extra items in the left set:
+E     'door.add-with-opening.v0.2'
+E     'door.fill-existing-opening.v0.2'
+E     'window.add-with-opening'
+E     Extra items in the right set:
+E     'window.add-with-opening.v0.2'...
+E     
+E     ...Full output truncated (3 lines hidden), use '-vv' to show
+________ test_repair_api_defaults_to_v08_without_mutating_v07_callers _________
+tests\ifc_repair\test_repair_intent_v08.py:283: in test_repair_api_defaults_to_v08_without_mutating_v07_callers
+    assert default == ENVELOPE_VERSION
+E   AssertionError: assert 'text2ifc/ifc...r-intent/0.10' == 'text2ifc/ifc...ir-intent/0.8'
+E     
+E     - text2ifc/ifc-repair-intent/0.8
+E     ?                              ^
+E     + text2ifc/ifc-repair-intent/0.10
+E     ?                              ^^
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_operation_prompt_profiles.py::test_compact_catalog_omits_full_few_shot_bodies
+FAILED tests/ifc_repair/test_repair_intent_v07.py::test_default_registry_binds_current_structural_profiles_only
+FAILED tests/ifc_repair/test_repair_intent_v08.py::test_v08_is_append_only_and_has_the_same_json_shape_as_v07
+FAILED tests/ifc_repair/test_repair_intent_v08.py::test_v08_stage1_uses_every_current_compact_profile_without_full_fewshots
+FAILED tests/ifc_repair/test_repair_intent_v08.py::test_repair_api_defaults_to_v08_without_mutating_v07_callers
+5 failed, 23 passed in 11.48s

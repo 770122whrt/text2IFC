@@ -1,0 +1,420 @@
+....................FFF....FFFF...........................F..FFFFF....FF [ 46%]
+.......FF..............................FFF......F.FFF......FFF.....FF..F [ 92%]
+FF...FF.FF.                                                              [100%]
+================================== FAILURES ===================================
+_ test_surviving_mapped_door_styles_pass_selection_and_measurement[source0-2AJ6T3vZDDZRJL7l0pGl86-2AJ6T3vZDDZRJL7kCpGl86] _
+tests\ifc_repair\test_door_geometry_regression.py:602: in test_surviving_mapped_door_styles_pass_selection_and_measurement
+    model = ifcopenshell.open(str(source))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\ifcopenshell\__init__.py:178: in open
+    raise FileNotFoundError(f"Path does not exist: '{path}'.")
+E   FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\.tmp\main-integration-20260912\dataset\ifc\train\1px.ifc'.
+_ test_surviving_mapped_door_styles_pass_selection_and_measurement[source1-08DlcJHzb8WfJZDS4ZFHLL-08DlcJHzb8WfJZDT8ZFHLL] _
+tests\ifc_repair\test_door_geometry_regression.py:602: in test_surviving_mapped_door_styles_pass_selection_and_measurement
+    model = ifcopenshell.open(str(source))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\ifcopenshell\__init__.py:178: in open
+    raise FileNotFoundError(f"Path does not exist: '{path}'.")
+E   FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\.tmp\main-integration-20260912\dataset\ifc\test\d7n.ifc'.
+___ test_mapped_door_style_still_rejects_a_materially_displaced_occurrence ____
+tests\ifc_repair\test_door_geometry_regression.py:615: in test_mapped_door_style_still_rejects_a_materially_displaced_occurrence
+    model = ifcopenshell.open(str(source))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\ifcopenshell\__init__.py:178: in open
+    raise FileNotFoundError(f"Path does not exist: '{path}'.")
+E   FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\.tmp\main-integration-20260912\dataset\ifc\test\d7n.ifc'.
+________ test_stage1_routes_and_extracts_in_exactly_one_provider_call _________
+tests\ifc_repair\test_selected_provider_profiles.py:158: in test_stage1_routes_and_extracts_in_exactly_one_provider_call
+    assert {item["profile_id"] for item in catalog} == {
+E   AssertionError: assert {'beam.add', ...to-wall', ...} == {'beam.add', ...to-wall', ...}
+E     
+E     Extra items in the left set:
+E     'door.add-with-opening.v0.4'
+E     'door.fill-existing-opening.v0.4'
+E     Extra items in the right set:
+E     'door.add-with-opening.v0.3'
+E     'door.fill-existing-opening.v0.3'
+E     Use -v to get more diff
+_____ test_stage1_fill_uses_retained_opening_as_program_derived_geometry ______
+tests\ifc_repair\test_selected_provider_profiles.py:188: in test_stage1_fill_uses_retained_opening_as_program_derived_geometry
+    assert result["valid"] is True
+E   assert False is True
+________ test_stage1_fill_rejects_non_contract_door_parameter_aliases _________
+tests\ifc_repair\test_selected_provider_profiles.py:231: in test_stage1_fill_rejects_non_contract_door_parameter_aliases
+    assert result["attempts"][0]["issues"][0]["code"] == (
+E   AssertionError: assert 'OPERATION_PROFILE_MISMATCH' == 'REPAIR_INTEN...CHEMA_INVALID'
+E     
+E     - REPAIR_INTENT_PARAMETER_SCHEMA_INVALID
+E     + OPERATION_PROFILE_MISMATCH
+______ test_stage1_unsupported_door_capability_precedes_missing_geometry ______
+tests\ifc_repair\test_selected_provider_profiles.py:252: in test_stage1_unsupported_door_capability_precedes_missing_geometry
+    assert result["valid"] is True
+E   assert False is True
+_______ test_live_runner_uses_only_the_curated_public_damaged_d7n_input _______
+tests\ifc_repair\test_phase12_live_uat.py:1318: in test_live_runner_uses_only_the_curated_public_damaged_d7n_input
+    assert module.SOURCE.is_file()
+E   AssertionError: assert False
+E    +  where False = is_file()
+E    +    where is_file = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/dataset/processed/proof/ifc-repair-success-cases/structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc').is_file
+E    +      where WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/dataset/processed/proof/ifc-repair-success-cases/structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc') = <module 'phase12_live' from 'E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\scripts\\ifc_repair\\run_phase12_live_uat.py'>.SOURCE
+______ test_live_runner_cannot_claim_independent_proof_before_plan_12_14 ______
+tests\ifc_repair\test_phase12_live_uat.py:1425: in test_live_runner_cannot_claim_independent_proof_before_plan_12_14
+    assert result["status"] == "test_passed"
+E   AssertionError: assert 'failed' == 'test_passed'
+E     
+E     - test_passed
+E     + failed
+____ test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3 ____
+tests\ifc_repair\test_phase12_live_uat.py:1444: in test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3
+    final = module._production_case_executor(
+scripts\ifc_repair\run_phase12_live_uat.py:1642: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:239: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+__ test_stage1_invalid_internal_id_retries_then_completes_public_full_chain ___
+tests\ifc_repair\test_phase12_live_uat.py:1528: in test_stage1_invalid_internal_id_retries_then_completes_public_full_chain
+    final = module._production_case_executor(
+scripts\ifc_repair\run_phase12_live_uat.py:1642: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:239: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+______ test_complete_executor_reopens_against_its_explicit_frozen_source ______
+tests\ifc_repair\test_phase12_live_uat.py:1561: in test_complete_executor_reopens_against_its_explicit_frozen_source
+    shutil.copy2(module.SOURCE, source)
+E:\anaconda\Lib\shutil.py:460: in copy2
+    _winapi.CopyFile2(src_, dst_, flags)
+E   FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����
+_____ test_clarification_transport_drives_real_api_resume_and_publication _____
+tests\ifc_repair\test_phase12_live_uat.py:1592: in test_clarification_transport_drives_real_api_resume_and_publication
+    final = module._production_case_executor(
+scripts\ifc_repair\run_phase12_live_uat.py:1642: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:239: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+_____ test_window_semantic_canary_drives_vector_stage15_stage2_and_reopen _____
+tests\ifc_repair\test_phase12_live_uat.py:1734: in test_window_semantic_canary_drives_vector_stage15_stage2_and_reopen
+    final = module._production_case_executor(
+scripts\ifc_repair\run_phase12_live_uat.py:1642: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:239: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+____ test_program_guard_transport_stops_real_api_before_stage2_or_mutation ____
+tests\ifc_repair\test_phase12_live_uat.py:1766: in test_program_guard_transport_stops_real_api_before_stage2_or_mutation
+    final = module._production_case_executor(
+scripts\ifc_repair\run_phase12_live_uat.py:1642: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:239: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\.tmp\\main-integration-20260912\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+_______________ test_strict_reopen_rejects_a_stale_source_hash ________________
+tests\ifc_repair\test_phase12_live_uat.py:1972: in test_strict_reopen_rejects_a_stale_source_hash
+    shutil.copy2(module.SOURCE, repaired)
+E:\anaconda\Lib\shutil.py:460: in copy2
+    _winapi.CopyFile2(src_, dst_, flags)
+E   FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����
+_______ test_strict_reopen_rejects_a_self_consistent_substitute_source ________
+tests\ifc_repair\test_phase12_live_uat.py:2030: in test_strict_reopen_rejects_a_self_consistent_substitute_source
+    shutil.copy2(module.SOURCE, repaired)
+E:\anaconda\Lib\shutil.py:460: in copy2
+    _winapi.CopyFile2(src_, dst_, flags)
+E   FileNotFoundError: [WinError 3] ϵͳ�Ҳ���ָ����·����
+_______ test_published_case_without_strict_reopen_evidence_cannot_pass ________
+tests\ifc_repair\test_phase12_live_uat.py:2843: in test_published_case_without_strict_reopen_evidence_cannot_pass
+    assert by_case["program-guard"]["contract_pass"] is True
+E   assert False is True
+________ test_clarification_success_requires_the_initial_grouped_stop _________
+tests\ifc_repair\test_phase12_live_uat.py:2907: in test_clarification_success_requires_the_initial_grouped_stop
+    assert by_case["program-guard"]["contract_pass"] is True
+E   assert False is True
+______ test_live_matrix_accepts_current_property_add_detail_answer_mode _______
+tests\ifc_repair\test_phase12_live_uat.py:2969: in test_live_matrix_accepts_current_property_add_detail_answer_mode
+    assert result["status"] == "test_passed"
+E   AssertionError: assert 'failed' == 'test_passed'
+E     
+E     - test_passed
+E     + failed
+____________ test_frozen_live_cases_have_exact_three_stage_lineage ____________
+tests\ifc_repair\test_phase12_live_uat.py:3182: in test_frozen_live_cases_have_exact_three_stage_lineage
+    assert result["status"] == "test_passed"
+E   AssertionError: assert 'failed' == 'test_passed'
+E     
+E     - test_passed
+E     + failed
+___ test_live_curator_accepts_only_complete_and_resumed_success_transcripts ___
+tests\ifc_repair\test_phase12_live_uat.py:3579: in test_live_curator_accepts_only_complete_and_resumed_success_transcripts
+    audit = curator.audit_live_uat_result(_valid_live_curation_result())
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+______ test_live_curator_accepts_current_property_add_detail_answer_mode ______
+tests\ifc_repair\test_phase12_live_uat.py:3602: in test_live_curator_accepts_current_property_add_detail_answer_mode
+    audit = curator.audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+___ test_live_curator_does_not_authorize_by_legacy_parallel_array_position ____
+tests\ifc_repair\test_phase12_live_uat.py:3613: in test_live_curator_does_not_authorize_by_legacy_parallel_array_position
+    audit = curator.audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+_ test_live_curator_rejects_each_single_transcript_defect[missing_template_id-LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[missing_template_hash-LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[missing_few_shot_hash-LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[broken_parent-LIVE_ATTEMPT_PARENT_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_ATTEMPT_PARENT_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[duplicate_attempt-LIVE_ATTEMPT_ID_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_ATTEMPT_ID_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[case_count_mismatch-LIVE_CASE_STAGE_COUNT_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_CASE_STAGE_COUNT_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[aggregate_count_mismatch-LIVE_AGGREGATE_STAGE_COUNT_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_AGGREGATE_STAGE_COUNT_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[provider_model_aggregate-LIVE_PROVIDER_MODEL_AGGREGATE_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_PROVIDER_MODEL_AGGREGATE_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[clarification_lineage-LIVE_CLARIFICATION_LINEAGE_INVALID] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_CLARIFICATION_LINEAGE_INVALID'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_rejects_each_single_transcript_defect[terminal_publication-LIVE_SUCCESS_TERMINAL_INVALID] _
+tests\ifc_repair\test_phase12_live_uat.py:3724: in test_live_curator_rejects_each_single_transcript_defect
+    curator.audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3723: in test_live_curator_rejects_each_single_transcript_defect
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_SUCCESS_TERMINAL_INVALID'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_binds_provider_responses_to_retained_runtime_artifacts[intent-LIVE_STAGE1_RESPONSE_ARTIFACT_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3802: in test_live_curator_binds_provider_responses_to_retained_runtime_artifacts
+    curator.audit_live_artifact_binding(
+scripts\ifc_repair\curate_phase12_live_proof.py:1031: in audit_live_artifact_binding
+    audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3801: in test_live_curator_binds_provider_responses_to_retained_runtime_artifacts
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_STAGE1_RESPONSE_ARTIFACT_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+_ test_live_curator_binds_provider_responses_to_retained_runtime_artifacts[changeset-LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH] _
+tests\ifc_repair\test_phase12_live_uat.py:3802: in test_live_curator_binds_provider_responses_to_retained_runtime_artifacts
+    curator.audit_live_artifact_binding(
+scripts\ifc_repair\curate_phase12_live_proof.py:1031: in audit_live_artifact_binding
+    audit_live_uat_result(result)
+scripts\ifc_repair\curate_phase12_live_proof.py:851: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+scripts\ifc_repair\curate_phase12_live_proof.py:702: in _audit_attempts
+    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E   ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+During handling of the above exception, another exception occurred:
+tests\ifc_repair\test_phase12_live_uat.py:3801: in test_live_curator_binds_provider_responses_to_retained_runtime_artifacts
+    with pytest.raises(ValueError, match=expected_code):
+E   AssertionError: Regex pattern did not match.
+E    Regex: 'LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH'
+E    Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_door_geometry_regression.py::test_surviving_mapped_door_styles_pass_selection_and_measurement[source0-2AJ6T3vZDDZRJL7l0pGl86-2AJ6T3vZDDZRJL7kCpGl86]
+FAILED tests/ifc_repair/test_door_geometry_regression.py::test_surviving_mapped_door_styles_pass_selection_and_measurement[source1-08DlcJHzb8WfJZDS4ZFHLL-08DlcJHzb8WfJZDT8ZFHLL]
+FAILED tests/ifc_repair/test_door_geometry_regression.py::test_mapped_door_style_still_rejects_a_materially_displaced_occurrence
+FAILED tests/ifc_repair/test_selected_provider_profiles.py::test_stage1_routes_and_extracts_in_exactly_one_provider_call
+FAILED tests/ifc_repair/test_selected_provider_profiles.py::test_stage1_fill_uses_retained_opening_as_program_derived_geometry
+FAILED tests/ifc_repair/test_selected_provider_profiles.py::test_stage1_fill_rejects_non_contract_door_parameter_aliases
+FAILED tests/ifc_repair/test_selected_provider_profiles.py::test_stage1_unsupported_door_capability_precedes_missing_geometry
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_runner_uses_only_the_curated_public_damaged_d7n_input
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_runner_cannot_claim_independent_proof_before_plan_12_14
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_stage1_invalid_internal_id_retries_then_completes_public_full_chain
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_complete_executor_reopens_against_its_explicit_frozen_source
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_clarification_transport_drives_real_api_resume_and_publication
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_window_semantic_canary_drives_vector_stage15_stage2_and_reopen
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_program_guard_transport_stops_real_api_before_stage2_or_mutation
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_strict_reopen_rejects_a_stale_source_hash
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_strict_reopen_rejects_a_self_consistent_substitute_source
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_published_case_without_strict_reopen_evidence_cannot_pass
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_clarification_success_requires_the_initial_grouped_stop
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_matrix_accepts_current_property_add_detail_answer_mode
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_frozen_live_cases_have_exact_three_stage_lineage
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_accepts_only_complete_and_resumed_success_transcripts
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_accepts_current_property_add_detail_answer_mode
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_does_not_authorize_by_legacy_parallel_array_position
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[missing_template_id-LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[missing_template_hash-LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[missing_few_shot_hash-LIVE_ATTEMPT_FEW_SHOT_HASH_REQUIRED]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[broken_parent-LIVE_ATTEMPT_PARENT_MISMATCH]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[duplicate_attempt-LIVE_ATTEMPT_ID_MISMATCH]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[case_count_mismatch-LIVE_CASE_STAGE_COUNT_MISMATCH]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[aggregate_count_mismatch-LIVE_AGGREGATE_STAGE_COUNT_MISMATCH]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[provider_model_aggregate-LIVE_PROVIDER_MODEL_AGGREGATE_MISMATCH]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[clarification_lineage-LIVE_CLARIFICATION_LINEAGE_INVALID]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_rejects_each_single_transcript_defect[terminal_publication-LIVE_SUCCESS_TERMINAL_INVALID]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_binds_provider_responses_to_retained_runtime_artifacts[intent-LIVE_STAGE1_RESPONSE_ARTIFACT_MISMATCH]
+FAILED tests/ifc_repair/test_phase12_live_uat.py::test_live_curator_binds_provider_responses_to_retained_runtime_artifacts[changeset-LIVE_STAGE2_RESPONSE_ARTIFACT_MISMATCH]
+36 failed, 119 passed in 210.19s (0:03:30)

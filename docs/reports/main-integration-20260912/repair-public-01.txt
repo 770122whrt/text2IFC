@@ -1,0 +1,78 @@
+
+=================================== ERRORS ====================================
+_ ERROR collecting tests/ifc_repair/test_semantic_bundle_claim_propagation.py _
+..\..\.venv\Lib\site-packages\_pytest\python.py:498: in importtestmodule
+    mod = import_path(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:561: in import_path
+    mod = _import_module_using_spec(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:725: in _import_module_using_spec
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\_pytest\assertion\rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests\ifc_repair\test_semantic_bundle_claim_propagation.py:37: in <module>
+    from text2ifc_ifc_repair.api import _has_natural_property_claims  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\api.py:29: in <module>
+    from .request_stage import generate_repair_intent
+E     File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_ifc_repair\request_stage.py", line 703
+E       continue
+E   IndentationError: unexpected indent
+____ ERROR collecting tests/ifc_repair/test_selected_provider_profiles.py _____
+..\..\.venv\Lib\site-packages\_pytest\python.py:498: in importtestmodule
+    mod = import_path(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:561: in import_path
+    mod = _import_module_using_spec(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:725: in _import_module_using_spec
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\_pytest\assertion\rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests\ifc_repair\test_selected_provider_profiles.py:9: in <module>
+    from text2ifc_ifc_repair.request_stage import generate_repair_intent
+E     File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_ifc_repair\request_stage.py", line 703
+E       continue
+E   IndentationError: unexpected indent
+______ ERROR collecting tests/ifc_repair/test_semantic_conflict_v010.py _______
+..\..\.venv\Lib\site-packages\_pytest\python.py:498: in importtestmodule
+    mod = import_path(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:561: in import_path
+    mod = _import_module_using_spec(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:725: in _import_module_using_spec
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\_pytest\assertion\rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests\ifc_repair\test_semantic_conflict_v010.py:18: in <module>
+    from text2ifc_ifc_repair.api import RepairAPI
+src\text2ifc_ifc_repair\api.py:29: in <module>
+    from .request_stage import generate_repair_intent
+E     File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_ifc_repair\request_stage.py", line 703
+E       continue
+E   IndentationError: unexpected indent
+_________ ERROR collecting tests/ifc_repair/test_phase12_live_uat.py __________
+..\..\.venv\Lib\site-packages\_pytest\python.py:498: in importtestmodule
+    mod = import_path(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:561: in import_path
+    mod = _import_module_using_spec(
+..\..\.venv\Lib\site-packages\_pytest\pathlib.py:725: in _import_module_using_spec
+    spec.loader.exec_module(mod)  # type: ignore[union-attr]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\.venv\Lib\site-packages\_pytest\assertion\rewrite.py:186: in exec_module
+    exec(co, module.__dict__)
+tests\ifc_repair\test_phase12_live_uat.py:22: in <module>
+    from scripts.ifc_repair.run_phase12_live_uat import DEFAULT_CASES as FROZEN_LIVE_CASES
+scripts\ifc_repair\run_phase12_live_uat.py:42: in <module>
+    from scripts.ifc_repair.validate_success_cases import (  # noqa: E402
+scripts\ifc_repair\validate_success_cases.py:75: in <module>
+    from text2ifc_ifc_repair.request_stage import _unsupported_operations
+E     File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_ifc_repair\request_stage.py", line 703
+E       continue
+E   IndentationError: unexpected indent
+=========================== short test summary info ===========================
+ERROR tests/ifc_repair/test_semantic_bundle_claim_propagation.py
+ERROR tests/ifc_repair/test_selected_provider_profiles.py
+ERROR tests/ifc_repair/test_semantic_conflict_v010.py
+ERROR tests/ifc_repair/test_phase12_live_uat.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 4 errors during collection !!!!!!!!!!!!!!!!!!!
+4 errors in 3.84s

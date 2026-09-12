@@ -1,0 +1,283 @@
+{
+  "model_fingerprint": "sha256:f61ff5cf8e1cc88da6944d6bcd3e2e7da5ff27dd3288a8781908018cb8240cd6",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "restore-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -216.820945,
+            "y_mm": 5648.800821,
+            "z_mm": -300
+          },
+          "start": {
+            "x_mm": -2116.820945,
+            "y_mm": 5648.800821,
+            "z_mm": -300
+          }
+        },
+        "section": {
+          "height_mm": 600,
+          "shape": "rectangle",
+          "width_mm": 200
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": false,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_BeamCommon",
+          "source": {
+            "excerpt": "Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"200x300\", Pset_QuantityTakeOff.Reference = \"200x300\", Pset_ReinforcementBarPitchOfBeam.Reference = \"200x300\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Slope",
+          "raw_unit": null,
+          "raw_value": 0,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_BeamCommon",
+          "source": {
+            "excerpt": "Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"200x300\", Pset_QuantityTakeOff.Reference = \"200x300\", Pset_ReinforcementBarPitchOfBeam.Reference = \"200x300\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "200x300",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_BeamCommon",
+          "source": {
+            "excerpt": "Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"200x300\", Pset_QuantityTakeOff.Reference = \"200x300\", Pset_ReinforcementBarPitchOfBeam.Reference = \"200x300\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "200x300",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_QuantityTakeOff",
+          "source": {
+            "excerpt": "Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"200x300\", Pset_QuantityTakeOff.Reference = \"200x300\", Pset_ReinforcementBarPitchOfBeam.Reference = \"200x300\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "200x300",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_ReinforcementBarPitchOfBeam",
+          "source": {
+            "excerpt": "Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"200x300\", Pset_QuantityTakeOff.Reference = \"200x300\", Pset_ReinforcementBarPitchOfBeam.Reference = \"200x300\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "2kMW8XyZv1d9XdPJLihM2H",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "must reuse the existing IfcBeamType with GlobalId 2kMW8XyZv1d9XdPJLihM2H; do not generate a new Type.",
+          "reference": "public request",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "Restore the 2 missing members of this building in one atomic ChangeSet. Beam 1 is on storey \"天花板\" with centre axis from (-2116.820945, 5648.800821, -300) mm to (-216.820945, 5648.800821, -300) mm (storey-local), a rectangular section 200 mm wide horizontally by 600 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 2kMW8XyZv1d9XdPJLihM2H; do not generate a new Type.",
+          "reference": "public request",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "add",
+        "component_family": "beam",
+        "operation_profile": "beam.add.v0.3",
+        "source": {
+          "excerpt": "Beam 1 is on storey \"天花板\" with centre axis from (-2116.820945, 5648.800821, -300) mm to (-216.820945, 5648.800821, -300) mm (storey-local), a rectangular section 200 mm wide horizontally by 600 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 2kMW8XyZv1d9XdPJLihM2H; do not generate a new Type.",
+          "reference": "public request",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "names": [
+          "天花板"
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    },
+    {
+      "attribute_intents": [],
+      "occurrence_reuse_intent": null,
+      "operation_id": "restore-door-1",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "door": {
+          "operation_type": "SINGLE_SWING_LEFT"
+        },
+        "fit_existing_opening": true
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "property_name": "IsExternal",
+          "raw_unit": null,
+          "raw_value": false,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_DoorCommon",
+          "source": {
+            "excerpt": "Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"0915 x 2134mm 5\", Pset_DoorCommon.ThermalTransmittance = 3.7021, Pset_QuantityTakeOff.Reference = \"0915 x 2134mm 5\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "0915 x 2134mm 5",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_DoorCommon",
+          "source": {
+            "excerpt": "Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"0915 x 2134mm 5\", Pset_DoorCommon.ThermalTransmittance = 3.7021, Pset_QuantityTakeOff.Reference = \"0915 x 2134mm 5\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "ThermalTransmittance",
+          "raw_unit": null,
+          "raw_value": 3.7021,
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_DoorCommon",
+          "source": {
+            "excerpt": "Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"0915 x 2134mm 5\", Pset_DoorCommon.ThermalTransmittance = 3.7021, Pset_QuantityTakeOff.Reference = \"0915 x 2134mm 5\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        },
+        {
+          "intent_kind": "exact_property",
+          "property_name": "Reference",
+          "raw_unit": null,
+          "raw_value": "0915 x 2134mm 5",
+          "requested_value_type": null,
+          "scope": "occurrence_direct",
+          "set_name": "Pset_QuantityTakeOff",
+          "source": {
+            "excerpt": "Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"0915 x 2134mm 5\", Pset_DoorCommon.ThermalTransmittance = 3.7021, Pset_QuantityTakeOff.Reference = \"0915 x 2134mm 5\".",
+            "reference": "public request",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "prototype_intent": {
+        "reference": "2AJ6T3vZDDZRJL7kKpGlCF",
+        "reference_kind": "global_id",
+        "source": {
+          "excerpt": "reuse the existing IfcDoorStyle with GlobalId 2AJ6T3vZDDZRJL7kKpGlCF, including its mapped representation; do not generate a new Type.",
+          "reference": "public request",
+          "source_kind": "user_request"
+        }
+      },
+      "provenance": [
+        {
+          "excerpt": "Door 1 must fill the retained empty opening that is 720 mm wide, 2300 mm high and 100 mm deep, at wall-local centre offset 580.3 mm and sill 0 mm, without creating another opening; use operation type SINGLE_SWING_LEFT and reuse the existing IfcDoorStyle with GlobalId 2AJ6T3vZDDZRJL7kKpGlCF, including its mapped representation; do not generate a new Type.",
+          "reference": "public request",
+          "source_kind": "user_request"
+        }
+      ],
+      "quantity_intents": [],
+      "routing_intent": {
+        "action": "fill_existing_opening",
+        "component_family": "door",
+        "operation_profile": "door.fill-existing-opening.v0.2",
+        "source": {
+          "excerpt": "Door 1 must fill the retained empty opening that is 720 mm wide, 2300 mm high and 100 mm deep, at wall-local centre offset 580.3 mm and sill 0 mm, without creating another opening; use operation type SINGLE_SWING_LEFT and reuse the existing IfcDoorStyle with GlobalId 2AJ6T3vZDDZRJL7kKpGlCF, including its mapped representation; do not generate a new Type.",
+          "reference": "public request",
+          "source_kind": "user_request"
+        }
+      },
+      "semantic_bundle_refs": [],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcOpeningElement"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "opening_width_mm",
+            "tolerance_mm": 0.1,
+            "value": 720
+          },
+          {
+            "field": "opening_height_mm",
+            "tolerance_mm": 0.1,
+            "value": 2300
+          },
+          {
+            "field": "opening_depth_mm",
+            "tolerance_mm": 0.1,
+            "value": 100
+          },
+          {
+            "field": "opening_center_offset_mm",
+            "tolerance_mm": 0.1,
+            "value": 580.3
+          },
+          {
+            "field": "opening_sill_height_mm",
+            "tolerance_mm": 0.1,
+            "value": 0
+          }
+        ],
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "prompt_fingerprint": "sha256:46e133568cba156f06151daaa47190b2cefa6abcbeecb6612185d9d736bbea32",
+  "provenance": [
+    {
+      "excerpt": "Restore the 2 missing members of this building in one atomic ChangeSet.",
+      "reference": "public request",
+      "source_kind": "user_request"
+    }
+  ],
+  "request_id": "request-e8024ae2885343ec",
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "semantic_bundles": [],
+  "source_request_hash": "sha256:e8024ae2885343ecb8b3d1395e8e2422c6a3bdd02192317956f1a04338dd4f44",
+  "unsupported_requests": []
+}

@@ -1,0 +1,72 @@
+{
+  "schema_version": "text2ifc/damage-restoration-proof/0.3",
+  "case_id": "C1",
+  "status": "passed",
+  "provider_evidence_mode": "genuine_live_provider",
+  "synthetic_fallback_used": false,
+  "claim_level": "case_viability_and_reliability_only",
+  "source_batch": "batch-01",
+  "damage_reconstruction_guid_trace": [
+    {
+      "role": "beam-1",
+      "repaired_tag": "add-support-beam-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "07ykdjoGLBROeD1VZtZex9",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "0PHy0Z4ATS3AnyPFMvZ9yN"
+    },
+    {
+      "role": "beam-2",
+      "repaired_tag": "add-support-beam-2",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "07ykdjoGLBROeD1VZtZebp",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "1VcZXBjsbVbu6zMmHkJXyl"
+    }
+  ],
+  "focused_ifccompare_status": "passed",
+  "generic_ifccompare_summary": {
+    "created_root_count": 6,
+    "modified_root_count": 5,
+    "removed_root_count": 14,
+    "changed_product_count": 4,
+    "changed_product_classes": {
+      "IfcBeam": 4
+    }
+  },
+  "whole_model_identity_equivalent": false,
+  "damage": {
+    "beams_removed": 2,
+    "columns_removed": 0,
+    "doors_removed": 0,
+    "windows_removed": 0
+  },
+  "artifacts": [
+    "01-original.ifc",
+    "02-damaged.ifc",
+    "03-repaired.ifc",
+    "REPORT.md",
+    "agent/intent-renderer-input.json",
+    "agent/live-attempts.json",
+    "agent/rendered-intent-prompt.md",
+    "agent/repair-intent.json",
+    "changeset/bound-changeset.json",
+    "changeset/prompt-profile-selection.json",
+    "changeset/semantic-manifest-add-support-beam-1.json",
+    "changeset/semantic-manifest-add-support-beam-2.json",
+    "changeset/semantic-manifests.json",
+    "input/frozen-request.txt",
+    "input/request.txt",
+    "terminal/evidence.json",
+    "terminal/state.json",
+    "validation/case-result.json",
+    "validation/damage-reconstruction-guid-trace.json",
+    "validation/generic-ifccompare.json",
+    "validation/ifccompare-geometry-property-debug.json",
+    "validation/public-evaluation.json"
+  ]
+}

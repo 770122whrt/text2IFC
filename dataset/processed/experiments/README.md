@@ -1,4 +1,4 @@
-# C 型建造与 token 实验记录
+# 实验与开发历史记录
 
 本目录独立保存实验和调试历史，含成功、失败、原始Provider响应、token账本、配置、脚本和验证记录。它们不因最终C被验收而自动成为accepted Proof。旧报告中的“下一步”和pending为当时状态，原字节不改。旧路径至当前路径、大小与SHA-256见 [归档索引](c-token-archive-20260911.json)。不收纳可重建的 __pycache__。
 
@@ -25,3 +25,9 @@
 C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次/171,516 token。各阶段累计值不可求和。reasoning已包含在output中。不同代码、Prompt和随机输出下的两次C运行不是受控token消融。
 
 冻结admission、数据库引用和日志里的原绝对路径仅表示历史环境；不能直接复用为新真实调用准入。原脚本原样保存用于审计，受影响的回归测试应改用本归档路径；任何真实重跑须创建新运行目录并建立当前准入。
+
+## 开发辅助材料
+
+[历史开发辅助归档](development-support-20260912/README.md) 保存原 .tmp 中319份尚无归档副本的脚本、测试结果和操作日志。它们不加入 pytest 发现范围，不替代原实验结论；会话恢复材料留在原地。源文件待备份推送后另行申请退役。
+
+[Zcode C1–C5 历史离线记录](repair-c1-c5-offline-20260903-v2/README.md) 与 [真实运行 Proof](../proof/repair/phase12/c1-c5-damage-restoration/REPORT.md) 分开收纳。

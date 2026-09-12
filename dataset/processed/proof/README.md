@@ -11,11 +11,12 @@
 | [repair/phase11/reference-cases](repair/phase11/reference-cases/REPORT.md) | accepted | 16 |
 | [repair/phase12/plan07-v2](repair/phase12/plan07-v2/REPORT.md) | accepted | 10 |
 | [repair/phase12/presentation-cases](repair/phase12/presentation-cases/REPORT.md) | pending_human_review | 3 |
+| [C1–C5 损坏修复](repair/phase12/c1-c5-damage-restoration/REPORT.md) | 历史人工验收保留；完整 curator 离线复核通过 | 5 |
 | [repair/phase12.1/r1](repair/phase12.1/r1/REPORT.md) | accepted | 12 |
 
-共 51 个直接展示案例。历史 live UAT 另引用 reference-cases 的两个成功案，不重复收纳。Plan07 已经用户人工审查通过；材质外观集合等待人工审查；整理不关闭 Phase、不提升模型能力结论。
+共 56 个直接展示案例。历史 live UAT 另引用 reference-cases 的两个成功案，不重复收纳。Plan07 已经用户人工审查通过；材质外观集合等待人工审查；整理不关闭 Phase、不提升模型能力结论。
 
-另有[双层社区阅读活动楼的人工验收记录](generation/phase6.6/two-storey-community-20260909/REPORT.md)：用户于 2026-09-09 验收模型与展示，工程门禁仍为 blocked，未完成终端发布。该独立 review 集合不计入上述 51 案或 accepted machine 索引。
+另有[双层社区阅读活动楼的人工验收记录](generation/phase6.6/two-storey-community-20260909/REPORT.md)：用户于 2026-09-09 验收模型与展示，工程门禁仍为 blocked，未完成终端发布。该独立 review 集合不计入上述 56 案或 accepted machine 索引。
 
 ## 如何读案例
 

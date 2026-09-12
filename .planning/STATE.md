@@ -16,7 +16,9 @@ progress:
 
 ## 当前工作：仓库清理与 main 整合（2026-09-12）
 
-已批准保守清理、隔离整合 main/Zcode/当前分支，以及完整离线Full Preflight。执行与阻断记录见 `docs/reports/main-integration-20260912/REPORT.md`；未调用Provider，未合main。下方C验收及Phase记录保持历史原义。
+2026-09-12 更新：当前分支与 Zcode 已在隔离工作树完成合并（f49bbf42），生产以当前合同为准，保留 Zcode refactor-workspace.zip。用户收缩为聚焦验证并要求尽快合 main；最终111项聚焦检查通过，全量测试按要求停止，不宣称 Full Preflight 全通过。93份已批准重复文件已删除；其余清理候选保留待批。详见 docs/reports/main-integration-20260912/REPORT.md。
+
+初始计划中的完整离线 Full Preflight 已被用户最新的精简验证要求取代。执行结果与剩余限制见 `docs/reports/main-integration-20260912/REPORT.md`；本轮未调用 Provider。下方 C 验收及 Phase 记录保持历史原义。
 
 ## 当前增量工作：C 型 Generation（2026-09-11）
 

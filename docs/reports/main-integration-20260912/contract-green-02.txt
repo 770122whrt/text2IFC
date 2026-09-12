@@ -1,0 +1,974 @@
+FFF.FFF.FFFFFF...............................FFFFF...................... [ 93%]
+.....                                                                    [100%]
+================================== FAILURES ===================================
+_ test_current_profile_preserves_explicit_tolerance[add_door_with_opening_to_wall-door.add-with-opening.v0.4] _
+
+operation = 'add_door_with_opening_to_wall'
+profile_id = 'door.add-with-opening.v0.4'
+
+    @pytest.mark.parametrize("operation,profile_id", [
+        ("add_door_with_opening_to_wall", "door.add-with-opening.v0.4"),
+        ("fill_existing_opening_with_door", "door.fill-existing-opening.v0.4"),
+        ("add_window_with_opening_to_wall", "window.add-with-opening.v0.3"),
+    ])
+    def test_current_profile_preserves_explicit_tolerance(operation, profile_id):
+        selected = create_default_registry().require(operation).prompt_profile_id
+        assert selected == profile_id
+>       doc = load_prompt_profiles()[selected].document
+              ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_current_profile_preserves_explicit_tolerance[fill_existing_opening_with_door-door.fill-existing-opening.v0.4] _
+
+operation = 'fill_existing_opening_with_door'
+profile_id = 'door.fill-existing-opening.v0.4'
+
+    @pytest.mark.parametrize("operation,profile_id", [
+        ("add_door_with_opening_to_wall", "door.add-with-opening.v0.4"),
+        ("fill_existing_opening_with_door", "door.fill-existing-opening.v0.4"),
+        ("add_window_with_opening_to_wall", "window.add-with-opening.v0.3"),
+    ])
+    def test_current_profile_preserves_explicit_tolerance(operation, profile_id):
+        selected = create_default_registry().require(operation).prompt_profile_id
+        assert selected == profile_id
+>       doc = load_prompt_profiles()[selected].document
+              ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_current_profile_preserves_explicit_tolerance[add_window_with_opening_to_wall-window.add-with-opening.v0.3] _
+
+operation = 'add_window_with_opening_to_wall'
+profile_id = 'window.add-with-opening.v0.3'
+
+    @pytest.mark.parametrize("operation,profile_id", [
+        ("add_door_with_opening_to_wall", "door.add-with-opening.v0.4"),
+        ("fill_existing_opening_with_door", "door.fill-existing-opening.v0.4"),
+        ("add_window_with_opening_to_wall", "window.add-with-opening.v0.3"),
+    ])
+    def test_current_profile_preserves_explicit_tolerance(operation, profile_id):
+        selected = create_default_registry().require(operation).prompt_profile_id
+        assert selected == profile_id
+>       doc = load_prompt_profiles()[selected].document
+              ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_integration_contract_compatibility.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+____________________ test_reordered_scope_target_ids_bind _____________________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_reordered_scope_target_id0')
+
+    def test_reordered_scope_target_ids_bind(tmp_path: Path) -> None:
+        """Same identifier set, provider order �� binds (live C3 shape)."""
+    
+>       result = _run(tmp_path / "composite-evidence-setsem-01", _draft())
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+______________________ test_reordered_evidence_refs_bind ______________________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_reordered_evidence_refs_b0')
+
+    def test_reordered_evidence_refs_bind(tmp_path: Path) -> None:
+        """Same evidence pointer set, provider order �� binds."""
+    
+        draft = _draft()
+        draft["evidence_refs"] = [BEAM_EVIDENCE, COLUMN_EVIDENCE]
+    
+>       result = _run(tmp_path / "composite-evidence-setsem-02", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:237: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_________________ test_reordered_operation_evidence_refs_bind _________________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_reordered_operation_evide0')
+
+    def test_reordered_operation_evidence_refs_bind(tmp_path: Path) -> None:
+        """Operation-level evidence pointer set in provider order �� binds."""
+    
+        draft = _draft()
+        draft["operations"][0]["evidence_refs"] = [BEAM_EVIDENCE]
+        draft["operations"][1]["evidence_refs"] = [COLUMN_EVIDENCE]
+    
+>       result = _run(tmp_path / "composite-evidence-setsem-03", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:249: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_identifier_drift_still_fails_closed[scope-extra-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH] _
+
+case = 'scope-extra-target', mutate = <function <lambda> at 0x000002057F9EECA0>
+expected_code = 'DRAFT_AUTHORITY_SCOPE_MISMATCH'
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_identifier_drift_still_fa0')
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str, tmp_path: Path
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+>       result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_identifier_drift_still_fails_closed[scope-missing-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH] _
+
+case = 'scope-missing-target'
+mutate = <function <lambda> at 0x000002057F9EED40>
+expected_code = 'DRAFT_AUTHORITY_SCOPE_MISMATCH'
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_identifier_drift_still_fa1')
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str, tmp_path: Path
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+>       result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_identifier_drift_still_fails_closed[scope-duplicate-target-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR] _
+
+case = 'scope-duplicate-target'
+mutate = <function <lambda> at 0x000002057F9EEDE0>
+expected_code = 'DRAFT_SCHEMA_VALIDATION_ERROR'
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_identifier_drift_still_fa2')
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str, tmp_path: Path
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+>       result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+
+case = 'evidence-extra-ref', mutate = <function <lambda> at 0x000002057F9EEE80>
+expected_code = 'DRAFT_AUTHORITY_EVIDENCE_MISMATCH'
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_identifier_drift_still_fa3')
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str, tmp_path: Path
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+>       result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+
+case = 'evidence-missing-ref'
+mutate = <function <lambda> at 0x000002057F9EEF20>
+expected_code = 'DRAFT_AUTHORITY_EVIDENCE_MISMATCH'
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_identifier_drift_still_fa4')
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str, tmp_path: Path
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+>       result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_identifier_drift_still_fails_closed[evidence-duplicate-ref-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR] _
+
+case = 'evidence-duplicate-ref'
+mutate = <function <lambda> at 0x000002057F9EEFC0>
+expected_code = 'DRAFT_SCHEMA_VALIDATION_ERROR'
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/main-integration-20260912/.tmp/integration-contract-green-02/test_identifier_drift_still_fa5')
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str, tmp_path: Path
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+>       result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:237: in select_prompt_profiles
+    registry = profiles or load_prompt_profiles()
+                           ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_v03_profiles_registered_and_selected[door.add-with-opening.v0.3-add_door_with_opening_to_wall] _
+
+profile_id = 'door.add-with-opening.v0.3'
+operation_type = 'add_door_with_opening_to_wall'
+
+    @pytest.mark.parametrize(
+        ("profile_id", "operation_type"),
+        [
+            (V03_ADD_PROFILE, "add_door_with_opening_to_wall"),
+            (V03_FILL_PROFILE, "fill_existing_opening_with_door"),
+        ],
+    )
+    def test_v03_profiles_registered_and_selected(
+        profile_id: str, operation_type: str
+    ) -> None:
+>       registry = load_prompt_profiles()
+                   ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_published_contract_reachability.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_v03_profiles_registered_and_selected[door.fill-existing-opening.v0.3-fill_existing_opening_with_door] _
+
+profile_id = 'door.fill-existing-opening.v0.3'
+operation_type = 'fill_existing_opening_with_door'
+
+    @pytest.mark.parametrize(
+        ("profile_id", "operation_type"),
+        [
+            (V03_ADD_PROFILE, "add_door_with_opening_to_wall"),
+            (V03_FILL_PROFILE, "fill_existing_opening_with_door"),
+        ],
+    )
+    def test_v03_profiles_registered_and_selected(
+        profile_id: str, operation_type: str
+    ) -> None:
+>       registry = load_prompt_profiles()
+                   ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_published_contract_reachability.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_v03_profile_publishes_enum_and_tolerance_rules[door.add-with-opening.v0.3] _
+
+profile_id = 'door.add-with-opening.v0.3'
+
+    @pytest.mark.parametrize(
+        "profile_id", [V03_ADD_PROFILE, V03_FILL_PROFILE]
+    )
+    def test_v03_profile_publishes_enum_and_tolerance_rules(
+        profile_id: str,
+    ) -> None:
+>       profile = load_prompt_profiles()[profile_id]
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_published_contract_reachability.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+_ test_v03_profile_publishes_enum_and_tolerance_rules[door.fill-existing-opening.v0.3] _
+
+profile_id = 'door.fill-existing-opening.v0.3'
+
+    @pytest.mark.parametrize(
+        "profile_id", [V03_ADD_PROFILE, V03_FILL_PROFILE]
+    )
+    def test_v03_profile_publishes_enum_and_tolerance_rules(
+        profile_id: str,
+    ) -> None:
+>       profile = load_prompt_profiles()[profile_id]
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_published_contract_reachability.py:138: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+________________ test_window_profile_publishes_tolerance_rule _________________
+
+    def test_window_profile_publishes_tolerance_rule() -> None:
+>       profile = load_prompt_profiles()[V02_WINDOW_PROFILE]
+                  ^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_published_contract_reachability.py:150: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_ifc_repair\prompt_profiles.py:192: in load_prompt_profiles
+    _validate_few_shots(document)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+document = {'action': 'add', 'classification_terms': ['beam', 'structural beam', 'add beam', 'horizontal member', '��', '������'], 'component_family': 'beam', 'conditional_slots': ['/prototype_intent', '/attribute_intents'], ...}
+
+    def _validate_few_shots(document: Mapping[str, Any]) -> None:
+        seen: set[str] = set()
+        for reference in document["few_shots"]:
+            example_id = str(reference["example_id"])
+            if example_id in seen:
+                raise PromptProfileError("DUPLICATE_FEW_SHOT_ID", example_id)
+            seen.add(example_id)
+            path = _project_file(str(reference["path"]))
+            raw = path.read_bytes()
+            if len(raw) > MAX_FEW_SHOT_BYTES:
+                raise PromptProfileError("FEW_SHOT_BYTE_LIMIT_EXCEEDED", path.name)
+            if str(reference["sha256"]) != _sha256(raw):
+>               raise PromptProfileError("FEW_SHOT_HASH_MISMATCH", example_id)
+E               text2ifc_ifc_repair.prompt_profiles.PromptProfileError: FEW_SHOT_HASH_MISMATCH: beam.add.complete
+
+src\text2ifc_ifc_repair\prompt_profiles.py:339: PromptProfileError
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[add_door_with_opening_to_wall-door.add-with-opening.v0.4]
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[fill_existing_opening_with_door-door.fill-existing-opening.v0.4]
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[add_window_with_opening_to_wall-window.add-with-opening.v0.3]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_scope_target_ids_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_evidence_refs_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_operation_evidence_refs_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-extra-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-missing-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-duplicate-target-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-duplicate-ref-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR]
+FAILED tests/ifc_repair/test_published_contract_reachability.py::test_v03_profiles_registered_and_selected[door.add-with-opening.v0.3-add_door_with_opening_to_wall]
+FAILED tests/ifc_repair/test_published_contract_reachability.py::test_v03_profiles_registered_and_selected[door.fill-existing-opening.v0.3-fill_existing_opening_with_door]
+FAILED tests/ifc_repair/test_published_contract_reachability.py::test_v03_profile_publishes_enum_and_tolerance_rules[door.add-with-opening.v0.3]
+FAILED tests/ifc_repair/test_published_contract_reachability.py::test_v03_profile_publishes_enum_and_tolerance_rules[door.fill-existing-opening.v0.3]
+FAILED tests/ifc_repair/test_published_contract_reachability.py::test_window_profile_publishes_tolerance_rule
+17 failed, 60 passed in 6.64s

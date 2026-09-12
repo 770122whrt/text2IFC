@@ -1,0 +1,16 @@
+..........FF                                                             [100%]
+================================== FAILURES ===================================
+_ test_reordered_identifiers_preserve_appearance_authority_through_binding[False] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:359: in test_reordered_identifiers_preserve_appearance_authority_through_binding
+    assert result["valid"] is not drift, result
+E   AssertionError: {'changeset': None, 'classification': 'invalid', 'issues': [{'code': 'DRAFT_SCHEMA_VALIDATION_ERROR', 'message': "'app...56:6e37279ffdf2f3694e5521379373e223b03e291322a82cd7a536fbf47f7aeefe', 'template_id': 'ifc-repair-changeset.v0.6'}, ...}
+E   assert False is not False
+_ test_reordered_identifiers_preserve_appearance_authority_through_binding[True] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:361: in test_reordered_identifiers_preserve_appearance_authority_through_binding
+    assert any("DRAFT_AUTHORITY_APPEARANCE_MISMATCH" in str(i) for i in result["issues"])
+E   assert False
+E    +  where False = any(<generator object test_reordered_identifiers_preserve_appearance_authority_through_binding.<locals>.<genexpr> at 0x000001DFB5938820>)
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_identifiers_preserve_appearance_authority_through_binding[False]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_identifiers_preserve_appearance_authority_through_binding[True]
+2 failed, 10 passed in 19.15s

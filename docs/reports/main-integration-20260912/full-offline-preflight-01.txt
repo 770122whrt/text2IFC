@@ -1,0 +1,210 @@
+...F.................................................................... [  2%]
+........................................................................ [  4%]
+........................................................................ [  6%]
+........................................................................ [  8%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........FF.............................................................F [ 14%]
+........................................................................ [ 16%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+........................................................................ [ 22%]
+........................................................................ [ 24%]
+........................................................................ [ 27%]
+........................................................................ [ 29%]
+............FF.......................................................... [ 31%]
+........................................................................ [ 33%]
+........................................................................ [ 35%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+........................................................................ [ 45%]
+........................................................................ [ 47%]
+..........................................F...FFF....................... [ 49%]
+....................F...F....F..FF.........F.FF.....FF.FF..FFFFFFFF..F.. [ 52%]
+..........FFFFF.FFFFFFFFFFF.FFFFF.F..................................... [ 54%]
+........................................................................ [ 56%]
+........................................................................ [ 58%]
+........................................................................ [ 60%]
+........................................................................ [ 62%]
+........................................................................ [ 64%]
+.................................F...................................... [ 66%]
+Windows fatal exception: access violation
+
+Current thread 0x00004cc0 (most recent call first):
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\torch\__init__.py", line 257 in _load_dll_libraries
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\torch\__init__.py", line 281 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\transformers\generation\logits_process.py", line 21 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\transformers\generation\configuration_utils.py", line 61 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\transformers\configuration_utils.py", line 32 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\sentence_transformers\backend\load.py", line 7 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\sentence_transformers\backend\__init__.py", line 3 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\sentence_transformers\__init__.py", line 10 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_search.py", line 711 in _load
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_search.py", line 722 in embed
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_search.py", line 860 in ensure_versioned
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_runtime.py", line 270 in create_property_runtime
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_runtime.py", line 504 in create_default_property_runtime
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\scripts\ifc_repair\run_phase12_offline.py", line 2061 in run_offline_matrix
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\tests\ifc_repair\test_phase12_dataset_e2e.py", line 195 in phase12_offline_run
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\fixtures.py", line 930 in call_fixture_func
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\fixtures.py", line 1196 in pytest_fixture_setup
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\fixtures.py", line 1128 in execute
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\fixtures.py", line 640 in _get_active_fixturedef
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\fixtures.py", line 549 in getfixturevalue
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\fixtures.py", line 720 in _fillfixtures
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\python.py", line 1674 in setup
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 514 in setup
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 164 in pytest_runtest_setup
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 246 in <lambda>
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 344 in from_call
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 245 in call_and_report
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 130 in runtestprotocol
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 117 in pytest_runtest_protocol
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 367 in pytest_runtestloop
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 343 in _main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 289 in wrap_session
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 336 in pytest_cmdline_main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175 in main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201 in console_main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+Windows fatal exception: access violation
+
+Current thread 0x00004cc0 (most recent call first):
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\torch\__init__.py", line 257 in _load_dll_libraries
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\torch\__init__.py", line 281 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\transformers\generation\logits_process.py", line 21 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\transformers\generation\configuration_utils.py", line 61 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\transformers\configuration_utils.py", line 32 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\sentence_transformers\backend\load.py", line 7 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\sentence_transformers\backend\__init__.py", line 3 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\sentence_transformers\__init__.py", line 10 in <module>
+  File "<frozen importlib._bootstrap>", line 488 in _call_with_frames_removed
+  File "<frozen importlib._bootstrap_external>", line 995 in exec_module
+  File "<frozen importlib._bootstrap>", line 935 in _load_unlocked
+  File "<frozen importlib._bootstrap>", line 1331 in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 1360 in _find_and_load
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_search.py", line 711 in _load
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_search.py", line 722 in embed
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_search.py", line 860 in ensure_versioned
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_runtime.py", line 270 in create_property_runtime
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\src\text2ifc_knowledge\property_runtime.py", line 504 in create_default_property_runtime
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\scripts\ifc_repair\run_phase12_offline.py", line 2061 in run_offline_matrix
+  File "E:\code for project\bimnet\.tmp\main-integration-20260912\tests\ifc_repair\test_phase12_dataset_e2e.py", line 566 in test_fixed_structural_case_is_byte_deterministic
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\python.py", line 157 in pytest_pyfunc_call
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\python.py", line 1671 in runtest
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 178 in pytest_runtest_call
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 246 in <lambda>
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 344 in from_call
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 245 in call_and_report
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 136 in runtestprotocol
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\runner.py", line 117 in pytest_runtest_protocol
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 367 in pytest_runtestloop
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 343 in _main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 289 in wrap_session
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\main.py", line 336 in pytest_cmdline_main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_callers.py", line 121 in _multicall
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_manager.py", line 120 in _hookexec
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pluggy\_hooks.py", line 512 in __call__
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\config\__init__.py", line 175 in main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\config\__init__.py", line 201 in console_main
+  File "E:\code for project\bimnet\.venv\Lib\site-packages\pytest\__main__.py", line 9 in <module>
+  File "<frozen runpy>", line 88 in _run_code
+  File "<frozen runpy>", line 198 in _run_module_as_main
+..FFF....F....................EEEFEEE................................... [ 68%]
+........................................................................ [ 70%]

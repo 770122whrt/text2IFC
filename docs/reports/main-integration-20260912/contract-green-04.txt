@@ -1,0 +1,136 @@
+.F..FFF.FFFFFF.......................................................... [ 93%]
+.....                                                                    [100%]
+================================== FAILURES ===================================
+_ test_current_profile_preserves_explicit_tolerance[fill_existing_opening_with_door-door.fill-existing-opening.v0.4] _
+tests\ifc_repair\test_integration_contract_compatibility.py:20: in test_current_profile_preserves_explicit_tolerance
+    assert "Omit unstated tolerance_mm" in summary
+E   AssertionError: assert 'Omit unstated tolerance_mm' in 'Exact resolvable unfilled Opening; door swing expressed EITHER as an explicit IfcDoorOperationEnum with door.formal_e...the opening must set tolerance_mm >= 1.0 (never 0) because stored IFC geometry carries sub-millimetre float precision.'
+____________________ test_reordered_scope_target_ids_bind _____________________
+tests\ifc_repair\test_draft_authority_set_semantics.py:221: in test_reordered_scope_target_ids_bind
+    result = _run(tmp_path / "composite-evidence-setsem-01", _draft())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+______________________ test_reordered_evidence_refs_bind ______________________
+tests\ifc_repair\test_draft_authority_set_semantics.py:237: in test_reordered_evidence_refs_bind
+    result = _run(tmp_path / "composite-evidence-setsem-02", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_________________ test_reordered_operation_evidence_refs_bind _________________
+tests\ifc_repair\test_draft_authority_set_semantics.py:249: in test_reordered_operation_evidence_refs_bind
+    result = _run(tmp_path / "composite-evidence-setsem-03", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_ test_identifier_drift_still_fails_closed[scope-extra-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_ test_identifier_drift_still_fails_closed[scope-missing-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_ test_identifier_drift_still_fails_closed[scope-duplicate-target-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_ test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_ test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+_ test_identifier_drift_still_fails_closed[evidence-duplicate-ref-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR] _
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:325: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_HASH_MISMATCH", profile.profile_id)
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_HASH_MISMATCH: beam.add.stage2.v0.1
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_integration_contract_compatibility.py::test_current_profile_preserves_explicit_tolerance[fill_existing_opening_with_door-door.fill-existing-opening.v0.4]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_scope_target_ids_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_evidence_refs_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_operation_evidence_refs_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-extra-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-missing-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-duplicate-target-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-duplicate-ref-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR]
+10 failed, 67 passed in 8.84s

@@ -1,0 +1,219 @@
+....FFF.FFFFFF..................................................F....F.. [ 93%]
+.....                                                                    [100%]
+================================== FAILURES ===================================
+____________________ test_reordered_scope_target_ids_bind _____________________
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:221: in test_reordered_scope_target_ids_bind
+    result = _run(tmp_path / "composite-evidence-setsem-01", _draft())
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+______________________ test_reordered_evidence_refs_bind ______________________
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:237: in test_reordered_evidence_refs_bind
+    result = _run(tmp_path / "composite-evidence-setsem-02", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_________________ test_reordered_operation_evidence_refs_bind _________________
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:249: in test_reordered_operation_evidence_refs_bind
+    result = _run(tmp_path / "composite-evidence-setsem-03", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_ test_identifier_drift_still_fails_closed[scope-extra-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH] _
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_ test_identifier_drift_still_fails_closed[scope-missing-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH] _
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_ test_identifier_drift_still_fails_closed[scope-duplicate-target-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR] _
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_ test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_ test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+_ test_identifier_drift_still_fails_closed[evidence-duplicate-ref-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR] _
+src\text2ifc_ifc_repair\prompt_profiles.py:309: in _validate_profile_registry_binding
+    prompt_registry = load_prompt_registry()
+                      ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+
+The above exception was the direct cause of the following exception:
+tests\ifc_repair\test_draft_authority_set_semantics.py:339: in test_identifier_drift_still_fails_closed
+    result = _run(tmp_path / f"composite-evidence-setsem-drift-{case}", draft)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_draft_authority_set_semantics.py:197: in _run
+    return generate_bound_changeset(
+src\text2ifc_ifc_repair\provider_stage.py:123: in generate_bound_changeset
+    profile_selection = select_prompt_profiles(
+src\text2ifc_ifc_repair\prompt_profiles.py:252: in select_prompt_profiles
+    _validate_profile_registry_binding(profile)
+src\text2ifc_ifc_repair\prompt_profiles.py:311: in _validate_profile_registry_binding
+    raise PromptProfileError("PROFILE_REGISTRY_INVALID", str(error)) from error
+E   text2ifc_ifc_repair.prompt_profiles.PromptProfileError: PROFILE_REGISTRY_INVALID: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+__ test_intent_v012_prompt_is_registered_without_beam_profile_version_change __
+tests\ifc_repair\test_repair_appearance_contract.py:120: in test_intent_v012_prompt_is_registered_without_beam_profile_version_change
+    registry = load_prompt_registry()
+               ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+___________ test_appearance_prompt_preserves_published_v05_identity ___________
+tests\ifc_repair\test_repair_appearance_contract.py:234: in test_appearance_prompt_preserves_published_v05_identity
+    registry = load_prompt_registry()
+               ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:65: in load_prompt_registry
+    raise PromptRegistryError(
+E   text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for door.fill-existing-opening.v0.4: sha256:9c5045b5cb5c37b875451fa790ab353b7c04aaebdad2e11731cf2af5a4ee6a92
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_scope_target_ids_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_evidence_refs_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_operation_evidence_refs_bind
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-extra-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-missing-target-<lambda>-DRAFT_AUTHORITY_SCOPE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[scope-duplicate-target-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-duplicate-ref-<lambda>-DRAFT_SCHEMA_VALIDATION_ERROR]
+FAILED tests/ifc_repair/test_repair_appearance_contract.py::test_intent_v012_prompt_is_registered_without_beam_profile_version_change
+FAILED tests/ifc_repair/test_repair_appearance_contract.py::test_appearance_prompt_preserves_published_v05_identity
+11 failed, 66 passed in 9.75s

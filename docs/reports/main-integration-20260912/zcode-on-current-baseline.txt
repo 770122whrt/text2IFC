@@ -1,0 +1,1025 @@
+FFFF...FF..F.....FFFFFF.....FFF                                          [100%]
+================================== FAILURES ===================================
+____________________ test_reordered_scope_target_ids_bind _____________________
+
+    def test_reordered_scope_target_ids_bind() -> None:
+        """Same identifier set, provider order �� binds (live C3 shape)."""
+    
+        result = _run(Path("composite-evidence-setsem-01"), _draft())
+    
+>       assert result["valid"] is True, result
+E       AssertionError: {'changeset': None, 'classification': 'invalid', 'issues': [{'code': 'DRAFT_AUTHORITY_SCOPE_MISMATCH', 'message': 'DRA...56:f354db4172fe177dfbed8ded156d5c62aec7aead33302ffe996050c57f20885f', 'template_id': 'ifc-repair-changeset.v0.5'}, ...}
+E       assert False is True
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_draft_authority_set_semantics.py:223: AssertionError
+______________________ test_reordered_evidence_refs_bind ______________________
+
+    def test_reordered_evidence_refs_bind() -> None:
+        """Same evidence pointer set, provider order �� binds."""
+    
+        draft = _draft()
+        draft["evidence_refs"] = [BEAM_EVIDENCE, COLUMN_EVIDENCE]
+    
+        result = _run(Path("composite-evidence-setsem-02"), draft)
+    
+>       assert result["valid"] is True, result
+E       AssertionError: {'changeset': None, 'classification': 'invalid', 'issues': [{'code': 'DRAFT_AUTHORITY_SCOPE_MISMATCH', 'message': 'DRA...56:f354db4172fe177dfbed8ded156d5c62aec7aead33302ffe996050c57f20885f', 'template_id': 'ifc-repair-changeset.v0.5'}, ...}
+E       assert False is True
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_draft_authority_set_semantics.py:239: AssertionError
+_________________ test_reordered_operation_evidence_refs_bind _________________
+
+    def test_reordered_operation_evidence_refs_bind() -> None:
+        """Operation-level evidence pointer set in provider order �� binds."""
+    
+        draft = _draft()
+        draft["operations"][0]["evidence_refs"] = [BEAM_EVIDENCE]
+        draft["operations"][1]["evidence_refs"] = [COLUMN_EVIDENCE]
+    
+        result = _run(Path("composite-evidence-setsem-03"), draft)
+    
+>       assert result["valid"] is True, result
+E       AssertionError: {'changeset': None, 'classification': 'invalid', 'issues': [{'code': 'DRAFT_AUTHORITY_SCOPE_MISMATCH', 'message': 'DRA...56:f354db4172fe177dfbed8ded156d5c62aec7aead33302ffe996050c57f20885f', 'template_id': 'ifc-repair-changeset.v0.5'}, ...}
+E       assert False is True
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_draft_authority_set_semantics.py:251: AssertionError
+______________________ test_reordered_forbidden_ids_bind ______________________
+
+    def test_reordered_forbidden_ids_bind() -> None:
+        """A reordered but set-equal forbidden set passes the authority check."""
+    
+        foreign_a = "0FOREIGNAAAAAAAAAAAAAA"
+        foreign_b = "0FOREIGNBBBBBBBBBBBBBB"
+        from text2ifc_ifc_repair.changesets import _require_exact_draft_authority
+    
+        authority = {
+            "scope": {
+                "target_ids": [STOREY_ID, STOREY_ID_2],
+                "forbidden_ids": [foreign_a, foreign_b],
+            },
+            "evidence_refs": [BEAM_EVIDENCE, COLUMN_EVIDENCE],
+            "operations": [
+                {
+                    "operation_id": "beam-1",
+                    "operation_type": "add_beam",
+                    "target": {"storey_global_id": STOREY_ID},
+                    "parameters": _beam_parameters(),
+                    "evidence_refs": [BEAM_EVIDENCE],
+                },
+                {
+                    "operation_id": "column-1",
+                    "operation_type": "add_column",
+                    "target": {"storey_global_id": STOREY_ID_2},
+                    "parameters": _column_parameters(),
+                    "evidence_refs": [COLUMN_EVIDENCE],
+                },
+            ],
+        }
+        draft_view = deepcopy(authority)
+        draft_view["scope"]["target_ids"] = [STOREY_ID_2, STOREY_ID]
+        draft_view["scope"]["forbidden_ids"] = [foreign_b, foreign_a]
+        draft_view["evidence_refs"] = [COLUMN_EVIDENCE, BEAM_EVIDENCE]
+        draft_view["operations"][0]["evidence_refs"] = [BEAM_EVIDENCE]
+        draft_view["operations"][1]["evidence_refs"] = [COLUMN_EVIDENCE]
+    
+>       _require_exact_draft_authority(draft_view, authority)
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_draft_authority_set_semantics.py:291: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+draft = {'evidence_refs': ['resolved:/operations/column-1/context/candidate_targets/0', 'resolved:/operations/beam-1/context/c...FOREIGNBBBBBBBBBBBBBB', '0FOREIGNAAAAAAAAAAAAAA'], 'target_ids': ['0K_MqVdrL0JOCMi_GblRwK', '0K_MqVdrL0JOCMi_GblRwJ']}}
+authority = {'evidence_refs': ['resolved:/operations/beam-1/context/candidate_targets/0', 'resolved:/operations/column-1/context/c...FOREIGNAAAAAAAAAAAAAA', '0FOREIGNBBBBBBBBBBBBBB'], 'target_ids': ['0K_MqVdrL0JOCMi_GblRwJ', '0K_MqVdrL0JOCMi_GblRwK']}}
+
+    def _require_exact_draft_authority(
+        draft: Mapping[str, Any],
+        authority: Mapping[str, Any],
+    ) -> None:
+        expected_operations = list(authority.get("operations", ()))
+        actual_operations = list(draft.get("operations", ()))
+        if len(actual_operations) != len(expected_operations):
+            raise ValueError(
+                "DRAFT_AUTHORITY_OPERATION_CARDINALITY_MISMATCH:/operations"
+            )
+        expected_ids = [str(item.get("operation_id", "")) for item in expected_operations]
+        actual_ids = [str(item.get("operation_id", "")) for item in actual_operations]
+        if (
+            len(set(actual_ids)) != len(actual_ids)
+            or set(actual_ids) != set(expected_ids)
+        ):
+            raise ValueError("DRAFT_AUTHORITY_OPERATION_ID_SET_MISMATCH:/operations")
+        if draft.get("scope") != authority.get("scope"):
+>           raise ValueError("DRAFT_AUTHORITY_SCOPE_MISMATCH:/scope")
+E           ValueError: DRAFT_AUTHORITY_SCOPE_MISMATCH:/scope
+
+src\text2ifc_ifc_repair\changesets.py:257: ValueError
+_ test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+
+case = 'evidence-extra-ref', mutate = <function <lambda> at 0x000001ACEAAE96C0>
+expected_code = 'DRAFT_AUTHORITY_EVIDENCE_MISMATCH'
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+        result = _run(Path(f"composite-evidence-setsem-drift-{case}"), draft)
+    
+        assert result["valid"] is False, case
+>       assert any(
+            expected_code in str(issue.get("code", ""))
+            for issue in result["issues"]
+        ), (case, result["issues"])
+E       AssertionError: ('evidence-extra-ref', [{'code': 'DRAFT_AUTHORITY_SCOPE_MISMATCH', 'message': 'DRAFT_AUTHORITY_SCOPE_MISMATCH:/scope', 'path': '/'}])
+E       assert False
+E        +  where False = any(<generator object test_identifier_drift_still_fails_closed.<locals>.<genexpr> at 0x000001ACC2AF0E40>)
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_draft_authority_set_semantics.py:342: AssertionError
+_ test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH] _
+
+case = 'evidence-missing-ref'
+mutate = <function <lambda> at 0x000001ACEAAE9760>
+expected_code = 'DRAFT_AUTHORITY_EVIDENCE_MISMATCH'
+
+    @pytest.mark.parametrize(
+        ("case", "mutate", "expected_code"),
+        [
+            (
+                "scope-extra-target",
+                lambda draft: draft["scope"]["target_ids"].append(
+                    "0FOREIGNAAAAAAAAAAAAAA"
+                ),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-missing-target",
+                lambda draft: draft["scope"]["target_ids"].pop(),
+                "DRAFT_AUTHORITY_SCOPE_MISMATCH",
+            ),
+            (
+                "scope-duplicate-target",
+                lambda draft: draft["scope"]["target_ids"].append(STOREY_ID),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+            (
+                "evidence-extra-ref",
+                lambda draft: draft["evidence_refs"].append(
+                    "resolved:/operations/foreign/context/candidate_targets/0"
+                ),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-missing-ref",
+                lambda draft: draft["evidence_refs"].pop(),
+                "DRAFT_AUTHORITY_EVIDENCE_MISMATCH",
+            ),
+            (
+                "evidence-duplicate-ref",
+                lambda draft: draft["evidence_refs"].append(BEAM_EVIDENCE),
+                "DRAFT_SCHEMA_VALIDATION_ERROR",
+            ),
+        ],
+    )
+    def test_identifier_drift_still_fails_closed(
+        case: str, mutate, expected_code: str
+    ) -> None:
+        draft = _draft()
+        mutate(draft)
+    
+        result = _run(Path(f"composite-evidence-setsem-drift-{case}"), draft)
+    
+        assert result["valid"] is False, case
+>       assert any(
+            expected_code in str(issue.get("code", ""))
+            for issue in result["issues"]
+        ), (case, result["issues"])
+E       AssertionError: ('evidence-missing-ref', [{'code': 'DRAFT_AUTHORITY_SCOPE_MISMATCH', 'message': 'DRAFT_AUTHORITY_SCOPE_MISMATCH:/scope', 'path': '/'}])
+E       assert False
+E        +  where False = any(<generator object test_identifier_drift_still_fails_closed.<locals>.<genexpr> at 0x000001ACEAAF1240>)
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_draft_authority_set_semantics.py:342: AssertionError
+__________ test_door_authorization_covers_opening_scoped_quantities ___________
+
+    def test_door_authorization_covers_opening_scoped_quantities() -> None:
+        """The add path creates an opening; opening-scoped quantities must be
+        authorized exactly like the window operation authorizes them."""
+    
+        created = _l1_authorization(creates_opening=True)["created"]
+>       assert created["semantic_opening_quantities"] == "IfcElementQuantity"
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'semantic_opening_quantities'
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_door_property_authorization.py:74: KeyError
+____________ test_window_policy_facts_carry_canonical_source_kind _____________
+
+    def test_window_policy_facts_carry_canonical_source_kind() -> None:
+        """The window hook must set the canonical kind like its siblings.
+    
+        Without it the window manifest downgrades to v0.1 and every mixed-family
+        changeset fails to bind (envelope negotiated to 0.2 while structural
+        manifests carry 0.3-only vocabulary).
+        """
+    
+        registry = create_default_registry()
+        facts = registry.build_semantic_policy_facts(
+            "add_window_with_opening_to_wall", operation=_window_operation()
+        )
+        assert facts
+>       assert all(
+            fact.canonical_source_kind == "deterministic_derived" for fact in facts
+        ), [fact.canonical_source_kind for fact in facts]
+E       AssertionError: [None, None, None, None, None]
+E       assert False
+E        +  where False = all(<generator object test_window_policy_facts_carry_canonical_source_kind.<locals>.<genexpr> at 0x000001ACEABCBB90>)
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:225: AssertionError
+____________________ test_beam_plus_window_manifests_bind _____________________
+
+    def test_beam_plus_window_manifests_bind() -> None:
+>       bound = _bind([_beam_operation(), _window_operation()])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+___________________ test_column_plus_window_manifests_bind ____________________
+
+    def test_column_plus_window_manifests_bind() -> None:
+>       bound = _bind([_column_operation(), _window_operation()])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:238: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+___________________ test_three_family_mixed_manifests_bind ____________________
+
+    def test_three_family_mixed_manifests_bind() -> None:
+>       bound = _bind(
+            [
+                _beam_operation("B-1"),
+                _column_operation("C-1"),
+                _window_operation("W-1"),
+            ]
+        )
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+_____________________ test_repeated_mixed_operations_bind _____________________
+
+    def test_repeated_mixed_operations_bind() -> None:
+>       bound = _bind(
+            [
+                _beam_operation("B-1"),
+                _beam_operation("B-2"),
+                _column_operation("C-1"),
+                _window_operation("W-1"),
+                _window_operation("W-2"),
+            ]
+        )
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:256: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+_______________________ test_window_only_manifest_binds _______________________
+
+    def test_window_only_manifest_binds() -> None:
+        bound = _bind([_window_operation()])
+        assert bound["binding_status"] == "bound"
+>       assert bound["schema_version"] in {
+            "text2ifc/ifc-repair-changeset/0.4",
+            "text2ifc/ifc-repair-changeset/0.3",
+        }
+E       AssertionError: assert 'text2ifc/ifc-repair-changeset/0.2' in {'text2ifc/ifc-repair-changeset/0.3', 'text2ifc/ifc-repair-changeset/0.4'}
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:277: AssertionError
+______ test_mixed_binding_with_varied_window_geometry[900-1200-900-1000] ______
+
+width = 900, height = 1200, sill = 900, offset = 1000
+
+    @pytest.mark.parametrize(
+        "width,height,sill,offset",
+        [
+            (900, 1200, 900, 1000),
+            (1800, 2100, 0, 4500),
+            (1200, 1500, 900, 2000),
+        ],
+    )
+    def test_mixed_binding_with_varied_window_geometry(
+        width: float, height: float, sill: float, offset: float
+    ) -> None:
+        window = _window_operation()
+        window["parameters"]["opening"]["width_mm"] = width
+        window["parameters"]["opening"]["height_mm"] = height
+        window["parameters"]["opening"]["sill_height_mm"] = sill
+        window["parameters"]["position"]["center_offset_mm"] = offset
+>       bound = _bind([_column_operation(), window])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:382: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+______ test_mixed_binding_with_varied_window_geometry[1800-2100-0-4500] _______
+
+width = 1800, height = 2100, sill = 0, offset = 4500
+
+    @pytest.mark.parametrize(
+        "width,height,sill,offset",
+        [
+            (900, 1200, 900, 1000),
+            (1800, 2100, 0, 4500),
+            (1200, 1500, 900, 2000),
+        ],
+    )
+    def test_mixed_binding_with_varied_window_geometry(
+        width: float, height: float, sill: float, offset: float
+    ) -> None:
+        window = _window_operation()
+        window["parameters"]["opening"]["width_mm"] = width
+        window["parameters"]["opening"]["height_mm"] = height
+        window["parameters"]["opening"]["sill_height_mm"] = sill
+        window["parameters"]["position"]["center_offset_mm"] = offset
+>       bound = _bind([_column_operation(), window])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:382: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+_____ test_mixed_binding_with_varied_window_geometry[1200-1500-900-2000] ______
+
+width = 1200, height = 1500, sill = 900, offset = 2000
+
+    @pytest.mark.parametrize(
+        "width,height,sill,offset",
+        [
+            (900, 1200, 900, 1000),
+            (1800, 2100, 0, 4500),
+            (1200, 1500, 900, 2000),
+        ],
+    )
+    def test_mixed_binding_with_varied_window_geometry(
+        width: float, height: float, sill: float, offset: float
+    ) -> None:
+        window = _window_operation()
+        window["parameters"]["opening"]["width_mm"] = width
+        window["parameters"]["opening"]["height_mm"] = height
+        window["parameters"]["opening"]["sill_height_mm"] = sill
+        window["parameters"]["position"]["center_offset_mm"] = offset
+>       bound = _bind([_column_operation(), window])
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:382: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.tmp\main-integration-20260912\tests\ifc_repair\test_mixed_manifest_binding.py:195: in _bind
+    return bind_repair_changeset(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def bind_repair_changeset(
+        *,
+        draft: Mapping[str, Any],
+        semantic_manifests: Sequence[Any],
+        semantic_manifest_hashes: Mapping[str, str],
+        source_request_hash: str,
+        base_model_fingerprint: str,
+        bound_schema_version: str = BOUND_CHANGESET_SCHEMA_VERSION,
+        resolved_authority: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        """Bind a non-authoritative Provider draft to immutable semantic manifests."""
+    
+        issues = validate_changeset_draft(
+            draft,
+            expected_version=(
+                str(draft.get("schema_version"))
+                if resolved_authority is not None
+                else None
+            ),
+        )
+        if issues:
+            raise ValueError(f"DRAFT_SCHEMA_INVALID:{issues[0].path}")
+        if resolved_authority is not None:
+            _require_exact_draft_authority(draft, resolved_authority)
+        if draft["source_request_hash"] != source_request_hash:
+            raise ValueError("SOURCE_REQUEST_HASH_MISMATCH")
+        if draft["base_model_fingerprint"] != base_model_fingerprint:
+            raise ValueError("BASE_MODEL_FINGERPRINT_MISMATCH")
+        manifests = {item.operation_id: item for item in semantic_manifests}
+        operations = []
+        for operation in draft["operations"]:
+            operation_id = str(operation["operation_id"])
+            manifest = manifests.pop(operation_id, None)
+            if manifest is None:
+                raise ValueError(f"SEMANTIC_MANIFEST_OPERATION_MISMATCH:{operation_id}")
+            expected_hash = semantic_manifest_hashes.get(operation_id)
+            if expected_hash != draft["semantic_manifest_sha256"]:
+                raise ValueError(f"SEMANTIC_MANIFEST_HASH_MISMATCH:{operation_id}")
+            if (
+                manifest.base_model_fingerprint != base_model_fingerprint
+                or manifest.operation_type != operation["operation_type"]
+            ):
+                raise ValueError(f"SEMANTIC_MANIFEST_BINDING_MISMATCH:{operation_id}")
+            operations.append(
+                {
+                    **copy.deepcopy(dict(operation)),
+                    "semantic_manifest": {
+                        "manifest_id": manifest.manifest_id,
+                        "policy_id": manifest.policy_id,
+                        "policy_version": manifest.policy_version,
+                    },
+                    "semantic_assignments": [
+                        _assignment_payload(
+                            assignment,
+                            bound_schema_version=bound_schema_version,
+                        )
+                        for assignment in manifest.assignments
+                    ],
+                }
+            )
+        if manifests:
+            raise ValueError("SEMANTIC_MANIFEST_SET_MISMATCH")
+        bound = {
+            "schema_version": bound_schema_version,
+            "changeset_id": str(draft["draft_id"]).replace("draft", "changeset", 1),
+            "binding_status": "bound",
+            "base_model_fingerprint": base_model_fingerprint,
+            "source_request_hash": source_request_hash,
+            "semantic_manifest_ref": draft["semantic_manifest_ref"],
+            "semantic_manifest_sha256": draft["semantic_manifest_sha256"],
+            "scope": copy.deepcopy(draft["scope"]),
+            "evidence_refs": copy.deepcopy(draft["evidence_refs"]),
+            "preconditions": copy.deepcopy(draft["preconditions"]),
+            "postconditions": copy.deepcopy(draft["postconditions"]),
+            "operations": operations,
+        }
+        bound_issues = validate_changeset(bound)
+        if bound_issues:
+>           raise ValueError(f"BOUND_CHANGESET_INVALID:{bound_issues[0].path}")
+E           ValueError: BOUND_CHANGESET_INVALID:/operations/0/semantic_assignments/0/source_kind
+
+src\text2ifc_ifc_repair\changesets.py:235: ValueError
+=========================== short test summary info ===========================
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_scope_target_ids_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_evidence_refs_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_operation_evidence_refs_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_draft_authority_set_semantics.py::test_reordered_forbidden_ids_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-extra-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_draft_authority_set_semantics.py::test_identifier_drift_still_fails_closed[evidence-missing-ref-<lambda>-DRAFT_AUTHORITY_EVIDENCE_MISMATCH]
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_door_property_authorization.py::test_door_authorization_covers_opening_scoped_quantities
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_window_policy_facts_carry_canonical_source_kind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_beam_plus_window_manifests_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_column_plus_window_manifests_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_three_family_mixed_manifests_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_repeated_mixed_operations_bind
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_window_only_manifest_binds
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_mixed_binding_with_varied_window_geometry[900-1200-900-1000]
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_mixed_binding_with_varied_window_geometry[1800-2100-0-4500]
+FAILED .tmp/main-integration-20260912/tests/ifc_repair/test_mixed_manifest_binding.py::test_mixed_binding_with_varied_window_geometry[1200-1500-900-2000]
+16 failed, 15 passed in 10.09s

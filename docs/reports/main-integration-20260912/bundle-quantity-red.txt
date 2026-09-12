@@ -1,0 +1,22 @@
+.....FF                                                                  [100%]
+================================== FAILURES ===================================
+____ test_bundle_quantities_use_existing_scope_and_override_rules[opening] ____
+tests\ifc_repair\test_semantic_bundle_claim_propagation.py:270: in test_bundle_quantities_use_existing_scope_and_override_rules
+    result = canonicalize_semantic_bundle_claims(intent)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\request_stage.py:715: in canonicalize_semantic_bundle_claims
+    quantities[(claim.set_name, claim.name)] = claim
+                                ^^^^^^^^^^
+E   AttributeError: 'QuantityIntent' object has no attribute 'name'
+____ test_bundle_quantities_use_existing_scope_and_override_rules[window] _____
+tests\ifc_repair\test_semantic_bundle_claim_propagation.py:270: in test_bundle_quantities_use_existing_scope_and_override_rules
+    result = canonicalize_semantic_bundle_claims(intent)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_ifc_repair\request_stage.py:715: in canonicalize_semantic_bundle_claims
+    quantities[(claim.set_name, claim.name)] = claim
+                                ^^^^^^^^^^
+E   AttributeError: 'QuantityIntent' object has no attribute 'name'
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_semantic_bundle_claim_propagation.py::test_bundle_quantities_use_existing_scope_and_override_rules[opening]
+FAILED tests/ifc_repair/test_semantic_bundle_claim_propagation.py::test_bundle_quantities_use_existing_scope_and_override_rules[window]
+2 failed, 5 passed in 4.15s

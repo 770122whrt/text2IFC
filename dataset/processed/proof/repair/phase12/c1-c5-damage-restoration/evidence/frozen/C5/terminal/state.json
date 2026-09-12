@@ -1,0 +1,182 @@
+{
+  "clarification": null,
+  "orchestrator_version": "0.1",
+  "reason_code": null,
+  "request_hash": "sha256:291407ce609782e37d714c7f74ce0907a6b8578b7c9c7a03a506d879590f0333",
+  "request_id": "request-291407ce609782e3",
+  "result_artifacts": {
+    "evaluation": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/evaluation/public-evaluation.json",
+    "manifest": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/manifest.json",
+    "successful_ifc": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/successful/repaired.ifc"
+  },
+  "run_id": "repair-c2cf6402eef842cf86a36b32c472b9c3",
+  "schema_version": "text2ifc/ifc-repair-run-state/0.1",
+  "source": {
+    "reference": "E:\\code for project\\bimnet-zcode\\w\\dataset\\processed\\ifc-repair-runs\\repair-damage-restoration-c3-c5-live-20260904-v7\\cases\\C5\\damage\\windows\\damaged.ifc",
+    "sha256": "sha256:b24e64f5545020a59adfa0a24ce484b7217f4d5e8f95b6e3242e0d5e68118d56",
+    "size_bytes": 3317080
+  },
+  "stage": "succeeded",
+  "state_version": 6,
+  "transitions": [
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:53:58.054271+00:00",
+      "from_stage": null,
+      "previous_hash": null,
+      "reason_code": null,
+      "record_hash": "sha256:e8a3fd9a21af7a8d760cacf2f92d549c8e31b2dea0c7a18fefa5dcc3060703a8",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:d7f1a7f96dd8df4f09e1314655e9a3b77f9ebc41248f881623211cc6f9f5c316",
+      "stage_payload": {
+        "request_hash": "sha256:291407ce609782e37d714c7f74ce0907a6b8578b7c9c7a03a506d879590f0333",
+        "source_sha256": "sha256:b24e64f5545020a59adfa0a24ce484b7217f4d5e8f95b6e3242e0d5e68118d56"
+      },
+      "state_version": 0,
+      "to_stage": "created",
+      "transition_id": 0
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:53:58.855470+00:00",
+      "from_stage": "created",
+      "previous_hash": "sha256:e8a3fd9a21af7a8d760cacf2f92d549c8e31b2dea0c7a18fefa5dcc3060703a8",
+      "reason_code": null,
+      "record_hash": "sha256:346ee86f66f6f3219a5f3132f04173fb3f6605e876602732f546761c222b41e4",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:6375b9e9b3b61b83153d7fa4db141ed81feaefcdda7bcf4646e7e77c3e6f62c7",
+      "stage_payload": {
+        "ifc_schema": "IFC2X3",
+        "source_sha256": "sha256:b24e64f5545020a59adfa0a24ce484b7217f4d5e8f95b6e3242e0d5e68118d56"
+      },
+      "state_version": 1,
+      "to_stage": "source_validated",
+      "transition_id": 1
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:54:02.904010+00:00",
+      "from_stage": "source_validated",
+      "previous_hash": "sha256:346ee86f66f6f3219a5f3132f04173fb3f6605e876602732f546761c222b41e4",
+      "reason_code": null,
+      "record_hash": "sha256:a7f0a8c65e01dd4f17b084a4919c43de8c27b4655341ff2214a8b2f89a7b5003",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:e77c565b32a3fa4fc9ef36adedec89f6ca0ea5ca528935ed91ac15bbc2a1397f",
+      "stage_payload": {
+        "index": {
+          "path": "index/targets.sqlite",
+          "schema_version": "text2ifc/ifc-index/0.5",
+          "sha256": "sha256:6bd2d9e0d2dbb1ebd50eac81c6d37213b5ca212f7c7bb749096eb8033a5e5d3c"
+        },
+        "source_sha256": "sha256:b24e64f5545020a59adfa0a24ce484b7217f4d5e8f95b6e3242e0d5e68118d56"
+      },
+      "state_version": 2,
+      "to_stage": "index_ready",
+      "transition_id": 2
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:57:13.717442+00:00",
+      "from_stage": "index_ready",
+      "previous_hash": "sha256:a7f0a8c65e01dd4f17b084a4919c43de8c27b4655341ff2214a8b2f89a7b5003",
+      "reason_code": null,
+      "record_hash": "sha256:eaddf1aa713bf3eadcbc1298c96769b2a4938e76f277d99acf38642a0ec91fd9",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:06410b7a45a379d383534d5c8fd5fed1506be302805cf7cf2b49aba3a690c813",
+      "stage_payload": {
+        "api_context": {
+          "path": "api-context.json",
+          "schema_version": "text2ifc/ifc-repair-api-context/0.1",
+          "sha256": "sha256:6b8ae3d8ab451bf99b1e0934807c0e2590b8b742769912897967ae3ed646fcf6"
+        },
+        "intent": {
+          "path": "intent/repair-intent.json",
+          "schema_version": "text2ifc/ifc-repair-intent/0.8",
+          "sha256": "sha256:9b4f9ae9946ba670b06a8e1c4426e2bd3767c8181974aa661cfe43a9d8cfaab0"
+        }
+      },
+      "state_version": 3,
+      "to_stage": "intent_ready",
+      "transition_id": 3
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:57:15.161064+00:00",
+      "from_stage": "intent_ready",
+      "previous_hash": "sha256:eaddf1aa713bf3eadcbc1298c96769b2a4938e76f277d99acf38642a0ec91fd9",
+      "reason_code": null,
+      "record_hash": "sha256:db11660ad3710895808a90a6934745da4895d28bea50230f7f0f4130625b5d6e",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:34c03dabed9f14d31ab202a5b12bf2204792b8134a3dcc1837cfa820d674347b",
+      "stage_payload": {
+        "resolution": {
+          "path": "resolution-v004.json",
+          "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+          "sha256": "sha256:33bcc63352f9b94e88e570868dc3af89e704926104f23353d363e1af85e4b570"
+        }
+      },
+      "state_version": 4,
+      "to_stage": "targets_resolved",
+      "transition_id": 4
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:58:36.453943+00:00",
+      "from_stage": "targets_resolved",
+      "previous_hash": "sha256:db11660ad3710895808a90a6934745da4895d28bea50230f7f0f4130625b5d6e",
+      "reason_code": null,
+      "record_hash": "sha256:fc853026f36ab2cbabf776bc407a8db40a7afe4cdfcb299b5b80b084f3cf9d70",
+      "result_artifacts": {},
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:bc6a3845ed072d7175a7baa6e3550be5b134386ecdb25a9bee0354ee5edbaffe",
+      "stage_payload": {
+        "changeset": {
+          "path": "changeset-v005.json",
+          "schema_version": "text2ifc/ifc-repair-changeset/0.1",
+          "sha256": "sha256:4dee65dcb9f6511f690f0b52abe2a5fd5bc85fe374caff4841d0672a9132a579"
+        }
+      },
+      "state_version": 5,
+      "to_stage": "changeset_ready",
+      "transition_id": 5
+    },
+    {
+      "answer": null,
+      "clarification": null,
+      "created_at": "2026-09-04T02:58:50.820214+00:00",
+      "from_stage": "changeset_ready",
+      "previous_hash": "sha256:fc853026f36ab2cbabf776bc407a8db40a7afe4cdfcb299b5b80b084f3cf9d70",
+      "reason_code": null,
+      "record_hash": "sha256:c9c7e240a5ab38fe339e0eab02486d4cf71700a2df8ccd814ccff4cee887f185",
+      "result_artifacts": {
+        "evaluation": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/evaluation/public-evaluation.json",
+        "manifest": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/manifest.json",
+        "successful_ifc": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/successful/repaired.ifc"
+      },
+      "schema_version": "text2ifc/ifc-repair-transition/0.1",
+      "stage_hash": "sha256:23f2bd3a2a1413db6da638809eefe14dba5554403aef2d0a584458e66b1f2f7d",
+      "stage_payload": {
+        "manifest": {
+          "path": ".terminal-bundles/0a9d1a1f523b4760ba7a81df4dd7741a/manifest.json",
+          "schema_version": "text2ifc/ifc-repair-artifact-manifest/0.1",
+          "sha256": "sha256:5c9262eadddf54b63dcdce12d1cd79544b0edc3421664682f4481c92c95f7d4c"
+        },
+        "status": "succeeded"
+      },
+      "state_version": 6,
+      "to_stage": "succeeded",
+      "transition_id": 6
+    }
+  ]
+}
