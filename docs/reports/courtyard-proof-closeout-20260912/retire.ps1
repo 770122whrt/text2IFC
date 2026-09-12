@@ -47,7 +47,8 @@ foreach ($source in $manifest.directories) {
         $retained = Assert-Contained (Join-Path $proofRoot $entry.path) $proofRoot
         Assert-Bytes $retained $entry
     }
-    $operations.Add(@{path=$path; directory=$true; files=$files.Count; bytes=($files | Measure-Object Length -Sum).Sum; kind='archived_source'})
+    $operations.Add(@{path=$path; directory=$true; files=$files.Count; bytes=[long](($files | Measure-Object Length -Sum).Sum); kind='archived_source'})
+    Write-Output "Verified archived source: $path"
 }
 # Test fixtures: bounded path, closed .lock state, no links, unchanged size/count.
 # No broad hashing of reproducible pytest files is needed.
@@ -57,13 +58,14 @@ foreach ($source in $tests.directories) {
     $actual = @(Get-ChildItem -LiteralPath $path -Force -Recurse)
     if (@($actual | Where-Object { $_.Attributes -band [IO.FileAttributes]::ReparsePoint }).Count) { throw "Linked fixture: $path" }
     $files = @($actual | Where-Object { -not $_.PSIsContainer })
-    $size = ($files | Measure-Object Length -Sum).Sum
+    $size = [long](($files | Measure-Object Length -Sum).Sum)
     if ($files.Count -ne $source.file_count -or $size -ne $source.size_bytes) { throw "Changed fixture: $path" }
     $children = @(Get-ChildItem -LiteralPath $path -Force)
     if (@(Compare-Object @($children.Name | Sort-Object) @($source.origin.child | Sort-Object)).Count) {
         throw "Changed pytest children: $path"
     }
     $operations.Add(@{path=$path; directory=$true; files=$files.Count; bytes=$size; kind='rebuildable_pytest'})
+    if ($operations.Count % 20 -eq 0) { Write-Output "Verified $($operations.Count) authorized directory targets" }
 }
 foreach ($source in $manifest.duplicate_scratch_files) {
     $path = Assert-Contained $source.path (Join-Path $repoRoot '.tmp')

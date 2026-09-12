@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="2.300" timestamp="2026-09-12T15:47:59.096611+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_part_appearance_recovery" name="test_new_brief_clarification_resumes_after_reopen_without_replaying_call" time="0.350"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible Design Brief failed schema validation">tests\agent\test_part_appearance_recovery.py:98: in test_new_brief_clarification_resumes_after_reopen_without_replaying_call
-    result=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoker(),user_answers=[])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-src\text2ifc_agent\interactive_cli_flow.py:430: in run_design_brief_clarification_loop
-    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-src\text2ifc_agent\interactive_cli_flow.py:351: in invoke
-    raise OpenAICompatError(
-E   text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible Design Brief failed schema validation</failure></testcase></testsuite></testsuites>
