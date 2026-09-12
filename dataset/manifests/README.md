@@ -57,7 +57,7 @@ them. Raw or derived redistribution rights are also not inferred.
 The existing `dataset/ifc/train` and `dataset/ifc/test` folders are historical
 source paths, not text2IFC model split assignments. Phase 3 must split by
 `scene_family` before generating text or augmented variants. The canonical
-family map is `dataset/processed/bim-json-2.0/scene-families.json`, whose
+family map is `dataset/processed/derived/bim-json-2.0/scene-families.json`, whose
 `split_assignment` remains `null` until that work begins.
 
 ## `ifc-repair-benchmarks.jsonl`
@@ -123,3 +123,7 @@ human-reviewable repair successes. Each admitted case contains:
 The proof manifest is an accepted-results index, not a training split and not
 a replacement for `ifc-repair-benchmarks.jsonl`. Private mutation manifests
 remain evaluator-only and must never be projected into Provider context.
+
+## Processed 存储归并
+
+[processed-layout-20260913.json](processed-layout-20260913.json) 记录派生数据和旧 JSON 修复材料的旧路径、新路径与原字节 SHA-256；不替代源 IFC 的 provenance、数据划分或 Proof manifest。

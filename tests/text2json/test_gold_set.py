@@ -17,7 +17,7 @@ from text2ifc_text.gold import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-AUDIT_PATH = ROOT / "dataset" / "processed" / "bim-json-2.0" / "extraction-audit.json"
+AUDIT_PATH = ROOT / "dataset" / "processed" / "derived" / "bim-json-2.0" / "extraction-audit.json"
 SPLIT_PATH = ROOT / "dataset" / "splits" / "bimnet-scene-splits.json"
 COMPLETE_FIXTURE = ROOT / "tests" / "contract_v2" / "fixtures" / "complete.json"
 

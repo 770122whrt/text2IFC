@@ -17,7 +17,7 @@ from text2ifc_text.splits import (
 ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = ROOT / "dataset" / "manifests" / "bimnet-ifc2x3.jsonl"
 FAMILIES_PATH = (
-    ROOT / "dataset" / "processed" / "bim-json-2.0" / "scene-families.json"
+    ROOT / "dataset" / "processed" / "derived" / "bim-json-2.0" / "scene-families.json"
 )
 
 
@@ -66,7 +66,7 @@ def test_build_scene_family_splits_covers_all_families_and_files() -> None:
     assert payload["source_manifest"] == "dataset/manifests/bimnet-ifc2x3.jsonl"
     assert (
         payload["source_scene_families"]
-        == "dataset/processed/bim-json-2.0/scene-families.json"
+        == "dataset/processed/derived/bim-json-2.0/scene-families.json"
     )
     assert payload["created_at"] == "2026-06-14"
     assert set(payload["splits"]) == {"train", "validation", "test"}
@@ -125,7 +125,7 @@ def test_split_checker_rejects_family_leakage() -> None:
     leaked_payload = {
         "schema_version": "text2ifc/bimnet-scene-splits-v1",
         "source_manifest": "dataset/manifests/bimnet-ifc2x3.jsonl",
-        "source_scene_families": "dataset/processed/bim-json-2.0/scene-families.json",
+        "source_scene_families": "dataset/processed/derived/bim-json-2.0/scene-families.json",
         "seed": 20260614,
         "policy": "scene-family-shuffle-70-15-15-v1",
         "created_at": "2026-06-14",

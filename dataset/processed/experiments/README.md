@@ -57,3 +57,7 @@ C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次
 [开发辅助归档](development-support-20260912/README.md) 保存此前收纳的 319 份脚本与测试记录；其旧目录是否已退役，以最新[整理报告](../../../docs/reports/development-cleanup-20260912/REPORT.md)及逐路径映射为准。
 
 [Zcode C1–C5 历史离线记录](repair-c1-c5-offline-20260903-v2/README.md) 与[真实运行 Proof](../proof/repair/phase12/c1-c5-damage-restoration/REPORT.md) 分开保留，不将 offline replay 计为真实 Provider 成功。
+
+## 早期 JSON 局部修复
+
+[旧 JSON 修复示例](legacy-jsonfix/README.md) 保留原 processed/jsonfix 的完整 14 份材料；只归档，不新增验收。

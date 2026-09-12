@@ -22,7 +22,7 @@ from text2ifc_extractor.inventory import verify_inventory  # noqa: E402
 
 
 MANIFEST_PATH = ROOT / "dataset" / "manifests" / "bimnet-ifc2x3.jsonl"
-OUTPUT_DIR = ROOT / "dataset" / "processed" / "bim-json-2.0"
+OUTPUT_DIR = ROOT / "dataset" / "processed" / "derived" / "bim-json-2.0"
 AUDIT_PATH = OUTPUT_DIR / "extraction-audit.json"
 FAMILIES_PATH = OUTPUT_DIR / "scene-families.json"
 EXPECTED_FILE_COUNT = 25

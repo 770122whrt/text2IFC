@@ -17,6 +17,7 @@ JSON representation between language understanding and IFC generation.
 ## Proof and repository layout
 
 - [Generation and repair Proof](dataset/processed/proof/README.md)
+- [Processed data and run directories](dataset/processed/README.md)
 - [Repository slimming proposal](docs/architecture/repository-organization-refactor.md)
 - [External IFC candidate screening and next steps](dataset/manifests/candidates/README.md)
 - [Repair Type/material support and generation appearance status](docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)
@@ -56,3 +57,12 @@ preservation gates pass.
 The Plan 07 review bundle keeps readable files and frozen machine evidence in
 one collection. Repair Milestone R1 has its own evidence collection and is
 not folded into the Plan 07 review manifest.
+
+## Local output placement
+
+Source, schemas, prompts, reusable tests and scripts stay at the repository root.
+Test artifacts use pytest `tmp_path`; one-off local diagnostics use `.tmp/`.
+Accepted artifacts live under `dataset/processed/proof/`, finished experiments
+under `dataset/processed/experiments/`, and derived datasets under
+`dataset/processed/derived/`. Do not write `composite-evidence-*` test outputs
+to the repository root.

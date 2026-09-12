@@ -19,6 +19,9 @@ _IFC_SCHEMA_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _PROCESSED_CLASSIFICATIONS = {
+    "derived": "retain",
+    "proof": "retain",
+    "experiments": "retain",
     "ifc-repair": "retain",
     "agent-demo": "review_before_delete",
     "text2json": "retain",

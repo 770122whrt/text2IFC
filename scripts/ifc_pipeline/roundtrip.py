@@ -423,8 +423,8 @@ def verify_roundtrip(original_path, reconstructed_path):
 
 def main():
     base_dir = Path("E:/code for project/bimnet/dataset/ifc")
-    json_dir = Path("E:/code for project/bimnet/dataset/processed/roundtrip_json")
-    recon_dir = Path("E:/code for project/bimnet/dataset/processed/roundtrip_ifc")
+    json_dir = Path("E:/code for project/bimnet/dataset/processed/derived/roundtrip_json")
+    recon_dir = Path("E:/code for project/bimnet/dataset/processed/derived/roundtrip_ifc")
     json_dir.mkdir(parents=True, exist_ok=True)
     recon_dir.mkdir(parents=True, exist_ok=True)
 

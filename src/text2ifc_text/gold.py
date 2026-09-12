@@ -25,7 +25,7 @@ from .splits import (
 )
 
 
-DEFAULT_AUDIT_PATH = ROOT / "dataset" / "processed" / "bim-json-2.0" / "extraction-audit.json"
+DEFAULT_AUDIT_PATH = ROOT / "dataset" / "processed" / "derived" / "bim-json-2.0" / "extraction-audit.json"
 DEFAULT_SPLIT_PATH = ROOT / "dataset" / "splits" / "bimnet-scene-splits.json"
 DEFAULT_OUTPUT_DIR = ROOT / "dataset" / "processed" / "text2json"
 TRIAGE_SCHEMA_VERSION = "text2ifc/text2json-draft-triage-v1"

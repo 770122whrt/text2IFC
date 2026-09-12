@@ -107,7 +107,7 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 - [Processed Dataset 与 Proof 分层](../dataset/processed/README.md)
 - [Dataset Manifest Format](../dataset/manifests/README.md)
 - [Authorized BIMNet IFC2X3 Manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)
-- [BIMNet Extraction Audit](../dataset/processed/bim-json-2.0/extraction-audit.json)
+- [BIMNet Extraction Audit](../dataset/processed/derived/bim-json-2.0/extraction-audit.json)
 - [IFC2X3 TC1 EXPRESS Schema](../schemas/ifc/IFC2X3_TC1.exp)
 - [BIM JSON Schemas](../schemas/bim-json/)
 

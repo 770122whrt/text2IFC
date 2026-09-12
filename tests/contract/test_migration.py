@@ -10,7 +10,7 @@ from text2ifc_contract.validation import validate_document
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ROOT = ROOT / "dataset" / "processed"
+SOURCE_ROOT = ROOT / "dataset" / "processed" / "derived"
 SOURCE_FILES = (
     SOURCE_ROOT / "ifc_parsed_data.json",
     SOURCE_ROOT / "ifc_parsed_enhanced.json",

@@ -1,0 +1,70 @@
+{
+  "layers": [
+    {
+      "id": "user-add-west-wall",
+      "kind": "user",
+      "operations": [
+        {
+          "op": "add_entity",
+          "target": {
+            "collection": "entities",
+            "id": "wall-west"
+          },
+          "value": {
+            "attributes": {
+              "Name": "wall-west",
+              "ObjectPlacement": {
+                "axis": [
+                  0,
+                  0,
+                  1
+                ],
+                "origin": [
+                  0,
+                  2000,
+                  0
+                ],
+                "ref_direction": [
+                  0,
+                  1,
+                  0
+                ],
+                "relative_to": "storey-1"
+              },
+              "Representation": {
+                "depth": 3000,
+                "direction": [
+                  0,
+                  0,
+                  1
+                ],
+                "kind": "extruded_profile",
+                "profile": {
+                  "kind": "rectangle",
+                  "x": 4000,
+                  "y": 200
+                }
+              }
+            },
+            "id": "wall-west",
+            "ifc_class": "IfcWallStandardCase",
+            "property_sets": {},
+            "provenance": {
+              "layer_id": "user-add-west-wall",
+              "source": "user-patch"
+            }
+          }
+        }
+      ],
+      "provenance": {
+        "prompt_version": "semantic-patch-v1",
+        "request_id": "missing-piece-repair",
+        "source": "user-natural-language"
+      }
+    }
+  ],
+  "patch_version": "bim-json-patch/1.0",
+  "target_document_id": "jsonfix-missing-piece-base",
+  "target_ifc_schema": "IFC2X3",
+  "target_schema_version": "bim-json/2.0"
+}

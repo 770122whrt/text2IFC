@@ -14,7 +14,11 @@ progress:
 
 # Project State
 
-## 当前整合：清理后分支合入 main（2026-09-13）
+## 当前整理：processed 与根目录（2026-09-13）
+
+当前分支已快进到上一轮 main 整合 b4eb7ccf。processed 派生产物集中到 derived，顶层 17→7 个目录；经用户批准删除根目录 composite 模拟输出等 15 个目标。Proof 字节与人工状态不变，50 项聚焦回归通过，无新 Provider／Full Preflight。见[整理报告](../docs/reports/processed-cleanup-20260913/REPORT.md)。
+
+## 最近整合：清理后分支合入 main（2026-09-13）
 
 本次整合基线为 main 5db5e82e 与 codex/workflow-dataset-links 241a5c24。保留 Zcode 已接入代码、C1–C5 Proof 和重构归档，并纳入最新光庭与旧运行目录退役记录。四处索引／导航冲突按条目并集合并，43 项聚焦离线测试通过；没有新 Provider、Full Preflight 或人工状态提升。详见[合并报告](../docs/reports/main-sync-20260912/REPORT.md)。
 

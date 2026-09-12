@@ -13,7 +13,7 @@ from typing import Any, Iterable
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST_PATH = ROOT / "dataset" / "manifests" / "bimnet-ifc2x3.jsonl"
 DEFAULT_FAMILIES_PATH = (
-    ROOT / "dataset" / "processed" / "bim-json-2.0" / "scene-families.json"
+    ROOT / "dataset" / "processed" / "derived" / "bim-json-2.0" / "scene-families.json"
 )
 DEFAULT_OUTPUT_PATH = ROOT / "dataset" / "splits" / "bimnet-scene-splits.json"
 SCHEMA_VERSION = "text2ifc/bimnet-scene-splits-v1"

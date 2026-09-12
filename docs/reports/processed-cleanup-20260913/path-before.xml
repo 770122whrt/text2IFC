@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="1.160" timestamp="2026-09-13T00:12:53.002164+08:00" hostname="what-do-matter"><testcase classname="tests.text2json.test_split_manifest" name="test_build_scene_family_splits_covers_all_families_and_files" time="0.026"><failure message="text2ifc_text.splits.SplitManifestError: failed to read JSON from dataset/processed/derived/bim-json-2.0/scene-families.json">path = WindowsPath('E:/code for project/bimnet/dataset/processed/derived/bim-json-2.0/scene-families.json')
+
+    def _read_json(path: Path) -&gt; dict[str, Any]:
+        try:
+&gt;           payload = json.loads(path.read_text(encoding="utf-8"))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\text2ifc_text\splits.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/dataset/processed/derived/bim-json-2.0/scene-families.json')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\derived\\bim-json-2.0\\scene-families.json'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+    def test_build_scene_family_splits_covers_all_families_and_files() -&gt; None:
+&gt;       payload = build_scene_family_splits(MANIFEST_PATH, FAMILIES_PATH)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\text2json\test_split_manifest.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_text\splits.py:290: in build_scene_family_splits
+    families_payload = load_scene_families(families_file)
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_text\splits.py:151: in load_scene_families
+    payload = _read_json(families_path)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('E:/code for project/bimnet/dataset/processed/derived/bim-json-2.0/scene-families.json')
+
+    def _read_json(path: Path) -&gt; dict[str, Any]:
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except OSError as exc:
+&gt;           raise SplitManifestError(f"failed to read JSON from {_relative(path)}") from exc
+E           text2ifc_text.splits.SplitManifestError: failed to read JSON from dataset/processed/derived/bim-json-2.0/scene-families.json
+
+src\text2ifc_text\splits.py:51: SplitManifestError</failure></testcase></testsuite></testsuites>
