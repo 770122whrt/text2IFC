@@ -1,7 +1,9 @@
 # Publish the text2IFC Repository to GitHub
 
-This guide describes the verified publishing workflow for this repository on
-Windows. It is intended for contributors and automation agents.
+This guide describes scoped publishing from a Windows checkout. Read
+[AGENTS.md](../../AGENTS.md) first; use the current task's authorized branch and
+files. This guide does not authorize a main merge, a Provider call, a Full
+Preflight, or history rewriting.
 
 ## Repository Requirements
 
@@ -51,35 +53,57 @@ git diff --stat
 git lfs ls-files
 ```
 
-Run the relevant tests:
+Choose validation for the change, following the
+[takeover guide](agent-takeover.md#6-验证强度如何选择). Documentation-only work needs
+link, claim and diff checks; behavioral changes need their applicable tests.
+Do not automatically run all tests or a Full Preflight for a push.
 
 ```powershell
-$env:PYTHONPATH='.deps\python312'
-python -m pytest tests -q
+git diff --check
+# For code changes, select the applicable target; prefer the repository venv.
+.venv\Scripts\python -m pytest <relevant-test> -q
 ```
 
-Stage, commit, and push:
+Confirm the current branch and inspect remote changes before staging:
 
 ```powershell
-git add <intended-files>
+git branch --show-current
+git worktree list
+git fetch origin
+git rev-list --left-right --count HEAD...origin/<authorized-branch>
+git diff --cached --stat
+```
+
+If the remote branch has new commits, inspect them before proceeding. Preserve
+unrelated staged and working-tree edits. Stage only the task's explicit files,
+review the staged diff, then commit and push to that same authorized branch:
+
+```powershell
+git add -- <intended-files>
+git diff --cached --check
+git diff --cached --stat
+git diff --cached -- <intended-files>
 git commit -m "<concise description>"
-git push -u origin main
+git push origin HEAD:refs/heads/<authorized-branch>
 ```
 
-Use explicit file paths when unrelated changes are present.
+`<authorized-branch>` and `<intended-files>` are placeholders, not literal
+commands. This does not merge main. Never use `git add -A`, broad normalization,
+force push or a reset to make an unrelated dirty checkout look clean.
 
 ## Verify the Remote
 
 ```powershell
-& 'G:\software\ghcli\gh.exe' api `
-  repos/770122whrt/text2IFC/git/ref/heads/main `
-  --jq '.object.sha'
-
+git rev-parse HEAD
+git ls-remote --heads origin refs/heads/<authorized-branch>
+git rev-list --left-right --count HEAD...origin/<authorized-branch>
 git status -sb
 git log --oneline --decorate -1
 ```
 
-The local `HEAD`, `origin/main`, and GitHub SHA must match.
+The local HEAD and the explicitly targeted remote SHA must match, with 0/0
+ahead/behind for that branch. Report main separately; do not claim it contains
+work pushed only to a workflow branch.
 
 ## Windows Recovery Procedure
 
@@ -114,32 +138,15 @@ The memory could not be read
 Confirm that IFC, PDF, and ZIP files are tracked by LFS:
 
 ```powershell
-git check-attr filter -- dataset\ifc\train\1px.ifc
+git check-attr filter -- <intended-ifc-file>
 git lfs ls-files
 ```
 
-If an unpublished commit contains normal Git blobs instead of LFS objects,
-migrate only the intended branch:
-
-```powershell
-git lfs migrate import `
-  --include="*.ifc,*.pdf,*.zip" `
-  --include-ref=refs/heads/main `
-  --yes
-```
-
-This rewrites commit history. Use it only when:
-
-1. The remote is empty, or the affected commit has not been shared.
-2. The remote SHA has been checked.
-3. A force update will use an exact lease.
-
-Restore working files after migration:
-
-```powershell
-git lfs checkout
-git add --renormalize .
-```
+Do not automatically migrate Git/LFS history or renormalize the whole checkout
+to recover a failed push. Preserve the failure, identify the exact affected
+files and remote state, and resolve within the user's authorized scope. A
+historical first-publish recovery procedure is not permission to rewrite
+shared history or alter accepted evidence.
 
 If a crashed Git process leaves `.git\index.lock`, first verify that no Git
 process is running:
@@ -156,36 +163,13 @@ Remove-Item -LiteralPath '.git\index.lock'
 
 ### Symptom: Credential helper crashes during LFS upload
 
-First confirm that `gh auth status` succeeds. A one-command authorization
-header may be derived from the GitHub CLI keyring without printing or
-persisting the token:
+First confirm that `gh auth status` succeeds and inspect the helper's actual
+error. Use the configured credential helper; do not print credentials or put
+tokens into command-line headers. Retry only the intended branch after the
+authentication problem is resolved. Do not broaden the upload to all LFS
+history or use force push as a credential workaround.
 
-```powershell
-$token = & 'G:\software\ghcli\gh.exe' auth token
-$pair = '770122whrt:' + $token.Trim()
-$basic = [Convert]::ToBase64String(
-  [Text.Encoding]::ASCII.GetBytes($pair)
-)
-
-git -c http.sslBackend=openssl `
-  -c "http.https://github.com/.extraheader=AUTHORIZATION: Basic $basic" `
-  lfs push --all origin main
-```
-
-The variables exist only in the current PowerShell process. Do not echo them.
-
-After separately uploading LFS objects, push the Git commit. If history was
-rewritten, use an exact force-with-lease:
-
-```powershell
-git push `
-  --force-with-lease=refs/heads/main:<verified-old-sha> `
-  -u origin main
-```
-
-Never use an unqualified `--force`.
-
-## Verified Initial Publication
+## Historical Initial Publication
 
 The initial repository publication used:
 
@@ -195,4 +179,5 @@ The initial repository publication used:
 - Git LFS objects: 31
 - LFS patterns: `*.ifc`, `*.pdf`, `*.zip`
 
-The final remote commit and local tracking branch were verified to match.
+At that historical checkpoint the remote commit and local tracking branch
+matched. These counts and commit are not the current repository state.

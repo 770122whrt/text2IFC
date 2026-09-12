@@ -8,6 +8,7 @@
 | 目的 | 入口 |
 |---|---|
 | 首次由 Agent 或开发者接管项目 | [首次接管 text2IFC 项目](how-to/agent-takeover.md) |
+| 接续最近的分支整合、目录清理和文档收尾 | [仓库交接快照（2026-09-13）](handoffs/repository-handoff-2026-09-13.md)，接手时重新核实 Git |
 | 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，以及后续 Phase 安排 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
 | 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
@@ -17,19 +18,24 @@
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
 | 查看研究总结和周报 | [Reports Index](reports/README.md) |
-| 查看项目计划和当前状态 | [`.planning/`](../.planning/PROJECT.md) |
+| 查看最新执行位置和阶段安排 | [STATE 顶部](../.planning/STATE.md)、[ROADMAP](../.planning/ROADMAP.md)、[PROJECT](../.planning/PROJECT.md) |
 
 ## 仓库整理入口
 
 - [按工作流与 Phase 阅读 Proof](../dataset/processed/proof/README.md)
-- [目录瘦身与后续重构方案](architecture/repository-organization-refactor.md)
+- [processed 七类目录与历史路径入口](../dataset/processed/README.md)
+- [processed 与根目录整理结果（2026-09-13）](reports/processed-cleanup-20260913/REPORT.md)
+- [main 与 Zcode 整合后的交接快照](handoffs/repository-handoff-2026-09-13.md)
+- [目录瘦身设计及历史执行记录](architecture/repository-organization-refactor.md)；当前结果以 STATE 和最新整理报告为准
 - [归档的 CLI 终端记录](reports/terminal-session-history.md)
 - [专项技术 handoffs](handoffs/) 与 [网页交叉讨论 context-handoff](context-handoff/CONTEXT-HANDOFF-RULES.md) 按各自职责保留。
 
 ## 当前重点
 
 - [Type、材质、属性和外观的接续计划](architecture/semantic-appearance-plan.md)
-  - A/B/C 已人工验收，C与实验已分别收纳；项目内 Type 按需组织，内置小型参数化模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
+  - A/B/C 与光庭第二版已人工验收，实验另行收纳；项目内 Type 按需组织，基础门窗和部件配色使用适用的新版本；不补写缺省材料/性能属性，Repair 保留原几何，不实现跨 IFC 参照。
+- [光庭设计与实施记录](architecture/courtyard-library-design.md)
+  - [两版 Proof](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/REPORT.md)保留第一版参考及第二版验收，跨轮约束来源与替代管理仍有后续工作。
 - [Token 效率与质量保全计划](architecture/token-efficiency-plan.md)
   - 一次真实 Audit 配对已完成并记录实际 token；[C与实验归档](../dataset/processed/experiments/README.md)已整理，后续优化按独立计划小步推进。
 - [首次接管 text2IFC 项目](how-to/agent-takeover.md)
@@ -86,6 +92,12 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 
 保存项目研究总结、周报和历史汇报。报告不是架构或验收标准的权威来源。
 
+### Handoffs
+
+目录：[`docs/handoffs/`](handoffs/)
+
+[当前仓库交接快照（2026-09-13）](handoffs/repository-handoff-2026-09-13.md)记录分支、整理结果、保留项和接续边界。旧 Phase／R1 handoff 保留专项历史；长期目录地图统一维护在接管指南，最新执行位置仍在 STATE。
+
 ### Project Planning
 
 - [Project Context](../.planning/PROJECT.md)
@@ -103,7 +115,7 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 - [Dataset Organization](../dataset/data_organization.md)
 - [External Data Source Catalog](../dataset/sources/CATALOG.md)
 - [外部 IFC 候选池、筛选状态与准入边界](../dataset/manifests/candidates/README.md)
-- [Repair Type/材质与 Generation 外观接续状态](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)
+- [Type／材质／属性／外观当前范围](architecture/semantic-appearance-plan.md)；[早期实现边界](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)用于历史定位
 - [Processed Dataset 与 Proof 分层](../dataset/processed/README.md)
 - [Dataset Manifest Format](../dataset/manifests/README.md)
 - [Authorized BIMNet IFC2X3 Manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)
@@ -120,6 +132,7 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 | 稳定参考、合同说明和方法论 | `docs/reference/` |
 | 任务操作指南 | `docs/how-to/` |
 | 研究总结、周报和人工汇报 | `docs/reports/` |
+| 特定日期／阶段的交接快照 | `docs/handoffs/`；不复制长期地图或另立产品权威 |
 | Phase SPEC/PLAN/VALIDATION/执行记忆 | `.planning/phases/<phase>/` |
 | 数据集说明和 provenance | `dataset/` |
 | 机器可读 Schema | `schemas/` |
