@@ -4,6 +4,8 @@
 
 同日后续：用户已批准并完成根 archive 退役，保留包提交为 `dbb94668`。见[退役报告](../reports/archive-retirement-20260913/REPORT.md)和[轻量恢复入口](../../dataset/processed/experiments/zcode-history-20260913/README.md)；下文 Git 基线和保留项列表仍是文档首次编写时的快照。
 
+再后续：Zcode 的生产评估拆分、独立 Proof 包与 25 个 runner 分类已按当前代码接入。[接入报告](../reports/zcode-refactor-adoption-20260913/REPORT.md)保留实际通过、原代码也失败的 18 项旧测试债务和本轮夹具修复。新代码入口见接管指南与脚本 README；不要再把这些实现视为只存在于 archive 的候选。当前分支的新提交尚未同步 main。
+
 ## 1. 接手时先确认什么
 
 本地根目录为 `E:\code for project\bimnet`，产品名称为 **text2IFC**。以下提交号是本快照的基线，后续以实际 Git 状态为准：

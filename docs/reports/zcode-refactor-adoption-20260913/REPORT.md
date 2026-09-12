@@ -21,10 +21,25 @@
 
 因此这一步是结构接入与已覆盖行为保持，不是全套 Proof 检查通过。后续修复测试数据绑定时必须恢复其原来的关键断言覆盖，不允许更新冻结 Prompt 或恢复撤回的验收资格来凑通过。缺失的 live 准入继续阻止真实调用。
 
-## 3. 运行脚本分类：待接入
+## 3. 运行脚本分类：已接入
 
-按 UAT、offline、curators、audits 整理实际实现，保留旧入口。不更换冻结准入的路径／哈希含义；没有有效新准入时真实调用继续失败关闭。
+25 个当前实现进入 UAT（10）、offline（7）、curators（5）、audits（3），原文件成为兼容入口；[完整路径映射](runner-paths.json)与[使用入口](../../../scripts/ifc_repair/README.md)。标准 Python 导入返回同一实现模块，保留 `main` 与旧命令；6 个测试文件仅更新按文件加载的实现位置，避免 monkeypatch 落在转发层。所有 25 个实现的函数／类体在忽略 import 后与迁移前相同，见 [AST 核对](runner-body-parity.json)。根定位深度单独调整，R1 curator 补直接命令所需的路径引导。
+
+准入另补一个必要边界：`REQUIRED_CHANGED_SCOPE_FILES` 保留 8 个原路径，并加入 6 个新实现／共享模块路径，防止以后只冻结兼容入口而遗漏真正执行的代码。旧准入与证据文件没有重写；新增缺失／错误哈希反例仍由原校验门拒绝。
+
+验证记录：
+
+- 新入口测试先命中缺失分组的失败；分组后旧／新模块、四类命令、Proof 包与公共隔离 42 passed。新增实现绑定检查也先失败，再补路径。
+- 分组后的公共／UAT／属性链路初次 148 passed、3 failed：[结果](grouped-public-tests.xml)。3 个失败是本轮模拟准入夹具未补齐新文件清单，补全模拟数据后准入正例、缺失项、错误哈希、篡改证据和禁止自动 Full Preflight 共 5 passed、104 deselected：[复验](grouped-admission-fixed.xml)。原通过的其他路径未修改，未重复整组；不能把分段复验说成一次完整全绿执行。
+- 属性公开链另一次聚焦 8 passed。历史 Window／Door 检查 5 passed、2 failed：[结果](grouped-legacy-tests.xml)。其中本地 VVO 五门批量修复、IFC 重开与注入失败原子回滚通过；两个失败都依赖缺失的旧 `dataset/ifc/train/vvo.ifc`，固定 `d9a91212` 原 Window runner 调用 `verify_matrix` 同样报该文件缺失。没有恢复旧路径、改变冻结清单或换源 IFC。
+- 测试源码未删除，关键断言保留。18 项既有失败（上一节 16 项加旧 Window 2 项）保留为后续测试数据／夹具维护债务。本轮新增的 3 项失败已修复。
+
+旧镜像中 README／地图目标已有当前导航替代，生产评估拆分、Proof 包和 25 项脚本分类均已实际采用。其未实施的提案（例如退休 legacy workflow、拆开 Agent 包）不因位于历史文档中就成为本轮承诺。当前 v2、诊断、assembler 和 C1–C5 已有实现保留，不能用旧镜像覆盖。
 
 ## 验证边界
 
 本轮无 Provider 调用、Full Preflight、完整 curator 或新人工验收。现有 Proof 字节与状态不变，不删除测试以取得通过。保留其他任务的 RVT、Proof 未跟踪文件和 ifc-bench 修改。
+
+机器生成的 pytest XML 原样保留，其 traceback 自带行末空白；Git 空白检查仅对这几份原始结果文件作排除，代码和文档检查仍执行。三步按独立提交保存，普通推送当前分支；本轮不额外合入 main。
+
+本轮自行创建的 pytest 工作区：13 个目录、5,124 个文件／889,911,793.0 字节已清除，4 个目标不存在；原始测试 XML 与结果报告保留。仅 `.tmp/zcode-refactor-baseline` 因 Windows ACL 无法读取而保留，已请求提权执行仍未获得该目录读取能力，没有改 ACL 或删除不明内容。见[精确记录](temporary-cleanup.json)。

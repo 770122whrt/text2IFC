@@ -27,8 +27,8 @@ from tests.ifc_repair.test_property_resolution_family_e2e import (
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / "scripts/ifc_repair/run_phase12_live_uat.py"
-CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
+SCRIPT = ROOT / "scripts/ifc_repair/uat/run_phase12_live_uat.py"
+CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curators/curate_phase12_live_proof.py"
 HASH_A = "sha256:" + "a" * 64
 HASH_B = "sha256:" + "b" * 64
 STAGE15_TEMPLATE_HASH = load_prompt_registry()[
@@ -742,13 +742,19 @@ def _changed_scope_admission(module: Any, tmp_path: Path) -> Path:
     supporting_evidence = tmp_path / "supporting-evidence.txt"
     supporting_evidence.write_text("admission seam passed\n", encoding="utf-8")
     scope_paths = (
-        ".planning/phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md",
         "scripts/ifc_repair/run_phase12_offline.py",
+        "scripts/ifc_repair/curate_phase12_live_proof.py",
+        "scripts/ifc_repair/run_phase12_live_uat.py",
+        "src/text2ifc_ifc_repair/production_evaluation.py",
+        "src/text2ifc_proof/validate_success_cases.py",
+        "src/text2ifc_proof/live_audit.py",
+        ".planning/phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md",
+        "scripts/ifc_repair/offline/run_phase12_offline.py",
         "tests/knowledge/test_property_retrieval_evaluation.py",
         "src/text2ifc_ifc_repair/evaluation.py",
         "tests/ifc_repair/test_validation_acceleration.py",
-        "scripts/ifc_repair/curate_phase12_live_proof.py",
-        "scripts/ifc_repair/run_phase12_live_uat.py",
+        "scripts/ifc_repair/curators/curate_phase12_live_proof.py",
+        "scripts/ifc_repair/uat/run_phase12_live_uat.py",
         "tests/ifc_repair/test_phase12_live_uat.py",
     )
     admission = {
@@ -1179,6 +1185,24 @@ def test_changed_scope_admission_validates_failed_source_and_all_resolutions(
         "cold_warm_cache_parity",
         "reopened_model_reuse_parity",
     }
+
+
+@pytest.mark.parametrize("tamper", ["missing", "wrong_hash"])
+def test_changed_scope_admission_rejects_unbound_grouped_implementation(
+    tmp_path: Path, tamper: str,
+) -> None:
+    module = _module()
+    admission_path = _changed_scope_admission(module, tmp_path)
+    document = json.loads(admission_path.read_text(encoding="utf-8"))
+    scope = document["scope_file_sha256"]
+    path = "src/text2ifc_proof/live_audit.py"
+    if tamper == "missing":
+        del scope[path]
+    else:
+        scope[path] = "sha256:" + "0" * 64
+    admission_path.write_text(json.dumps(document), encoding="utf-8")
+    with pytest.raises(ValueError, match="CHANGED_SCOPE_FILE_HASH_MISMATCH"):
+        module._load_changed_scope_admission(admission_path)
 
 
 def test_changed_scope_admission_rejects_tampered_resolution_evidence(

@@ -218,8 +218,10 @@ public request + damaged IFC
 - [`src/text2ifc_ifc_repair/changesets.py`](../../src/text2ifc_ifc_repair/changesets.py)：Draft 到 Bound ChangeSet；
 - [`src/text2ifc_ifc_repair/apply.py`](../../src/text2ifc_ifc_repair/apply.py)：原子应用和 staging；
 - [`src/text2ifc_ifc_repair/evaluation.py`](../../src/text2ifc_ifc_repair/evaluation.py)：reopen、L1/L2 和 preservation；
+- [`production_evaluation.py`](../../src/text2ifc_ifc_repair/production_evaluation.py)：公开生产评估与共享计算；[`benchmark_evaluation.py`](../../src/text2ifc_ifc_repair/benchmark_evaluation.py)：评估器侧私有比较，单向依赖生产评估；
 - [`src/text2ifc_ifc_repair/operations/`](../../src/text2ifc_ifc_repair/operations/)：Window、Door、Opening、Beam、Column 等 operation；
-- [`scripts/ifc_repair/`](../../scripts/ifc_repair/)：离线矩阵、live UAT、milestone 和 Proof 工具。
+- [`scripts/ifc_repair/README.md`](../../scripts/ifc_repair/README.md)：uat／offline／curators／audits 分类和旧入口兼容；
+- [`src/text2ifc_proof/`](../../src/text2ifc_proof/)：独立 Proof 校验与 transcript 审计，不加载 Repair runner。
 
 完整解释见
 [`IFC Repair Pipeline 与 Roadmap`](../architecture/ifc-repair-pipeline-status-and-roadmap.md)。
@@ -235,7 +237,7 @@ public request + damaged IFC
 | 属性知识和检索 | [`src/text2ifc_knowledge/`](../../src/text2ifc_knowledge/)、[IFC Schema](../../schemas/ifc/) | [`tests/knowledge/`](../../tests/knowledge/) |
 | 数据提取、清单、文本配对 | [`src/text2ifc_extractor/`](../../src/text2ifc_extractor/)、[`src/text2ifc_dataset/`](../../src/text2ifc_dataset/)、[`src/text2ifc_text/`](../../src/text2ifc_text/) | [`tests/extractor/`](../../tests/extractor/)、[`tests/dataset/`](../../tests/dataset/)、[`tests/text2json/`](../../tests/text2json/) |
 | Prompt／Schema 版本 | [`prompts/agent/registry.json`](../../prompts/agent/registry.json)、[`schemas/`](../../schemas/) | 按本次所选版本查对应测试，新增版本不覆盖旧内容 |
-| Proof 布局与冻结证据 | [Proof 入口](../../dataset/processed/proof/README.md) | [`scripts/proof/`](../../scripts/proof/)、[`tests/proof/`](../../tests/proof/) |
+| Proof 布局与冻结证据 | [Proof 入口](../../dataset/processed/proof/README.md)、[`src/text2ifc_proof/`](../../src/text2ifc_proof/) | [`scripts/proof/`](../../scripts/proof/)、[`tests/proof/`](../../tests/proof/)、Repair 的 Proof 回归 |
 
 这张表用于定位，不是要求每次运行整列测试。`src/` 中其余 service、fidelity、
 jsonfix 等模块按任务进入；目录存在不等于当前任务要重构它。

@@ -51,7 +51,7 @@ BASE_DAMAGE_CASE = ROOT / "tests/ifc_repair/fixtures/historical-plan07-base"
 
 LIVE_CASE_ID = "phase12-live-deepseek-complete"
 LIVE_CASE_PATH = Path("structural") / "live" / LIVE_CASE_ID
-CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curate_phase12_live_proof.py"
+CURATOR_SCRIPT = ROOT / "scripts/ifc_repair/curators/curate_phase12_live_proof.py"
 STAGE15_TEMPLATE_HASH = load_prompt_registry()[
     "ifc-property-resolution.v0.2"
 ]["sha256"]

@@ -16,7 +16,7 @@ progress:
 
 ## 当前重构：接入 Zcode 有效实现（2026-09-13）
 
-用户明确要求实际接入重构。生产／基准评估已分离，211 项聚焦离线检查通过；继续将 Proof 校验独立成包并整理运行入口。以当前实现为基线保留后续修复、旧入口和冻结合同，不整包覆盖旧镜像。见[执行记录](../docs/reports/zcode-refactor-adoption-20260913/REPORT.md)与[范围](../docs/architecture/repository-organization-refactor.md)。
+用户要求的有效重构已接入：生产／基准评估分离（`2d1a18bb`）、独立 Proof 包（`d9a91212`）、25 个 runner 分类并保留旧入口。当前实现作为基线，未覆盖后续修复或冻结合同。评估 211 项通过；Proof 168 项通过、16 项原有失败已用原代码复现；分组新入口／公共链检查及本轮夹具修复已完成，另确认 2 项旧 Window 数据路径失败。完整分段结果与 18 项既有测试债务见[执行记录](../docs/reports/zcode-refactor-adoption-20260913/REPORT.md)。无新 Provider／Full Preflight／main 合并。
 
 ## 当前整理：根 archive 已退役（2026-09-13）
 

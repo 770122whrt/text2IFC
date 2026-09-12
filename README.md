@@ -55,6 +55,8 @@ Python 要求见 [pyproject.toml](pyproject.toml)（当前为 ≥3.12），本�
 
 根 `archive/` 已退役。[Zcode 历史恢复与重构参考](dataset/processed/experiments/zcode-history-20260913/README.md)保留轻量合同、清单和代码差异，完整原始运行／失败／数据快照通过固定 Git/LFS 修订恢复；不是尚待整包合并的生产代码。
 
+Zcode 的有效重构已按当前实现接入：生产／基准评估分离、独立 `text2ifc_proof` 包、25 个运行脚本分类并保留旧入口。见[实施与验证记录](docs/reports/zcode-refactor-adoption-20260913/REPORT.md)和[脚本地图](scripts/ifc_repair/README.md)。
+
 ## 当前设计与验证入口
 
 - [语义与外观计划](docs/architecture/semantic-appearance-plan.md)：Type、材料、属性、颜色和基础门窗模板的范围权威。
