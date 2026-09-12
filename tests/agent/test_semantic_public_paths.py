@@ -24,7 +24,7 @@ def test_new_design_call_cannot_silently_return_old_contract(tmp_path):
 
 
 @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
-@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3'])
+@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4'])
 @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
 def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
     skeleton, manifest, expected, values = _fixture(1)
@@ -50,7 +50,7 @@ def test_public_strategies_preserve_explicit_material_and_property(tmp_path, str
         'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
                                   'property_sets':wall['property_sets']},
             {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
-    if brief_version in {'2.2', '2.3'}:
+    if brief_version in {'2.2', '2.3', '2.4'}:
         from tests.agent.test_semantic_authority_completeness import review
         brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
     if strategy == 'staged':
@@ -133,7 +133,7 @@ def test_staged_shared_type_is_authored_once_after_instances(tmp_path):
 @pytest.mark.parametrize('detailed', [False, True])
 @pytest.mark.parametrize('canonical_ids', [False, True])
 @pytest.mark.parametrize('recover_field', [False, True])
-@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3'])
+@pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4'])
 def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
     from text2ifc_agent.live_pipeline import run_design_brief_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
@@ -141,6 +141,8 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
     from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
     brief = _outside_boundary_design_brief()
     brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+    if brief_version == '2.4':
+        brief['known_facts']['plan_constraints'] = []
     brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
     brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
     brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
@@ -172,7 +174,7 @@ def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed,
             record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
     store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
     session=store.create_session(original_input=brief['original_request'])
-    if brief_version in {'2.2', '2.3'}:
+    if brief_version in {'2.2', '2.3', '2.4'}:
         from tests.agent.test_semantic_authority_completeness import review
         declared = {'material': True, 'property': True}
         if detailed:

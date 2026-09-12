@@ -96,7 +96,7 @@ def validate_design_brief(
 def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -> str:
     """Preserve released contracts while explicitly selecting the stronger one."""
     if schema_version == 'text2ifc/design-brief/2.4':
-        return 'design-brief.v2.15' if design_review_enabled else 'design-brief.v2.14'
+        return 'design-brief.v2.17' if design_review_enabled else 'design-brief.v2.16'
     if schema_version == 'text2ifc/design-brief/2.3':
         return 'design-brief.v2.13' if design_review_enabled else 'design-brief.v2.12'
     if schema_version == 'text2ifc/design-brief/2.2':
