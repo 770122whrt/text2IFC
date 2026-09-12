@@ -1,0 +1,108 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "program-guard:stage1:001",
+      "case_id": "program-guard",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "cached",
+      "fallback_flags": {
+        "cached": true,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [
+        {
+          "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "few_shot_id": "beam.add.complete"
+        }
+      ],
+      "few_shot_hashes": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "few_shot_ids": [
+        "beam.add.complete"
+      ],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "cached",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-11",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": null,
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "profile_ids": [
+        "beam.add"
+      ],
+      "profile_versions": [
+        "0.1"
+      ],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+      "raw_response_sha256": "sha256:db2c357610029c8ab85e8e8a9363d2b649422c3551068deeba6e0c2507aa0ae0",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+      },
+      "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-11",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:db2c357610029c8ab85e8e8a9363d2b649422c3551068deeba6e0c2507aa0ae0",
+      "stage": "stage1",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    }
+  ],
+  "case_id": "program-guard",
+  "contract_pass": false,
+  "feedback_sha256": null,
+  "final": {
+    "complete_repair_success": false,
+    "reason_code": "[Errno 2] No such file or directory: 'E:\\\\code for project\\\\bimnet\\\\dataset\\\\processed\\\\proof\\\\ifc-repair-success-cases\\\\structu",
+    "status": "provider_failed",
+    "successful_artifact_publishable": false
+  },
+  "live_evidence_pass": false,
+  "private_evidence_detected": false,
+  "proof_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "request_sha256": "sha256:d036f61d4ff642805b9335d2d17e66aca7d15fb71d0f37acbdc02b18ffead7b3",
+  "status": "failed",
+  "synthetic_fallback_used": false,
+  "transport_calls": 1,
+  "transport_calls_by_stage": {
+    "property_resolution": 0,
+    "stage1": 1,
+    "stage2": 0
+  }
+}

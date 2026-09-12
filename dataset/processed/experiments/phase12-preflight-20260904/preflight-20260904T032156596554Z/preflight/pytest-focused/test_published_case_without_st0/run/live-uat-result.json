@@ -1,0 +1,1309 @@
+{
+  "acceptance_eligible": false,
+  "case_contract_version": "phase12-plan07-live-cases/0.1",
+  "cases": [
+    {
+      "attempts": [
+        {
+          "attempt_id": "complete:stage1:001",
+          "case_id": "complete",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [
+            {
+              "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "few_shot_id": "beam.add.complete"
+            }
+          ],
+          "few_shot_hashes": [
+            "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          ],
+          "few_shot_ids": [
+            "beam.add.complete"
+          ],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-1",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": null,
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "profile_ids": [
+            "beam.add"
+          ],
+          "profile_versions": [
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+          "raw_response_sha256": "sha256:5af5213765a7befbec4fd3a525bc54bb1a92dbc5584b1852c0cfee89e071b206",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-1",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:5af5213765a7befbec4fd3a525bc54bb1a92dbc5584b1852c0cfee89e071b206",
+          "stage": "stage1",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "complete:property_resolution:001",
+          "case_id": "complete",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [],
+          "few_shot_hashes": [],
+          "few_shot_ids": [],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-2",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": "complete:stage1:001",
+          "private_evidence_detected": false,
+          "profile_hashes": [],
+          "profile_ids": [],
+          "profile_versions": [],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:fbaec46a9ae749974661f472440d79382ef91e751a776c0f9a0d967c1808ef38",
+          "raw_response_sha256": "sha256:3951a9175a1ee5f77378d5122786af418efea28f17463e40b12a0568f142b808",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "PROPERTY_RESOLUTION_INPUT={}"
+          },
+          "request_sha256": "sha256:77bc06bca01ac46d7f0508e7b65b3241e6d42e4abe97615cb1f6b026ce012ddb",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-2",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:3951a9175a1ee5f77378d5122786af418efea28f17463e40b12a0568f142b808",
+          "stage": "property_resolution",
+          "stage_attempt": 1,
+          "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+          "template_id": "ifc-property-resolution.v0.2",
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "complete:property_resolution:002",
+          "case_id": "complete",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [],
+          "few_shot_hashes": [],
+          "few_shot_ids": [],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-3",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 2,
+          "parent_attempt_id": "complete:property_resolution:001",
+          "private_evidence_detected": false,
+          "profile_hashes": [],
+          "profile_ids": [],
+          "profile_versions": [],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:fbaec46a9ae749974661f472440d79382ef91e751a776c0f9a0d967c1808ef38",
+          "raw_response_sha256": "sha256:c6160aa513d9dc65a419d7d42508abb8b15ca24ff01d4d527d1d6e01ca615a90",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "PROPERTY_RESOLUTION_INPUT={}"
+          },
+          "request_sha256": "sha256:77bc06bca01ac46d7f0508e7b65b3241e6d42e4abe97615cb1f6b026ce012ddb",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-3",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:c6160aa513d9dc65a419d7d42508abb8b15ca24ff01d4d527d1d6e01ca615a90",
+          "stage": "property_resolution",
+          "stage_attempt": 1,
+          "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+          "template_id": "ifc-property-resolution.v0.2",
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "complete:stage2:001",
+          "case_id": "complete",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [
+            {
+              "few_shot_hash": "sha256:0cfebe0759f75b33346f86c01e580f387f5bb12549e55d32692f9d6187433e39",
+              "few_shot_id": "beam.add.stage2.v0.1.complete"
+            },
+            {
+              "few_shot_hash": "sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f",
+              "few_shot_id": "column.add.stage2.v0.1.complete"
+            }
+          ],
+          "few_shot_hashes": [
+            "sha256:0cfebe0759f75b33346f86c01e580f387f5bb12549e55d32692f9d6187433e39",
+            "sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f"
+          ],
+          "few_shot_ids": [
+            "beam.add.stage2.v0.1.complete",
+            "column.add.stage2.v0.1.complete"
+          ],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-4",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": "complete:property_resolution:002",
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:6281a88273c828c8e52057652c6f91982e7d03975a93e79e2f2629e68675ad4b",
+            "sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab"
+          ],
+          "profile_ids": [
+            "beam.add.stage2.v0.1",
+            "column.add.stage2.v0.1"
+          ],
+          "profile_versions": [
+            "0.1",
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:1a8c76f41f4b543dd21371fc1749c30caf9dc52e082dbc906dfd2d48015644b7",
+          "raw_response_sha256": "sha256:762aef22d761c02f49501652f21ec8b6b13d0a68c49310a628276aed7a56a182",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:0cfebe0759f75b33346f86c01e580f387f5bb12549e55d32692f9d6187433e39\", \"example_id\": \"beam.add.stage2.v0.1.complete\"}, {\"example_hash\": \"sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f\", \"example_id\": \"column.add.stage2.v0.1.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:6281a88273c828c8e52057652c6f91982e7d03975a93e79e2f2629e68675ad4b\", \"profile_id\": \"beam.add.stage2.v0.1\", \"profile_version\": \"0.1\"}, {\"profile_hash\": \"sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab\", \"profile_id\": \"column.add.stage2.v0.1\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:4d553b367e1063611c35c7b295c7cf5d9e6a1c545d8855b32312ecfcec0465e0",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-4",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:762aef22d761c02f49501652f21ec8b6b13d0a68c49310a628276aed7a56a182",
+          "stage": "stage2",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        }
+      ],
+      "case_id": "complete",
+      "contract_pass": false,
+      "feedback_sha256": null,
+      "final": {
+        "clarification_answer_applied": false,
+        "complete_repair_success": true,
+        "status": "succeeded",
+        "successful_artifact_publishable": true
+      },
+      "live_evidence_pass": true,
+      "private_evidence_detected": false,
+      "proof_acceptance_eligible": false,
+      "proof_validation_status": "pending_plan_12_14",
+      "request_sha256": "sha256:eaac43393aa006722ff10b2fe3c84d4c1c6befd76779ba928d5e97eecb7e66b5",
+      "status": "failed",
+      "synthetic_fallback_used": false,
+      "transport_calls": 4,
+      "transport_calls_by_stage": {
+        "property_resolution": 2,
+        "stage1": 1,
+        "stage2": 1
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "clarification-resume:stage1:001",
+          "case_id": "clarification-resume",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [
+            {
+              "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "few_shot_id": "beam.add.complete"
+            }
+          ],
+          "few_shot_hashes": [
+            "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          ],
+          "few_shot_ids": [
+            "beam.add.complete"
+          ],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-5",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": null,
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "profile_ids": [
+            "beam.add"
+          ],
+          "profile_versions": [
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+          "raw_response_sha256": "sha256:b11c59d15af0f145a833e992c7fad77be21602f2520a72aaa95859c2419576e3",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-5",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:b11c59d15af0f145a833e992c7fad77be21602f2520a72aaa95859c2419576e3",
+          "stage": "stage1",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "clarification-resume:property_resolution:001",
+          "case_id": "clarification-resume",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [],
+          "few_shot_hashes": [],
+          "few_shot_ids": [],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-6",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": "clarification-resume:stage1:001",
+          "private_evidence_detected": false,
+          "profile_hashes": [],
+          "profile_ids": [],
+          "profile_versions": [],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:fbaec46a9ae749974661f472440d79382ef91e751a776c0f9a0d967c1808ef38",
+          "raw_response_sha256": "sha256:4354305aba7d3e35f97c7574eac3a5e3ab4e4873aaf2799a085537701b929623",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "PROPERTY_RESOLUTION_INPUT={}"
+          },
+          "request_sha256": "sha256:77bc06bca01ac46d7f0508e7b65b3241e6d42e4abe97615cb1f6b026ce012ddb",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-6",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:4354305aba7d3e35f97c7574eac3a5e3ab4e4873aaf2799a085537701b929623",
+          "stage": "property_resolution",
+          "stage_attempt": 1,
+          "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+          "template_id": "ifc-property-resolution.v0.2",
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "clarification-resume:stage2:001",
+          "case_id": "clarification-resume",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [
+            {
+              "few_shot_hash": "sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f",
+              "few_shot_id": "column.add.stage2.v0.1.complete"
+            }
+          ],
+          "few_shot_hashes": [
+            "sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f"
+          ],
+          "few_shot_ids": [
+            "column.add.stage2.v0.1.complete"
+          ],
+          "http_status": 200,
+          "lineage": "clarification-resume",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-7",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": "clarification-resume:property_resolution:001",
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab"
+          ],
+          "profile_ids": [
+            "column.add.stage2.v0.1"
+          ],
+          "profile_versions": [
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:1dcc6b9b1a1ffe1251ab7bb71f0a2f908b6de15705ccce35ed7a4f788321e132",
+          "raw_response_sha256": "sha256:edda06bcd82921271ddab1203ed9cd5ca4a176a0e24e18e1ae8da149ff44619f",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f\", \"example_id\": \"column.add.stage2.v0.1.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab\", \"profile_id\": \"column.add.stage2.v0.1\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:446dddf8e0f9b9fb57d99bc0722925d9c51538b66d2d0827fd307a04d869e91b",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-7",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:edda06bcd82921271ddab1203ed9cd5ca4a176a0e24e18e1ae8da149ff44619f",
+          "stage": "stage2",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        }
+      ],
+      "case_id": "clarification-resume",
+      "contract_pass": false,
+      "feedback_sha256": "sha256:a5f6dd6b5c2600862c62b8337fc6555368727de1fc78c29179ad58a00eeb79a6",
+      "final": {
+        "clarification_answer_applied": true,
+        "complete_repair_success": true,
+        "status": "succeeded",
+        "successful_artifact_publishable": true
+      },
+      "live_evidence_pass": true,
+      "private_evidence_detected": false,
+      "proof_acceptance_eligible": false,
+      "proof_validation_status": "pending_plan_12_14",
+      "request_sha256": "sha256:9a008ca96cbb317d63fa53aa7bc10b4845924859ef0a8f309f228d866e93169a",
+      "status": "failed",
+      "synthetic_fallback_used": false,
+      "transport_calls": 3,
+      "transport_calls_by_stage": {
+        "property_resolution": 1,
+        "stage1": 1,
+        "stage2": 1
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "window-semantic-canary:stage1:001",
+          "case_id": "window-semantic-canary",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [
+            {
+              "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "few_shot_id": "beam.add.complete"
+            }
+          ],
+          "few_shot_hashes": [
+            "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          ],
+          "few_shot_ids": [
+            "beam.add.complete"
+          ],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-8",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": null,
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "profile_ids": [
+            "beam.add"
+          ],
+          "profile_versions": [
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+          "raw_response_sha256": "sha256:371bc58ee2eadf0919228cec7ac2d05d535611079667e4f6612127cf8b4f08f9",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-8",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:371bc58ee2eadf0919228cec7ac2d05d535611079667e4f6612127cf8b4f08f9",
+          "stage": "stage1",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "window-semantic-canary:property_resolution:001",
+          "case_id": "window-semantic-canary",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [],
+          "few_shot_hashes": [],
+          "few_shot_ids": [],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-9",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": "window-semantic-canary:stage1:001",
+          "private_evidence_detected": false,
+          "profile_hashes": [],
+          "profile_ids": [],
+          "profile_versions": [],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:fbaec46a9ae749974661f472440d79382ef91e751a776c0f9a0d967c1808ef38",
+          "raw_response_sha256": "sha256:bbd7acc4fa55a8d4a0b0ad4a3dee8ead75b2884913869f1288e22fab6b128fee",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "PROPERTY_RESOLUTION_INPUT={}"
+          },
+          "request_sha256": "sha256:77bc06bca01ac46d7f0508e7b65b3241e6d42e4abe97615cb1f6b026ce012ddb",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-9",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:bbd7acc4fa55a8d4a0b0ad4a3dee8ead75b2884913869f1288e22fab6b128fee",
+          "stage": "property_resolution",
+          "stage_attempt": 1,
+          "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+          "template_id": "ifc-property-resolution.v0.2",
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        },
+        {
+          "attempt_id": "window-semantic-canary:stage2:001",
+          "case_id": "window-semantic-canary",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [],
+          "few_shot_hashes": [],
+          "few_shot_ids": [],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-10",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": "window-semantic-canary:property_resolution:001",
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b"
+          ],
+          "profile_ids": [
+            "occurrence.set-properties"
+          ],
+          "profile_versions": [
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:9ff85e296803f7bde04ee4b7c4cdbf45e1f4fd14f7339056a5815d4a440659a5",
+          "raw_response_sha256": "sha256:67d4d542a5cdd353e089f0c16abd0fbd04a3382016de87560c23ae66e862a9c4",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [], \"selected_profiles\": [{\"profile_hash\": \"sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b\", \"profile_id\": \"occurrence.set-properties\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:02640f06db306b3b0438a010e8ba86c781d77ad7739b491361416cd88e2fbf14",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-10",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:67d4d542a5cdd353e089f0c16abd0fbd04a3382016de87560c23ae66e862a9c4",
+          "stage": "stage2",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        }
+      ],
+      "case_id": "window-semantic-canary",
+      "contract_pass": false,
+      "feedback_sha256": null,
+      "final": {
+        "clarification_answer_applied": false,
+        "complete_repair_success": true,
+        "status": "succeeded",
+        "successful_artifact_publishable": true
+      },
+      "live_evidence_pass": true,
+      "private_evidence_detected": false,
+      "proof_acceptance_eligible": false,
+      "proof_validation_status": "pending_plan_12_14",
+      "request_sha256": "sha256:17eed55838744c8f4544a8d23ed626e33f2642c817bf619fc217c7be28a9a68c",
+      "status": "failed",
+      "synthetic_fallback_used": false,
+      "transport_calls": 3,
+      "transport_calls_by_stage": {
+        "property_resolution": 1,
+        "stage1": 1,
+        "stage2": 1
+      }
+    },
+    {
+      "attempts": [
+        {
+          "attempt_id": "program-guard:stage1:001",
+          "case_id": "program-guard",
+          "correction_reason": null,
+          "error": null,
+          "evidence_class": "live",
+          "fallback_flags": {
+            "cached": false,
+            "hand_authored": false,
+            "prerecorded": false,
+            "synthetic": false
+          },
+          "few_shot_bindings": [
+            {
+              "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+              "few_shot_id": "beam.add.complete"
+            }
+          ],
+          "few_shot_hashes": [
+            "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+          ],
+          "few_shot_ids": [
+            "beam.add.complete"
+          ],
+          "http_status": 200,
+          "lineage": "initial",
+          "metadata": {
+            "api_key": "[REDACTED]",
+            "evidence_class": "live",
+            "model": "mock-reasoner",
+            "provider": "mock-deepseek",
+            "response_id": "response-11",
+            "transport_attempts": 1,
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "model": "mock-reasoner",
+          "ordinal": 1,
+          "parent_attempt_id": null,
+          "private_evidence_detected": false,
+          "profile_hashes": [
+            "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          ],
+          "profile_ids": [
+            "beam.add"
+          ],
+          "profile_versions": [
+            "0.1"
+          ],
+          "provider": "mock-deepseek",
+          "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+          "raw_response_sha256": "sha256:db2c357610029c8ab85e8e8a9363d2b649422c3551068deeba6e0c2507aa0ae0",
+          "request": {
+            "authorization": "[REDACTED]",
+            "model": "mock-reasoner",
+            "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+          },
+          "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+          "response": {
+            "content": "{\"ok\": true}",
+            "id": "response-11",
+            "model": "mock-reasoner",
+            "usage": {
+              "completion_tokens": 37,
+              "prompt_tokens": 101,
+              "total_tokens": 138
+            }
+          },
+          "response_sha256": "sha256:db2c357610029c8ab85e8e8a9363d2b649422c3551068deeba6e0c2507aa0ae0",
+          "stage": "stage1",
+          "stage_attempt": 1,
+          "template_hash": null,
+          "template_id": null,
+          "usage": {
+            "completion_tokens": 37,
+            "prompt_tokens": 101,
+            "total_tokens": 138
+          }
+        }
+      ],
+      "case_id": "program-guard",
+      "contract_pass": false,
+      "feedback_sha256": null,
+      "final": {
+        "complete_repair_success": false,
+        "reason_code": "[Errno 2] No such file or directory: 'E:\\\\code for project\\\\bimnet\\\\dataset\\\\processed\\\\proof\\\\ifc-repair-success-cases\\\\structu",
+        "status": "provider_failed",
+        "successful_artifact_publishable": false
+      },
+      "live_evidence_pass": true,
+      "private_evidence_detected": false,
+      "proof_acceptance_eligible": false,
+      "proof_validation_status": "pending_plan_12_14",
+      "request_sha256": "sha256:d036f61d4ff642805b9335d2d17e66aca7d15fb71d0f37acbdc02b18ffead7b3",
+      "status": "failed",
+      "synthetic_fallback_used": false,
+      "transport_calls": 1,
+      "transport_calls_by_stage": {
+        "property_resolution": 0,
+        "stage1": 1,
+        "stage2": 0
+      }
+    }
+  ],
+  "evidence_mode": "live",
+  "execution_mode": "test_injected",
+  "preflight": {
+    "checks": [
+      {
+        "artifacts": [
+          {
+            "path": "logs/focused.stdout.txt",
+            "sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+            "size_bytes": 17
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/ifc_repair/test_phase12_live_uat.py",
+          "tests/ifc_repair/test_phase12_live_uat_v2.py",
+          "-q",
+          "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\run\\preflight\\pytest-focused",
+          "-o",
+          "cache_dir=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\run\\preflight\\pytest-cache-focused"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.504797Z",
+        "name": "focused",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:f21c6431212f85bcf1ea00fb8a112c20ecceda0276cb9089813a97181e0d3fee",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.499807Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/retrieval-evaluation.stdout.txt",
+            "sha256": "sha256:b362e98ed9496552b773f6c00a77a0db3f8110130b1af20160d08ab6ca97b48f",
+            "size_bytes": 27
+          },
+          {
+            "path": "property-retrieval-evaluation/property-evaluation.json",
+            "sha256": "sha256:67c67e59c44f82b6271a93a98a0d1937ee6bcdf6fca64f24640bc3457b8a9bfa",
+            "size_bytes": 1042
+          },
+          {
+            "path": "property-retrieval-evaluation/property-retrieval-ledger.json",
+            "sha256": "sha256:f3341be956d044790e4f9df7848427e73a0779226578aaefd80fec10d22d8c64",
+            "size_bytes": 150
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "scripts/ifc_repair/run_phase12_offline.py",
+          "--output-root",
+          "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\run\\preflight\\property-retrieval-evaluation",
+          "--property-retrieval-evaluation-only"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.547949Z",
+        "name": "retrieval-evaluation",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:02d36a8ab6135113d9224e4beb85baded9669d4a904d88b301e372fa50941b54",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.513467Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:b362e98ed9496552b773f6c00a77a0db3f8110130b1af20160d08ab6ca97b48f",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/offline.stdout.txt",
+            "sha256": "sha256:14cdc1f558ebde5177cbbb7cfb3c5faa4457960711705d283c12f993c5db0f24",
+            "size_bytes": 14
+          },
+          {
+            "path": "offline-matrix/run-summary.json",
+            "sha256": "sha256:81b777eb6d94f4ff2a66e96a426c2144354f20d89f4543a5a174aeee27b7049e",
+            "size_bytes": 156
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "scripts/ifc_repair/run_phase12_offline.py",
+          "--output-root",
+          "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\run\\preflight\\offline-matrix"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.583019Z",
+        "name": "offline",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:fb6d0ee7de44420d5317b43158b5fd95bd96213b43986c00919191bb1201daa7",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.569518Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:14cdc1f558ebde5177cbbb7cfb3c5faa4457960711705d283c12f993c5db0f24",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/full-suite.stdout.txt",
+            "sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+            "size_bytes": 17
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/knowledge",
+          "tests/ifc_repair",
+          "-q",
+          "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\run\\preflight\\pytest-full-suite",
+          "-o",
+          "cache_dir=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\run\\preflight\\pytest-cache-full-suite"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.603303Z",
+        "name": "full-suite",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:d59518ba0b68484b7bc1deb2c4f24edc44a243f9b7b83a8728471acb615db542",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.598018Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/compile.stdout.txt",
+            "sha256": "sha256:1770803a4c4fd3d8694a0a7f1731fd13bbfbf3c84f46a99f18649ee4f0b7ccd7",
+            "size_bytes": 14
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "-m",
+          "compileall",
+          "-q",
+          "src",
+          "tests",
+          "scripts"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.616784Z",
+        "name": "compile",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:fcfb5a74caa515507321b7c83728c813f083c207e6ad016660c2b6a4ae8f81fe",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.611785Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:1770803a4c4fd3d8694a0a7f1731fd13bbfbf3c84f46a99f18649ee4f0b7ccd7",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/diff.stdout.txt",
+            "sha256": "sha256:925c6897be1796dee1fe68580f2e240ee77319f6fa5f5c6d6fa0495710f75969",
+            "size_bytes": 11
+          }
+        ],
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.630962Z",
+        "name": "diff",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:a75c49344cd9aa261c587d0d5c19c51148d3b4ac2242f43efe5088a30693422c",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.623947Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:925c6897be1796dee1fe68580f2e240ee77319f6fa5f5c6d6fa0495710f75969",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/proof.stdout.txt",
+            "sha256": "sha256:2cae33d77624ff87089fae852832daf4a86b405e7e0fcd310048ea1d8feec86b",
+            "size_bytes": 190
+          },
+          {
+            "path": "E:/code for project/bimnet/dataset/processed/ifc-presentation-validation/phase12-preflight-20260904/preflight-20260904T032156596554Z/preflight/pytest-focused/test_published_case_without_st0/proof/manifest.json",
+            "sha256": "sha256:27941142ac8e9e32e7cbf96d2bff8f0f5ea20922d5c0993a1ed878c9fadf5cfe",
+            "size_bytes": 31
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "scripts/ifc_repair/validate_success_cases.py",
+          "--collection-root",
+          "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_published_case_without_st0\\proof",
+          "--json"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:50.649987Z",
+        "name": "proof",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:30fee37e04d4dccee0b6349840db9f8720a4f516967cb0315b502f0fd4bc28d7",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:50.638420Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:2cae33d77624ff87089fae852832daf4a86b405e7e0fcd310048ea1d8feec86b",
+        "substitution_count": 0,
+        "timeout_count": 0
+      }
+    ],
+    "evidence_sha256": "sha256:8819dbd9472d343a7e780bc0933647fead81d8d6c03867b743d0008678d683c1",
+    "execution_identity": {
+      "dependencies": {
+        "ifcopenshell": "0.8.5",
+        "jsonschema": "4.26.0",
+        "pytest": "8.4.2",
+        "qdrant-client": "1.18.0",
+        "sentence-transformers": "5.6.1",
+        "torch": "2.9.0"
+      },
+      "platform": {
+        "machine": "AMD64",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "release": "11",
+        "system": "Windows"
+      },
+      "python": {
+        "executable": "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+        "implementation": "CPython",
+        "version": "3.12.4 | packaged by Anaconda, Inc. | (main, Jun 18 2024, 15:03:56) [MSC v.1929 64 bit (AMD64)]"
+      },
+      "repository": {
+        "branch": "codex/workflow-dataset-links",
+        "commit": "aae8469e36abd62e42d07592c28249598ddee002",
+        "tracked_change_count": 4,
+        "untracked_count": 44,
+        "worktree_clean": false,
+        "worktree_porcelain_v1": [
+          "M docs/reports/README.md",
+          " M docs/validation/ifc2x3-changeset/README.md",
+          " M src/text2ifc_compiler/compiler.py",
+          " M src/text2ifc_ifc_repair/operations/structural_member.py",
+          "?? dataset/processed/ifc-presentation-validation/",
+          "?? dataset/processed/ifc-repair-runs/phase12-1-semantic-evaluation/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/case1-diagnostic-20260830T121318772787Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/preflight-20260820T132237191405Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260817T162809950610Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260818T133409954828Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260820T103415722873Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260820T135432218011Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/live-uat-result.json",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260829T014916747905Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260829T025013804951Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T112115666821Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T115805215556Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T174344933512Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-stage2-beam-column-20260829T133518416355Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T032507331224Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T034907322238Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T040334441512Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T151326967970Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T155141193325Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T034310928815Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T052919004905Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T055419268779Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T053023885207Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T141632454789Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T142055280724Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T142600567859Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T145705953728Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T145900991242Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T150201099674Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T150620324506Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T150713117380Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-e2-genuine-diagnostic-20260901T054811235740Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-h1-genuine-diagnostic-20260901T052645933962Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-m2-genuine-diagnostic-20260902T141119863111Z/",
+          "?? docs/plans/2026-09-03-llm-generation-repair-next-step-discussion.md",
+          "?? docs/plans/2026-09-04-dataset-reorganization-boundary.md",
+          "?? docs/reports/llm-generation-repair-demo-next-direction-2026-09-03.md",
+          "?? docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md",
+          "?? scripts/presentation/",
+          "?? src/text2ifc_presentation/",
+          "?? tests/compiler/test_generation_appearance_profiles.py",
+          "?? tests/ifc_repair/test_structural_visual_fidelity.py",
+          "?? tests/presentation/"
+        ],
+        "worktree_porcelain_v1_sha256": "sha256:2157401b409430ee976ccec9963449af3d51f10e33334f1943571bbc4690b71d"
+      }
+    },
+    "failure_count": 0,
+    "finished_at_utc": "2026-09-04T03:22:50.664461Z",
+    "network_calls": 0,
+    "network_transport_attempted": false,
+    "schema_version": "text2ifc/phase12-live-preflight/0.4",
+    "skip_count": 0,
+    "started_at_utc": "2026-09-04T03:22:49.791360Z",
+    "status": "passed",
+    "substitution_count": 0,
+    "timeout_count": 0
+  },
+  "proof_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "provider_evidence_mode": "test_injected",
+  "provider_models": [
+    {
+      "model": "mock-reasoner",
+      "provider": "mock-deepseek"
+    }
+  ],
+  "reason_code": "LIVE_CASE_CONTRACT_FAILED",
+  "runner_contract_eligible": false,
+  "schema_version": "text2ifc/phase12-live-uat/0.1",
+  "status": "failed",
+  "synthetic_fallback_used": false,
+  "token_guard": {
+    "max_completion_tokens": 65536,
+    "max_input_tokens": 65536
+  },
+  "transport_calls": 11,
+  "transport_calls_by_stage": {
+    "property_resolution": 4,
+    "stage1": 4,
+    "stage2": 3
+  }
+}

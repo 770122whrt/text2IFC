@@ -1,6 +1,8 @@
 param(
     [ValidateSet('evidence', 'pytest')][string]$Category,
     [ValidateSet('default', 'elevated')][string]$Context,
+    [string]$RetryFrom,
+    [ValidatePattern('^deletion-[a-z-]+\.json$')][string]$ResultName,
     [switch]$Apply
 )
 $ErrorActionPreference = 'Stop'
@@ -40,6 +42,16 @@ function Get-VerifiedFiles([string]$Path) {
 $targets = [Collections.Generic.List[object]]::new()
 if ($Category -eq 'evidence') {
     $archive = Get-Content -LiteralPath (Join-Path $experimentRoot 'development-retirement-20260912.json') -Encoding UTF8 | ConvertFrom-Json
+    $supplementPath = Join-Path $experimentRoot 'development-retirement-permission-supplement-20260912.json'
+    if (Test-Path -LiteralPath $supplementPath) {
+        if ($Apply -and -not $receipt.supplement_backup_verified) { throw 'Permission supplement not backed up.' }
+        $supplement = Get-Content -LiteralPath $supplementPath -Encoding UTF8 | ConvertFrom-Json
+        foreach ($extra in $supplement.bundles) {
+            $bundle = @($archive.bundles | Where-Object old_root -EQ $extra.old_root)
+            if ($bundle.Count -ne 1) { throw 'Supplement root must match exactly once.' }
+            $bundle[0].entries = @($bundle[0].entries) + @($extra.entries)
+        }
+    }
     foreach ($bundle in $archive.bundles) {
         $targets.Add(@{path=(Join-Path $repoRoot $bundle.old_root); kind='archived_source'; data=$bundle})
     }
@@ -52,8 +64,15 @@ if ($Category -eq 'evidence') {
     }
 }
 
+if ($RetryFrom) {
+    $prior = Get-Content -LiteralPath (Join-Path $PSScriptRoot $RetryFrom) -Encoding UTF8 | ConvertFrom-Json
+    if ($prior.status -ne 'completed') { throw 'Previous execution is still running.' }
+    $retryPaths = @($prior.results | Where-Object status -NE 'deleted' | ForEach-Object { [IO.Path]::GetFullPath($_.path) })
+    $targets = @($targets | Where-Object { [IO.Path]::GetFullPath($_.path) -in $retryPaths })
+}
+
 $results = [Collections.Generic.List[object]]::new()
-$resultPath = Join-Path $PSScriptRoot "deletion-$Category-$Context.json"
+$resultPath = Join-Path $PSScriptRoot $(if ($ResultName) { $ResultName } else { "deletion-$Category-$Context.json" })
 if (Test-Path -LiteralPath $resultPath) { throw 'Keep prior execution records; do not overwrite.' }
 $index = 0
 foreach ($target in $targets) {

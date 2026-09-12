@@ -12,11 +12,13 @@
 |---|---|---|
 | 17 个旧展示／开发目录 | 3,555 份证据，173 份复用已有 Proof，其余原字节进入 experiments；36 个 Python 缓存不归档 | [旧路径与保留路径](../../../dataset/processed/experiments/development-retirement-20260912.json) |
 | 328 个 `.tmp` 单独文件 | 116 份复用冻结结果，212 份一次性脚本或结果归档；两个巨大重复空白诊断日志无损 ZIP 保存 | [逐文件索引](../../../dataset/processed/experiments/scratch-retirement-20260912.json) |
-| 313 个已结束的 pytest 目录 | 对应保留的 JUnit 测试族；检查路径、文件数、大小、锁及链接后删除可重建夹具 | [目录与来源](scratch-retirement-plan.json) |
+| 315 个已结束的 pytest 目录 | 原清单 313 个，加本轮失败／通过验证的 2 个；对应保留的 JUnit，检查路径、文件数、大小、锁及链接后删除可重建夹具 | [目录与来源](scratch-retirement-plan.json) |
 
 两个日志从 383,419,299 字节压缩为 19,914,355 字节，解压成员与原文 SHA-256 相同。归档不把旧失败或待审结果升级为已验收，不改原始响应和历史判断；若原目录与现有 Proof 中同名文件的字节不同，两份都保留。
 
 每次执行结果另存 `deletion-*.json`，完成后由本报告补充实际数量。清理脚本 [retire.ps1](retire.ps1) 只处理清单范围。权限错误、目录内容变化或缺失保留证据均停止该目标并记录，不重设 ACL、不操作活动工作树。
+
+**权限复核补存：** 三个目录的删除前检查发现不同 Windows 上下文的文件可见性不一致；首次归档遍历遗漏了权限隐藏的子目录。删除门禁保留了这三个目录。补存另外 883 文件、19,390,141 字节（包括原有离线矩阵、修复破坏材料及 5 个历史 pytest-cache 文件），原始复制索引不改，使用 [追加映射](../../../dataset/processed/experiments/development-retirement-permission-supplement-20260912.json)。补充材料全部逐字节验证，凭据扫描无发现；见 [补存验证](permission-supplement-verification.json)。不得仅凭原归档“绑定通过”推断原目录完整性。
 
 ## 测试处理及验证
 
@@ -25,6 +27,8 @@
 路径复验最初为 **18 通过、2 失败**。原因是旧 continuation 测试将 Brief 升为 2.1，却没有提供此版本要求的 `known_facts.semantic_requirements`。归档前后运行器字节相同；此次仅为明确没有材料／属性语义的合成夹具补空列表，未改生产门禁或原断言。修正后 **20 通过**。保留 [初次结果](path-regression.xml)、[失败归因](fixture-diagnosis.json) 与 [修正结果](path-regression-fixed.xml)，不将路径复验描述为系统能力提升。
 
 [归档检查](archive-verification.json) 验证 3,883 个保留绑定（3,767 个不同文件／ZIP 成员），扫描 3,589 个文本／数据库对象，未发现凭据。只检查本次迁移证据，没有大范围重算既有 Proof。新归档在删除前还需验证 Git 索引中的字节及远端备份。
+
+原批次 [索引验证](index-verification.json) 核对 3,767 个保留文件、98 个 LFS 指针；[补存索引验证](permission-supplement-index-verification.json) 核对 883 文件、7 个 LFS 指针。初次 `diff --check` 报告失败 JUnit 原始回溯中的两处尾随空白；未修改失败输出，手写源码和文档的定向检查通过。
 
 ## 保留边界
 
