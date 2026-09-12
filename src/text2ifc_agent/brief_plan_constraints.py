@@ -9,7 +9,7 @@ import math
 from text2ifc_contract.validation import ValidationIssue
 
 VERSION = 'text2ifc/design-brief/2.4'
-VERSIONS = {VERSION, 'text2ifc/design-brief/2.5'}
+VERSIONS = {VERSION, 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}
 EPS = 1e-6  # Numerical equality in millimetres; not a mesh acceptance tolerance.
 
 

@@ -49,7 +49,7 @@ def apply_coordinated_appearance(model, document, context):
         type_record = records.get(_identity(type_object), {}) if type_object else {}
         explicit = record.get('appearance') or type_record.get('appearance')
         source = 'user' if record.get('appearance') else 'type' if explicit else 'theme'
-        overrides = record.get('part_appearance', {}) if document.get('schema_version') == 'bim-json/2.2' else {}
+        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3'} else {}
         if overrides:
             source = 'user-parts'
         material = util.get_material(product)
@@ -102,7 +102,7 @@ def verify_appearance(model, document):
         record = records.get(identity, {})
         type_object = util.get_type(product)
         explicit = record.get('appearance') or (records.get(_identity(type_object), {}).get('appearance') if type_object else None)
-        overrides = record.get('part_appearance', {}) if document.get('schema_version') == 'bim-json/2.2' else {}
+        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3'} else {}
         roles = {}
         for aspect in getattr(product.Representation, 'HasShapeAspects', ()):
             role = {'Framing':'frame','Lining':'frame','Glazing':'glazing','Panel':'panel'}.get(aspect.Name)

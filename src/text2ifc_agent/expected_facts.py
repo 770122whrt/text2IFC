@@ -33,7 +33,7 @@ def build_expected_facts(
     design_brief: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Build dynamic expected facts without mutating the Design Brief."""
-    if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+    if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:
         from jsonschema import Draft202012Validator
         from .design_brief import load_design_brief_schema
         from .brief_plan_constraints import validate_plan_constraints
@@ -180,7 +180,7 @@ def build_expected_facts(
         or _singular_stair_record(known_facts, storeys)
         or _stair_records_from_nested(nested_storeys, storeys)
     )
-    products = _product_records(known_facts)
+    products = _product_records(known_facts, railing_enabled=design_brief.get('schema_version') == 'text2ifc/design-brief/2.6')
     roof = _roof_record(known_facts)
     if design_brief.get("status") == "ready" and not storeys:
         raise ExpectedFactsError(
@@ -263,7 +263,7 @@ def build_expected_facts(
         payload["fixture_reuse"] = deepcopy(dict(fixture_reuse))
     from .semantic_requirements import project_semantic_requirements, generation_schema_version
     semantics = project_semantic_requirements(design_brief)
-    if generation_schema_version(design_brief) in {'bim-json/2.1', 'bim-json/2.2'}:
+    if generation_schema_version(design_brief) in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
         payload['generation_schema_version'] = generation_schema_version(design_brief)
         payload['semantic_authority_declared'] = semantics['authority_declared']
     if semantics['expectations'] or semantics['issues']:
@@ -1182,7 +1182,7 @@ def _slab_records(known_facts: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     return records
 
 
-def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
+def _product_records(known_facts: Mapping[str, Any], *, railing_enabled=False) -> list[dict[str, Any]]:
     products: list[dict[str, Any]] = []
     for collection, spec in _PRODUCT_FAMILY_SPECS.items():
         expected_class = str(spec["ifc_class"])
@@ -1212,6 +1212,12 @@ def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
                     geometry_kind=str(spec["geometry_kind"]),
                 ),
             }
+            if railing_enabled and collection == 'railings':
+                templates = [r['template'] for r in _records(known_facts.get('semantic_requirements'))
+                             if r.get('entity_id') == item.get('id') and isinstance(r.get('template'), Mapping)]
+                if len(templates) == 1 and templates[0].get('template_id') == 'metal-picket':
+                    record['geometry'] = _linear_product_geometry(item, geometry_kind='basic_railing_segment')
+                    record['geometry']['template'] = deepcopy(templates[0])
             alignment_target = item.get("alignment_target")
             if isinstance(alignment_target, str) and alignment_target:
                 record["alignment_target"] = alignment_target

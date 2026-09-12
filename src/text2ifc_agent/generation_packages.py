@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
-from .product_geometry import world_box_bbox
+from .product_geometry import world_box_bbox, basic_railing_bbox
 
 
 MANIFEST_VERSION = "text2ifc/generation-package-manifest/1.0"
@@ -114,7 +114,7 @@ def build_generation_package_manifest(
                 )
             else:
                 local_component_classes[storey_id][component_id] = ifc_class
-        if not _valid_linear_product_geometry(record.get("geometry")) and world_box_bbox(record.get("geometry")) is None:
+        if not _valid_linear_product_geometry(record.get("geometry")) and world_box_bbox(record.get("geometry")) is None and basic_railing_bbox(record.get("geometry")) is None:
             issues.append(
                 _issue(
                     "PACKAGE_PRODUCT_GEOMETRY_INCOMPLETE",

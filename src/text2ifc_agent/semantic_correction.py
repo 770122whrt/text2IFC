@@ -25,7 +25,7 @@ def build_semantic_correction(*, candidate, design_brief, expected_facts, issues
                 'candidate_hash': index['candidate_hash'],
                 'expected_facts_hash': hash_json_value(expected_facts),
                 'source_issue_ids': [], 'edits': {}, 'dependencies': [], 'issues': []}
-    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2'}:
+    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
         return contract
     request = project_semantic_requirements(design_brief)
     request['expectations'] = [*expected_facts.get('semantic_expectations', []), *request['expectations']]

@@ -12,14 +12,15 @@ from text2ifc_agent.scoped_loop import run_scoped_changeset_round
 from text2ifc_agent.candidate_index import build_candidate_index
 
 
+@pytest.mark.parametrize('brief_version',['2.5','2.6'])
 @pytest.mark.parametrize('keep_requested', [False, True])
 @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
-def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack):
+def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
     candidate, brief, expected, filling = fixture()
-    candidate['schema_version'] = 'bim-json/2.2'; filling.pop('appearance')
+    candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
     requested = {'frame': {'color': [.1, .2, .3]}}
     filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
-    brief['schema_version'] = 'text2ifc/design-brief/2.5'
+    brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
     brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
     if keep_requested:
         brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
@@ -60,7 +61,8 @@ def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, atta
         assert result['preservation']['unrelated_component_preservation_rate'] == 1
 
 
-def test_new_brief_clarification_resumes_after_reopen_without_replaying_call(tmp_path):
+@pytest.mark.parametrize('brief_version',['2.5','2.6'])
+def test_new_brief_clarification_resumes_after_reopen_without_replaying_call(tmp_path,brief_version):
     from types import SimpleNamespace
     from tests.agent.test_interactive_cli_flow import _brief
     from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker, run_design_brief_clarification_loop
@@ -70,7 +72,7 @@ def test_new_brief_clarification_resumes_after_reopen_without_replaying_call(tmp
     first = _brief(original_request=request, status='needs_clarification')
     ready = _brief(original_request=request, status='ready', source_turns=['turn-user-001', 'turn-user-003'])
     for b in (first, ready):
-        b['schema_version'] = 'text2ifc/design-brief/2.5'
+        b['schema_version'] = 'text2ifc/design-brief/'+brief_version
         b['known_facts'].update(plan_constraints=[], semantic_review=review(appearance=True, template=True))
         b['known_facts']['semantic_requirements'] = [{'entity_id':'door-request',
             'template':{'template_id':'door-left','template_version':'text2ifc/basic-filling/1.0'},
@@ -93,7 +95,7 @@ def test_new_brief_clarification_resumes_after_reopen_without_replaying_call(tmp
     session=store.create_session(original_input=request)
     def invoker():
         return make_openai_design_brief_invoker(config=config, run_dir=session.run_dir,
-            design_brief_schema_version='text2ifc/design-brief/2.5',
+            design_brief_schema_version='text2ifc/design-brief/'+brief_version,
             client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
     result=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoker(),user_answers=[])
     assert result.status=='needs_clarification'

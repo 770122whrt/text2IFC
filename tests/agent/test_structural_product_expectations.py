@@ -101,3 +101,16 @@ def test_reopened_ifc_must_match_structural_family_storey_and_world_bounds(tmp_p
     assert result.success,(result.input_issues,result.ifc_issues)
     checked=check_generated_ifc(result.output_path,geometry)
     assert checked.success == (mutation=="none"),checked
+
+
+@pytest.mark.parametrize('storey',['upper','ground'])
+def test_spatial_aggregation_is_a_legal_storey_path_without_accepting_wrong_floor(tmp_path,storey):
+    from text2ifc_compiler import compile_document
+    from text2ifc_quality.generated_ifc import check_generated_ifc
+    doc=_model(family='IfcSpace',storey=storey)
+    doc['entities'][-1]['attributes'].update(InteriorOrExteriorSpace='INTERNAL',CompositionType='ELEMENT')
+    compiled=compile_document(doc,tmp_path/'spatial.ifc');assert compiled.success,compiled
+    geometry={'case_id':'spatial','spaces':{'reading-post':{'ifc_class':'IfcSpace','storey_id':'upper',
+        'bbox':{'x':[-1.6,-1.3],'y':[5.2,5.5],'z':[4.2,7.6]}}}}
+    checked=check_generated_ifc(compiled.output_path,geometry)
+    assert checked.success==(storey=='upper'),checked

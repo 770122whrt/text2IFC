@@ -15,7 +15,7 @@ CONTRACT = 'text2ifc/filling-relationship-recovery/1.0'
 
 def recover_filling_relationships(candidate, brief, *, case_id):
     blocked = {'eligible': False, 'candidate': None, 'contract': CONTRACT}
-    if not isinstance(candidate, dict) or candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2'}:
+    if not isinstance(candidate, dict) or candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
         return blocked
     issues = validate_v2_document(candidate)
     if not issues or any(i.code != 'BASIC_FILLING_CONSTRAINT_CONFLICT' for i in issues):

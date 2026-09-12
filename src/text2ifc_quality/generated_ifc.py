@@ -386,7 +386,18 @@ def _check_component_bboxes(
                 entity_ids=[str(component_id)], expected=expected_class, actual=product.is_a()))
         expected_storey = expected_component.get("storey_id")
         if isinstance(expected_storey, str):
-            container = ifcopenshell.util.element.get_container(product)
+            if product.is_a('IfcSpatialStructureElement'):
+                # Spaces are aggregated under storeys, not contained like beams.
+                container = ifcopenshell.util.element.get_aggregate(product)
+                seen = {product.id()}
+                while container is not None and not container.is_a('IfcBuildingStorey'):
+                    if container.id() in seen:
+                        container = None
+                        break
+                    seen.add(container.id())
+                    container = ifcopenshell.util.element.get_aggregate(container)
+            else:
+                container = ifcopenshell.util.element.get_container(product, ifc_class='IfcBuildingStorey')
             actual_storey = (ifcopenshell.util.element.get_psets(container).get(IDENTITY_PSET, {}).get(IDENTITY_PROPERTY)
                             if container is not None and container.is_a("IfcBuildingStorey") else None)
             metrics[str(component_id)]["storey_id"] = actual_storey
@@ -395,6 +406,11 @@ def _check_component_bboxes(
                     "The reopened IFC containment differs from the explicitly requested storey.",
                     entity_ids=[str(component_id)], expected=expected_storey, actual=actual_storey))
         expected_bbox = expected_component.get("bbox")
+        if expected_component.get('geometry_kind') == 'basic_railing_segment' and not _railing_matches_request(
+            product, str(component_id), expected_component.get('railing_geometry'), tolerance):
+            issues.append(_issue('RAILING_BASELINE_MISMATCH', f'/{path_prefix}/{component_id}/railing_geometry',
+                'Actual railing baseline, slope or solids differ from the frozen request.',
+                entity_ids=[str(component_id)], expected=expected_component.get('railing_geometry'), actual=None))
         if isinstance(expected_bbox, Mapping) and not _bbox_matches(
             actual_bbox, expected_bbox, tolerance
         ):
@@ -410,6 +426,32 @@ def _check_component_bboxes(
                 )
             )
     return metrics
+
+
+def _railing_matches_request(product, identity, geometry, tolerance):
+    """Same outer bounds do not establish correct slope direction or rod gaps."""
+    import math
+    import numpy as np
+    import ifcopenshell.util.placement
+    import ifcopenshell.util.unit
+    from text2ifc_compiler.basic_railing import verify_basic_railing
+    try:
+        start, end = geometry['start_mm'], geometry['end_mm']
+        dx, dy = end[0]-start[0], end[1]-start[1]
+        length = math.hypot(dx, dy)
+        rep = {**geometry['template'], 'kind':'basic_railing', 'length':length,
+               'height':geometry['height_mm'], 'depth':geometry['thickness_mm'], 'rise':end[2]-start[2]}
+        matrix = ifcopenshell.util.placement.get_local_placement(product.ObjectPlacement)
+        matrix[:3,3] *= ifcopenshell.util.unit.calculate_unit_scale(product.file)
+        if not np.allclose(matrix[:3,3], np.asarray(start)/1000, rtol=0, atol=tolerance):
+            return False
+        if not np.allclose(matrix[:3,0], [dx/length,dy/length,0], rtol=0, atol=1e-7) or not np.allclose(
+            matrix[:3,2], [0,0,1], rtol=0, atol=1e-7):
+            return False
+        return not verify_basic_railing(product.file, {'entities':[{'id':identity,'ifc_class':'IfcRailing',
+            'attributes':{'Representation':rep}}]}, verify_placement=False)
+    except (AttributeError, KeyError, TypeError, ValueError, ZeroDivisionError):
+        return False
 
 
 def _combined_bbox(boxes: list[Mapping[str, list[float]]]) -> dict[str, list[float]]:

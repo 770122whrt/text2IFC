@@ -46,7 +46,7 @@ def role_index(brief):
         identities.pop(identity)
     return identities,issues
 
-def role_issue(row,identities):
+def role_issue(row,identities,*,railing_enabled=False):
     identity=row['entity_id'];definition=identities.get(identity,{})
     cls=definition.get('ifc_class');kind=row['kind'];value=row['value'];code=None
     if kind=='type':
@@ -59,6 +59,7 @@ def role_issue(row,identities):
         template=value.get('template_id') if isinstance(value,Mapping) else None
         family={'door-left':'IfcDoor','door-right':'IfcDoor','window-single':'IfcWindow',
                 'window-double-vertical':'IfcWindow'}.get(template)
+        if railing_enabled and template=='metal-picket':family='IfcRailing'
         if cls!=family or row.get('scope')=='inherited':code='SEMANTIC_TEMPLATE_TARGET_ROLE'
     elif kind=='material' and cls and isinstance(value,Mapping):
         material_kind=value.get('kind');scope=row.get('scope','effective')
@@ -77,11 +78,11 @@ def role_issue(row,identities):
     return None
 
 def filter_roles(brief,expectations):
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:return expectations,[]
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:return expectations,[]
     identities,issues=role_index(brief);valid=[]
     bindings={}
     for row in expectations:
-        issue=role_issue(row,identities)
+        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')=='text2ifc/design-brief/2.6')
         if issue:issues.append(issue)
         else:
             valid.append(row)
@@ -104,7 +105,7 @@ def filter_roles(brief,expectations):
 
 def removable_semantic_paths(brief):
     """Explicit products/types may lose semantic leaves only, never identity data."""
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:return []
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:return []
     from .semantic_requirements import SEMANTIC_FIELDS
     identities,issues=role_index(brief)
     if issues:return []

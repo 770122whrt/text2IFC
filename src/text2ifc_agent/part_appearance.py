@@ -27,7 +27,7 @@ def validate_part_requests(brief, expectations):
         families = template_families.get(identity, set())
         if cls is None and len(families) == 1:
             cls = next(iter(families))
-        if (brief.get('schema_version') != 'text2ifc/design-brief/2.5'
+        if (brief.get('schema_version') not in {'text2ifc/design-brief/2.5','text2ifc/design-brief/2.6'}
                 or cls not in {'IfcDoor', 'IfcWindow'} or row['scope'] == 'inherited'
                 or not valid_part_appearance(value, cls) or identity not in templates
                 or families != {cls}
@@ -46,7 +46,7 @@ def validate_part_requests(brief, expectations):
 
 
 def unauthorized_parts(candidate, expectations):
-    if candidate.get('schema_version') != 'bim-json/2.2':
+    if candidate.get('schema_version') not in {'bim-json/2.2','bim-json/2.3'}:
         return []
     allowed = {(r['entity_id'], part, key) for r in expectations if r['kind'] == 'part_appearance'
                and isinstance(r.get('value'), dict) for part, value in r['value'].items()

@@ -79,7 +79,7 @@ def run_staged_generation(
     if manifest.get("status") != "ready":
         return _blocked("draft_required", manifest.get("issues", []), [])
     workspace = copy.deepcopy(dict(skeleton))
-    if workspace.get('schema_version') in {'bim-json/2.1', 'bim-json/2.2'} and expected_facts.get('appearance'):
+    if workspace.get('schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'} and expected_facts.get('appearance'):
         workspace['appearance'] = copy.deepcopy(expected_facts['appearance'])
     revision = _revision(
         candidate=workspace,

@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'part_appearance', 'template'}
-SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}
 SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
@@ -71,6 +71,8 @@ def _project_appearance(selection, source_path):
 
 
 def generation_schema_version(brief: Mapping[str, Any]) -> str:
+    if brief.get('schema_version') == 'text2ifc/design-brief/2.6':
+        return 'bim-json/2.3'
     if brief.get('schema_version') == 'text2ifc/design-brief/2.5':
         return 'bim-json/2.2'
     known = brief.get('known_facts', {})
@@ -108,7 +110,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
-        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'} and not path.startswith('/known_facts/semantic_requirements/'):
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'} and not path.startswith('/known_facts/semantic_requirements/'):
             issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
                            'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
@@ -161,7 +163,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
     issues.extend(role_issues)
     from .part_appearance import validate_part_requests
     issues.extend(validate_part_requests(brief, expectations))
-    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5'}:
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:
         review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
         for kind in sorted(SEMANTIC_KINDS):
             entry = review.get(kind, {}) if isinstance(review, Mapping) else {}
@@ -211,7 +213,7 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
             # weaken a saved expectation during resume or final acceptance.
             projected['expectations'] = [*frozen['semantic_expectations'], *projected['expectations']]
         projected['issues'].extend(frozen.get('semantic_projection_issues', []))
-        if frozen.get('generation_schema_version') in {'bim-json/2.1', 'bim-json/2.2'}:
+        if frozen.get('generation_schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
             projected['minimum_schema_version'] = frozen['generation_schema_version']
         if 'appearance' in frozen:
             add_appearance(frozen['appearance'], 'expected-facts.json#/appearance')
@@ -311,7 +313,7 @@ def request_contract_issues(candidate, request):
 
 def unauthorized_candidate_semantics(candidate, expectations):
     """Defaults cannot manufacture facts or grant whole-product style overrides."""
-    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2'}:
+    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
         return []
     allowed_properties = {(e['entity_id'], e.get('pset'), e.get('property'))
                           for e in expectations if e['kind'] == 'property'}

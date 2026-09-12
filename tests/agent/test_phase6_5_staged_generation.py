@@ -174,7 +174,7 @@ def _changesets(skeleton, manifest, expected, package_values):
         ]
         results.append(
             {
-                "schema_version": "text2ifc/bim-json-changeset/1.0",
+                "schema_version": "text2ifc/bim-json-changeset/1.3" if skeleton["schema_version"] == "bim-json/2.3" else "text2ifc/bim-json-changeset/1.0",
                 "changeset_id": f"changeset-package-{sequence}",
                 "base_revision_id": revision_id,
                 "base_candidate_hash": index["candidate_hash"],

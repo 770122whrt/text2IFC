@@ -30,7 +30,7 @@ def _path_parent_exists(document: Any, pointer: str) -> bool:
 
 def validate_draft(document: Any) -> list[ValidationIssue]:
     schema = load_draft_schema()
-    if isinstance(document, dict) and document.get('draft_version') in {'bim-json-draft/1.1', 'bim-json-draft/1.2'}:
+    if isinstance(document, dict) and document.get('draft_version') in {'bim-json-draft/1.1', 'bim-json-draft/1.2', 'bim-json-draft/1.3'}:
         schema = _load_schema_path(Path(__file__).resolve().parents[2] / f"schemas/bim-json/draft/{document['draft_version'].split('/')[-1]}/schema.json")
     validator = Draft202012Validator(schema)
     issues = [
