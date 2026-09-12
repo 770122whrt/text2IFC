@@ -49,8 +49,9 @@ def check_floor_openings(*, model, expected, tolerance, issues):
             fail('GEOMETRY_EXPECTATION_INCOMPLETE', 'Opening requires frozen world bounds and host identity.')
             continue
         hosts = identities.get(record['host_slab_id'], [])
-        if len(hosts) != 1 or not hosts[0].is_a('IfcSlab'):
-            fail('FLOOR_OPENING_HOST_BINDING_INVALID', 'Expected host must identify exactly one IfcSlab.')
+        host_class = record.get('host_ifc_class', 'IfcSlab')
+        if host_class not in {'IfcSlab','IfcRoof'} or len(hosts) != 1 or not hosts[0].is_a(host_class):
+            fail('FLOOR_OPENING_HOST_BINDING_INVALID', 'Expected host must identify exactly one product of the frozen slab/roof class.')
             continue
         host = hosts[0]
         targets = identities.get(str(identity), [])

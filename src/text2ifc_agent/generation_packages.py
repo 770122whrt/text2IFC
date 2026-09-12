@@ -160,7 +160,17 @@ def build_generation_package_manifest(
                         cross_refs.add(endpoint)
     roof = expected_facts.get("roof")
     if isinstance(roof, Mapping):
-        cross_components.append(_component_id(roof, "roof-main"))
+        roof_id = _component_id(roof, "roof-main")
+        cross_components.append(roof_id)
+        from .cross_storey_identity import floor_opening_id
+        from .semantic_coverage import _plan_bounds
+        for index, opening in enumerate(_slab_openings(roof)):
+            if _plan_bounds(opening.get('bounds')) is None:
+                issues.append(_issue('PACKAGE_ROOF_OPENING_INCOMPLETE', f'/roof/openings/{index}',
+                    'Roof openings require explicit valid bounds before package generation.'))
+                continue
+            cross_components.append(floor_opening_id(opening, roof_id, index))
+            cross_relationships.append(f'rel-voids-{roof_id}' if index == 0 else f'rel-voids-{roof_id}-{index + 1}')
 
     if issues:
         return {

@@ -52,4 +52,7 @@ def cross_storey_entity_records(*, slabs, stairs, roof):
             add('stair_flights', child, parent_id=identity, **endpoints)
     if isinstance(roof, Mapping) and isinstance(roof.get('id'), str) and roof['id']:
         add('roof', roof['id'])
+        for index, opening in enumerate(slab_openings(roof)):
+            add('floor_openings', floor_opening_id(opening, roof['id'], index), host_id=roof['id'],
+                storey=roof.get('storey'), identity_source='explicit' if opening.get('id') else 'derived')
     return result

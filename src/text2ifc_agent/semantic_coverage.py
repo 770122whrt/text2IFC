@@ -129,40 +129,8 @@ def build_design_geometry_expectation(
             "datum": "slab_top",
             "source_fact_refs": [path],
         }
-        openings = _records(slab.get("openings"))
-        if isinstance(slab.get("opening"), Mapping):
-            openings.insert(0, dict(slab["opening"]))
-        for opening_index, opening in enumerate(openings):
-            opening_bounds = _plan_bounds(opening.get("bounds"))
-            singular = isinstance(slab.get("opening"), Mapping)
-            source_path = (f"{path}/opening" if singular and opening_index == 0
-                           else f"{path}/openings/{opening_index - int(singular)}")
-            if opening_bounds is None and schema_version == "text2ifc/design-geometry-expectation/1.1":
-                unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_bounds_missing"))
-            if opening_bounds is not None:
-                from .cross_storey_identity import floor_opening_id
-                opening_id = floor_opening_id(opening, slab_id, opening_index)
-                if opening_id in floor_openings and schema_version == "text2ifc/design-geometry-expectation/1.1":
-                    unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_identity_duplicate"))
-                    continue
-                floor_openings[opening_id] = {
-                    "bbox": _bbox(
-                        opening_bounds[0],
-                        opening_bounds[1],
-                        opening_bounds[2],
-                        opening_bounds[3],
-                        top - thickness,
-                        top,
-                    ),
-                    "host_slab_id": slab_id,
-                    "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
-                    "source_fact_refs": [f"{path}/openings/{opening_index}"],
-                }
-                if schema_version == "text2ifc/design-geometry-expectation/1.1":
-                    floor_openings[opening_id].update(
-                        identity_source="explicit" if _string(opening.get("id")) else "derived",
-                        source_fact_refs=[source_path],
-                    )
+        _add_opening_expectations(slab=slab, slab_id=slab_id, top=top, thickness=thickness,
+            path=path, schema_version=schema_version, floor_openings=floor_openings, unresolved=unresolved)
 
     roof_record = expected_facts.get("roof")
     if isinstance(roof_record, Mapping):
@@ -184,6 +152,17 @@ def build_design_geometry_expectation(
                 "datum": "roof_bottom",
                 "source_fact_refs": ["/known_facts/roof_slab"],
             }
+
+            _add_opening_expectations(slab=roof_record, slab_id=roof_id, top=bottom + thickness,
+                thickness=thickness, path='/known_facts/roof_slab', schema_version=schema_version,
+                floor_openings=floor_openings, unresolved=unresolved)
+            from .cross_storey_identity import slab_openings, floor_opening_id
+            for index, opening in enumerate(slab_openings(roof_record)):
+                key = floor_opening_id(opening, roof_id, index)
+                if key in floor_openings and floor_openings[key]['host_slab_id'] == roof_id:
+                    floor_openings[key]['host_ifc_class'] = roof_record.get('ifc_class', 'IfcSlab')
+        elif roof_record.get('opening') or roof_record.get('openings'):
+            unresolved.append(_unresolved_geometry(path='/known_facts/roof_slab', reason='roof_opening_host_geometry_missing'))
 
     for stair_index, stair in enumerate(_records(expected_facts.get("stairs"))):
         stair_id = _string(stair.get("id"))
@@ -1066,3 +1045,40 @@ def _number(value: Any) -> float | None:
     if isinstance(value, (int, float)):
         return float(value)
     return None
+
+
+def _add_opening_expectations(*, slab, slab_id, top, thickness, path, schema_version, floor_openings, unresolved):
+    openings = _records(slab.get("openings"))
+    if isinstance(slab.get("opening"), Mapping):
+        openings.insert(0, dict(slab["opening"]))
+    for opening_index, opening in enumerate(openings):
+        opening_bounds = _plan_bounds(opening.get("bounds"))
+        singular = isinstance(slab.get("opening"), Mapping)
+        source_path = (f"{path}/opening" if singular and opening_index == 0
+                       else f"{path}/openings/{opening_index - int(singular)}")
+        if opening_bounds is None and schema_version == "text2ifc/design-geometry-expectation/1.1":
+            unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_bounds_missing"))
+        if opening_bounds is not None:
+            from .cross_storey_identity import floor_opening_id
+            opening_id = floor_opening_id(opening, slab_id, opening_index)
+            if opening_id in floor_openings and schema_version == "text2ifc/design-geometry-expectation/1.1":
+                unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_identity_duplicate"))
+                continue
+            floor_openings[opening_id] = {
+                "bbox": _bbox(
+                    opening_bounds[0],
+                    opening_bounds[1],
+                    opening_bounds[2],
+                    opening_bounds[3],
+                    top - thickness,
+                    top,
+                ),
+                "host_slab_id": slab_id,
+                "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
+                "source_fact_refs": [f"{path}/openings/{opening_index}"],
+            }
+            if schema_version == "text2ifc/design-geometry-expectation/1.1":
+                floor_openings[opening_id].update(
+                    identity_source="explicit" if _string(opening.get("id")) else "derived",
+                    source_fact_refs=[source_path],
+                )
