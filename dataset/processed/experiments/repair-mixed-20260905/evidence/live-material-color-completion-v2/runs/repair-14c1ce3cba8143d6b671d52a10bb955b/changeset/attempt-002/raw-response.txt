@@ -1,0 +1,252 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.4",
+  "draft_id": "draft-0.5",
+  "base_model_fingerprint": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+  "source_request_hash": "sha256:7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:90ce82df0472e2ed807511754e965096271132b986bae2be2dcd09bd5949d50e",
+  "semantic_summary": {
+    "required": 32,
+    "conditional": 22,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "0jltRti3rFigAmdXYhXxqI",
+      "1B$rgWypT66viEf30I1iIv",
+      "1vTeahUkP60PdWqwCTjUuM",
+      "1vTeahUkP60PdWqwCTjeRs",
+      "2CsmzAChHF6O6maGXlo6yJ",
+      "2IUEnGd5v4Yfg1ZkLtd0qa"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/add-beam-1/context/candidate_targets/0",
+    "resolved:/operations/add-column-1/context/candidate_targets/0",
+    "resolved:/operations/add-window-1/context/candidate_targets/0",
+    "resolved:/operations/add-window-2/context/candidate_targets/0",
+    "resolved:/operations/fill-door-1/context/candidate_targets/0",
+    "resolved:/operations/fill-door-2/context/candidate_targets/0"
+  ],
+  "preconditions": [],
+  "postconditions": [],
+  "operations": [
+    {
+      "operation_id": "add-window-1",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target": {
+        "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ"
+      },
+      "parameters": {
+        "position": {
+          "reference": "wall_local_start",
+          "center_offset_mm": 4701.961
+        },
+        "opening": {
+          "width_mm": 1180,
+          "height_mm": 500,
+          "sill_height_mm": 2670.828
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-window-1/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "intent_kind": "surface_color_rgb",
+        "red": 0.18,
+        "green": 0.2,
+        "blue": 0.22
+      }
+    },
+    {
+      "operation_id": "add-window-2",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target": {
+        "wall_global_id": "0jltRti3rFigAmdXYhXxqI"
+      },
+      "parameters": {
+        "position": {
+          "reference": "wall_local_start",
+          "center_offset_mm": 9315.561
+        },
+        "opening": {
+          "width_mm": 870,
+          "height_mm": 2370,
+          "sill_height_mm": 610
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-window-2/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "intent_kind": "surface_color_rgb",
+        "red": 0.72,
+        "green": 0.45,
+        "blue": 0.24
+      }
+    },
+    {
+      "operation_id": "fill-door-1",
+      "operation_type": "fill_existing_opening_with_door",
+      "target": {
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+      },
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:fd2b2257a8c6b4133980981d263476d6facdd3b56ec94e39c1b5a358b8deb42b",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 565.932051,
+          "reference": "wall_local_start"
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/fill-door-1/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "intent_kind": "surface_color_rgb",
+        "red": 0.18,
+        "green": 0.2,
+        "blue": 0.22
+      }
+    },
+    {
+      "operation_id": "fill-door-2",
+      "operation_type": "fill_existing_opening_with_door",
+      "target": {
+        "opening_global_id": "1B$rgWypT66viEf30I1iIv"
+      },
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:0a2369197ac8a98cf5efbffc06dc421dd4568a2bd998ad72c25f46cc7dcc3ab6",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:1B$rgWypT66viEf30I1iIv"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2400.0,
+          "overall_width_mm": 935.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:1B$rgWypT66viEf30I1iIv"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2400.0,
+          "sill_height_mm": 110.359199,
+          "width_mm": 935.0
+        },
+        "position": {
+          "center_offset_mm": 6507.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/fill-door-2/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "intent_kind": "surface_color_rgb",
+        "red": 0.72,
+        "green": 0.45,
+        "blue": 0.24
+      }
+    },
+    {
+      "operation_id": "add-beam-1",
+      "operation_type": "add_beam",
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": -285.0
+          },
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": -285.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 455,
+          "height_mm": 570
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-beam-1/context/candidate_targets/0"
+      ],
+      "appearance": null
+    },
+    {
+      "operation_id": "add-column-1",
+      "operation_type": "add_column",
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      },
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 500,
+          "depth_mm": 500
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/add-column-1/context/candidate_targets/0"
+      ],
+      "appearance": null
+    }
+  ]
+}

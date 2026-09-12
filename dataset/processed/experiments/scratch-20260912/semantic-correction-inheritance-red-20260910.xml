@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="3.182" timestamp="2026-09-10T15:04:41.982009+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_semantic_correction" name="test_cleanup_preserves_already_correct_inherited_values" time="0.253"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'SEMANTIC_CORRECTION_INHERITED_SCOPE', 'message': 'wall-1 requires inherited s...direct reattachment is not authorized.', 'path': '/semantic_correction'}], 'preservation': None, 'revision': None, ...}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-inheritance-red-20260910/test_cleanup_preserves_already0')
+
+    def test_cleanup_preserves_already_correct_inherited_values(tmp_path):
+        data = fixture(shared=True)
+        req = data[1]['known_facts']['semantic_requirements'][0]
+        req['scope'] = 'inherited'
+        data[5]['materials'], data[5]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+        data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'],
+            'material': req['material'], 'property_sets': copy.deepcopy(req['property_sets'])})
+        data[2]['semantic_expectations'] = project_semantic_requirements(data[1])['expectations']
+        data[5]['property_sets']['Pset_WallCommon']['ThermalTransmittance'] = 0
+        result, _ = run_round(tmp_path, data, {
+            data[5]['id']: {'op': 'update_entity', 'changes': {'/property_sets': req['property_sets']}},
+            data[6]['id']: {'op': 'update_relationship', 'changes': {'/attributes/RelatedObjects': [data[3]['id']]}}})
+&gt;       assert result['valid'], result
+E       AssertionError: {'candidate': None, 'issues': [{'code': 'SEMANTIC_CORRECTION_INHERITED_SCOPE', 'message': 'wall-1 requires inherited s...direct reattachment is not authorized.', 'path': '/semantic_correction'}], 'preservation': None, 'revision': None, ...}
+E       assert False
+
+tests\agent\test_generation_semantic_correction.py:357: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_detachment_cannot_choose_between_conflicting_direct_and_effective_values" time="1.224"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-inheritance-red-20260910/test_detachment_cannot_choose_0')
+
+    def test_detachment_cannot_choose_between_conflicting_direct_and_effective_values(tmp_path):
+        data = fixture()
+        data[2]['semantic_expectations'][0]['scope'] = 'direct'
+        data[2]['semantic_expectations'][0]['value'] = {'kind': 'single_material', 'name': 'Other brick'}
+        result, provider = run_round(tmp_path, data, edits_for(data))
+&gt;       assert not result['valid']
+E       assert not True
+
+tests\agent\test_generation_semantic_correction.py:371: AssertionError</failure></testcase></testsuite></testsuites>

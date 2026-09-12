@@ -11,7 +11,7 @@ from tests.agent.test_interactive_cli_generation import PHASE6_1_COMPLETE, _writ
 from tests.agent.test_phase6_5_staged_generation import SequenceProvider
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / 'dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/projection-retry-20260910/run_branches.py'
+SCRIPT = ROOT / 'dataset/processed/experiments/three-storey-clarification-branches-20260910/projection-retry-20260910/run_branches.py'
 
 
 def load_harness():

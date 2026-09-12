@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="13" time="13.380" timestamp="2026-09-08T22:56:46.601377+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_early_field_recovery" name="test_multiple_enum_errors_are_one_stable_atomic_group" time="1.385" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[partial]" time="1.074" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[unrelated]" time="0.817" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[stale]" time="0.843" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[remove]" time="1.090"><failure message="assert (not True)">mode = 'remove'
+
+    @pytest.mark.parametrize('mode', ['partial', 'unrelated', 'stale', 'remove'])
+    def test_group_never_promotes_partial_or_out_of_scope_result(mode):
+        value = candidate()
+        original = copy.deepcopy(value)
+        g = group(value)
+        cs = patch(value, g['scope'], omit_last=mode == 'partial', drift=mode == 'unrelated')
+        if mode == 'stale':
+            cs['base_candidate_hash'] = 'sha256:' + '0' * 64
+        if mode == 'remove':
+            for op in cs['operations']:
+                op['op'] = 'remove_entity'
+                op.pop('changes')
+        result = apply(value, g, cs)
+&gt;       assert not result['valid'] and result['candidate'] is None
+E       assert (not True)
+
+tests\agent\test_early_field_recovery.py:80: AssertionError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_registry_derived_unique_field_rename_preserves_value_and_other_attributes" time="1.226" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[unknown]" time="0.664" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[collision]" time="0.669" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[wrong_value]" time="0.669" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[duplicate_id]" time="0.272" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[conflict]" time="0.256" /><testcase classname="tests.agent.test_early_field_recovery" name="test_semantic_dependencies_are_read_only_including_other_type_users" time="0.001" /><testcase classname="tests.agent.test_early_field_recovery" name="test_public_repair_stage_uses_bounded_changeset_for_invalid_formal" time="3.755" /></testsuite></testsuites>

@@ -1,0 +1,853 @@
+{
+  "status": "gates_blocked",
+  "started_at": "2026-09-08T11:10:39.145669+00:00",
+  "network_transport_attempted": true,
+  "origin_session": "bd9a2fd94c6e4be8",
+  "evidence_class": "real_provider_corrective_attempt",
+  "public_entry": "existing live_pipeline Generator feedback -> candidate gate -> repair routing -> Audit -> final acceptance; no claimed new CLI first-attempt success",
+  "frozen_failure_family_sha256": "0e1d2fef8327b49a7ed8363d79b1fa86c59678f713d1397a94beda57eed59307",
+  "generator": {
+    "case_id": "reception-corrective-02",
+    "stage": "generate",
+    "status": "formal",
+    "classification": "formal",
+    "valid": true,
+    "contract_valid": true,
+    "strict_output_contract_valid": true,
+    "response_id": "b46b1f33-6ba2-4ddc-a555-ceb6eec24c19",
+    "evidence_class": "live",
+    "output_dir": "dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/generation/corrective-attempt-02/generator"
+  },
+  "candidate_gates": {
+    "case_id": "reception-corrective-02",
+    "stage": "candidate-gates",
+    "valid": false,
+    "ifc_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\generation\\corrective-attempt-02\\output.ifc",
+    "output_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\generation\\corrective-attempt-02",
+    "compile_reopen_success": false,
+    "geometry_success": false,
+    "deterministic_gates_passed": false,
+    "gate_summary": {
+      "schema_version": "text2ifc/gate-summary/1.0",
+      "case_id": "reception-corrective-02",
+      "candidate_path": "generator/candidate.json",
+      "candidate_hash": "48817d324de7dd6f8827420c25118184fbf71e8e6fdb9f23133b80cba5e6f0b1",
+      "expected_facts_path": "expected-facts.json",
+      "expected_facts_hash": "38822d9e2afb46aedff2131efdd69940e47c8eb2f5d42057ac28e464486e1297",
+      "artifact_hashes": {
+        "generator/candidate.json": "48817d324de7dd6f8827420c25118184fbf71e8e6fdb9f23133b80cba5e6f0b1",
+        "generator/validation.json": "6be6595f4f77090199203073905e3755e4015ff1a83b3412d64571cd872b4c41",
+        "expected-facts.json": "38822d9e2afb46aedff2131efdd69940e47c8eb2f5d42057ac28e464486e1297",
+        "dynamic-gates.json": "7be26f9c6c70d35196bf7d9195d269048fa8d74fa24fe494d2c34fd7fc506b22",
+        "request-semantics.json": "e1fc06c69f3fc40c739782d00753d39b2819d2b552be521dd9b0de4eda7eea16",
+        "semantic-verification.json": "b2108f7ba11a7ad10d76a190107b5c503db1d4147b77274b081ad818b1a7b94e",
+        "ifc-verification.json": "b8c988dc471f4c2bb12d766ad1c1b53f37fb3594432b227a47b2ca3066b5a7e0",
+        "geometry-feedback.json": "11f8662caa95ec08fe41578f49e08468585745dead620b395de2a0065b97585a"
+      },
+      "evidence": {
+        "schema_validation": {
+          "issue_count": 0,
+          "issues": [],
+          "valid": true
+        },
+        "semantic_coverage": null,
+        "request_semantics": {
+          "basis": "request expectations independently compared with reopened IFC before atomic publication",
+          "expectations": [
+            {
+              "entity_id": "wall-south",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/0",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-north",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/1",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-west",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/2",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-east",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/3",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "slab-ground",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/4",
+              "value": {
+                "kind": "single_material",
+                "name": "混凝土"
+              }
+            },
+            {
+              "entity_id": "door-south",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/5",
+              "value": {
+                "parameters": {},
+                "template_id": "door-left",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-east",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/6",
+              "value": {
+                "parameters": {},
+                "template_id": "window-double-vertical",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-west",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/7",
+              "value": {
+                "parameters": {},
+                "template_id": "window-single",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "wall-south",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/0",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-north",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/1",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-west",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/2",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-east",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/3",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "slab-ground",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/4",
+              "value": {
+                "kind": "single_material",
+                "name": "混凝土"
+              }
+            },
+            {
+              "entity_id": "door-south",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/5",
+              "value": {
+                "parameters": {},
+                "template_id": "door-left",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-east",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/6",
+              "value": {
+                "parameters": {},
+                "template_id": "window-double-vertical",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-west",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/7",
+              "value": {
+                "parameters": {},
+                "template_id": "window-single",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            }
+          ],
+          "issues": [
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-south/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-north/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-west/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-east/materials"
+            }
+          ],
+          "schema_version": "text2ifc/request-semantic-verification/1.0",
+          "valid": false
+        },
+        "compile_reopen": {
+          "ifc_issues": [],
+          "input_issues": [
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-south/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-north/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-west/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-east/materials"
+            }
+          ],
+          "output_path": null,
+          "success": false
+        },
+        "geometry": {
+          "expectation_source": "design_brief_expected_facts",
+          "issues": [
+            {
+              "code": "COMPILE_REOPEN_FAILED",
+              "message": "IFC compilation or reopen verification failed.",
+              "path": "/output.ifc"
+            }
+          ],
+          "metrics": {},
+          "success": false
+        },
+        "repair_history": null
+      },
+      "gates": [
+        {
+          "name": "bim_json_validation",
+          "applicability": "applicable",
+          "status": "passed",
+          "basis": "generator validation sidecar",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "generator/validation.json"
+          ]
+        },
+        {
+          "name": "dynamic_entity_completeness",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "expected-facts total_counts compared with candidate entities",
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "EXPECTED_ENTITY_MISSING",
+              "path": "/walls",
+              "ifc_class": "IfcWall",
+              "expected": 4,
+              "actual": 0
+            }
+          ],
+          "issue_codes": [
+            "EXPECTED_ENTITY_MISSING"
+          ],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ]
+        },
+        {
+          "name": "dynamic_storey_containment",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "expected storey and host-wall facts compared with candidate placement/void-fill graph",
+          "issue_count": 4,
+          "issues": [
+            {
+              "code": "STOREY_CONTAINMENT_MISMATCH",
+              "path": "/walls/storey-1",
+              "ifc_class": "IfcWall",
+              "expected_storey": "storey-1",
+              "expected": 4,
+              "actual": 0
+            },
+            {
+              "code": "HOST_WALL_MISMATCH",
+              "path": "/doors/door-south/host_wall",
+              "expected_host_wall": "wall-south",
+              "actual_host_wall": "wall-storey-1-wall-south"
+            },
+            {
+              "code": "HOST_WALL_MISMATCH",
+              "path": "/windows/window-east/host_wall",
+              "expected_host_wall": "wall-east",
+              "actual_host_wall": "wall-storey-1-wall-east"
+            },
+            {
+              "code": "HOST_WALL_MISMATCH",
+              "path": "/windows/window-west/host_wall",
+              "expected_host_wall": "wall-west",
+              "actual_host_wall": "wall-storey-1-wall-west"
+            }
+          ],
+          "issue_codes": [
+            "HOST_WALL_MISMATCH",
+            "STOREY_CONTAINMENT_MISMATCH"
+          ],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ],
+          "entity_matches": [
+            {
+              "collection": "doors",
+              "expected_id": "door-south",
+              "candidate_id": "door-storey-1-door-south",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "spaces",
+              "expected_id": "space-room",
+              "candidate_id": "space-storey-1-space-room",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-south",
+              "candidate_id": "wall-storey-1-wall-south",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-north",
+              "candidate_id": "wall-storey-1-wall-north",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-west",
+              "candidate_id": "wall-storey-1-wall-west",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-east",
+              "candidate_id": "wall-storey-1-wall-east",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "windows",
+              "expected_id": "window-east",
+              "candidate_id": "window-storey-1-window-east",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "windows",
+              "expected_id": "window-west",
+              "candidate_id": "window-storey-1-window-west",
+              "match_basis": "canonical_entity_id"
+            }
+          ]
+        },
+        {
+          "name": "dynamic_storey_name_consistency",
+          "applicability": "not_applicable",
+          "status": "skipped",
+          "basis": "expected facts contain fewer than two unique explicit storey names",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ]
+        },
+        {
+          "name": "dynamic_opening_fill",
+          "applicability": "applicable",
+          "status": "passed",
+          "basis": "expected opening/fill obligations compared with IfcRelVoidsElement and IfcRelFillsElement",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ]
+        },
+        {
+          "name": "semantic_coverage",
+          "applicability": "not_applicable",
+          "status": "skipped",
+          "basis": "semantic coverage sidecar is not present",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": []
+        },
+        {
+          "name": "request_semantics",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "independent reopened IFC/request comparison",
+          "issue_count": 4,
+          "issues": [
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-south/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-north/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-west/materials"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "message": "配色或模板不能补写未经请求授权的材料。",
+              "path": "/entities/wall-storey-1-wall-east/materials"
+            }
+          ],
+          "issue_codes": [
+            "UNREQUESTED_MATERIAL"
+          ],
+          "source_paths": [
+            "semantic-verification.json"
+          ]
+        },
+        {
+          "name": "ifc_compile_reopen",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "IFC compile/reopen sidecar",
+          "issue_count": 4,
+          "issues": [
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "path": "/entities/wall-storey-1-wall-south/materials",
+              "message": "配色或模板不能补写未经请求授权的材料。"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "path": "/entities/wall-storey-1-wall-north/materials",
+              "message": "配色或模板不能补写未经请求授权的材料。"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "path": "/entities/wall-storey-1-wall-west/materials",
+              "message": "配色或模板不能补写未经请求授权的材料。"
+            },
+            {
+              "code": "UNREQUESTED_MATERIAL",
+              "path": "/entities/wall-storey-1-wall-east/materials",
+              "message": "配色或模板不能补写未经请求授权的材料。"
+            }
+          ],
+          "issue_codes": [
+            "UNREQUESTED_MATERIAL"
+          ],
+          "source_paths": [
+            "ifc-verification.json"
+          ]
+        },
+        {
+          "name": "geometry",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "geometry feedback sidecar",
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "COMPILE_REOPEN_FAILED",
+              "path": "/output.ifc",
+              "message": "IFC compilation or reopen verification failed."
+            }
+          ],
+          "issue_codes": [
+            "COMPILE_REOPEN_FAILED"
+          ],
+          "source_paths": [
+            "geometry-feedback.json"
+          ]
+        },
+        {
+          "name": "repair_route",
+          "applicability": "not_applicable",
+          "status": "skipped",
+          "basis": "repair route sidecar is not present",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": []
+        }
+      ],
+      "overall_status": "failed"
+    },
+    "ifc_verification": {
+      "success": false,
+      "output_path": null,
+      "input_issues": [
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-south/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        },
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-north/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        },
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-west/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        },
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-east/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        }
+      ],
+      "ifc_issues": []
+    },
+    "geometry_feedback": {
+      "success": false,
+      "issues": [
+        {
+          "code": "COMPILE_REOPEN_FAILED",
+          "path": "/output.ifc",
+          "message": "IFC compilation or reopen verification failed."
+        }
+      ],
+      "metrics": {},
+      "expectation_source": "design_brief_expected_facts"
+    },
+    "semantic_geometry_expectation": {
+      "schema_version": "text2ifc/design-geometry-expectation/1.0",
+      "case_id": "reception-corrective-02",
+      "source": "design_brief_expected_facts",
+      "units": "METRE",
+      "tolerance": 0.05,
+      "complete": true,
+      "spaces": {
+        "space-room": {
+          "bbox": {
+            "x": [
+              -3.0,
+              3.0
+            ],
+            "y": [
+              -2.0,
+              2.0
+            ],
+            "z": [
+              0.0,
+              3.0
+            ]
+          },
+          "storey_id": "storey-1",
+          "source_fact_refs": [
+            "/known_facts/storeys/0/spaces/0"
+          ]
+        }
+      },
+      "walls": {},
+      "slabs": {
+        "slab-ground": {
+          "bbox": {
+            "x": [
+              -3.2,
+              3.2
+            ],
+            "y": [
+              -2.2,
+              2.2
+            ],
+            "z": [
+              -0.15,
+              0.0
+            ]
+          },
+          "datum": "slab_top",
+          "source_fact_refs": [
+            "/known_facts/floor_slabs/0"
+          ],
+          "must_touch_walls": []
+        }
+      },
+      "roof": {},
+      "stairs": {},
+      "floor_openings": {},
+      "products": {},
+      "unresolved": []
+    },
+    "semantic_verification": {
+      "schema_version": "text2ifc/request-semantic-verification/1.0",
+      "valid": false,
+      "basis": "request expectations independently compared with reopened IFC before atomic publication",
+      "expectations": [
+        {
+          "entity_id": "wall-south",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/0",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-north",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/1",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-west",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/2",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-east",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/3",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "slab-ground",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/4",
+          "value": {
+            "kind": "single_material",
+            "name": "混凝土"
+          }
+        },
+        {
+          "entity_id": "door-south",
+          "kind": "template",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/5",
+          "value": {
+            "parameters": {},
+            "template_id": "door-left",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-east",
+          "kind": "template",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/6",
+          "value": {
+            "parameters": {},
+            "template_id": "window-double-vertical",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-west",
+          "kind": "template",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/7",
+          "value": {
+            "parameters": {},
+            "template_id": "window-single",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "wall-south",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/0",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-north",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/1",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-west",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/2",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-east",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/3",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "slab-ground",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/4",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "混凝土"
+          }
+        },
+        {
+          "entity_id": "door-south",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/5",
+          "kind": "template",
+          "value": {
+            "parameters": {},
+            "template_id": "door-left",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-east",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/6",
+          "kind": "template",
+          "value": {
+            "parameters": {},
+            "template_id": "window-double-vertical",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-west",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/7",
+          "kind": "template",
+          "value": {
+            "parameters": {},
+            "template_id": "window-single",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        }
+      ],
+      "issues": [
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-south/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        },
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-north/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        },
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-west/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        },
+        {
+          "code": "UNREQUESTED_MATERIAL",
+          "path": "/entities/wall-storey-1-wall-east/materials",
+          "message": "配色或模板不能补写未经请求授权的材料。"
+        }
+      ]
+    }
+  },
+  "finished_at": "2026-09-08T11:12:57.280911+00:00"
+}

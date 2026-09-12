@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="33" time="41.519" timestamp="2026-09-08T23:15:51.917724+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_task_budget" name="test_factories_and_resume_share_consumed_calls" time="0.043" /><testcase classname="tests.agent.test_generation_task_budget" name="test_token_reservation_blocks_before_transport" time="0.017" /><testcase classname="tests.agent.test_generation_task_budget" name="test_failed_or_interrupted_calls_are_not_refunded_on_resume" time="0.036" /><testcase classname="tests.agent.test_generation_task_budget" name="test_reopen_cannot_silently_enlarge_budget" time="0.017" /><testcase classname="tests.agent.test_generation_task_budget" name="test_legacy_evidence_is_charged_once_without_rewriting_sources" time="0.027" /><testcase classname="tests.agent.test_generation_task_budget" name="test_actual_usage_and_active_time_accumulate" time="0.047" /><testcase classname="tests.agent.test_generation_task_budget" name="test_feedback_stops_a_b_a_cycle_but_allows_new_stage" time="0.022" /><testcase classname="tests.agent.test_generation_task_budget" name="test_public_budget_exhaustion_before_audit_never_publishes" time="5.858" /><testcase classname="tests.agent.test_generation_task_budget" name="test_scoped_recovery_stops_repeated_failed_patch_and_keeps_attempts" time="5.338" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_contract_and_persistence" time="0.018" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_stops_when_issue_count_does_not_improve" time="0.001" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_stops_after_default_three_round_limit" time="0.001" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_does_not_automatically_retry_user_fact_routes" time="0.002" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_dispatch_boundaries_for_supported_routes" time="0.002" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_artifacts_append_rounds_instead_of_overwriting" time="0.030" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_equal_issue_count_can_retry_when_issue_set_changed" time="0.022" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_same_issue_code_can_retry_when_structured_evidence_changed" time="0.036" /><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_resolve_issue_component_refs_converts_exact_collection_index_to_stable_id" time="0.003" /><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_resolve_issue_component_refs_blocks_out_of_range_index_without_guessing" time="0.003" /><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_scoped_round_applies_changeset_and_preserves_unrelated_components" time="0.885" /><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_scoped_round_uses_component_issues_for_scope_and_keeps_global_evidence" time="0.916" /><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_scoped_round_retries_one_application_scope_violation_without_mutating_base" time="1.253" /><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_scoped_round_retries_one_invalid_changeset_with_schema_feedback" time="0.615"><failure message="assert False is True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-loop-green/test_scoped_round_retries_one_1')
+
+    def test_scoped_round_retries_one_invalid_changeset_with_schema_feedback(tmp_path):
+        candidate = _candidate()
+        expected = _expected()
+        provider = ChangeSetProvider(candidate, expected, invalid_contract_once=True)
+        before = build_candidate_index(candidate)
+    
+        result = run_scoped_changeset_round(
+            provider=provider,
+            output_dir=tmp_path,
+            case_id="case-contract-retry",
+            round_number=1,
+            user_request="Correct the wall name.",
+            conversation=[{"role": "user", "content": "Correct the wall name."}],
+            design_brief={"status": "ready"},
+            expected_facts=expected,
+            candidate=candidate,
+            issues=[_issue()],
+            trace_level="debug",
+        )
+    
+&gt;       assert result["valid"] is True
+E       assert False is True
+
+tests\agent\test_phase6_5_scoped_loop.py:239: AssertionError</failure></testcase><testcase classname="tests.agent.test_phase6_5_scoped_loop" name="test_scoped_round_uses_three_attempt_budget_for_contract_then_scope_feedback" time="0.895"><failure message="assert False is True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-loop-green/test_scoped_round_uses_three_a0')
+
+    def test_scoped_round_uses_three_attempt_budget_for_contract_then_scope_feedback(
+        tmp_path,
+    ):
+        candidate = _candidate()
+        expected = _expected()
+        provider = ChangeSetProvider(
+            candidate,
+            expected,
+            invalid_contract_once=True,
+            violate_scope_once=True,
+        )
+        before = build_candidate_index(candidate)
+    
+        result = run_scoped_changeset_round(
+            provider=provider,
+            output_dir=tmp_path,
+            case_id="case-contract-then-scope-retry",
+            round_number=1,
+            user_request="Correct the wall name.",
+            conversation=[{"role": "user", "content": "Correct the wall name."}],
+            design_brief={"status": "ready"},
+            expected_facts=expected,
+            candidate=candidate,
+            issues=[_issue()],
+            trace_level="debug",
+        )
+    
+&gt;       assert result["valid"] is True
+E       assert False is True
+
+tests\agent\test_phase6_5_scoped_loop.py:274: AssertionError</failure></testcase><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_skeleton_workspace_uses_explicit_dynamic_storeys[2]" time="0.549" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_skeleton_workspace_uses_explicit_dynamic_storeys[3]" time="0.590" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_skeleton_workspace_uses_explicit_dynamic_storeys[5]" time="0.556" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_staged_generation_composes_dynamic_storeys_and_only_final_is_formal[2]" time="4.129" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_staged_generation_composes_dynamic_storeys_and_only_final_is_formal[3]" time="5.150" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_staged_generation_stops_on_package_draft_without_promoting_candidate" time="1.254" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_staged_generation_retries_only_the_failed_package_within_three_attempts" time="3.705" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_staged_generation_retries_package_when_merged_workspace_breaks_schema" time="4.261" /><testcase classname="tests.agent.test_phase6_5_staged_generation" name="test_staged_scope_exposes_manifest_relationship_ownership_to_provider" time="3.304" /></testsuite></testsuites>

@@ -20,8 +20,10 @@
 
 ## 专题设计与决策
 
+- [两层光庭阅读馆设计](courtyard-library-design.md)：露天光庭与二层回廊已确认；按用户委托确定布局与材料，覆盖适用的已有能力，区分栏杆现有表达与扩展范围。
+
 - [Repair 与 Generation 的 Type、材质、属性和外观计划](semantic-appearance-plan.md)
-  - A/B 已人工验收，当前优先完成 C 型教学楼；项目内 Type 按需组织，小型内置模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
+  - A/B/C 已人工验收，当前推进光庭阅读馆；项目内 Type 按需组织，小型内置模板与 Generation 基础门窗细节；默认配色，不补写缺省材料/性能属性；Repair 保留原几何，不实现跨 IFC 参照。
 - [Token 效率与质量保全计划](token-efficiency-plan.md)
   - 一次有界 Audit 真实配对已完成；其他研究后置，主线回到 C 型教学楼。
 - [Feedback Routing Design](feedback-routing/design.md)

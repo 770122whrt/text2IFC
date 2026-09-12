@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="3.897" timestamp="2026-09-12T18:00:12.285439+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_railing_generation_contract" name="test_new_railing_runs_through_public_generation_and_actual_ifc[legacy_full]" time="0.584"><failure message="ValueError: ready session is missing Design Brief artifact: E:\code for project\bimnet\.tmp\courtyard-open-court-railing-chain-01\test_new_railing_runs_through_0\session\runs\a4bab0c34990e97d\design-brief\conversation.json">tests\agent\test_railing_generation_contract.py:101: in test_new_railing_runs_through_public_generation_and_actual_ifc
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:562: in _run_ready_session_to_ifc
+    design_dir = _prepare_design_source(stored_session)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:2356: in _prepare_design_source
+    raise ValueError(
+E   ValueError: ready session is missing Design Brief artifact: E:\code for project\bimnet\.tmp\courtyard-open-court-railing-chain-01\test_new_railing_runs_through_0\session\runs\a4bab0c34990e97d\design-brief\conversation.json</failure></testcase><testcase classname="tests.agent.test_railing_generation_contract" name="test_new_railing_runs_through_public_generation_and_actual_ifc[staged]" time="1.423"><failure message="ValueError: ready session is missing Design Brief artifact: E:\code for project\bimnet\.tmp\courtyard-open-court-railing-chain-01\test_new_railing_runs_through_1\session\runs\d753562f0d7277bc\design-brief\conversation.json">tests\agent\test_railing_generation_contract.py:101: in test_new_railing_runs_through_public_generation_and_actual_ifc
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:562: in _run_ready_session_to_ifc
+    design_dir = _prepare_design_source(stored_session)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:2356: in _prepare_design_source
+    raise ValueError(
+E   ValueError: ready session is missing Design Brief artifact: E:\code for project\bimnet\.tmp\courtyard-open-court-railing-chain-01\test_new_railing_runs_through_1\session\runs\d753562f0d7277bc\design-brief\conversation.json</failure></testcase></testsuite></testsuites>

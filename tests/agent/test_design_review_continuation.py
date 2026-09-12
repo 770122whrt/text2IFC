@@ -11,7 +11,7 @@ from tests.agent.test_interactive_cli_generation import PHASE6_1_COMPLETE, _writ
 from tests.agent.test_phase6_5_staged_generation import SequenceProvider
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / 'dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/continue_branches.py'
+SCRIPT = ROOT / 'dataset/processed/experiments/three-storey-clarification-branches-20260910/continue_branches.py'
 spec = importlib.util.spec_from_file_location('branch_continuation_harness', SCRIPT)
 harness = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(harness)
@@ -27,6 +27,9 @@ def test_continuation_public_path_preserves_parent_and_cumulative_budget(tmp_pat
     harness.write(call / 'conversation.json', turns)
     brief = harness.read(call / 'design-brief.json')
     brief['schema_version'] = 'text2ifc/design-brief/2.1'
+    # This synthetic candidate explicitly requests no material/type/property
+    # changes. Version 2.1 requires that authority to be stated, not omitted.
+    brief['known_facts']['semantic_requirements'] = []
     harness.write(call / 'design-brief.json', brief)
     harness.write(parent / 'generation-budget.json', {
         'schema_version': 'text2ifc/generation-budget/1.0',

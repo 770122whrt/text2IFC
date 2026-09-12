@@ -153,8 +153,8 @@ def make_openai_design_brief_invoker(
     from .generation_budget import GenerationBudget
 
     def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
-        if not transcript:
-            raise ValueError("Design Brief invocation requires transcript")
+        from .brief_conversation import require_brief_conversation
+        require_brief_conversation(transcript)
         original_request = str(transcript[0].get("content", ""))
         call_dir = root / "calls" / f"{call_index:02d}-design-brief"
         try:
@@ -166,7 +166,7 @@ def make_openai_design_brief_invoker(
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
-            schema_version="bim-json/2.1",
+            schema_version="bim-json/2.3" if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
         )
         from .design_brief import design_brief_template_id
         schema = load_design_brief_schema(design_brief_schema_version)
@@ -566,8 +566,8 @@ def _run_ready_session_to_ifc(
     trace_path = design_dir / "trace-manifest.json"
     brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
     if review_context is None and (
-        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15'}
-        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15'}
+        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17'}
+        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17'}
     ):
         raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
@@ -1171,6 +1171,14 @@ def _maybe_promote_scaffold_from_generator_failure(
         return None
     if (run_dir / "generator" / "candidate.json").is_file():
         return None
+    # Prefer the bounded attachment repair over a whole-building replacement.
+    parsed_path = run_dir / 'generator' / 'parsed-output.json'
+    if parsed_path.is_file():
+        from .filling_relationship_recovery import recover_filling_relationships
+        missing_links = recover_filling_relationships(
+            _read_required_json(parsed_path), design_brief, case_id=stored_session.session_hash)
+        if missing_links['eligible']:
+            return None
     expected_facts_path = run_dir / "expected-facts.json"
     if not expected_facts_path.is_file():
         return None
@@ -2261,6 +2269,15 @@ def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None
         }
     )
     _write_json(metrics_path, metrics)
+    recovery = _read_optional_json(repaired_candidate.parent/'attachment-recovery.json')
+    if recovery and recovery.get('eligible'):
+        origin = _read_optional_json(run_dir/'candidate-origin.json') or {}
+        # Eligibility describes the derivation route, as for the normal model
+        # path; actual live/fake evidence remains in the source call metrics.
+        # Never promote a previously excluded scaffold origin.
+        _write_candidate_origin(run_dir, candidate_origin='model_with_deterministic_attachments',
+            live_acceptance_eligible=origin.get('live_acceptance_eligible', True),
+            route=str(recovery['contract']))
 
 
 def _restore_design_brief_call(row: Mapping[str, Any], run_dir: Path) -> ClarificationCall:

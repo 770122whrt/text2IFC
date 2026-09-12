@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="20" time="10.717" timestamp="2026-09-12T15:14:48.745819+08:00" hostname="what-do-matter"><testcase classname="tests.compiler.test_part_appearance" name="test_part_override_reopens_with_identical_mesh_and_materials[window-single]" time="0.364"><failure message="AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=())&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=()).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-part-appearance-red/test_part_override_reopens_wit0')
+template = 'window-single'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_part_override_reopens_with_identical_mesh_and_materials(tmp_path, template):
+        value, record = document(template)
+        baseline = copy.deepcopy(value); baseline['schema_version'] = 'bim-json/2.1'
+        record['part_appearance'] = {'frame': {'color': [.13, .24, .35]}}
+        panel = 'panel' if template.startswith('door') else 'glazing'
+        record['part_appearance'][panel] = {'color': [.61, .42, .23]} if panel == 'panel' else {'transparency': .7}
+        before = copy.deepcopy(value)
+        results = []
+        for label, source in [('old', baseline), ('new', value)]:
+            result = compile_document(source, tmp_path / (label + '.ifc'))
+&gt;           assert result.success, result
+E           AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=())
+E           assert False
+E            +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=()).success
+
+tests\compiler\test_part_appearance.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_part_override_reopens_with_identical_mesh_and_materials[window-double-vertical]" time="0.541"><failure message="AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=())&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=()).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-part-appearance-red/test_part_override_reopens_wit1')
+template = 'window-double-vertical'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_part_override_reopens_with_identical_mesh_and_materials(tmp_path, template):
+        value, record = document(template)
+        baseline = copy.deepcopy(value); baseline['schema_version'] = 'bim-json/2.1'
+        record['part_appearance'] = {'frame': {'color': [.13, .24, .35]}}
+        panel = 'panel' if template.startswith('door') else 'glazing'
+        record['part_appearance'][panel] = {'color': [.61, .42, .23]} if panel == 'panel' else {'transparency': .7}
+        before = copy.deepcopy(value)
+        results = []
+        for label, source in [('old', baseline), ('new', value)]:
+            result = compile_document(source, tmp_path / (label + '.ifc'))
+&gt;           assert result.success, result
+E           AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=())
+E           assert False
+E            +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='BASIC_FILLING_CONSTRAINT_CONFLICT', path='/ent...ributes/Representation', message='Basic filling requires exactly one explicit opening relationship.'),), ifc_issues=()).success
+
+tests\compiler\test_part_appearance.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_part_override_reopens_with_identical_mesh_and_materials[door-left]" time="3.179"><failure message="AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message=&quot;Required field 'target_schema' is missing.&quot;)), ifc_issues=())&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message=&quot;Required field 'target_schema' is missing.&quot;)), ifc_issues=()).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-part-appearance-red/test_part_override_reopens_wit2')
+template = 'door-left'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_part_override_reopens_with_identical_mesh_and_materials(tmp_path, template):
+        value, record = document(template)
+        baseline = copy.deepcopy(value); baseline['schema_version'] = 'bim-json/2.1'
+        record['part_appearance'] = {'frame': {'color': [.13, .24, .35]}}
+        panel = 'panel' if template.startswith('door') else 'glazing'
+        record['part_appearance'][panel] = {'color': [.61, .42, .23]} if panel == 'panel' else {'transparency': .7}
+        before = copy.deepcopy(value)
+        results = []
+        for label, source in [('old', baseline), ('new', value)]:
+            result = compile_document(source, tmp_path / (label + '.ifc'))
+&gt;           assert result.success, result
+E           AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message="Required field 'target_schema' is missing.")), ifc_issues=())
+E           assert False
+E            +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message="Required field 'target_schema' is missing.")), ifc_issues=()).success
+
+tests\compiler\test_part_appearance.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_part_override_reopens_with_identical_mesh_and_materials[door-right]" time="3.216"><failure message="AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message=&quot;Required field 'target_schema' is missing.&quot;)), ifc_issues=())&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message=&quot;Required field 'target_schema' is missing.&quot;)), ifc_issues=()).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-part-appearance-red/test_part_override_reopens_wit3')
+template = 'door-right'
+
+    @pytest.mark.parametrize('template', TEMPLATES)
+    def test_part_override_reopens_with_identical_mesh_and_materials(tmp_path, template):
+        value, record = document(template)
+        baseline = copy.deepcopy(value); baseline['schema_version'] = 'bim-json/2.1'
+        record['part_appearance'] = {'frame': {'color': [.13, .24, .35]}}
+        panel = 'panel' if template.startswith('door') else 'glazing'
+        record['part_appearance'][panel] = {'color': [.61, .42, .23]} if panel == 'panel' else {'transparency': .7}
+        before = copy.deepcopy(value)
+        results = []
+        for label, source in [('old', baseline), ('new', value)]:
+            result = compile_document(source, tmp_path / (label + '.ifc'))
+&gt;           assert result.success, result
+E           AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message="Required field 'target_schema' is missing.")), ifc_issues=())
+E           assert False
+E            +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message="Required field 'target_schema' is missing.")), ifc_issues=()).success
+
+tests\compiler\test_part_appearance.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[None]" time="0.091" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part1]" time="0.099" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part2]" time="0.087" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part3]" time="0.097" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part4]" time="0.126" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part5]" time="0.103" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part6]" time="0.102" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part7]" time="0.121" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part8]" time="0.089" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part9]" time="0.090" /><testcase classname="tests.compiler.test_part_appearance" name="test_invalid_part_requests_fail_closed[part10]" time="0.082" /><testcase classname="tests.compiler.test_part_appearance" name="test_incompatible_targets_or_whole_colour_cannot_silently_override_parts[whole]" time="0.094"><failure message="assert False&#10; +  where False = any(&lt;generator object test_incompatible_targets_or_whole_colour_cannot_silently_override_parts.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001F2CB564A00&gt;)">attack = 'whole'
+
+    @pytest.mark.parametrize('attack', ['whole', 'type', 'legacy_geometry'])
+    def test_incompatible_targets_or_whole_colour_cannot_silently_override_parts(attack):
+        value, record = document('door-right'); record['part_appearance'] = {'frame': {'color': [0, 0, 0]}}
+        if attack == 'whole': record['appearance'] = {'color': [1, 1, 1]}
+        if attack == 'type': record['ifc_class'] = 'IfcDoorStyle'
+        if attack == 'legacy_geometry': record['attributes'].pop('Representation')
+&gt;       assert any(i.code == 'INVALID_PART_APPEARANCE' for i in validate_v2_document(value))
+E       assert False
+E        +  where False = any(&lt;generator object test_incompatible_targets_or_whole_colour_cannot_silently_override_parts.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001F2CB564A00&gt;)
+
+tests\compiler\test_part_appearance.py:76: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_incompatible_targets_or_whole_colour_cannot_silently_override_parts[type]" time="0.112"><failure message="assert False&#10; +  where False = any(&lt;generator object test_incompatible_targets_or_whole_colour_cannot_silently_override_parts.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001F2CC5842B0&gt;)">attack = 'type'
+
+    @pytest.mark.parametrize('attack', ['whole', 'type', 'legacy_geometry'])
+    def test_incompatible_targets_or_whole_colour_cannot_silently_override_parts(attack):
+        value, record = document('door-right'); record['part_appearance'] = {'frame': {'color': [0, 0, 0]}}
+        if attack == 'whole': record['appearance'] = {'color': [1, 1, 1]}
+        if attack == 'type': record['ifc_class'] = 'IfcDoorStyle'
+        if attack == 'legacy_geometry': record['attributes'].pop('Representation')
+&gt;       assert any(i.code == 'INVALID_PART_APPEARANCE' for i in validate_v2_document(value))
+E       assert False
+E        +  where False = any(&lt;generator object test_incompatible_targets_or_whole_colour_cannot_silently_override_parts.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001F2CC5842B0&gt;)
+
+tests\compiler\test_part_appearance.py:76: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_incompatible_targets_or_whole_colour_cannot_silently_override_parts[legacy_geometry]" time="0.093"><failure message="assert False&#10; +  where False = any(&lt;generator object test_incompatible_targets_or_whole_colour_cannot_silently_override_parts.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001F2CAFDDD80&gt;)">attack = 'legacy_geometry'
+
+    @pytest.mark.parametrize('attack', ['whole', 'type', 'legacy_geometry'])
+    def test_incompatible_targets_or_whole_colour_cannot_silently_override_parts(attack):
+        value, record = document('door-right'); record['part_appearance'] = {'frame': {'color': [0, 0, 0]}}
+        if attack == 'whole': record['appearance'] = {'color': [1, 1, 1]}
+        if attack == 'type': record['ifc_class'] = 'IfcDoorStyle'
+        if attack == 'legacy_geometry': record['attributes'].pop('Representation')
+&gt;       assert any(i.code == 'INVALID_PART_APPEARANCE' for i in validate_v2_document(value))
+E       assert False
+E        +  where False = any(&lt;generator object test_incompatible_targets_or_whole_colour_cannot_silently_override_parts.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001F2CAFDDD80&gt;)
+
+tests\compiler\test_part_appearance.py:76: AssertionError</failure></testcase><testcase classname="tests.compiler.test_part_appearance" name="test_old_registered_contract_still_rejects_part_field" time="0.108" /><testcase classname="tests.compiler.test_part_appearance" name="test_verifier_reads_real_parts_instead_of_provenance" time="0.119"><failure message="AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message=&quot;Required field 'target_schema' is missing.&quot;)), ifc_issues=())&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message=&quot;Required field 'target_schema' is missing.&quot;)), ifc_issues=()).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-part-appearance-red/test_verifier_reads_real_parts0')
+
+    def test_verifier_reads_real_parts_instead_of_provenance(tmp_path):
+        value, record = document('window-double-vertical')
+        record['part_appearance'] = {'frame': {'color': [.1, .2, .3]}, 'glazing': {'transparency': .7}}
+&gt;       result = compile_document(value, tmp_path / 'parts.ifc'); assert result.success, result
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message="Required field 'target_schema' is missing.")), ifc_issues=())
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_FIELD', path='/appearance', messag...ue(code='REQUIRED_FIELD', path='/target_schema', message="Required field 'target_schema' is missing.")), ifc_issues=()).success
+
+tests\compiler\test_part_appearance.py:88: AssertionError</failure></testcase></testsuite></testsuites>

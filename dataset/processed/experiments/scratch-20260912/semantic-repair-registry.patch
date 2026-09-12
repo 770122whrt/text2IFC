@@ -1,0 +1,37 @@
+--- a/prompts/agent/registry.json
++++ b/prompts/agent/registry.json
+@@ -1024,6 +1024,34 @@
+         "unregistered_operation",
+         "unselected_profile"
+       ]
++    },
++    {
++      "template_id": "ifc-repair-intent.v0.13",
++      "role": "ifc_repair_request_understanding",
++      "mode": "repair_intent",
++      "path": "prompts/agent/ifc-repair-intent-v0.13.md",
++      "sha256": "sha256:2b394fa51c85db985f12f76287ec69875d479aecfce79d1bc585d800b21e3d36",
++      "required_inputs": [
++        "REPAIR_REQUEST",
++        "SUPPORTED_OPERATIONS",
++        "REPAIR_INTENT_SCHEMA",
++        "VALIDATION_FEEDBACK"
++      ],
++      "forbidden_outputs": [
++        "raw_ifc",
++        "step_text",
++        "step_id",
++        "resolved_target_id",
++        "resolved_target_guid",
++        "resolved_type_id",
++        "unregistered_profile",
++        "inferred_occurrence_reuse",
++        "mutation_mapping",
++        "private_original_ifc",
++        "benchmark_gold",
++        "guessed_project_fact",
++        "repair_changeset"
++      ]
+     }
+   ]
+ }

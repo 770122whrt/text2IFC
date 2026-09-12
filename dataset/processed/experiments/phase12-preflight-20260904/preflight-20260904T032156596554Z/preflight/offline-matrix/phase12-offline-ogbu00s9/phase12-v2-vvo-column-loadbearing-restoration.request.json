@@ -1,0 +1,58 @@
+{
+  "case_id": "phase12-v2-vvo-column-loadbearing-restoration",
+  "changeset_id": "changeset-phase12-v2-vvo-column-loadbearing-restoration",
+  "operations": [
+    {
+      "attribute_intents": [],
+      "operation_id": "phase12-v2-vvo-column-loadbearing-restoration-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500.0,
+          "orientation": {
+            "x": 0.0,
+            "y": -1.0
+          },
+          "shape": "rectangle",
+          "width_mm": 500.0
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "natural_language_property",
+          "property_phrase": "column is load bearing",
+          "raw_unit": null,
+          "raw_value": true,
+          "scope": "occurrence_direct",
+          "source": {
+            "excerpt": "column is load bearing",
+            "reference": "request:/operations/0/properties/0",
+            "source_kind": "user_request"
+          }
+        }
+      ],
+      "target_query": {
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "global_id": "1vTeahUkP60PdWqwCTjeRs",
+        "schema_version": "text2ifc/ifc-target-query/0.1"
+      }
+    }
+  ],
+  "request": "Restore the missing vertical rectangular Column at the specified center axis and make the Column load bearing.",
+  "request_id": "request-phase12-v2-vvo-column-loadbearing-restoration",
+  "schema_version": "text2ifc/phase12-public-structural-request/0.1"
+}

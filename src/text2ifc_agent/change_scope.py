@@ -20,7 +20,7 @@ _TRAVERSABLE_RELATIONSHIPS = {
     "IfcRelSpaceBoundary",
 }
 _CONTAINMENT = "IfcRelContainedInSpatialStructure"
-_LOCAL_SEMANTIC_FIELDS = {"materials", "property_sets", "appearance", "template"}
+_LOCAL_SEMANTIC_FIELDS = {"materials", "property_sets", "appearance", "part_appearance", "template"}
 
 
 def derive_change_scope(

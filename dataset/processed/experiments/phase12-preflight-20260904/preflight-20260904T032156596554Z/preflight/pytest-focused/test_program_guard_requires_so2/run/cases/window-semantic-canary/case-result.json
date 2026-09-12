@@ -1,0 +1,254 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "window-semantic-canary:stage1:001",
+      "case_id": "window-semantic-canary",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [
+        {
+          "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "few_shot_id": "beam.add.complete"
+        }
+      ],
+      "few_shot_hashes": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "few_shot_ids": [
+        "beam.add.complete"
+      ],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "live",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-8",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": null,
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "profile_ids": [
+        "beam.add"
+      ],
+      "profile_versions": [
+        "0.1"
+      ],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+      "raw_response_sha256": "sha256:371bc58ee2eadf0919228cec7ac2d05d535611079667e4f6612127cf8b4f08f9",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+      },
+      "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-8",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:371bc58ee2eadf0919228cec7ac2d05d535611079667e4f6612127cf8b4f08f9",
+      "stage": "stage1",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    },
+    {
+      "attempt_id": "window-semantic-canary:property_resolution:001",
+      "case_id": "window-semantic-canary",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [],
+      "few_shot_hashes": [],
+      "few_shot_ids": [],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "live",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-9",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": "window-semantic-canary:stage1:001",
+      "private_evidence_detected": false,
+      "profile_hashes": [],
+      "profile_ids": [],
+      "profile_versions": [],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:fbaec46a9ae749974661f472440d79382ef91e751a776c0f9a0d967c1808ef38",
+      "raw_response_sha256": "sha256:bbd7acc4fa55a8d4a0b0ad4a3dee8ead75b2884913869f1288e22fab6b128fee",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "PROPERTY_RESOLUTION_INPUT={}"
+      },
+      "request_sha256": "sha256:77bc06bca01ac46d7f0508e7b65b3241e6d42e4abe97615cb1f6b026ce012ddb",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-9",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:bbd7acc4fa55a8d4a0b0ad4a3dee8ead75b2884913869f1288e22fab6b128fee",
+      "stage": "property_resolution",
+      "stage_attempt": 1,
+      "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+      "template_id": "ifc-property-resolution.v0.2",
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    },
+    {
+      "attempt_id": "window-semantic-canary:stage2:001",
+      "case_id": "window-semantic-canary",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [],
+      "few_shot_hashes": [],
+      "few_shot_ids": [],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "live",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-10",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": "window-semantic-canary:property_resolution:001",
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b"
+      ],
+      "profile_ids": [
+        "occurrence.set-properties"
+      ],
+      "profile_versions": [
+        "0.1"
+      ],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:9ff85e296803f7bde04ee4b7c4cdbf45e1f4fd14f7339056a5815d4a440659a5",
+      "raw_response_sha256": "sha256:67d4d542a5cdd353e089f0c16abd0fbd04a3382016de87560c23ae66e862a9c4",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "{\"few_shots\": [], \"selected_profiles\": [{\"profile_hash\": \"sha256:7b95c00e8f19ff4990053698c42dd182e385931260a2929d0edecbd19dbbec2b\", \"profile_id\": \"occurrence.set-properties\", \"profile_version\": \"0.1\"}]}"
+      },
+      "request_sha256": "sha256:02640f06db306b3b0438a010e8ba86c781d77ad7739b491361416cd88e2fbf14",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-10",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:67d4d542a5cdd353e089f0c16abd0fbd04a3382016de87560c23ae66e862a9c4",
+      "stage": "stage2",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    }
+  ],
+  "case_id": "window-semantic-canary",
+  "contract_pass": true,
+  "feedback_sha256": null,
+  "final": {
+    "clarification_answer_applied": false,
+    "complete_repair_success": true,
+    "status": "succeeded",
+    "strict_reopen_verification": {
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "status": "passed"
+    },
+    "successful_artifact_publishable": true
+  },
+  "live_evidence_pass": true,
+  "private_evidence_detected": false,
+  "proof_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "request_sha256": "sha256:17eed55838744c8f4544a8d23ed626e33f2642c817bf619fc217c7be28a9a68c",
+  "status": "passed",
+  "synthetic_fallback_used": false,
+  "transport_calls": 3,
+  "transport_calls_by_stage": {
+    "property_resolution": 1,
+    "stage1": 1,
+    "stage2": 1
+  }
+}

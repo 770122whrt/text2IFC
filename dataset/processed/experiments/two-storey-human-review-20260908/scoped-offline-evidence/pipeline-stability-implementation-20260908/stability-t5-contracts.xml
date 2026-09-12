@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="69" time="12.128" timestamp="2026-09-08T23:21:46.235770+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_prompt_registry" name="test_registry_hash_is_invariant_to_windows_line_endings" time="0.029" /><testcase classname="tests.agent.test_prompt_registry" name="test_prompt_trace_requires_template_identity" time="0.001" /><testcase classname="tests.agent.test_prompt_registry" name="test_registry_loads_and_renders_versioned_generator_prompt" time="0.107" /><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v1_registry_hash_remains_historical" time="0.048" /><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v2_registry_hash_remains_live_attempt_history" time="0.051" /><testcase classname="tests.agent.test_prompt_registry" name="test_registry_renders_evidence_grounded_design_brief_v2_prompt" time="0.100" /><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v2_1_strengthens_live_bare_json_contract" time="0.162" /><testcase classname="tests.agent.test_prompt_registry" name="test_generator_v1_registry_hash_remains_historical" time="0.053" /><testcase classname="tests.agent.test_prompt_registry" name="test_generator_v2_renders_both_exact_canonical_contracts" time="0.114" /><testcase classname="tests.agent.test_prompt_registry" name="test_generator_context_includes_standard_two_storey_few_shot" time="0.004" /><testcase classname="tests.agent.test_prompt_registry" name="test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract" time="0.063" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcWindowStyle-ConstructionType-ALUMINIUM-WINDOW]" time="0.281" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcDoorStyle-OperationType-SINGLE_SWING_LEFT-LEFT]" time="0.269" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcSlab-PredefinedType-FLOOR-WALL]" time="0.305" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_field_names_and_compiler_boundary_are_not_guessed" time="0.206" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcNotAClass]" time="0.201" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcCartesianPoint]" time="0.202" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcOwnerHistory]" time="0.176" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_scoped_contract_hash_is_deterministic_and_no_defaults_invented" time="0.612" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_generator_receives_registered_new_contract_without_rewriting_old_prompt" time="1.353" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_new_formal_version_accepted_without_rewriting_old" time="1.161" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_staged_skeleton_keeps_request_contract_version" time="0.001" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_semantic_expectations_frozen_before_generation_and_survive_projection" time="0.002" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_absent_performance_does_not_create_a_requirement" time="0.002" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_saved_projection_errors_remain_blocking_on_resume" time="0.031" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_unbound_material_request_is_blocking_not_represented" time="0.002" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_staged_type_package_owns_shared_definition_once_after_occurrences" time="0.002" /><testcase classname="tests.agent.test_generation_semantic_versions" name="test_new_brief_semantics_survive_public_clarification_and_persistence" time="0.469" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[non_json]" time="0.447" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[truncated]" time="0.412" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[empty]" time="0.362" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[auth]" time="0.377" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[timeout]" time="0.360" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[response.raw.json]" time="0.036"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Unreadable historical Provider evidence">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t5-contracts/test_repeated_call_index_canno0')
+existing = 'response.raw.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+&gt;       invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+
+tests\agent\test_design_brief_attempt_preservation.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:151: in make_openai_design_brief_invoker
+    budget = GenerationBudget(root)
+             ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\generation_budget.py:49: in __init__
+    'limits':asdict(frozen), 'attempts':self._historical_attempts(frozen)})
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x00000239376A0920&gt;
+limits = BudgetLimits(max_calls=32, max_tokens=2000000, max_active_seconds=3600)
+
+    def _historical_attempts(self, limits):
+        # Import recorded consumption once. Duplicate archive copies count
+        # conservatively; do not infer that similar responses were one call.
+        responses = list(self.root.rglob('response.raw.json'))
+        sources = responses + [p for p in self.root.rglob('request.redacted.json')
+                               if not (p.parent/'response.raw.json').exists()]
+        attempts = []
+        for path in sorted(sources):
+            raw = path.read_bytes()
+            try:
+                payload = json.loads(raw)
+                usage = payload.get('usage', {}) if path.name == 'response.raw.json' else {}
+            except (ValueError, AttributeError):
+&gt;               raise GenerationBudgetExceeded('Unreadable historical Provider evidence') from None
+E               text2ifc_agent.generation_budget.GenerationBudgetExceeded: Unreadable historical Provider evidence
+
+src\text2ifc_agent\generation_budget.py:64: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[request.redacted.json]" time="0.027"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Unreadable historical Provider evidence">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t5-contracts/test_repeated_call_index_canno1')
+existing = 'request.redacted.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+&gt;       invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+
+tests\agent\test_design_brief_attempt_preservation.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:151: in make_openai_design_brief_invoker
+    budget = GenerationBudget(root)
+             ^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\generation_budget.py:49: in __init__
+    'limits':asdict(frozen), 'attempts':self._historical_attempts(frozen)})
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x00000239376A0F20&gt;
+limits = BudgetLimits(max_calls=32, max_tokens=2000000, max_active_seconds=3600)
+
+    def _historical_attempts(self, limits):
+        # Import recorded consumption once. Duplicate archive copies count
+        # conservatively; do not infer that similar responses were one call.
+        responses = list(self.root.rglob('response.raw.json'))
+        sources = responses + [p for p in self.root.rglob('request.redacted.json')
+                               if not (p.parent/'response.raw.json').exists()]
+        attempts = []
+        for path in sorted(sources):
+            raw = path.read_bytes()
+            try:
+                payload = json.loads(raw)
+                usage = payload.get('usage', {}) if path.name == 'response.raw.json' else {}
+            except (ValueError, AttributeError):
+&gt;               raise GenerationBudgetExceeded('Unreadable historical Provider evidence') from None
+E               text2ifc_agent.generation_budget.GenerationBudgetExceeded: Unreadable historical Provider evidence
+
+src\text2ifc_agent\generation_budget.py:64: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[transport-failure.json]" time="0.042" /><testcase classname="tests.agent.test_clarification_resume_preservation" name="test_resume_preserves_first_call_and_uses_next_index[answers0]" time="0.379" /><testcase classname="tests.agent.test_clarification_resume_preservation" name="test_resume_preserves_first_call_and_uses_next_index[answers1]" time="0.414" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_real_openai_clients_disable_hidden_sdk_retries" time="0.002" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_openai_compatible_config_accepts_api_key_without_leaking_values" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_config_accepts_flash_model_without_leaking_values" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_openai_compatible_config_reports_missing_names_only" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com-https://api.xiaomimimo.com/v1]" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com/-https://api.xiaomimimo.com/v1]" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com/v1-https://api.xiaomimimo.com/v1]" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com/v1/-https://api.xiaomimimo.com/v1]" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_parse_chat_completion_evidence_preserves_required_metadata" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_parse_chat_completion_blocks_length_finish_reason" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_compatibility_report_shape_records_decision_and_evidence_classes" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_compatibility_report_blocks_when_openai_sdk_smoke_fails" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_runtime_config_keeps_secrets_out_of_public_repr" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_runtime_config_keeps_base_url_without_v1_suffix" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_runtime_config_defaults_to_64k_input_and_output_budgets" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_runtime_config_accepts_explicit_output_budget" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_runtime_config_accepts_explicit_input_budget" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_runtime_config_accepts_explicit_provider_timeout" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_runtime_config_defaults_to_large_design_brief_token_budget" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_runtime_config_accepts_explicit_max_completion_tokens" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence" time="0.002" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_openai_compatible_live_provider_returns_live_provider_result" time="0.002" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_live_provider_records_enabled_thinking_request_and_evidence" time="0.002" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_live_provider_rejects_prompt_over_input_budget_before_call" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_live_provider_wraps_connection_failure_without_secrets" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_deepseek_live_provider_retries_transient_connection_then_succeeds" time="0.002" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_phase6_2_compatibility_check_combines_live_probe_results" time="0.001" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_agents_sdk_smoke_closes_async_openai_client" time="0.006" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_phase6_2_check_openai_compat_cli_writes_report" time="0.086" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_phase6_2_check_openai_compat_cli_missing_config_is_safe" time="0.035" /><testcase classname="tests.agent.test_phase6_2_openai_compat" name="test_phase6_2_env_file_overrides_stale_process_provider_env" time="0.036" /></testsuite></testsuites>

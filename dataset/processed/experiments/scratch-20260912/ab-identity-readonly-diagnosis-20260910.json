@@ -1,0 +1,97 @@
+{
+  "A": {
+    "brief_reused_byte_identically": true,
+    "brief_status": "ready",
+    "prior_candidate_reused": false,
+    "new_call_stages": [
+      "generate",
+      "audit"
+    ],
+    "new_calls_available_at_restart": 2
+  },
+  "B": {
+    "old_offered_collections": [
+      "doors",
+      "spaces",
+      "walls",
+      "windows"
+    ],
+    "new_offered_collection_counts": {
+      "walls": 15,
+      "spaces": 6,
+      "doors": 4,
+      "windows": 15,
+      "slabs": 3,
+      "floor_openings": 2,
+      "stairs": 2,
+      "stair_flights": 2,
+      "roof": 1
+    },
+    "new_stairs": [
+      {
+        "brief_id": "stair-1-flight",
+        "entity_id": "stair-1-flight",
+        "storey": "storey-1",
+        "to_storey": "storey-2"
+      },
+      {
+        "brief_id": "stair-2-flight",
+        "entity_id": "stair-2-flight",
+        "storey": "storey-2",
+        "to_storey": "storey-3"
+      }
+    ],
+    "new_children": [
+      {
+        "brief_id": "stair-flight-1-flight",
+        "entity_id": "stair-flight-1-flight",
+        "parent_id": "stair-1-flight",
+        "storey": "storey-1",
+        "to_storey": "storey-2"
+      },
+      {
+        "brief_id": "stair-flight-2-flight",
+        "entity_id": "stair-flight-2-flight",
+        "parent_id": "stair-2-flight",
+        "storey": "storey-2",
+        "to_storey": "storey-3"
+      }
+    ],
+    "new_floor_openings": [
+      {
+        "brief_id": "floor-slab-storey-2-opening-stair",
+        "entity_id": "floor-slab-storey-2-opening-stair",
+        "host_id": "floor-slab-storey-2",
+        "storey": "storey-2",
+        "identity_source": "explicit"
+      },
+      {
+        "brief_id": "floor-slab-storey-3-opening-stair",
+        "entity_id": "floor-slab-storey-3-opening-stair",
+        "host_id": "floor-slab-storey-3",
+        "storey": "storey-3",
+        "identity_source": "explicit"
+      }
+    ],
+    "old_ifc_readonly_gate_success": false,
+    "old_ifc_remaining_issues": {
+      "MISSING_WALL": 15,
+      "ROOM_ENCLOSURE_OPEN": 1,
+      "MISSING_SPACE": 6,
+      "MISSING_STAIR_OPENING": 2,
+      "MISSING_STAIR_FLIGHT": 2
+    }
+  },
+  "frozen_files": {
+    "LIVE-ATTEMPT-FILES.json": {
+      "checked": 174,
+      "changed": []
+    },
+    "FILES.json": {
+      "checked": 335,
+      "changed": []
+    }
+  },
+  "provider_calls": 0,
+  "role": "post-fix read-only diagnostic, not new acceptance"
+}

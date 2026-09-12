@@ -1,0 +1,85 @@
+{
+  "status": "passed",
+  "checks": {
+    "schema_ifc2x3": true,
+    "original_hash_frozen": true,
+    "damaged_hash_frozen": true,
+    "dataset_source_immutable": true,
+    "original_properties_match": true,
+    "damaged_attachment_absent": true,
+    "repaired_direct_properties_match_exact_types": true,
+    "every_preexisting_step_entity_unchanged": true,
+    "all_three_meshes_and_effective_styles_identical": true,
+    "all_three_meshes_succeeded": true
+  },
+  "observed_direct_properties": {
+    "original": [
+      {
+        "Reference": {
+          "type": "IfcIdentifier",
+          "value": "240"
+        },
+        "IsExternal": {
+          "type": "IfcBoolean",
+          "value": true
+        },
+        "ExtendToStructure": {
+          "type": "IfcBoolean",
+          "value": false
+        },
+        "LoadBearing": {
+          "type": "IfcBoolean",
+          "value": false
+        }
+      }
+    ],
+    "damaged": [],
+    "repaired": [
+      {
+        "ExtendToStructure": {
+          "type": "IfcBoolean",
+          "value": false
+        },
+        "IsExternal": {
+          "type": "IfcBoolean",
+          "value": true
+        },
+        "LoadBearing": {
+          "type": "IfcBoolean",
+          "value": false
+        },
+        "Reference": {
+          "type": "IfcIdentifier",
+          "value": "240"
+        }
+      }
+    ]
+  },
+  "authority": "runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/successful/repaired.ifc",
+  "sha256": {
+    "original": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+    "damaged": "7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6",
+    "repaired": "6a94e68fe349673d9aa67ceaf724f2a8dbcb706daeddedca1235930e2305c3e7"
+  },
+  "changed_existing_ids": [],
+  "removed_existing_ids": [],
+  "added_entities": [
+    "#86991=IFCPROPERTYSINGLEVALUE('ExtendToStructure',$,IFCBOOLEAN(.F.),$)",
+    "#86992=IFCPROPERTYSINGLEVALUE('IsExternal',$,IFCBOOLEAN(.T.),$)",
+    "#86993=IFCPROPERTYSINGLEVALUE('LoadBearing',$,IFCBOOLEAN(.F.),$)",
+    "#86994=IFCPROPERTYSINGLEVALUE('Reference',$,IFCIDENTIFIER('240'),$)",
+    "#86995=IFCPROPERTYSET('3pmIMdn$PRpOdHFzdJ$3aB',#41,'Pset_WallCommon',$,(#86991,#86992,#86993,#86994))",
+    "#86996=IFCRELDEFINESBYPROPERTIES('22YbOQHUDKixkSKeLWZ5xg',#41,$,$,(#210),#86995)"
+  ],
+  "mesh_products_per_file": [
+    152,
+    152,
+    152
+  ],
+  "mesh_errors": [
+    [],
+    [],
+    []
+  ],
+  "limitation": "Independent verification of one frozen relation-damage case; not a capability metric. Existing public L2 conditional check is not_required and is not relied on for the requested values."
+}

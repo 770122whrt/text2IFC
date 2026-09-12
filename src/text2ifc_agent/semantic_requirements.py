@@ -13,8 +13,8 @@ from pathlib import Path
 from typing import Any, Mapping
 
 
-SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'template'}
-SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}
+SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'part_appearance', 'template'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
 SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
@@ -71,6 +71,10 @@ def _project_appearance(selection, source_path):
 
 
 def generation_schema_version(brief: Mapping[str, Any]) -> str:
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
+        return 'bim-json/2.3'
+    if brief.get('schema_version') == 'text2ifc/design-brief/2.5':
+        return 'bim-json/2.2'
     known = brief.get('known_facts', {})
     if brief.get('schema_version') in SEMANTIC_BRIEF_VERSIONS or (
         isinstance(known, Mapping) and known.get('semantic_requirements')
@@ -106,7 +110,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
-        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'} and not path.startswith('/known_facts/semantic_requirements/'):
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} and not path.startswith('/known_facts/semantic_requirements/'):
             issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
                            'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
@@ -144,7 +148,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
                 else:
                     expectations.append({**base, 'kind': 'property', 'pset': pset,
                                          'property': name, 'value': copy.deepcopy(value)})
-        for field, kind in [('type_id', 'type'), ('appearance', 'appearance'), ('template', 'template')]:
+        for field, kind in [('type_id', 'type'), ('appearance', 'appearance'), ('part_appearance', 'part_appearance'), ('template', 'template')]:
             if field in record:
                 if field == 'appearance':
                     from jsonschema import Draft202012Validator
@@ -154,12 +158,38 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
                             'message': '构件 appearance 只支持非空数值 RGB/透明度覆盖；主题及窗框、玻璃等部件说明不能作为整件外观字段。'})
                         continue
                 expectations.append({**base, 'kind': kind, 'value': copy.deepcopy(record[field])})
-    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
+    from .brief_semantic_roles import filter_roles
+    expectations, role_issues = filter_roles(brief, expectations)
+    issues.extend(role_issues)
+    if brief.get('schema_version') == 'text2ifc/design-brief/2.7':
+        from .brief_semantic_roles import role_index
+        from text2ifc_contract.property_validation import validate_property_sets
+        from text2ifc_knowledge.registry import load_ifc2x3_registry
+        identities, _ = role_index(brief)
+        registry = load_ifc2x3_registry()
+        executable = []
+        for row in expectations:
+            if row['kind'] != 'property':
+                executable.append(row)
+                continue
+            cls = identities.get(row['entity_id'], {}).get('ifc_class')
+            rejected = validate_property_sets(cls, {row['pset']: {row['property']: row['value']}},
+                path=row['source_path'] + '/property_sets', registry=registry)
+            if rejected:
+                issues.extend({'code': 'SEMANTIC_PROPERTY_NOT_ADMISSIBLE', 'path': i.path,
+                    'message': f'{i.code}: {i.message} Correct extraction from the user request; native IFC attributes are not Pset properties. Do not invent a replacement property or discard an explicit unsupported request.'}
+                    for i in rejected)
+            else:
+                executable.append(row)
+        expectations = executable
+    from .part_appearance import validate_part_requests
+    issues.extend(validate_part_requests(brief, expectations))
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
         review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
         for kind in sorted(SEMANTIC_KINDS):
             entry = review.get(kind, {}) if isinstance(review, Mapping) else {}
             status = entry.get('status') if isinstance(entry, Mapping) else None
-            has_values = any(e['kind'] == kind for e in expectations)
+            has_values = any(e['kind'] == kind or (kind == 'appearance' and e['kind'] == 'part_appearance') for e in expectations)
             if status not in {'specified', 'not_specified', 'unresolved'} or (
                 status == 'unresolved'
             ):
@@ -182,7 +212,7 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
     brief_path = next((p for p in paths if p.is_file()), None)
     brief = json.loads(brief_path.read_text(encoding='utf-8')) if brief_path else {}
     projected = project_semantic_requirements(brief)
-    projected['minimum_schema_version'] = 'bim-json/2.1' if brief.get('schema_version') in SEMANTIC_BRIEF_VERSIONS else None
+    projected['minimum_schema_version'] = generation_schema_version(brief) if brief.get('schema_version') in SEMANTIC_BRIEF_VERSIONS else None
     projected['appearance_requests'], projected['appearance_notes'] = [], []
 
     def add_appearance(selection, source_path):
@@ -204,8 +234,8 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
             # weaken a saved expectation during resume or final acceptance.
             projected['expectations'] = [*frozen['semantic_expectations'], *projected['expectations']]
         projected['issues'].extend(frozen.get('semantic_projection_issues', []))
-        if frozen.get('generation_schema_version') == 'bim-json/2.1':
-            projected['minimum_schema_version'] = 'bim-json/2.1'
+        if frozen.get('generation_schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
+            projected['minimum_schema_version'] = frozen['generation_schema_version']
         if 'appearance' in frozen:
             add_appearance(frozen['appearance'], 'expected-facts.json#/appearance')
     projected['valid'] = not projected['issues']
@@ -304,13 +334,14 @@ def request_contract_issues(candidate, request):
 
 def unauthorized_candidate_semantics(candidate, expectations):
     """Defaults cannot manufacture facts or grant whole-product style overrides."""
-    if candidate.get('schema_version') != 'bim-json/2.1':
+    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
         return []
     allowed_properties = {(e['entity_id'], e.get('pset'), e.get('property'))
                           for e in expectations if e['kind'] == 'property'}
     allowed_materials = {e['entity_id'] for e in expectations if e['kind'] == 'material'}
     allowed_appearance = {e['entity_id'] for e in expectations if e['kind'] == 'appearance'}
-    issues = _unauthorized_candidate_types(candidate, expectations)
+    from .part_appearance import unauthorized_parts
+    issues = [*_unauthorized_candidate_types(candidate, expectations), *unauthorized_parts(candidate, expectations)]
     for record in candidate.get('entities', []):
         entity_id = record['id']
         if 'appearance' in record and entity_id not in allowed_appearance:

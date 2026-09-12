@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from .product_geometry import world_box_bbox, basic_railing_bbox
+
 
 MANIFEST_VERSION = "text2ifc/generation-package-manifest/1.0"
 
@@ -112,12 +114,12 @@ def build_generation_package_manifest(
                 )
             else:
                 local_component_classes[storey_id][component_id] = ifc_class
-        if not _valid_linear_product_geometry(record.get("geometry")):
+        if not _valid_linear_product_geometry(record.get("geometry")) and world_box_bbox(record.get("geometry")) is None and basic_railing_bbox(record.get("geometry")) is None:
             issues.append(
                 _issue(
                     "PACKAGE_PRODUCT_GEOMETRY_INCOMPLETE",
                     f"/products/{index}/geometry",
-                    "A linear product requires axis-aligned non-zero endpoints, height, and thickness.",
+                    "A product requires complete explicit linear dimensions or finite positive world-axis box bounds.",
                 )
             )
 
@@ -160,7 +162,17 @@ def build_generation_package_manifest(
                         cross_refs.add(endpoint)
     roof = expected_facts.get("roof")
     if isinstance(roof, Mapping):
-        cross_components.append(_component_id(roof, "roof-main"))
+        roof_id = _component_id(roof, "roof-main")
+        cross_components.append(roof_id)
+        from .cross_storey_identity import floor_opening_id
+        from .semantic_coverage import _plan_bounds
+        for index, opening in enumerate(_slab_openings(roof)):
+            if _plan_bounds(opening.get('bounds')) is None:
+                issues.append(_issue('PACKAGE_ROOF_OPENING_INCOMPLETE', f'/roof/openings/{index}',
+                    'Roof openings require explicit valid bounds before package generation.'))
+                continue
+            cross_components.append(floor_opening_id(opening, roof_id, index))
+            cross_relationships.append(f'rel-voids-{roof_id}' if index == 0 else f'rel-voids-{roof_id}-{index + 1}')
 
     if issues:
         return {

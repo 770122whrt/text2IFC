@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="9" time="2.789" timestamp="2026-09-08T22:43:00.322346+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcWindowStyle-ConstructionType-ALUMINIUM-WINDOW]" time="0.367" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcDoorStyle-OperationType-SINGLE_SWING_LEFT-LEFT]" time="0.134" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcSlab-PredefinedType-FLOOR-WALL]" time="0.140" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_field_names_and_compiler_boundary_are_not_guessed" time="0.104" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcNotAClass]" time="0.083" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcCartesianPoint]" time="0.099" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcOwnerHistory]" time="0.079" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_scoped_contract_hash_is_deterministic_and_no_defaults_invented" time="0.290" /><testcase classname="tests.agent.test_generation_authoring_contract" name="test_generator_receives_registered_new_contract_without_rewriting_old_prompt" time="1.011"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.2: sha256:192b85a0a3f97cd889686823c9a4db682bf39dd367bd03082c5315c5b9bc2529">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-stability-t1-green/test_generator_receives_regist0')
+
+    def test_generator_receives_registered_new_contract_without_rewriting_old_prompt(tmp_path):
+        from text2ifc_agent.live_pipeline import run_generator_stage
+        from text2ifc_agent.prompt_registry import load_prompt_registry
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        root = Path(__file__).resolve().parents[2]
+        candidate = json.loads((root/'tests/contract_v2/fixtures/complete.json').read_text(encoding='utf-8'))
+        candidate['schema_version'] = 'bim-json/2.1'
+        source = tmp_path/'design-brief'
+        source.mkdir()
+        (source/'input.txt').write_text('生成一间房间。', encoding='utf-8')
+        for name, value in [('conversation', []), ('context-selection', {'evidence': []}),
+                            ('design-brief', {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts':{}})]:
+            (source/f'{name}.json').write_text(json.dumps(value), encoding='utf-8')
+        provider = SequenceProvider([copy.deepcopy(candidate)])
+&gt;       result = run_generator_stage(provider=provider, output_dir=tmp_path/'generator', design_source_dir=source, case_id='contract-family')
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_authoring_contract.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:554: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for bim-json-generator.v2.2: sha256:192b85a0a3f97cd889686823c9a4db682bf39dd367bd03082c5315c5b9bc2529
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase></testsuite></testsuites>

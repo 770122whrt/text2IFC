@@ -37,6 +37,9 @@ def write_semantic_report(path, ifc_path, expectations, issues=(), *, appearance
                 type_entity=util.get_type(original)
                 actual=util.get_psets(type_entity,should_inherit=False).get('Pset_text2IFCIdentity',{}).get('BimJsonId') if type_entity else None
             elif kind == 'appearance': actual=[s for r in entity.Representation.Representations for i in r.Items for s in item_appearance_signatures(i)] if entity.Representation else []
+            elif kind == 'part_appearance':
+                from text2ifc_presentation.part_readback import read_part_styles
+                actual = read_part_styles(entity)
             elif kind == 'template': actual=util.get_psets(entity,should_inherit=False).get('Pset_text2IFCBasicFilling',{})
         okay = bool(model) and not verify_semantic_expectations(model,[expected])
         label = '.'.join([expected.get('pset',''),expected.get('property','')]).strip('.') if kind=='property' else kind

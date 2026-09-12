@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="13" time="13.859" timestamp="2026-09-09T22:10:22.887315+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_structured_audit_dispute_stops_even_with_candidate_error[gate_dispute-None]" time="0.001"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">code = 'gate_dispute', classification = None
+
+    @pytest.mark.parametrize('code,classification', [
+        ('gate_dispute', None), ('GATE_DISPUTE', None),
+        ('MISSING_STAIR_OPENING', 'gate_dispute'),
+        ('WALL_BBOX_MISMATCH', 'gate_dispute'),
+    ])
+    def test_structured_audit_dispute_stops_even_with_candidate_error(code, classification):
+        finding = {'code': code, 'message': 'Evaluator applicability needs review.'}
+        if classification:
+            finding['classification'] = classification
+        findings = [finding, {'code': 'EXPECTED_STAIR_MISSING', 'message': 'Missing stair.'}]
+        for records in [findings, list(reversed(findings))]:
+            issues = normalize_audit_findings({'findings': records, 'blocking': True})
+            result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;           assert result['route'] == 'gate_issue'
+E           AssertionError: assert 'regenerate_json' == 'gate_issue'
+E             
+E             - gate_issue
+E             + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_structured_audit_dispute_stops_even_with_candidate_error[GATE_DISPUTE-None]" time="0.001"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">code = 'GATE_DISPUTE', classification = None
+
+    @pytest.mark.parametrize('code,classification', [
+        ('gate_dispute', None), ('GATE_DISPUTE', None),
+        ('MISSING_STAIR_OPENING', 'gate_dispute'),
+        ('WALL_BBOX_MISMATCH', 'gate_dispute'),
+    ])
+    def test_structured_audit_dispute_stops_even_with_candidate_error(code, classification):
+        finding = {'code': code, 'message': 'Evaluator applicability needs review.'}
+        if classification:
+            finding['classification'] = classification
+        findings = [finding, {'code': 'EXPECTED_STAIR_MISSING', 'message': 'Missing stair.'}]
+        for records in [findings, list(reversed(findings))]:
+            issues = normalize_audit_findings({'findings': records, 'blocking': True})
+            result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;           assert result['route'] == 'gate_issue'
+E           AssertionError: assert 'regenerate_json' == 'gate_issue'
+E             
+E             - gate_issue
+E             + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_structured_audit_dispute_stops_even_with_candidate_error[MISSING_STAIR_OPENING-gate_dispute]" time="0.001"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">code = 'MISSING_STAIR_OPENING', classification = 'gate_dispute'
+
+    @pytest.mark.parametrize('code,classification', [
+        ('gate_dispute', None), ('GATE_DISPUTE', None),
+        ('MISSING_STAIR_OPENING', 'gate_dispute'),
+        ('WALL_BBOX_MISMATCH', 'gate_dispute'),
+    ])
+    def test_structured_audit_dispute_stops_even_with_candidate_error(code, classification):
+        finding = {'code': code, 'message': 'Evaluator applicability needs review.'}
+        if classification:
+            finding['classification'] = classification
+        findings = [finding, {'code': 'EXPECTED_STAIR_MISSING', 'message': 'Missing stair.'}]
+        for records in [findings, list(reversed(findings))]:
+            issues = normalize_audit_findings({'findings': records, 'blocking': True})
+            result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;           assert result['route'] == 'gate_issue'
+E           AssertionError: assert 'regenerate_json' == 'gate_issue'
+E             
+E             - gate_issue
+E             + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_structured_audit_dispute_stops_even_with_candidate_error[WALL_BBOX_MISMATCH-gate_dispute]" time="0.001"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">code = 'WALL_BBOX_MISMATCH', classification = 'gate_dispute'
+
+    @pytest.mark.parametrize('code,classification', [
+        ('gate_dispute', None), ('GATE_DISPUTE', None),
+        ('MISSING_STAIR_OPENING', 'gate_dispute'),
+        ('WALL_BBOX_MISMATCH', 'gate_dispute'),
+    ])
+    def test_structured_audit_dispute_stops_even_with_candidate_error(code, classification):
+        finding = {'code': code, 'message': 'Evaluator applicability needs review.'}
+        if classification:
+            finding['classification'] = classification
+        findings = [finding, {'code': 'EXPECTED_STAIR_MISSING', 'message': 'Missing stair.'}]
+        for records in [findings, list(reversed(findings))]:
+            issues = normalize_audit_findings({'findings': records, 'blocking': True})
+            result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;           assert result['route'] == 'gate_issue'
+E           AssertionError: assert 'regenerate_json' == 'gate_issue'
+E             
+E             - gate_issue
+E             + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_incomplete_expectation_cannot_repair_candidate[geometry]" time="0.011"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-gate-routing-red02/test_incomplete_expectation_ca0')
+source = 'geometry'
+
+    @pytest.mark.parametrize('source', ['geometry', 'summary', 'both'])
+    def test_incomplete_expectation_cannot_repair_candidate(tmp_path, source):
+        incomplete = {'code': 'GEOMETRY_EXPECTATION_INCOMPLETE',
+                      'path': '/known_facts/storeys/1/walls/interior/0',
+                      'actual': {'reason': 'shared_boundary_not_unique_or_wall_thickness_missing'}}
+        missing = {'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/stair-opening'}
+        if source in {'geometry', 'both'}:
+            (tmp_path/'geometry-feedback.json').write_text(json.dumps({'success': False, 'issues': [missing, incomplete]}))
+        if source in {'summary', 'both'}:
+            (tmp_path/'gate-summary.json').write_text(json.dumps({'overall_status': 'failed', 'gates': [
+                {'name': 'geometry', 'status': 'failed', 'issues': [missing, incomplete]}]}))
+        issues = normalize_gate_sidecars(tmp_path)
+        result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;       assert result['route'] == 'gate_issue'
+E       AssertionError: assert 'regenerate_json' == 'gate_issue'
+E         
+E         - gate_issue
+E         + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:42: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_incomplete_expectation_cannot_repair_candidate[summary]" time="0.007"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-gate-routing-red02/test_incomplete_expectation_ca1')
+source = 'summary'
+
+    @pytest.mark.parametrize('source', ['geometry', 'summary', 'both'])
+    def test_incomplete_expectation_cannot_repair_candidate(tmp_path, source):
+        incomplete = {'code': 'GEOMETRY_EXPECTATION_INCOMPLETE',
+                      'path': '/known_facts/storeys/1/walls/interior/0',
+                      'actual': {'reason': 'shared_boundary_not_unique_or_wall_thickness_missing'}}
+        missing = {'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/stair-opening'}
+        if source in {'geometry', 'both'}:
+            (tmp_path/'geometry-feedback.json').write_text(json.dumps({'success': False, 'issues': [missing, incomplete]}))
+        if source in {'summary', 'both'}:
+            (tmp_path/'gate-summary.json').write_text(json.dumps({'overall_status': 'failed', 'gates': [
+                {'name': 'geometry', 'status': 'failed', 'issues': [missing, incomplete]}]}))
+        issues = normalize_gate_sidecars(tmp_path)
+        result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;       assert result['route'] == 'gate_issue'
+E       AssertionError: assert 'regenerate_json' == 'gate_issue'
+E         
+E         - gate_issue
+E         + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:42: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_incomplete_expectation_cannot_repair_candidate[both]" time="0.010"><failure message="AssertionError: assert 'regenerate_json' == 'gate_issue'&#10;  &#10;  - gate_issue&#10;  + regenerate_json">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-gate-routing-red02/test_incomplete_expectation_ca2')
+source = 'both'
+
+    @pytest.mark.parametrize('source', ['geometry', 'summary', 'both'])
+    def test_incomplete_expectation_cannot_repair_candidate(tmp_path, source):
+        incomplete = {'code': 'GEOMETRY_EXPECTATION_INCOMPLETE',
+                      'path': '/known_facts/storeys/1/walls/interior/0',
+                      'actual': {'reason': 'shared_boundary_not_unique_or_wall_thickness_missing'}}
+        missing = {'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/stair-opening'}
+        if source in {'geometry', 'both'}:
+            (tmp_path/'geometry-feedback.json').write_text(json.dumps({'success': False, 'issues': [missing, incomplete]}))
+        if source in {'summary', 'both'}:
+            (tmp_path/'gate-summary.json').write_text(json.dumps({'overall_status': 'failed', 'gates': [
+                {'name': 'geometry', 'status': 'failed', 'issues': [missing, incomplete]}]}))
+        issues = normalize_gate_sidecars(tmp_path)
+        result = plan_feedback_round(source_stage='audit', issues=issues, previous_issue_count=None, current_feedback_round=0)
+&gt;       assert result['route'] == 'gate_issue'
+E       AssertionError: assert 'regenerate_json' == 'gate_issue'
+E         
+E         - gate_issue
+E         + regenerate_json
+
+tests\agent\test_gate_dispute_recovery.py:42: AssertionError</failure></testcase><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_real_candidate_errors_still_allow_bounded_repair[WALL_BBOX_MISMATCH]" time="0.001" /><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_real_candidate_errors_still_allow_bounded_repair[EXPECTED_STAIR_MISSING]" time="0.001" /><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_real_candidate_errors_still_allow_bounded_repair[MISSING_HOST]" time="0.001" /><testcase classname="tests.agent.test_gate_dispute_recovery" name="test_informational_dispute_does_not_block_accepted_run" time="0.001" /><testcase classname="tests.agent.test_interactive_cli_generation" name="test_gate_dispute_blocks_public_candidate_repair_without_provider_retry[legacy_full]" time="6.417"><failure message="IndexError: list index out of range">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-gate-routing-red02/test_gate_dispute_blocks_publi0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002557EF6DCA0&gt;
+strategy = 'legacy_full'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    def test_gate_dispute_blocks_public_candidate_repair_without_provider_retry(tmp_path, monkeypatch, strategy):
+        root = tmp_path / strategy
+        store = SessionStore.open(root / 'sessions.sqlite', artifact_root=root)
+        session = store.create_session(original_input='Create a rectangular room with confirmed dimensions.')
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, 'ready')
+        candidate = _geometry_blocked_candidate(json.loads(
+            (PHASE6_1_COMPLETE / 'generator/candidate.json').read_text(encoding='utf-8')))
+        if strategy == 'staged':
+            # Only the initial staged provider seam is replaced; compile, gates,
+            # Audit normalization, recovery routing and terminal publication are real.
+            import text2ifc_agent.interactive_cli_flow as flow
+            def staged(**kwargs):
+                return {'valid': True, 'candidate': candidate, 'package_count': 1,
+                        'provider_call_count': 0, 'status': 'formal', 'package_records': [],
+                        'revision': {'revision_id': 'revision-02', 'sequence': 2,
+                                     'candidate_hash': build_candidate_index(candidate)['candidate_hash']}}
+            monkeypatch.setattr(flow, 'run_staged_generation', staged)
+        audit = {'schema_version': 'text2ifc/audit/2.0', 'recommendation': 'revise',
+                 'blocking': True, 'deterministic_gate_status': 'failed',
+                 'findings': [{'code': 'GATE_DISPUTE', 'classification': 'gate_dispute',
+                               'message': 'Expected geometry needs review before candidate changes.'}],
+                 'evidence_paths': ['gate-summary.json']}
+        provider = _SequenceLiveProvider(([candidate] if strategy == 'legacy_full' else []) + [audit])
+        try:
+&gt;           result = run_ready_session_to_ifc(store=store, session=session.session_hash,
+                                             provider_factory=lambda: provider,
+                                             generation_strategy=strategy)
+
+tests\agent\test_interactive_cli_generation.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:466: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:879: in _run_ready_session_to_ifc
+    regeneration_attempt = _attempt_generator_regeneration_after_audit(
+src\text2ifc_agent\interactive_cli_flow.py:1558: in _attempt_generator_regeneration_after_audit
+    scoped = run_scoped_changeset_round(
+src\text2ifc_agent\scoped_loop.py:133: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;tests.agent.test_interactive_cli_generation._SequenceLiveProvider object at 0x000002557EF6EFC0&gt;
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+        del prompt, schema, state
+        index = len(self.session_ids)
+        self.session_ids.append(session_id)
+&gt;       payload = self.payloads[index]
+                  ^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\agent\test_interactive_cli_generation.py:27: IndexError</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_gate_dispute_blocks_public_candidate_repair_without_provider_retry[staged]" time="5.204"><failure message="IndexError: list index out of range">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-gate-routing-red02/test_gate_dispute_blocks_publi1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000002557FE63B90&gt;
+strategy = 'staged'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    def test_gate_dispute_blocks_public_candidate_repair_without_provider_retry(tmp_path, monkeypatch, strategy):
+        root = tmp_path / strategy
+        store = SessionStore.open(root / 'sessions.sqlite', artifact_root=root)
+        session = store.create_session(original_input='Create a rectangular room with confirmed dimensions.')
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, 'ready')
+        candidate = _geometry_blocked_candidate(json.loads(
+            (PHASE6_1_COMPLETE / 'generator/candidate.json').read_text(encoding='utf-8')))
+        if strategy == 'staged':
+            # Only the initial staged provider seam is replaced; compile, gates,
+            # Audit normalization, recovery routing and terminal publication are real.
+            import text2ifc_agent.interactive_cli_flow as flow
+            def staged(**kwargs):
+                return {'valid': True, 'candidate': candidate, 'package_count': 1,
+                        'provider_call_count': 0, 'status': 'formal', 'package_records': [],
+                        'revision': {'revision_id': 'revision-02', 'sequence': 2,
+                                     'candidate_hash': build_candidate_index(candidate)['candidate_hash']}}
+            monkeypatch.setattr(flow, 'run_staged_generation', staged)
+        audit = {'schema_version': 'text2ifc/audit/2.0', 'recommendation': 'revise',
+                 'blocking': True, 'deterministic_gate_status': 'failed',
+                 'findings': [{'code': 'GATE_DISPUTE', 'classification': 'gate_dispute',
+                               'message': 'Expected geometry needs review before candidate changes.'}],
+                 'evidence_paths': ['gate-summary.json']}
+        provider = _SequenceLiveProvider(([candidate] if strategy == 'legacy_full' else []) + [audit])
+        try:
+&gt;           result = run_ready_session_to_ifc(store=store, session=session.session_hash,
+                                             provider_factory=lambda: provider,
+                                             generation_strategy=strategy)
+
+tests\agent\test_interactive_cli_generation.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:466: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:879: in _run_ready_session_to_ifc
+    regeneration_attempt = _attempt_generator_regeneration_after_audit(
+src\text2ifc_agent\interactive_cli_flow.py:1558: in _attempt_generator_regeneration_after_audit
+    scoped = run_scoped_changeset_round(
+src\text2ifc_agent\scoped_loop.py:133: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;tests.agent.test_interactive_cli_generation._SequenceLiveProvider object at 0x000002557FE61C40&gt;
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+        del prompt, schema, state
+        index = len(self.session_ids)
+        self.session_ids.append(session_id)
+&gt;       payload = self.payloads[index]
+                  ^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\agent\test_interactive_cli_generation.py:27: IndexError</failure></testcase></testsuite></testsuites>

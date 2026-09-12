@@ -1,0 +1,106 @@
+{
+  "applicability_by_operation": {
+    "phase12-v2-vvo-column-loadbearing-restoration-column-1": {
+      "column.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-column-loadbearing-restoration-column-1/column.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "column.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-column-loadbearing-restoration-column-1/column.pset",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true
+      },
+      "column.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-column-loadbearing-restoration-column-1/column.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "column.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-column-loadbearing-restoration-column-1/column.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "explicit.pset-Pset_ColumnCommon.LoadBearing": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/phase12-v2-vvo-column-loadbearing-restoration-column-1/explicit.pset-Pset_ColumnCommon.LoadBearing",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    }
+  },
+  "conflicts": [],
+  "expected_facts_by_operation": {
+    "phase12-v2-vvo-column-loadbearing-restoration-column-1": [
+      {
+        "fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+        "inherited": false,
+        "provenance": [
+          "request-source:user_request",
+          "request-evidence:request:/operations/0/properties/0",
+          "operation:phase12-v2-vvo-column-loadbearing-restoration-column-1",
+          "property-hash:sha256:201fd34f75d8aee53ee7458ef31ae0e9a63231b1c05141bc18a85b672dae80d9",
+          "source_fact_key:pset:Pset_ColumnCommon.LoadBearing"
+        ],
+        "source_kind": "explicit_request",
+        "source_ref": "request:/operations/0/properties/0",
+        "unit": null,
+        "value": true,
+        "value_type": "IfcBoolean"
+      },
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:1vTeahUkP60PdWqwCTjeRs",
+          "resolved-host:1vTeahUkP60PdWqwCTjeRs",
+          "operation:phase12-v2-vvo-column-loadbearing-restoration-column-1"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:1vTeahUkP60PdWqwCTjeRs",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjeRs",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:phase12-v2-vvo-column-loadbearing-restoration-column-1",
+          "registered-column-base-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/phase12-v2-vvo-column-loadbearing-restoration-column-1/target",
+        "unit": null,
+        "value": "1vTeahUkP60PdWqwCTjeRs",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:phase12-v2-vvo-column-loadbearing-restoration-column-1",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:0jAQiI72jNOxpB2J9pfQ7I",
+        "unit": null,
+        "value": "0jAQiI72jNOxpB2J9pfQ7I",
+        "value_type": "IfcColumnType"
+      }
+    ]
+  },
+  "operation_types": {
+    "phase12-v2-vvo-column-loadbearing-restoration-column-1": "add_column"
+  },
+  "schema_version": "text2ifc/phase12-production-evidence/0.1"
+}

@@ -1,0 +1,599 @@
+.............................................................F.FF..F     [100%]
+================================== FAILURES ===================================
+__________ test_design_brief_loop_persists_agent_question_and_recall __________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-compatibility-20260910/test_design_brief_loop_persist0')
+
+    def test_design_brief_loop_persists_agent_question_and_recall(tmp_path):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(original_input="创建一个6米乘4米的房间，高3米。")
+        observed = []
+    
+        def invoke(transcript, call_index):
+            observed.append((transcript, call_index))
+            if call_index == 1:
+                return _call(
+                    call_index,
+                    original_request=session.original_input,
+                    status="needs_clarification",
+                )
+            return _call(
+                call_index,
+                original_request=session.original_input,
+                status="ready",
+                source_turns=["turn-user-001", "turn-user-003"],
+            )
+    
+>       result = run_design_brief_clarification_loop(
+            store=store,
+            session=session.session_hash,
+            invoke_design_brief=invoke,
+            user_answers=["墙体厚度为300mm。"],
+        )
+
+tests\agent\test_interactive_cli_flow.py:117: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:427: in run_design_brief_clarification_loop
+    controller = controller.answer_and_rerun(
+src\text2ifc_agent\clarification.py:183: in answer_and_rerun
+    return awaiting.record_model_call(next_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='72844db6d586d96d', original_request='创建一个6米乘4米的房间，高3米。', transcript=(ClarificationTur...:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}]),), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=2, response_id='msg_phase62_2', prompt_template_id='design-brief.v2.2', prompt_template_h...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -> "ClarificationController":
+        if self.status != "awaiting_model":
+            raise ClarificationError(
+                "Design Brief call requires awaiting_model; "
+                "pending questions require a user answer and terminal states cannot advance"
+            )
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+            conversation=self.transcript_dicts(),
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+>           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: SEMANTIC_AUTHORITY_INCOMPLETE@/known_facts/semantic_requirements
+
+src\text2ifc_agent\clarification.py:115: ClarificationError
+_______ test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker ________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-compatibility-20260910/test_phase6_2_cli_runs_design_0')
+capsys = <_pytest.capture.CaptureFixture object at 0x0000020FD571AD50>
+
+    def test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker(
+        tmp_path, capsys
+    ):
+        from scripts.agent import run_phase6_2_cli
+    
+        root = tmp_path / "phase6.2-interactive-cli"
+        scripted_stdin = tmp_path / "clarified-room.stdin"
+        scripted_stdin.write_text(
+            "\n".join(
+                [
+                    "创建一个6米乘4米、高3米的房间，南墙有门，北墙有窗。",
+                    "墙体厚度为300mm。",
+                ]
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        observed = []
+    
+        def invoke(transcript, call_index):
+            observed.append((transcript, call_index))
+            original_request = transcript[0]["content"]
+            if call_index == 1:
+                return _call(
+                    call_index,
+                    original_request=original_request,
+                    status="needs_clarification",
+                )
+            return _call(
+                call_index,
+                original_request=original_request,
+                status="ready",
+                source_turns=["turn-user-001", "turn-user-003"],
+            )
+    
+>       exit_code = run_phase6_2_cli.main(
+            [
+                "--live",
+                "--stop-after",
+                "design-brief",
+                "--scripted-stdin",
+                str(scripted_stdin),
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            design_brief_invoker=invoke,
+        )
+
+tests\agent\test_interactive_cli_flow.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_2_cli.py:114: in main
+    return _run_interactive_cli(
+scripts\agent\run_phase6_2_cli.py:207: in _run_interactive_cli
+    result = run_design_brief_clarification_loop(
+src\text2ifc_agent\interactive_cli_flow.py:427: in run_design_brief_clarification_loop
+    controller = controller.answer_and_rerun(
+src\text2ifc_agent\clarification.py:183: in answer_and_rerun
+    return awaiting.record_model_call(next_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='624924f080e5c51d', original_request='创建一个6米乘4米、高3米的房间，南墙有门，北墙有窗。', transcript=(Clarif...:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}]),), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=2, response_id='msg_phase62_2', prompt_template_id='design-brief.v2.2', prompt_template_h...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -> "ClarificationController":
+        if self.status != "awaiting_model":
+            raise ClarificationError(
+                "Design Brief call requires awaiting_model; "
+                "pending questions require a user answer and terminal states cannot advance"
+            )
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+            conversation=self.transcript_dicts(),
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+>           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: SEMANTIC_AUTHORITY_INCOMPLETE@/known_facts/semantic_requirements
+
+src\text2ifc_agent\clarification.py:115: ClarificationError
+______________ test_live_cli_reads_clarification_answers_lazily _______________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-compatibility-20260910/test_live_cli_reads_clarificat0')
+capsys = <_pytest.capture.CaptureFixture object at 0x0000020FDB7FE510>
+
+    def test_live_cli_reads_clarification_answers_lazily(tmp_path, capsys):
+        from scripts.agent import run_phase6_2_cli
+    
+        root = tmp_path / "phase6.2-interactive-cli"
+    
+        class LazyStdin:
+            def __init__(self):
+                self.lines = iter(
+                    [
+                        "create a simple room\n",
+                        "wall thickness is 300mm\n",
+                    ]
+                )
+                self.read_called = False
+                self.line_count = 0
+    
+            def read(self):
+                self.read_called = True
+                raise AssertionError("live CLI must not pre-read all stdin")
+    
+            def __iter__(self):
+                return self
+    
+            def __next__(self):
+                line = next(self.lines)
+                self.line_count += 1
+                return line
+    
+        stdin = LazyStdin()
+        observed_line_counts = []
+    
+        def invoke(transcript, call_index):
+            observed_line_counts.append(stdin.line_count)
+            original_request = transcript[0]["content"]
+            if call_index == 1:
+                return _call(
+                    call_index,
+                    original_request=original_request,
+                    status="needs_clarification",
+                )
+            return _call(
+                call_index,
+                original_request=original_request,
+                status="ready",
+                source_turns=["turn-user-001", "turn-user-003"],
+            )
+    
+>       exit_code = run_phase6_2_cli.main(
+            [
+                "--live",
+                "--stop-after",
+                "design-brief",
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            design_brief_invoker=invoke,
+            stdin=stdin,
+        )
+
+tests\agent\test_interactive_cli_flow.py:271: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_2_cli.py:114: in main
+    return _run_interactive_cli(
+scripts\agent\run_phase6_2_cli.py:207: in _run_interactive_cli
+    result = run_design_brief_clarification_loop(
+src\text2ifc_agent\interactive_cli_flow.py:427: in run_design_brief_clarification_loop
+    controller = controller.answer_and_rerun(
+src\text2ifc_agent\clarification.py:183: in answer_and_rerun
+    return awaiting.record_model_call(next_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='b477759c94bb5a29', original_request='create a simple room', transcript=(Clarification...:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}]),), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=2, response_id='msg_phase62_2', prompt_template_id='design-brief.v2.2', prompt_template_h...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -> "ClarificationController":
+        if self.status != "awaiting_model":
+            raise ClarificationError(
+                "Design Brief call requires awaiting_model; "
+                "pending questions require a user answer and terminal states cannot advance"
+            )
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+            conversation=self.transcript_dicts(),
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+>           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: SEMANTIC_AUTHORITY_INCOMPLETE@/known_facts/semantic_requirements
+
+src\text2ifc_agent\clarification.py:115: ClarificationError
+________ test_phase6_2_cli_builds_default_openai_design_brief_invoker _________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-compatibility-20260910/test_phase6_2_cli_builds_defau0')
+capsys = <_pytest.capture.CaptureFixture object at 0x0000020FD63895B0>
+
+    def test_phase6_2_cli_builds_default_openai_design_brief_invoker(
+        tmp_path, capsys
+    ):
+        from scripts.agent import run_phase6_2_cli
+    
+        root = tmp_path / "phase6.2-interactive-cli"
+        env_file = tmp_path / ".env"
+        env_file.write_text(
+            "\n".join(
+                [
+                    "API_KEY=secret-api-key",
+                    "OpenAI_BASE_URL=https://api.xiaomimimo.com",
+                    "TEXT2IFC_MIMO_MODEL=mimo-v2.5-pro",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        original_request = "创建一个6米乘4米、高3米的房间。"
+        scripted_stdin = tmp_path / "clarified-room.stdin"
+        scripted_stdin.write_text(original_request + "\n墙体厚度为300mm。\n", encoding="utf-8")
+    
+        first = _brief(original_request=original_request, status="needs_clarification")
+        first_selection = select_design_brief_context(
+            user_request=original_request,
+            conversation=[{"turn_id": "turn-user-001", "role": "user", "content": original_request}],
+        )
+        first["fact_sources"][0]["evidence_refs"] = ["schema:bim-json-v2:representation"]
+        first["provenance"]["selected_evidence_ids"] = [
+            item["evidence_id"] for item in first_selection["evidence"]
+        ]
+        second = _brief(
+            original_request=original_request,
+            status="ready",
+            source_turns=["turn-user-001", "turn-user-003"],
+        )
+        second["fact_sources"][0]["evidence_refs"] = ["schema:bim-json-v2:representation"]
+        second["provenance"]["selected_evidence_ids"] = [
+            item["evidence_id"] for item in first_selection["evidence"]
+        ]
+        responses = [first, second]
+    
+        class Response:
+            def __init__(self, payload, index):
+                self.payload = payload
+                self.index = index
+    
+            def model_dump(self):
+                return {
+                    "id": f"chatcmpl-design-{self.index}",
+                    "object": "chat.completion",
+                    "model": "mimo-v2.5-pro",
+                    "choices": [
+                        {
+                            "index": 0,
+                            "finish_reason": "stop",
+                            "message": {
+                                "role": "assistant",
+                                "content": json.dumps(self.payload, ensure_ascii=False),
+                            },
+                        }
+                    ],
+                    "usage": {"total_tokens": 10 + self.index},
+                }
+    
+        class ChatCompletions:
+            def __init__(self):
+                self.index = 0
+    
+            def create(self, **kwargs):
+                self.index += 1
+                return Response(responses[self.index - 1], self.index)
+    
+        class Client:
+            def __init__(self):
+                self.chat = type("Chat", (), {"completions": ChatCompletions()})()
+    
+>       exit_code = run_phase6_2_cli.main(
+            [
+                "--live",
+                "--stop-after",
+                "design-brief",
+                "--env-file",
+                str(env_file),
+                "--scripted-stdin",
+                str(scripted_stdin),
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            openai_client_factory=lambda **kwargs: Client(),
+        )
+
+tests\agent\test_interactive_cli_flow.py:518: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_2_cli.py:114: in main
+    return _run_interactive_cli(
+scripts\agent\run_phase6_2_cli.py:207: in _run_interactive_cli
+    result = run_design_brief_clarification_loop(
+src\text2ifc_agent\interactive_cli_flow.py:427: in run_design_brief_clarification_loop
+    controller = controller.answer_and_rerun(
+src\text2ifc_agent\clarification.py:179: in answer_and_rerun
+    next_call = invoke_design_brief(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+transcript = [{'content': '创建一个6米乘4米、高3米的房间。', 'question_ids': [], 'role': 'user', 'turn_id': 'turn-user-001'}, {'content': '墙体厚度是多...nt-002'}, {'content': '墙体厚度为300mm。', 'question_ids': ['q-wall-thickness'], 'role': 'user', 'turn_id': 'turn-user-003'}]
+call_index = 2
+
+    def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
+        if not transcript:
+            raise ValueError("Design Brief invocation requires transcript")
+        original_request = str(transcript[0].get("content", ""))
+        call_dir = root / "calls" / f"{call_index:02d}-design-brief"
+        try:
+            call_dir.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            raise OpenAICompatError("DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS",
+                                    evidence={"call_index": call_index, "transport_attempted": False}) from None
+        budget = GenerationBudget(root)
+        selection = select_design_brief_context(
+            user_request=original_request,
+            conversation=transcript,
+            schema_version="bim-json/2.1",
+        )
+        from .design_brief import design_brief_template_id
+        schema = load_design_brief_schema(design_brief_schema_version)
+        renderer_inputs = {
+            "USER_REQUEST": original_request,
+            "CONVERSATION": transcript,
+            "DESIGN_BRIEF_SCHEMA": schema,
+            "EVIDENCE_CATALOG": selection["evidence"],
+            "FEW_SHOTS": selection["few_shots"],
+        }
+        rendered = render_prompt(
+            template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
+            inputs=renderer_inputs,
+        )
+        request = {
+            "model": config.model,
+            "messages": [{"role": "user", "content": rendered["text"]}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(token_limit_request(config))
+        # Persist the attempt before transport/parsing: even an unusable response
+        # is real evidence, and must not disappear from the review lineage.
+        _write_json(call_dir / "conversation.json", transcript)
+        _write_json(call_dir / "context-selection.json", selection)
+        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
+        _write_json(call_dir / "request.redacted.json", request)
+        import time
+        reservation = budget.reserve(stage='design_brief',
+            reserved_tokens=len(rendered['text'].encode('utf-8')) + config.max_completion_tokens)
+        started = time.monotonic()
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception as error:
+            budget.settle(reservation, elapsed_seconds=time.monotonic()-started, failed=True)
+            failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
+            _write_json(call_dir / "transport-failure.json", failure)
+            # Provider exceptions may contain credentials or private endpoint URLs.
+            raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
+        payload = _object_to_dict(response)
+        _write_json(call_dir / "response.raw.json", payload)
+        budget.settle(reservation, usage=payload.get('usage', {}), elapsed_seconds=time.monotonic()-started)
+        evidence = parse_chat_completion_evidence(
+            payload,
+            request=request,
+            evidence_class="live",
+            provider_label=config.provider_label,
+        )
+        provider_output = ProviderOutput(
+            text=str(evidence["content_text"]),
+            metadata={
+                "provider": config.provider_label,
+                "response_id": evidence["response_id"],
+                "finish_reason": evidence["finish_reason"],
+                "model": evidence["model"],
+            },
+        )
+        parse_status, parsed, diagnostics = provider_output.parse_json()
+        if parse_status != "ok" or parsed is None:
+            raise OpenAICompatError(
+                "OpenAI-compatible Design Brief response is not valid JSON",
+                evidence={"parse_status": parse_status, "diagnostics": diagnostics},
+            )
+        if diagnostics:
+            _write_design_brief_trace(
+                call_dir=call_dir,
+                transcript=transcript,
+                selection=selection,
+                renderer_inputs=renderer_inputs,
+                rendered_text=rendered["text"],
+                request=evidence["request"],
+                response=payload,
+                model_text=str(evidence["content_text"]),
+                parsed=parsed,
+                validation={
+                    "valid": False,
+                    "issue_count": len(diagnostics),
+                    "issues": diagnostics,
+                },
+                metrics={
+                    "response_id": evidence["response_id"],
+                    "model": evidence["model"],
+                    "finish_reason": evidence["finish_reason"],
+                    "usage": evidence["usage"],
+                    "prompt_template_id": rendered["metadata"]["template_id"],
+                    "prompt_template_hash": rendered["metadata"]["template_hash"],
+                    "parse_valid": True,
+                    "schema_semantic_valid": False,
+                    "strict_output_contract_valid": False,
+                    "design_status": parsed.get("status"),
+                    "question_count": len(parsed.get("clarification_questions", [])),
+                },
+            )
+            raise OpenAICompatError(
+                "OpenAI-compatible Design Brief violated strict JSON output contract",
+                evidence={"parse_status": parse_status, "diagnostics": diagnostics},
+            )
+        issues = validate_design_brief(
+            parsed,
+            evidence_catalog=selection["evidence"],
+            expected_schema_version=design_brief_schema_version,
+            conversation=transcript,
+        )
+        serialized_issues = [
+            {
+                "code": issue.code,
+                "path": issue.path,
+                "message": issue.message,
+            }
+            for issue in issues
+        ]
+        metrics = {
+            "response_id": evidence["response_id"],
+            "model": evidence["model"],
+            "finish_reason": evidence["finish_reason"],
+            "usage": evidence["usage"],
+            "prompt_template_id": rendered["metadata"]["template_id"],
+            "prompt_template_hash": rendered["metadata"]["template_hash"],
+            "parse_valid": True,
+            "schema_semantic_valid": not issues,
+            "strict_output_contract_valid": True,
+            "design_status": parsed.get("status"),
+            "question_count": len(parsed.get("clarification_questions", [])),
+        }
+        _write_design_brief_trace(
+            call_dir=call_dir,
+            transcript=transcript,
+            selection=selection,
+            renderer_inputs=renderer_inputs,
+            rendered_text=rendered["text"],
+            request=evidence["request"],
+            response=payload,
+            model_text=str(evidence["content_text"]),
+            parsed=parsed,
+            validation={
+                "valid": not issues,
+                "issue_count": len(serialized_issues),
+                "issues": serialized_issues,
+            },
+            metrics=metrics,
+        )
+        from .brief_semantic_repair import semantic_repair_eligible, repair_semantic_brief
+        if semantic_repair_eligible(parsed, issues):
+            from .generation_budget import BudgetedProvider
+            from .openai_compat import OpenAICompatibleLiveProvider
+            _write_json(call_dir / 'initial-validation.json', {'valid': False, 'issues': serialized_issues})
+            repaired = repair_semantic_brief(
+                provider=BudgetedProvider(OpenAICompatibleLiveProvider(config=config, client_factory=lambda **_: client), budget),
+                output_dir=call_dir/'semantic-repair', brief=parsed,
+                case={'user_request': original_request, 'conversation': transcript},
+                evidence_catalog=selection['evidence'], session_id=f'brief-{call_index}-semantic-repair')
+            serialized_issues = repaired['issues']
+            issues = serialized_issues
+            metrics['semantic_repair'] = {key: value for key, value in repaired.items() if key != 'brief'}
+            metrics['schema_semantic_valid'] = repaired['valid']
+            _write_json(call_dir / 'metrics.json', metrics)
+            _write_json(call_dir / 'validation.json', {'valid': repaired['valid'],
+                'issue_count': len(serialized_issues), 'issues': serialized_issues})
+            if repaired['valid']:
+                parsed = repaired['brief']
+        if issues:
+>           raise OpenAICompatError(
+                "OpenAI-compatible Design Brief failed schema validation",
+                evidence={"issues": serialized_issues},
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible Design Brief failed schema validation
+
+src\text2ifc_agent\interactive_cli_flow.py:332: OpenAICompatError
+- generated xml file: E:\code for project\bimnet\.tmp\brief-compatibility-20260910.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_interactive_cli_flow.py::test_design_brief_loop_persists_agent_question_and_recall
+FAILED tests/agent/test_interactive_cli_flow.py::test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker
+FAILED tests/agent/test_interactive_cli_flow.py::test_live_cli_reads_clarification_answers_lazily
+FAILED tests/agent/test_interactive_cli_flow.py::test_phase6_2_cli_builds_default_openai_design_brief_invoker
+4 failed, 64 passed in 79.76s (0:01:19)

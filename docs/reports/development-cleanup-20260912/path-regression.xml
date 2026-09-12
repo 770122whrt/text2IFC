@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="20" time="46.647" timestamp="2026-09-12T22:27:47.701045+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_design_review_fresh_rerun" name="test_fresh_branches_compile_without_reusing_prior_brief_or_budget[A-revise]" time="7.749" /><testcase classname="tests.agent.test_design_review_fresh_rerun" name="test_fresh_branches_compile_without_reusing_prior_brief_or_budget[B-retain]" time="7.202" /><testcase classname="tests.agent.test_design_review_continuation" name="test_continuation_public_path_preserves_parent_and_cumulative_budget[A-revise-4]" time="2.787"><failure message="AssertionError: {'branch': 'A-revise', 'brief_result': {'reused': True, 'status': 'ready', 'valid': True}, 'budget_after': {'active_se...eted', ...}], 'calls_used': 4, 'limits': {'max_active_seconds': 1800, 'max_calls': 6, 'max_tokens': 800000}, ...}, ...}&#10;assert 'audit_blocked' == 'compiled'&#10;  &#10;  - compiled&#10;  + audit_blocked">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/development-retirement-validation/test_continuation_public_path_0')
+branch = 'A-revise', used = 4
+
+    @pytest.mark.parametrize('branch,used', [('A-revise', 4), ('B-retain', 0), ('A-revise', 6)])
+    def test_continuation_public_path_preserves_parent_and_cumulative_budget(tmp_path, branch, used):
+        parent = tmp_path / 'parent'
+        _write_ready_design_brief_call(parent)
+        call = parent / 'calls/01-design-brief'
+        turns = harness.read(call / 'conversation.json')
+        turns.append({'turn_id': 'turn-authorized', 'role': 'user', 'content': '按已确认的决定建模并记录局限。'})
+        harness.write(call / 'conversation.json', turns)
+        brief = harness.read(call / 'design-brief.json')
+        brief['schema_version'] = 'text2ifc/design-brief/2.1'
+        harness.write(call / 'design-brief.json', brief)
+        harness.write(parent / 'generation-budget.json', {
+            'schema_version': 'text2ifc/generation-budget/1.0',
+            'limits': {'max_calls': 6, 'max_tokens': 800000, 'max_active_seconds': 1800},
+            'attempts': [{'attempt': i + 1, 'stage': 'offline-previous', 'status': 'completed',
+                          'tokens_charged': 10, 'elapsed_seconds': 1} for i in range(used)]})
+        frozen = {p.relative_to(parent).as_posix(): p.read_bytes() for p in parent.rglob('*') if p.is_file()}
+        case = tmp_path / branch
+        case.mkdir()
+        harness.write(case / 'conversation.json', turns)
+        harness.write(case / 'reference-review.json', {'source': 'offline fixture', 'gap_mm': 0})
+        candidate = harness.read(PHASE6_1_COMPLETE / 'generator/candidate.json')
+        candidate['schema_version'] = 'bim-json/2.1'
+        for entity in candidate['entities']:
+            entity['materials'], entity['property_sets'] = [], {}
+        audit = _audit('not_verified' if branch == 'A-revise' else 'retained_known_issue')
+        audit['design_review']['concerns'][0]['id'] = 'reference-stair-walking-clearance'
+        provider = SequenceProvider(([brief] if branch == 'B-retain' else []) + [candidate, audit])
+        output = tmp_path / 'continuation' / branch
+        result = harness.execute(case=case, output=output, provider_factory=lambda: provider,
+                                 prior_run=parent if branch == 'A-revise' else None)
+        assert {p.relative_to(parent).as_posix(): p.read_bytes() for p in parent.rglob('*') if p.is_file()} == frozen
+        run = Path(result['run_dir'])
+        if used == 6:
+            assert result['status'] == 'budget_blocked'
+            assert provider.calls == []
+            assert not (run / 'output.ifc').exists()
+        else:
+&gt;           assert result['status'] == 'compiled', result
+E           AssertionError: {'branch': 'A-revise', 'brief_result': {'reused': True, 'status': 'ready', 'valid': True}, 'budget_after': {'active_se...eted', ...}], 'calls_used': 4, 'limits': {'max_active_seconds': 1800, 'max_calls': 6, 'max_tokens': 800000}, ...}, ...}
+E           assert 'audit_blocked' == 'compiled'
+E             
+E             - compiled
+E             + audit_blocked
+
+tests\agent\test_design_review_continuation.py:58: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_continuation" name="test_continuation_public_path_preserves_parent_and_cumulative_budget[B-retain-0]" time="0.753"><failure message="AssertionError: {'branch': 'B-retain', 'brief_result': {'case_id': 'fd00d21f5679d7a5', 'evidence_class': 'unit_test_fixture', 'output_...ttempts': [], 'calls_used': 0, 'limits': {'max_active_seconds': 1800, 'max_calls': 6, 'max_tokens': 800000}, ...}, ...}&#10;assert 'blocked_prompt_defect' == 'compiled'&#10;  &#10;  - compiled&#10;  + blocked_prompt_defect">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/development-retirement-validation/test_continuation_public_path_1')
+branch = 'B-retain', used = 0
+
+    @pytest.mark.parametrize('branch,used', [('A-revise', 4), ('B-retain', 0), ('A-revise', 6)])
+    def test_continuation_public_path_preserves_parent_and_cumulative_budget(tmp_path, branch, used):
+        parent = tmp_path / 'parent'
+        _write_ready_design_brief_call(parent)
+        call = parent / 'calls/01-design-brief'
+        turns = harness.read(call / 'conversation.json')
+        turns.append({'turn_id': 'turn-authorized', 'role': 'user', 'content': '按已确认的决定建模并记录局限。'})
+        harness.write(call / 'conversation.json', turns)
+        brief = harness.read(call / 'design-brief.json')
+        brief['schema_version'] = 'text2ifc/design-brief/2.1'
+        harness.write(call / 'design-brief.json', brief)
+        harness.write(parent / 'generation-budget.json', {
+            'schema_version': 'text2ifc/generation-budget/1.0',
+            'limits': {'max_calls': 6, 'max_tokens': 800000, 'max_active_seconds': 1800},
+            'attempts': [{'attempt': i + 1, 'stage': 'offline-previous', 'status': 'completed',
+                          'tokens_charged': 10, 'elapsed_seconds': 1} for i in range(used)]})
+        frozen = {p.relative_to(parent).as_posix(): p.read_bytes() for p in parent.rglob('*') if p.is_file()}
+        case = tmp_path / branch
+        case.mkdir()
+        harness.write(case / 'conversation.json', turns)
+        harness.write(case / 'reference-review.json', {'source': 'offline fixture', 'gap_mm': 0})
+        candidate = harness.read(PHASE6_1_COMPLETE / 'generator/candidate.json')
+        candidate['schema_version'] = 'bim-json/2.1'
+        for entity in candidate['entities']:
+            entity['materials'], entity['property_sets'] = [], {}
+        audit = _audit('not_verified' if branch == 'A-revise' else 'retained_known_issue')
+        audit['design_review']['concerns'][0]['id'] = 'reference-stair-walking-clearance'
+        provider = SequenceProvider(([brief] if branch == 'B-retain' else []) + [candidate, audit])
+        output = tmp_path / 'continuation' / branch
+        result = harness.execute(case=case, output=output, provider_factory=lambda: provider,
+                                 prior_run=parent if branch == 'A-revise' else None)
+        assert {p.relative_to(parent).as_posix(): p.read_bytes() for p in parent.rglob('*') if p.is_file()} == frozen
+        run = Path(result['run_dir'])
+        if used == 6:
+            assert result['status'] == 'budget_blocked'
+            assert provider.calls == []
+            assert not (run / 'output.ifc').exists()
+        else:
+&gt;           assert result['status'] == 'compiled', result
+E           AssertionError: {'branch': 'B-retain', 'brief_result': {'case_id': 'fd00d21f5679d7a5', 'evidence_class': 'unit_test_fixture', 'output_...ttempts': [], 'calls_used': 0, 'limits': {'max_active_seconds': 1800, 'max_calls': 6, 'max_tokens': 800000}, ...}, ...}
+E           assert 'blocked_prompt_defect' == 'compiled'
+E             
+E             - compiled
+E             + blocked_prompt_defect
+
+tests\agent\test_design_review_continuation.py:58: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_continuation" name="test_continuation_public_path_preserves_parent_and_cumulative_budget[A-revise-6]" time="0.750" /><testcase classname="tests.agent.test_design_review_budget_retry" name="test_retry_keeps_task_spend_but_requests_new_brief[A-revise-3]" time="6.817" /><testcase classname="tests.agent.test_design_review_budget_retry" name="test_retry_keeps_task_spend_but_requests_new_brief[B-retain-0]" time="7.236" /><testcase classname="tests.agent.test_design_review_budget_retry" name="test_retry_keeps_task_spend_but_requests_new_brief[A-revise-32]" time="0.626" /><testcase classname="tests.agent.test_design_review_budget_retry" name="test_unsettled_previous_attempt_blocks_before_provider" time="0.262" /><testcase classname="tests.agent.test_design_review_budget_retry" name="test_cli_honors_new_hold_before_reading_admission_or_credentials" time="0.008" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[unapproved]" time="0.029" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_branch]" time="0.009" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_hash]" time="0.010" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[wrong_prior]" time="0.011" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[calls]" time="0.012" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[time]" time="0.010" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[lower]" time="0.012" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_invalid_extension_or_unsettled_history_cannot_create_new_budget[unsettled]" time="0.027" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_approved_extension_preserves_every_prior_attempt_and_budget_failure" time="0.058" /><testcase classname="tests.agent.test_authorized_budget_extension" name="test_extended_budget_runs_fresh_public_generation_without_resetting_spend" time="6.613" /></testsuite></testsuites>

@@ -1,0 +1,37 @@
+{
+  "scope": "Development failure family; no blind capability claim",
+  "baseline": "6b7eb432",
+  "observed": "Full-envelope declaration on explicit open frontage; missing band rejected before Generator.",
+  "hypotheses": [
+    {
+      "rank": 1,
+      "hypothesis": "Prompt conflates inside/nonoverlap with full coverage",
+      "prediction": "Valid same wall coordinates with independent layout checks pass, full envelope still reports gap."
+    },
+    {
+      "rank": 2,
+      "hypothesis": "Schema cannot express independent checks",
+      "prediction": "Old2.6 rejects wall_layout; new immutable2.7 can express selected checks."
+    },
+    {
+      "rank": 3,
+      "hypothesis": "Geometry evaluator wrongly finds a gap",
+      "prediction": "Frozen full ring retains real gap under unchanged evaluator."
+    }
+  ],
+  "failure_family": "tests/agent/test_wall_layout_constraints.py",
+  "family_sha256": "4399b610d90142cb982f9150212a107f36cb4df1a2027070f6a830f50910d7a1",
+  "source_files": {
+    "metrics.json": "d7c6230abd08514ee889f64f9714446bbc1c4efbf6b19012f7c7c61d9c70f082",
+    "parsed-output.json": "a9fb0616bec774126d68dc5cbb4cbffee4b1881fb9ec6442c24b26a3b45ee2b9",
+    "prompt-rendered.md": "671467560ee77c140941030b2197e28a3c1aba6c186cee8ff0d0e6e098b05734",
+    "validation.json": "b55262d5c7959bb54634244fab605081c020dd340ed4a3843402747afdbee7a2"
+  },
+  "red": {
+    "path": "red.xml",
+    "passed": 7,
+    "failed": 17,
+    "note": "New contract absent; actual existing-contract gap reproduction preserved separately in live-run."
+  },
+  "holdout": "Not run; rotated/reflected families are development regressions, not hidden test evidence."
+}

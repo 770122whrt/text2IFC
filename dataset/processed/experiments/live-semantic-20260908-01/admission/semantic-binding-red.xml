@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="10" time="14.219" timestamp="2026-09-08T19:16:35.075362+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[60-wall-1]" time="2.534" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[60-wall-storey-1-wall-1]" time="3.078"><failure message="AssertionError: assert False is ('60' == '60'&#10;  &#10;    60)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-binding-red-01/test_public_gate_binds_frozen_1')
+identity = 'wall-storey-1-wall-1', actual = '60'
+
+    @pytest.mark.parametrize('identity', ['wall-1', 'wall-storey-1-wall-1'])
+    @pytest.mark.parametrize('actual', ['60', '30'])
+    def test_public_gate_binds_frozen_identity_and_still_reads_value(tmp_path, identity, actual):
+        candidate = setup_case(tmp_path, actual)
+        candidate = json.loads(json.dumps(candidate).replace('"wall-1"', json.dumps(identity)))
+        (tmp_path / 'generator/candidate.json').write_text(json.dumps(candidate), encoding='utf-8')
+        frozen = {'entity_id_contract': {'walls': [
+            {'brief_id': 'wall-1', 'entity_id': 'wall-storey-1-wall-1', 'storey': 'storey-1'}]}}
+        path = tmp_path / 'expected-facts.json'
+        path.write_text(json.dumps(frozen), encoding='utf-8')
+        frozen_bytes = path.read_bytes()
+        result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='identity-family')
+&gt;       assert result['compile_reopen_success'] is (actual == '60')
+E       AssertionError: assert False is ('60' == '60'
+E         
+E           60)
+
+tests\agent\test_semantic_identity_binding.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[30-wall-1]" time="2.740" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[30-wall-storey-1-wall-1]" time="3.013" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[canonical]" time="0.002"><failure message="ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)">scenario = 'canonical'
+
+    @pytest.mark.parametrize('scenario', ['canonical', 'legacy', 'both', 'duplicate-storeys', 'wrong-family', 'unoffered'])
+    def test_identity_binding_is_unique_and_family_scoped(scenario):
+&gt;       from text2ifc_agent.semantic_requirements import bind_semantic_targets
+E       ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)
+
+tests\agent\test_semantic_identity_binding.py:29: ImportError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[legacy]" time="0.002"><failure message="ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)">scenario = 'legacy'
+
+    @pytest.mark.parametrize('scenario', ['canonical', 'legacy', 'both', 'duplicate-storeys', 'wrong-family', 'unoffered'])
+    def test_identity_binding_is_unique_and_family_scoped(scenario):
+&gt;       from text2ifc_agent.semantic_requirements import bind_semantic_targets
+E       ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)
+
+tests\agent\test_semantic_identity_binding.py:29: ImportError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[both]" time="0.002"><failure message="ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)">scenario = 'both'
+
+    @pytest.mark.parametrize('scenario', ['canonical', 'legacy', 'both', 'duplicate-storeys', 'wrong-family', 'unoffered'])
+    def test_identity_binding_is_unique_and_family_scoped(scenario):
+&gt;       from text2ifc_agent.semantic_requirements import bind_semantic_targets
+E       ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)
+
+tests\agent\test_semantic_identity_binding.py:29: ImportError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[duplicate-storeys]" time="0.002"><failure message="ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)">scenario = 'duplicate-storeys'
+
+    @pytest.mark.parametrize('scenario', ['canonical', 'legacy', 'both', 'duplicate-storeys', 'wrong-family', 'unoffered'])
+    def test_identity_binding_is_unique_and_family_scoped(scenario):
+&gt;       from text2ifc_agent.semantic_requirements import bind_semantic_targets
+E       ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)
+
+tests\agent\test_semantic_identity_binding.py:29: ImportError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[wrong-family]" time="0.002"><failure message="ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)">scenario = 'wrong-family'
+
+    @pytest.mark.parametrize('scenario', ['canonical', 'legacy', 'both', 'duplicate-storeys', 'wrong-family', 'unoffered'])
+    def test_identity_binding_is_unique_and_family_scoped(scenario):
+&gt;       from text2ifc_agent.semantic_requirements import bind_semantic_targets
+E       ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)
+
+tests\agent\test_semantic_identity_binding.py:29: ImportError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[unoffered]" time="0.002"><failure message="ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)">scenario = 'unoffered'
+
+    @pytest.mark.parametrize('scenario', ['canonical', 'legacy', 'both', 'duplicate-storeys', 'wrong-family', 'unoffered'])
+    def test_identity_binding_is_unique_and_family_scoped(scenario):
+&gt;       from text2ifc_agent.semantic_requirements import bind_semantic_targets
+E       ImportError: cannot import name 'bind_semantic_targets' from 'text2ifc_agent.semantic_requirements' (E:\code for project\bimnet\src\text2ifc_agent\semantic_requirements.py)
+
+tests\agent\test_semantic_identity_binding.py:29: ImportError</failure></testcase></testsuite></testsuites>

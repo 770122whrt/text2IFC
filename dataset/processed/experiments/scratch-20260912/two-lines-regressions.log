@@ -1,0 +1,184 @@
+..................................................................F..... [ 28%]
+....................FFFFF.....FFFFFFF........................F.......... [ 56%]
+........................................................................ [ 85%]
+.....................................                                    [100%]
+================================== FAILURES ===================================
+_______ test_vvo_one_text_one_changeset_repairs_five_windows_atomically _______
+tests\ifc_repair\test_phase10_3_vvo_batch_e2e.py:289: in test_vvo_one_text_one_changeset_repairs_five_windows_atomically
+    assert calls == {"stage1": 1, "stage2": 1}
+E   AssertionError: assert {'stage1': 1, 'stage2': 2} == {'stage1': 1, 'stage2': 1}
+E     
+E     Omitting 1 identical items, use -vv to show
+E     Differing items:
+E     {'stage2': 2} != {'stage2': 1}
+E     Use -v to get more diff
+_ test_live_structural_proof_recomputes_transcript_and_base_damage_authority __
+tests\ifc_repair\test_phase12_success_cases.py:1672: in test_live_structural_proof_recomputes_transcript_and_base_damage_authority
+    collection, _case_root = _live_proof_collection(tmp_path)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1518: in _live_proof_collection
+    shutil.copytree(BASE_DAMAGE_CASE, case_root)
+E:\anaconda\Lib\shutil.py:598: in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+E   FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic'
+___ test_property_authority_replay_accepts_public_user_candidate_selection ____
+tests\ifc_repair\test_phase12_success_cases.py:1699: in test_property_authority_replay_accepts_public_user_candidate_selection
+    final = live_uat._production_case_executor(
+scripts\ifc_repair\run_phase12_live_uat.py:1642: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:239: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+_ test_live_proof_cannot_bypass_underlying_damage_authority[schema_downgrade-l0.structural.live:source_manifest_schema] _
+tests\ifc_repair\test_phase12_success_cases.py:1802: in test_live_proof_cannot_bypass_underlying_damage_authority
+    collection, case_root = _live_proof_collection(tmp_path)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1518: in _live_proof_collection
+    shutil.copytree(BASE_DAMAGE_CASE, case_root)
+E:\anaconda\Lib\shutil.py:598: in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+E   FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic'
+_ test_live_proof_cannot_bypass_underlying_damage_authority[missing_base-l0.structural.live:base_damage_manifest_missing] _
+tests\ifc_repair\test_phase12_success_cases.py:1802: in test_live_proof_cannot_bypass_underlying_damage_authority
+    collection, case_root = _live_proof_collection(tmp_path)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1518: in _live_proof_collection
+    shutil.copytree(BASE_DAMAGE_CASE, case_root)
+E:\anaconda\Lib\shutil.py:598: in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+E   FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic'
+_ test_live_proof_cannot_bypass_underlying_damage_authority[base_binding-l0.structural.live:base_damage_binding] _
+tests\ifc_repair\test_phase12_success_cases.py:1802: in test_live_proof_cannot_bypass_underlying_damage_authority
+    collection, case_root = _live_proof_collection(tmp_path)
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1518: in _live_proof_collection
+    shutil.copytree(BASE_DAMAGE_CASE, case_root)
+E:\anaconda\Lib\shutil.py:598: in copytree
+    with os.scandir(src) as itr:
+         ^^^^^^^^^^^^^^^
+E   FileNotFoundError: [WinError 3] 系统找不到指定的路径。: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic'
+___ test_public_curate_runs_validator_in_a_separate_process_before_install ____
+tests\ifc_repair\test_phase12_success_cases.py:2336: in test_public_curate_runs_validator_in_a_separate_process_before_install
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_ test_public_curate_installs_only_two_strict_success_cases_after_validation __
+tests\ifc_repair\test_phase12_success_cases.py:2387: in test_public_curate_installs_only_two_strict_success_cases_after_validation
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_____ test_public_curate_resolves_the_latest_timestamped_runner_directory _____
+tests\ifc_repair\test_phase12_success_cases.py:2441: in test_public_curate_resolves_the_latest_timestamped_runner_directory
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_ test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-case-ids] _
+tests\ifc_repair\test_phase12_success_cases.py:2486: in test_public_curate_rejects_forged_passed_validator_summary_without_install
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_ test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-count] _
+tests\ifc_repair\test_phase12_success_cases.py:2486: in test_public_curate_rejects_forged_passed_validator_summary_without_install
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_ test_public_curate_rejects_forged_passed_validator_summary_without_install[not-recomputed] _
+tests\ifc_repair\test_phase12_success_cases.py:2486: in test_public_curate_rejects_forged_passed_validator_summary_without_install
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_ test_public_curate_rejects_forged_passed_validator_summary_without_install[legacy] _
+tests\ifc_repair\test_phase12_success_cases.py:2486: in test_public_curate_rejects_forged_passed_validator_summary_without_install
+    source = _curator_source_run(tmp_path)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\ifc_repair\test_phase12_success_cases.py:1859: in _curator_source_run
+    (BASE_DAMAGE_CASE / "repair-intent.json").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\repair-intent.json'
+_________ test_real_window_door_beam_column_changeset_publishes_once __________
+tests\ifc_repair\test_structural_atomicity.py:525: in test_real_window_door_beam_column_changeset_publishes_once
+    (FOUR_FAMILY_CASE / "input" / "request.txt").read_text(encoding="utf-8")
+E:\anaconda\Lib\pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\pathlib.py:1013: in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\mixed\\door-window\\vvo-authority-triplet-public-repair\\input\\request.txt'
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_phase10_3_vvo_batch_e2e.py::test_vvo_one_text_one_changeset_repairs_five_windows_atomically
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_live_structural_proof_recomputes_transcript_and_base_damage_authority
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_live_proof_cannot_bypass_underlying_damage_authority[schema_downgrade-l0.structural.live:source_manifest_schema]
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_live_proof_cannot_bypass_underlying_damage_authority[missing_base-l0.structural.live:base_damage_manifest_missing]
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_live_proof_cannot_bypass_underlying_damage_authority[base_binding-l0.structural.live:base_damage_binding]
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_runs_validator_in_a_separate_process_before_install
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_installs_only_two_strict_success_cases_after_validation
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_resolves_the_latest_timestamped_runner_directory
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-case-ids]
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-count]
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[not-recomputed]
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[legacy]
+FAILED tests/ifc_repair/test_structural_atomicity.py::test_real_window_door_beam_column_changeset_publishes_once
+14 failed, 239 passed in 316.19s (0:05:16)

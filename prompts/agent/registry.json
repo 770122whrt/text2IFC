@@ -620,34 +620,6 @@
       ]
     },
     {
-      "template_id": "ifc-repair-intent.v0.12",
-      "role": "ifc_repair_request_understanding",
-      "mode": "repair_intent",
-      "path": "prompts/agent/ifc-repair-intent-v0.12.md",
-      "sha256": "sha256:60341ba54d6f2e11cafd3420b482c7471617df5b2e0952550c0176497ec4bf52",
-      "required_inputs": [
-        "REPAIR_REQUEST",
-        "SUPPORTED_OPERATIONS",
-        "REPAIR_INTENT_SCHEMA",
-        "VALIDATION_FEEDBACK"
-      ],
-      "forbidden_outputs": [
-        "raw_ifc",
-        "step_text",
-        "step_id",
-        "resolved_target_id",
-        "resolved_target_guid",
-        "resolved_type_id",
-        "unregistered_profile",
-        "inferred_occurrence_reuse",
-        "mutation_mapping",
-        "private_original_ifc",
-        "benchmark_gold",
-        "guessed_project_fact",
-        "repair_changeset"
-      ]
-    },
-    {
       "template_id": "ifc-repair-changeset.v0.4",
       "role": "ifc_repair_generator",
       "mode": "bound_changeset",
@@ -852,18 +824,6 @@
       ]
     },
     {
-      "template_id": "door.add-with-opening.v0.3",
-      "role": "ifc_repair_operation_profile",
-      "mode": "selected_profile",
-      "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.v0.3.json",
-      "sha256": "sha256:db0247fda27927fef73846ba142aae6c84b0e6b0c9db8af9e6c4ccaa125e1acc",
-      "required_inputs": [],
-      "forbidden_outputs": [
-        "unselected_profile",
-        "unregistered_operation"
-      ]
-    },
-    {
       "template_id": "door.fill-existing-opening",
       "role": "ifc_repair_operation_profile",
       "mode": "selected_profile",
@@ -881,18 +841,6 @@
       "mode": "selected_profile",
       "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.v0.2.json",
       "sha256": "sha256:1e79bce84c2704108eb22a59ec45e279366196ed28439dcc4bcfca8591721dd6",
-      "required_inputs": [],
-      "forbidden_outputs": [
-        "unselected_profile",
-        "unregistered_operation"
-      ]
-    },
-    {
-      "template_id": "door.fill-existing-opening.v0.3",
-      "role": "ifc_repair_operation_profile",
-      "mode": "selected_profile",
-      "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.v0.3.json",
-      "sha256": "sha256:93497312b83c322c59d836a8010c3a93c4a624bcd455392241a69078b0091d8e",
       "required_inputs": [],
       "forbidden_outputs": [
         "unselected_profile",
@@ -929,18 +877,6 @@
       "mode": "selected_profile",
       "path": "prompts/agent/ifc-repair-profiles/window.add-with-opening.json",
       "sha256": "sha256:d00699ba8ee0f5ec4751bb982f113662bb7920409f3ca5f8915dd3c941cec45c",
-      "required_inputs": [],
-      "forbidden_outputs": [
-        "unselected_profile",
-        "unregistered_operation"
-      ]
-    },
-    {
-      "template_id": "window.add-with-opening.v0.2",
-      "role": "ifc_repair_operation_profile",
-      "mode": "selected_profile",
-      "path": "prompts/agent/ifc-repair-profiles/window.add-with-opening.v0.2.json",
-      "sha256": "sha256:eba021a8cdb7b95910d20e9804771da81ff7290519e1c8da1a8e95cb9db6b99b",
       "required_inputs": [],
       "forbidden_outputs": [
         "unselected_profile",
@@ -1048,6 +984,34 @@
         "IfcOwnerHistory",
         "compiler_only_object",
         "deterministic_gate_override"
+      ]
+    },
+    {
+      "template_id": "ifc-repair-intent.v0.12",
+      "role": "ifc_repair_request_understanding",
+      "mode": "repair_intent",
+      "path": "prompts/agent/ifc-repair-intent-v0.12.md",
+      "sha256": "sha256:60341ba54d6f2e11cafd3420b482c7471617df5b2e0952550c0176497ec4bf52",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "REPAIR_INTENT_SCHEMA",
+        "VALIDATION_FEEDBACK"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "resolved_target_id",
+        "resolved_target_guid",
+        "resolved_type_id",
+        "unregistered_profile",
+        "inferred_occurrence_reuse",
+        "mutation_mapping",
+        "private_original_ifc",
+        "benchmark_gold",
+        "guessed_project_fact",
+        "repair_changeset"
       ]
     },
     {
@@ -2090,6 +2054,649 @@
         "IfcDirection",
         "IfcOwnerHistory",
         "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.2",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.2.md",
+      "sha256": "sha256:2e4e785dac5eda67e3d96df49f86397a12ad1bf1f27e33d71732bf199115deae",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.16",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.16.md",
+      "sha256": "sha256:a4493836551fdeb4340f6ae86888fe8a57bb325b037098a266929f5c83bdd1ee",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.17",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.17.md",
+      "sha256": "sha256:dd5ddbefd72228c73d44c3e10ceeed8e92e6269b38fc13fe077aca6379f26357",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.18",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.18.md",
+      "sha256": "sha256:cc39357382a57d5152af7f5490a30d64c9143f26fdeaf4f0d17c03c3c9c3b687",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.19",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.19.md",
+      "sha256": "sha256:459fc4021e769898bec20c44905729c8c747e95d5b365814ef0e14b049a941c0",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.3",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.3.md",
+      "sha256": "sha256:bdf75e23021d22f597852db287fdaedca87398363113c641890b1c96bd45a50b",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.5",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.5.md",
+      "sha256": "sha256:4c3dfcc8430833fd6a3ff46c7d7320abed218d68161ccaeba46bf7492d98bf6a",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.3",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.3.md",
+      "sha256": "sha256:9941789ca288563857daa50d94158771dd44e06aa5006e8d62c797334f181d5f",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.9",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.9.md",
+      "sha256": "sha256:e3c5447e55585ee45c8160ea827fc145ed3c2540cca3c6f32ddf3b755a4ed4bb",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "SEMANTIC_CORRECTION"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.20",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.20.md",
+      "sha256": "sha256:a43e20b09459d06ce53d263eac633518f59d68e7a58e6629d545e7d5de6c251f",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.21",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.21.md",
+      "sha256": "sha256:b258c370eb2e5400428829010e392a9d0d9583e7065eefd58759824f3a5542e3",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.4",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.4.md",
+      "sha256": "sha256:f8b5834230c91c27d80a66c0e6285b0f21db0f6f557f5bc1eccc1544fc3ccddb",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.6",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.6.md",
+      "sha256": "sha256:85cee26b89252d75a11619171a5f0c1e95e4baf07a490ed62017c992a96a1bb2",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.4",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.4.md",
+      "sha256": "sha256:63ee8328cd5b6cd86e17131e8e1362d2727fdfa1bf2cd4c0357c73dbfec71824",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.10",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.10.md",
+      "sha256": "sha256:5f45bde69746471d2973cff52910d6930e3dc9a9a0ce55846771858d21df5c62",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "SEMANTIC_CORRECTION"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.22",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.22.md",
+      "sha256": "sha256:14756845c1142731384f381d8262a8effe72381d0d6d82bdb5263418ffa69548",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.23",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.23.md",
+      "sha256": "sha256:adbd90079cda2dd32aaa27bd8d9494efc685b36eb607c483469aae748c817b8c",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-plan-repair.v1.1",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-plan-repair-v1.1.md",
+      "sha256": "sha256:1e88085ddf0b5e09af86d948c8b65d07f89631da7443767c6f0785aedc34fab7",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "ALLOWED_PATHS",
+        "DESIGN_BRIEF_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.5",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.5.md",
+      "sha256": "sha256:1996dce3e1663a826fde1c5cbd726fb1e4588aabde8b43162216165b650af135",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.24",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.24.md",
+      "sha256": "sha256:1c535db7e03597e4b2217c7aa535ddc9b24ccb085327bfb63fb918a5ed0abb4a",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.25",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.25.md",
+      "sha256": "sha256:d2ed63ead9acd230957a4c64bf29d6a39815affa700d85618cd0ec6657da0ec1",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.6",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.6.md",
+      "sha256": "sha256:650e2f3218e00be219a0dd0542f0d10f593524ceac30b6a3649fdf077cae3739",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "door.add-with-opening.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.add-with-opening.v0.3.json",
+      "sha256": "sha256:db0247fda27927fef73846ba142aae6c84b0e6b0c9db8af9e6c4ccaa125e1acc",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "door.fill-existing-opening.v0.3",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/door.fill-existing-opening.v0.3.json",
+      "sha256": "sha256:93497312b83c322c59d836a8010c3a93c4a624bcd455392241a69078b0091d8e",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
+      ]
+    },
+    {
+      "template_id": "window.add-with-opening.v0.2",
+      "role": "ifc_repair_operation_profile",
+      "mode": "selected_profile",
+      "path": "prompts/agent/ifc-repair-profiles/window.add-with-opening.v0.2.json",
+      "sha256": "sha256:eba021a8cdb7b95910d20e9804771da81ff7290519e1c8da1a8e95cb9db6b99b",
+      "required_inputs": [],
+      "forbidden_outputs": [
+        "unselected_profile",
+        "unregistered_operation"
       ]
     },
     {

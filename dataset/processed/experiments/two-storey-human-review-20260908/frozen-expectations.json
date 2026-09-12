@@ -1,0 +1,124 @@
+{
+  "created_at": "2026-09-08T13:13:26.779678+00:00",
+  "request_sha256": "9c927ce50a7c1fa3ab3cb2d4879d5fcc2a76aad8235b43d720fa2a48caf72780",
+  "purpose": "new development viability Proof; not blind capability comparison",
+  "schema": "IFC2X3",
+  "strategy": "legacy_full",
+  "unit": "mm",
+  "storey_elevations_mm": [
+    0,
+    3150
+  ],
+  "net_height_mm": 3000,
+  "outer_bounds_mm": {
+    "x": [
+      -200,
+      9200
+    ],
+    "y": [
+      -200,
+      8200
+    ]
+  },
+  "counts": {
+    "IfcBuildingStorey": 2,
+    "IfcSpace": 4,
+    "IfcWall": 10,
+    "IfcSlab": 3,
+    "IfcDoor": 3,
+    "IfcWindow": 10
+  },
+  "door_templates": {
+    "door-left": 1,
+    "door-right": 2
+  },
+  "window_templates": {
+    "window-double-vertical": 8,
+    "window-single": 2
+  },
+  "floor_tops_mm": [
+    0,
+    3150
+  ],
+  "roof_bottom_mm": 6150,
+  "slab_thickness_mm": 150,
+  "stair": {
+    "bounds_mm": {
+      "x": [
+        7400,
+        8600
+      ],
+      "y": [
+        1200,
+        6600
+      ],
+      "z": [
+        0,
+        3150
+      ]
+    },
+    "risers": 18,
+    "rise_mm": 175,
+    "tread_mm": 300
+  },
+  "floor_opening_mm": {
+    "x": [
+      7200,
+      8800
+    ],
+    "y": [
+      1200,
+      6600
+    ],
+    "z": [
+      3000,
+      3150
+    ]
+  },
+  "theme": "warm-residential",
+  "requested_materials": {
+    "walls": "砖",
+    "slabs": "混凝土"
+  },
+  "unrequested_materials_properties": "must be absent except internal provenance and minimum IFC attachments",
+  "windows_per_storey": [
+    {
+      "side": "south",
+      "centers_mm": [
+        1500,
+        5300
+      ],
+      "width_mm": 1800,
+      "height_mm": 1500,
+      "sill_mm": 900
+    },
+    {
+      "side": "north",
+      "centers_mm": [
+        3400
+      ],
+      "width_mm": 2400,
+      "height_mm": 1500,
+      "sill_mm": 900
+    },
+    {
+      "side": "west",
+      "centers_mm": [
+        4000
+      ],
+      "width_mm": 1800,
+      "height_mm": 1500,
+      "sill_mm": 900
+    },
+    {
+      "side": "east",
+      "centers_mm": [
+        4000
+      ],
+      "width_mm": 900,
+      "height_mm": 1800,
+      "sill_mm": 600
+    }
+  ],
+  "limits": "schematic architectural model, no furniture, MEP, rails or complex hardware; physical construction compliance not evaluated"
+}

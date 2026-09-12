@@ -1,0 +1,27 @@
+{
+  "issues": [
+    {
+      "code": "DRAFT_SCHEMA_VALIDATION_ERROR",
+      "message": "{'appearance': {'blue': 0.22, 'green': 0.2, 'intent_kind': 'surface_color_rgb', 'red': 0.18}, 'evidence_refs': ['resolved:/operations/install-window-1/context/candidate_targets/0'], 'operation_id': 'install-window-1', 'operation_type': 'add_window_with_opening_to_wall', 'parameters': {'opening': {'height_mm': 500, 'sill_height_mm': 2670.828, 'width_mm': 1180}, 'position': {'center_offset_mm': 4701.961, 'reference': 'wall_local_start'}, 'window': {'fit_opening': True}}, 'target': {'wall_global_id': '2CsmzAChHF6O6maGXlo6yJ'}} is not valid under any of the given schemas",
+      "path": "/operations/0"
+    },
+    {
+      "code": "DRAFT_SCHEMA_VALIDATION_ERROR",
+      "message": "{'appearance': {'blue': 0.24, 'green': 0.45, 'intent_kind': 'surface_color_rgb', 'red': 0.72}, 'evidence_refs': ['resolved:/operations/install-window-2/context/candidate_targets/0'], 'operation_id': 'install-window-2', 'operation_type': 'add_window_with_opening_to_wall', 'parameters': {'opening': {'height_mm': 2370, 'sill_height_mm': 610, 'width_mm': 870}, 'position': {'center_offset_mm': 9315.561, 'reference': 'wall_local_start'}, 'window': {'fit_opening': True}}, 'target': {'wall_global_id': '0jltRti3rFigAmdXYhXxqI'}} is not valid under any of the given schemas",
+      "path": "/operations/1"
+    },
+    {
+      "code": "DRAFT_SCHEMA_VALIDATION_ERROR",
+      "message": "{'appearance': {'blue': 0.22, 'green': 0.2, 'intent_kind': 'surface_color_rgb', 'red': 0.18}, 'evidence_refs': ['resolved:/operations/fill-door-1/context/candidate_targets/0'], 'operation_id': 'fill-door-1', 'operation_type': 'fill_existing_opening_with_door', 'parameters': {'derivation': {'digest': 'sha256:fd2b2257a8c6b4133980981d263476d6facdd3b56ec94e39c1b5a358b8deb42b', 'position': {'formula': 'existing_opening_center', 'source_anchor': 'opening:2IUEnGd5v4Yfg1ZkLtd0qa'}}, 'door': {'operation_derivation': {'source': 'explicit_formal_enum'}, 'operation_type': 'SINGLE_SWING_LEFT', 'overall_height_mm': 2480.0, 'overall_width_mm': 800.0}, 'host_wall_global_id': '2HNE4WMQ1CXebZMaih8XoD', 'opening': {'derivation': {'formula': 'fit_existing_opening', 'source': 'opening:2IUEnGd5v4Yfg1ZkLtd0qa'}, 'dimension_meaning': 'overall_opening', 'height_mm': 2480.0, 'sill_height_mm': 130.359199, 'width_mm': 800.0}, 'position': {'center_offset_mm': 565.932051, 'reference': 'wall_local_start'}}, 'target': {'opening_global_id': '2IUEnGd5v4Yfg1ZkLtd0qa'}} is not valid under any of the given schemas",
+      "path": "/operations/2"
+    },
+    {
+      "code": "DRAFT_SCHEMA_VALIDATION_ERROR",
+      "message": "{'appearance': {'blue': 0.24, 'green': 0.45, 'intent_kind': 'surface_color_rgb', 'red': 0.72}, 'evidence_refs': ['resolved:/operations/fill-door-2/context/candidate_targets/0'], 'operation_id': 'fill-door-2', 'operation_type': 'fill_existing_opening_with_door', 'parameters': {'derivation': {'digest': 'sha256:0a2369197ac8a98cf5efbffc06dc421dd4568a2bd998ad72c25f46cc7dcc3ab6', 'position': {'formula': 'existing_opening_center', 'source_anchor': 'opening:1B$rgWypT66viEf30I1iIv'}}, 'door': {'operation_derivation': {'source': 'explicit_formal_enum'}, 'operation_type': 'SINGLE_SWING_RIGHT', 'overall_height_mm': 2400.0, 'overall_width_mm': 935.0}, 'host_wall_global_id': '2HNE4WMQ1CXebZMaih8Xi_', 'opening': {'derivation': {'formula': 'fit_existing_opening', 'source': 'opening:1B$rgWypT66viEf30I1iIv'}, 'dimension_meaning': 'overall_opening', 'height_mm': 2400.0, 'sill_height_mm': 110.359199, 'width_mm': 935.0}, 'position': {'center_offset_mm': 6507.5, 'reference': 'wall_local_start'}}, 'target': {'opening_global_id': '1B$rgWypT66viEf30I1iIv'}} is not valid under any of the given schemas",
+      "path": "/operations/3"
+    }
+  ],
+  "parse_status": "ok",
+  "schema_version": "text2ifc/ifc-repair-provider-stage/0.2",
+  "valid": false
+}

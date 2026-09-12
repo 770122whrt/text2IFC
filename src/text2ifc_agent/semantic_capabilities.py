@@ -81,3 +81,27 @@ def build_semantic_capability_profile_v21() -> dict[str, Any]:
     profile['appearance_policy'] = 'explicit_user_then_type_then_material_then_coordinated_default'
     profile['profile_hash'] = _profile_hash(profile)
     return profile
+
+
+def build_semantic_capability_profile_v22() -> dict[str, Any]:
+    profile = build_semantic_capability_profile_v21()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.2/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.2/schema.json'
+    profile['part_appearance'] = {'IfcDoor': ['frame', 'panel'], 'IfcWindow': ['frame', 'glazing'],
+        'channels': ['color', 'transparency'], 'scope': 'explicit basic_filling occurrence only',
+        'unspecified': 'theme defaults', 'whole_appearance_conflict': 'clarification_required'}
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile
+
+
+def build_semantic_capability_profile_v23() -> dict[str, Any]:
+    profile = build_semantic_capability_profile_v22()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.3/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.3/schema.json'
+    profile['supported_fact_prefixes'].extend(['/known_facts/columns', '/known_facts/beams', '/known_facts/railings'])
+    profile['basic_railing'] = {'template_id': 'metal-picket', 'version': 'text2ifc/basic-railing/1.0',
+        'scope': 'straight horizontal or signed slope; IfcRailing occurrence; single material and whole appearance',
+        'geometry_authority': 'explicit world baseline endpoints, vertical height and depth; no inferred position or size'}
+    profile['structural_geometry'] = 'Explicit world_axis_aligned_box in mm for columns and beams; reopened family, storey and bounds checks, no structural certification.'
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile

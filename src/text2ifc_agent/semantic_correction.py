@@ -16,7 +16,7 @@ from .semantic_requirements import (
 )
 
 
-SEMANTIC_FIELDS = {'materials', 'property_sets', 'appearance', 'template'}
+SEMANTIC_FIELDS = {'materials', 'property_sets', 'appearance', 'part_appearance', 'template'}
 
 
 def build_semantic_correction(*, candidate, design_brief, expected_facts, issues):
@@ -25,7 +25,7 @@ def build_semantic_correction(*, candidate, design_brief, expected_facts, issues
                 'candidate_hash': index['candidate_hash'],
                 'expected_facts_hash': hash_json_value(expected_facts),
                 'source_issue_ids': [], 'edits': {}, 'dependencies': [], 'issues': []}
-    if candidate.get('schema_version') != 'bim-json/2.1':
+    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
         return contract
     request = project_semantic_requirements(design_brief)
     request['expectations'] = [*expected_facts.get('semantic_expectations', []), *request['expectations']]
@@ -97,6 +97,20 @@ def build_semantic_correction(*, candidate, design_brief, expected_facts, issues
         elif issue['code'] == 'UNREQUESTED_APPEARANCE':
             edits.setdefault(identity, {'op': 'update_entity'}).setdefault('remove_paths', []).append('/appearance')
             contract['schema_version'] = 'text2ifc/generation-semantic-correction/1.1'
+        elif issue['code'] == 'UNREQUESTED_PART_APPEARANCE':
+            parts_value = copy.deepcopy(entities[identity].get('part_appearance', {}))
+            allowed = {(part, key) for r in expected if r['entity_id'] == identity and r['kind'] == 'part_appearance'
+                       for part, channels in r['value'].items() for key in channels}
+            kept = {part: {key: val for key, val in channels.items() if (part, key) in allowed}
+                    for part, channels in parts_value.items()}
+            kept = {part: channels for part, channels in kept.items() if channels}
+            if kept:
+                _set_edit(edits, identity, '/part_appearance', kept)
+            else:
+                paths = edits.setdefault(identity, {'op': 'update_entity'}).setdefault('remove_paths', [])
+                if '/part_appearance' not in paths:
+                    paths.append('/part_appearance')
+            contract['schema_version'] = 'text2ifc/generation-semantic-correction/1.2'
         elif issue['code'] == 'UNREQUESTED_PROPERTY':
             properties = edits.get(identity, {}).get('changes', {}).get('/property_sets')
             if properties is None:

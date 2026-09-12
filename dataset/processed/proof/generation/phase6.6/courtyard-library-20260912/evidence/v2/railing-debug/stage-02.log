@@ -1,0 +1,30 @@
+........................................................................ [ 14%]
+........................................................................ [ 28%]
+........................................................................ [ 42%]
+.FF..................................................................... [ 56%]
+........................................................................ [ 71%]
+........................................................................ [ 85%]
+........................................................................ [ 99%]
+..                                                                       [100%]
+================================== FAILURES ===================================
+_____ test_public_loop_reopens_recovered_ifc_and_keeps_parts[legacy_full] _____
+tests\agent\test_filling_relationship_recovery.py:179: in test_public_loop_reopens_recovered_ifc_and_keeps_parts
+    assert result['status'] == 'compiled', result
+E   AssertionError: {'brief_result': {'case_id': '59c6b05fdfc4757f', 'evidence_class': 'unit_test_fixture', 'output_dir': '.tmp/courtyard-...seconds': 3600, 'max_calls': 32, 'max_tokens': 2000000}, ...}, 'evidence_class': 'offline_fake_attachment_family', ...}
+E   assert 'audit_blocked' == 'compiled'
+E     
+E     - compiled
+E     + audit_blocked
+_______ test_public_loop_reopens_recovered_ifc_and_keeps_parts[staged] ________
+tests\agent\test_filling_relationship_recovery.py:179: in test_public_loop_reopens_recovered_ifc_and_keeps_parts
+    assert result['status'] == 'compiled', result
+E   AssertionError: {'brief_result': {'case_id': '288b08e33f3221c8', 'evidence_class': 'unit_test_fixture', 'output_dir': '.tmp/courtyard-...seconds': 3600, 'max_calls': 32, 'max_tokens': 2000000}, ...}, 'evidence_class': 'offline_fake_attachment_family', ...}
+E   assert 'audit_blocked' == 'compiled'
+E     
+E     - compiled
+E     + audit_blocked
+- generated xml file: E:\code for project\bimnet\dataset\processed\ifc-presentation-validation\courtyard-library-open-court-20260912\railing-debug\stage-02.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_filling_relationship_recovery.py::test_public_loop_reopens_recovered_ifc_and_keeps_parts[legacy_full]
+FAILED tests/agent/test_filling_relationship_recovery.py::test_public_loop_reopens_recovered_ifc_and_keeps_parts[staged]
+2 failed, 504 passed in 823.40s (0:13:43)

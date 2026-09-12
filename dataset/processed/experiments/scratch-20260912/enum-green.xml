@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="37" time="34.501" timestamp="2026-09-11T14:31:41.034872+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcSpace-InteriorOrExternalSpace-INTERNAL-InternalOrExternalSpace]" time="0.130"><failure message="assert False">cls = 'IfcSpace', old = 'InteriorOrExternalSpace', value = 'INTERNAL'
+new = 'InternalOrExternalSpace'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InternalOrExternalSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InternalOrExternalSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:53: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcSpace-SpaceExposure-EXTERNAL-InternalOrExternalSpace]" time="0.107"><failure message="assert False">cls = 'IfcSpace', old = 'SpaceExposure', value = 'EXTERNAL'
+new = 'InternalOrExternalSpace'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InternalOrExternalSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InternalOrExternalSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:53: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcWindowStyle-PanelOperation-SINGLE_PANEL-OperationType]" time="0.104"><failure message="assert False">cls = 'IfcWindowStyle', old = 'PanelOperation', value = 'SINGLE_PANEL'
+new = 'OperationType'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InternalOrExternalSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InternalOrExternalSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:53: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[ambiguous]" time="0.132" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[existing]" time="0.108" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[unknown]" time="0.102" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[number]" time="0.119" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[feedback]" time="0.001" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[two_sources]" time="0.104" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[value]" time="0.112"><failure message="assert False">mode = 'value'
+
+    @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
+    def test_out_of_scope_or_changed_value_rolls_back(mode):
+        doc, _ = candidate()
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:87: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[unrelated]" time="0.105"><failure message="assert False">mode = 'unrelated'
+
+    @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
+    def test_out_of_scope_or_changed_value_rolls_back(mode):
+        doc, _ = candidate()
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:87: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[relationship]" time="0.115"><failure message="assert False">mode = 'relationship'
+
+    @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
+    def test_out_of_scope_or_changed_value_rolls_back(mode):
+        doc, _ = candidate()
+        before = copy.deepcopy(doc)
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:87: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_public_formal_repair_uses_changeset_and_preserves_all_relationships" time="2.144"><failure message="assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/enum-green-tmp/test_public_formal_repair_uses0')
+
+    def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp_path):
+        from text2ifc_agent.live_pipeline import run_repair_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        doc, _ = candidate()
+        g = group(doc)
+&gt;       assert g['eligible']
+E       assert False
+
+tests\agent\test_enum_field_recovery.py:108: AssertionError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_multiple_enum_errors_are_one_stable_atomic_group" time="3.099" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[partial]" time="2.487" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[unrelated]" time="1.727" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[stale]" time="1.861" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[remove]" time="2.122" /><testcase classname="tests.agent.test_early_field_recovery" name="test_registry_derived_unique_field_rename_preserves_value_and_other_attributes" time="3.122" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[unknown]" time="1.674" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[collision]" time="1.680" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[wrong_value]" time="1.789" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[duplicate_id]" time="0.700" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[conflict]" time="0.797" /><testcase classname="tests.agent.test_early_field_recovery" name="test_semantic_dependencies_are_read_only_including_other_type_users" time="0.003" /><testcase classname="tests.agent.test_early_field_recovery" name="test_public_repair_stage_uses_bounded_changeset_for_invalid_formal" time="6.452" /><testcase classname="tests.agent.test_prompt_registry" name="test_registry_hash_is_invariant_to_windows_line_endings" time="0.039" /><testcase classname="tests.agent.test_prompt_registry" name="test_prompt_trace_requires_template_identity" time="0.002" /><testcase classname="tests.agent.test_prompt_registry" name="test_registry_loads_and_renders_versioned_generator_prompt" time="0.472" /><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v1_registry_hash_remains_historical" time="0.235" /><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v2_registry_hash_remains_live_attempt_history" time="0.235" /><testcase classname="tests.agent.test_prompt_registry" name="test_registry_renders_evidence_grounded_design_brief_v2_prompt" time="0.477" /><testcase classname="tests.agent.test_prompt_registry" name="test_design_brief_v2_1_strengthens_live_bare_json_contract" time="0.474" /><testcase classname="tests.agent.test_prompt_registry" name="test_generator_v1_registry_hash_remains_historical" time="0.215" /><testcase classname="tests.agent.test_prompt_registry" name="test_generator_v2_renders_both_exact_canonical_contracts" time="0.429" /><testcase classname="tests.agent.test_prompt_registry" name="test_generator_context_includes_standard_two_storey_few_shot" time="0.009" /><testcase classname="tests.agent.test_prompt_registry" name="test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract" time="0.218" /></testsuite></testsuites>

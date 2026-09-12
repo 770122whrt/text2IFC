@@ -1,0 +1,31 @@
+{
+  "baseline": "2cf18d56",
+  "source_run": "../rerun-01/live-run/runs/d2c21f51c9bb69f6",
+  "observed": "Brief freezes undeclared standard property; Generator emits it; repair removes it but changes protected paths and is blocked.",
+  "hypotheses": [
+    {
+      "rank": 1,
+      "hypothesis": "Brief only checks non-null values; standard property registry is used later",
+      "prediction": "Unknown name, incompatible family and wrong type all pass Brief but fail existing formal validator."
+    },
+    {
+      "rank": 2,
+      "hypothesis": "Current registry lacks valid native spatial classification",
+      "prediction": "Registry native IfcSpace attribute accepts EXTERNAL while Pset_SpaceCommon has no IsExternal; genuine candidate already carries native attribute."
+    },
+    {
+      "rank": 3,
+      "hypothesis": "Repair can safely solve an invalid frozen requirement",
+      "prediction": "Even if its edit passes formal schema, frozen requirement conflicts remain; repair scope must not be relaxed."
+    }
+  ],
+  "family": "tests/agent/test_brief_property_admissibility.py",
+  "family_sha256": "a4b76b19bc8e542ac064970bb14a51d7c5b9d6da05c1f6a04ed8849ba5f5f926",
+  "red": {
+    "failed": 6,
+    "passed": 3,
+    "path": "red.xml"
+  },
+  "holdout": "not run; development regressions only",
+  "scope": "Shared existing property registry rules before new Brief2.7 freezes expectations; no IFC schema content or generation geometry changes."
+}

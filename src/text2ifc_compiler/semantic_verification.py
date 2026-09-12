@@ -109,8 +109,34 @@ def verify_semantic_expectations(ifc_file_or_path, expectations: Sequence[Mappin
                 items = [item for shape in representation.Representations if shape.RepresentationIdentifier == 'Body' for item in shape.Items] if representation else []
                 signatures = [item_appearance_signatures(item) for item in items]
                 actual = signatures
-                if items and all(len(values) == 1 and all(math.isclose(values[0][key], value, abs_tol=1e-6) for key, value in zip(('red','green','blue','transparency'), [*wanted.get('color', []), wanted.get('transparency', 0.0)])) for values in signatures) and len(wanted.get('color', [])) == 3:
+                channels = dict(zip(('red','green','blue'), wanted.get('color', [])))
+                if 'transparency' in wanted:
+                    channels['transparency'] = wanted['transparency']
+                colour_valid = 'color' not in wanted or len(wanted['color']) == 3
+                if items and channels and colour_valid and set(wanted) <= {'color', 'transparency'} and all(len(values) == 1 and all(
+                        math.isclose(values[0][key], value, abs_tol=1e-6)
+                        for key, value in channels.items()) for values in signatures):
                     actual = wanted
+            elif kind == 'part_appearance':
+                from text2ifc_presentation.part_readback import part_request_matches
+                wanted = expected.get('value', {})
+                if entity and scope != 'inherited' and part_request_matches(entity, wanted):
+                    actual = wanted
+            elif kind == 'template' and expected.get('value', {}).get('template_id') == 'metal-picket':
+                from .basic_railing import verify_basic_railing
+                wanted = expected.get('value', {})
+                try:
+                    metadata = _properties(entity).get('Pset_text2IFCBasicRailing', {})
+                    dimensions = json.loads(metadata.get('DimensionsJson', '{}'))
+                    rep = {**dimensions, **wanted, 'kind':'basic_railing'}
+                    # Use request parameters, not metadata's claim of what the user
+                    # specified. The verifier compares actual solids and defaults.
+                    if entity.is_a('IfcRailing') and scope != 'inherited' and not verify_basic_railing(
+                        entity.file, {'entities':[{'id':entity_id,'ifc_class':'IfcRailing',
+                        'attributes':{'Representation':rep}}]}, verify_placement=False):
+                        actual = wanted
+                except (AttributeError, KeyError, TypeError, ValueError):
+                    reason = 'Railing template request cannot be verified from reopened IFC.'
             elif kind == 'template':
                 from .basic_filling import verify_basic_filling
                 import ifcopenshell.util.unit
@@ -148,13 +174,13 @@ def verify_document_semantics(ifc_file_or_path, document) -> tuple[IfcValidation
     issues = []
     for record in document["entities"]:
         entity_id = record["id"]
+        rep = record.get('attributes', {}).get('Representation', {})
         expected.append({"entity_id": entity_id, "kind": "type", "value": types.get(entity_id)})
         matches = indexed.get(entity_id, [])
         if len(matches) != 1:
             continue
         entity = matches[0]
         if entity_id not in types and _types(entity):
-            rep = record.get('attributes', {}).get('Representation', {})
             attached = _types(entity)
             operation = {'door-left':'SINGLE_SWING_LEFT', 'door-right':'SINGLE_SWING_RIGHT'}.get(rep.get('template_id'))
             legal_attachment = rep.get('kind') == 'basic_filling' and len(attached) == 1 and operation and attached[0].is_a('IfcDoorStyle') and attached[0].OperationType == operation and not _identity(attached[0]) and attached[0].Name == f'text2IFC construction attachment {entity_id}' and not attached[0].HasPropertySets and not attached[0].HasAssociations and not attached[0].RepresentationMaps
@@ -164,6 +190,10 @@ def verify_document_semantics(ifc_file_or_path, document) -> tuple[IfcValidation
         # Compiler-owned provenance is checked by its own geometry/presentation contracts.
         for name in ("Pset_text2IFCBasicFilling", "Pset_text2IFCAppearance"):
             actual_properties.pop(name, None)
+        if document.get('schema_version') == 'bim-json/2.3' and rep.get('kind') == 'basic_railing':
+            # The dedicated verifier checks this construction metadata and every
+            # actual solid; it is not an authored performance property set.
+            actual_properties.pop('Pset_text2IFCBasicRailing', None)
         wanted_properties = {name: values for name, values in record.get("property_sets", {}).items() if values}
         if actual_properties != wanted_properties:
             issues.append(IfcValidationIssue("IFC_SEMANTIC_MISMATCH", entity_id, "property_sets", f"Authored direct properties {wanted_properties!r}; IFC contains {actual_properties!r}."))

@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="14" time="8.157" timestamp="2026-09-10T08:59:51.751148+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_design_review_audit" name="test_public_audit_preserves_design_problem_separately_from_technical_acceptance[retain-retained_known_issue]" time="0.528"><failure message="AssertionError: {'issue_count': 1, 'issues': [{'code': 'UNSUPPORTED_AUDIT_VERSION', 'message': 'Audit output must use text2ifc/audit/2.0.', 'path': '/schema_version'}], 'valid': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_public_audit_preserves_de0')
+decision = 'retain', status = 'retained_known_issue'
+
+    @pytest.mark.parametrize("decision,status", [("retain", "retained_known_issue"), ("revise", "not_verified")])
+    def test_public_audit_preserves_design_problem_separately_from_technical_acceptance(tmp_path, decision, status):
+        root = _write_auditable_case_dir(tmp_path / decision)
+        _context(root, decision)
+        provider = _RecordingLiveProvider(_audit(status))
+        result = run_audit_report_stage(provider=provider, case_dir=root, case_id=decision)
+&gt;       assert result["valid"], json.loads((root / "audit/validation.json").read_text())
+E       AssertionError: {'issue_count': 1, 'issues': [{'code': 'UNSUPPORTED_AUDIT_VERSION', 'message': 'Audit output must use text2ifc/audit/2.0.', 'path': '/schema_version'}], 'valid': False}
+E       assert False
+
+tests\agent\test_design_review_audit.py:59: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_public_audit_preserves_design_problem_separately_from_technical_acceptance[revise-not_verified]" time="0.568"><failure message="AssertionError: {'issue_count': 1, 'issues': [{'code': 'UNSUPPORTED_AUDIT_VERSION', 'message': 'Audit output must use text2ifc/audit/2.0.', 'path': '/schema_version'}], 'valid': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_public_audit_preserves_de1')
+decision = 'revise', status = 'not_verified'
+
+    @pytest.mark.parametrize("decision,status", [("retain", "retained_known_issue"), ("revise", "not_verified")])
+    def test_public_audit_preserves_design_problem_separately_from_technical_acceptance(tmp_path, decision, status):
+        root = _write_auditable_case_dir(tmp_path / decision)
+        _context(root, decision)
+        provider = _RecordingLiveProvider(_audit(status))
+        result = run_audit_report_stage(provider=provider, case_dir=root, case_id=decision)
+&gt;       assert result["valid"], json.loads((root / "audit/validation.json").read_text())
+E       AssertionError: {'issue_count': 1, 'issues': [{'code': 'UNSUPPORTED_AUDIT_VERSION', 'message': 'Audit output must use text2ifc/audit/2.0.', 'path': '/schema_version'}], 'valid': False}
+E       assert False
+
+tests\agent\test_design_review_audit.py:59: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[drop]" time="0.465" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[erase]" time="0.516" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[duplicate]" time="0.447" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[unknown]" time="0.465" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[bad_evidence]" time="0.485" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[downgrade]" time="0.457"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_audit_cannot_omit_erase_o5')
+change = 'downgrade'
+
+    @pytest.mark.parametrize("change", ["drop", "erase", "duplicate", "unknown", "bad_evidence", "downgrade"])
+    def test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        _context(root)
+        payload = _audit()
+        rows = payload["design_review"]["concerns"]
+        if change == "drop":
+            rows.clear()
+        elif change == "erase":
+            rows[0]["status"] = "resolved"
+        elif change == "duplicate":
+            rows.append(dict(rows[0]))
+        elif change == "unknown":
+            rows[0]["id"] = "another-building"
+        elif change == "bad_evidence":
+            rows[0]["evidence_paths"] = ["../private.json"]
+        else:
+            payload["schema_version"] = "text2ifc/audit/2.0"
+            payload.pop("design_review")
+        result = run_audit_report_stage(provider=_RecordingLiveProvider(payload), case_dir=root, case_id=change)
+&gt;       assert not result["valid"]
+E       assert not True
+
+tests\agent\test_design_review_audit.py:87: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[quote]" time="0.403"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_invalid_confirmation_cont0')
+change = 'quote'
+
+    @pytest.mark.parametrize("change", ["quote", "assistant", "stale", "evidence", "pending", "duplicate"])
+    def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        row = context["concerns"][0]
+        if change == "quote":
+            row["decision_quote"] = "用户从未说过的话"
+        elif change == "assistant":
+            path = root / "design-brief/conversation.json"
+            turns = json.loads(path.read_text(encoding="utf-8"))
+            turns[-1]["role"] = "assistant"
+            path.write_text(json.dumps(turns), encoding="utf-8")
+            context["conversation_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif change == "stale":
+            context["conversation_sha256"] = "0" * 64
+        elif change == "evidence":
+            row["evidence_sha256"] = "0" * 64
+        elif change == "pending":
+            row["decision"] = "pending"
+        else:
+            context["concerns"].append(dict(row))
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        provider = _RecordingLiveProvider(_audit())
+&gt;       with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\agent\test_design_review_audit.py:114: Failed</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[assistant]" time="0.519"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_invalid_confirmation_cont1')
+change = 'assistant'
+
+    @pytest.mark.parametrize("change", ["quote", "assistant", "stale", "evidence", "pending", "duplicate"])
+    def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        row = context["concerns"][0]
+        if change == "quote":
+            row["decision_quote"] = "用户从未说过的话"
+        elif change == "assistant":
+            path = root / "design-brief/conversation.json"
+            turns = json.loads(path.read_text(encoding="utf-8"))
+            turns[-1]["role"] = "assistant"
+            path.write_text(json.dumps(turns), encoding="utf-8")
+            context["conversation_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif change == "stale":
+            context["conversation_sha256"] = "0" * 64
+        elif change == "evidence":
+            row["evidence_sha256"] = "0" * 64
+        elif change == "pending":
+            row["decision"] = "pending"
+        else:
+            context["concerns"].append(dict(row))
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        provider = _RecordingLiveProvider(_audit())
+&gt;       with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\agent\test_design_review_audit.py:114: Failed</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[stale]" time="0.407"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_invalid_confirmation_cont2')
+change = 'stale'
+
+    @pytest.mark.parametrize("change", ["quote", "assistant", "stale", "evidence", "pending", "duplicate"])
+    def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        row = context["concerns"][0]
+        if change == "quote":
+            row["decision_quote"] = "用户从未说过的话"
+        elif change == "assistant":
+            path = root / "design-brief/conversation.json"
+            turns = json.loads(path.read_text(encoding="utf-8"))
+            turns[-1]["role"] = "assistant"
+            path.write_text(json.dumps(turns), encoding="utf-8")
+            context["conversation_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif change == "stale":
+            context["conversation_sha256"] = "0" * 64
+        elif change == "evidence":
+            row["evidence_sha256"] = "0" * 64
+        elif change == "pending":
+            row["decision"] = "pending"
+        else:
+            context["concerns"].append(dict(row))
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        provider = _RecordingLiveProvider(_audit())
+&gt;       with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\agent\test_design_review_audit.py:114: Failed</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[evidence]" time="0.471"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_invalid_confirmation_cont3')
+change = 'evidence'
+
+    @pytest.mark.parametrize("change", ["quote", "assistant", "stale", "evidence", "pending", "duplicate"])
+    def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        row = context["concerns"][0]
+        if change == "quote":
+            row["decision_quote"] = "用户从未说过的话"
+        elif change == "assistant":
+            path = root / "design-brief/conversation.json"
+            turns = json.loads(path.read_text(encoding="utf-8"))
+            turns[-1]["role"] = "assistant"
+            path.write_text(json.dumps(turns), encoding="utf-8")
+            context["conversation_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif change == "stale":
+            context["conversation_sha256"] = "0" * 64
+        elif change == "evidence":
+            row["evidence_sha256"] = "0" * 64
+        elif change == "pending":
+            row["decision"] = "pending"
+        else:
+            context["concerns"].append(dict(row))
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        provider = _RecordingLiveProvider(_audit())
+&gt;       with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\agent\test_design_review_audit.py:114: Failed</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[pending]" time="0.384"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_invalid_confirmation_cont4')
+change = 'pending'
+
+    @pytest.mark.parametrize("change", ["quote", "assistant", "stale", "evidence", "pending", "duplicate"])
+    def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        row = context["concerns"][0]
+        if change == "quote":
+            row["decision_quote"] = "用户从未说过的话"
+        elif change == "assistant":
+            path = root / "design-brief/conversation.json"
+            turns = json.loads(path.read_text(encoding="utf-8"))
+            turns[-1]["role"] = "assistant"
+            path.write_text(json.dumps(turns), encoding="utf-8")
+            context["conversation_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif change == "stale":
+            context["conversation_sha256"] = "0" * 64
+        elif change == "evidence":
+            row["evidence_sha256"] = "0" * 64
+        elif change == "pending":
+            row["decision"] = "pending"
+        else:
+            context["concerns"].append(dict(row))
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        provider = _RecordingLiveProvider(_audit())
+&gt;       with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\agent\test_design_review_audit.py:114: Failed</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[duplicate]" time="0.290"><failure message="Failed: DID NOT RAISE &lt;class 'ValueError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-red-20260910/test_invalid_confirmation_cont5')
+change = 'duplicate'
+
+    @pytest.mark.parametrize("change", ["quote", "assistant", "stale", "evidence", "pending", "duplicate"])
+    def test_invalid_confirmation_context_stops_before_provider(tmp_path, change):
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        row = context["concerns"][0]
+        if change == "quote":
+            row["decision_quote"] = "用户从未说过的话"
+        elif change == "assistant":
+            path = root / "design-brief/conversation.json"
+            turns = json.loads(path.read_text(encoding="utf-8"))
+            turns[-1]["role"] = "assistant"
+            path.write_text(json.dumps(turns), encoding="utf-8")
+            context["conversation_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        elif change == "stale":
+            context["conversation_sha256"] = "0" * 64
+        elif change == "evidence":
+            row["evidence_sha256"] = "0" * 64
+        elif change == "pending":
+            row["decision"] = "pending"
+        else:
+            context["concerns"].append(dict(row))
+        (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        provider = _RecordingLiveProvider(_audit())
+&gt;       with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+E       Failed: DID NOT RAISE &lt;class 'ValueError'&gt;
+
+tests\agent\test_design_review_audit.py:114: Failed</failure></testcase></testsuite></testsuites>

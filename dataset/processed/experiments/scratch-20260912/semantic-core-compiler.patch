@@ -1,0 +1,33 @@
+--- a/src/text2ifc_compiler/compiler.py
++++ b/src/text2ifc_compiler/compiler.py
+@@ -35,11 +35,12 @@
+     *,
+     appearance_profile: str | None = None,
+     appearance_seed: str | None = None,
++    semantic_expectations=None,
+ ) -> CompilationResult:
+-    if document.get("schema_version") == "bim-json/2.0":
++    if document.get("schema_version") in {"bim-json/2.0", "bim-json/2.1"}:
+         input_issues = tuple(validate_v2_document(document))
+         builder = build_ifc_v2
+-    elif document.get("draft_version") == "bim-json-draft/1.0":
++    elif document.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1"}:
+         input_issues = (
+             ValidationIssue(
+                 "DRAFT_NOT_COMPILABLE",
+@@ -90,6 +91,15 @@
+         if reopened_issues:
+             return CompilationResult(ifc_issues=reopened_issues)
+ 
++        from .semantic_verification import verify_document_semantics, verify_semantic_expectations
++        semantic_issues = ()
++        if document.get("schema_version") == "bim-json/2.1":
++            semantic_issues += verify_document_semantics(temporary_path, document)
++        if semantic_expectations:
++            semantic_issues += verify_semantic_expectations(temporary_path, semantic_expectations)
++        if semantic_issues:
++            return CompilationResult(ifc_issues=semantic_issues)
++
+         os.replace(temporary_path, output)
+         temporary_path = None
+         return CompilationResult(output_path=output)

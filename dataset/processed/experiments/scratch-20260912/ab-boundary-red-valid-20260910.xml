@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="21" skipped="0" tests="29" time="3.684" timestamp="2026-09-10T14:05:10.163015+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[True-stair-north-flight-flights0]" time="0.003"><failure message="KeyError: 'stairs'">stair_id = 'stair-north-flight', flights = ['stair-flight-north-flight']
+explicit_opening = True
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[True-stair-link-flights1]" time="0.002"><failure message="KeyError: 'stairs'">stair_id = 'stair-link', flights = ['stair-flight-link']
+explicit_opening = True
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[True-north-link-flights2]" time="0.001"><failure message="KeyError: 'stairs'">stair_id = 'north-link', flights = ['north-link-flight']
+explicit_opening = True
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[True-\u5317\u68af-flights3]" time="0.001"><failure message="KeyError: 'stairs'">stair_id = '北梯', flights = ['北梯-flight'], explicit_opening = True
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[False-stair-north-flight-flights0]" time="0.001"><failure message="KeyError: 'stairs'">stair_id = 'stair-north-flight', flights = ['stair-flight-north-flight']
+explicit_opening = False
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[False-stair-link-flights1]" time="0.001"><failure message="KeyError: 'stairs'">stair_id = 'stair-link', flights = ['stair-flight-link']
+explicit_opening = False
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[False-north-link-flights2]" time="0.001"><failure message="KeyError: 'stairs'">stair_id = 'north-link', flights = ['north-link-flight']
+explicit_opening = False
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_contract_offers_same_opaque_ids_as_package_and_geometry[False-\u5317\u68af-flights3]" time="0.001"><failure message="KeyError: 'stairs'">stair_id = '北梯', flights = ['北梯-flight'], explicit_opening = False
+
+    @pytest.mark.parametrize('stair_id,flights', [
+        ('stair-north-flight', ['stair-flight-north-flight']),
+        ('stair-link', ['stair-flight-link']),
+        ('north-link', ['north-link-flight']),
+        ('北梯', ['北梯-flight']),
+    ])
+    @pytest.mark.parametrize('explicit_opening', [True, False])
+    def test_contract_offers_same_opaque_ids_as_package_and_geometry(stair_id, flights, explicit_opening):
+        brief = _brief(stair_id, explicit_opening=explicit_opening)
+        frozen = copy.deepcopy(brief)
+        expected = build_expected_facts(case_id='identity-family', design_brief=brief)
+        contract = expected['entity_id_contract']
+&gt;       assert contract['stairs'][0]['entity_id'] == stair_id
+               ^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stairs'
+
+tests\agent\test_cross_storey_identity_contract.py:44: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_explicit_children_keep_their_ids_and_order" time="0.001"><failure message="KeyError: 'stair_flights'">def test_explicit_children_keep_their_ids_and_order():
+        expected = build_expected_facts(case_id='explicit', design_brief=_brief(flight_ids=['part-z', 'part-a']))
+&gt;       assert [r['entity_id'] for r in expected['entity_id_contract']['stair_flights']] == ['part-z', 'part-a']
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stair_flights'
+
+tests\agent\test_cross_storey_identity_contract.py:61: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_ambiguous_role_identity_stops_projection[parent_child_collision]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;">failure = 'parent_child_collision'
+
+    @pytest.mark.parametrize('failure', ['parent_child_collision', 'duplicate_child', 'shared_child', 'opening_collision'])
+    def test_ambiguous_role_identity_stops_projection(failure):
+        brief = _brief()
+        known = brief['known_facts']
+        if failure == 'parent_child_collision':
+            known['stairs'][0]['flight_ids'] = ['stair-north-flight']
+        elif failure == 'duplicate_child':
+            known['stairs'][0]['flight_ids'] = ['child', 'child']
+        elif failure == 'shared_child':
+            known['stairs'][0]['flight_ids'] = ['shared-child']
+            known['stairs'].append({**known['stairs'][0], 'id': 'another-connection'})
+        else:
+            known['floor_slabs'][0]['opening']['id'] = 'upper-slab'
+&gt;       with pytest.raises(ExpectedFactsError, match='IDENTITY'):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;
+
+tests\agent\test_cross_storey_identity_contract.py:77: Failed</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_ambiguous_role_identity_stops_projection[duplicate_child]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;">failure = 'duplicate_child'
+
+    @pytest.mark.parametrize('failure', ['parent_child_collision', 'duplicate_child', 'shared_child', 'opening_collision'])
+    def test_ambiguous_role_identity_stops_projection(failure):
+        brief = _brief()
+        known = brief['known_facts']
+        if failure == 'parent_child_collision':
+            known['stairs'][0]['flight_ids'] = ['stair-north-flight']
+        elif failure == 'duplicate_child':
+            known['stairs'][0]['flight_ids'] = ['child', 'child']
+        elif failure == 'shared_child':
+            known['stairs'][0]['flight_ids'] = ['shared-child']
+            known['stairs'].append({**known['stairs'][0], 'id': 'another-connection'})
+        else:
+            known['floor_slabs'][0]['opening']['id'] = 'upper-slab'
+&gt;       with pytest.raises(ExpectedFactsError, match='IDENTITY'):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;
+
+tests\agent\test_cross_storey_identity_contract.py:77: Failed</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_ambiguous_role_identity_stops_projection[shared_child]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;">failure = 'shared_child'
+
+    @pytest.mark.parametrize('failure', ['parent_child_collision', 'duplicate_child', 'shared_child', 'opening_collision'])
+    def test_ambiguous_role_identity_stops_projection(failure):
+        brief = _brief()
+        known = brief['known_facts']
+        if failure == 'parent_child_collision':
+            known['stairs'][0]['flight_ids'] = ['stair-north-flight']
+        elif failure == 'duplicate_child':
+            known['stairs'][0]['flight_ids'] = ['child', 'child']
+        elif failure == 'shared_child':
+            known['stairs'][0]['flight_ids'] = ['shared-child']
+            known['stairs'].append({**known['stairs'][0], 'id': 'another-connection'})
+        else:
+            known['floor_slabs'][0]['opening']['id'] = 'upper-slab'
+&gt;       with pytest.raises(ExpectedFactsError, match='IDENTITY'):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;
+
+tests\agent\test_cross_storey_identity_contract.py:77: Failed</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_ambiguous_role_identity_stops_projection[opening_collision]" time="0.001"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;">failure = 'opening_collision'
+
+    @pytest.mark.parametrize('failure', ['parent_child_collision', 'duplicate_child', 'shared_child', 'opening_collision'])
+    def test_ambiguous_role_identity_stops_projection(failure):
+        brief = _brief()
+        known = brief['known_facts']
+        if failure == 'parent_child_collision':
+            known['stairs'][0]['flight_ids'] = ['stair-north-flight']
+        elif failure == 'duplicate_child':
+            known['stairs'][0]['flight_ids'] = ['child', 'child']
+        elif failure == 'shared_child':
+            known['stairs'][0]['flight_ids'] = ['shared-child']
+            known['stairs'].append({**known['stairs'][0], 'id': 'another-connection'})
+        else:
+            known['floor_slabs'][0]['opening']['id'] = 'upper-slab'
+&gt;       with pytest.raises(ExpectedFactsError, match='IDENTITY'):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.expected_facts.ExpectedFactsError'&gt;
+
+tests\agent\test_cross_storey_identity_contract.py:77: Failed</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_public_generator_receives_cross_storey_ids_and_versioned_instruction" time="1.443"><failure message="KeyError: 'stair_flights'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_public_generator_receives0')
+
+    def test_public_generator_receives_cross_storey_ids_and_versioned_instruction(tmp_path):
+        from text2ifc_agent.live_pipeline import run_generator_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        root = Path(__file__).resolve().parents[2]
+        brief = _brief(flight_ids=['actual-child'])
+        expected = build_expected_facts(case_id='offered', design_brief=brief)
+        source = tmp_path/'design-brief'
+        source.mkdir()
+        (source/'input.txt').write_text('按确认的两层楼梯和洞口建模。', encoding='utf-8')
+        for name, value in [('conversation', []), ('context-selection', {'evidence': []}), ('design-brief', brief)]:
+            (source/f'{name}.json').write_text(json.dumps(value), encoding='utf-8')
+        (tmp_path/'expected-facts.json').write_text(json.dumps(expected), encoding='utf-8')
+        candidate = json.loads((root/'tests/contract_v2/fixtures/complete.json').read_text(encoding='utf-8'))
+        candidate['schema_version'] = 'bim-json/2.1'
+        # The fake payload is only to exercise prompt transport, not IFC acceptance.
+        run_generator_stage(provider=SequenceProvider([candidate]), output_dir=tmp_path/'generator',
+                            design_source_dir=source, case_id='offered')
+        rendered = json.loads((tmp_path/'generator/prompt-render-input.json').read_text(encoding='utf-8'))
+&gt;       assert rendered['ENTITY_ID_CONTRACT']['stair_flights'][0]['entity_id'] == 'actual-child'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'stair_flights'
+
+tests\agent\test_cross_storey_identity_contract.py:99: KeyError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_endpoint_names_follow_unique_frozen_parent_child_binding[None]" time="0.004"><failure message="AssertionError: assert ('failed' == 'passed'&#10;  &#10;  - passed&#10;  + failed) is (None is None)">failure = None
+
+    @pytest.mark.parametrize('failure', [None, 'wrong_parent', 'no_aggregate', 'duplicate_parent', 'unoffered_child', 'wrong_owner'])
+    def test_endpoint_names_follow_unique_frozen_parent_child_binding(failure):
+        from tests.agent.test_cross_storey_name_boundary import _case, _gate
+        candidate, expected = _case()
+        expected['stairs'][0].update(id='parent-stair', flight_ids=['flight-a'])
+        candidate['entities'].append({'id': 'parent-stair', 'ifc_class': 'IfcStair',
+            'attributes': {'ObjectPlacement': {'relative_to': 'level-0'}}})
+        relation = {'id': 'aggregate', 'ifc_class': 'IfcRelAggregates',
+                    'attributes': {'RelatingObject': 'parent-stair', 'RelatedObjects': ['flight-a']}}
+        candidate['relationships'].append(relation)
+        if failure == 'wrong_parent':
+            relation['attributes']['RelatingObject'] = 'other'
+        elif failure == 'no_aggregate':
+            candidate['relationships'] = []
+        elif failure == 'duplicate_parent':
+            candidate['relationships'].append({**copy.deepcopy(relation), 'id': 'duplicate'})
+        elif failure == 'unoffered_child':
+            expected['stairs'][0]['flight_ids'] = ['other']
+        elif failure == 'wrong_owner':
+            candidate['entities'][-2]['attributes']['ObjectPlacement']['relative_to'] = 'level-1'
+&gt;       assert (_gate(candidate, expected)['status'] == 'passed') is (failure is None)
+E       AssertionError: assert ('failed' == 'passed'
+E         
+E         - passed
+E         + failed) is (None is None)
+
+tests\agent\test_cross_storey_identity_contract.py:126: AssertionError</failure></testcase><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_endpoint_names_follow_unique_frozen_parent_child_binding[wrong_parent]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_endpoint_names_follow_unique_frozen_parent_child_binding[no_aggregate]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_endpoint_names_follow_unique_frozen_parent_child_binding[duplicate_parent]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_endpoint_names_follow_unique_frozen_parent_child_binding[unoffered_child]" time="0.001" /><testcase classname="tests.agent.test_cross_storey_identity_contract" name="test_endpoint_names_follow_unique_frozen_parent_child_binding[wrong_owner]" time="0.001" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[True-truncated]" time="0.163"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_failed_public_stage_prese0')
+scenario = 'truncated', known_usage = True
+
+    @pytest.mark.parametrize('scenario', ['truncated', 'no_choices', 'forbidden'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_failed_public_stage_preserves_received_response_and_budget(tmp_path, scenario, known_usage):
+        payload = _response(scenario, known_usage)
+        provider, calls = _provider(payload)
+        budget = GenerationBudget(tmp_path/'budget', BudgetLimits(max_calls=2, max_tokens=1000000, max_active_seconds=100))
+&gt;       result = _run(tmp_path/'stage', BudgetedProvider(provider, budget))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_phase6_5_changeset_stage.py:128: in _run
+    return run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\openai_compat.py:293: in generate_live
+    evidence = parse_chat_completion_evidence(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"operations":[', 'role': 'assistant'}}], 'id': 'offline-response', 'model': 'fixture-model', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:424: OpenAICompatError</failure></testcase><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[True-no_choices]" time="0.120"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion has no first choice">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_failed_public_stage_prese1')
+scenario = 'no_choices', known_usage = True
+
+    @pytest.mark.parametrize('scenario', ['truncated', 'no_choices', 'forbidden'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_failed_public_stage_preserves_received_response_and_budget(tmp_path, scenario, known_usage):
+        payload = _response(scenario, known_usage)
+        provider, calls = _provider(payload)
+        budget = GenerationBudget(tmp_path/'budget', BudgetLimits(max_calls=2, max_tokens=1000000, max_active_seconds=100))
+&gt;       result = _run(tmp_path/'stage', BudgetedProvider(provider, budget))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_phase6_5_changeset_stage.py:128: in _run
+    return run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\openai_compat.py:293: in generate_live
+    evidence = parse_chat_completion_evidence(
+src\text2ifc_agent\openai_compat.py:407: in parse_chat_completion_evidence
+    choice = _first_choice(response)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [], 'id': 'offline-response', 'model': 'fixture-model', 'usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18}}
+
+    def _first_choice(response: dict[str, Any]) -&gt; dict[str, Any]:
+        choices = response.get("choices")
+        if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion has no first choice",
+                evidence={
+                    "provider": "mimo-openai-compatible",
+                    "response_id": response.get("id"),
+                    "parse_eligible": False,
+                    "failure_class": "missing_choice",
+                },
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion has no first choice
+
+src\text2ifc_agent\openai_compat.py:645: OpenAICompatError</failure></testcase><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[True-forbidden]" time="0.123"><failure message="text2ifc_agent.providers.ProviderOutputError: Provider output contains raw IFC/STEP or low-level IFC helper content.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_failed_public_stage_prese2')
+scenario = 'forbidden', known_usage = True
+
+    @pytest.mark.parametrize('scenario', ['truncated', 'no_choices', 'forbidden'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_failed_public_stage_preserves_received_response_and_budget(tmp_path, scenario, known_usage):
+        payload = _response(scenario, known_usage)
+        provider, calls = _provider(payload)
+        budget = GenerationBudget(tmp_path/'budget', BudgetLimits(max_calls=2, max_tokens=1000000, max_active_seconds=100))
+&gt;       result = _run(tmp_path/'stage', BudgetedProvider(provider, budget))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_phase6_5_changeset_stage.py:128: in _run
+    return run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\openai_compat.py:299: in generate_live
+    output = validate_provider_output(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+output = ProviderOutput(text='ISO-10303-21;', metadata={'provider': 'deepseek-openai-compatible', 'evidence_class': 'live', 'se...mpts': 1, 'request_configuration': {'thinking': {'type': 'enabled'}, 'temperature': {'value': 0, 'effective': False}}})
+
+    def validate_provider_output(output: ProviderOutput) -&gt; ProviderOutput:
+        upper = output.text.upper()
+        for term in LOW_LEVEL_FORBIDDEN_TERMS:
+            if term in upper:
+&gt;               raise ProviderOutputError(
+                    "Provider output contains raw IFC/STEP or low-level IFC helper content."
+                )
+E               text2ifc_agent.providers.ProviderOutputError: Provider output contains raw IFC/STEP or low-level IFC helper content.
+
+src\text2ifc_agent\providers.py:426: ProviderOutputError</failure></testcase><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[False-truncated]" time="0.116"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_failed_public_stage_prese3')
+scenario = 'truncated', known_usage = False
+
+    @pytest.mark.parametrize('scenario', ['truncated', 'no_choices', 'forbidden'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_failed_public_stage_preserves_received_response_and_budget(tmp_path, scenario, known_usage):
+        payload = _response(scenario, known_usage)
+        provider, calls = _provider(payload)
+        budget = GenerationBudget(tmp_path/'budget', BudgetLimits(max_calls=2, max_tokens=1000000, max_active_seconds=100))
+&gt;       result = _run(tmp_path/'stage', BudgetedProvider(provider, budget))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_phase6_5_changeset_stage.py:128: in _run
+    return run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\openai_compat.py:293: in generate_live
+    evidence = parse_chat_completion_evidence(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [{'finish_reason': 'length', 'message': {'content': '{"operations":[', 'role': 'assistant'}}], 'id': 'offline-response', 'model': 'fixture-model'}
+
+    def parse_chat_completion_evidence(
+        response: dict[str, Any],
+        *,
+        request: dict[str, Any],
+        evidence_class: str,
+        provider_label: str = "mimo-openai-compatible",
+    ) -&gt; dict[str, Any]:
+        """Extract acceptance evidence from an OpenAI chat-completion response."""
+    
+        choice = _first_choice(response)
+        message = choice.get("message") if isinstance(choice.get("message"), dict) else {}
+        finish_reason = choice.get("finish_reason")
+        evidence = {
+            "provider": provider_label,
+            "evidence_class": evidence_class,
+            "response_id": response.get("id"),
+            "object": response.get("object"),
+            "model": response.get("model"),
+            "finish_reason": finish_reason,
+            "content_text": str(message.get("content", "")),
+            "usage": dict(response.get("usage", {})) if isinstance(response.get("usage"), dict) else {},
+            "request": redact_provider_payload(request),
+            "parse_eligible": finish_reason != "length",
+        }
+        if finish_reason == "length":
+            evidence["failure_class"] = "truncated"
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence=evidence,
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion is truncated: finish_reason=length
+
+src\text2ifc_agent\openai_compat.py:424: OpenAICompatError</failure></testcase><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[False-no_choices]" time="0.111"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion has no first choice">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_failed_public_stage_prese4')
+scenario = 'no_choices', known_usage = False
+
+    @pytest.mark.parametrize('scenario', ['truncated', 'no_choices', 'forbidden'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_failed_public_stage_preserves_received_response_and_budget(tmp_path, scenario, known_usage):
+        payload = _response(scenario, known_usage)
+        provider, calls = _provider(payload)
+        budget = GenerationBudget(tmp_path/'budget', BudgetLimits(max_calls=2, max_tokens=1000000, max_active_seconds=100))
+&gt;       result = _run(tmp_path/'stage', BudgetedProvider(provider, budget))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_phase6_5_changeset_stage.py:128: in _run
+    return run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\openai_compat.py:293: in generate_live
+    evidence = parse_chat_completion_evidence(
+src\text2ifc_agent\openai_compat.py:407: in parse_chat_completion_evidence
+    choice = _first_choice(response)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+response = {'choices': [], 'id': 'offline-response', 'model': 'fixture-model'}
+
+    def _first_choice(response: dict[str, Any]) -&gt; dict[str, Any]:
+        choices = response.get("choices")
+        if not isinstance(choices, list) or not choices or not isinstance(choices[0], dict):
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible chat completion has no first choice",
+                evidence={
+                    "provider": "mimo-openai-compatible",
+                    "response_id": response.get("id"),
+                    "parse_eligible": False,
+                    "failure_class": "missing_choice",
+                },
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible chat completion has no first choice
+
+src\text2ifc_agent\openai_compat.py:645: OpenAICompatError</failure></testcase><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[False-forbidden]" time="0.131"><failure message="text2ifc_agent.providers.ProviderOutputError: Provider output contains raw IFC/STEP or low-level IFC helper content.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-boundary-red-valid-20260910/test_failed_public_stage_prese5')
+scenario = 'forbidden', known_usage = False
+
+    @pytest.mark.parametrize('scenario', ['truncated', 'no_choices', 'forbidden'])
+    @pytest.mark.parametrize('known_usage', [True, False])
+    def test_failed_public_stage_preserves_received_response_and_budget(tmp_path, scenario, known_usage):
+        payload = _response(scenario, known_usage)
+        provider, calls = _provider(payload)
+        budget = GenerationBudget(tmp_path/'budget', BudgetLimits(max_calls=2, max_tokens=1000000, max_active_seconds=100))
+&gt;       result = _run(tmp_path/'stage', BudgetedProvider(provider, budget))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_failure_evidence.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_phase6_5_changeset_stage.py:128: in _run
+    return run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:94: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\openai_compat.py:299: in generate_live
+    output = validate_provider_output(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+output = ProviderOutput(text='ISO-10303-21;', metadata={'provider': 'deepseek-openai-compatible', 'evidence_class': 'live', 'se...mpts': 1, 'request_configuration': {'thinking': {'type': 'enabled'}, 'temperature': {'value': 0, 'effective': False}}})
+
+    def validate_provider_output(output: ProviderOutput) -&gt; ProviderOutput:
+        upper = output.text.upper()
+        for term in LOW_LEVEL_FORBIDDEN_TERMS:
+            if term in upper:
+&gt;               raise ProviderOutputError(
+                    "Provider output contains raw IFC/STEP or low-level IFC helper content."
+                )
+E               text2ifc_agent.providers.ProviderOutputError: Provider output contains raw IFC/STEP or low-level IFC helper content.
+
+src\text2ifc_agent\providers.py:426: ProviderOutputError</failure></testcase><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_normal_or_malformed_json_keeps_existing_stage_contract[valid]" time="0.104" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_normal_or_malformed_json_keeps_existing_stage_contract[malformed]" time="0.093" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_budget_exhaustion_still_escapes_before_provider_attempt" time="0.107" /></testsuite></testsuites>

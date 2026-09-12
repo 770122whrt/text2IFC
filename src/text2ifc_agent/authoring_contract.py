@@ -19,7 +19,7 @@ _MANAGED = {'GlobalId', 'OwnerHistory', 'HasPropertySets', 'RepresentationMaps'}
 
 def build_authoring_contract(classes: Iterable[str] | None = None, *, version: str = '1.1') -> dict:
     """Offer legal fields, not default facts or authorization to invent values."""
-    if version not in {'1.0', '1.1'}:
+    if version not in {'1.0', '1.1', '1.2', '1.3'}:
         raise ValueError(f'Unsupported authoring contract version: {version}')
     registry = load_ifc2x3_registry()
     supported = {k for k, v in load_capabilities().items() if v == 'generate'}
@@ -63,6 +63,10 @@ def build_authoring_contract(classes: Iterable[str] | None = None, *, version: s
         records[name] = {'attributes': attrs}
     sources = ['schemas/ifc/generated/IFC2X3/declarations.json',
                'schemas/ifc/capabilities/IFC2X3.json', 'schemas/bim-json/2.1/schema.json']
+    if version == '1.2':
+        sources[-1] = 'schemas/bim-json/2.2/schema.json'
+    if version == '1.3':
+        sources[-1] = 'schemas/bim-json/2.3/schema.json'
     result = {
         'schema_version': f'text2ifc/generation-authoring-contract/{version}', 'ifc_schema': 'IFC2X3',
         'source_hashes': {p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources},
@@ -76,7 +80,7 @@ def build_authoring_contract(classes: Iterable[str] | None = None, *, version: s
             'repair': 'The offered schema is read-only evidence, not write permission. Edit only explicitly authorized stable components and paths. Missing user facts or explicit conflicts require Draft.',
         },
     }
-    if version == '1.1':
+    if version in {'1.1', '1.2', '1.3'}:
         result['geometry_encoding'] = {
             'rectangle': {
                 'anchor': 'profile_center_at_extrusion_base',
@@ -101,6 +105,23 @@ def build_authoring_contract(classes: Iterable[str] | None = None, *, version: s
         }
         for source in ['src/text2ifc_compiler/geometry.py', 'src/text2ifc_contract/placement.py',
                        'src/text2ifc_contract/basic_filling.py', 'src/text2ifc_compiler/basic_filling.py']:
+            result['source_hashes'][source] = hashlib.sha256((ROOT/source).read_bytes()).hexdigest()
+    if version in {'1.2', '1.3'}:
+        result['policies']['part_appearance'] = 'Occurrence-only basic_filling frame/panel/glazing RGB and transparency. Explicit requested channels only; unspecified channels keep theme defaults. Whole occurrence or Type appearance conflicts. No geometry, Type, material or property changes.'
+    if version == '1.3':
+        from text2ifc_contract.basic_railing import VERSION, DEFAULTS, RANGES
+        result['geometry_encoding']['basic_railing'] = {
+            'template_id': 'metal-picket', 'template_version': VERSION,
+            'family': 'IfcRailing occurrence only', 'units': 'mm',
+            'required': ['length', 'height', 'depth'], 'optional': ['rise', 'parameters'],
+            'anchor': 'Local X=0..length; Y centered on baseline; base Z=rise*X/length. Height is vertical above the baseline. Convert frozen world start and horizontal direction into the parent frame.',
+            'bounds': {'length': [300,20000], 'height': [700,1600], 'depth': [20,100]},
+            'rise': 'Signed end Z minus start Z; magnitude <= horizontal length. Keep local Z vertical; do not tilt placement and apply slope twice.',
+            'parameter_defaults': DEFAULTS, 'parameter_ranges': RANGES,
+            'limits': 'At most 512 solids; post/picket widths <= depth. Explicit parameters only; omitted parameters retain versioned defaults. No performance certification.',
+        }
+        result['policies']['basic_railing'] = 'Single explicit material and whole occurrence appearance only. No automatic physical material, properties, Type or mixed-part styling. Compiler generates and verifies posts, pickets and top/bottom rails; do not author them as extra entities.'
+        for source in ['src/text2ifc_contract/basic_railing.py', 'src/text2ifc_compiler/basic_railing.py']:
             result['source_hashes'][source] = hashlib.sha256((ROOT/source).read_bytes()).hexdigest()
     encoded = json.dumps(result, sort_keys=True, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     result['contract_hash'] = 'sha256:' + hashlib.sha256(encoded).hexdigest()

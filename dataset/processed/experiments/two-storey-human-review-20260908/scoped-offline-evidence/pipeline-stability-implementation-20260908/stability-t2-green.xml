@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="12" time="10.739" timestamp="2026-09-08T22:55:42.693282+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_early_field_recovery" name="test_multiple_enum_errors_are_one_stable_atomic_group" time="0.809"><failure message="AssertionError: [{'code': 'CHANGESET_CONTRACT_ERROR', 'message': &quot;{'operation_id': 'fix-0', 'op': 'update_entity', 'target_id': 'style...Type', 'field-recovery-0001-ConstructionType']} is not valid under any of the given schemas&quot;, 'path': '/operations/1'}]&#10;assert False">def test_multiple_enum_errors_are_one_stable_atomic_group():
+        value = candidate()
+        original = copy.deepcopy(value)
+        g = group(value)
+        assert g['eligible']
+        assert g['scope']['entity_ids'] == ['style-0', 'style-1']
+        assert all(p == ['/attributes/ConstructionType'] for p in g['scope']['allowed_paths'].values())
+        result = apply(value, g, patch(value, g['scope']))
+&gt;       assert result['valid'], result['issues']
+E       AssertionError: [{'code': 'CHANGESET_CONTRACT_ERROR', 'message': "{'operation_id': 'fix-0', 'op': 'update_entity', 'target_id': 'style...Type', 'field-recovery-0001-ConstructionType']} is not valid under any of the given schemas", 'path': '/operations/1'}]
+E       assert False
+
+tests\agent\test_early_field_recovery.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[partial]" time="0.807" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[unrelated]" time="0.798" /><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[stale]" time="0.749" /><testcase classname="tests.agent.test_early_field_recovery" name="test_registry_derived_unique_field_rename_preserves_value_and_other_attributes" time="0.663"><failure message="AssertionError: [{'code': 'CHANGESET_CONTRACT_ERROR', 'message': &quot;{'operation_id': 'fix-0', 'op': 'update_entity', 'target_id': 'wall-...overy-0000-Name', 'field-recovery-0000-Names']} is not valid under any of the given schemas&quot;, 'path': '/operations/0'}]&#10;assert False">def test_registry_derived_unique_field_rename_preserves_value_and_other_attributes():
+        value = _candidate()
+        value['schema_version'] = 'bim-json/2.1'
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        wall['attributes']['Names'] = wall['attributes'].pop('Name', 'Wall')
+        g = group(value)
+        assert g['eligible']
+        assert g['scope']['allowed_paths'][wall['id']] == ['/attributes/Name', '/attributes/Names']
+        result = apply(value, g, patch(value, g['scope']))
+&gt;       assert result['valid'], result['issues']
+E       AssertionError: [{'code': 'CHANGESET_CONTRACT_ERROR', 'message': "{'operation_id': 'fix-0', 'op': 'update_entity', 'target_id': 'wall-...overy-0000-Name', 'field-recovery-0000-Names']} is not valid under any of the given schemas", 'path': '/operations/0'}]
+E       assert False
+
+tests\agent\test_early_field_recovery.py:89: AssertionError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[unknown]" time="0.653" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[collision]" time="0.655" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[wrong_value]" time="0.663" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[duplicate_id]" time="0.257" /><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[conflict]" time="0.263" /><testcase classname="tests.agent.test_early_field_recovery" name="test_semantic_dependencies_are_read_only_including_other_type_users" time="0.001" /><testcase classname="tests.agent.test_early_field_recovery" name="test_public_repair_stage_uses_bounded_changeset_for_invalid_formal" time="3.575"><failure message="IndexError: list index out of range">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t2-green/test_public_repair_stage_uses_0')
+
+    def test_public_repair_stage_uses_bounded_changeset_for_invalid_formal(tmp_path):
+        from text2ifc_agent.live_pipeline import run_repair_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        value = candidate()
+        g = group(value)
+        expected = _expected_facts()
+        source = tmp_path/'generator'
+        source.mkdir()
+        (source/'input.txt').write_text('生成房间。', encoding='utf-8')
+        records = {'conversation':[], 'design-brief':{'schema_version':'text2ifc/design-brief/2.1',
+            'known_facts':expected}, 'parsed-output':value,
+            'validation':{'valid':False, 'issues':[vars(i) for i in validate_v2_document(value)]},
+            'metrics':{'contract_valid':False, 'classification':'formal'}}
+        (tmp_path/'expected-facts.json').write_text(json.dumps(expected), encoding='utf-8')
+        for name, record in records.items():
+            (source/f'{name}.json').write_text(json.dumps(record), encoding='utf-8')
+        provider = SequenceProvider([patch(value, g['scope'])])
+&gt;       result = run_repair_stage(provider_factory=lambda:provider, output_dir=tmp_path/'repair',
+            generator_source_dir=source, case_id='field-family')
+
+tests\agent\test_early_field_recovery.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:883: in run_repair_stage
+    scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+src\text2ifc_agent\scoped_loop.py:132: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:89: in run_changeset_stage
+    result = provider.generate_live(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;tests.agent.test_phase6_5_staged_generation.SequenceProvider object at 0x000001C1FF253FE0&gt;
+
+    def generate_live(self, *, session_id, prompt, schema, state):
+&gt;       payload = self.payloads[len(self.calls)]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests\agent\test_phase6_5_staged_generation.py:200: IndexError</failure></testcase></testsuite></testsuites>

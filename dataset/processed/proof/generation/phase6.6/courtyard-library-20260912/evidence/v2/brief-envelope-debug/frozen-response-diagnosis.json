@@ -1,0 +1,24 @@
+{
+  "role": "Offline stage-substitution diagnostic only; not Provider output and never used as fresh run input",
+  "original_issues": [
+    {
+      "code": "BRIEF_PLAN_GEOMETRY",
+      "path": "/known_facts/plan_constraints/0",
+      "message": "gap: {'cell_mm': [5000, 19000, 0, 200], 'wall_ids': []}; correct only declared derived wall bounds; preserve all explicit facts."
+    },
+    {
+      "code": "BRIEF_PLAN_GEOMETRY",
+      "path": "/known_facts/plan_constraints/1",
+      "message": "gap: {'cell_mm': [5000, 19000, 0, 200], 'wall_ids': []}; correct only declared derived wall bounds; preserve all explicit facts."
+    }
+  ],
+  "new_issues": [],
+  "changed_fields": [
+    "schema_version",
+    "plan_constraints[].kind",
+    "plan_constraints[].checks",
+    "plan_constraints[].thickness_mm"
+  ],
+  "all_actual_wall_geometry_unchanged": true,
+  "used_for_acceptance": false
+}

@@ -9,6 +9,7 @@ import math
 from text2ifc_contract.validation import ValidationIssue
 
 VERSION = 'text2ifc/design-brief/2.4'
+VERSIONS = {VERSION, 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
 EPS = 1e-6  # Numerical equality in millimetres; not a mesh acceptance tolerance.
 
 
@@ -75,7 +76,7 @@ def constraint_context(brief, constraint):
         if not isinstance(values,list):raise ValueError('Wall groups must be arrays.')
         for i,wall in enumerate(values):
             if not isinstance(wall,dict) or not isinstance(wall.get('id'),str) or not wall['id']:raise ValueError('Wall ID required.')
-            if role=='exterior' and wall.get('thickness_mm',constraint['thickness_mm']) != constraint['thickness_mm']:
+            if constraint['kind']=='inside_wall_envelope' and role=='exterior' and wall.get('thickness_mm',constraint['thickness_mm']) != constraint['thickness_mm']:
                 raise ValueError('Wall thickness and envelope thickness disagree; do not overwrite explicit values.')
             records.append({'id':wall['id'],'role':role,'bounds':_bounds(wall),
                 'path':constraint['storey_ref']+f'/walls/{role}/{i}/bounds'})
@@ -83,7 +84,7 @@ def constraint_context(brief, constraint):
                 raise ValueError('Derived solid bounds cannot have competing centerline coordinates.')
     ids=[w['id'] for w in records]
     if not 1 <= len(records) <= 64 or len(set(ids)) != len(ids):raise ValueError('Require 1..64 uniquely identified walls.')
-    if not any(w['role']=='exterior' for w in records):raise ValueError('Exterior walls required.')
+    if constraint['kind']=='inside_wall_envelope' and not any(w['role']=='exterior' for w in records):raise ValueError('Exterior walls required.')
     if not set(constraint['derived_wall_ids']).issubset(ids):raise ValueError('Unknown derived wall ID.')
     return points,edges,records
 
@@ -120,8 +121,34 @@ def _failures(points,edges,records,thickness):
     return found
 
 
+def constraint_failures(points, edges, records, constraint):
+    """Coverage belongs only to a full envelope; layout checks are independent."""
+    if constraint['kind'] == 'inside_wall_envelope':
+        return _failures(points, edges, records, constraint['thickness_mm'])
+    if constraint['kind'] != 'wall_layout':
+        raise ValueError('Unknown wall constraint kind.')
+    checks = constraint['checks']
+    if not checks or set(checks) - {'inside_outline', 'non_overlapping'}:
+        raise ValueError('Unknown or empty wall layout checks.')
+    found = {}
+    if 'inside_outline' in checks:
+        # Zero band width still partitions exactly at polygon and wall edges.
+        outside = _failures(points, edges, records, 0).get('outside')
+        if outside is not None:
+            found['outside'] = outside
+    if 'non_overlapping' in checks:
+        for i, a in enumerate(records):
+            for b in records[i + 1:]:
+                ax1, ax2, ay1, ay2 = a['bounds']
+                bx1, bx2, by1, by2 = b['bounds']
+                cell = [max(ax1, bx1), min(ax2, bx2), max(ay1, by1), min(ay2, by2)]
+                if cell[1] - cell[0] > EPS and cell[3] - cell[2] > EPS:
+                    found.setdefault('overlap', {'cell_mm': cell, 'wall_ids': [a['id'], b['id']]})
+    return found
+
+
 def validate_plan_constraints(brief, conversation=None):
-    if brief.get('schema_version') != VERSION:return []
+    if brief.get('schema_version') not in VERSIONS:return []
     constraints=brief.get('known_facts',{}).get('plan_constraints',[])
     issues=[];seen=set();storeys=set()
     user_turns=None if conversation is None else {t.get('turn_id') for t in conversation if t.get('role')=='user'}
@@ -133,7 +160,7 @@ def validate_plan_constraints(brief, conversation=None):
             if user_turns is not None and not set(c['source_turns']).issubset(user_turns):raise ValueError('Constraint must cite actual user turns.')
             points,edges,records=constraint_context(brief,c)
             if brief.get('status')!='ready':continue
-            for kind,evidence in _failures(points,edges,records,c['thickness_mm']).items():
+            for kind,evidence in constraint_failures(points,edges,records,c).items():
                 issues.append(ValidationIssue('BRIEF_PLAN_GEOMETRY',path,
                     f'{kind}: {evidence}; correct only declared derived wall bounds; preserve all explicit facts.'))
         except (KeyError,TypeError,ValueError,IndexError) as error:
@@ -157,6 +184,6 @@ def fixed_plan_conflict(brief):
     for c in brief['known_facts']['plan_constraints']:
         points,edges,records=constraint_context(brief,c)
         fixed=[w for w in records if w['id'] not in c['derived_wall_ids']]
-        failures=_failures(points,edges,fixed,c['thickness_mm'])
+        failures=constraint_failures(points,edges,fixed,c)
         if {'outside','overlap','boundary_depth'} & failures.keys():return True
     return False

@@ -1,0 +1,36 @@
+{
+  "choices": [
+    {
+      "finish_reason": "stop",
+      "index": 0,
+      "logprobs": null,
+      "message": {
+        "annotations": null,
+        "audio": null,
+        "content": "{\"schema_version\":\"text2ifc/ifc-repair-changeset-draft/0.2\",\"draft_id\":\"draft-set-wall-properties-1\",\"base_model_fingerprint\":\"sha256:7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6\",\"source_request_hash\":\"sha256:78b31c7a44102d2d5d34a110d8417b4e8857a0d4f2ad97a1411609e334fbb598\",\"semantic_manifest_ref\":\"changeset/semantic-manifest-set-wall-properties-1.json\",\"semantic_manifest_sha256\":\"sha256:b6c186c22e878205a3a99733fd6c4e441aca1af4032abe6b095609cc9bb9186d\",\"semantic_summary\":{\"required\":0,\"conditional\":4,\"not_required\":0},\"scope\":{\"target_ids\":[\"2CsmzAChHF6O6maGXlo6PS\"],\"forbidden_ids\":[]},\"evidence_refs\":[\"resolved:/operations/set-wall-properties-1/context/candidate_targets/0\"],\"preconditions\":[\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"],\"postconditions\":[\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"],\"operations\":[{\"evidence_refs\":[\"resolved:/operations/set-wall-properties-1/context/candidate_targets/0\"],\"operation_id\":\"set-wall-properties-1\",\"operation_type\":\"set_occurrence_properties\",\"parameters\":{},\"target\":{\"element_global_id\":\"2CsmzAChHF6O6maGXlo6PS\"}}]}",
+        "function_call": null,
+        "reasoning_content": "We need output JSON conforming to schema. Need include fields. Must copy operation IDs etc. Need draft_id? We need generate. But no deterministic id? Could use something. Schema constraints id minLength pattern. Need include all required. Base model fingerprint is model hash provided: sha256:7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6. Source request hash given. semantic manifest ref and hash. Semantic summary counts given. Scope from projection: forbidden_ids [], target_ids [global id]. Evidence refs include resolved:/operations/... Need preconditions/postconditions? Need use contracts: precondition_names and postcondition_names for operation type? The draft schema requires strings arrays likely. We need include what? There are no direct values except operation contract registered. Need likely preconditions: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"]? Postconditions [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]. But these are contract precondition_names and postcondition_names. Need include at top-level? Required preconditions/postconditions. Include these exact names. Need semantic_summary object. Then operations array single item with evidence_refs from projection, operation details exactly. Need include parameter object empty. Target {element_global_id}. Need draft_id? We can pick something like \"changeset-draft-2CsmzAChHF6O6maGXlo6PS-set-wall-properties-1\"? Must match pattern. Let's craft maybe \"set-wall-properties-1-draft\". Schema id minLength and pattern includes letters digits . _ : / -. Fine.\n\nNeed ensure no low-level IFC. Return JSON only. Let's construct.\n\nBut wait: \"source request: sha256:78b...\" and model hash. semantic manifest hash etc. \"resolved operation projection\" has evidence_refs. Use exactly. \"operations\" from projection: {\"operation_id\": \"set-wall-properties-1\", ...}. Include operation_type, parameters {}, target {\"element_global_id\": \"2CsmzAChHF6O6maGXlo6PS\"}, evidence_refs. \"preconditions\" top-level maybe should contain the precondition_names from operation contract? If multiple operations? only one. \"postconditions\" similarly.\n\nLet's ensure no extra property. Schema additionalProperties false, doesn't allow unknown. Need include exactly properties. We need include semantic_manifest_ref and semantic_manifest_sha256. Evidence_refs at top-level maybe maybe from projection? There is no top-level evidence_refs in projection? Actually projection has \"evidence_refs\" only within operation? At root operation projection object has \"evidence_refs\" [resolved:/operations/...] and operations. Need top-level evidence_refs required. Probably should include evidence_refs as array with that evidence. But duplicate? Use top-level evidence_refs with one item. Operation evidence_refs same. Fine.\n\nNeed decide if semantic_summary required field counts from \"Semantic group counts\". Object: required 0, conditional 4, not_required 0. required order in schema? required list: required, conditional, not_required. JSON no order. But schema object properties. We set.\n\nLet's write:\n\n{\n \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n \"draft_id\": \"set-wall-properties-1-draft\",\n \"base_model_fingerprint\": \"sha256:7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6\",\n \"source_request_hash\": \"sha256:78b31c7a44102d2d5d34a110d8417b4e8857a0d4f2ad97a1411609e334fbb598\",\n \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-wall-properties-1.json\",\n \"semantic_manifest_sha256\": \"sha256:b6c186c22e878205a3a99733fd6c4e441aca1af4032abe6b095609cc9bb9186d\",\n \"semantic_summary\": {\"required\":0,\"conditional\":4,\"not_required\":0},\n \"scope\": {\"target_ids\":[\"2CsmzAChHF6O6maGXlo6PS\"],\"forbidden_ids\":[]},\n \"evidence_refs\":[\"resolved:/operations/set-wall-properties-1/context/candidate_targets/0\"],\n \"preconditions\":[\"target_exists\",\"target_class_supported\",\"property_assignments_bound\"],\n \"postconditions\":[\"target_preserved\",\"requested_properties_match\",\"shared_type_unchanged\"],\n \"operations\":[\n  {\n   \"evidence_refs\":[\"resolved:/operations/set-wall-properties-1/context/candidate_targets/0\"],\n   \"operation_id\":\"set-wall-properties-1\",\n   \"operation_type\":\"set_occurrence_properties\",\n   \"parameters\":{},\n   \"target\":{\"element_global_id\":\"2CsmzAChHF6O6maGXlo6PS\"}\n  }\n ]\n}\n\nNeed ensure precondition names from \"precondition_names\" are valid? It's exact from operation_contracts list. We include. But note \"preconditions\" top-level perhaps should be not preconditions? Schema doesn't constrain. Good.\n\nNeed maybe include \"draft_id\" with prefix? \"draft_...\"? Pattern allows. Let's do \"draft-set-wall-properties-1\". Good.\n\nLet's validate additional property? \"evidence_refs\" string array. Good.\n\nNeed include \"postconditions\" maybe no direct spec top-level says all required. Fine.\n\nNeed no text outside JSON.",
+        "refusal": null,
+        "role": "assistant",
+        "tool_calls": null
+      }
+    }
+  ],
+  "created": 1788861974,
+  "id": "e1d53f4b-dac8-4a0e-8cfb-89c8b6f49b6c",
+  "model": "deepseek-v4-flash",
+  "moderation": null,
+  "object": "chat.completion",
+  "service_tier": null,
+  "stop_reason": "stop",
+  "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+  "usage": {
+    "completion_tokens": 1650,
+    "completion_tokens_details": "[REDACTED]",
+    "prompt_cache_hit_tokens": "[REDACTED]",
+    "prompt_cache_miss_tokens": "[REDACTED]",
+    "prompt_tokens": 2216,
+    "prompt_tokens_details": "[REDACTED]",
+    "total_tokens": 3866
+  }
+}

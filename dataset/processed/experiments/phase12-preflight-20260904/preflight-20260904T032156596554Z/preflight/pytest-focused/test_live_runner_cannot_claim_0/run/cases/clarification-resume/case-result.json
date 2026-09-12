@@ -1,0 +1,279 @@
+{
+  "attempts": [
+    {
+      "attempt_id": "clarification-resume:stage1:001",
+      "case_id": "clarification-resume",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [
+        {
+          "few_shot_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "few_shot_id": "beam.add.complete"
+        }
+      ],
+      "few_shot_hashes": [
+        "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ],
+      "few_shot_ids": [
+        "beam.add.complete"
+      ],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "live",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-5",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": null,
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      ],
+      "profile_ids": [
+        "beam.add"
+      ],
+      "profile_versions": [
+        "0.1"
+      ],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:0dbe179409bd91983fc695f9926a6485be0543c330e41968db44200bad656e8a",
+      "raw_response_sha256": "sha256:b11c59d15af0f145a833e992c7fad77be21602f2520a72aaa95859c2419576e3",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\", \"example_id\": \"beam.add.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"profile_id\": \"beam.add\", \"profile_version\": \"0.1\"}]}"
+      },
+      "request_sha256": "sha256:ab24c69e4a156e7170efa583f54116fb2195adf53f8f187840639d070c49cbd4",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-5",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:b11c59d15af0f145a833e992c7fad77be21602f2520a72aaa95859c2419576e3",
+      "stage": "stage1",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    },
+    {
+      "attempt_id": "clarification-resume:property_resolution:001",
+      "case_id": "clarification-resume",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [],
+      "few_shot_hashes": [],
+      "few_shot_ids": [],
+      "http_status": 200,
+      "lineage": "initial",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "live",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-6",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": "clarification-resume:stage1:001",
+      "private_evidence_detected": false,
+      "profile_hashes": [],
+      "profile_ids": [],
+      "profile_versions": [],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:fbaec46a9ae749974661f472440d79382ef91e751a776c0f9a0d967c1808ef38",
+      "raw_response_sha256": "sha256:4354305aba7d3e35f97c7574eac3a5e3ab4e4873aaf2799a085537701b929623",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "PROPERTY_RESOLUTION_INPUT={}"
+      },
+      "request_sha256": "sha256:77bc06bca01ac46d7f0508e7b65b3241e6d42e4abe97615cb1f6b026ce012ddb",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-6",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:4354305aba7d3e35f97c7574eac3a5e3ab4e4873aaf2799a085537701b929623",
+      "stage": "property_resolution",
+      "stage_attempt": 1,
+      "template_hash": "sha256:cb184d74d316dc441868c8266cccfe6ca06b5eb7598f99c693a8647564d4d0df",
+      "template_id": "ifc-property-resolution.v0.2",
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    },
+    {
+      "attempt_id": "clarification-resume:stage2:001",
+      "case_id": "clarification-resume",
+      "correction_reason": null,
+      "error": null,
+      "evidence_class": "live",
+      "fallback_flags": {
+        "cached": false,
+        "hand_authored": false,
+        "prerecorded": false,
+        "synthetic": false
+      },
+      "few_shot_bindings": [
+        {
+          "few_shot_hash": "sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f",
+          "few_shot_id": "column.add.stage2.v0.1.complete"
+        }
+      ],
+      "few_shot_hashes": [
+        "sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f"
+      ],
+      "few_shot_ids": [
+        "column.add.stage2.v0.1.complete"
+      ],
+      "http_status": 200,
+      "lineage": "clarification-resume",
+      "metadata": {
+        "api_key": "[REDACTED]",
+        "evidence_class": "live",
+        "model": "mock-reasoner",
+        "provider": "mock-deepseek",
+        "response_id": "response-7",
+        "transport_attempts": 1,
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "model": "mock-reasoner",
+      "ordinal": 1,
+      "parent_attempt_id": "clarification-resume:property_resolution:001",
+      "private_evidence_detected": false,
+      "profile_hashes": [
+        "sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab"
+      ],
+      "profile_ids": [
+        "column.add.stage2.v0.1"
+      ],
+      "profile_versions": [
+        "0.1"
+      ],
+      "provider": "mock-deepseek",
+      "raw_request_sha256": "sha256:1dcc6b9b1a1ffe1251ab7bb71f0a2f908b6de15705ccce35ed7a4f788321e132",
+      "raw_response_sha256": "sha256:edda06bcd82921271ddab1203ed9cd5ca4a176a0e24e18e1ae8da149ff44619f",
+      "request": {
+        "authorization": "[REDACTED]",
+        "model": "mock-reasoner",
+        "prompt": "{\"few_shots\": [{\"example_hash\": \"sha256:da873c3b68f1d5e9981747baa4e18c6b1d333f44c72d2e0895d4cf86c282053f\", \"example_id\": \"column.add.stage2.v0.1.complete\"}], \"selected_profiles\": [{\"profile_hash\": \"sha256:4246f8ab76aeee47ab60b8479773c4573003b30df7348e9a19e59496934b03ab\", \"profile_id\": \"column.add.stage2.v0.1\", \"profile_version\": \"0.1\"}]}"
+      },
+      "request_sha256": "sha256:446dddf8e0f9b9fb57d99bc0722925d9c51538b66d2d0827fd307a04d869e91b",
+      "response": {
+        "content": "{\"ok\": true}",
+        "id": "response-7",
+        "model": "mock-reasoner",
+        "usage": {
+          "completion_tokens": 37,
+          "prompt_tokens": 101,
+          "total_tokens": 138
+        }
+      },
+      "response_sha256": "sha256:edda06bcd82921271ddab1203ed9cd5ca4a176a0e24e18e1ae8da149ff44619f",
+      "stage": "stage2",
+      "stage_attempt": 1,
+      "template_hash": null,
+      "template_id": null,
+      "usage": {
+        "completion_tokens": 37,
+        "prompt_tokens": 101,
+        "total_tokens": 138
+      }
+    }
+  ],
+  "case_id": "clarification-resume",
+  "contract_pass": true,
+  "feedback_sha256": "sha256:a5f6dd6b5c2600862c62b8337fc6555368727de1fc78c29179ad58a00eeb79a6",
+  "final": {
+    "clarification": {
+      "answer_modes": [
+        "select_candidate",
+        "add_detail",
+        "cancel"
+      ],
+      "clarification_id": "clarification-001",
+      "question": "Select the intended IFC property.",
+      "reason_code": "property_resolution"
+    },
+    "clarification_answer_applied": true,
+    "complete_repair_success": true,
+    "initial": {
+      "complete_repair_success": false,
+      "status": "clarification_required",
+      "successful_artifact_publishable": false
+    },
+    "status": "succeeded",
+    "strict_reopen_verification": {
+      "l0_pass": true,
+      "l1_pass": true,
+      "l2_pass": true,
+      "proof_validation_status": "pending_plan_12_14",
+      "status": "passed"
+    },
+    "successful_artifact_publishable": true
+  },
+  "live_evidence_pass": true,
+  "private_evidence_detected": false,
+  "proof_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "request_sha256": "sha256:9a008ca96cbb317d63fa53aa7bc10b4845924859ef0a8f309f228d866e93169a",
+  "status": "passed",
+  "synthetic_fallback_used": false,
+  "transport_calls": 3,
+  "transport_calls_by_stage": {
+    "property_resolution": 1,
+    "stage1": 1,
+    "stage2": 1
+  }
+}

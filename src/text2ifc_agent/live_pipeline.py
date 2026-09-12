@@ -166,16 +166,18 @@ def run_design_brief_stage(
     except FileExistsError:
         raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS') from None
     user_request = str(case["user_request"])
+    from .brief_conversation import require_brief_conversation
+    require_brief_conversation(case["conversation"])
     conversation = list(case["conversation"])
-    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
+    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
         raise ValueError('Unsupported Design Brief stage contract.')
-    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}
+    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
     if design_review_enabled and not new_semantics:
         raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(
         user_request=user_request,
         conversation=conversation,
-        schema_version='bim-json/2.1' if new_semantics else 'bim-json/2.0',
+        schema_version='bim-json/2.3' if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} else 'bim-json/2.2' if design_brief_schema_version == 'text2ifc/design-brief/2.5' else 'bim-json/2.1' if new_semantics else 'bim-json/2.0',
     )
     schema = load_design_brief_schema(design_brief_schema_version)
     renderer_inputs = {
@@ -220,8 +222,15 @@ def run_design_brief_stage(
     )
     parse_status, parsed, parse_diagnostics = result.output.parse_json()
     issues = []
+    outline_normalization = []
     if parse_status == "ok" and parsed is not None:
         _write_json(output / "parsed-output.json", parsed)
+        from .brief_plan_normalization import normalize_layout_outlines
+        parsed, outline_normalization = normalize_layout_outlines(parsed)
+        if outline_normalization:
+            _write_json(output / 'outline-normalization.json', {
+                'schema_version':'text2ifc/brief-outline-normalization/1.0',
+                'changes':outline_normalization})
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],
@@ -280,6 +289,7 @@ def run_design_brief_stage(
         "schema_semantic_valid": schema_semantic_valid,
         "strict_output_contract_valid": strict_output_contract_valid,
         "normalization_diagnostics": parse_diagnostics,
+        "outline_normalization": outline_normalization,
         "response_id": result.response.get("id"),
         "model": result.response.get("model"),
         "stop_reason": result.response.get("stop_reason"),
@@ -337,6 +347,9 @@ def run_design_brief_stage(
         },
     }
     _write_json(output / "trace-manifest.json", trace_manifest)
+    if outline_normalization:
+        trace_manifest['artifacts']['outline_normalization'] = 'outline-normalization.json'
+        _write_json(output / 'trace-manifest.json', trace_manifest)
     if semantic_repair is not None:
         trace_manifest['artifacts']['semantic_repair'] = 'semantic-repair/'
         trace_manifest['artifacts']['initial_validation'] = 'initial-validation.json'
@@ -581,15 +594,15 @@ def run_generator_stage(
     if design_brief.get("status") != "ready":
         raise ValueError("Generator requires a ready Design Brief")
     from .semantic_requirements import generation_schema_version
-    new_semantics = generation_schema_version(design_brief) == 'bim-json/2.1'
-    formal_schema_path = PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json' if new_semantics else FORMAL_SCHEMA_PATH
-    draft_schema_path = PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json' if new_semantics else DRAFT_SCHEMA_PATH
+    new_semantics = generation_schema_version(design_brief) in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}
+    formal_schema_path = PROJECT_ROOT / f'schemas/{generation_schema_version(design_brief)}/schema.json' if new_semantics else FORMAL_SCHEMA_PATH
+    draft_schema_path = PROJECT_ROOT / ('schemas/bim-json/draft/1.3/schema.json' if generation_schema_version(design_brief) == 'bim-json/2.3' else 'schemas/bim-json/draft/1.2/schema.json' if generation_schema_version(design_brief) == 'bim-json/2.2' else 'schemas/bim-json/draft/1.1/schema.json') if new_semantics else DRAFT_SCHEMA_PATH
     formal_schema = json.loads(formal_schema_path.read_text(encoding="utf-8"))
     draft_schema = json.loads(draft_schema_path.read_text(encoding="utf-8"))
     generator_context = _select_generator_context(design_context)
     if new_semantics:
-        from .semantic_capabilities import build_semantic_capability_profile_v21
-        generator_context['semantic_capability_profile'] = build_semantic_capability_profile_v21()
+        from .semantic_capabilities import build_semantic_capability_profile_v21, build_semantic_capability_profile_v22, build_semantic_capability_profile_v23
+        generator_context['semantic_capability_profile'] = build_semantic_capability_profile_v23() if generation_schema_version(design_brief) == 'bim-json/2.3' else build_semantic_capability_profile_v22() if generation_schema_version(design_brief) == 'bim-json/2.2' else build_semantic_capability_profile_v21()
         generator_context['capability_profile']['semantic_capability_profile'] = generator_context['semantic_capability_profile']
     semantic_profile = generator_context["semantic_capability_profile"]
     entity_id_contract = _load_entity_id_contract(source.parent / "expected-facts.json")
@@ -605,9 +618,9 @@ def run_generator_stage(
         "GENERATION_FEEDBACK": dict(generation_feedback or {}),
     }
     if new_semantics:
-        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.3' if generation_schema_version(design_brief) == 'bim-json/2.3' else '1.2' if generation_schema_version(design_brief) == 'bim-json/2.2' else '1.1')
     rendered = render_prompt(
-        template_id='bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
+        template_id='bim-json-generator.v2.6' if generation_schema_version(design_brief) == 'bim-json/2.3' else 'bim-json-generator.v2.5' if generation_schema_version(design_brief) == 'bim-json/2.2' else 'bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 
@@ -902,6 +915,9 @@ def run_repair_stage(
     candidate = repair_source.document
     validation_issues = list(validation.get("issues", []))
     geometry_issues = [dict(issue) for issue in list(geometry_feedback or [])]
+    from .filling_relationship_recovery import recover_filling_relationships
+    attachment_recovery = (recover_filling_relationships(candidate, design_brief, case_id=case_id)
+        if candidate and not geometry_issues and prior_attempt_count < 3 else {'eligible': False})
     from .early_recovery import build_field_recovery_group
     field_group = build_field_recovery_group(candidate, validation_issues) if candidate and not geometry_issues else {'eligible': False}
     route = route_generation_failure(
@@ -929,7 +945,19 @@ def run_repair_stage(
     fact_delta: dict[str, Any] | None = None
     repair_diagnostics: list[dict[str, Any]] = []
     repair_template_id = REPAIR_TEMPLATE_ID
-    if field_group['eligible'] and prior_attempt_count < 3:
+    if attachment_recovery['eligible']:
+        repaired_document = attachment_recovery['candidate']
+        repaired_artifact_name = 'repaired-candidate.json'
+        _write_json(output/repaired_artifact_name, repaired_document)
+        _write_json(output/'attachment-recovery.json',
+                    {k: v for k, v in attachment_recovery.items() if k != 'candidate'})
+        valid = True
+        evidence_class = 'deterministic-derived-no-call'
+        route = {'route': 'repair_attempted', 'recovery_contract': attachment_recovery['contract'],
+                 'repair_attempts': [{'attempt_number': 1, 'result_status': 'improved',
+                                      'provider_call_count': 0}],
+                 'attachment_evidence': 'attachment-recovery.json'}
+    elif field_group['eligible'] and prior_attempt_count < 3:
         from .scoped_loop import run_scoped_changeset_round
         from .expected_facts import build_expected_facts
         expected_path = source.parent / 'expected-facts.json'
@@ -961,12 +989,12 @@ def run_repair_stage(
         valid = bool(validation.get("valid")) and candidate is not None
     elif route["route"] == "repair_attempted" and candidate is not None:
         from .semantic_requirements import generation_schema_version
-        new_semantics = generation_schema_version(design_brief) == 'bim-json/2.1'
-        formal_path = PROJECT_ROOT / 'schemas/bim-json/2.1/schema.json' if new_semantics else FORMAL_SCHEMA_PATH
-        draft_path = PROJECT_ROOT / 'schemas/bim-json/draft/1.1/schema.json' if new_semantics else DRAFT_SCHEMA_PATH
+        new_semantics = generation_schema_version(design_brief) in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}
+        formal_path = PROJECT_ROOT / f'schemas/{generation_schema_version(design_brief)}/schema.json' if new_semantics else FORMAL_SCHEMA_PATH
+        draft_path = PROJECT_ROOT / ('schemas/bim-json/draft/1.3/schema.json' if generation_schema_version(design_brief) == 'bim-json/2.3' else 'schemas/bim-json/draft/1.2/schema.json' if generation_schema_version(design_brief) == 'bim-json/2.2' else 'schemas/bim-json/draft/1.1/schema.json') if new_semantics else DRAFT_SCHEMA_PATH
         formal_schema = json.loads(formal_path.read_text(encoding="utf-8"))
         draft_schema = json.loads(draft_path.read_text(encoding="utf-8"))
-        repair_template_id = 'bim-json-generator-repair.v2.2' if new_semantics else REPAIR_TEMPLATE_ID
+        repair_template_id = 'bim-json-generator-repair.v2.4' if generation_schema_version(design_brief) == 'bim-json/2.3' else 'bim-json-generator-repair.v2.3' if generation_schema_version(design_brief) == 'bim-json/2.2' else 'bim-json-generator-repair.v2.2' if new_semantics else REPAIR_TEMPLATE_ID
         repair_issues = [*validation_issues, *geometry_issues]
         allowed_change_paths = _repair_allowed_change_paths(
             repair_issues,
@@ -990,7 +1018,7 @@ def run_repair_stage(
             "EVIDENCE_BY_PATH": evidence_by_path,
         }
         if new_semantics:
-            renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract()
+            renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.3' if generation_schema_version(design_brief) == 'bim-json/2.3' else '1.2' if generation_schema_version(design_brief) == 'bim-json/2.2' else '1.1')
         rendered = render_prompt(
             template_id=repair_template_id,
             inputs=renderer_inputs,
@@ -1575,7 +1603,7 @@ def run_candidate_gate_stage(
     from text2ifc_compiler.compiler import CompilationResult
     from text2ifc_contract.validation import ValidationIssue
     request_semantics = bind_semantic_targets(candidate, request_semantics_for_case(case_root))
-    if candidate.get('schema_version') == 'bim-json/2.1' and not request_semantics['authority_declared']:
+    if candidate.get('schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'} and not request_semantics['authority_declared']:
         if not any(i['code'] == 'SEMANTIC_AUTHORITY_INCOMPLETE' for i in request_semantics['issues']):
             request_semantics['issues'].append({'code': 'SEMANTIC_AUTHORITY_INCOMPLETE',
                 'path': '/known_facts/semantic_requirements',
@@ -1839,7 +1867,7 @@ def _resolve_repair_source(
         and validation.get("valid") is False
     ):
         parsed = json.loads(parsed_path.read_text(encoding="utf-8"))
-        if isinstance(parsed, dict) and parsed.get("schema_version") in {"bim-json/2.0", "bim-json/2.1"}:
+        if isinstance(parsed, dict) and parsed.get("schema_version") in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", 'bim-json/2.3'}:
             return RepairSource(
                 document=parsed,
                 kind="invalid_formal",

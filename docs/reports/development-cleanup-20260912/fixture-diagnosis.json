@@ -1,0 +1,438 @@
+{
+  "classification": "offline fixture version upgrade omitted required semantic authority; not migration byte drift or Provider failure",
+  "original_and_archived_runner_identical": true,
+  "runner_sha256": "274a71378a77c2099337deabb4253b2a1f8ac4b754f2fd9eb1719912cfac0984",
+  "before": "path-regression.xml: 2 failed, 18 passed",
+  "after": "path-regression-fixed.xml: 20 passed",
+  "change": "only explicit empty semantic_requirements in synthetic Brief, consistent with the candidate declaring no requested material/type/property",
+  "product_modified": false,
+  "records": [
+    {
+      "artifact": ".tmp/development-retirement-validation/test_continuation_public_path_0/continuation/A-revise/runtime/runs/be7d5bdfd5d1ccc9/gate-summary.json",
+      "gate_summary": {
+        "artifact_hashes": {
+          "dynamic-gates.json": "43668b8c33d5f84fc69bd7ecdcd0ee488dcb2053601b89cc8b76ee842a60cce9",
+          "expected-facts.json": "13c5fe593e40ad1ede4906700419c2cc724cc6ce79b46e95328d0092b5423e6d",
+          "generator/candidate.json": "14399f43393d39babc13b44fa8c1c58e04137afcd2921c29abe2eb2af47dbaeb",
+          "generator/validation.json": "6be6595f4f77090199203073905e3755e4015ff1a83b3412d64571cd872b4c41",
+          "geometry-feedback.json": "f7124bc5bee3cdc2364f02a77482932aae97dfdba8e95fce80874fa3801179fd",
+          "ifc-verification.json": "272ce6accef80ab9a4c7fe61e2d17b3ef39748231e05b1eb27c5cec16b498e8d",
+          "repair/route.json": "de480076d14fc69f47b6531d4860918124492ccd7829fd310bf4021ca857bb6a",
+          "request-semantics.json": "cfd7190d81f6a1b54058883fc81cc2378608d5f1c97bc61543c0f41156a08707",
+          "semantic-coverage.json": "b89a364cb6d15662e28fd1c2702c9da211954a221cfb5a814f341b36dd0906de",
+          "semantic-verification.json": "90ce9f97dfc0a73a7882709be9ff7bf793e0d1a6bf9c7af1900baffadf8ea4f8"
+        },
+        "candidate_hash": "14399f43393d39babc13b44fa8c1c58e04137afcd2921c29abe2eb2af47dbaeb",
+        "candidate_path": "generator/candidate.json",
+        "case_id": "be7d5bdfd5d1ccc9",
+        "evidence": {
+          "compile_reopen": {
+            "ifc_issues": [],
+            "input_issues": [
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              },
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              }
+            ],
+            "output_path": null,
+            "success": false
+          },
+          "geometry": {
+            "blocked_by": "ifc-verification.json",
+            "execution_status": "not_run",
+            "expectation_source": "candidate",
+            "issues": [],
+            "metrics": {},
+            "success": false
+          },
+          "repair_history": {
+            "assessment_scope": {
+              "geometry_feedback_supplied": false,
+              "geometry_issue_count_basis": "supplied_feedback_only",
+              "geometry_pass_certified": false,
+              "interpretation": "This route assesses generator validation and only the geometry issues supplied to this invocation. Zero issues/no_repair_needed is not a geometry pass. Current compile/reopen/geometry gates remain authoritative."
+            },
+            "case_id": "be7d5bdfd5d1ccc9",
+            "fact_delta": null,
+            "geometry_issue_count": 0,
+            "provider_call_count": 0,
+            "repair_attempts": [],
+            "repair_diagnostics": [],
+            "repair_source_artifact": "candidate.json",
+            "route": "no_repair_needed",
+            "schema_version": "text2ifc/repair-route/1.1",
+            "source_document_kind": "candidate",
+            "source_document_path": "candidate.json",
+            "source_generator_dir": ".tmp/development-retirement-validation/test_continuation_public_path_0/continuation/A-revise/runtime/runs/be7d5bdfd5d1ccc9/generator",
+            "source_generator_response_id": "response-package-1",
+            "valid": true,
+            "validation_issue_count": 0
+          },
+          "request_semantics": {
+            "basis": "request expectations independently compared with reopened IFC before atomic publication",
+            "expectations": [],
+            "issues": [
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              },
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              }
+            ],
+            "schema_version": "text2ifc/request-semantic-verification/1.0",
+            "valid": false
+          },
+          "schema_validation": {
+            "issue_count": 0,
+            "issues": [],
+            "valid": true
+          },
+          "semantic_coverage": {
+            "blocking_facts": [],
+            "candidate_entity_count": 13,
+            "capability_profile_hash": "sha256:051dd624f853807e94cce4c82e43370c59c8b679e09a998dc69e17b2e3f9de71",
+            "capability_profile_id": "text2ifc/semantic-capabilities/ifc2x3-bim-json-2.1/1.0",
+            "case_id": "be7d5bdfd5d1ccc9",
+            "custom_property_policy": {
+              "counts_as_semantic_support": false,
+              "state": "preserved_text_only"
+            },
+            "facts": [
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/door/alignment",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": "host_centerline"
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/door/height_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 2100
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/door/host",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": "south_wall"
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/door/width_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 900
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/space/height_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 3000
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/space/length_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 6000
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/space/shape",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": "rectangle"
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/space/width_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 4000
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/walls/count",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 4
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/walls/enclosure",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": "closed"
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/walls/thickness_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 300
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/window/alignment",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": "host_centerline"
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/window/height_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 1500
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/window/host",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": "north_wall"
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/window/sill_height_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 900
+              },
+              {
+                "coverage_state": "represented",
+                "path": "/known_facts/window/width_mm",
+                "reason": "Fact is inside the current supported semantic profile.",
+                "value": 1200
+              }
+            ],
+            "schema_version": "text2ifc/semantic-coverage/1.0",
+            "valid": true
+          }
+        },
+        "expected_facts_hash": "13c5fe593e40ad1ede4906700419c2cc724cc6ce79b46e95328d0092b5423e6d",
+        "expected_facts_path": "expected-facts.json",
+        "gates": [
+          {
+            "applicability": "applicable",
+            "basis": "generator validation sidecar",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "bim_json_validation",
+            "source_paths": [
+              "generator/validation.json"
+            ],
+            "status": "passed"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "expected-facts total_counts compared with candidate entities",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "dynamic_entity_completeness",
+            "source_paths": [
+              "expected-facts.json",
+              "generator/candidate.json"
+            ],
+            "status": "passed"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "expected storey and host-wall facts compared with candidate placement/void-fill graph",
+            "entity_matches": [
+              {
+                "candidate_id": "door-1",
+                "collection": "doors",
+                "expected_id": "door-1",
+                "match_basis": "exact_brief_id"
+              },
+              {
+                "candidate_id": "space-1",
+                "collection": "spaces",
+                "expected_id": "space-1",
+                "match_basis": "exact_brief_id"
+              },
+              {
+                "candidate_id": "wall-south",
+                "collection": "walls",
+                "expected_id": "wall-south",
+                "match_basis": "exact_brief_id"
+              },
+              {
+                "candidate_id": "wall-north",
+                "collection": "walls",
+                "expected_id": "wall-north",
+                "match_basis": "exact_brief_id"
+              },
+              {
+                "candidate_id": "wall-west",
+                "collection": "walls",
+                "expected_id": "wall-west",
+                "match_basis": "exact_brief_id"
+              },
+              {
+                "candidate_id": "wall-east",
+                "collection": "walls",
+                "expected_id": "wall-east",
+                "match_basis": "exact_brief_id"
+              },
+              {
+                "candidate_id": "window-1",
+                "collection": "windows",
+                "expected_id": "window-1",
+                "match_basis": "exact_brief_id"
+              }
+            ],
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "dynamic_storey_containment",
+            "source_paths": [
+              "expected-facts.json",
+              "generator/candidate.json"
+            ],
+            "status": "passed"
+          },
+          {
+            "applicability": "not_applicable",
+            "basis": "expected facts contain fewer than two unique explicit storey names",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "dynamic_storey_name_consistency",
+            "source_paths": [
+              "expected-facts.json",
+              "generator/candidate.json"
+            ],
+            "status": "skipped"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "expected opening/fill obligations compared with IfcRelVoidsElement and IfcRelFillsElement",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "dynamic_opening_fill",
+            "source_paths": [
+              "expected-facts.json",
+              "generator/candidate.json"
+            ],
+            "status": "passed"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "semantic coverage sidecar",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "semantic_coverage",
+            "source_paths": [
+              "semantic-coverage.json"
+            ],
+            "status": "passed"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "independent reopened IFC/request comparison",
+            "issue_codes": [
+              "SEMANTIC_AUTHORITY_INCOMPLETE"
+            ],
+            "issue_count": 2,
+            "issues": [
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              },
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              }
+            ],
+            "name": "request_semantics",
+            "source_paths": [
+              "semantic-verification.json"
+            ],
+            "status": "failed"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "IFC compile/reopen sidecar",
+            "issue_codes": [
+              "SEMANTIC_AUTHORITY_INCOMPLETE"
+            ],
+            "issue_count": 2,
+            "issues": [
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              },
+              {
+                "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+                "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+                "path": "/known_facts/semantic_requirements"
+              }
+            ],
+            "name": "ifc_compile_reopen",
+            "source_paths": [
+              "ifc-verification.json"
+            ],
+            "status": "failed"
+          },
+          {
+            "applicability": "not_applicable",
+            "basis": "Geometry was not evaluated because compile/reopen verification failed.",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "geometry",
+            "source_paths": [
+              "geometry-feedback.json",
+              "ifc-verification.json"
+            ],
+            "status": "skipped"
+          },
+          {
+            "applicability": "applicable",
+            "basis": "repair route is no_repair_needed; this gate checks route eligibility only, not a geometry pass. Counts in route/metrics refer only to feedback supplied to that routing invocation; current geometry gate is independent.",
+            "issue_codes": [],
+            "issue_count": 0,
+            "issues": [],
+            "name": "repair_route",
+            "source_paths": [
+              "repair/route.json"
+            ],
+            "status": "passed"
+          }
+        ],
+        "overall_status": "failed",
+        "schema_version": "text2ifc/gate-summary/1.0"
+      }
+    },
+    {
+      "artifact": ".tmp/development-retirement-validation/test_continuation_public_path_1/continuation/B-retain/runtime/runs/fd00d21f5679d7a5/calls/01-design-brief/validation.json",
+      "brief_validation": {
+        "issue_count": 1,
+        "issues": [
+          {
+            "code": "SEMANTIC_AUTHORITY_INCOMPLETE",
+            "message": "语义提取尚未明确：缺少数组不能视为用户无要求。请依据原始对话校正 Brief，禁止据此清除候选语义。",
+            "path": "/known_facts/semantic_requirements"
+          }
+        ],
+        "valid": false
+      }
+    },
+    {
+      "artifact": ".tmp/development-retirement-validation/test_continuation_public_path_1/parent/calls/01-design-brief/validation.json",
+      "brief_validation": {
+        "issue_count": 0,
+        "issues": [],
+        "valid": true
+      }
+    }
+  ]
+}

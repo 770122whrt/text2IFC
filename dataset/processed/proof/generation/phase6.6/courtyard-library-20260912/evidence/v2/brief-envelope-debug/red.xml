@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="17" skipped="0" tests="24" time="4.777" timestamp="2026-09-12T19:08:19.903758+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[0-rectangle]" time="0.023"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'rectangle', transform = 0
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[0-elbow]" time="0.048"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-4', 'boundary-5'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'elbow', transform = 0
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-4', 'boundary-5'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[0-courtyard]" time="0.037"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...oundary-5', 'boundary-6', ...], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'courtyard', transform = 0
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...oundary-5', 'boundary-6', ...], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[1-rectangle]" time="0.042"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'rectangle', transform = 1
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[1-elbow]" time="0.055"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-4', 'boundary-5'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'elbow', transform = 1
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-4', 'boundary-5'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[1-courtyard]" time="0.038"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...oundary-5', 'boundary-6', ...], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'courtyard', transform = 1
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...oundary-5', 'boundary-6', ...], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[2-rectangle]" time="0.035"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'rectangle', transform = 2
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[2-elbow]" time="0.045"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-4', 'boundary-5'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'elbow', transform = 2
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-4', 'boundary-5'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_is_valid_without_dropping_containment_or_overlap_checks[2-courtyard]" time="0.037"><failure message="assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10; +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...oundary-5', 'boundary-6', ...], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])">shape = 'courtyard', transform = 2
+
+    @pytest.mark.parametrize('shape', LAYOUTS)
+    @pytest.mark.parametrize('transform', [0, 1, 2])
+    def test_open_layout_is_valid_without_dropping_containment_or_overlap_checks(shape, transform):
+        case, brief = layout_fixture(shape, transform)
+        before = copy.deepcopy(brief)
+&gt;       assert not validate_design_brief(brief, conversation=case['conversation'])
+E       assert not [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E        +  where [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")] = validate_design_brief({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...oundary-5', 'boundary-6', ...], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, conversation=[{'content': '请创建一个单层矩形房间，长6米、宽4米、高3米；四面墙闭合，南墙中央设置一扇宽0.9米、高2.1米的门，北墙中央设置一扇宽1.2米、高1.5米、窗台高0.9米的窗。', 'role': 'user', 'tu...': 'assistant', 'turn_id': 'turn-assistant-002'}, {'content': '厚度为300毫米。', 'role': 'user', 'turn_id': 'turn-user-003'}])
+
+tests\agent\test_wall_layout_constraints.py:28: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_still_blocks_real_geometry_defects[outside]" time="0.043"><failure message="AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10;assert False&#10; +  where False = any(&lt;generator object test_open_layout_still_blocks_real_geometry_defects.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001D37E9E8930&gt;)">failure = 'outside'
+
+    @pytest.mark.parametrize('failure', ['outside', 'overlap'])
+    def test_open_layout_still_blocks_real_geometry_defects(failure):
+        case, brief = layout_fixture()
+        walls = brief['known_facts']['storeys'][0]['walls']['exterior']
+        if failure == 'outside':
+            walls[0]['bounds']['x'] = [7900, 8100]
+        else:
+            walls[0]['bounds']['y'][1] = 6000
+        issues = validate_design_brief(brief, conversation=case['conversation'])
+&gt;       assert any(i.code == 'BRIEF_PLAN_GEOMETRY' and failure in i.message for i in issues), issues
+E       AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E       assert False
+E        +  where False = any(&lt;generator object test_open_layout_still_blocks_real_geometry_defects.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001D37E9E8930&gt;)
+
+tests\agent\test_wall_layout_constraints.py:41: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_open_layout_still_blocks_real_geometry_defects[overlap]" time="0.054"><failure message="AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10;assert False&#10; +  where False = any(&lt;generator object test_open_layout_still_blocks_real_geometry_defects.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001D37E9E8110&gt;)">failure = 'overlap'
+
+    @pytest.mark.parametrize('failure', ['outside', 'overlap'])
+    def test_open_layout_still_blocks_real_geometry_defects(failure):
+        case, brief = layout_fixture()
+        walls = brief['known_facts']['storeys'][0]['walls']['exterior']
+        if failure == 'outside':
+            walls[0]['bounds']['x'] = [7900, 8100]
+        else:
+            walls[0]['bounds']['y'][1] = 6000
+        issues = validate_design_brief(brief, conversation=case['conversation'])
+&gt;       assert any(i.code == 'BRIEF_PLAN_GEOMETRY' and failure in i.message for i in issues), issues
+E       AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E       assert False
+E        +  where False = any(&lt;generator object test_open_layout_still_blocks_real_geometry_defects.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001D37E9E8110&gt;)
+
+tests\agent\test_wall_layout_constraints.py:41: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_only_requested_check_applies_even_for_overlap_outside_outline" time="0.060"><failure message="AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10;assert (1 == 1 and 'overlap' in &quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)&#10; +  where 1 = len([ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)])&#10; +  and   &quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot; = ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;).message">def test_only_requested_check_applies_even_for_overlap_outside_outline():
+        case, brief = layout_fixture()
+        walls = brief['known_facts']['storeys'][0]['walls']['exterior']
+        walls[:] = [dict(id='a', bounds=dict(x=[9000, 9200], y=[0, 1000])),
+                    dict(id='b', bounds=dict(x=[9100, 9300], y=[0, 1000]))]
+        c = brief['known_facts']['plan_constraints'][0]
+        c.update(checks=['non_overlapping'], derived_wall_ids=[])
+        issues = validate_design_brief(brief, conversation=case['conversation'])
+&gt;       assert len(issues) == 1 and 'overlap' in issues[0].message, issues
+E       AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E       assert (1 == 1 and 'overlap' in "Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")
+E        +  where 1 = len([ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")])
+E        +  and   "Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'." = ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.").message
+
+tests\agent\test_wall_layout_constraints.py:52: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_full_envelope_retains_missing_wall_failure[2.4]" time="0.189" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_full_envelope_retains_missing_wall_failure[2.5]" time="0.128" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_full_envelope_retains_missing_wall_failure[2.6]" time="0.072" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_full_envelope_retains_missing_wall_failure[2.7]" time="0.017"><failure message="AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)]&#10;assert False&#10; +  where False = any(&lt;generator object test_full_envelope_retains_missing_wall_failure.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001D37E9CF2A0&gt;)">version = '2.7'
+
+    @pytest.mark.parametrize('version', ['2.4', '2.5', '2.6', '2.7'])
+    def test_full_envelope_retains_missing_wall_failure(version):
+        case, brief = fixture()
+        brief['schema_version'] = 'text2ifc/design-brief/' + version
+        brief['known_facts']['storeys'][0]['walls']['exterior'][0]['bounds']['x'][0] = 100
+        issues = validate_design_brief(brief, conversation=case['conversation'])
+&gt;       assert any(i.code == 'BRIEF_PLAN_GEOMETRY' and 'gap' in i.message for i in issues), issues
+E       AssertionError: [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")]
+E       assert False
+E        +  where False = any(&lt;generator object test_full_envelope_retains_missing_wall_failure.&lt;locals&gt;.&lt;genexpr&gt; at 0x000001D37E9CF2A0&gt;)
+
+tests\agent\test_wall_layout_constraints.py:63: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_new_checks_do_not_weaken_version_or_source_contract[old_version]" time="0.020" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_new_checks_do_not_weaken_version_or_source_contract[unknown_check]" time="0.016" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_new_checks_do_not_weaken_version_or_source_contract[empty_checks]" time="0.017" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_new_checks_do_not_weaken_version_or_source_contract[bad_source]" time="0.017" /><testcase classname="tests.agent.test_wall_layout_constraints" name="test_selected_layout_repair_is_atomic_and_cannot_remove_authority[none]" time="0.022"><failure message="assert False&#10; +  where False = plan_repair_eligible({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)])">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-wall-layout-red/test_selected_layout_repair_is0')
+attack = 'none'
+
+    @pytest.mark.parametrize('attack', ['none', 'remove_check', 'move_fixed'])
+    def test_selected_layout_repair_is_atomic_and_cannot_remove_authority(tmp_path, attack):
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, good = layout_fixture()
+        good['known_facts']['storeys'][0]['walls']['interior'] = [
+            dict(id='fixed', bounds=dict(x=[3000, 3200], y=[1000, 2000]))]
+        bad = copy.deepcopy(good)
+        bad['known_facts']['storeys'][0]['walls']['exterior'][0]['bounds']['x'] = [7900, 8100]
+        response = copy.deepcopy(good)
+        if attack == 'remove_check': response['known_facts']['plan_constraints'][0]['checks'] = ['non_overlapping']
+        elif attack == 'move_fixed': response['known_facts']['storeys'][0]['walls']['interior'][0]['bounds']['x'] = [4000, 4200]
+        before = copy.deepcopy(bad)
+        issues = validate_design_brief(bad, conversation=case['conversation'])
+&gt;       assert plan_repair_eligible(bad, issues)
+E       assert False
+E        +  where False = plan_repair_eligible({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")])
+
+tests\agent\test_wall_layout_constraints.py:90: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_selected_layout_repair_is_atomic_and_cannot_remove_authority[remove_check]" time="0.020"><failure message="assert False&#10; +  where False = plan_repair_eligible({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)])">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-wall-layout-red/test_selected_layout_repair_is1')
+attack = 'remove_check'
+
+    @pytest.mark.parametrize('attack', ['none', 'remove_check', 'move_fixed'])
+    def test_selected_layout_repair_is_atomic_and_cannot_remove_authority(tmp_path, attack):
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, good = layout_fixture()
+        good['known_facts']['storeys'][0]['walls']['interior'] = [
+            dict(id='fixed', bounds=dict(x=[3000, 3200], y=[1000, 2000]))]
+        bad = copy.deepcopy(good)
+        bad['known_facts']['storeys'][0]['walls']['exterior'][0]['bounds']['x'] = [7900, 8100]
+        response = copy.deepcopy(good)
+        if attack == 'remove_check': response['known_facts']['plan_constraints'][0]['checks'] = ['non_overlapping']
+        elif attack == 'move_fixed': response['known_facts']['storeys'][0]['walls']['interior'][0]['bounds']['x'] = [4000, 4200]
+        before = copy.deepcopy(bad)
+        issues = validate_design_brief(bad, conversation=case['conversation'])
+&gt;       assert plan_repair_eligible(bad, issues)
+E       assert False
+E        +  where False = plan_repair_eligible({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")])
+
+tests\agent\test_wall_layout_constraints.py:90: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_selected_layout_repair_is_atomic_and_cannot_remove_authority[move_fixed]" time="0.040"><failure message="assert False&#10; +  where False = plan_repair_eligible({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message=&quot;Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.&quot;)])">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-wall-layout-red/test_selected_layout_repair_is2')
+attack = 'move_fixed'
+
+    @pytest.mark.parametrize('attack', ['none', 'remove_check', 'move_fixed'])
+    def test_selected_layout_repair_is_atomic_and_cannot_remove_authority(tmp_path, attack):
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, good = layout_fixture()
+        good['known_facts']['storeys'][0]['walls']['interior'] = [
+            dict(id='fixed', bounds=dict(x=[3000, 3200], y=[1000, 2000]))]
+        bad = copy.deepcopy(good)
+        bad['known_facts']['storeys'][0]['walls']['exterior'][0]['bounds']['x'] = [7900, 8100]
+        response = copy.deepcopy(good)
+        if attack == 'remove_check': response['known_facts']['plan_constraints'][0]['checks'] = ['non_overlapping']
+        elif attack == 'move_fixed': response['known_facts']['storeys'][0]['walls']['interior'][0]['bounds']['x'] = [4000, 4200]
+        before = copy.deepcopy(bad)
+        issues = validate_design_brief(bad, conversation=case['conversation'])
+&gt;       assert plan_repair_eligible(bad, issues)
+E       assert False
+E        +  where False = plan_repair_eligible({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'door': {'height_mm': 2100, 'ho...', 'boundary-2', 'boundary-3'], 'id': 'envelope', 'kind': 'wall_layout', ...}], 'semantic_requirements': [], ...}, ...}, [ValidationIssue(code='UNSUPPORTED_DESIGN_BRIEF_VERSION', path='/schema_version', message="Unsupported Design Brief schema version: 'text2ifc/design-brief/2.7'.")])
+
+tests\agent\test_wall_layout_constraints.py:90: AssertionError</failure></testcase><testcase classname="tests.agent.test_wall_layout_constraints" name="test_prompt_and_generation_contract_selection_are_explicit" time="0.001"><failure message="ValueError: Unsupported Design Brief stage contract or review mode.">def test_prompt_and_generation_contract_selection_are_explicit():
+        from text2ifc_agent.semantic_requirements import generation_schema_version
+&gt;       assert design_brief_template_id('text2ifc/design-brief/2.7', design_review_enabled=False) == 'design-brief.v2.22'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_wall_layout_constraints.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+schema_version = 'text2ifc/design-brief/2.7'
+
+    def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -&gt; str:
+        """Preserve released contracts while explicitly selecting the stronger one."""
+        if schema_version == 'text2ifc/design-brief/2.6':
+            return 'design-brief.v2.21' if design_review_enabled else 'design-brief.v2.20'
+        if schema_version == 'text2ifc/design-brief/2.5':
+            return 'design-brief.v2.19' if design_review_enabled else 'design-brief.v2.18'
+        if schema_version == 'text2ifc/design-brief/2.4':
+            return 'design-brief.v2.17' if design_review_enabled else 'design-brief.v2.16'
+        if schema_version == 'text2ifc/design-brief/2.3':
+            return 'design-brief.v2.13' if design_review_enabled else 'design-brief.v2.12'
+        if schema_version == 'text2ifc/design-brief/2.2':
+            return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
+        if schema_version == 'text2ifc/design-brief/2.1':
+            return 'design-brief.v2.4' if design_review_enabled else 'design-brief.v2.3'
+        if schema_version == 'text2ifc/design-brief/2.0' and not design_review_enabled:
+            return 'design-brief.v2.1'
+&gt;       raise ValueError('Unsupported Design Brief stage contract or review mode.')
+E       ValueError: Unsupported Design Brief stage contract or review mode.
+
+src\text2ifc_agent\design_brief.py:114: ValueError</failure></testcase></testsuite></testsuites>

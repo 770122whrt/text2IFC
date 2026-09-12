@@ -1,0 +1,97 @@
+{
+  "schema_version": "text2ifc/presentation-changed-scope-preflight/0.1",
+  "status": "passed",
+  "provider_calls": 0,
+  "network_transport_attempted": false,
+  "scope": {
+    "generation": "optional deterministic appearance profiles at compiler boundary",
+    "repair": "exact structural Type appearance with same-Type reference occurrence fallback",
+    "dataset_path_migration": "active tests use canonical dataset/external/bimnet paths"
+  },
+  "tests": {
+    "final_core": {
+      "status": "passed",
+      "passed": 26,
+      "evidence": "final-core.junit.xml",
+      "sha256": "sha256:1ee52a4ad266c9951fbe4ad40d53ab68b73bb160e76d0ee465baace557f15566"
+    },
+    "dataset_path_regression": {
+      "status": "passed",
+      "passed": 39,
+      "evidence": "dataset-path-regression-final.junit.xml",
+      "sha256": "sha256:f79d8914b61f9d9307dcd0961cc2b098a4990a0c39b09be7575c0cafc3fccacf"
+    },
+    "repairapi_provider": {
+      "status": "passed",
+      "passed": 6,
+      "evidence": "final-repairapi-provider.junit.xml",
+      "sha256": "sha256:bce574fb0ee03ec862084aea29e385395588416b17c6d6f10ece7f5a38a50cae"
+    }
+  },
+  "offline_validation": {
+    "status": "passed",
+    "evidence": "offline-validation-final/validation.json",
+    "sha256": "sha256:68657b1cb3fb2fb6f0e232c9e68f05d747f413c1142b8518f946b5bb57834372",
+    "generation": {
+      "profile": "demo-colorful-v0.1",
+      "styled_product_count": 15,
+      "distinct_colour_count": 11,
+      "deterministic_reopen_signatures": true
+    },
+    "repair": {
+      "schema": "IFC2X3",
+      "geometry_ok": true,
+      "appearance_ok": true
+    }
+  },
+  "a1_replay": {
+    "status": "passed",
+    "request": "在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。",
+    "source": "dataset/external/ifc-bench/projects/sixty5/str.ifc",
+    "source_sha256": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+    "type_global_id": "12jWe1_Rb2cR0ot5ICgwf_",
+    "type_name": "28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45)",
+    "new_beam_global_id": "1g5fq_GwLRavtYbIAOQBjh",
+    "storey": "00 begane grond",
+    "axis_start_mm": [25000.0, 58000.0, 3000.0],
+    "axis_end_mm": [31000.0, 58000.0, 3000.0],
+    "axis_extent_mm": 6000.0,
+    "section": {
+      "shape": "rectangle",
+      "width_mm": 500.0,
+      "height_mm": 800.0
+    },
+    "resolved_appearance_source": "same_type_reference_occurrence",
+    "resolved_material_style": "f2_beton ihwg_C35/45",
+    "resolved_rgb": [0.0, 0.384314, 0.52549],
+    "evidence": "a1-offline-result.json",
+    "evidence_sha256": "sha256:d58065cdfd8490b7206ace2e7588dbd8840c11273d63767cf8e43fe150c11ab4",
+    "ifc": "a1-offline-reapplied.ifc",
+    "ifc_sha256": "sha256:02492c6a6fa55c6f983a039e9f31d3493011b49f88dafa032152714c28298577"
+  },
+  "code_sha256": {
+    "src/text2ifc_presentation/__init__.py": "sha256:8c15e69436312fb3360a58c894f7d4b060507fc7b7aacc2c504c33b55dfe352f",
+    "src/text2ifc_compiler/compiler.py": "sha256:586652d9baedc2ac114f6cb244e1edd7bfd2c0042d80fe8c34cc400995840f82",
+    "src/text2ifc_ifc_repair/operations/structural_member.py": "sha256:60a6967a8d3ad67805a5e8656d08d3cd388a5930b779b12d2a4632e89be528d8"
+  },
+  "dataset_identity": {
+    "dataset/external/bimnet/d7n.ifc": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
+    "dataset/external/bimnet/vvo.ifc": "sha256:b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+  },
+  "static_checks": {
+    "compileall": "passed",
+    "scoped_git_diff_check": "passed",
+    "provider_config": {
+      "status": "ready",
+      "provider": "deepseek-openai-compatible",
+      "model": "deepseek-v4-flash",
+      "max_input_tokens": 65536,
+      "max_completion_tokens": 65536,
+      "secret_redacted": true
+    }
+  },
+  "worktree_warning": {
+    "path": "tests/ifc_repair/test_phase12_success_cases.py",
+    "reason": "an unrelated pre-existing dirty hunk reports a CR/trailing-whitespace diff at line 1126; this is outside the D7N path migration hunk and was not rewritten"
+  }
+}

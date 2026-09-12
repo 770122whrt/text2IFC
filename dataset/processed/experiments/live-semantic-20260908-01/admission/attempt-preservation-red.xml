@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="5" time="1.966" timestamp="2026-09-08T13:59:22.426744+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[non_json]" time="0.096"><failure message="AssertionError: assert False&#10; +  where False = is_file()&#10; +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r0/calls/01-design-brief') / 'request.redacted.json').is_file">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r0')
+kind = 'non_json'
+
+    @pytest.mark.parametrize('kind', ['non_json', 'truncated', 'empty', 'auth', 'timeout'])
+    def test_failed_design_transport_retains_attempt_without_publishing(tmp_path, kind):
+        response={'id':'retained-attempt','model':'fake','choices':[{'finish_reason':'length' if kind=='truncated' else 'stop','message':{'content':'' if kind=='empty' else '{"broken":' if kind=='truncated' else 'not json'}}], 'usage':{'total_tokens':11}}
+        def create(**kwargs):
+            if kind in {'auth','timeout'}:
+                raise (PermissionError if kind=='auth' else TimeoutError)('secret-key provider-private-url')
+            return SimpleNamespace(model_dump=lambda:response)
+        config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'secret-key','OPENAI_BASE_URL':'https://provider-private-url','TEXT2IFC_DEEPSEEK_MODEL':'fake'})
+        invoke=make_openai_design_brief_invoker(config=config,run_dir=tmp_path,client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception):
+            invoke([{'role':'user','content':'生成一个房间。','turn_id':'turn-user-001'}],1)
+        root=tmp_path/'calls/01-design-brief'
+&gt;       assert (root/'request.redacted.json').is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r0/calls/01-design-brief') / 'request.redacted.json').is_file
+
+tests\agent\test_design_brief_attempt_preservation.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[truncated]" time="0.061"><failure message="AssertionError: assert False&#10; +  where False = is_file()&#10; +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r1/calls/01-design-brief') / 'request.redacted.json').is_file">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r1')
+kind = 'truncated'
+
+    @pytest.mark.parametrize('kind', ['non_json', 'truncated', 'empty', 'auth', 'timeout'])
+    def test_failed_design_transport_retains_attempt_without_publishing(tmp_path, kind):
+        response={'id':'retained-attempt','model':'fake','choices':[{'finish_reason':'length' if kind=='truncated' else 'stop','message':{'content':'' if kind=='empty' else '{"broken":' if kind=='truncated' else 'not json'}}], 'usage':{'total_tokens':11}}
+        def create(**kwargs):
+            if kind in {'auth','timeout'}:
+                raise (PermissionError if kind=='auth' else TimeoutError)('secret-key provider-private-url')
+            return SimpleNamespace(model_dump=lambda:response)
+        config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'secret-key','OPENAI_BASE_URL':'https://provider-private-url','TEXT2IFC_DEEPSEEK_MODEL':'fake'})
+        invoke=make_openai_design_brief_invoker(config=config,run_dir=tmp_path,client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception):
+            invoke([{'role':'user','content':'生成一个房间。','turn_id':'turn-user-001'}],1)
+        root=tmp_path/'calls/01-design-brief'
+&gt;       assert (root/'request.redacted.json').is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r1/calls/01-design-brief') / 'request.redacted.json').is_file
+
+tests\agent\test_design_brief_attempt_preservation.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[empty]" time="0.058"><failure message="AssertionError: assert False&#10; +  where False = is_file()&#10; +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r2/calls/01-design-brief') / 'request.redacted.json').is_file">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r2')
+kind = 'empty'
+
+    @pytest.mark.parametrize('kind', ['non_json', 'truncated', 'empty', 'auth', 'timeout'])
+    def test_failed_design_transport_retains_attempt_without_publishing(tmp_path, kind):
+        response={'id':'retained-attempt','model':'fake','choices':[{'finish_reason':'length' if kind=='truncated' else 'stop','message':{'content':'' if kind=='empty' else '{"broken":' if kind=='truncated' else 'not json'}}], 'usage':{'total_tokens':11}}
+        def create(**kwargs):
+            if kind in {'auth','timeout'}:
+                raise (PermissionError if kind=='auth' else TimeoutError)('secret-key provider-private-url')
+            return SimpleNamespace(model_dump=lambda:response)
+        config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'secret-key','OPENAI_BASE_URL':'https://provider-private-url','TEXT2IFC_DEEPSEEK_MODEL':'fake'})
+        invoke=make_openai_design_brief_invoker(config=config,run_dir=tmp_path,client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception):
+            invoke([{'role':'user','content':'生成一个房间。','turn_id':'turn-user-001'}],1)
+        root=tmp_path/'calls/01-design-brief'
+&gt;       assert (root/'request.redacted.json').is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r2/calls/01-design-brief') / 'request.redacted.json').is_file
+
+tests\agent\test_design_brief_attempt_preservation.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[auth]" time="0.060"><failure message="AssertionError: assert False&#10; +  where False = is_file()&#10; +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r3/calls/01-design-brief') / 'request.redacted.json').is_file">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r3')
+kind = 'auth'
+
+    @pytest.mark.parametrize('kind', ['non_json', 'truncated', 'empty', 'auth', 'timeout'])
+    def test_failed_design_transport_retains_attempt_without_publishing(tmp_path, kind):
+        response={'id':'retained-attempt','model':'fake','choices':[{'finish_reason':'length' if kind=='truncated' else 'stop','message':{'content':'' if kind=='empty' else '{"broken":' if kind=='truncated' else 'not json'}}], 'usage':{'total_tokens':11}}
+        def create(**kwargs):
+            if kind in {'auth','timeout'}:
+                raise (PermissionError if kind=='auth' else TimeoutError)('secret-key provider-private-url')
+            return SimpleNamespace(model_dump=lambda:response)
+        config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'secret-key','OPENAI_BASE_URL':'https://provider-private-url','TEXT2IFC_DEEPSEEK_MODEL':'fake'})
+        invoke=make_openai_design_brief_invoker(config=config,run_dir=tmp_path,client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception):
+            invoke([{'role':'user','content':'生成一个房间。','turn_id':'turn-user-001'}],1)
+        root=tmp_path/'calls/01-design-brief'
+&gt;       assert (root/'request.redacted.json').is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r3/calls/01-design-brief') / 'request.redacted.json').is_file
+
+tests\agent\test_design_brief_attempt_preservation.py:23: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[timeout]" time="0.057"><failure message="AssertionError: assert False&#10; +  where False = is_file()&#10; +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r4/calls/01-design-brief') / 'request.redacted.json').is_file">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r4')
+kind = 'timeout'
+
+    @pytest.mark.parametrize('kind', ['non_json', 'truncated', 'empty', 'auth', 'timeout'])
+    def test_failed_design_transport_retains_attempt_without_publishing(tmp_path, kind):
+        response={'id':'retained-attempt','model':'fake','choices':[{'finish_reason':'length' if kind=='truncated' else 'stop','message':{'content':'' if kind=='empty' else '{"broken":' if kind=='truncated' else 'not json'}}], 'usage':{'total_tokens':11}}
+        def create(**kwargs):
+            if kind in {'auth','timeout'}:
+                raise (PermissionError if kind=='auth' else TimeoutError)('secret-key provider-private-url')
+            return SimpleNamespace(model_dump=lambda:response)
+        config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'secret-key','OPENAI_BASE_URL':'https://provider-private-url','TEXT2IFC_DEEPSEEK_MODEL':'fake'})
+        invoke=make_openai_design_brief_invoker(config=config,run_dir=tmp_path,client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception):
+            invoke([{'role':'user','content':'生成一个房间。','turn_id':'turn-user-001'}],1)
+        root=tmp_path/'calls/01-design-brief'
+&gt;       assert (root/'request.redacted.json').is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/live-attempt-red-20260908-01/test_failed_design_transport_r4/calls/01-design-brief') / 'request.redacted.json').is_file
+
+tests\agent\test_design_brief_attempt_preservation.py:23: AssertionError</failure></testcase></testsuite></testsuites>

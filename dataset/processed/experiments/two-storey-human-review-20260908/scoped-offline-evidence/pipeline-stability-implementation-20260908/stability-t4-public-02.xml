@@ -1,0 +1,655 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="31" time="10.017" timestamp="2026-09-08T23:08:43.061235+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_task_budget" name="test_factories_and_resume_share_consumed_calls" time="0.064" /><testcase classname="tests.agent.test_generation_task_budget" name="test_token_reservation_blocks_before_transport" time="0.019" /><testcase classname="tests.agent.test_generation_task_budget" name="test_failed_or_interrupted_calls_are_not_refunded_on_resume" time="0.033" /><testcase classname="tests.agent.test_generation_task_budget" name="test_reopen_cannot_silently_enlarge_budget" time="0.019" /><testcase classname="tests.agent.test_generation_task_budget" name="test_actual_usage_and_active_time_accumulate" time="0.047" /><testcase classname="tests.agent.test_generation_task_budget" name="test_feedback_stops_a_b_a_cycle_but_allows_new_stage" time="0.022" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_contract_and_persistence" time="0.007" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_stops_when_issue_count_does_not_improve" time="0.001" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_stops_after_default_three_round_limit" time="0.001" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_does_not_automatically_retry_user_fact_routes" time="0.000" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_round_dispatch_boundaries_for_supported_routes" time="0.001" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_feedback_artifacts_append_rounds_instead_of_overwriting" time="0.012" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_equal_issue_count_can_retry_when_issue_set_changed" time="0.010" /><testcase classname="tests.agent.test_phase6_4_feedback_loop" name="test_same_issue_code_can_retry_when_structured_evidence_changed" time="0.009" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_design_brief_loop_persists_agent_question_and_recall" time="0.325" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_unknown_answer_routes_to_draft_without_ifc_artifact" time="0.367" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_phase6_2_cli_runs_design_brief_loop_with_injected_invoker" time="0.475" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_live_cli_reads_clarification_answers_lazily" time="0.414" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_openai_design_brief_invoker_writes_trace_and_returns_call" time="0.395" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_openai_design_brief_invoker_preserves_schema_failure_evidence" time="0.304" /><testcase classname="tests.agent.test_interactive_cli_flow" name="test_phase6_2_cli_builds_default_openai_design_brief_invoker" time="1.162" /><testcase classname="tests.agent.test_interactive_cli_generation" name="test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts" time="0.597"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_phase6_2_session_ge0')
+
+    def test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts(tmp_path):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(
+            original_input=(
+                "创建一个长6米、宽4米、高3米的房间，南墙中间有一扇900mm宽、"
+                "2100mm高的门，北墙中间有一扇1200mm宽、1500mm高、窗台900mm高的窗。"
+                "墙体厚度为300mm。"
+            )
+        )
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+    
+        candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        audit = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _SequenceLiveProvider([candidate, audit])
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_interactive_cli_generation.py:99: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A8063680&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_phase6_2_session_ge0/phase6.2-interactive-cli/runs/a0f798b40850e871')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_ready_session_can_select_staged_initial_generation" time="0.327"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_session_can_select_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E3A8062240&gt;
+
+    def test_ready_session_can_select_staged_initial_generation(tmp_path, monkeypatch):
+        root = tmp_path / "phase6.5-staged-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(original_input="创建一个分阶段生成的建筑。")
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+        candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(encoding="utf-8")
+        )
+        staged_calls = []
+    
+        def staged_generation(**kwargs):
+            staged_calls.append(kwargs)
+            return {
+                "valid": True,
+                "status": "formal",
+                "candidate": candidate,
+                "revision": {
+                    "revision_id": "revision-02",
+                    "sequence": 2,
+                    "candidate_hash": build_candidate_index(candidate)["candidate_hash"],
+                },
+                "package_records": [
+                    {"package_id": "package-storey-1", "status": "accepted"},
+                    {"package_id": "package-cross-storey", "status": "accepted"},
+                ],
+                "issues": [],
+            }
+    
+        monkeypatch.setattr(
+            "text2ifc_agent.interactive_cli_flow.run_staged_generation",
+            staged_generation,
+        )
+        audit = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": ["generator/candidate.json", "gate-summary.json"],
+        }
+        provider = _SequenceLiveProvider([audit])
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+            generation_strategy="staged",
+        )
+
+tests\agent\test_interactive_cli_generation.py:178: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A801E450&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_session_can_select_0/phase6.5-staged-cli/runs/54ae37e4d3e81ce9')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_ready_session_applies_scoped_changeset_after_geometry_audit_revise" time="0.208"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_session_applies_sco0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E3A801ED80&gt;
+
+    def test_ready_session_applies_scoped_changeset_after_geometry_audit_revise(
+        tmp_path, monkeypatch
+    ):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(original_input="创建一个需要几何修复的矩形房间。")
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+    
+        regenerated_candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        blocked_candidate = _geometry_blocked_candidate(regenerated_candidate)
+        audit_revise = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "revise",
+            "blocking": True,
+            "deterministic_gate_status": "failed",
+            "findings": [
+                {
+                    "code": "GEOMETRY_TRUE_POSITIVE",
+                    "message": "东西墙方向错误，候选 BIM JSON 需要修复。",
+                    "evidence_path": "geometry-feedback.json",
+                }
+            ],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+                "geometry-feedback.json",
+            ],
+        }
+        audit_accept = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+                "geometry-feedback.json",
+            ],
+        }
+        provider = _SequenceLiveProvider([blocked_candidate, audit_revise, audit_accept])
+        scoped_calls = []
+    
+        def apply_scoped_round(**kwargs):
+            scoped_calls.append(kwargs)
+            return {
+                "valid": True,
+                "status": "applied",
+                "candidate": regenerated_candidate,
+                "revision": {
+                    "revision_id": "revision-01",
+                    "sequence": 1,
+                    "candidate_hash": build_candidate_index(regenerated_candidate)[
+                        "candidate_hash"
+                    ],
+                },
+                "preservation": {
+                    "unrelated_component_preservation_rate": 1.0,
+                    "forbidden_drift_ids": [],
+                },
+                "issues": [],
+                "scope": {"scope_id": "scope-revision-01"},
+                "stage": {
+                    "status": "changeset",
+                    "classification": "changeset",
+                    "response_id": "msg_changeset_1",
+                },
+            }
+    
+        monkeypatch.setattr(
+            "text2ifc_agent.interactive_cli_flow.run_scoped_changeset_round",
+            apply_scoped_round,
+        )
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_interactive_cli_generation.py:286: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A801DF70&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_session_applies_sco0/phase6.2-interactive-cli/runs/22a0b30d4890e8b8')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_geometry_gate_failure_uses_changeset_when_audit_incorrectly_accepts" time="0.214"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_geometry_gate_failure_use0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E3A801D7C0&gt;
+
+    def test_geometry_gate_failure_uses_changeset_when_audit_incorrectly_accepts(
+        tmp_path, monkeypatch
+    ):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(
+            original_input="Create a rectangular room whose geometry must be checked."
+        )
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+    
+        regenerated_candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        blocked_candidate = _geometry_blocked_candidate(regenerated_candidate)
+        incorrect_accept = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+                "geometry-feedback.json",
+            ],
+        }
+        final_accept = deepcopy(incorrect_accept)
+        provider = _SequenceLiveProvider([blocked_candidate, incorrect_accept, final_accept])
+        scoped_calls = _install_scoped_candidate_sequence(
+            monkeypatch, [regenerated_candidate]
+        )
+        progress_events = []
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+            progress=lambda stage, payload: progress_events.append((stage, payload)),
+        )
+
+tests\agent\test_interactive_cli_generation.py:349: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A801EB40&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_geometry_gate_failure_use0/phase6.2-interactive-cli/runs/b7dc99b223c47fed')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_geometry_feedback_allows_two_scoped_changeset_rounds" time="0.215"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_geometry_feedback_allows_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E3A801C740&gt;
+
+    def test_geometry_feedback_allows_two_scoped_changeset_rounds(tmp_path, monkeypatch):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(original_input="Create a checked rectangular room.")
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+    
+        valid_candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        first_blocked = _geometry_blocked_candidate(valid_candidate)
+        second_blocked = _geometry_blocked_candidate_one_wall(valid_candidate)
+        audit_revise = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "revise",
+            "blocking": True,
+            "deterministic_gate_status": "failed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+                "geometry-feedback.json",
+            ],
+        }
+        audit_accept = {
+            **audit_revise,
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+        }
+        provider = _SequenceLiveProvider(
+            [
+                first_blocked,
+                audit_revise,
+                audit_revise,
+                audit_accept,
+            ]
+        )
+        _install_scoped_candidate_sequence(monkeypatch, [second_blocked, valid_candidate])
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_interactive_cli_generation.py:416: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A8061F40&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_geometry_feedback_allows_0/phase6.2-interactive-cli/runs/ccbaeec0cd37a5b4')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_failed_dynamic_gate_cannot_be_overridden_by_audit_accept" time="0.217"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_failed_dynamic_gate_canno0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001E3A8061820&gt;
+
+    def test_failed_dynamic_gate_cannot_be_overridden_by_audit_accept(
+        tmp_path, monkeypatch
+    ):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(
+            original_input="Create a checked room with correctly oriented openings."
+        )
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+    
+        def write_opening_expected_facts(*, case_dir, case_id, design_brief):
+            del case_id, design_brief
+            payload = {
+                "schema_version": "text2ifc/expected-facts/1.0",
+                "total_counts": {"IfcDoor": 1},
+                "required_relationships": {"opening_fill": {"doors": 1}},
+            }
+            path = Path(case_dir) / "expected-facts.json"
+            path.write_text(json.dumps(payload), encoding="utf-8")
+            return payload
+    
+        monkeypatch.setattr(
+            "text2ifc_agent.interactive_cli_flow.write_expected_facts",
+            write_opening_expected_facts,
+        )
+    
+        valid_candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        first_blocked = _geometry_blocked_candidate(valid_candidate)
+        second_blocked = _opening_axis_blocked_candidate(valid_candidate)
+        incorrect_accept = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+                "gate-summary.json",
+            ],
+        }
+        provider = _SequenceLiveProvider(
+            [
+                first_blocked,
+                incorrect_accept,
+                incorrect_accept,
+                incorrect_accept,
+            ]
+        )
+        _install_scoped_candidate_sequence(monkeypatch, [second_blocked, valid_candidate])
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_interactive_cli_generation.py:498: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A8061310&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_failed_dynamic_gate_canno0/phase6.2-interactive-cli/runs/865a3df18b1521e6')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_phase6_2_cli_resumes_ready_session_to_ifc" time="0.231"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_phase6_2_cli_resumes_read0')
+capsys = &lt;_pytest.capture.CaptureFixture object at 0x000001E3A80919A0&gt;
+
+    def test_phase6_2_cli_resumes_ready_session_to_ifc(tmp_path, capsys):
+        from scripts.agent import run_phase6_2_cli
+    
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(original_input="创建一个完整的测试房间。")
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+        store.close()
+    
+        candidate = json.loads(
+            (PHASE6_1_COMPLETE / "generator" / "candidate.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        audit = {
+            "schema_version": "text2ifc/audit/2.0",
+            "recommendation": "accept",
+            "blocking": False,
+            "deterministic_gate_status": "passed",
+            "findings": [],
+            "evidence_paths": [
+                "design-brief/design-brief.json",
+                "generator/candidate.json",
+                "repair/route.json",
+            ],
+        }
+        provider = _SequenceLiveProvider([candidate, audit])
+    
+&gt;       exit_code = run_phase6_2_cli.main(
+            [
+                "--live",
+                "--stop-after",
+                "ifc",
+                "--resume",
+                session.session_hash,
+                "--output-root",
+                str(root),
+                "--db",
+                str(root / "sessions.sqlite"),
+            ],
+            live_provider_factory=lambda: provider,
+        )
+
+tests\agent\test_interactive_cli_generation.py:550: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\agent\run_phase6_2_cli.py:113: in main
+    return _run_interactive_cli(
+scripts\agent\run_phase6_2_cli.py:190: in _run_interactive_cli
+    result = run_ready_session_to_ifc(
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A80924E0&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_phase6_2_cli_resumes_read0/phase6.2-interactive-cli/runs/587dd77bdab49890')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_interactive_cli_generation" name="test_ready_session_stops_cleanly_when_generator_returns_draft" time="0.220"><failure message="text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_session_stops_clean0')
+
+    def test_ready_session_stops_cleanly_when_generator_returns_draft(tmp_path):
+        root = tmp_path / "phase6.2-interactive-cli"
+        store = SessionStore.open(root / "sessions.sqlite", artifact_root=root)
+        session = store.create_session(original_input="Create a building that remains draft.")
+        _write_ready_design_brief_call(session.run_dir)
+        store.mark_session_status(session.session_id, "ready")
+    
+        draft = {
+            "draft_version": "bim-json-draft/1.0",
+            "target_schema_version": "bim-json/2.0",
+            "partial_document": {
+                "schema_version": "bim-json/2.0",
+                "ifc_schema": "IFC2X3",
+                "units": {"length": "MILLIMETRE"},
+                "entities": [],
+                "relationships": [],
+            },
+            "missing_facts": [
+                {
+                    "entity_id": "space",
+                    "path": "/entities",
+                    "code": "MISSING_IFCSPACE",
+                    "message": "No spaces defined.",
+                }
+            ],
+            "losses": [],
+            "clarification_targets": [],
+            "provenance": {"source": "unit-test"},
+        }
+        provider = _SequenceLiveProvider([draft])
+    
+&gt;       result = run_ready_session_to_ifc(
+            store=store,
+            session=session.session_hash,
+            provider_factory=lambda: provider,
+        )
+
+tests\agent\test_interactive_cli_generation.py:604: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:470: in run_ready_session_to_ifc
+    budget = GenerationBudget(stored_session.run_dir, budget_limits)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_agent.generation_budget.GenerationBudget object at 0x000001E3A80605F0&gt;
+root = WindowsPath('E:/code for project/bimnet/.tmp/stability-t4-public-02/test_ready_session_stops_clean0/phase6.2-interactive-cli/runs/538d7281d6f355a7')
+limits = None
+
+    def __init__(self, root, limits=None):
+        self.root = Path(root)
+        self.root.mkdir(parents=True, exist_ok=True)
+        self.path = self.root/'generation-budget.json'
+        with self._locked():
+            if self.path.exists():
+                data = self._read()
+                if limits is not None and data['limits'] != asdict(limits):
+                    raise GenerationBudgetExceeded('Resuming cannot change the frozen task budget')
+            else:
+                # Older sessions need an explicit migration rather than a silent
+                # reset of genuine attempts made before this ledger existed.
+                if next(self.root.rglob('response.raw.json'), None) is not None:
+&gt;                   raise GenerationBudgetExceeded('Existing unbudgeted attempts require budget migration')
+E                   text2ifc_agent.generation_budget.GenerationBudgetExceeded: Existing unbudgeted attempts require budget migration
+
+src\text2ifc_agent\generation_budget.py:49: GenerationBudgetExceeded</failure></testcase><testcase classname="tests.agent.test_clarification_resume_preservation" name="test_resume_preserves_first_call_and_uses_next_index[answers0]" time="0.192" /><testcase classname="tests.agent.test_clarification_resume_preservation" name="test_resume_preserves_first_call_and_uses_next_index[answers1]" time="0.226" /></testsuite></testsuites>

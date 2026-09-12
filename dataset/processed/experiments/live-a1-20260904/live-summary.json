@@ -1,0 +1,64 @@
+{
+  "schema_version": "text2ifc/presentation-live-summary/0.1",
+  "status": "passed",
+  "preflight": {
+    "path": "dataset/processed/ifc-presentation-validation/preflight-20260904T0431/preflight.json",
+    "sha256": "sha256:7a768f1450ce3885388d8fb84e12121874a129f3f17ca291f86efa7ff8842801",
+    "status": "passed",
+    "provider_calls": 0,
+    "network_transport_attempted": false
+  },
+  "request": "在 00 begane grond 添加一根新的水平直线矩形梁，中心轴从 (25000, 58000, 3000) mm 到 (31000, 58000, 3000) mm，截面宽 500 mm、高 800 mm，并精确复用 GlobalId 为 12jWe1_Rb2cR0ot5ICgwf_、名称为 28_SF_AT_balk vierkant beton:balk vierkant_gen_500x800 (C35/45) 的现有 IfcBeamType。",
+  "source": {
+    "path": "dataset/external/ifc-bench/projects/sixty5/str.ifc",
+    "sha256": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+    "unchanged_after_live": true
+  },
+  "repair_api": {
+    "run_id": "repair-aef5ae0ea9314b2c8c09e4ede121fc07",
+    "status": "succeeded",
+    "complete_repair_success": true,
+    "successful_artifact_publishable": true,
+    "clarification": null
+  },
+  "provider": {
+    "provider": "deepseek-openai-compatible",
+    "model": "deepseek-v4-flash",
+    "intent_evidence": {
+      "path": "dataset/processed/ifc-presentation-validation/live-a1-20260904/runs/repair-aef5ae0ea9314b2c8c09e4ede121fc07/intent/live-attempt-001.json",
+      "sha256": "sha256:aa159461b8e2c707ec6661cfca2c94c50f77761101b92eae7e0af45e2967ce01",
+      "evidence_class": "live"
+    },
+    "changeset_evidence": {
+      "path": "dataset/processed/ifc-presentation-validation/live-a1-20260904/runs/repair-aef5ae0ea9314b2c8c09e4ede121fc07/changeset/attempt-001/provider-metadata.json",
+      "sha256": "sha256:f62121368ccb51c8f08d72e5d002d7a7eb207529abbe09ee87c227b59d7ed279",
+      "evidence_class": "live",
+      "transport_attempts": 1
+    }
+  },
+  "output": {
+    "path": "dataset/processed/ifc-presentation-validation/live-a1-20260904/runs/repair-aef5ae0ea9314b2c8c09e4ede121fc07/.terminal-bundles/2b4f1192ff8f4914b1f031dbacc3a7c5/successful/repaired.ifc",
+    "sha256": "sha256:02492c6a6fa55c6f983a039e9f31d3493011b49f88dafa032152714c28298577",
+    "schema": "IFC2X3"
+  },
+  "independent_reopen_validation": {
+    "path": "dataset/processed/ifc-presentation-validation/live-a1-20260904/live-validation.json",
+    "sha256": "sha256:9f478f51e39dc5717295c9ef28d578c64529c188f7c2a32547717ec7531f085e",
+    "passed": true,
+    "type_global_id": "12jWe1_Rb2cR0ot5ICgwf_",
+    "new_beam_global_id": "1g5fq_GwLRavtYbIAOQBjh",
+    "storey": "00 begane grond",
+    "axis_start_mm": [25000.0, 58000.0, 3000.0],
+    "axis_end_mm": [31000.0, 58000.0, 3000.0],
+    "axis_extent_mm": 6000.0,
+    "section": {
+      "shape": "rectangle",
+      "width_mm": 500.0,
+      "height_mm": 800.0
+    },
+    "appearance_source": "same_type_reference_occurrence_material_style",
+    "style_name": "f2_beton ihwg_C35/45",
+    "rgb": [0.0, 0.384314, 0.52549],
+    "transparency": 0.0
+  }
+}

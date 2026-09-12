@@ -1,0 +1,87 @@
+........................................................................ [ 62%]
+.....F................................FFF...                             [100%]
+================================== FAILURES ===================================
+______ test_public_brief_stage_can_explicitly_select_the_review_contract ______
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-new-contract-20260910/test_public_brief_stage_can_ex0')
+
+    def test_public_brief_stage_can_explicitly_select_the_review_contract(tmp_path):
+        from text2ifc_agent.live_pipeline import complete_room_case, run_design_brief_stage
+        root = _write_auditable_case_dir(tmp_path / "reference")
+        brief = json.loads((root / "design-brief/design-brief.json").read_text(encoding="utf-8"))
+        brief["schema_version"] = "text2ifc/design-brief/2.1"
+        provider = _RecordingLiveProvider(brief)
+        target = tmp_path / "review-brief"
+        result = run_design_brief_stage(provider=provider, output_dir=target,
+                                        case=complete_room_case(), design_review_enabled=True)
+>       assert result["valid"]
+E       assert False
+
+tests\agent\test_design_review_audit.py:140: AssertionError
+_______ test_resume_keeps_saved_choices_and_narrative_provenance[None] ________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-new-contract-20260910/test_resume_keeps_saved_choice0')
+changed = None
+
+    @pytest.mark.parametrize('changed', [None, 'profile', 'seed'])
+    def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
+        frozen = {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '原说明：浅墙深框。'}
+        later = {**frozen, 'style_notes': '追加说明：需要人工看近景。'}
+        if changed:
+            later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
+        write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
+                                              'known_facts': {'appearance': later}})
+        write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
+        original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+        request = request_semantics_for_case(tmp_path)
+>       assert request['valid']
+E       assert False
+
+tests\agent\test_appearance_request_projection.py:72: AssertionError
+______ test_resume_keeps_saved_choices_and_narrative_provenance[profile] ______
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-new-contract-20260910/test_resume_keeps_saved_choice1')
+changed = 'profile'
+
+    @pytest.mark.parametrize('changed', [None, 'profile', 'seed'])
+    def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
+        frozen = {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '原说明：浅墙深框。'}
+        later = {**frozen, 'style_notes': '追加说明：需要人工看近景。'}
+        if changed:
+            later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
+        write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
+                                              'known_facts': {'appearance': later}})
+        write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
+        original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+        request = request_semantics_for_case(tmp_path)
+>       assert request['valid']
+E       assert False
+
+tests\agent\test_appearance_request_projection.py:72: AssertionError
+_______ test_resume_keeps_saved_choices_and_narrative_provenance[seed] ________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-new-contract-20260910/test_resume_keeps_saved_choice2')
+changed = 'seed'
+
+    @pytest.mark.parametrize('changed', [None, 'profile', 'seed'])
+    def test_resume_keeps_saved_choices_and_narrative_provenance(tmp_path, changed):
+        frozen = {'profile': 'warm-residential', 'seed': 'frozen', 'style_notes': '原说明：浅墙深框。'}
+        later = {**frozen, 'style_notes': '追加说明：需要人工看近景。'}
+        if changed:
+            later[changed] = 'neutral-architectural' if changed == 'profile' else 'changed'
+        write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1',
+                                              'known_facts': {'appearance': later}})
+        write(tmp_path / 'expected-facts.json', {'generation_schema_version': 'bim-json/2.1', 'appearance': frozen})
+        original = {p.name: p.read_bytes() for p in tmp_path.iterdir()}
+        request = request_semantics_for_case(tmp_path)
+>       assert request['valid']
+E       assert False
+
+tests\agent\test_appearance_request_projection.py:72: AssertionError
+- generated xml file: E:\code for project\bimnet\.tmp\semantic-new-contract-20260910.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_design_review_audit.py::test_public_brief_stage_can_explicitly_select_the_review_contract
+FAILED tests/agent/test_appearance_request_projection.py::test_resume_keeps_saved_choices_and_narrative_provenance[None]
+FAILED tests/agent/test_appearance_request_projection.py::test_resume_keeps_saved_choices_and_narrative_provenance[profile]
+FAILED tests/agent/test_appearance_request_projection.py::test_resume_keeps_saved_choices_and_narrative_provenance[seed]
+4 failed, 112 passed in 329.13s (0:05:29)

@@ -1,0 +1,81 @@
+{
+  "evidence_mode": "scoped offline tests and disclosed-case deterministic replay",
+  "new_ifc_provider_calls": 0,
+  "full_preflight_run": false,
+  "live_admission": "requires scoped update",
+  "test_rounds": [
+    {
+      "file": "opening-binding-red.xml",
+      "tests": 16,
+      "failures": 9,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "opening-binding-green.xml",
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "opening-binding-boundary-red.xml",
+      "tests": 21,
+      "failures": 2,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "opening-binding-regression.xml",
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "wall-contract-red.xml",
+      "tests": 5,
+      "failures": 1,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "wall-contract-green.xml",
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "file": "wall-contract-final.xml",
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "old_prompt_contents_unchanged": [
+    "prompts/agent/design-brief-v2.2.md",
+    "prompts/agent/bim-json-changeset-v1.4.md"
+  ],
+  "source_sha256": {
+    "src/text2ifc_quality/floor_openings.py": "c1a96ffcc492e6cdb9e726bb2e79328e4df17b8890925c99dc9570b4af413951",
+    "src/text2ifc_quality/generated_ifc.py": "87aa8efb48d0cf6e526feb2cb632e226972bc7f354220237adfdd88fb71df672",
+    "src/text2ifc_agent/semantic_coverage.py": "851680d72da2a0f99253c0f6c16365e7bf71b83380d858369abba58fc3ac1b1c",
+    "src/text2ifc_agent/live_pipeline.py": "7211b4a82564a1fc87951b94c25288ca87fbd6d17a0c3eed1b3a3b562599563e",
+    "src/text2ifc_agent/interactive_cli_flow.py": "cc3e20353cd08fc763b3e0988c9d48ad471f255d80b4bb92c2b6e36ba9af551c",
+    "src/text2ifc_agent/changeset_stage.py": "55cd2d50ff9f2deaa545ec6fffd2b9840fadd3d2a05b5472188c03b0a769c6fd",
+    "prompts/agent/design-brief-v2.3.md": "4e55a836dd172edc4f64f8d57c9c934bab391bf68a18ed908169d4ffc5333d57",
+    "prompts/agent/bim-json-changeset-v1.5.md": "908c7f0d11b4a4c910350b0930b02d1b124d234db2e5988b52f2fb5968073596",
+    "prompts/agent/registry.json": "0687c43527db5b8b6494f6af11752fc4e30d6fb48b263831cd1b3e59fe61ed3e",
+    "tests/ifc_quality/test_floor_opening_identity.py": "6ce231b35f7f548c2718f96c780d9f2091e8d6a68de09af11b27f3b838e1091d",
+    "tests/agent/test_explicit_wall_fact_contract.py": "7007ef013e8136f27b1b1b1a4c63853ded061497d8872d59412963c11b606408",
+    "tests/agent/test_interactive_cli_flow.py": "4131b62c7a7c123f91327d348797e8a035490bc83774cacdab341f6b452a82a4"
+  },
+  "limits": [
+    "Not a capability or live success-rate comparison",
+    "Original IFC, Audit and accepted human view unchanged",
+    "Two missing wall expectations in the original case remain blocking",
+    "R1 extraction completeness, shared opening identity, other Draft addressing and interruption reconciliation remain partial or pending"
+  ]
+}

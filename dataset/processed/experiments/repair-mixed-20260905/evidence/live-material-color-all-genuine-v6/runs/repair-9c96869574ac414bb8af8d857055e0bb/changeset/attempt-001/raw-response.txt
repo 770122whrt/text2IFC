@@ -1,0 +1,274 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.4",
+  "draft_id": "changeset-draft-0.5-7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "base_model_fingerprint": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+  "source_request_hash": "sha256:7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:e66cca8285a56661a2f7743c4f913bf7e1a0aff285d888ec3613fd71ca7c98c9",
+  "semantic_summary": {
+    "required": 32,
+    "conditional": 22,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "0jltRti3rFigAmdXYhXxqI",
+      "1B$rgWypT66viEf30I1iIv",
+      "1vTeahUkP60PdWqwCTjUuM",
+      "1vTeahUkP60PdWqwCTjeRs",
+      "2CsmzAChHF6O6maGXlo6yJ",
+      "2IUEnGd5v4Yfg1ZkLtd0qa"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/beam-restore-level7-rect-455x570/context/candidate_targets/0",
+    "resolved:/operations/column-restore-level0-rect-500x500/context/candidate_targets/0",
+    "resolved:/operations/door1-existing-opening-left-800x2480/context/candidate_targets/0",
+    "resolved:/operations/door2-existing-opening-right-935x2400/context/candidate_targets/0",
+    "resolved:/operations/window1-south-wall-4701961/context/candidate_targets/0",
+    "resolved:/operations/window2-east-wall-9315561/context/candidate_targets/0"
+  ],
+  "preconditions": [
+    "base_model_fingerprint_matches",
+    "source_request_hash_matches",
+    "target_exists",
+    "opening_within_wall",
+    "opening_interval_available",
+    "opening_available",
+    "structural_axis_available",
+    "structural_type_authorized"
+  ],
+  "postconditions": [
+    "opening_voids_wall",
+    "window_fills_opening",
+    "requested_geometry_matches",
+    "door_fills_opening",
+    "door_contained_in_storey",
+    "door_type_bound",
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound",
+    "column_geometry_matches",
+    "column_contained_in_base_storey",
+    "column_type_bound"
+  ],
+  "operations": [
+    {
+      "operation_id": "window1-south-wall-4701961",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target": {
+        "wall_global_id": "2CsmzAChHF6O6maGXlo6yJ"
+      },
+      "parameters": {
+        "opening": {
+          "height_mm": 500,
+          "sill_height_mm": 2670.828,
+          "width_mm": 1180
+        },
+        "position": {
+          "center_offset_mm": 4701.961,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/window1-south-wall-4701961/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "blue": 0.22,
+        "green": 0.2,
+        "intent_kind": "surface_color_rgb",
+        "red": 0.18
+      }
+    },
+    {
+      "operation_id": "window2-east-wall-9315561",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target": {
+        "wall_global_id": "0jltRti3rFigAmdXYhXxqI"
+      },
+      "parameters": {
+        "opening": {
+          "height_mm": 2370,
+          "sill_height_mm": 610,
+          "width_mm": 870
+        },
+        "position": {
+          "center_offset_mm": 9315.561,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/window2-east-wall-9315561/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "blue": 0.24,
+        "green": 0.45,
+        "intent_kind": "surface_color_rgb",
+        "red": 0.72
+      }
+    },
+    {
+      "operation_id": "door1-existing-opening-left-800x2480",
+      "operation_type": "fill_existing_opening_with_door",
+      "target": {
+        "opening_global_id": "2IUEnGd5v4Yfg1ZkLtd0qa"
+      },
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:fd2b2257a8c6b4133980981d263476d6facdd3b56ec94e39c1b5a358b8deb42b",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2480.0,
+          "overall_width_mm": 800.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8XoD",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2IUEnGd5v4Yfg1ZkLtd0qa"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2480.0,
+          "sill_height_mm": 130.359199,
+          "width_mm": 800.0
+        },
+        "position": {
+          "center_offset_mm": 565.932051,
+          "reference": "wall_local_start"
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/door1-existing-opening-left-800x2480/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "blue": 0.22,
+        "green": 0.2,
+        "intent_kind": "surface_color_rgb",
+        "red": 0.18
+      }
+    },
+    {
+      "operation_id": "door2-existing-opening-right-935x2400",
+      "operation_type": "fill_existing_opening_with_door",
+      "target": {
+        "opening_global_id": "1B$rgWypT66viEf30I1iIv"
+      },
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:0a2369197ac8a98cf5efbffc06dc421dd4568a2bd998ad72c25f46cc7dcc3ab6",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:1B$rgWypT66viEf30I1iIv"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_formal_enum"
+          },
+          "operation_type": "SINGLE_SWING_RIGHT",
+          "overall_height_mm": 2400.0,
+          "overall_width_mm": 935.0
+        },
+        "host_wall_global_id": "2HNE4WMQ1CXebZMaih8Xi_",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:1B$rgWypT66viEf30I1iIv"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2400.0,
+          "sill_height_mm": 110.359199,
+          "width_mm": 935.0
+        },
+        "position": {
+          "center_offset_mm": 6507.5,
+          "reference": "wall_local_start"
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/door2-existing-opening-right-935x2400/context/candidate_targets/0"
+      ],
+      "appearance": {
+        "blue": 0.24,
+        "green": 0.45,
+        "intent_kind": "surface_color_rgb",
+        "red": 0.72
+      }
+    },
+    {
+      "operation_id": "beam-restore-level7-rect-455x570",
+      "operation_type": "add_beam",
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+      },
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": -285.0
+          },
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": -285.0
+          }
+        },
+        "section": {
+          "height_mm": 570,
+          "shape": "rectangle",
+          "width_mm": 455
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/beam-restore-level7-rect-455x570/context/candidate_targets/0"
+      ],
+      "appearance": null
+    },
+    {
+      "operation_id": "column-restore-level0-rect-500x500",
+      "operation_type": "add_column",
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      },
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 500
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/column-restore-level0-rect-500x500/context/candidate_targets/0"
+      ],
+      "appearance": null
+    }
+  ]
+}

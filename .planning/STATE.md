@@ -14,7 +14,23 @@ progress:
 
 # Project State
 
-## 当前工作：仓库清理与 main 整合（2026-09-12）
+## 当前整合：清理后分支合入 main（2026-09-13）
+
+本次整合基线为 main 5db5e82e 与 codex/workflow-dataset-links 241a5c24。保留 Zcode 已接入代码、C1–C5 Proof 和重构归档，并纳入最新光庭与旧运行目录退役记录。四处索引／导航冲突按条目并集合并，43 项聚焦离线测试通过；没有新 Provider、Full Preflight 或人工状态提升。详见[合并报告](../docs/reports/main-sync-20260912/REPORT.md)。
+
+## 最近完成：光庭收纳与已完成 Phase 工作区清理完成（2026-09-12）
+
+光庭、其他展示案例及更早 Phase 6、9–12 的清理已完成：464 个清单目录、352 个单独文件、4 个旧测试链接退役，共 253,690 个旧文件／约 9.76 GiB 源字节。57 个早期 Phase 工作区的完整内容压缩保存到 experiments；当前 few-shot、Plan07 来源及其他有依赖的 26 个目录保留。Proof 字节及人工状态不变，没有新 Provider 或 Full Preflight。清理前备份均已普通推送，最终记录随收尾提交；见 [执行报告](../docs/reports/development-cleanup-20260912/REPORT.md) 和 [实验入口](../dataset/processed/experiments/README.md)。
+
+光庭第二版按概念图右上角深化为两层南侧敞开U形、外露楼梯、20柱6梁、14细杆护栏、44窗6门，不含家具植物。第一版完整包532a4a4c已保留并推送，未按新方案验收。当前分支codex/workflow-dataset-links；通用修复2cf18d56区分开敞墙布局检查与完整墙环，ee94b2a4前移属性校验并明确梯段外观目标，1e46a1fb补严格等价矩形表示转换。
+
+第二版rerun-03（ce8116ce095acdcf）已从全新真实Brief完成Generator/Audit并发布IFC，无候选修复调用；本loop317,533 token。独立正式IFC复核545项通过、111实体网格化成功；Agent实际视图检查完成；用户于2026-09-12人工验收，已收入光庭Proof。最终文件SHA256：650accdb5131b1ae3fdc26e5af000029deb4860fe6f38571dcad174d8ff9b39d。
+
+光庭75个目录及24个重复文件已按批准清单删除，实际49,563文件/710.02 MiB；完整证据已在Proof，后续其他开发目录清理另有记录。全部失败保留，累计17次、1,591,587 token、2723.014活动秒。主要局部复验245项、139项与运行包装器1项通过，不累加为能力指标；未运行仓库Full Preflight。报告保留原浮点颜色失败与统一HEX重算、Audit强度等级文字勘误。跨轮约束来源与替代管理仍待后续小步。
+
+入口：[交付报告](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/REPORT.md)、[最终IFC](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/generated.ifc)、[输入](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/request.txt)。A/B/C历史验收保持；下方是历史检查点。
+
+## 历史工作：仓库清理与 main 整合（2026-09-12）
 
 2026-09-12 更新：当前分支与 Zcode 已在隔离工作树完成合并（f49bbf42），生产以当前合同为准，保留 Zcode refactor-workspace.zip。用户收缩为聚焦验证并要求尽快合 main；最终111项聚焦检查通过，全量测试按要求停止，不宣称 Full Preflight 全通过。93份已批准重复文件已删除；其余清理候选保留待批。详见 docs/reports/main-integration-20260912/REPORT.md。
 

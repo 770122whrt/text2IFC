@@ -1,0 +1,371 @@
+{
+  "acceptance_eligible": false,
+  "case_contract_version": "phase12-plan07-live-cases/0.1",
+  "cases": [],
+  "current_default_case_matrix_sha256": "sha256:8d5dec1c09a2b66ec10703930b340437cb3ae9de02f502e0b9c22ef186e14f5c",
+  "evidence_mode": "live",
+  "execution_mode": "test_injected",
+  "preflight": {
+    "checks": [
+      {
+        "artifacts": [
+          {
+            "path": "logs/focused.stdout.txt",
+            "sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+            "size_bytes": 17
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/ifc_repair/test_phase12_live_uat.py",
+          "tests/ifc_repair/test_phase12_live_uat_v2.py",
+          "-q",
+          "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\run\\preflight\\pytest-focused",
+          "-o",
+          "cache_dir=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\run\\preflight\\pytest-cache-focused"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.657666Z",
+        "name": "focused",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:f187cb202e7db59a71df8569df11965ef4423f1b932afab0189c6a63568693f1",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.653665Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/retrieval-evaluation.stdout.txt",
+            "sha256": "sha256:b362e98ed9496552b773f6c00a77a0db3f8110130b1af20160d08ab6ca97b48f",
+            "size_bytes": 27
+          },
+          {
+            "path": "property-retrieval-evaluation/property-evaluation.json",
+            "sha256": "sha256:fa61fa48f550abe234cdb515f07c6d7f663e7a7697c2b9734f1ae4b446960c3d",
+            "size_bytes": 1042
+          },
+          {
+            "path": "property-retrieval-evaluation/property-retrieval-ledger.json",
+            "sha256": "sha256:f3341be956d044790e4f9df7848427e73a0779226578aaefd80fec10d22d8c64",
+            "size_bytes": 150
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "scripts/ifc_repair/run_phase12_offline.py",
+          "--output-root",
+          "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\run\\preflight\\property-retrieval-evaluation",
+          "--property-retrieval-evaluation-only"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.704420Z",
+        "name": "retrieval-evaluation",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:d11d564a4e48e618d2d8e6ac5c505e7c5ecb8f9ae22be01b691520e6fc144c9b",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.664679Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:b362e98ed9496552b773f6c00a77a0db3f8110130b1af20160d08ab6ca97b48f",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/offline.stdout.txt",
+            "sha256": "sha256:14cdc1f558ebde5177cbbb7cfb3c5faa4457960711705d283c12f993c5db0f24",
+            "size_bytes": 14
+          },
+          {
+            "path": "offline-matrix/run-summary.json",
+            "sha256": "sha256:81b777eb6d94f4ff2a66e96a426c2144354f20d89f4543a5a174aeee27b7049e",
+            "size_bytes": 156
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "scripts/ifc_repair/run_phase12_offline.py",
+          "--output-root",
+          "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\run\\preflight\\offline-matrix"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.735542Z",
+        "name": "offline",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:90d3960b3d71d206d243fe52e7944b1b0755437eae40291dbdb1c72d0dec7e55",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.722749Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:14cdc1f558ebde5177cbbb7cfb3c5faa4457960711705d283c12f993c5db0f24",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/full-suite.stdout.txt",
+            "sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+            "size_bytes": 17
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "-m",
+          "pytest",
+          "tests/knowledge",
+          "tests/ifc_repair",
+          "-q",
+          "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\run\\preflight\\pytest-full-suite",
+          "-o",
+          "cache_dir=E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\run\\preflight\\pytest-cache-full-suite"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.753568Z",
+        "name": "full-suite",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:37921335c8e93d6d20bfb677fa27d68804fc1c14c75bcc82e9f0535781bb3d16",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.748504Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:c9ad3870487423ab7d84c6c17245c2bb24d164daa770e8fbfff7e46b0566657d",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/compile.stdout.txt",
+            "sha256": "sha256:1770803a4c4fd3d8694a0a7f1731fd13bbfbf3c84f46a99f18649ee4f0b7ccd7",
+            "size_bytes": 14
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "-m",
+          "compileall",
+          "-q",
+          "src",
+          "tests",
+          "scripts"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.763640Z",
+        "name": "compile",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:9b924bfb53c1de39e4983d940e4aee8b5f09ec63345e3a0b73cba0001603ec6b",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.759540Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:1770803a4c4fd3d8694a0a7f1731fd13bbfbf3c84f46a99f18649ee4f0b7ccd7",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/diff.stdout.txt",
+            "sha256": "sha256:925c6897be1796dee1fe68580f2e240ee77319f6fa5f5c6d6fa0495710f75969",
+            "size_bytes": 11
+          }
+        ],
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.775250Z",
+        "name": "diff",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:d4bfc4821a019756909ddcf876d545da154259b12c7481c9ce247358ea54ea5a",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.770259Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:925c6897be1796dee1fe68580f2e240ee77319f6fa5f5c6d6fa0495710f75969",
+        "substitution_count": 0,
+        "timeout_count": 0
+      },
+      {
+        "artifacts": [
+          {
+            "path": "logs/proof.stdout.txt",
+            "sha256": "sha256:2cae33d77624ff87089fae852832daf4a86b405e7e0fcd310048ea1d8feec86b",
+            "size_bytes": 190
+          },
+          {
+            "path": "E:/code for project/bimnet/dataset/processed/ifc-presentation-validation/phase12-preflight-20260904/preflight-20260904T032156596554Z/preflight/pytest-focused/test_green_preflight_rejects_a0/proof/manifest.json",
+            "sha256": "sha256:27941142ac8e9e32e7cbf96d2bff8f0f5ea20922d5c0993a1ed878c9fadf5cfe",
+            "size_bytes": 31
+          }
+        ],
+        "command": [
+          "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+          "scripts/ifc_repair/validate_success_cases.py",
+          "--collection-root",
+          "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\phase12-preflight-20260904\\preflight-20260904T032156596554Z\\preflight\\pytest-focused\\test_green_preflight_rejects_a0\\proof",
+          "--json"
+        ],
+        "exit_code": 0,
+        "finished_at_utc": "2026-09-04T03:22:39.793022Z",
+        "name": "proof",
+        "network_calls": 0,
+        "network_transport_attempted": false,
+        "reason_code": null,
+        "result_sha256": "sha256:39e727012d89da3ed977cd7ebfb04c5c285aa4311e399b3a2f5fd681c17de3b2",
+        "skip_count": 0,
+        "started_at_utc": "2026-09-04T03:22:39.785023Z",
+        "status": "passed",
+        "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "sha256:2cae33d77624ff87089fae852832daf4a86b405e7e0fcd310048ea1d8feec86b",
+        "substitution_count": 0,
+        "timeout_count": 0
+      }
+    ],
+    "evidence_sha256": "sha256:1d632dad3cf6ef65aea6ee0082b17753170ba6b5e3e0328aee5f9ce9ed355b55",
+    "execution_identity": {
+      "dependencies": {
+        "ifcopenshell": "0.8.5",
+        "jsonschema": "4.26.0",
+        "pytest": "8.4.2",
+        "qdrant-client": "1.18.0",
+        "sentence-transformers": "5.6.1",
+        "torch": "2.9.0"
+      },
+      "platform": {
+        "machine": "AMD64",
+        "platform": "Windows-11-10.0.26200-SP0",
+        "release": "11",
+        "system": "Windows"
+      },
+      "python": {
+        "executable": "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+        "implementation": "CPython",
+        "version": "3.12.4 | packaged by Anaconda, Inc. | (main, Jun 18 2024, 15:03:56) [MSC v.1929 64 bit (AMD64)]"
+      },
+      "repository": {
+        "branch": "codex/workflow-dataset-links",
+        "commit": "aae8469e36abd62e42d07592c28249598ddee002",
+        "tracked_change_count": 4,
+        "untracked_count": 44,
+        "worktree_clean": false,
+        "worktree_porcelain_v1": [
+          "M docs/reports/README.md",
+          " M docs/validation/ifc2x3-changeset/README.md",
+          " M src/text2ifc_compiler/compiler.py",
+          " M src/text2ifc_ifc_repair/operations/structural_member.py",
+          "?? dataset/processed/ifc-presentation-validation/",
+          "?? dataset/processed/ifc-repair-runs/phase12-1-semantic-evaluation/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/case1-diagnostic-20260830T121318772787Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/preflight-20260820T132237191405Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260817T162809950610Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260818T133409954828Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260820T103415722873Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260820T135432218011Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260828T153638178631Z/live-uat-result.json",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260829T014916747905Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260829T025013804951Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T112115666821Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T115805215556Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-20260830T174344933512Z/",
+          "?? dataset/processed/ifc-repair-runs/phase12-live/uat-stage2-beam-column-20260829T133518416355Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T032507331224Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T034907322238Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T040334441512Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T151326967970Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260831T155141193325Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T034310928815Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T052919004905Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260901T055419268779Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T053023885207Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T141632454789Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T142055280724Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T142600567859Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T145705953728Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T145900991242Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T150201099674Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T150620324506Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-20260902T150713117380Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-e2-genuine-diagnostic-20260901T054811235740Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-h1-genuine-diagnostic-20260901T052645933962Z/",
+          "?? dataset/processed/ifc-repair-runs/repair-milestone-r1/r1-m2-genuine-diagnostic-20260902T141119863111Z/",
+          "?? docs/plans/2026-09-03-llm-generation-repair-next-step-discussion.md",
+          "?? docs/plans/2026-09-04-dataset-reorganization-boundary.md",
+          "?? docs/reports/llm-generation-repair-demo-next-direction-2026-09-03.md",
+          "?? docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md",
+          "?? scripts/presentation/",
+          "?? src/text2ifc_presentation/",
+          "?? tests/compiler/test_generation_appearance_profiles.py",
+          "?? tests/ifc_repair/test_structural_visual_fidelity.py",
+          "?? tests/presentation/"
+        ],
+        "worktree_porcelain_v1_sha256": "sha256:2157401b409430ee976ccec9963449af3d51f10e33334f1943571bbc4690b71d"
+      }
+    },
+    "failure_count": 0,
+    "finished_at_utc": "2026-09-04T03:22:39.808042Z",
+    "network_calls": 0,
+    "network_transport_attempted": false,
+    "schema_version": "text2ifc/phase12-live-preflight/0.4",
+    "skip_count": 0,
+    "started_at_utc": "2026-09-04T03:22:38.957347Z",
+    "status": "passed",
+    "substitution_count": 0,
+    "timeout_count": 0
+  },
+  "proof_acceptance_eligible": false,
+  "proof_validation_status": "pending_plan_12_14",
+  "provided_case_ids": [
+    "complete",
+    "program-guard",
+    "substitute"
+  ],
+  "provided_case_matrix_sha256": "sha256:f5f261f36688fe25d070c22eb64cf8565b402ba1276635a1851a47fb6a2230ac",
+  "provider_evidence_mode": "test_injected",
+  "provider_models": [],
+  "reason_code": "LIVE_CASE_MATRIX_REQUIRED",
+  "required_case_ids": [
+    "complete",
+    "clarification-resume",
+    "window-semantic-canary",
+    "program-guard"
+  ],
+  "required_case_matrix_sha256": "sha256:8d5dec1c09a2b66ec10703930b340437cb3ae9de02f502e0b9c22ef186e14f5c",
+  "runner_contract_eligible": false,
+  "schema_version": "text2ifc/phase12-live-uat/0.1",
+  "status": "blocked",
+  "synthetic_fallback_used": false,
+  "token_guard": {
+    "max_completion_tokens": 65536,
+    "max_input_tokens": 65536
+  },
+  "transport_calls": 0,
+  "transport_calls_by_stage": {
+    "property_resolution": 0,
+    "stage1": 0,
+    "stage2": 0
+  }
+}

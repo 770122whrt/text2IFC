@@ -1,0 +1,788 @@
+{
+  "status": "blocked",
+  "created_at": "2026-09-08T11:26:08.981455+00:00",
+  "scope": "same Generation stage; frozen identity alias binding; 39 focused tests and exact real candidate offline compile/reopen, geometry and no-call routing",
+  "base_admission_sha256": "611e1566309727497ed36c3527192dcd7b561b5cda808196e067b3b73f7c21ec",
+  "resume_admission_sha256": "4bcf5375643827cda174ac0a46196479d68217a1a9534e0cdb7ce9cf97cc2a9e",
+  "changed_source_sha256": {
+    "src/text2ifc_agent/interactive_cli_flow.py": "0e40edfca12d365e9b07425482458d23ab34ac0073799e5767d671c11ced281d",
+    "src/text2ifc_agent/live_pipeline.py": "309660059d678c9b7fdfdad33e3f44ed019f0f9ff0020ced426e0b30c1146bb9",
+    "src/text2ifc_agent/semantic_requirements.py": "1d1d2b3823e53ff1857c7b8c509d628c2a7f436a23150510480154aaf63932f0",
+    "src/text2ifc_compiler/relationships.py": "d4c234f518f009d2c7f8d041fb5727343d657976096030894a8af33a7f6f1ac2"
+  },
+  "revalidation_sha256": "c9266844b9eb77282fba6901438a53cfb9009377da5d10dbefb98c27ddcbaddc",
+  "relationship_revalidation_sha256": "025576d78614d6f10fb9f509839f2b9911168884cb57be72c30d0b8ca31a5858",
+  "candidate_sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+  "frozen_expected_facts_sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+  "network_transport_attempted": false,
+  "candidate_gates": {
+    "case_id": "corrective-02-binding-revalidation",
+    "stage": "candidate-gates",
+    "valid": false,
+    "ifc_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\generation\\corrective-02-compiler-revalidation\\output.ifc",
+    "output_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\generation\\corrective-02-compiler-revalidation",
+    "compile_reopen_success": true,
+    "geometry_success": false,
+    "deterministic_gates_passed": false,
+    "gate_summary": {
+      "schema_version": "text2ifc/gate-summary/1.0",
+      "case_id": "corrective-02-binding-revalidation",
+      "candidate_path": "generator/candidate.json",
+      "candidate_hash": "48817d324de7dd6f8827420c25118184fbf71e8e6fdb9f23133b80cba5e6f0b1",
+      "expected_facts_path": "expected-facts.json",
+      "expected_facts_hash": "38822d9e2afb46aedff2131efdd69940e47c8eb2f5d42057ac28e464486e1297",
+      "artifact_hashes": {
+        "generator/candidate.json": "48817d324de7dd6f8827420c25118184fbf71e8e6fdb9f23133b80cba5e6f0b1",
+        "generator/validation.json": "6be6595f4f77090199203073905e3755e4015ff1a83b3412d64571cd872b4c41",
+        "expected-facts.json": "38822d9e2afb46aedff2131efdd69940e47c8eb2f5d42057ac28e464486e1297",
+        "dynamic-gates.json": "7be26f9c6c70d35196bf7d9195d269048fa8d74fa24fe494d2c34fd7fc506b22",
+        "request-semantics.json": "c14dbfddb9ce2aed2d06fccfc8b51f8eb8f6bbe0f3aefb5f19bd975acc8e3ad7",
+        "semantic-verification.json": "c4abb4dda920d61e6716d03219d30aad44e2865b1a4ee3d411d57f9045509cc2",
+        "ifc-verification.json": "b772a8f2e235871579a0af63a171130e1674589c1f29adc311a5094125f8f533",
+        "geometry-feedback.json": "140db27f68c9865d4c223c3ce6fd6cbd41e6603522e46bbb0b5ab11b04fa1431"
+      },
+      "evidence": {
+        "schema_validation": {
+          "issue_count": 0,
+          "issues": [],
+          "valid": true
+        },
+        "semantic_coverage": null,
+        "request_semantics": {
+          "basis": "request expectations independently compared with reopened IFC before atomic publication",
+          "expectations": [
+            {
+              "entity_id": "wall-storey-1-wall-south",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/0",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-north",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/1",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-west",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/2",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-east",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/3",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "slab-ground",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/4",
+              "value": {
+                "kind": "single_material",
+                "name": "混凝土"
+              }
+            },
+            {
+              "entity_id": "door-storey-1-door-south",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/5",
+              "value": {
+                "parameters": {},
+                "template_id": "door-left",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-storey-1-window-east",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/6",
+              "value": {
+                "parameters": {},
+                "template_id": "window-double-vertical",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-storey-1-window-west",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/7",
+              "value": {
+                "parameters": {},
+                "template_id": "window-single",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-south",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/0",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-north",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/1",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-west",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/2",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "wall-storey-1-wall-east",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/3",
+              "value": {
+                "kind": "single_material",
+                "name": "砖"
+              }
+            },
+            {
+              "entity_id": "slab-ground",
+              "kind": "material",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/4",
+              "value": {
+                "kind": "single_material",
+                "name": "混凝土"
+              }
+            },
+            {
+              "entity_id": "door-storey-1-door-south",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/5",
+              "value": {
+                "parameters": {},
+                "template_id": "door-left",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-storey-1-window-east",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/6",
+              "value": {
+                "parameters": {},
+                "template_id": "window-double-vertical",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            },
+            {
+              "entity_id": "window-storey-1-window-west",
+              "kind": "template",
+              "scope": "direct",
+              "source_path": "/known_facts/semantic_requirements/7",
+              "value": {
+                "parameters": {},
+                "template_id": "window-single",
+                "template_version": "text2ifc/basic-filling/1.0"
+              }
+            }
+          ],
+          "issues": [],
+          "schema_version": "text2ifc/request-semantic-verification/1.0",
+          "valid": true
+        },
+        "compile_reopen": {
+          "ifc_issues": [],
+          "input_issues": [],
+          "output_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\generation\\corrective-02-compiler-revalidation\\output.ifc",
+          "success": true
+        },
+        "geometry": {
+          "expectation_source": "design_brief_expected_facts",
+          "issues": [
+            {
+              "code": "MISSING_SPACE",
+              "entity_ids": [
+                "space-room"
+              ],
+              "message": "Expected component 'space-room' was not found in the IFC.",
+              "path": "/spaces/space-room",
+              "source_fact_refs": [
+                "/known_facts/storeys/0/spaces/0"
+              ]
+            }
+          ],
+          "metrics": {
+            "case_id": "corrective-02-binding-revalidation",
+            "floor_openings": {},
+            "products": {},
+            "roof": {},
+            "slabs": {
+              "slab-ground": {
+                "bbox": {
+                  "x": [
+                    -3.2,
+                    3.2
+                  ],
+                  "y": [
+                    -2.2,
+                    2.2
+                  ],
+                  "z": [
+                    -0.15,
+                    0.0
+                  ]
+                },
+                "ifc_class": "IfcSlab"
+              }
+            },
+            "spaces": {},
+            "stairs": {},
+            "wall_set_convention": "primary",
+            "walls": {}
+          },
+          "success": false
+        },
+        "repair_history": null
+      },
+      "gates": [
+        {
+          "name": "bim_json_validation",
+          "applicability": "applicable",
+          "status": "passed",
+          "basis": "generator validation sidecar",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "generator/validation.json"
+          ]
+        },
+        {
+          "name": "dynamic_entity_completeness",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "expected-facts total_counts compared with candidate entities",
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "EXPECTED_ENTITY_MISSING",
+              "path": "/walls",
+              "ifc_class": "IfcWall",
+              "expected": 4,
+              "actual": 0
+            }
+          ],
+          "issue_codes": [
+            "EXPECTED_ENTITY_MISSING"
+          ],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ]
+        },
+        {
+          "name": "dynamic_storey_containment",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "expected storey and host-wall facts compared with candidate placement/void-fill graph",
+          "issue_count": 4,
+          "issues": [
+            {
+              "code": "STOREY_CONTAINMENT_MISMATCH",
+              "path": "/walls/storey-1",
+              "ifc_class": "IfcWall",
+              "expected_storey": "storey-1",
+              "expected": 4,
+              "actual": 0
+            },
+            {
+              "code": "HOST_WALL_MISMATCH",
+              "path": "/doors/door-south/host_wall",
+              "expected_host_wall": "wall-south",
+              "actual_host_wall": "wall-storey-1-wall-south"
+            },
+            {
+              "code": "HOST_WALL_MISMATCH",
+              "path": "/windows/window-east/host_wall",
+              "expected_host_wall": "wall-east",
+              "actual_host_wall": "wall-storey-1-wall-east"
+            },
+            {
+              "code": "HOST_WALL_MISMATCH",
+              "path": "/windows/window-west/host_wall",
+              "expected_host_wall": "wall-west",
+              "actual_host_wall": "wall-storey-1-wall-west"
+            }
+          ],
+          "issue_codes": [
+            "HOST_WALL_MISMATCH",
+            "STOREY_CONTAINMENT_MISMATCH"
+          ],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ],
+          "entity_matches": [
+            {
+              "collection": "doors",
+              "expected_id": "door-south",
+              "candidate_id": "door-storey-1-door-south",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "spaces",
+              "expected_id": "space-room",
+              "candidate_id": "space-storey-1-space-room",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-south",
+              "candidate_id": "wall-storey-1-wall-south",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-north",
+              "candidate_id": "wall-storey-1-wall-north",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-west",
+              "candidate_id": "wall-storey-1-wall-west",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "walls",
+              "expected_id": "wall-east",
+              "candidate_id": "wall-storey-1-wall-east",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "windows",
+              "expected_id": "window-east",
+              "candidate_id": "window-storey-1-window-east",
+              "match_basis": "canonical_entity_id"
+            },
+            {
+              "collection": "windows",
+              "expected_id": "window-west",
+              "candidate_id": "window-storey-1-window-west",
+              "match_basis": "canonical_entity_id"
+            }
+          ]
+        },
+        {
+          "name": "dynamic_storey_name_consistency",
+          "applicability": "not_applicable",
+          "status": "skipped",
+          "basis": "expected facts contain fewer than two unique explicit storey names",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ]
+        },
+        {
+          "name": "dynamic_opening_fill",
+          "applicability": "applicable",
+          "status": "passed",
+          "basis": "expected opening/fill obligations compared with IfcRelVoidsElement and IfcRelFillsElement",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "expected-facts.json",
+            "generator/candidate.json"
+          ]
+        },
+        {
+          "name": "semantic_coverage",
+          "applicability": "not_applicable",
+          "status": "skipped",
+          "basis": "semantic coverage sidecar is not present",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": []
+        },
+        {
+          "name": "request_semantics",
+          "applicability": "applicable",
+          "status": "passed",
+          "basis": "independent reopened IFC/request comparison",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "semantic-verification.json"
+          ]
+        },
+        {
+          "name": "ifc_compile_reopen",
+          "applicability": "applicable",
+          "status": "passed",
+          "basis": "IFC compile/reopen sidecar",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": [
+            "ifc-verification.json"
+          ]
+        },
+        {
+          "name": "geometry",
+          "applicability": "applicable",
+          "status": "failed",
+          "basis": "geometry feedback sidecar",
+          "issue_count": 1,
+          "issues": [
+            {
+              "code": "MISSING_SPACE",
+              "path": "/spaces/space-room",
+              "message": "Expected component 'space-room' was not found in the IFC."
+            }
+          ],
+          "issue_codes": [
+            "MISSING_SPACE"
+          ],
+          "source_paths": [
+            "geometry-feedback.json"
+          ]
+        },
+        {
+          "name": "repair_route",
+          "applicability": "not_applicable",
+          "status": "skipped",
+          "basis": "repair route sidecar is not present",
+          "issue_count": 0,
+          "issues": [],
+          "issue_codes": [],
+          "source_paths": []
+        }
+      ],
+      "overall_status": "failed"
+    },
+    "ifc_verification": {
+      "success": true,
+      "output_path": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\generation\\corrective-02-compiler-revalidation\\output.ifc",
+      "input_issues": [],
+      "ifc_issues": []
+    },
+    "geometry_feedback": {
+      "success": false,
+      "issues": [
+        {
+          "code": "MISSING_SPACE",
+          "path": "/spaces/space-room",
+          "message": "Expected component 'space-room' was not found in the IFC.",
+          "entity_ids": [
+            "space-room"
+          ],
+          "source_fact_refs": [
+            "/known_facts/storeys/0/spaces/0"
+          ]
+        }
+      ],
+      "metrics": {
+        "case_id": "corrective-02-binding-revalidation",
+        "wall_set_convention": "primary",
+        "walls": {},
+        "slabs": {
+          "slab-ground": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -3.2,
+                3.2
+              ],
+              "y": [
+                -2.2,
+                2.2
+              ],
+              "z": [
+                -0.15,
+                0.0
+              ]
+            }
+          }
+        },
+        "spaces": {},
+        "roof": {},
+        "floor_openings": {},
+        "products": {},
+        "stairs": {}
+      },
+      "expectation_source": "design_brief_expected_facts"
+    },
+    "semantic_geometry_expectation": {
+      "schema_version": "text2ifc/design-geometry-expectation/1.0",
+      "case_id": "corrective-02-binding-revalidation",
+      "source": "design_brief_expected_facts",
+      "units": "METRE",
+      "tolerance": 0.05,
+      "complete": true,
+      "spaces": {
+        "space-room": {
+          "bbox": {
+            "x": [
+              -3.0,
+              3.0
+            ],
+            "y": [
+              -2.0,
+              2.0
+            ],
+            "z": [
+              0.0,
+              3.0
+            ]
+          },
+          "storey_id": "storey-1",
+          "source_fact_refs": [
+            "/known_facts/storeys/0/spaces/0"
+          ]
+        }
+      },
+      "walls": {},
+      "slabs": {
+        "slab-ground": {
+          "bbox": {
+            "x": [
+              -3.2,
+              3.2
+            ],
+            "y": [
+              -2.2,
+              2.2
+            ],
+            "z": [
+              -0.15,
+              0.0
+            ]
+          },
+          "datum": "slab_top",
+          "source_fact_refs": [
+            "/known_facts/floor_slabs/0"
+          ],
+          "must_touch_walls": []
+        }
+      },
+      "roof": {},
+      "stairs": {},
+      "floor_openings": {},
+      "products": {},
+      "unresolved": []
+    },
+    "semantic_verification": {
+      "schema_version": "text2ifc/request-semantic-verification/1.0",
+      "valid": true,
+      "basis": "request expectations independently compared with reopened IFC before atomic publication",
+      "expectations": [
+        {
+          "entity_id": "wall-storey-1-wall-south",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/0",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-north",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/1",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-west",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/2",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-east",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/3",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "slab-ground",
+          "kind": "material",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/4",
+          "value": {
+            "kind": "single_material",
+            "name": "混凝土"
+          }
+        },
+        {
+          "entity_id": "door-storey-1-door-south",
+          "kind": "template",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/5",
+          "value": {
+            "parameters": {},
+            "template_id": "door-left",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-storey-1-window-east",
+          "kind": "template",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/6",
+          "value": {
+            "parameters": {},
+            "template_id": "window-double-vertical",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-storey-1-window-west",
+          "kind": "template",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/7",
+          "value": {
+            "parameters": {},
+            "template_id": "window-single",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-south",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/0",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-north",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/1",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-west",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/2",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "wall-storey-1-wall-east",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/3",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "砖"
+          }
+        },
+        {
+          "entity_id": "slab-ground",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/4",
+          "kind": "material",
+          "value": {
+            "kind": "single_material",
+            "name": "混凝土"
+          }
+        },
+        {
+          "entity_id": "door-storey-1-door-south",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/5",
+          "kind": "template",
+          "value": {
+            "parameters": {},
+            "template_id": "door-left",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-storey-1-window-east",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/6",
+          "kind": "template",
+          "value": {
+            "parameters": {},
+            "template_id": "window-double-vertical",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        },
+        {
+          "entity_id": "window-storey-1-window-west",
+          "scope": "direct",
+          "source_path": "/known_facts/semantic_requirements/7",
+          "kind": "template",
+          "value": {
+            "parameters": {},
+            "template_id": "window-single",
+            "template_version": "text2ifc/basic-filling/1.0"
+          }
+        }
+      ],
+      "issues": []
+    }
+  },
+  "repair_route": null
+}

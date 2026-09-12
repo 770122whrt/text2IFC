@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="8" time="52.671" timestamp="2026-09-08T23:17:02.082183+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-False-False]" time="9.739" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-False-True]" time="10.849" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-True-False]" time="10.012" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[False-True-True]" time="11.037" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-False-False]" time="2.033"><failure message="KeyError: 'wall-1'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t5-public/test_ready_session_public_chai4')
+detailed = False, canonical_ids = False, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+&gt;           correction = _changeset(broken, frozen)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = {'entities': [{'attributes': {'Name': 'Text2IFC Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_set...w-1'}, 'id': 'fill-window-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'text2ifc-generator'}}], ...}
+expected_facts = {'case_id': '62451081921d6b4f', 'door_counts_by_storey': {}, 'doors': [], 'entity_id_contract': {'doors': [], 'spaces'...rey-1'}, {'brief_id': 'wall-east', 'entity_id': 'wall-storey-1-wall-east', 'storey': 'storey-1'}], 'windows': []}, ...}
+
+    def _changeset(candidate: dict, expected_facts: dict, *, operation=None) -&gt; dict:
+        index = build_candidate_index(candidate)
+        return {
+            "schema_version": "text2ifc/bim-json-changeset/1.0",
+            "changeset_id": "changeset-revision-01",
+            "base_revision_id": "revision-00",
+            "base_candidate_hash": index["candidate_hash"],
+            "expected_facts_hash": hash_json_value(expected_facts),
+            "source_issue_ids": ["issue-wall-001"],
+            "scope_id": "scope-revision-01",
+            "operations": [
+                operation
+                or {
+                    "operation_id": "operation-wall-name",
+                    "op": "update_entity",
+                    "target_id": "wall-1",
+&gt;                   "target_component_hash": index["component_hashes"]["wall-1"],
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    "changes": {"/attributes/Name": "Corrected wall"},
+                    "evidence_refs": ["issue-wall-001:/expected"],
+                }
+            ],
+        }
+E       KeyError: 'wall-1'
+
+tests\agent\test_phase6_5_changeset_apply.py:75: KeyError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-False-True]" time="2.071"><failure message="KeyError: 'wall-1'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t5-public/test_ready_session_public_chai5')
+detailed = True, canonical_ids = False, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+&gt;           correction = _changeset(broken, frozen)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = {'entities': [{'attributes': {'Name': 'Text2IFC Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_set...w-1'}, 'id': 'fill-window-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'text2ifc-generator'}}], ...}
+expected_facts = {'case_id': 'b5e3659219b08cb8', 'door_counts_by_storey': {}, 'doors': [], 'entity_id_contract': {'doors': [], 'spaces'...rey-1'}, {'brief_id': 'wall-east', 'entity_id': 'wall-storey-1-wall-east', 'storey': 'storey-1'}], 'windows': []}, ...}
+
+    def _changeset(candidate: dict, expected_facts: dict, *, operation=None) -&gt; dict:
+        index = build_candidate_index(candidate)
+        return {
+            "schema_version": "text2ifc/bim-json-changeset/1.0",
+            "changeset_id": "changeset-revision-01",
+            "base_revision_id": "revision-00",
+            "base_candidate_hash": index["candidate_hash"],
+            "expected_facts_hash": hash_json_value(expected_facts),
+            "source_issue_ids": ["issue-wall-001"],
+            "scope_id": "scope-revision-01",
+            "operations": [
+                operation
+                or {
+                    "operation_id": "operation-wall-name",
+                    "op": "update_entity",
+                    "target_id": "wall-1",
+&gt;                   "target_component_hash": index["component_hashes"]["wall-1"],
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    "changes": {"/attributes/Name": "Corrected wall"},
+                    "evidence_refs": ["issue-wall-001:/expected"],
+                }
+            ],
+        }
+E       KeyError: 'wall-1'
+
+tests\agent\test_phase6_5_changeset_apply.py:75: KeyError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-True-False]" time="2.165"><failure message="KeyError: 'wall-1'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t5-public/test_ready_session_public_chai6')
+detailed = False, canonical_ids = True, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+&gt;           correction = _changeset(broken, frozen)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = {'entities': [{'attributes': {'Name': 'Text2IFC Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_set...w-1'}, 'id': 'fill-window-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'text2ifc-generator'}}], ...}
+expected_facts = {'case_id': '269200d6f9a667d3', 'door_counts_by_storey': {}, 'doors': [], 'entity_id_contract': {'doors': [], 'spaces'...rey-1'}, {'brief_id': 'wall-east', 'entity_id': 'wall-storey-1-wall-east', 'storey': 'storey-1'}], 'windows': []}, ...}
+
+    def _changeset(candidate: dict, expected_facts: dict, *, operation=None) -&gt; dict:
+        index = build_candidate_index(candidate)
+        return {
+            "schema_version": "text2ifc/bim-json-changeset/1.0",
+            "changeset_id": "changeset-revision-01",
+            "base_revision_id": "revision-00",
+            "base_candidate_hash": index["candidate_hash"],
+            "expected_facts_hash": hash_json_value(expected_facts),
+            "source_issue_ids": ["issue-wall-001"],
+            "scope_id": "scope-revision-01",
+            "operations": [
+                operation
+                or {
+                    "operation_id": "operation-wall-name",
+                    "op": "update_entity",
+                    "target_id": "wall-1",
+&gt;                   "target_component_hash": index["component_hashes"]["wall-1"],
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    "changes": {"/attributes/Name": "Corrected wall"},
+                    "evidence_refs": ["issue-wall-001:/expected"],
+                }
+            ],
+        }
+E       KeyError: 'wall-1'
+
+tests\agent\test_phase6_5_changeset_apply.py:75: KeyError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[True-True-True]" time="2.041"><failure message="KeyError: 'wall-1'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t5-public/test_ready_session_public_chai7')
+detailed = True, canonical_ids = True, recover_field = True
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']='text2ifc/design-brief/2.1'
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],'conversation':[]},
+            output_dir=session.run_dir/'design-brief')
+        assert design['valid'],design
+        (session.run_dir/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+        store.mark_session_status(session.session_id,'ready')
+        audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],
+            'evidence_paths':['generator/candidate.json','ifc-verification.json','semantic-verification.json']}
+        if canonical_ids:
+            from text2ifc_agent.expected_facts import build_expected_facts
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+            aliases = {item['brief_id']: item['entity_id']
+                       for records in frozen['entity_id_contract'].values() for item in records}
+            def bind(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, list):
+                    return [bind(item) for item in value]
+                if isinstance(value, dict):
+                    return {key: bind(item) for key, item in value.items()}
+                return value
+            candidate = bind(candidate)
+            for relation in candidate['relationships']:
+                relation['attributes']['Name'] = '显式关系名称'
+        payloads = [candidate, audit]
+        if recover_field:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            from text2ifc_contract.validation_v2 import validate_v2_document
+            from text2ifc_agent.expected_facts import build_expected_facts
+            from tests.agent.test_phase6_5_changeset_apply import _changeset
+            broken = copy.deepcopy(candidate)
+            space = next(e for e in broken['entities'] if e['ifc_class']=='IfcSpace')
+            space['attributes']['InteriorOrExteriorSpace'] = 'ROOM'
+            errors = [vars(i) for i in validate_v2_document(broken)]
+            group = build_field_recovery_group(broken, errors)
+            assert group['eligible']
+            frozen = build_expected_facts(case_id=session.session_hash, design_brief=brief)
+&gt;           correction = _changeset(broken, frozen)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:203: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+candidate = {'entities': [{'attributes': {'Name': 'Text2IFC Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_set...w-1'}, 'id': 'fill-window-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'text2ifc-generator'}}], ...}
+expected_facts = {'case_id': '6177534ca32a73b3', 'door_counts_by_storey': {}, 'doors': [], 'entity_id_contract': {'doors': [], 'spaces'...rey-1'}, {'brief_id': 'wall-east', 'entity_id': 'wall-storey-1-wall-east', 'storey': 'storey-1'}], 'windows': []}, ...}
+
+    def _changeset(candidate: dict, expected_facts: dict, *, operation=None) -&gt; dict:
+        index = build_candidate_index(candidate)
+        return {
+            "schema_version": "text2ifc/bim-json-changeset/1.0",
+            "changeset_id": "changeset-revision-01",
+            "base_revision_id": "revision-00",
+            "base_candidate_hash": index["candidate_hash"],
+            "expected_facts_hash": hash_json_value(expected_facts),
+            "source_issue_ids": ["issue-wall-001"],
+            "scope_id": "scope-revision-01",
+            "operations": [
+                operation
+                or {
+                    "operation_id": "operation-wall-name",
+                    "op": "update_entity",
+                    "target_id": "wall-1",
+&gt;                   "target_component_hash": index["component_hashes"]["wall-1"],
+                                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                    "changes": {"/attributes/Name": "Corrected wall"},
+                    "evidence_refs": ["issue-wall-001:/expected"],
+                }
+            ],
+        }
+E       KeyError: 'wall-1'
+
+tests\agent\test_phase6_5_changeset_apply.py:75: KeyError</failure></testcase></testsuite></testsuites>

@@ -160,13 +160,14 @@ def test_semantic_extraction_failure_routes_to_brief_not_user_or_candidate(tmp_p
         assert row.suggested_route == 'revise_design_brief'
 
 
-@pytest.mark.parametrize('version', ['2.2', '2.3'])
+@pytest.mark.parametrize('version', ['2.2', '2.3', '2.4', '2.5'])
 def test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trace(tmp_path, version):
     from types import SimpleNamespace
     from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker
     from text2ifc_agent.openai_compat import load_openai_compatible_runtime_config
     case, brief = valid_brief()
     brief['schema_version'] = 'text2ifc/design-brief/' + version
+    if version in {'2.4', '2.5'}:brief['known_facts']['plan_constraints']=[]
     initial = copy.deepcopy(brief)
     initial['known_facts'].pop('semantic_review')
     payloads = [initial, brief]

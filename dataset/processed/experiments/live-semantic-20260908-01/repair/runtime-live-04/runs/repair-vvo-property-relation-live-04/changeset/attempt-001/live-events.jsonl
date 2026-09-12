@@ -1,0 +1,40 @@
+{
+  "data": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\n  \"schema_version\": \"text2ifc/ifc-repair-changeset-draft/0.2\",\n  \"draft_id\": \"changeset/set-wall-pset-1-draft-001\",\n  \"base_model_fingerprint\": \"sha256:7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6\",\n  \"source_request_hash\": \"sha256:78b31c7a44102d2d5d34a110d8417b4e8857a0d4f2ad97a1411609e334fbb598\",\n  \"semantic_manifest_ref\": \"changeset/semantic-manifest-set-wall-pset-1.json\",\n  \"semantic_manifest_sha256\": \"sha256:656e8cc305e2ad149049434affe80146b66f44dd96491b277137aa5d570cf203\",\n  \"semantic_summary\": {\n    \"required\": 0,\n    \"conditional\": 4,\n    \"not_required\": 0\n  },\n  \"scope\": {\n    \"target_ids\": [\"2CsmzAChHF6O6maGXlo6PS\"],\n    \"forbidden_ids\": []\n  },\n  \"evidence_refs\": [\"resolved:/operations/set-wall-pset-1/context/candidate_targets/0\"],\n  \"preconditions\": [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"],\n  \"postconditions\": [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"],\n  \"operations\": [\n    {\n      \"operation_id\": \"set-wall-pset-1\",\n      \"operation_type\": \"set_occurrence_properties\",\n      \"target\": {\n        \"element_global_id\": \"2CsmzAChHF6O6maGXlo6PS\"\n      },\n      \"parameters\": {},\n      \"evidence_refs\": [\"resolved:/operations/set-wall-pset-1/context/candidate_targets/0\"]\n    }\n  ]\n}",
+          "function_call": null,
+          "reasoning_content": "我们只需要根据要求输出JSON对象。需求是生成一个IFC修复变更集草稿。根据提供的schema和输入，我们需要构造一个JSON。\n\n具体内容：\n- schema_version: \"text2ifc/ifc-repair-changeset-draft/0.2\"\n- draft_id: 需要符合id格式，可以类似\"changeset/draft-...\"，但必须有值。由于没有给定，我们可以创建一个唯一id，但必须符合pattern：^[A-Za-z0-9][A-Za-z0-9._:/-]*$。可以使用\"changeset/set-wall-pset-1-draft-001\"。\n- base_model_fingerprint: 从输入中的\"model: sha256:...\"，即\"sha256:7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6\"\n- source_request_hash: \"sha256:78b31c7a44102d2d5d34a110d8417b4e8857a0d4f2ad97a1411609e334fbb598\"\n- semantic_manifest_ref: \"changeset/semantic-manifest-set-wall-pset-1.json\"\n- semantic_manifest_sha256: \"sha256:656e8cc305e2ad149049434affe80146b66f44dd96491b277137aa5d570cf203\"\n- semantic_summary: {\"required\":0,\"conditional\":4,\"not_required\":0} 来自\"Semantic group counts\"\n- scope: {\"target_ids\":[\"2CsmzAChHF6O6maGXlo6PS\"],\"forbidden_ids\":[]} 来自Resolved operation projection中的scope\n- evidence_refs: 注意顶层有evidence_refs字段，以及operations中每个操作有evidence_refs。顶层evidence_refs应该是什么？从schema看，顶层是一个字符串数组。可能我们需要包含一些引用？在Resolved operation projection中只有operations有evidence_refs。但schema要求顶层有evidence_refs。可能我们要复制？也许从operations中提取？但schema要求evidence_refs是数组。既然没有显式顶层，可能我们需要设置为空数组或从操作中复制？但规则说“Copy operation IDs, types, targets, parameters, scope, and evidence exactly.” 可能顶层evidence_refs应是操作中所有evidence_refs的并集？但Resolved operation projection没有给顶层证据。看结构，在“Resolved operation projection”中，每个operation有evidence_refs，但顶层没有。然而schema要求evidence_refs，所以应该填充什么？或许我们使用semantic manifest ref和hash？不，那是独立的。也许顶层evidence_refs是文档级别的证据，可以是空数组。但为了安全，我们可以从操作中提取所有evidence_refs去重。例如操作0的evidence_refs是[\"resolved:/operations/set-wall-pset-1/context/candidate_targets/0\"]。那么顶层evidence_refs可以设为这个列表。这样可以满足唯一性。\n\n- preconditions: 根据operation_contracts，有precondition_names: [\"target_exists\", \"target_class_supported\", \"property_assignments_bound\"]，所以preconditions应该是这些名字的字符串数组。\n- postconditions: [\"target_preserved\", \"requested_properties_match\", \"shared_type_unchanged\"]\n- operations: 一个操作对象，从Resolved operation projection中第一个操作复制：operation_id: \"set-wall-pset-1\", operation_type: \"set_occurrence_properties\", target: {\"element_global_id\": \"2CsmzAChHF6O6maGXlo6PS\"}, parameters: {}（因为parameter schema为空对象），evidence_refs: [\"resolved:/operations/set-wall-pset-1/context/candidate_targets/0\"]。\n\n注意：schema中operation对象需要additionalProperties false且必须有这些字段。我们已经有了。\n\n另外，注意“scope”字段也有evidence_refs吗？没有，schema中scope只有target_ids和forbidden_ids。\n\n还有semantic_summary结构是正确的。\n\ndraft_id 必须是字符串，且符合pattern。我们取一个简单的如\"changeset/set-wall-pset-1-draft\" 或者带时间戳。但为了确定性，可以使用\"changeset/set-wall-pset-1-draft-001\"。\n\n注意顶层要求有\"semantic_summary\"对象，且其required字段等。\n\n让我们构建JSON。\n\n注意：\"parameters\": {} 在操作中是空对象，因为operation_contracts中parameter_schema的maxProperties=0，所以必须是空。\n\n另外，注意我们需要确保所有required字段都存在。\n\n现在构造。",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1788862326,
+    "id": "bea0e65a-2ee8-4ff7-95ae-a8014f6d3e17",
+    "model": "deepseek-v4-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "a26a7955944dc5c60445bff77fac9c8e",
+    "usage": {
+      "completion_tokens": 1488,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 2215,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 3703
+    }
+  },
+  "event": "chat.completion",
+  "sequence": 0
+}

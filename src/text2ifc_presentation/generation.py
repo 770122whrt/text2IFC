@@ -49,6 +49,9 @@ def apply_coordinated_appearance(model, document, context):
         type_record = records.get(_identity(type_object), {}) if type_object else {}
         explicit = record.get('appearance') or type_record.get('appearance')
         source = 'user' if record.get('appearance') else 'type' if explicit else 'theme'
+        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3'} else {}
+        if overrides:
+            source = 'user-parts'
         material = util.get_material(product)
         role = _role(product)
         if material and material.is_a('IfcMaterial') and material.id() not in styled_material_ids:
@@ -69,13 +72,19 @@ def apply_coordinated_appearance(model, document, context):
             for item in representation.Items:
                 part = part_roles.get(item.id(), role)
                 if explicit:
-                    spec = AppearanceSpec('explicit-user', *explicit['color'], transparency=explicit.get('transparency', 0.0))
+                    spec = AppearanceSpec('explicit-user', *explicit.get('color', palette[part]), transparency=explicit.get('transparency', 0.0))
+                elif part in overrides:
+                    channels = overrides[part]
+                    spec = AppearanceSpec(f'explicit-user:{part}', *channels.get('color', palette[part]),
+                                          transparency=channels.get('transparency', .45 if part == 'glazing' else 0.))
                 else:
                     spec = AppearanceSpec(f'{theme}:{part}', *palette[part], transparency=0.45 if part == 'glazing' else 0.0)
                 # Part/default item bindings make effective style deterministic
                 # across viewers, while material-owned style remains available.
                 assign_item_appearance(model, item=item, spec=spec)
-                applied.append({'role': part, **spec.signature()})
+                applied.append({'role': part, **spec.signature(), **({'channel_sources': {
+                    key: 'user' if key in overrides.get(part, {}) else f'theme:{theme}'
+                    for key in ('color', 'transparency')}} if overrides else {})})
         pset = add_pset(model, product=product, name='Pset_text2IFCAppearance')
         edit_pset(model, pset=pset, properties={'Profile': theme, 'Source': source,
                   'Seed': str(selection.get('seed', '')), 'PartsJson': json.dumps(applied, sort_keys=True)})
@@ -93,6 +102,7 @@ def verify_appearance(model, document):
         record = records.get(identity, {})
         type_object = util.get_type(product)
         explicit = record.get('appearance') or (records.get(_identity(type_object), {}).get('appearance') if type_object else None)
+        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3'} else {}
         roles = {}
         for aspect in getattr(product.Representation, 'HasShapeAspects', ()):
             role = {'Framing':'frame','Lining':'frame','Glazing':'glazing','Panel':'panel'}.get(aspect.Name)
@@ -104,9 +114,14 @@ def verify_appearance(model, document):
                 values = item_appearance_signatures(item)
                 valid = len(values) == 1 and all(0 <= float(values[0][k]) <= 1 for k in ('red','green','blue','transparency'))
                 role = roles.get(item.id(), _role(product))
-                wanted = [*explicit['color'], explicit.get('transparency', 0.0)] if explicit else [*palette[role], .45 if role == 'glazing' else 0.0]
+                wanted = [*explicit.get('color', palette[role]), explicit.get('transparency', 0.0)] if explicit else [*palette[role], .45 if role == 'glazing' else 0.0]
+                if role in overrides:
+                    channels = overrides[role]
+                    wanted = [*channels.get('color', palette[role]), channels.get('transparency', .45 if role == 'glazing' else 0.)]
                 if valid:
                     valid = all(math.isclose(values[0][k], v, abs_tol=1e-6) for k, v in zip(('red','green','blue','transparency'), wanted))
                 if not valid:
                     issues.append(IfcValidationIssue('IFC_APPEARANCE_MISMATCH', str(identity), 'appearance', 'Missing, ambiguous or incorrect effective item style.'))
+        if overrides and not set(overrides).issubset(roles.values()):
+            issues.append(IfcValidationIssue('IFC_APPEARANCE_MISMATCH', str(identity), 'part_appearance', 'Requested part is absent from the actual IFC shape aspects.'))
     return tuple(issues)

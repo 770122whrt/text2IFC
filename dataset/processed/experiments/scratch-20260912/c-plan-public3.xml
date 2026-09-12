@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="7.089" timestamp="2026-09-11T15:15:12.852030+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_c_plan_run" name="test_exact_c_loop_plan_correction_reopens_final_ifc[legacy_full]" time="2.583"><failure message="AssertionError: Unexpected stage: generate">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/c-plan-public3-tmp/test_exact_c_loop_plan_correct0')
+strategy = 'legacy_full'
+
+    @pytest.mark.parametrize('strategy',['legacy_full','staged'])
+    def test_exact_c_loop_plan_correction_reopens_final_ifc(tmp_path,strategy):
+        from text2ifc_agent.brief_plan_constraints import validate_plan_constraints
+        runner=module('c_plan_runner',ROOT/'c-shaped-plan-constraints-20260911/run_case.py')
+        brief,candidate=fixture();assert not validate_plan_constraints(brief)
+        provider=Provider(brief,candidate);before=runner.PRIOR_BUDGET.read_bytes()
+&gt;       result=runner.execute(output=tmp_path/'run',provider_factory=lambda:provider,evidence_class='fake',strategy=strategy)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_c_plan_run.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+dataset\processed\ifc-presentation-validation\c-shaped-plan-constraints-20260911\run_case.py:55: in execute
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=provider_factory,
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:612: in _run_ready_session_to_ifc
+    generator = run_generator_stage(
+src\text2ifc_agent\live_pipeline.py:619: in run_generator_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;tests.agent.test_c_plan_run.Provider object at 0x00000296F8700D40&gt;
+args = {'prompt': '只输出一个裸 JSON 对象，禁止围栏、解释、STEP 和对象外文字。\n你是 text2IFC Generation Agent，按提供的 BIM JSON 2.1 Schema 或 Draft 1.1 Sch...te': {'case_id': '7aee4c3a251fe6bd', 'generator_call_index': 1, 'has_generation_feedback': False, 'stage': 'generate'}}
+stage = 'generate'
+
+    def generate_live(self,**args):
+        stage=args['state']['stage'];text=args['prompt']
+        if stage=='design-brief':
+            payload=copy.deepcopy(self.brief)
+            payload['known_facts']['storeys'][0]['walls']['exterior'][0]['bounds']['y']=[-200,0]
+        elif stage=='design-brief-plan-repair':payload=self.brief
+        elif stage=='generator':payload=self.candidate
+        elif stage=='changeset':
+            def extract(label):return json.JSONDecoder().raw_decode(text.split(label,1)[1].lstrip())[0]
+            scope=extract('允许修改范围：');revision=extract('基础 Revision：')
+            records={r['id']:r for r in self.candidate['entities']+self.candidate['relationships']}
+            payload={'schema_version':'text2ifc/bim-json-changeset/1.0','changeset_id':f'fake-{len(self.calls)}',
+                'base_revision_id':revision['revision_id'],'base_candidate_hash':revision['candidate_hash'],
+                'expected_facts_hash':revision['expected_facts_hash'],'scope_id':scope['scope_id'],
+                'source_issue_ids':scope['source_issue_ids'],'operations':[]}
+            for target in scope['entity_ids']+scope['relationship_ids']:
+                value=copy.deepcopy(records[target])
+                payload['operations'].append({'operation_id':'add-'+target,'op':'add_relationship' if value['ifc_class'].startswith('IfcRel') else 'add_entity',
+                    'target_id':target,'value':value,'evidence_refs':[i+':/expected' for i in scope['source_issue_ids']]})
+        elif stage=='audit':payload={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
+            'deterministic_gate_status':'passed','findings':[],'evidence_paths':['generator/candidate.json','repair/route.json']}
+&gt;       else:raise AssertionError('Unexpected stage: '+stage)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Unexpected stage: generate
+
+tests\agent\test_c_plan_run.py:47: AssertionError</failure></testcase><testcase classname="tests.agent.test_c_plan_run" name="test_exact_c_loop_plan_correction_reopens_final_ifc[staged]" time="2.345"><failure message="KeyError: 'rel-voids-ifcdoor-1-0'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/c-plan-public3-tmp/test_exact_c_loop_plan_correct1')
+strategy = 'staged'
+
+    @pytest.mark.parametrize('strategy',['legacy_full','staged'])
+    def test_exact_c_loop_plan_correction_reopens_final_ifc(tmp_path,strategy):
+        from text2ifc_agent.brief_plan_constraints import validate_plan_constraints
+        runner=module('c_plan_runner',ROOT/'c-shaped-plan-constraints-20260911/run_case.py')
+        brief,candidate=fixture();assert not validate_plan_constraints(brief)
+        provider=Provider(brief,candidate);before=runner.PRIOR_BUDGET.read_bytes()
+&gt;       result=runner.execute(output=tmp_path/'run',provider_factory=lambda:provider,evidence_class='fake',strategy=strategy)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_c_plan_run.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+dataset\processed\ifc-presentation-validation\c-shaped-plan-constraints-20260911\run_case.py:55: in execute
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=provider_factory,
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:603: in _run_ready_session_to_ifc
+    generator = _run_staged_initial_generation(
+src\text2ifc_agent\interactive_cli_flow.py:1431: in _run_staged_initial_generation
+    result = run_staged_generation(
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:106: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;tests.agent.test_c_plan_run.Provider object at 0x00000296A02EBD10&gt;
+args = {'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色\...se6.5-2135deab1c9adc01-changeset-11', 'state': {'call_index': 11, 'case_id': '2135deab1c9adc01', 'stage': 'changeset'}}
+stage = 'changeset'
+payload = {'base_candidate_hash': 'sha256:94432ce31856349446c150bdf08d21ddb5f4decd86c4605cf93e7b82c6fd5ff9', 'base_revision_id':...t_id': 'fake-2', 'expected_facts_hash': 'sha256:cfd6c5557bc6bf8e1434702600a4192e3eff22b1e9fdef09f884fd45db88384b', ...}
+extract = &lt;function Provider.generate_live.&lt;locals&gt;.extract at 0x00000296A10AC540&gt;
+scope = {'allowed_paths': {'ifcdoor-1-0': ['/'], 'ifcdoor-1-1': ['/'], 'ifcdoor-1-entry': ['/'], 'ifcwindow-1-0': ['/'], ...},...1-south', 'wall-1-north', 'wall-1-west', 'wall-1-east_south', 'wall-1-east_north', 'wall-1-courtyard_south', ...], ...}
+revision = {'artifacts': {'candidate': 'workspace-skeleton.json'}, 'candidate_hash': 'sha256:94432ce31856349446c150bdf08d21ddb5f4...028a14ad', ...}, 'expected_facts_hash': 'sha256:cfd6c5557bc6bf8e1434702600a4192e3eff22b1e9fdef09f884fd45db88384b', ...}
+records = {'aggregate-stair-1': {'attributes': {'RelatedObjects': ['stair-flight-1'], 'RelatingObject': 'stair-1'}, 'id': 'aggre...community-reading'}, 'id': 'building-storeys', 'ifc_class': 'IfcRelAggregates', 'provenance': {'source': 'test'}}, ...}
+
+    def generate_live(self,**args):
+        stage=args['state']['stage'];text=args['prompt']
+        if stage=='design-brief':
+            payload=copy.deepcopy(self.brief)
+            payload['known_facts']['storeys'][0]['walls']['exterior'][0]['bounds']['y']=[-200,0]
+        elif stage=='design-brief-plan-repair':payload=self.brief
+        elif stage=='generator':payload=self.candidate
+        elif stage=='changeset':
+            def extract(label):return json.JSONDecoder().raw_decode(text.split(label,1)[1].lstrip())[0]
+            scope=extract('允许修改范围：');revision=extract('基础 Revision：')
+            records={r['id']:r for r in self.candidate['entities']+self.candidate['relationships']}
+            payload={'schema_version':'text2ifc/bim-json-changeset/1.0','changeset_id':f'fake-{len(self.calls)}',
+                'base_revision_id':revision['revision_id'],'base_candidate_hash':revision['candidate_hash'],
+                'expected_facts_hash':revision['expected_facts_hash'],'scope_id':scope['scope_id'],
+                'source_issue_ids':scope['source_issue_ids'],'operations':[]}
+            for target in scope['entity_ids']+scope['relationship_ids']:
+&gt;               value=copy.deepcopy(records[target])
+                                    ^^^^^^^^^^^^^^^
+E               KeyError: 'rel-voids-ifcdoor-1-0'
+
+tests\agent\test_c_plan_run.py:42: KeyError</failure></testcase></testsuite></testsuites>

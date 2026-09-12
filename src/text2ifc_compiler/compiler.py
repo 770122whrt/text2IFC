@@ -37,10 +37,10 @@ def compile_document(
     appearance_seed: str | None = None,
     semantic_expectations=None,
 ) -> CompilationResult:
-    if document.get("schema_version") in {"bim-json/2.0", "bim-json/2.1"}:
+    if document.get("schema_version") in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", "bim-json/2.3"}:
         input_issues = tuple(validate_v2_document(document))
         builder = build_ifc_v2
-    elif document.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1"}:
+    elif document.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3'}:
         input_issues = (
             ValidationIssue(
                 "DRAFT_NOT_COMPILABLE",
@@ -57,7 +57,7 @@ def compile_document(
 
     output = Path(output_path).resolve()
     bootstrap = builder(document)
-    if document.get("schema_version") == "bim-json/2.1":
+    if document.get("schema_version") in {"bim-json/2.1", "bim-json/2.2", "bim-json/2.3"}:
         from text2ifc_presentation.generation import apply_coordinated_appearance
         apply_coordinated_appearance(bootstrap.ifc_file, document, bootstrap.body_context)
     if appearance_profile is not None:
@@ -96,13 +96,16 @@ def compile_document(
 
         from .semantic_verification import verify_document_semantics, verify_semantic_expectations
         semantic_issues = ()
-        if document.get("schema_version") == "bim-json/2.1":
+        if document.get("schema_version") in {"bim-json/2.1", "bim-json/2.2", "bim-json/2.3"}:
             semantic_issues += verify_document_semantics(temporary_path, document)
             import ifcopenshell
             from text2ifc_presentation.generation import verify_appearance
             semantic_issues += tuple(verify_appearance(ifcopenshell.open(str(temporary_path)), document))
             from .basic_filling import verify_basic_filling
             semantic_issues += tuple(verify_basic_filling(ifcopenshell.open(str(temporary_path)), document))
+            if document.get("schema_version") == "bim-json/2.3":
+                from .basic_railing import verify_basic_railing
+                semantic_issues += verify_basic_railing(ifcopenshell.open(str(temporary_path)), document)
         if semantic_expectations:
             semantic_issues += verify_semantic_expectations(temporary_path, semantic_expectations)
         if semantic_issues:
