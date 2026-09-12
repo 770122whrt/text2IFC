@@ -222,8 +222,15 @@ def run_design_brief_stage(
     )
     parse_status, parsed, parse_diagnostics = result.output.parse_json()
     issues = []
+    outline_normalization = []
     if parse_status == "ok" and parsed is not None:
         _write_json(output / "parsed-output.json", parsed)
+        from .brief_plan_normalization import normalize_layout_outlines
+        parsed, outline_normalization = normalize_layout_outlines(parsed)
+        if outline_normalization:
+            _write_json(output / 'outline-normalization.json', {
+                'schema_version':'text2ifc/brief-outline-normalization/1.0',
+                'changes':outline_normalization})
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],
@@ -282,6 +289,7 @@ def run_design_brief_stage(
         "schema_semantic_valid": schema_semantic_valid,
         "strict_output_contract_valid": strict_output_contract_valid,
         "normalization_diagnostics": parse_diagnostics,
+        "outline_normalization": outline_normalization,
         "response_id": result.response.get("id"),
         "model": result.response.get("model"),
         "stop_reason": result.response.get("stop_reason"),
@@ -339,6 +347,9 @@ def run_design_brief_stage(
         },
     }
     _write_json(output / "trace-manifest.json", trace_manifest)
+    if outline_normalization:
+        trace_manifest['artifacts']['outline_normalization'] = 'outline-normalization.json'
+        _write_json(output / 'trace-manifest.json', trace_manifest)
     if semantic_repair is not None:
         trace_manifest['artifacts']['semantic_repair'] = 'semantic-repair/'
         trace_manifest['artifacts']['initial_validation'] = 'initial-validation.json'
