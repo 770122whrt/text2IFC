@@ -1,0 +1,86 @@
+{
+  "evidence_class": "offline diagnostic only",
+  "network_transport_attempted": false,
+  "production_changes": false,
+  "sources_sha256": {
+    "dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260908\\runtime-02\\runs\\45743eb8eb1e77b0\\generator\\parsed-output.json": "55246bdc8b54e31f645e88f3cf9f3d8c63591a3db6445af45d9c40e60c19b1a3",
+    "dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260908\\corrective-04\\generator\\parsed-output.json": "6fcd3141ff161d2005e4619d362d6dbeefeb61fabcc6a9db8c6d335858041d50",
+    "dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260908\\corrective-04\\generator\\prompt-render-input.json": "cf754482e589a65fba37fe7a2edfe5d1c9aad3b7f519d18bc175353fedac2c03"
+  },
+  "rename_permission_probe": {
+    "allowed_paths": [
+      "/entities/24/attributes/NumberOfRisers"
+    ],
+    "delta": {
+      "schema_version": "text2ifc/repair-fact-delta/1.0",
+      "valid": false,
+      "change_count": 2,
+      "issue_count": 1,
+      "changes": [
+        {
+          "path": "/entities/24/attributes/NumberOfRiser",
+          "kind": "added",
+          "before": null,
+          "after": 18
+        },
+        {
+          "path": "/entities/24/attributes/NumberOfRisers",
+          "kind": "removed",
+          "before": 18,
+          "after": null
+        }
+      ],
+      "issues": [
+        {
+          "code": "UNPERMITTED_FACT_DELTA",
+          "path": "/entities/24/attributes/NumberOfRiser",
+          "message": "Repair changed a path outside deterministic feedback."
+        }
+      ]
+    },
+    "same_path_permission_positive": true,
+    "unrelated_change_rejected": true,
+    "limits": "Permission checks alone do not validate candidate semantics; all mutations stayed in memory."
+  },
+  "early_error_route_probe": {
+    "route": "blocked_failure",
+    "eligible": false,
+    "max_attempts": 3,
+    "repair_attempts": [],
+    "blocking_code": "NON_REPAIRABLE_ISSUE_CLASS",
+    "issue_codes": [
+      "INVALID_IFC_ATTRIBUTE_TYPE"
+    ],
+    "non_repairable_codes": [
+      "INVALID_IFC_ATTRIBUTE_TYPE"
+    ]
+  },
+  "one_of_ten_correction_probe": {
+    "remaining_contract_errors": 9,
+    "classification": "invalid",
+    "limits": "No mutated candidate saved or compiled. Existing apply_changeset rejects any remaining Formal validation issue, so connecting independent early-error patches needs an explicit partial-workspace contract or a complete bounded repair group."
+  },
+  "actual_context_token_occurrences": {
+    "FORMAL_SCHEMA": {
+      "ConstructionType": 0,
+      "IfcWindowStyleConstructionEnum": 0,
+      "OTHER_CONSTRUCTION": 0
+    },
+    "CAPABILITY_PROFILE": {
+      "ConstructionType": 0,
+      "IfcWindowStyleConstructionEnum": 0,
+      "OTHER_CONSTRUCTION": 0
+    },
+    "FEW_SHOTS": {
+      "ConstructionType": 0,
+      "IfcWindowStyleConstructionEnum": 0,
+      "OTHER_CONSTRUCTION": 0
+    },
+    "GENERATION_FEEDBACK": {
+      "ConstructionType": 0,
+      "IfcWindowStyleConstructionEnum": 0,
+      "OTHER_CONSTRUCTION": 0
+    }
+  },
+  "recommendation_boundaries": "Preserve IFC2X3, default legacy_full, explicit staged, immutable raw attempts, no material/property invention, local Type and final reopen verification."
+}

@@ -1,0 +1,2281 @@
+{
+  "appearance": {
+    "profile": "warm-residential"
+  },
+  "case_id": "135976189dc358f9",
+  "door_counts_by_storey": {
+    "storey-1": 2,
+    "storey-2": 1,
+    "storey-3": 1
+  },
+  "doors": [
+    {
+      "center_global_mm": [
+        3800,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 3800,
+      "height_mm": 2400,
+      "host_wall": "storey-1-wall-south",
+      "id": "storey-1-door-main",
+      "leaf_count": 1,
+      "open_side": "left",
+      "sill_height_mm": 0,
+      "source_key": "首层.door[1]",
+      "storey": "storey-1",
+      "template_id": "door-left",
+      "width_mm": 1200
+    },
+    {
+      "center_global_mm": [
+        7400,
+        700
+      ],
+      "center_offset_from_net_south_mm": 700,
+      "height_mm": 2100,
+      "host_wall": "storey-1-wall-partition",
+      "id": "storey-1-door-partition",
+      "leaf_count": 1,
+      "open_side": "right",
+      "sill_height_mm": 0,
+      "source_key": "首层.door[2]",
+      "storey": "storey-1",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "center_global_mm": [
+        7400,
+        7650
+      ],
+      "center_offset_from_net_south_mm": 7650,
+      "height_mm": 2100,
+      "host_wall": "storey-2-wall-partition",
+      "id": "storey-2-door-partition",
+      "leaf_count": 1,
+      "open_side": "right",
+      "sill_height_mm": 0,
+      "source_key": "二层.door[1]",
+      "storey": "storey-2",
+      "template_id": "door-right",
+      "width_mm": 900
+    },
+    {
+      "center_global_mm": [
+        7400,
+        700
+      ],
+      "center_offset_from_net_south_mm": 700,
+      "height_mm": 2100,
+      "host_wall": "storey-3-wall-partition",
+      "id": "storey-3-door-partition",
+      "leaf_count": 1,
+      "open_side": "right",
+      "sill_height_mm": 0,
+      "source_key": "三层.door[1]",
+      "storey": "storey-3",
+      "template_id": "door-right",
+      "width_mm": 900
+    }
+  ],
+  "entity_id_contract": {
+    "doors": [
+      {
+        "brief_id": "storey-1-door-main",
+        "entity_id": "door-storey-1-storey-1-door-main",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-door-partition",
+        "entity_id": "door-storey-1-storey-1-door-partition",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-door-partition",
+        "entity_id": "door-storey-2-storey-2-door-partition",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-door-partition",
+        "entity_id": "door-storey-3-storey-3-door-partition",
+        "storey": "storey-3"
+      }
+    ],
+    "floor_openings": [
+      {
+        "brief_id": "storey-2-slab-opening-stair",
+        "entity_id": "storey-2-slab-opening-stair",
+        "host_id": "floor-slab-2",
+        "identity_source": "explicit",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-slab-opening-stair",
+        "entity_id": "storey-3-slab-opening-stair",
+        "host_id": "floor-slab-3",
+        "identity_source": "explicit",
+        "storey": "storey-3"
+      }
+    ],
+    "roof": [
+      {
+        "brief_id": "roof-slab",
+        "entity_id": "roof-slab"
+      }
+    ],
+    "slabs": [
+      {
+        "brief_id": "floor-slab-1",
+        "entity_id": "floor-slab-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "floor-slab-2",
+        "entity_id": "floor-slab-2",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "floor-slab-3",
+        "entity_id": "floor-slab-3",
+        "storey": "storey-3"
+      }
+    ],
+    "spaces": [
+      {
+        "brief_id": "storey-1-space-hall",
+        "entity_id": "space-storey-1-storey-1-space-hall",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-space-stairwell",
+        "entity_id": "space-storey-1-storey-1-space-stairwell",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-space-hall",
+        "entity_id": "space-storey-2-storey-2-space-hall",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-space-platform",
+        "entity_id": "space-storey-2-storey-2-space-platform",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-space-hall",
+        "entity_id": "space-storey-3-storey-3-space-hall",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-space-platform",
+        "entity_id": "space-storey-3-storey-3-space-platform",
+        "storey": "storey-3"
+      }
+    ],
+    "stair_flights": [
+      {
+        "brief_id": "stair-flight-flight-1",
+        "entity_id": "stair-flight-flight-1",
+        "parent_id": "stair-flight-1",
+        "storey": "storey-1",
+        "to_storey": "storey-2"
+      },
+      {
+        "brief_id": "stair-flight-flight-2",
+        "entity_id": "stair-flight-flight-2",
+        "parent_id": "stair-flight-2",
+        "storey": "storey-2",
+        "to_storey": "storey-3"
+      }
+    ],
+    "stairs": [
+      {
+        "brief_id": "stair-flight-1",
+        "entity_id": "stair-flight-1",
+        "storey": "storey-1",
+        "to_storey": "storey-2"
+      },
+      {
+        "brief_id": "stair-flight-2",
+        "entity_id": "stair-flight-2",
+        "storey": "storey-2",
+        "to_storey": "storey-3"
+      }
+    ],
+    "walls": [
+      {
+        "brief_id": "storey-1-wall-south",
+        "entity_id": "wall-storey-1-storey-1-wall-south",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-north",
+        "entity_id": "wall-storey-1-storey-1-wall-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-west",
+        "entity_id": "wall-storey-1-storey-1-wall-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-east",
+        "entity_id": "wall-storey-1-storey-1-wall-east",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-wall-partition",
+        "entity_id": "wall-storey-1-storey-1-wall-partition",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-wall-south",
+        "entity_id": "wall-storey-2-storey-2-wall-south",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-north",
+        "entity_id": "wall-storey-2-storey-2-wall-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-west",
+        "entity_id": "wall-storey-2-storey-2-wall-west",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-east",
+        "entity_id": "wall-storey-2-storey-2-wall-east",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-wall-partition",
+        "entity_id": "wall-storey-2-storey-2-wall-partition",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-wall-south",
+        "entity_id": "wall-storey-3-storey-3-wall-south",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-north",
+        "entity_id": "wall-storey-3-storey-3-wall-north",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-west",
+        "entity_id": "wall-storey-3-storey-3-wall-west",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-east",
+        "entity_id": "wall-storey-3-storey-3-wall-east",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-wall-partition",
+        "entity_id": "wall-storey-3-storey-3-wall-partition",
+        "storey": "storey-3"
+      }
+    ],
+    "windows": [
+      {
+        "brief_id": "storey-1-window-south-1",
+        "entity_id": "window-storey-1-storey-1-window-south-1",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-south-2",
+        "entity_id": "window-storey-1-storey-1-window-south-2",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-north",
+        "entity_id": "window-storey-1-storey-1-window-north",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-west",
+        "entity_id": "window-storey-1-storey-1-window-west",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-1-window-east",
+        "entity_id": "window-storey-1-storey-1-window-east",
+        "storey": "storey-1"
+      },
+      {
+        "brief_id": "storey-2-window-south-1",
+        "entity_id": "window-storey-2-storey-2-window-south-1",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-south-2",
+        "entity_id": "window-storey-2-storey-2-window-south-2",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-north",
+        "entity_id": "window-storey-2-storey-2-window-north",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-west",
+        "entity_id": "window-storey-2-storey-2-window-west",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-2-window-east",
+        "entity_id": "window-storey-2-storey-2-window-east",
+        "storey": "storey-2"
+      },
+      {
+        "brief_id": "storey-3-window-south-1",
+        "entity_id": "window-storey-3-storey-3-window-south-1",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-south-2",
+        "entity_id": "window-storey-3-storey-3-window-south-2",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-north",
+        "entity_id": "window-storey-3-storey-3-window-north",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-west",
+        "entity_id": "window-storey-3-storey-3-window-west",
+        "storey": "storey-3"
+      },
+      {
+        "brief_id": "storey-3-window-east",
+        "entity_id": "window-storey-3-storey-3-window-east",
+        "storey": "storey-3"
+      }
+    ]
+  },
+  "generation_package_manifest": {
+    "issues": [],
+    "packages": [
+      {
+        "allowed_reference_ids": [],
+        "kind": "skeleton",
+        "owned_component_ids": [
+          "project-main",
+          "site-main",
+          "building-main",
+          "storey-1",
+          "storey-2",
+          "storey-3"
+        ],
+        "owned_relationship_ids": [
+          "aggregate-project-site",
+          "aggregate-site-building",
+          "aggregate-building-storeys"
+        ],
+        "package_id": "package-skeleton",
+        "storey_id": null
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-1",
+          "storey-1-wall-east",
+          "storey-1-wall-north",
+          "storey-1-wall-partition",
+          "storey-1-wall-south",
+          "storey-1-wall-west"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "storey-1-wall-south",
+          "storey-1-wall-north",
+          "storey-1-wall-west",
+          "storey-1-wall-east",
+          "storey-1-wall-partition",
+          "storey-1-space-hall",
+          "storey-1-space-stairwell",
+          "storey-1-door-main",
+          "opening-storey-1-door-main",
+          "storey-1-door-partition",
+          "opening-storey-1-door-partition",
+          "storey-1-window-south-1",
+          "opening-storey-1-window-south-1",
+          "storey-1-window-south-2",
+          "opening-storey-1-window-south-2",
+          "storey-1-window-north",
+          "opening-storey-1-window-north",
+          "storey-1-window-west",
+          "opening-storey-1-window-west",
+          "storey-1-window-east",
+          "opening-storey-1-window-east"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-storey-1-door-main",
+          "rel-fills-storey-1-door-main",
+          "rel-voids-storey-1-door-partition",
+          "rel-fills-storey-1-door-partition",
+          "rel-voids-storey-1-window-south-1",
+          "rel-fills-storey-1-window-south-1",
+          "rel-voids-storey-1-window-south-2",
+          "rel-fills-storey-1-window-south-2",
+          "rel-voids-storey-1-window-north",
+          "rel-fills-storey-1-window-north",
+          "rel-voids-storey-1-window-west",
+          "rel-fills-storey-1-window-west",
+          "rel-voids-storey-1-window-east",
+          "rel-fills-storey-1-window-east"
+        ],
+        "package_id": "package-storey-1",
+        "storey_id": "storey-1"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-2",
+          "storey-2-wall-east",
+          "storey-2-wall-north",
+          "storey-2-wall-partition",
+          "storey-2-wall-south",
+          "storey-2-wall-west"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "storey-2-wall-south",
+          "storey-2-wall-north",
+          "storey-2-wall-west",
+          "storey-2-wall-east",
+          "storey-2-wall-partition",
+          "storey-2-space-hall",
+          "storey-2-space-platform",
+          "storey-2-door-partition",
+          "opening-storey-2-door-partition",
+          "storey-2-window-south-1",
+          "opening-storey-2-window-south-1",
+          "storey-2-window-south-2",
+          "opening-storey-2-window-south-2",
+          "storey-2-window-north",
+          "opening-storey-2-window-north",
+          "storey-2-window-west",
+          "opening-storey-2-window-west",
+          "storey-2-window-east",
+          "opening-storey-2-window-east"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-storey-2-door-partition",
+          "rel-fills-storey-2-door-partition",
+          "rel-voids-storey-2-window-south-1",
+          "rel-fills-storey-2-window-south-1",
+          "rel-voids-storey-2-window-south-2",
+          "rel-fills-storey-2-window-south-2",
+          "rel-voids-storey-2-window-north",
+          "rel-fills-storey-2-window-north",
+          "rel-voids-storey-2-window-west",
+          "rel-fills-storey-2-window-west",
+          "rel-voids-storey-2-window-east",
+          "rel-fills-storey-2-window-east"
+        ],
+        "package_id": "package-storey-2",
+        "storey_id": "storey-2"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-3",
+          "storey-3-wall-east",
+          "storey-3-wall-north",
+          "storey-3-wall-partition",
+          "storey-3-wall-south",
+          "storey-3-wall-west"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "storey-3-wall-south",
+          "storey-3-wall-north",
+          "storey-3-wall-west",
+          "storey-3-wall-east",
+          "storey-3-wall-partition",
+          "storey-3-space-hall",
+          "storey-3-space-platform",
+          "storey-3-door-partition",
+          "opening-storey-3-door-partition",
+          "storey-3-window-south-1",
+          "opening-storey-3-window-south-1",
+          "storey-3-window-south-2",
+          "opening-storey-3-window-south-2",
+          "storey-3-window-north",
+          "opening-storey-3-window-north",
+          "storey-3-window-west",
+          "opening-storey-3-window-west",
+          "storey-3-window-east",
+          "opening-storey-3-window-east"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-storey-3-door-partition",
+          "rel-fills-storey-3-door-partition",
+          "rel-voids-storey-3-window-south-1",
+          "rel-fills-storey-3-window-south-1",
+          "rel-voids-storey-3-window-south-2",
+          "rel-fills-storey-3-window-south-2",
+          "rel-voids-storey-3-window-north",
+          "rel-fills-storey-3-window-north",
+          "rel-voids-storey-3-window-west",
+          "rel-fills-storey-3-window-west",
+          "rel-voids-storey-3-window-east",
+          "rel-fills-storey-3-window-east"
+        ],
+        "package_id": "package-storey-3",
+        "storey_id": "storey-3"
+      },
+      {
+        "allowed_reference_ids": [
+          "storey-1",
+          "storey-2",
+          "storey-3"
+        ],
+        "kind": "cross_storey",
+        "owned_component_ids": [
+          "floor-slab-1",
+          "floor-slab-2",
+          "storey-2-slab-opening-stair",
+          "floor-slab-3",
+          "storey-3-slab-opening-stair",
+          "stair-flight-1",
+          "stair-flight-flight-1",
+          "stair-flight-2",
+          "stair-flight-flight-2",
+          "roof-slab"
+        ],
+        "owned_relationship_ids": [
+          "rel-voids-floor-slab-2",
+          "rel-voids-floor-slab-3",
+          "aggregate-stair-flight-1-flight",
+          "aggregate-stair-flight-2-flight"
+        ],
+        "package_id": "package-cross-storey",
+        "storey_id": null
+      }
+    ],
+    "schema_version": "text2ifc/generation-package-manifest/1.0",
+    "status": "ready",
+    "storey_count": 3
+  },
+  "generation_schema_version": "bim-json/2.1",
+  "products": [],
+  "required_relationships": {
+    "containment": {
+      "doors": 4,
+      "products": 0,
+      "slabs": 3,
+      "spaces": 6,
+      "storeys": 3,
+      "walls": 15,
+      "windows": 15
+    },
+    "opening_fill": {
+      "doors": 4,
+      "windows": 15
+    }
+  },
+  "roof": {
+    "bottom_elevation_mm": 9300,
+    "id": "roof-slab",
+    "name": "平屋面",
+    "openings": [],
+    "polygon": [
+      [
+        -200,
+        -200
+      ],
+      [
+        10200,
+        -200
+      ],
+      [
+        10200,
+        8600
+      ],
+      [
+        -200,
+        8600
+      ],
+      [
+        -200,
+        -200
+      ]
+    ],
+    "source_key": "roof",
+    "thickness_mm": 150
+  },
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "semantic_authority_declared": true,
+  "semantic_expectations": [
+    {
+      "entity_id": "storey-1-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/0",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/1",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/2",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/3",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/4",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/5",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/6",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/7",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/8",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/9",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/10",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/11",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/12",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/13",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-partition",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/14",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "floor-slab-1",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/15",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "floor-slab-2",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/16",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "floor-slab-3",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/17",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "roof-slab",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/18",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-main",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/19",
+      "value": {
+        "template_id": "door-left",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/20",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-door-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/21",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-door-partition",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/22",
+      "value": {
+        "template_id": "door-right",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/23",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/24",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-north",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/25",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/26",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-east",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/27",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/28",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/29",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-north",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/30",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/31",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-east",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/32",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-south-1",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/33",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-south-2",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/34",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-north",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/35",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/36",
+      "value": {
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-east",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/37",
+      "value": {
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-south",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/38",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-north",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/39",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-west",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/40",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-east",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/41",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-1-wall-partition",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/42",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-south",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/43",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-north",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/44",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-west",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/45",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-east",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/46",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-2-wall-partition",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/47",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-south",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/48",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-north",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/49",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-west",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/50",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-east",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/51",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-3-wall-partition",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/52",
+      "value": {
+        "profile": "warm-residential",
+        "surface": "wall",
+        "surface_color": "浅暖色"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-south-1",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/53",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-south-2",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/54",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-north",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/55",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-west",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/56",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-1-window-east",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/57",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-south-1",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/58",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-south-2",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/59",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-north",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/60",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-west",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/61",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-2-window-east",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/62",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-south-1",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/63",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-south-2",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/64",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-north",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/65",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-west",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/66",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-3-window-east",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/67",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "glazing_transparency": "透明",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-main",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/68",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-1-door-partition",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/69",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-2-door-partition",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/70",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "profile": "warm-residential"
+      }
+    },
+    {
+      "entity_id": "storey-3-door-partition",
+      "kind": "appearance",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/71",
+      "value": {
+        "frame_color": "深色",
+        "frame_profile": "细框",
+        "profile": "warm-residential"
+      }
+    }
+  ],
+  "semantic_expectations_hash": "449ce46b35b35c6397e69566cd6d22d81fdb222f1f53410abf7e991275898d6b",
+  "semantic_projection_issues": [],
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [
+    {
+      "id": "floor-slab-1",
+      "name": "首层地坪",
+      "polygon": [
+        [
+          -200,
+          -200
+        ],
+        [
+          10200,
+          -200
+        ],
+        [
+          10200,
+          8600
+        ],
+        [
+          -200,
+          8600
+        ],
+        [
+          -200,
+          -200
+        ]
+      ],
+      "storey": "storey-1",
+      "thickness_mm": 150,
+      "top_elevation_mm": 0
+    },
+    {
+      "id": "floor-slab-2",
+      "name": "二层楼板",
+      "openings": [
+        {
+          "bounds": {
+            "x": [
+              7500,
+              8700
+            ],
+            "y": [
+              1500,
+              6900
+            ]
+          },
+          "id": "storey-2-slab-opening-stair"
+        }
+      ],
+      "polygon": [
+        [
+          -200,
+          -200
+        ],
+        [
+          10200,
+          -200
+        ],
+        [
+          10200,
+          8600
+        ],
+        [
+          -200,
+          8600
+        ],
+        [
+          -200,
+          -200
+        ]
+      ],
+      "storey": "storey-2",
+      "thickness_mm": 150,
+      "top_elevation_mm": 3150
+    },
+    {
+      "id": "floor-slab-3",
+      "name": "三层楼板",
+      "openings": [
+        {
+          "bounds": {
+            "x": [
+              8800,
+              10000
+            ],
+            "y": [
+              1500,
+              6900
+            ]
+          },
+          "id": "storey-3-slab-opening-stair"
+        }
+      ],
+      "polygon": [
+        [
+          -200,
+          -200
+        ],
+        [
+          10200,
+          -200
+        ],
+        [
+          10200,
+          8600
+        ],
+        [
+          -200,
+          8600
+        ],
+        [
+          -200,
+          -200
+        ]
+      ],
+      "storey": "storey-3",
+      "thickness_mm": 150,
+      "top_elevation_mm": 6300
+    }
+  ],
+  "source": {
+    "design_brief_schema_version": "text2ifc/design-brief/2.2",
+    "language": "zh-CN",
+    "status": "ready"
+  },
+  "source_paths": {
+    "/known_facts/appearance": [
+      "turn-user-001"
+    ],
+    "/known_facts/building": [
+      "turn-user-001"
+    ],
+    "/known_facts/floor_slabs": [
+      "turn-user-001",
+      "turn-user-003"
+    ],
+    "/known_facts/roof_slab": [
+      "turn-user-001"
+    ],
+    "/known_facts/semantic_requirements": [
+      "turn-user-001",
+      "turn-user-003"
+    ],
+    "/known_facts/semantic_review": [
+      "turn-user-001",
+      "turn-user-003"
+    ],
+    "/known_facts/stairs": [
+      "turn-user-001",
+      "turn-user-003"
+    ],
+    "/known_facts/storeys/0": [
+      "turn-user-001",
+      "turn-user-003"
+    ],
+    "/known_facts/storeys/1": [
+      "turn-user-001",
+      "turn-user-003"
+    ],
+    "/known_facts/storeys/2": [
+      "turn-user-001",
+      "turn-user-003"
+    ]
+  },
+  "space_counts_by_storey": {
+    "storey-1": 2,
+    "storey-2": 2,
+    "storey-3": 2
+  },
+  "spaces": [
+    {
+      "bounds": {
+        "x": [
+          0,
+          7300
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "id": "storey-1-space-hall",
+      "name": "接待阅览厅",
+      "source_key": "首层.spaces[1]",
+      "storey": "storey-1"
+    },
+    {
+      "bounds": {
+        "x": [
+          7500,
+          10000
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "id": "storey-1-space-stairwell",
+      "name": "楼梯间",
+      "source_key": "首层.spaces[2]",
+      "storey": "storey-1"
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          7300
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "id": "storey-2-space-hall",
+      "name": "安静阅览厅",
+      "source_key": "二层.spaces[1]",
+      "storey": "storey-2"
+    },
+    {
+      "bounds": {
+        "x": [
+          7500,
+          10000
+        ],
+        "y": [
+          6900,
+          8400
+        ]
+      },
+      "id": "storey-2-space-platform",
+      "name": "换向平台",
+      "source_key": "二层.spaces[2]",
+      "storey": "storey-2"
+    },
+    {
+      "bounds": {
+        "x": [
+          0,
+          7300
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "id": "storey-3-space-hall",
+      "name": "多功能活动厅",
+      "source_key": "三层.spaces[1]",
+      "storey": "storey-3"
+    },
+    {
+      "bounds": {
+        "x": [
+          7500,
+          10000
+        ],
+        "y": [
+          0,
+          1500
+        ]
+      },
+      "id": "storey-3-space-platform",
+      "name": "到达平台",
+      "source_key": "三层.spaces[2]",
+      "storey": "storey-3"
+    }
+  ],
+  "stairs": [
+    {
+      "bounds": {
+        "x": [
+          7500,
+          8700
+        ],
+        "y": [
+          1500,
+          6900
+        ]
+      },
+      "end_elevation_mm": 3150,
+      "from_storey": "storey-1",
+      "id": "stair-flight-1",
+      "number_of_risers": 18,
+      "number_of_treads": 18,
+      "opening_bounds": {
+        "x": [
+          7500,
+          8700
+        ],
+        "y": [
+          1500,
+          6900
+        ]
+      },
+      "riser_height_mm": 175,
+      "run_direction": "north",
+      "start_elevation_mm": 0,
+      "to_storey": "storey-2",
+      "tread_depth_mm": 300,
+      "width_mm": 1200
+    },
+    {
+      "bounds": {
+        "x": [
+          8800,
+          10000
+        ],
+        "y": [
+          1500,
+          6900
+        ]
+      },
+      "end_elevation_mm": 6300,
+      "from_storey": "storey-2",
+      "id": "stair-flight-2",
+      "number_of_risers": 18,
+      "number_of_treads": 18,
+      "opening_bounds": {
+        "x": [
+          8800,
+          10000
+        ],
+        "y": [
+          1500,
+          6900
+        ]
+      },
+      "riser_height_mm": 175,
+      "run_direction": "south",
+      "start_elevation_mm": 3150,
+      "to_storey": "storey-3",
+      "tread_depth_mm": 300,
+      "width_mm": 1200
+    }
+  ],
+  "storey_count": 3,
+  "storeys": [
+    {
+      "elevation_mm": 0,
+      "id": "storey-1",
+      "name": "首层",
+      "source_key": "首层"
+    },
+    {
+      "elevation_mm": 3150,
+      "id": "storey-2",
+      "name": "二层",
+      "source_key": "二层"
+    },
+    {
+      "elevation_mm": 6300,
+      "id": "storey-3",
+      "name": "三层",
+      "source_key": "三层"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 3,
+    "IfcDoor": 4,
+    "IfcSlab": 3,
+    "IfcSpace": 6,
+    "IfcWall": 15,
+    "IfcWindow": 15
+  },
+  "unresolved_expectations": [],
+  "walls": [
+    {
+      "bounds": {
+        "x": [
+          -200,
+          10200
+        ],
+        "y": [
+          -200,
+          0
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-south",
+      "side": "south",
+      "source_key": "storey-1.walls.exterior[1]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          10200
+        ],
+        "y": [
+          8400,
+          8600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-north",
+      "side": "north",
+      "source_key": "storey-1.walls.exterior[2]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          0
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-west",
+      "side": "west",
+      "source_key": "storey-1.walls.exterior[3]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          10000,
+          10200
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-1-wall-east",
+      "side": "east",
+      "source_key": "storey-1.walls.exterior[4]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          7300,
+          7500
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "connects": [
+        "storey-1-space-hall",
+        "storey-1-space-stairwell"
+      ],
+      "height_mm": 3000,
+      "id": "storey-1-wall-partition",
+      "source_key": "storey-1.walls.interior[5]",
+      "storey": "storey-1",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          10200
+        ],
+        "y": [
+          -200,
+          0
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-south",
+      "side": "south",
+      "source_key": "storey-2.walls.exterior[1]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          10200
+        ],
+        "y": [
+          8400,
+          8600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-north",
+      "side": "north",
+      "source_key": "storey-2.walls.exterior[2]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          0
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-west",
+      "side": "west",
+      "source_key": "storey-2.walls.exterior[3]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          10000,
+          10200
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-2-wall-east",
+      "side": "east",
+      "source_key": "storey-2.walls.exterior[4]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          7300,
+          7500
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "connects": [
+        "storey-2-space-hall",
+        "storey-2-space-platform"
+      ],
+      "height_mm": 3000,
+      "id": "storey-2-wall-partition",
+      "source_key": "storey-2.walls.interior[5]",
+      "storey": "storey-2",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          10200
+        ],
+        "y": [
+          -200,
+          0
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-south",
+      "side": "south",
+      "source_key": "storey-3.walls.exterior[1]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          10200
+        ],
+        "y": [
+          8400,
+          8600
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-north",
+      "side": "north",
+      "source_key": "storey-3.walls.exterior[2]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          -200,
+          0
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-west",
+      "side": "west",
+      "source_key": "storey-3.walls.exterior[3]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          10000,
+          10200
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "height_mm": 3000,
+      "id": "storey-3-wall-east",
+      "side": "east",
+      "source_key": "storey-3.walls.exterior[4]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    },
+    {
+      "bounds": {
+        "x": [
+          7300,
+          7500
+        ],
+        "y": [
+          0,
+          8400
+        ]
+      },
+      "connects": [
+        "storey-3-space-hall",
+        "storey-3-space-platform"
+      ],
+      "height_mm": 3000,
+      "id": "storey-3-wall-partition",
+      "source_key": "storey-3.walls.interior[5]",
+      "storey": "storey-3",
+      "thickness_mm": 200
+    }
+  ],
+  "window_counts_by_storey": {
+    "storey-1": 5,
+    "storey-2": 5,
+    "storey-3": 5
+  },
+  "windows": [
+    {
+      "center_global_mm": [
+        1700,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 1700,
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-south",
+      "id": "storey-1-window-south-1",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "首层.window[1]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        5900,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 5900,
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-south",
+      "id": "storey-1-window-south-2",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "首层.window[2]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        3800,
+        8500
+      ],
+      "center_offset_from_net_west_mm": 3800,
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-north",
+      "id": "storey-1-window-north",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "首层.window[3]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 2400
+    },
+    {
+      "center_global_mm": [
+        -100,
+        4200
+      ],
+      "center_offset_from_net_south_mm": 4200,
+      "height_mm": 1500,
+      "host_wall": "storey-1-wall-west",
+      "id": "storey-1-window-west",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "首层.window[4]",
+      "storey": "storey-1",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10100,
+        4200
+      ],
+      "center_offset_from_net_south_mm": 4200,
+      "height_mm": 1800,
+      "host_wall": "storey-1-wall-east",
+      "id": "storey-1-window-east",
+      "panel_count": 1,
+      "sill_height_mm": 600,
+      "source_key": "首层.window[5]",
+      "storey": "storey-1",
+      "template_id": "window-single",
+      "width_mm": 900
+    },
+    {
+      "center_global_mm": [
+        1700,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 1700,
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-south",
+      "id": "storey-2-window-south-1",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "二层.window[1]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        5900,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 5900,
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-south",
+      "id": "storey-2-window-south-2",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "二层.window[2]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        3800,
+        8500
+      ],
+      "center_offset_from_net_west_mm": 3800,
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-north",
+      "id": "storey-2-window-north",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "二层.window[3]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 2400
+    },
+    {
+      "center_global_mm": [
+        -100,
+        4200
+      ],
+      "center_offset_from_net_south_mm": 4200,
+      "height_mm": 1500,
+      "host_wall": "storey-2-wall-west",
+      "id": "storey-2-window-west",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "二层.window[4]",
+      "storey": "storey-2",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10100,
+        4200
+      ],
+      "center_offset_from_net_south_mm": 4200,
+      "height_mm": 1800,
+      "host_wall": "storey-2-wall-east",
+      "id": "storey-2-window-east",
+      "panel_count": 1,
+      "sill_height_mm": 600,
+      "source_key": "二层.window[5]",
+      "storey": "storey-2",
+      "template_id": "window-single",
+      "width_mm": 900
+    },
+    {
+      "center_global_mm": [
+        1700,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 1700,
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-south",
+      "id": "storey-3-window-south-1",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "三层.window[1]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        5900,
+        -100
+      ],
+      "center_offset_from_net_west_mm": 5900,
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-south",
+      "id": "storey-3-window-south-2",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "三层.window[2]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        3800,
+        8500
+      ],
+      "center_offset_from_net_west_mm": 3800,
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-north",
+      "id": "storey-3-window-north",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "三层.window[3]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 2400
+    },
+    {
+      "center_global_mm": [
+        -100,
+        4200
+      ],
+      "center_offset_from_net_south_mm": 4200,
+      "height_mm": 1500,
+      "host_wall": "storey-3-wall-west",
+      "id": "storey-3-window-west",
+      "panel_count": 2,
+      "sill_height_mm": 900,
+      "source_key": "三层.window[4]",
+      "storey": "storey-3",
+      "template_id": "window-double-vertical",
+      "width_mm": 1800
+    },
+    {
+      "center_global_mm": [
+        10100,
+        4200
+      ],
+      "center_offset_from_net_south_mm": 4200,
+      "height_mm": 1800,
+      "host_wall": "storey-3-wall-east",
+      "id": "storey-3-window-east",
+      "panel_count": 1,
+      "sill_height_mm": 600,
+      "source_key": "三层.window[5]",
+      "storey": "storey-3",
+      "template_id": "window-single",
+      "width_mm": 900
+    }
+  ]
+}

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="17" time="2.377" timestamp="2026-09-10T08:15:17.233429+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension-]" time="0.030" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension- ]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = ' ', conflict = False
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension-\t\r\n]" time="0.003"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = '\t\r\n', conflict = False
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension-\u3000]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = '\u3000', conflict = False
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict-]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict- ]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = ' ', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict-\t\r\n]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = '\t\r\n', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict-\u3000]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = '\u3000', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[needs_clarification]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'needs_clarification'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[ready]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'ready'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[draft_required]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'draft_required'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[blocked]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'blocked'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_nonblank_answer_is_preserved_and_result_is_not_forced_ready[  \u5899\u539a\u4e3a200\u6beb\u7c73\u3002\n-ready]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_nonblank_answer_is_preserved_and_result_is_not_forced_ready[  \u6211\u4e0d\u77e5\u9053\u3002\n-draft_required]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_nonblank_answer_is_preserved_and_result_is_not_forced_ready[\u5148\u786e\u8ba4\u5899\u539a\uff0c\u5176\u4ed6\u95ee\u9898\u8fd8\u9700\u8981\u8ba8\u8bba\u3002-needs_clarification]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable[initial-loop]" time="0.269"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/clarification-boundary-red-valid-20260910/test_public_loop_rejects_blank0')
+resume = False
+
+    @pytest.mark.parametrize("resume", [False, True], ids=["initial-loop", "reopened-session"])
+    def test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable(tmp_path, resume):
+        db = tmp_path / "sessions.sqlite"
+        store = SessionStore.open(db, artifact_root=tmp_path)
+        session = store.create_session(original_input=REQUEST)
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            brief = _pending(conflict=True) if index == 1 else _brief(status="ready")
+            directory = session.run_dir / "calls" / f"{index:02d}-design-brief"
+            directory.mkdir(parents=True, exist_ok=False)
+            (directory / "design-brief.json").write_text(json.dumps(brief), encoding="utf-8")
+            (directory / "context-selection.json").write_text(
+                json.dumps({"evidence": EVIDENCE}), encoding="utf-8"
+            )
+            return _call(index, brief)
+    
+        try:
+            if resume:
+                run_design_brief_clarification_loop(
+                    store=store, session=session.session_hash,
+                    invoke_design_brief=invoke, user_answers=[],
+                )
+                store.close()
+                store = SessionStore.open(db, artifact_root=tmp_path)
+    
+&gt;           with pytest.raises(ClarificationError, match="non-empty"):
+E           Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:113: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable[reopened-session]" time="0.366"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/clarification-boundary-red-valid-20260910/test_public_loop_rejects_blank1')
+resume = True
+
+    @pytest.mark.parametrize("resume", [False, True], ids=["initial-loop", "reopened-session"])
+    def test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable(tmp_path, resume):
+        db = tmp_path / "sessions.sqlite"
+        store = SessionStore.open(db, artifact_root=tmp_path)
+        session = store.create_session(original_input=REQUEST)
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            brief = _pending(conflict=True) if index == 1 else _brief(status="ready")
+            directory = session.run_dir / "calls" / f"{index:02d}-design-brief"
+            directory.mkdir(parents=True, exist_ok=False)
+            (directory / "design-brief.json").write_text(json.dumps(brief), encoding="utf-8")
+            (directory / "context-selection.json").write_text(
+                json.dumps({"evidence": EVIDENCE}), encoding="utf-8"
+            )
+            return _call(index, brief)
+    
+        try:
+            if resume:
+                run_design_brief_clarification_loop(
+                    store=store, session=session.session_hash,
+                    invoke_design_brief=invoke, user_answers=[],
+                )
+                store.close()
+                store = SessionStore.open(db, artifact_root=tmp_path)
+    
+&gt;           with pytest.raises(ClarificationError, match="non-empty"):
+E           Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:113: Failed</failure></testcase></testsuite></testsuites>

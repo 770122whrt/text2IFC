@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="17" time="5.946" timestamp="2026-09-10T09:05:37.049495+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_design_review_audit" name="test_public_audit_preserves_design_problem_separately_from_technical_acceptance[retain-retained_known_issue]" time="0.330" /><testcase classname="tests.agent.test_design_review_audit" name="test_public_audit_preserves_design_problem_separately_from_technical_acceptance[revise-not_verified]" time="0.269" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[drop]" time="0.285" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[erase]" time="0.309" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[duplicate]" time="0.274" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[unknown]" time="0.361" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[bad_evidence]" time="0.361" /><testcase classname="tests.agent.test_design_review_audit" name="test_audit_cannot_omit_erase_or_fabricate_acknowledged_issue[downgrade]" time="0.432" /><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[quote]" time="0.088" /><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[assistant]" time="0.089" /><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[stale]" time="0.077" /><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[evidence]" time="0.063" /><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[pending]" time="0.054" /><testcase classname="tests.agent.test_design_review_audit" name="test_invalid_confirmation_context_stops_before_provider[duplicate]" time="0.068" /><testcase classname="tests.agent.test_design_review_audit" name="test_current_brief_entries_use_new_decision_prompt_without_rewriting_old_versions" time="0.086"><failure message="AssertionError: assert 'design-brief.v2.3' == 'design-brief.v2.4'&#10;  &#10;  - design-brief.v2.4&#10;  ?                 ^&#10;  + design-brief.v2.3&#10;  ?                 ^">def test_current_brief_entries_use_new_decision_prompt_without_rewriting_old_versions():
+        from text2ifc_agent import interactive_cli_flow, live_pipeline
+        from text2ifc_agent.prompt_registry import load_prompt_registry
+&gt;       assert interactive_cli_flow.DESIGN_BRIEF_TEMPLATE_ID == live_pipeline.DESIGN_BRIEF_TEMPLATE_ID == "design-brief.v2.4"
+E       AssertionError: assert 'design-brief.v2.3' == 'design-brief.v2.4'
+E         
+E         - design-brief.v2.4
+E         ?                 ^
+E         + design-brief.v2.3
+E         ?                 ^
+
+tests\agent\test_design_review_audit.py:124: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_final_acceptance_rechecks_the_same_context_before_compile[removed]" time="0.439"><failure message="AssertionError: must not compile after changed review context">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-final-red-20260910/test_final_acceptance_rechecks0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000258D541EDB0&gt;
+change = 'removed'
+
+    @pytest.mark.parametrize("change", ["removed", "rebound"])
+    def test_final_acceptance_rechecks_the_same_context_before_compile(tmp_path, monkeypatch, change):
+        from text2ifc_agent import live_pipeline
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        result = run_audit_report_stage(provider=_RecordingLiveProvider(_audit()), case_dir=root, case_id=change)
+        assert result["valid"]
+        if change == "removed":
+            (root / "design-review-context.json").unlink()  # Only this isolated pytest fixture.
+        else:
+            context["concerns"][0]["description"] = "篡改了冻结的问题描述"
+            (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        calls = []
+        def gate(**kwargs):
+            calls.append(kwargs)
+            raise AssertionError("must not compile after changed review context")
+        monkeypatch.setattr(live_pipeline, "run_candidate_gate_stage", gate)
+        with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+&gt;           live_pipeline.run_final_acceptance_stage(case_dir=root, output_dir=root, case_id=change)
+
+tests\agent\test_design_review_audit.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:1388: in run_final_acceptance_stage
+    gate_result = run_candidate_gate_stage(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'case_dir': WindowsPath('E:/code for project/bimnet/.tmp/design-review-final-red-20260910/test_final_acceptance_reche...indowsPath('E:/code for project/bimnet/.tmp/design-review-final-red-20260910/test_final_acceptance_rechecks0/removed')}
+
+    def gate(**kwargs):
+        calls.append(kwargs)
+&gt;       raise AssertionError("must not compile after changed review context")
+E       AssertionError: must not compile after changed review context
+
+tests\agent\test_design_review_audit.py:145: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_review_audit" name="test_final_acceptance_rechecks_the_same_context_before_compile[rebound]" time="0.399"><failure message="AssertionError: must not compile after changed review context">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/design-review-final-red-20260910/test_final_acceptance_rechecks1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x00000258D5441A30&gt;
+change = 'rebound'
+
+    @pytest.mark.parametrize("change", ["removed", "rebound"])
+    def test_final_acceptance_rechecks_the_same_context_before_compile(tmp_path, monkeypatch, change):
+        from text2ifc_agent import live_pipeline
+        root = _write_auditable_case_dir(tmp_path / change)
+        context = _context(root)
+        result = run_audit_report_stage(provider=_RecordingLiveProvider(_audit()), case_dir=root, case_id=change)
+        assert result["valid"]
+        if change == "removed":
+            (root / "design-review-context.json").unlink()  # Only this isolated pytest fixture.
+        else:
+            context["concerns"][0]["description"] = "篡改了冻结的问题描述"
+            (root / "design-review-context.json").write_text(json.dumps(context), encoding="utf-8")
+        calls = []
+        def gate(**kwargs):
+            calls.append(kwargs)
+            raise AssertionError("must not compile after changed review context")
+        monkeypatch.setattr(live_pipeline, "run_candidate_gate_stage", gate)
+        with pytest.raises(ValueError, match="DESIGN_REVIEW"):
+&gt;           live_pipeline.run_final_acceptance_stage(case_dir=root, output_dir=root, case_id=change)
+
+tests\agent\test_design_review_audit.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:1388: in run_final_acceptance_stage
+    gate_result = run_candidate_gate_stage(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'case_dir': WindowsPath('E:/code for project/bimnet/.tmp/design-review-final-red-20260910/test_final_acceptance_reche...indowsPath('E:/code for project/bimnet/.tmp/design-review-final-red-20260910/test_final_acceptance_rechecks1/rebound')}
+
+    def gate(**kwargs):
+        calls.append(kwargs)
+&gt;       raise AssertionError("must not compile after changed review context")
+E       AssertionError: must not compile after changed review context
+
+tests\agent\test_design_review_audit.py:145: AssertionError</failure></testcase></testsuite></testsuites>

@@ -1,0 +1,566 @@
+{
+  "evidence_class": "offline_exact_replay",
+  "candidate_sha256": "55246bdc8b54e31f645e88f3cf9f3d8c63591a3db6445af45d9c40e60c19b1a3",
+  "validation": {
+    "status": "invalid",
+    "classification": "formal",
+    "diagnostics": [
+      {
+        "code": "INVALID_IFC_ATTRIBUTE",
+        "path": "/entities/24/attributes/NumberOfRisers",
+        "message": "'NumberOfRisers' is not available on IfcStairFlight."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/29/attributes/Representation",
+        "message": "Explicit DoorStyle operation conflicts with the requested template hand."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/31/attributes/Representation",
+        "message": "Explicit DoorStyle operation conflicts with the requested template hand."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/31/attributes/Representation",
+        "message": "Filling, opening and wall axes must align in the bounded template contract."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/33/attributes/Representation",
+        "message": "Explicit DoorStyle operation conflicts with the requested template hand."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/33/attributes/Representation",
+        "message": "Filling, opening and wall axes must align in the bounded template contract."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/51/attributes/Representation",
+        "message": "Filling, opening and wall axes must align in the bounded template contract."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/53/attributes/Representation",
+        "message": "Filling, opening and wall axes must align in the bounded template contract."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/61/attributes/Representation",
+        "message": "Filling, opening and wall axes must align in the bounded template contract."
+      },
+      {
+        "code": "BASIC_FILLING_CONSTRAINT_CONFLICT",
+        "path": "/entities/63/attributes/Representation",
+        "message": "Filling, opening and wall axes must align in the bounded template contract."
+      }
+    ]
+  },
+  "ifc2x3_stair_attributes": [
+    "id",
+    "type",
+    "GlobalId",
+    "OwnerHistory",
+    "Name",
+    "Description",
+    "ObjectType",
+    "ObjectPlacement",
+    "Representation",
+    "Tag",
+    "NumberOfRiser",
+    "NumberOfTreads",
+    "RiserHeight",
+    "TreadLength"
+  ],
+  "diagnosis": "Unchanged validator reproduces the 10 real Generator output errors. No product defect or silent normalization established. Existing contract requires IFC2X3 NumberOfRiser (singular), matching door OperationType, and local axes inherited once from each host. No candidate edits and no compiler bypass.",
+  "affected_entities": {
+    "24": {
+      "attributes": {
+        "Name": "北向直跑梯段",
+        "NumberOfRisers": 18,
+        "ObjectPlacement": {
+          "axis": [
+            1,
+            0,
+            0
+          ],
+          "origin": [
+            7400,
+            1200,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "depth": 1200,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                0,
+                0
+              ],
+              [
+                0,
+                175
+              ],
+              [
+                300,
+                175
+              ],
+              [
+                300,
+                350
+              ],
+              [
+                600,
+                350
+              ],
+              [
+                600,
+                525
+              ],
+              [
+                900,
+                525
+              ],
+              [
+                900,
+                700
+              ],
+              [
+                1200,
+                700
+              ],
+              [
+                1200,
+                875
+              ],
+              [
+                1500,
+                875
+              ],
+              [
+                1500,
+                1050
+              ],
+              [
+                1800,
+                1050
+              ],
+              [
+                1800,
+                1225
+              ],
+              [
+                2100,
+                1225
+              ],
+              [
+                2100,
+                1400
+              ],
+              [
+                2400,
+                1400
+              ],
+              [
+                2400,
+                1575
+              ],
+              [
+                2700,
+                1575
+              ],
+              [
+                2700,
+                1750
+              ],
+              [
+                3000,
+                1750
+              ],
+              [
+                3000,
+                1925
+              ],
+              [
+                3300,
+                1925
+              ],
+              [
+                3300,
+                2100
+              ],
+              [
+                3600,
+                2100
+              ],
+              [
+                3600,
+                2275
+              ],
+              [
+                3900,
+                2275
+              ],
+              [
+                3900,
+                2450
+              ],
+              [
+                4200,
+                2450
+              ],
+              [
+                4200,
+                2625
+              ],
+              [
+                4500,
+                2625
+              ],
+              [
+                4500,
+                2800
+              ],
+              [
+                4800,
+                2800
+              ],
+              [
+                4800,
+                2975
+              ],
+              [
+                5100,
+                2975
+              ],
+              [
+                5100,
+                3150
+              ],
+              [
+                5400,
+                3150
+              ],
+              [
+                5400,
+                0
+              ],
+              [
+                0,
+                0
+              ]
+            ]
+          }
+        },
+        "RiserHeight": 175,
+        "TreadLength": 300
+      },
+      "id": "stair-flight-1",
+      "ifc_class": "IfcStairFlight",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "29": {
+      "attributes": {
+        "Name": "主入口",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "opening-storey-1-door-main"
+        },
+        "OverallHeight": 2400,
+        "OverallWidth": 1200,
+        "Representation": {
+          "depth": 200,
+          "height": 2400,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1200
+        }
+      },
+      "id": "door-storey-1-storey-1-door-main",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "31": {
+      "attributes": {
+        "Name": "首层分隔墙门",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-storey-1-door-partition"
+        },
+        "OverallHeight": 2100,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 2100,
+          "kind": "basic_filling",
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "door-storey-1-storey-1-door-partition",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "33": {
+      "attributes": {
+        "Name": "二层分隔墙门",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-storey-2-door-partition"
+        },
+        "OverallHeight": 2100,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 2100,
+          "kind": "basic_filling",
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "door-storey-2-storey-2-door-partition",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "51": {
+      "appearance": {
+        "transparency": 1.0
+      },
+      "attributes": {
+        "Name": "首层西窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-storey-1-window-west-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-1-storey-1-window-west-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "53": {
+      "appearance": {
+        "transparency": 1.0
+      },
+      "attributes": {
+        "Name": "首层东窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-storey-1-window-east-1"
+        },
+        "OverallHeight": 1800,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 1800,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "window-storey-1-storey-1-window-east-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "61": {
+      "appearance": {
+        "transparency": 1.0
+      },
+      "attributes": {
+        "Name": "二层西窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-storey-2-window-west-1"
+        },
+        "OverallHeight": 1500,
+        "OverallWidth": 1800,
+        "Representation": {
+          "depth": 200,
+          "height": 1500,
+          "kind": "basic_filling",
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1800
+        }
+      },
+      "id": "window-storey-2-storey-2-window-west-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    "63": {
+      "appearance": {
+        "transparency": 1.0
+      },
+      "attributes": {
+        "Name": "二层东窗",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            0,
+            1,
+            0
+          ],
+          "relative_to": "opening-storey-2-window-east-1"
+        },
+        "OverallHeight": 1800,
+        "OverallWidth": 900,
+        "Representation": {
+          "depth": 200,
+          "height": 1800,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 900
+        }
+      },
+      "id": "window-storey-2-storey-2-window-east-1",
+      "ifc_class": "IfcWindow",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    }
+  }
+}

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="15" time="9.156" timestamp="2026-09-10T14:50:02.857068+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_semantic_correction" name="test_public_cleanup_restores_only_request_values_and_reopens[alpha]" time="0.561"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': &quot;Path '/materials' is outside the auth...ll-1' is outside the allowed scope.&quot;, 'path': '/operations/0/target_id'}], 'preservation': None, 'revision': None, ...}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_public_cleanup_restores_o0')
+prefix = 'alpha'
+
+    @pytest.mark.parametrize('prefix', ['alpha', 'opaque-71', 'building-z'])
+    def test_public_cleanup_restores_only_request_values_and_reopens(tmp_path, prefix):
+        data = fixture(prefix=prefix)
+        result, provider = run_round(tmp_path, data, edits_for(data))
+&gt;       assert result['valid'], result
+E       AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': "Path '/materials' is outside the auth...ll-1' is outside the allowed scope.", 'path': '/operations/0/target_id'}], 'preservation': None, 'revision': None, ...}
+E       assert False
+
+tests\agent\test_generation_semantic_correction.py:108: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_public_cleanup_restores_only_request_values_and_reopens[opaque-71]" time="0.500"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': &quot;Path '/materials' is outside the auth...ll-1' is outside the allowed scope.&quot;, 'path': '/operations/0/target_id'}], 'preservation': None, 'revision': None, ...}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_public_cleanup_restores_o1')
+prefix = 'opaque-71'
+
+    @pytest.mark.parametrize('prefix', ['alpha', 'opaque-71', 'building-z'])
+    def test_public_cleanup_restores_only_request_values_and_reopens(tmp_path, prefix):
+        data = fixture(prefix=prefix)
+        result, provider = run_round(tmp_path, data, edits_for(data))
+&gt;       assert result['valid'], result
+E       AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': "Path '/materials' is outside the auth...ll-1' is outside the allowed scope.", 'path': '/operations/0/target_id'}], 'preservation': None, 'revision': None, ...}
+E       assert False
+
+tests\agent\test_generation_semantic_correction.py:108: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_public_cleanup_restores_only_request_values_and_reopens[building-z]" time="0.491"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': &quot;Path '/materials' is outside the auth...ll-1' is outside the allowed scope.&quot;, 'path': '/operations/0/target_id'}], 'preservation': None, 'revision': None, ...}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_public_cleanup_restores_o2')
+prefix = 'building-z'
+
+    @pytest.mark.parametrize('prefix', ['alpha', 'opaque-71', 'building-z'])
+    def test_public_cleanup_restores_only_request_values_and_reopens(tmp_path, prefix):
+        data = fixture(prefix=prefix)
+        result, provider = run_round(tmp_path, data, edits_for(data))
+&gt;       assert result['valid'], result
+E       AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': "Path '/materials' is outside the auth...ll-1' is outside the allowed scope.", 'path': '/operations/0/target_id'}], 'preservation': None, 'revision': None, ...}
+E       assert False
+
+tests\agent\test_generation_semantic_correction.py:108: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_mixed_type_members_keep_legal_group_and_direct_values" time="0.496"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': &quot;Path '/property_sets' is outside the authorized field scope.&quot;, 'path': '/operations/0/changes/~1property_sets'}], 'preservation': None, 'revision': None, ...}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_mixed_type_members_keep_l0')
+
+    def test_mixed_type_members_keep_legal_group_and_direct_values(tmp_path):
+        data = fixture(shared=True)
+        # Already correct direct values must not be changed while trimming membership.
+        req = data[1]['known_facts']['semantic_requirements'][0]
+        data[3]['materials'], data[3]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+        edits = edits_for(data, shared=True)
+        edits.pop(data[3]['id'])
+        result, _ = run_round(tmp_path, data, edits)
+&gt;       assert result['valid'], result
+E       AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': "Path '/property_sets' is outside the authorized field scope.", 'path': '/operations/0/changes/~1property_sets'}], 'preservation': None, 'revision': None, ...}
+E       assert False
+
+tests\agent\test_generation_semantic_correction.py:138: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[partial]" time="0.483" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[geometry]" time="0.417" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[wrong_material]" time="0.442" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[erase_requested]" time="0.388" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_bad_cleanup_is_atomic_and_never_published[other_member]" time="0.426" /><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[inherited]" time="0.486"><failure message="AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]&#10; +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FC8FB830&gt;.calls">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_unproven_cleanup_stops_be0')
+conflict = 'inherited'
+
+    @pytest.mark.parametrize('conflict', ['inherited', 'unknown_reference', 'conflicting_frozen_value', 'requested_type_semantics'])
+    def test_unproven_cleanup_stops_before_transport(tmp_path, conflict):
+        data = fixture(inherited=conflict == 'inherited')
+        if conflict == 'unknown_reference':
+            # A declared non-Type relation is not an authorized implicit cascade.
+            relation = _relation('unknown-reference', data[5]['id'], [data[3]['id']])
+            relation['ifc_class'] = 'IfcRelAssociatesClassification'
+            relation['attributes'] = {'RelatingClassification': data[5]['id'], 'RelatedObjects': [data[3]['id']]}
+            data[0]['relationships'].append(relation)
+        elif conflict == 'conflicting_frozen_value':
+            data[2]['semantic_expectations'][0]['value'] = {'kind': 'single_material', 'name': 'Different frozen material'}
+        elif conflict == 'requested_type_semantics':
+            data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'], 'material': data[5]['materials'][0]})
+        result, provider = run_round(tmp_path, data, edits_for(data))
+        assert not result['valid']
+&gt;       assert not provider.calls
+E       AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]
+E        +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FC8FB830&gt;.calls
+
+tests\agent\test_generation_semantic_correction.py:182: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[unknown_reference]" time="0.432"><failure message="AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]&#10; +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FC083DA0&gt;.calls">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_unproven_cleanup_stops_be1')
+conflict = 'unknown_reference'
+
+    @pytest.mark.parametrize('conflict', ['inherited', 'unknown_reference', 'conflicting_frozen_value', 'requested_type_semantics'])
+    def test_unproven_cleanup_stops_before_transport(tmp_path, conflict):
+        data = fixture(inherited=conflict == 'inherited')
+        if conflict == 'unknown_reference':
+            # A declared non-Type relation is not an authorized implicit cascade.
+            relation = _relation('unknown-reference', data[5]['id'], [data[3]['id']])
+            relation['ifc_class'] = 'IfcRelAssociatesClassification'
+            relation['attributes'] = {'RelatingClassification': data[5]['id'], 'RelatedObjects': [data[3]['id']]}
+            data[0]['relationships'].append(relation)
+        elif conflict == 'conflicting_frozen_value':
+            data[2]['semantic_expectations'][0]['value'] = {'kind': 'single_material', 'name': 'Different frozen material'}
+        elif conflict == 'requested_type_semantics':
+            data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'], 'material': data[5]['materials'][0]})
+        result, provider = run_round(tmp_path, data, edits_for(data))
+        assert not result['valid']
+&gt;       assert not provider.calls
+E       AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]
+E        +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FC083DA0&gt;.calls
+
+tests\agent\test_generation_semantic_correction.py:182: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[conflicting_frozen_value]" time="0.523"><failure message="AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]&#10; +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FCC3DB20&gt;.calls">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_unproven_cleanup_stops_be2')
+conflict = 'conflicting_frozen_value'
+
+    @pytest.mark.parametrize('conflict', ['inherited', 'unknown_reference', 'conflicting_frozen_value', 'requested_type_semantics'])
+    def test_unproven_cleanup_stops_before_transport(tmp_path, conflict):
+        data = fixture(inherited=conflict == 'inherited')
+        if conflict == 'unknown_reference':
+            # A declared non-Type relation is not an authorized implicit cascade.
+            relation = _relation('unknown-reference', data[5]['id'], [data[3]['id']])
+            relation['ifc_class'] = 'IfcRelAssociatesClassification'
+            relation['attributes'] = {'RelatingClassification': data[5]['id'], 'RelatedObjects': [data[3]['id']]}
+            data[0]['relationships'].append(relation)
+        elif conflict == 'conflicting_frozen_value':
+            data[2]['semantic_expectations'][0]['value'] = {'kind': 'single_material', 'name': 'Different frozen material'}
+        elif conflict == 'requested_type_semantics':
+            data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'], 'material': data[5]['materials'][0]})
+        result, provider = run_round(tmp_path, data, edits_for(data))
+        assert not result['valid']
+&gt;       assert not provider.calls
+E       AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]
+E        +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FCC3DB20&gt;.calls
+
+tests\agent\test_generation_semantic_correction.py:182: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unproven_cleanup_stops_before_transport[requested_type_semantics]" time="0.506"><failure message="AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]&#10; +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FCA94530&gt;.calls">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_unproven_cleanup_stops_be3')
+conflict = 'requested_type_semantics'
+
+    @pytest.mark.parametrize('conflict', ['inherited', 'unknown_reference', 'conflicting_frozen_value', 'requested_type_semantics'])
+    def test_unproven_cleanup_stops_before_transport(tmp_path, conflict):
+        data = fixture(inherited=conflict == 'inherited')
+        if conflict == 'unknown_reference':
+            # A declared non-Type relation is not an authorized implicit cascade.
+            relation = _relation('unknown-reference', data[5]['id'], [data[3]['id']])
+            relation['ifc_class'] = 'IfcRelAssociatesClassification'
+            relation['attributes'] = {'RelatingClassification': data[5]['id'], 'RelatedObjects': [data[3]['id']]}
+            data[0]['relationships'].append(relation)
+        elif conflict == 'conflicting_frozen_value':
+            data[2]['semantic_expectations'][0]['value'] = {'kind': 'single_material', 'name': 'Different frozen material'}
+        elif conflict == 'requested_type_semantics':
+            data[1]['known_facts']['semantic_requirements'].append({'entity_id': data[5]['id'], 'material': data[5]['materials'][0]})
+        result, provider = run_round(tmp_path, data, edits_for(data))
+        assert not result['valid']
+&gt;       assert not provider.calls
+E       AssertionError: assert not [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}]
+E        +  where [{'prompt': '最高优先级输出协议\n\n你的整个回答必须是一个裸 JSON 对象。第一个非空白字符必须是左花括号，最后一个非空白字符必须是右花括号。禁止 Markdown 代码围栏、解释、前言、结语或第二个对象。\n\n角色...hase6.5-semantic-family-changeset-01', 'state': {'call_index': 1, 'case_id': 'semantic-family', 'stage': 'changeset'}}] = &lt;tests.agent.test_generation_semantic_correction.PatchProvider object at 0x000001D2FCA94530&gt;.calls
+
+tests\agent\test_generation_semantic_correction.py:182: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_field_permission_does_not_authorize_deleting_a_requested_type" time="0.767"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_field_permission_does_not0')
+
+    def test_field_permission_does_not_authorize_deleting_a_requested_type(tmp_path):
+        data = fixture(shared=True)
+        result, _ = run_round(tmp_path, data, {data[5]['id']: {'op': 'remove_entity'},
+            data[6]['id']: {'op': 'remove_relationship'}})
+&gt;       assert not result['valid']
+E       assert not True
+
+tests\agent\test_generation_semantic_correction.py:190: AssertionError</failure></testcase><testcase classname="tests.agent.test_generation_semantic_correction" name="test_unrequested_property_removal_preserves_requested_siblings" time="0.453"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': &quot;Path '/property_sets' is outside the authorized field scope.&quot;, 'path': '/operations/0/changes/~1property_sets'}], 'preservation': None, 'revision': None, ...}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-semantic-correction-red-20260910/test_unrequested_property_remo0')
+
+    def test_unrequested_property_removal_preserves_requested_siblings(tmp_path):
+        data = fixture(shared=True)
+        data[6]['attributes']['RelatedObjects'] = [data[3]['id']]
+        data[5]['materials'], data[5]['property_sets'] = [], {}
+        req = data[1]['known_facts']['semantic_requirements'][0]
+        data[3]['materials'], data[3]['property_sets'] = [req['material']], copy.deepcopy(req['property_sets'])
+        data[3]['property_sets']['Pset_WallCommon']['ThermalTransmittance'] = 0
+        result, _ = run_round(tmp_path, data, {data[3]['id']: {'op': 'update_entity', 'changes': {'/property_sets': req['property_sets']}}})
+&gt;       assert result['valid'], result
+E       AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': "Path '/property_sets' is outside the authorized field scope.", 'path': '/operations/0/changes/~1property_sets'}], 'preservation': None, 'revision': None, ...}
+E       assert False
+
+tests\agent\test_generation_semantic_correction.py:201: AssertionError</failure></testcase></testsuite></testsuites>

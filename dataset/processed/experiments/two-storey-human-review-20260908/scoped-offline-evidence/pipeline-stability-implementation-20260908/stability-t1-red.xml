@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="9" time="2.347" timestamp="2026-09-08T22:40:39.698447+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcWindowStyle-ConstructionType-ALUMINIUM-WINDOW]" time="0.268"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">cls = 'IfcWindowStyle', field = 'ConstructionType', valid = 'ALUMINIUM'
+invalid = 'WINDOW'
+
+    @pytest.mark.parametrize('cls,field,valid,invalid', [
+        ('IfcWindowStyle', 'ConstructionType', 'ALUMINIUM', 'WINDOW'),
+        ('IfcDoorStyle', 'OperationType', 'SINGLE_SWING_LEFT', 'LEFT'),
+        ('IfcSlab', 'PredefinedType', 'FLOOR', 'WALL'),
+    ])
+    def test_enum_choices_match_actual_ifc_validation(cls, field, valid, invalid):
+        from text2ifc_contract.validation_v2 import _attribute_type_matches
+        from text2ifc_knowledge.registry import load_ifc2x3_registry
+&gt;       a = contract([cls])['classes'][cls]['attributes'][field]
+            ^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_authoring_contract.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcWindowStyle']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcDoorStyle-OperationType-SINGLE_SWING_LEFT-LEFT]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">cls = 'IfcDoorStyle', field = 'OperationType', valid = 'SINGLE_SWING_LEFT'
+invalid = 'LEFT'
+
+    @pytest.mark.parametrize('cls,field,valid,invalid', [
+        ('IfcWindowStyle', 'ConstructionType', 'ALUMINIUM', 'WINDOW'),
+        ('IfcDoorStyle', 'OperationType', 'SINGLE_SWING_LEFT', 'LEFT'),
+        ('IfcSlab', 'PredefinedType', 'FLOOR', 'WALL'),
+    ])
+    def test_enum_choices_match_actual_ifc_validation(cls, field, valid, invalid):
+        from text2ifc_contract.validation_v2 import _attribute_type_matches
+        from text2ifc_knowledge.registry import load_ifc2x3_registry
+&gt;       a = contract([cls])['classes'][cls]['attributes'][field]
+            ^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_authoring_contract.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcDoorStyle']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_enum_choices_match_actual_ifc_validation[IfcSlab-PredefinedType-FLOOR-WALL]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">cls = 'IfcSlab', field = 'PredefinedType', valid = 'FLOOR', invalid = 'WALL'
+
+    @pytest.mark.parametrize('cls,field,valid,invalid', [
+        ('IfcWindowStyle', 'ConstructionType', 'ALUMINIUM', 'WINDOW'),
+        ('IfcDoorStyle', 'OperationType', 'SINGLE_SWING_LEFT', 'LEFT'),
+        ('IfcSlab', 'PredefinedType', 'FLOOR', 'WALL'),
+    ])
+    def test_enum_choices_match_actual_ifc_validation(cls, field, valid, invalid):
+        from text2ifc_contract.validation_v2 import _attribute_type_matches
+        from text2ifc_knowledge.registry import load_ifc2x3_registry
+&gt;       a = contract([cls])['classes'][cls]['attributes'][field]
+            ^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_authoring_contract.py:22: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcSlab']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_field_names_and_compiler_boundary_are_not_guessed" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">def test_field_names_and_compiler_boundary_are_not_guessed():
+&gt;       attrs = contract(['IfcStairFlight'])['classes']['IfcStairFlight']['attributes']
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_authoring_contract.py:29: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcStairFlight']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcNotAClass]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">unsupported = 'IfcNotAClass'
+
+    @pytest.mark.parametrize('unsupported', ['IfcNotAClass', 'IfcCartesianPoint', 'IfcOwnerHistory'])
+    def test_unknown_and_compiler_only_classes_fail_closed(unsupported):
+        with pytest.raises(ValueError):
+&gt;           contract([unsupported])
+
+tests\agent\test_generation_authoring_contract.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcNotAClass']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcCartesianPoint]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">unsupported = 'IfcCartesianPoint'
+
+    @pytest.mark.parametrize('unsupported', ['IfcNotAClass', 'IfcCartesianPoint', 'IfcOwnerHistory'])
+    def test_unknown_and_compiler_only_classes_fail_closed(unsupported):
+        with pytest.raises(ValueError):
+&gt;           contract([unsupported])
+
+tests\agent\test_generation_authoring_contract.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcCartesianPoint']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_unknown_and_compiler_only_classes_fail_closed[IfcOwnerHistory]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">unsupported = 'IfcOwnerHistory'
+
+    @pytest.mark.parametrize('unsupported', ['IfcNotAClass', 'IfcCartesianPoint', 'IfcOwnerHistory'])
+    def test_unknown_and_compiler_only_classes_fail_closed(unsupported):
+        with pytest.raises(ValueError):
+&gt;           contract([unsupported])
+
+tests\agent\test_generation_authoring_contract.py:38: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcOwnerHistory']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_scoped_contract_hash_is_deterministic_and_no_defaults_invented" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'">def test_scoped_contract_hash_is_deterministic_and_no_defaults_invented():
+&gt;       a = contract(['IfcWindowStyle', 'IfcWall'])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_generation_authoring_contract.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+classes = ['IfcWindowStyle', 'IfcWall']
+
+    def contract(classes=None):
+&gt;       from text2ifc_agent.authoring_contract import build_authoring_contract
+E       ModuleNotFoundError: No module named 'text2ifc_agent.authoring_contract'
+
+tests\agent\test_generation_authoring_contract.py:10: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_generation_authoring_contract" name="test_generator_receives_registered_new_contract_without_rewriting_old_prompt" time="1.612"><failure message="AssertionError: assert 'IFC_AUTHORING_CONTRACT' in {'CAPABILITY_PROFILE': {'ifc_generation_capabilities': [], 'schema_version': 'text2ifc/generator-capability-profile/2..../1.1/schema.json', '$schema': 'https://json-schema.org/draft/2020-12/schema', 'additionalProperties': False, ...}, ...}">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-stability-t1-red/test_generator_receives_regist0')
+
+    def test_generator_receives_registered_new_contract_without_rewriting_old_prompt(tmp_path):
+        from text2ifc_agent.live_pipeline import run_generator_stage
+        from text2ifc_agent.prompt_registry import load_prompt_registry
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        root = Path(__file__).resolve().parents[2]
+        candidate = json.loads((root/'tests/contract_v2/fixtures/complete.json').read_text(encoding='utf-8'))
+        candidate['schema_version'] = 'bim-json/2.1'
+        source = tmp_path/'design-brief'
+        source.mkdir()
+        (source/'input.txt').write_text('生成一间房间。', encoding='utf-8')
+        for name, value in [('conversation', []), ('context-selection', {'evidence': []}),
+                            ('design-brief', {'schema_version':'text2ifc/design-brief/2.1','status':'ready','known_facts':{}})]:
+            (source/f'{name}.json').write_text(json.dumps(value), encoding='utf-8')
+        provider = SequenceProvider([copy.deepcopy(candidate)])
+        result = run_generator_stage(provider=provider, output_dir=tmp_path/'generator', design_source_dir=source, case_id='contract-family')
+        assert result['valid']
+        sent = json.loads((tmp_path/'generator/prompt-render-input.json').read_text(encoding='utf-8'))
+&gt;       assert 'IFC_AUTHORING_CONTRACT' in sent
+E       AssertionError: assert 'IFC_AUTHORING_CONTRACT' in {'CAPABILITY_PROFILE': {'ifc_generation_capabilities': [], 'schema_version': 'text2ifc/generator-capability-profile/2..../1.1/schema.json', '$schema': 'https://json-schema.org/draft/2020-12/schema', 'additionalProperties': False, ...}, ...}
+
+tests\agent\test_generation_authoring_contract.py:68: AssertionError</failure></testcase></testsuite></testsuites>

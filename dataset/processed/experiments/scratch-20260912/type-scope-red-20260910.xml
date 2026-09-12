@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="14" skipped="0" tests="19" time="4.082" timestamp="2026-09-10T11:04:49.340389+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_semantic_field_reaches_scope_without_attributes_replacement[materials]" time="0.034"><failure message="AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-a#/materials'&#10;  &#10;  - entity:type-a#/materials&#10;  ?                -  ^  ^^&#10;  + entity:type-a#/attributes&#10;  ?                  ^  ^^^^">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_semantic_field_reaches_sc0')
+field = 'materials'
+
+    @pytest.mark.parametrize('field', ['materials', 'property_sets/Pset_WallCommon/FireRating',
+                                      'appearance/color', 'template/template_id'])
+    def test_semantic_field_reaches_scope_without_attributes_replacement(tmp_path, field):
+        candidate, _, resolved = _normalize(tmp_path, f'/entities/type-a/{field}')
+        assert not resolved['issues']
+&gt;       assert resolved['resolved'][0]['actual_ref'] == f'entity:type-a#/{field}'
+E       AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-a#/materials'
+E         
+E         - entity:type-a#/materials
+E         ?                -  ^  ^^
+E         + entity:type-a#/attributes
+E         ?                  ^  ^^^^
+
+tests\agent\test_semantic_scope_and_type_policy.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_semantic_field_reaches_scope_without_attributes_replacement[property_sets/Pset_WallCommon/FireRating]" time="0.021"><failure message="AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...on/FireRating'&#10;  &#10;  - entity:type-a#/property_sets/Pset_WallCommon/FireRating&#10;  + entity:type-a#/attributes">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_semantic_field_reaches_sc1')
+field = 'property_sets/Pset_WallCommon/FireRating'
+
+    @pytest.mark.parametrize('field', ['materials', 'property_sets/Pset_WallCommon/FireRating',
+                                      'appearance/color', 'template/template_id'])
+    def test_semantic_field_reaches_scope_without_attributes_replacement(tmp_path, field):
+        candidate, _, resolved = _normalize(tmp_path, f'/entities/type-a/{field}')
+        assert not resolved['issues']
+&gt;       assert resolved['resolved'][0]['actual_ref'] == f'entity:type-a#/{field}'
+E       AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...on/FireRating'
+E         
+E         - entity:type-a#/property_sets/Pset_WallCommon/FireRating
+E         + entity:type-a#/attributes
+
+tests\agent\test_semantic_scope_and_type_policy.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_semantic_field_reaches_scope_without_attributes_replacement[appearance/color]" time="0.017"><failure message="AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...earance/color'&#10;  &#10;  - entity:type-a#/appearance/color&#10;  + entity:type-a#/attributes">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_semantic_field_reaches_sc2')
+field = 'appearance/color'
+
+    @pytest.mark.parametrize('field', ['materials', 'property_sets/Pset_WallCommon/FireRating',
+                                      'appearance/color', 'template/template_id'])
+    def test_semantic_field_reaches_scope_without_attributes_replacement(tmp_path, field):
+        candidate, _, resolved = _normalize(tmp_path, f'/entities/type-a/{field}')
+        assert not resolved['issues']
+&gt;       assert resolved['resolved'][0]['actual_ref'] == f'entity:type-a#/{field}'
+E       AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...earance/color'
+E         
+E         - entity:type-a#/appearance/color
+E         + entity:type-a#/attributes
+
+tests\agent\test_semantic_scope_and_type_policy.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_semantic_field_reaches_scope_without_attributes_replacement[template/template_id]" time="0.017"><failure message="AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...e/template_id'&#10;  &#10;  - entity:type-a#/template/template_id&#10;  + entity:type-a#/attributes">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_semantic_field_reaches_sc3')
+field = 'template/template_id'
+
+    @pytest.mark.parametrize('field', ['materials', 'property_sets/Pset_WallCommon/FireRating',
+                                      'appearance/color', 'template/template_id'])
+    def test_semantic_field_reaches_scope_without_attributes_replacement(tmp_path, field):
+        candidate, _, resolved = _normalize(tmp_path, f'/entities/type-a/{field}')
+        assert not resolved['issues']
+&gt;       assert resolved['resolved'][0]['actual_ref'] == f'entity:type-a#/{field}'
+E       AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...e/template_id'
+E         
+E         - entity:type-a#/template/template_id
+E         + entity:type-a#/attributes
+
+tests\agent\test_semantic_scope_and_type_policy.py:62: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_semantic_property_pointer_escaping_is_preserved" time="0.021"><failure message="AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...et/Value~0Key'&#10;  &#10;  - entity:type-a#/property_sets/User~1Pset/Value~0Key&#10;  + entity:type-a#/attributes">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_semantic_property_pointer0')
+
+    def test_semantic_property_pointer_escaping_is_preserved(tmp_path):
+        _, _, resolved = _normalize(tmp_path, '/entities/type-a/property_sets/User~1Pset/Value~0Key')
+&gt;       assert resolved['resolved'][0]['actual_ref'] == 'entity:type-a#/property_sets/User~1Pset/Value~0Key'
+E       AssertionError: assert 'entity:type-a#/attributes' == 'entity:type-...et/Value~0Key'
+E         
+E         - entity:type-a#/property_sets/User~1Pset/Value~0Key
+E         + entity:type-a#/attributes
+
+tests\agent\test_semantic_scope_and_type_policy.py:71: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_unknown_semantic_target_stays_unresolved" time="0.021" /><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_semantic_target_disagreement_does_not_grant_other_entity" time="0.020"><failure message="assert not [{'actual_ref': 'entity:type-other#/attributes', 'evidence': 'UNREQUESTED_MATERIAL: No diagnostic message was provided...&quot;, &quot;target_entity_ids&quot;: [&quot;type-other&quot;]}', 'expected_fact_ref': None, 'issue_id': 'issue_deterministic_gate_0001', ...}]">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_semantic_target_disagreem0')
+
+    def test_semantic_target_disagreement_does_not_grant_other_entity(tmp_path):
+        _, issues, resolved = _normalize(tmp_path, '/entities/type-a/materials', targets=['type-other'])
+&gt;       assert not resolved['resolved']
+E       assert not [{'actual_ref': 'entity:type-other#/attributes', 'evidence': 'UNREQUESTED_MATERIAL: No diagnostic message was provided...", "target_entity_ids": ["type-other"]}', 'expected_fact_ref': None, 'issue_id': 'issue_deterministic_gate_0001', ...}]
+
+tests\agent\test_semantic_scope_and_type_policy.py:81: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_geometry_dependency_scope_keeps_existing_contract" time="0.032" /><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_no_requested_type_rejects_empty_or_claimed_compiler_type[IfcWallType]" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000208804525A0&gt;)">kind = 'IfcWallType'
+
+    @pytest.mark.parametrize('kind', ['IfcWallType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle', 'IfcBeamType'])
+    def test_no_requested_type_rejects_empty_or_claimed_compiler_type(kind):
+        row = _entity('extra-type', kind)
+        row['provenance'] = {'source': 'compiler', 'authorized': True}
+        issues = unauthorized_candidate_semantics(_candidate(row), [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_TYPE' and i['path'] == '/entities/extra-type' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000208804525A0&gt;)
+
+tests\agent\test_semantic_scope_and_type_policy.py:98: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_no_requested_type_rejects_empty_or_claimed_compiler_type[IfcSlabType]" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000208804532A0&gt;)">kind = 'IfcSlabType'
+
+    @pytest.mark.parametrize('kind', ['IfcWallType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle', 'IfcBeamType'])
+    def test_no_requested_type_rejects_empty_or_claimed_compiler_type(kind):
+        row = _entity('extra-type', kind)
+        row['provenance'] = {'source': 'compiler', 'authorized': True}
+        issues = unauthorized_candidate_semantics(_candidate(row), [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_TYPE' and i['path'] == '/entities/extra-type' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000208804532A0&gt;)
+
+tests\agent\test_semantic_scope_and_type_policy.py:98: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_no_requested_type_rejects_empty_or_claimed_compiler_type[IfcDoorStyle]" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000020880453E00&gt;)">kind = 'IfcDoorStyle'
+
+    @pytest.mark.parametrize('kind', ['IfcWallType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle', 'IfcBeamType'])
+    def test_no_requested_type_rejects_empty_or_claimed_compiler_type(kind):
+        row = _entity('extra-type', kind)
+        row['provenance'] = {'source': 'compiler', 'authorized': True}
+        issues = unauthorized_candidate_semantics(_candidate(row), [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_TYPE' and i['path'] == '/entities/extra-type' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x0000020880453E00&gt;)
+
+tests\agent\test_semantic_scope_and_type_policy.py:98: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_no_requested_type_rejects_empty_or_claimed_compiler_type[IfcWindowStyle]" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002088045D150&gt;)">kind = 'IfcWindowStyle'
+
+    @pytest.mark.parametrize('kind', ['IfcWallType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle', 'IfcBeamType'])
+    def test_no_requested_type_rejects_empty_or_claimed_compiler_type(kind):
+        row = _entity('extra-type', kind)
+        row['provenance'] = {'source': 'compiler', 'authorized': True}
+        issues = unauthorized_candidate_semantics(_candidate(row), [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_TYPE' and i['path'] == '/entities/extra-type' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002088045D150&gt;)
+
+tests\agent\test_semantic_scope_and_type_policy.py:98: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_no_requested_type_rejects_empty_or_claimed_compiler_type[IfcBeamType]" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002088045DBE0&gt;)">kind = 'IfcBeamType'
+
+    @pytest.mark.parametrize('kind', ['IfcWallType', 'IfcSlabType', 'IfcDoorStyle', 'IfcWindowStyle', 'IfcBeamType'])
+    def test_no_requested_type_rejects_empty_or_claimed_compiler_type(kind):
+        row = _entity('extra-type', kind)
+        row['provenance'] = {'source': 'compiler', 'authorized': True}
+        issues = unauthorized_candidate_semantics(_candidate(row), [])
+&gt;       assert any(i['code'] == 'UNREQUESTED_TYPE' and i['path'] == '/entities/extra-type' for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_no_requested_type_rejects_empty_or_claimed_compiler_type.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002088045DBE0&gt;)
+
+tests\agent\test_semantic_scope_and_type_policy.py:98: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_requested_shared_type_allows_only_requested_members" time="0.001"><failure message="assert False&#10; +  where False = any(&lt;generator object test_requested_shared_type_allows_only_requested_members.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002088045DFF0&gt;)">def test_requested_shared_type_allows_only_requested_members():
+        a, b, other, type_row = [_entity(i, 'IfcWall' if i != 'requested-type' else 'IfcWallType')
+                                  for i in ['wall-a', 'wall-b', 'wall-other', 'requested-type']]
+        requirements = [_type_request('wall-a', 'requested-type'), _type_request('wall-b', 'requested-type')]
+        relation = _relation('type-link', 'requested-type', ['wall-a', 'wall-b'])
+        candidate = _candidate(a, b, other, type_row, relationships=[relation])
+        assert unauthorized_candidate_semantics(candidate, requirements) == []
+        relation['attributes']['RelatedObjects'].append('wall-other')
+        issues = unauthorized_candidate_semantics(candidate, requirements)
+&gt;       assert any(i['code'] == 'UNREQUESTED_TYPE_ASSIGNMENT' and i['path'].startswith('/relationships/type-link/') for i in issues)
+E       assert False
+E        +  where False = any(&lt;generator object test_requested_shared_type_allows_only_requested_members.&lt;locals&gt;.&lt;genexpr&gt; at 0x000002088045DFF0&gt;)
+
+tests\agent\test_semantic_scope_and_type_policy.py:110: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_requested_distinct_types_are_not_merged_or_rejected" time="0.001" /><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_type_permission_does_not_authorize_material_or_performance" time="0.000" /><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_legacy_generation_contract_keeps_old_type_behavior" time="0.000" /><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_public_gate_blocks_unrequested_type_before_compilation" time="1.998"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_public_gate_blocks_unrequ0')
+
+    def test_public_gate_blocks_unrequested_type_before_compilation(tmp_path):
+        candidate = json.loads((ROOT / 'tests/contract_v2/fixtures/complete.json').read_text(encoding='utf-8'))
+        candidate['schema_version'] = 'bim-json/2.1'
+        for entity in candidate['entities']:
+            entity['materials'], entity['property_sets'] = [], {}
+        extra = _entity('unexpected-wall-type')
+        extra['attributes'] = {'Name': 'Unexpected', 'PredefinedType': 'NOTDEFINED'}
+        candidate['entities'].append(extra)
+        _write(tmp_path / 'generator/candidate.json', candidate)
+        _write(tmp_path / 'design-brief.json', {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': {}})
+        original = (tmp_path / 'generator/candidate.json').read_bytes()
+        result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='unrequested-type')
+&gt;       assert not result['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_semantic_scope_and_type_policy.py:148: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_scope_and_type_policy" name="test_public_gate_keeps_compiler_owned_minimal_door_style" time="0.014"><failure message="ImportError: cannot import name '_document' from 'tests.compiler.test_basic_filling' (E:\code for project\bimnet\tests\compiler\test_basic_filling.py)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/type-scope-red-20260910/test_public_gate_keeps_compile0')
+
+    def test_public_gate_keeps_compiler_owned_minimal_door_style(tmp_path):
+&gt;       from tests.compiler.test_basic_filling import _document
+E       ImportError: cannot import name '_document' from 'tests.compiler.test_basic_filling' (E:\code for project\bimnet\tests\compiler\test_basic_filling.py)
+
+tests\agent\test_semantic_scope_and_type_policy.py:155: ImportError</failure></testcase></testsuite></testsuites>

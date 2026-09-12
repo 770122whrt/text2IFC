@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="74" time="5.351" timestamp="2026-09-10T18:56:33.572853+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value0-wall-opaque]" time="0.036" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value0-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value0-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value1-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value1-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value1-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value2-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value2-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value2-door-opaque]" time="0.002" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value3-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value3-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value3-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value4-wall-opaque]" time="0.002" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value4-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value4-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value5-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value5-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value5-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value6-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value6-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value6-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value7-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value7-window-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value7-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value8-wall-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value8-window-opaque]" time="0.002" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_non_executable_appearance_is_not_frozen_as_authority[value8-door-opaque]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value0]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value1]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value2]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_legal_whole_element_numeric_overrides_remain_supported[value3]" time="0.001" /><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[False-False]" time="0.105"><failure message="ValueError: Unsupported Design Brief stage contract or review mode.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-typed-brief-green-20260910/test_new_public_brief_contract0')
+design_review = False, repair = False
+
+    @pytest.mark.parametrize('design_review', [False, True])
+    @pytest.mark.parametrize('repair', [False, True])
+    def test_new_public_brief_contract_keeps_part_style_in_theme_notes(tmp_path, design_review, repair):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, brief = valid_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.3'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential',
+            'style_notes': 'Use the selected theme and basic template: dark frame, clear glazing.'}
+        broken = copy.deepcopy(brief)
+        if repair:
+            broken['known_facts']['semantic_requirements'] = [
+                {'entity_id': 'window-opaque', 'appearance': {'frame_color': 'dark'}}]
+            broken['known_facts']['semantic_review'] = review(appearance=True)
+        provider = SequenceProvider([broken, brief] if repair else [brief])
+&gt;       result = run_design_brief_stage(provider=provider, output_dir=tmp_path,
+            case=case, design_review_enabled=design_review, design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_brief_appearance_grammar.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:176: in run_design_brief_stage
+    template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+schema_version = 'text2ifc/design-brief/2.3'
+
+    def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -&gt; str:
+        """Preserve released contracts while explicitly selecting the stronger one."""
+        if schema_version == 'text2ifc/design-brief/2.2':
+            return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
+        if schema_version == 'text2ifc/design-brief/2.1':
+            return 'design-brief.v2.4' if design_review_enabled else 'design-brief.v2.3'
+        if schema_version == 'text2ifc/design-brief/2.0' and not design_review_enabled:
+            return 'design-brief.v2.1'
+&gt;       raise ValueError('Unsupported Design Brief stage contract or review mode.')
+E       ValueError: Unsupported Design Brief stage contract or review mode.
+
+src\text2ifc_agent\design_brief.py:100: ValueError</failure></testcase><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[False-True]" time="0.058"><failure message="ValueError: Unsupported Design Brief stage contract or review mode.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-typed-brief-green-20260910/test_new_public_brief_contract1')
+design_review = True, repair = False
+
+    @pytest.mark.parametrize('design_review', [False, True])
+    @pytest.mark.parametrize('repair', [False, True])
+    def test_new_public_brief_contract_keeps_part_style_in_theme_notes(tmp_path, design_review, repair):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, brief = valid_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.3'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential',
+            'style_notes': 'Use the selected theme and basic template: dark frame, clear glazing.'}
+        broken = copy.deepcopy(brief)
+        if repair:
+            broken['known_facts']['semantic_requirements'] = [
+                {'entity_id': 'window-opaque', 'appearance': {'frame_color': 'dark'}}]
+            broken['known_facts']['semantic_review'] = review(appearance=True)
+        provider = SequenceProvider([broken, brief] if repair else [brief])
+&gt;       result = run_design_brief_stage(provider=provider, output_dir=tmp_path,
+            case=case, design_review_enabled=design_review, design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_brief_appearance_grammar.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:176: in run_design_brief_stage
+    template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+schema_version = 'text2ifc/design-brief/2.3'
+
+    def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -&gt; str:
+        """Preserve released contracts while explicitly selecting the stronger one."""
+        if schema_version == 'text2ifc/design-brief/2.2':
+            return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
+        if schema_version == 'text2ifc/design-brief/2.1':
+            return 'design-brief.v2.4' if design_review_enabled else 'design-brief.v2.3'
+        if schema_version == 'text2ifc/design-brief/2.0' and not design_review_enabled:
+            return 'design-brief.v2.1'
+&gt;       raise ValueError('Unsupported Design Brief stage contract or review mode.')
+E       ValueError: Unsupported Design Brief stage contract or review mode.
+
+src\text2ifc_agent\design_brief.py:100: ValueError</failure></testcase><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[True-False]" time="0.030"><failure message="ValueError: Unsupported Design Brief stage contract or review mode.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-typed-brief-green-20260910/test_new_public_brief_contract2')
+design_review = False, repair = True
+
+    @pytest.mark.parametrize('design_review', [False, True])
+    @pytest.mark.parametrize('repair', [False, True])
+    def test_new_public_brief_contract_keeps_part_style_in_theme_notes(tmp_path, design_review, repair):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, brief = valid_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.3'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential',
+            'style_notes': 'Use the selected theme and basic template: dark frame, clear glazing.'}
+        broken = copy.deepcopy(brief)
+        if repair:
+            broken['known_facts']['semantic_requirements'] = [
+                {'entity_id': 'window-opaque', 'appearance': {'frame_color': 'dark'}}]
+            broken['known_facts']['semantic_review'] = review(appearance=True)
+        provider = SequenceProvider([broken, brief] if repair else [brief])
+&gt;       result = run_design_brief_stage(provider=provider, output_dir=tmp_path,
+            case=case, design_review_enabled=design_review, design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_brief_appearance_grammar.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:176: in run_design_brief_stage
+    template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+schema_version = 'text2ifc/design-brief/2.3'
+
+    def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -&gt; str:
+        """Preserve released contracts while explicitly selecting the stronger one."""
+        if schema_version == 'text2ifc/design-brief/2.2':
+            return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
+        if schema_version == 'text2ifc/design-brief/2.1':
+            return 'design-brief.v2.4' if design_review_enabled else 'design-brief.v2.3'
+        if schema_version == 'text2ifc/design-brief/2.0' and not design_review_enabled:
+            return 'design-brief.v2.1'
+&gt;       raise ValueError('Unsupported Design Brief stage contract or review mode.')
+E       ValueError: Unsupported Design Brief stage contract or review mode.
+
+src\text2ifc_agent\design_brief.py:100: ValueError</failure></testcase><testcase classname="tests.agent.test_brief_appearance_grammar" name="test_new_public_brief_contract_keeps_part_style_in_theme_notes[True-True]" time="0.033"><failure message="ValueError: Unsupported Design Brief stage contract or review mode.">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-typed-brief-green-20260910/test_new_public_brief_contract3')
+design_review = True, repair = True
+
+    @pytest.mark.parametrize('design_review', [False, True])
+    @pytest.mark.parametrize('repair', [False, True])
+    def test_new_public_brief_contract_keeps_part_style_in_theme_notes(tmp_path, design_review, repair):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, brief = valid_brief()
+        brief['schema_version'] = 'text2ifc/design-brief/2.3'
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential',
+            'style_notes': 'Use the selected theme and basic template: dark frame, clear glazing.'}
+        broken = copy.deepcopy(brief)
+        if repair:
+            broken['known_facts']['semantic_requirements'] = [
+                {'entity_id': 'window-opaque', 'appearance': {'frame_color': 'dark'}}]
+            broken['known_facts']['semantic_review'] = review(appearance=True)
+        provider = SequenceProvider([broken, brief] if repair else [brief])
+&gt;       result = run_design_brief_stage(provider=provider, output_dir=tmp_path,
+            case=case, design_review_enabled=design_review, design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_brief_appearance_grammar.py:56: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:176: in run_design_brief_stage
+    template_id=design_brief_template_id(design_brief_schema_version, design_review_enabled=design_review_enabled),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+schema_version = 'text2ifc/design-brief/2.3'
+
+    def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -&gt; str:
+        """Preserve released contracts while explicitly selecting the stronger one."""
+        if schema_version == 'text2ifc/design-brief/2.2':
+            return 'design-brief.v2.6' if design_review_enabled else 'design-brief.v2.5'
+        if schema_version == 'text2ifc/design-brief/2.1':
+            return 'design-brief.v2.4' if design_review_enabled else 'design-brief.v2.3'
+        if schema_version == 'text2ifc/design-brief/2.0' and not design_review_enabled:
+            return 'design-brief.v2.1'
+&gt;       raise ValueError('Unsupported Design Brief stage contract or review mode.')
+E       ValueError: Unsupported Design Brief stage contract or review mode.
+
+src\text2ifc_agent\design_brief.py:100: ValueError</failure></testcase><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[materials-missing]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[materials-notes]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[materials-nested]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[property_sets-missing]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[property_sets-notes]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[property_sets-nested]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[appearance-missing]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[appearance-notes]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_missing_authority_never_permits_cleanup[appearance-nested]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_explicit_legacy_empty_array_remains_distinct_from_missing" time="0.000" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[missing_review]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[missing_category]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[unresolved]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[false_none]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[false_specified]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_refuses_partial_or_contradictory_declarations[outside_canonical]" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_contract_preserves_canonical_values_and_does_not_read_candidate" time="0.001" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[none]" time="0.187" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[geometry]" time="0.103" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[original_request]" time="0.101" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[unknown_source]" time="0.101" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bounded_brief_repair_preserves_every_nonsemantic_fact[still_missing]" time="0.101" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[False-False]" time="0.208" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[False-True]" time="0.176" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[True-False]" time="0.317" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_public_brief_stage_uses_new_contract_and_shared_budget[True-True]" time="0.321" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_semantic_extraction_failure_routes_to_brief_not_user_or_candidate" time="0.012" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_interactive_invoker_repairs_with_same_budget_and_preserves_initial_trace" time="0.412" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_brief_repair_must_keep_previously_structured_semantics" time="0.109" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_candidate_without_any_request_authority_cannot_publish" time="0.070" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[None]" time="0.125" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[payload1]" time="0.097" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[payload2]" time="0.097" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_bad_semantic_repair_output_is_retained_and_never_retried[truncated {]" time="0.088" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_brief_repair_cannot_reset_or_exceed_shared_call_budget" time="0.216" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_new_brief_clarification_preserves_user_turns_and_resumes" time="0.104" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[ready]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[needs_clarification]" time="0.004" /><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_unresolved_semantics_never_authorize_cleanup_even_outside_ready[None]" time="0.004" /></testsuite></testsuites>

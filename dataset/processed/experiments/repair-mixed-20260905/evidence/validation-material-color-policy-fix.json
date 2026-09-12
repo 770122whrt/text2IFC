@@ -1,0 +1,63 @@
+{
+  "schema_version": "text2ifc/repair-mixed-material-color-policy-fix/0.1",
+  "source_request_hash": "sha256:7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "source_ifc_sha256": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+  "historical_application_run": {
+    "run_id": "repair-b617c986a35c406ca6af40054e7f3d7e",
+    "historical_status": "not_publishable",
+    "historical_failure_check": "l1.scope.relations",
+    "candidate_path": "evidence/live-material-color-completion-v4/runs/repair-b617c986a35c406ca6af40054e7f3d7e/staging/application-candidate.ifc"
+  },
+  "root_cause": {
+    "relationship_changes_total": 24,
+    "authorized_before_fix": 22,
+    "unauthorized_before_fix": 2,
+    "unauthorized_ifc_class": "IfcRelAssociatesMaterial",
+    "unauthorized_role": "semantic_door_material_relationship",
+    "reason": "Door L1 authorization did not register the scoped semantic material relationship role emitted by generic semantic authoring."
+  },
+  "post_fix_re_evaluation": {
+    "relationship_changes_total": 24,
+    "relationship_changes_authorized": 24,
+    "relationship_failures": [],
+    "l1_status": "passed",
+    "scope_checks": {
+      "l1.scope.created-roots": "passed",
+      "l1.scope.modified-roots": "passed",
+      "l1.scope.removed-roots": "passed",
+      "l1.scope.relations": "passed"
+    }
+  },
+  "independent_reopen": {
+    "window_1": {
+      "material": "深灰铝合金",
+      "rgb": [0.18, 0.2, 0.22]
+    },
+    "door_1": {
+      "material": "深灰铝合金",
+      "rgb": [0.18, 0.2, 0.22]
+    },
+    "window_2": {
+      "material": "浅橡木",
+      "rgb": [0.72, 0.45, 0.24]
+    },
+    "door_2": {
+      "material": "浅橡木",
+      "rgb": [0.72, 0.45, 0.24]
+    }
+  },
+  "focused_regression": {
+    "command": ".venv/Scripts/python.exe -m pytest -q tests/ifc_repair/test_l1_evaluator.py tests/ifc_repair/test_evaluation_policy.py tests/ifc_repair/test_semantic_authoring.py tests/ifc_repair/test_repair_appearance_contract.py",
+    "passed": 96,
+    "failed": 0
+  },
+  "post_fix_live_retry": {
+    "run_id": "repair-c43809dc0a3c45deaa0c623cc66ee898",
+    "status": "clarification_required",
+    "reason_code": "not_found",
+    "operation_id": "add-window-1",
+    "classification": "target-resolution retrieval instability",
+    "note": "This retry did not reach Stage 2 and therefore is not evidence against the Door L1 relationship-authorization fix. The same source/request previously resolved and reached application in repair-b617c986a35c406ca6af40054e7f3d7e."
+  },
+  "passed": true
+}

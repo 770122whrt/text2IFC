@@ -1,0 +1,85 @@
+{
+  "actual_calls": [
+    {
+      "workflow": "repair",
+      "attempt": "runtime-02",
+      "stage": "intent",
+      "response_id": "c0ece3a6-a1e8-41ab-ad90-93f457779cea",
+      "model": "deepseek-v4-flash",
+      "path": "repair/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/live-attempt-001.json",
+      "sha256": "78dcfaed256f9bf31c9d8d77647e666787473f71e58b663550890885794d99a6"
+    },
+    {
+      "workflow": "repair",
+      "attempt": "runtime-02",
+      "stage": "changeset",
+      "response_id": "e1d53f4b-dac8-4a0e-8cfb-89c8b6f49b6c",
+      "model": "deepseek-v4-flash",
+      "path": "repair/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-response.json",
+      "sha256": "3dcdb070d1f720b5e923f64c9a5024d4da01a7c608a1fe4bc3d03bf2c27d3a2a"
+    },
+    {
+      "workflow": "repair",
+      "attempt": "runtime-live-04",
+      "stage": "intent",
+      "response_id": "24d49597-b3c6-487f-89ce-a290952174a3",
+      "model": "deepseek-v4-flash",
+      "path": "repair/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/live-attempt-001.json",
+      "sha256": "970c5cef95eeddec9140a9bb341fb52c151eea439c376c4f9a34cb43aa7dd5a4"
+    },
+    {
+      "workflow": "repair",
+      "attempt": "runtime-live-04",
+      "stage": "changeset",
+      "response_id": "bea0e65a-2ee8-4ff7-95ae-a8014f6d3e17",
+      "model": "deepseek-v4-flash",
+      "path": "repair/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-response.json",
+      "sha256": "06d3e2744be158da6855f842a9fb9e608641552d318cd8eca0bbb569b9a2340f"
+    },
+    {
+      "workflow": "generation",
+      "stage": "design-brief-clarification",
+      "response_id": "d7158d43-66a2-4df1-9eea-343997126400",
+      "model": "deepseek-v4-flash",
+      "path": "generation/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/response.raw.json",
+      "sha256": "2fb279ab88cc4b520a20d8b23290b85feaffb985c98c0178f45398447e38576d"
+    },
+    {
+      "workflow": "generation",
+      "stage": "design-brief-resume",
+      "response_id": "bec795f0-4d43-45ee-825b-6b53b6329c6b",
+      "model": "deepseek-v4-flash",
+      "path": "generation/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/response.raw.json",
+      "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342"
+    },
+    {
+      "workflow": "generation",
+      "stage": "generator",
+      "response_id": "8224fc7c-e136-4e1e-9e07-815cb3d20825",
+      "path": "generation/runtime/runs/bd9a2fd94c6e4be8/generator/metrics.json",
+      "sha256": "fbe38e6a6af2e3a2577cc80635f1c84d21be7a0d2d837ea268fb7a450ec0c3d3"
+    },
+    {
+      "workflow": "generation",
+      "stage": "generator",
+      "response_id": "b46b1f33-6ba2-4ddc-a555-ceb6eec24c19",
+      "path": "generation/corrective-attempt-02/generator/metrics.json",
+      "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe"
+    },
+    {
+      "workflow": "generation",
+      "stage": "audit",
+      "response_id": "a7baee6f-658a-4856-8e4c-d9d464c7d67e",
+      "model": "deepseek-v4-flash",
+      "path": "generation/corrective-02-general-revalidation/audit/metrics.json",
+      "sha256": "f10f71aa08ffe777f0ae29a21009dc6c8d42563727473ef9ae4cc93ee0bafd88"
+    }
+  ],
+  "count": 9,
+  "not_counted": [
+    "startup-01 rejected run-id before transport",
+    "runtime-offline-03 fake Provider",
+    "deterministic revalidation copies",
+    "Previous blocked Audit submissions and local payload preview had no transport"
+  ]
+}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="9" skipped="0" tests="16" time="35.391" timestamp="2026-09-09T22:45:57.073011+08:00" hostname="what-do-matter"><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_missing_generated_identity_binds_only_unique_reopened_host_and_bounds[False]" time="2.041"><failure message="AssertionError: [{'code': 'MISSING_STAIR_OPENING', 'entity_ids': ['expected-cut'], 'message': &quot;Expected component 'expected-cut' was not found in the IFC.&quot;, 'path': '/floor_openings/expected-cut', ...}]&#10;assert False&#10; +  where False = GeneratedIfcCheckResult(success=False, issues=[{'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/expected-cut...n': 'primary', 'walls': {}, 'slabs': {}, 'spaces': {}, 'roof': {}, 'floor_openings': {}, 'products': {}, 'stairs': {}}).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_missing_generated_identit0')
+rotate = False
+
+    @pytest.mark.parametrize('rotate',[False,True])
+    def test_missing_generated_identity_binds_only_unique_reopened_host_and_bounds(tmp_path,rotate):
+        path=_compile(tmp_path,rotate=rotate); expectation=_expect(rotate=rotate)
+        frozen=deepcopy(expectation); before=hashlib.sha256(path.read_bytes()).hexdigest()
+        result=check_generated_ifc(path,expectation)
+&gt;       assert result.success,result.issues
+E       AssertionError: [{'code': 'MISSING_STAIR_OPENING', 'entity_ids': ['expected-cut'], 'message': "Expected component 'expected-cut' was not found in the IFC.", 'path': '/floor_openings/expected-cut', ...}]
+E       assert False
+E        +  where False = GeneratedIfcCheckResult(success=False, issues=[{'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/expected-cut...n': 'primary', 'walls': {}, 'slabs': {}, 'spaces': {}, 'roof': {}, 'floor_openings': {}, 'products': {}, 'stairs': {}}).success
+
+tests\ifc_quality\test_floor_opening_identity.py:59: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_missing_generated_identity_binds_only_unique_reopened_host_and_bounds[True]" time="2.268"><failure message="AssertionError: [{'code': 'MISSING_STAIR_OPENING', 'entity_ids': ['expected-cut'], 'message': &quot;Expected component 'expected-cut' was not found in the IFC.&quot;, 'path': '/floor_openings/expected-cut', ...}]&#10;assert False&#10; +  where False = GeneratedIfcCheckResult(success=False, issues=[{'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/expected-cut...n': 'primary', 'walls': {}, 'slabs': {}, 'spaces': {}, 'roof': {}, 'floor_openings': {}, 'products': {}, 'stairs': {}}).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_missing_generated_identit1')
+rotate = True
+
+    @pytest.mark.parametrize('rotate',[False,True])
+    def test_missing_generated_identity_binds_only_unique_reopened_host_and_bounds(tmp_path,rotate):
+        path=_compile(tmp_path,rotate=rotate); expectation=_expect(rotate=rotate)
+        frozen=deepcopy(expectation); before=hashlib.sha256(path.read_bytes()).hexdigest()
+        result=check_generated_ifc(path,expectation)
+&gt;       assert result.success,result.issues
+E       AssertionError: [{'code': 'MISSING_STAIR_OPENING', 'entity_ids': ['expected-cut'], 'message': "Expected component 'expected-cut' was not found in the IFC.", 'path': '/floor_openings/expected-cut', ...}]
+E       assert False
+E        +  where False = GeneratedIfcCheckResult(success=False, issues=[{'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/expected-cut...n': 'primary', 'walls': {}, 'slabs': {}, 'spaces': {}, 'roof': {}, 'floor_openings': {}, 'products': {}, 'stairs': {}}).success
+
+tests\ifc_quality\test_floor_opening_identity.py:59: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_no_fallback_without_explicit_derived_policy[explicit]" time="2.603" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_no_fallback_without_explicit_derived_policy[None]" time="2.704" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_legacy_contract_keeps_strict_identity_lookup" time="2.863" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_wrong_host_never_matches_even_when_identity_and_bounds_match[actual-cut]" time="3.048" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_wrong_host_never_matches_even_when_identity_and_bounds_match[expected-cut]" time="2.623"><failure message="AssertionError: assert not True&#10; +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': None, 'wall_set_convention': 'primary', 'walls': ...ss': 'IfcOpeningElement', 'bbox': {'x': [0.6, 1.4], 'y': [1.0, 2.0], 'z': [3.0, 3.2]}}}, 'products': {}, 'stairs': {}}).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_wrong_host_never_matches_1')
+identity = 'expected-cut'
+
+    @pytest.mark.parametrize('identity',['actual-cut','expected-cut'])
+    def test_wrong_host_never_matches_even_when_identity_and_bounds_match(tmp_path,identity):
+        result=check_generated_ifc(_compile(tmp_path,((identity,'deck-b',1000),)),_expect())
+&gt;       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': None, 'wall_set_convention': 'primary', 'walls': ...ss': 'IfcOpeningElement', 'bbox': {'x': [0.6, 1.4], 'y': [1.0, 2.0], 'z': [3.0, 3.2]}}}, 'products': {}, 'stairs': {}}).success
+
+tests\ifc_quality\test_floor_opening_identity.py:79: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_ambiguous_geometry_candidates_are_not_arbitrarily_selected" time="2.677"><failure message="AssertionError: assert 'FLOOR_OPENING_BINDING_AMBIGUOUS' in {'MISSING_STAIR_OPENING'}">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_ambiguous_geometry_candid0')
+
+    def test_ambiguous_geometry_candidates_are_not_arbitrarily_selected(tmp_path):
+        path=_compile(tmp_path,(('cut-a','deck-a',1000),('cut-b','deck-a',1000)))
+        result=check_generated_ifc(path,_expect())
+        assert not result.success
+&gt;       assert 'FLOOR_OPENING_BINDING_AMBIGUOUS' in {i['code'] for i in result.issues}
+E       AssertionError: assert 'FLOOR_OPENING_BINDING_AMBIGUOUS' in {'MISSING_STAIR_OPENING'}
+
+tests\ifc_quality\test_floor_opening_identity.py:86: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_one_actual_opening_cannot_satisfy_two_expected_openings" time="2.840"><failure message="AssertionError: assert 'FLOOR_OPENING_BINDING_REUSED' in {'MISSING_STAIR_OPENING'}">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_one_actual_opening_cannot0')
+
+    def test_one_actual_opening_cannot_satisfy_two_expected_openings(tmp_path):
+        expectation=_expect(); expectation['floor_openings']['other-cut']=deepcopy(expectation['floor_openings']['expected-cut'])
+        result=check_generated_ifc(_compile(tmp_path),expectation)
+        assert not result.success
+&gt;       assert 'FLOOR_OPENING_BINDING_REUSED' in {i['code'] for i in result.issues}
+E       AssertionError: assert 'FLOOR_OPENING_BINDING_REUSED' in {'MISSING_STAIR_OPENING'}
+
+tests\ifc_quality\test_floor_opening_identity.py:93: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_same_size_different_position_does_not_bind[1100]" time="1.787" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_same_size_different_position_does_not_bind[2500]" time="1.331" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_multiple_openings_on_one_host_bind_independently" time="1.336"><failure message="AssertionError: [{'code': 'MISSING_STAIR_OPENING', 'entity_ids': ['expected-cut'], 'message': &quot;Expected component 'expected-cut' was n...sage': &quot;Expected component 'expected-other' was not found in the IFC.&quot;, 'path': '/floor_openings/expected-other', ...}]&#10;assert False&#10; +  where False = GeneratedIfcCheckResult(success=False, issues=[{'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/expected-cut...n': 'primary', 'walls': {}, 'slabs': {}, 'spaces': {}, 'roof': {}, 'floor_openings': {}, 'products': {}, 'stairs': {}}).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_multiple_openings_on_one_0')
+
+    def test_multiple_openings_on_one_host_bind_independently(tmp_path):
+        path=_compile(tmp_path,(('cut-a','deck-a',1000),('cut-b','deck-a',2700)))
+        expectation=_expect(); second=deepcopy(expectation['floor_openings']['expected-cut'])
+        second['bbox']['x']=[2.3,3.1]; expectation['floor_openings']['expected-other']=second
+        result=check_generated_ifc(path,expectation)
+&gt;       assert result.success,result.issues
+E       AssertionError: [{'code': 'MISSING_STAIR_OPENING', 'entity_ids': ['expected-cut'], 'message': "Expected component 'expected-cut' was n...sage': "Expected component 'expected-other' was not found in the IFC.", 'path': '/floor_openings/expected-other', ...}]
+E       assert False
+E        +  where False = GeneratedIfcCheckResult(success=False, issues=[{'code': 'MISSING_STAIR_OPENING', 'path': '/floor_openings/expected-cut...n': 'primary', 'walls': {}, 'slabs': {}, 'spaces': {}, 'roof': {}, 'floor_openings': {}, 'products': {}, 'stairs': {}}).success
+
+tests\ifc_quality\test_floor_opening_identity.py:106: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_duplicate_reopened_identities_fail_closed[actual-cut]" time="2.219" /><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_duplicate_reopened_identities_fail_closed[deck-a]" time="2.138"><failure message="AssertionError: assert not True&#10; +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': None, 'wall_set_convention': 'primary', 'walls': ...ss': 'IfcOpeningElement', 'bbox': {'x': [0.6, 1.4], 'y': [1.0, 2.0], 'z': [3.0, 3.2]}}}, 'products': {}, 'stairs': {}}).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-opening-binding-red/test_duplicate_reopened_identi1')
+duplicate = 'deck-a'
+
+    @pytest.mark.parametrize('duplicate',['actual-cut','deck-a'])
+    def test_duplicate_reopened_identities_fail_closed(tmp_path,duplicate):
+        path=_compile(tmp_path,(('actual-cut','deck-a',1000),('cut-b','deck-a',2700)))
+        model=ifcopenshell.open(str(path)); old='cut-b' if duplicate=='actual-cut' else 'deck-b'
+        for prop in model.by_type('IfcPropertySingleValue'):
+            if prop.Name=='BimJsonId' and prop.NominalValue.wrappedValue==old:
+                prop.NominalValue.wrappedValue=duplicate
+        model.write(str(path))
+        result=check_generated_ifc(path,_expect('actual-cut'))
+&gt;       assert not result.success
+E       AssertionError: assert not True
+E        +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': None, 'wall_set_convention': 'primary', 'walls': ...ss': 'IfcOpeningElement', 'bbox': {'x': [0.6, 1.4], 'y': [1.0, 2.0], 'z': [3.0, 3.2]}}}, 'products': {}, 'stairs': {}}).success
+
+tests\ifc_quality\test_floor_opening_identity.py:119: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_geometry_projection_versions_source_identity_and_singular_provenance[False]" time="0.003"><failure message="AssertionError: assert 'text2ifc/des...pectation/1.0' == 'text2ifc/des...pectation/1.1'&#10;  &#10;  - text2ifc/design-geometry-expectation/1.1&#10;  ?                                        ^&#10;  + text2ifc/design-geometry-expectation/1.0&#10;  ?                                        ^">explicit = False
+
+    @pytest.mark.parametrize('explicit',[False,True])
+    def test_geometry_projection_versions_source_identity_and_singular_provenance(explicit):
+        opening={'bounds':{'x':[600,1400],'y':[1000,2000]}}
+        if explicit: opening['id']='chosen-cut'
+        brief={'known_facts':{'floor_slabs':[{'id':'deck-a','storey':'level-a','top_elevation_mm':3200,
+                     'thickness_mm':200,'bounds':{'x':[0,4000],'y':[0,4000]},'opening':opening}]}}
+        facts={'storeys':[{'id':'level-a','elevation_mm':3200}],'slabs':deepcopy(brief['known_facts']['floor_slabs'])}
+        original=deepcopy(facts)
+        result=build_design_geometry_expectation(case_id='fixture',design_brief=brief,expected_facts=facts)
+&gt;       assert result['schema_version']=='text2ifc/design-geometry-expectation/1.1'
+E       AssertionError: assert 'text2ifc/des...pectation/1.0' == 'text2ifc/des...pectation/1.1'
+E         
+E         - text2ifc/design-geometry-expectation/1.1
+E         ?                                        ^
+E         + text2ifc/design-geometry-expectation/1.0
+E         ?                                        ^
+
+tests\ifc_quality\test_floor_opening_identity.py:131: AssertionError</failure></testcase><testcase classname="tests.ifc_quality.test_floor_opening_identity" name="test_geometry_projection_versions_source_identity_and_singular_provenance[True]" time="0.004"><failure message="AssertionError: assert 'text2ifc/des...pectation/1.0' == 'text2ifc/des...pectation/1.1'&#10;  &#10;  - text2ifc/design-geometry-expectation/1.1&#10;  ?                                        ^&#10;  + text2ifc/design-geometry-expectation/1.0&#10;  ?                                        ^">explicit = True
+
+    @pytest.mark.parametrize('explicit',[False,True])
+    def test_geometry_projection_versions_source_identity_and_singular_provenance(explicit):
+        opening={'bounds':{'x':[600,1400],'y':[1000,2000]}}
+        if explicit: opening['id']='chosen-cut'
+        brief={'known_facts':{'floor_slabs':[{'id':'deck-a','storey':'level-a','top_elevation_mm':3200,
+                     'thickness_mm':200,'bounds':{'x':[0,4000],'y':[0,4000]},'opening':opening}]}}
+        facts={'storeys':[{'id':'level-a','elevation_mm':3200}],'slabs':deepcopy(brief['known_facts']['floor_slabs'])}
+        original=deepcopy(facts)
+        result=build_design_geometry_expectation(case_id='fixture',design_brief=brief,expected_facts=facts)
+&gt;       assert result['schema_version']=='text2ifc/design-geometry-expectation/1.1'
+E       AssertionError: assert 'text2ifc/des...pectation/1.0' == 'text2ifc/des...pectation/1.1'
+E         
+E         - text2ifc/design-geometry-expectation/1.1
+E         ?                                        ^
+E         + text2ifc/design-geometry-expectation/1.0
+E         ?                                        ^
+
+tests\ifc_quality\test_floor_opening_identity.py:131: AssertionError</failure></testcase></testsuite></testsuites>

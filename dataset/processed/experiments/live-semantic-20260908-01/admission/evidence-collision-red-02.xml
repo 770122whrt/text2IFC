@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="8" time="3.783" timestamp="2026-09-08T19:48:50.886119+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[non_json]" time="0.176" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[truncated]" time="0.142" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[empty]" time="0.130" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[auth]" time="0.135" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[timeout]" time="0.132" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[response.raw.json]" time="0.077"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'Design Brief transport failed'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-evidence-collision-red-02/test_repeated_call_index_canno0')
+existing = 'response.raw.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+        invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           invoke([{'role': 'user', 'content': '另一场景', 'turn_id': 'turn-user-001'}], 1)
+
+tests\agent\test_design_brief_attempt_preservation.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+transcript = [{'content': '另一场景', 'role': 'user', 'turn_id': 'turn-user-001'}]
+call_index = 1
+
+    def invoke(transcript: list[dict[str, Any]], call_index: int) -&gt; ClarificationCall:
+        if not transcript:
+            raise ValueError("Design Brief invocation requires transcript")
+        original_request = str(transcript[0].get("content", ""))
+        call_dir = root / "calls" / f"{call_index:02d}-design-brief"
+        call_dir.mkdir(parents=True, exist_ok=True)
+        selection = select_design_brief_context(
+            user_request=original_request,
+            conversation=transcript,
+            schema_version="bim-json/2.1",
+        )
+        schema = load_design_brief_schema("text2ifc/design-brief/2.1")
+        renderer_inputs = {
+            "USER_REQUEST": original_request,
+            "CONVERSATION": transcript,
+            "DESIGN_BRIEF_SCHEMA": schema,
+            "EVIDENCE_CATALOG": selection["evidence"],
+            "FEW_SHOTS": selection["few_shots"],
+        }
+        rendered = render_prompt(
+            template_id=DESIGN_BRIEF_TEMPLATE_ID,
+            inputs=renderer_inputs,
+        )
+        request = {
+            "model": config.model,
+            "messages": [{"role": "user", "content": rendered["text"]}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(token_limit_request(config))
+        # Persist the attempt before transport/parsing: even an unusable response
+        # is real evidence, and must not disappear from the review lineage.
+        _write_json(call_dir / "conversation.json", transcript)
+        _write_json(call_dir / "context-selection.json", selection)
+        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
+        _write_json(call_dir / "request.redacted.json", request)
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception as error:
+            failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
+            _write_json(call_dir / "transport-failure.json", failure)
+            # Provider exceptions may contain credentials or private endpoint URLs.
+&gt;           raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
+E           text2ifc_agent.openai_compat.OpenAICompatError: Design Brief transport failed
+
+src\text2ifc_agent\interactive_cli_flow.py:194: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-evidence-collision-red-02/test_repeated_call_index_canno0')
+existing = 'response.raw.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+        invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'Design Brief transport failed'
+
+tests\agent\test_design_brief_attempt_preservation.py:50: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[request.redacted.json]" time="0.195"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'Design Brief transport failed'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-evidence-collision-red-02/test_repeated_call_index_canno1')
+existing = 'request.redacted.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+        invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           invoke([{'role': 'user', 'content': '另一场景', 'turn_id': 'turn-user-001'}], 1)
+
+tests\agent\test_design_brief_attempt_preservation.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+transcript = [{'content': '另一场景', 'role': 'user', 'turn_id': 'turn-user-001'}]
+call_index = 1
+
+    def invoke(transcript: list[dict[str, Any]], call_index: int) -&gt; ClarificationCall:
+        if not transcript:
+            raise ValueError("Design Brief invocation requires transcript")
+        original_request = str(transcript[0].get("content", ""))
+        call_dir = root / "calls" / f"{call_index:02d}-design-brief"
+        call_dir.mkdir(parents=True, exist_ok=True)
+        selection = select_design_brief_context(
+            user_request=original_request,
+            conversation=transcript,
+            schema_version="bim-json/2.1",
+        )
+        schema = load_design_brief_schema("text2ifc/design-brief/2.1")
+        renderer_inputs = {
+            "USER_REQUEST": original_request,
+            "CONVERSATION": transcript,
+            "DESIGN_BRIEF_SCHEMA": schema,
+            "EVIDENCE_CATALOG": selection["evidence"],
+            "FEW_SHOTS": selection["few_shots"],
+        }
+        rendered = render_prompt(
+            template_id=DESIGN_BRIEF_TEMPLATE_ID,
+            inputs=renderer_inputs,
+        )
+        request = {
+            "model": config.model,
+            "messages": [{"role": "user", "content": rendered["text"]}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(token_limit_request(config))
+        # Persist the attempt before transport/parsing: even an unusable response
+        # is real evidence, and must not disappear from the review lineage.
+        _write_json(call_dir / "conversation.json", transcript)
+        _write_json(call_dir / "context-selection.json", selection)
+        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
+        _write_json(call_dir / "request.redacted.json", request)
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception as error:
+            failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
+            _write_json(call_dir / "transport-failure.json", failure)
+            # Provider exceptions may contain credentials or private endpoint URLs.
+&gt;           raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
+E           text2ifc_agent.openai_compat.OpenAICompatError: Design Brief transport failed
+
+src\text2ifc_agent\interactive_cli_flow.py:194: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-evidence-collision-red-02/test_repeated_call_index_canno1')
+existing = 'request.redacted.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+        invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'Design Brief transport failed'
+
+tests\agent\test_design_brief_attempt_preservation.py:50: AssertionError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[transport-failure.json]" time="0.239"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'&#10; Input: 'Design Brief transport failed'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-evidence-collision-red-02/test_repeated_call_index_canno2')
+existing = 'transport-failure.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+        invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+        with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+&gt;           invoke([{'role': 'user', 'content': '另一场景', 'turn_id': 'turn-user-001'}], 1)
+
+tests\agent\test_design_brief_attempt_preservation.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+transcript = [{'content': '另一场景', 'role': 'user', 'turn_id': 'turn-user-001'}]
+call_index = 1
+
+    def invoke(transcript: list[dict[str, Any]], call_index: int) -&gt; ClarificationCall:
+        if not transcript:
+            raise ValueError("Design Brief invocation requires transcript")
+        original_request = str(transcript[0].get("content", ""))
+        call_dir = root / "calls" / f"{call_index:02d}-design-brief"
+        call_dir.mkdir(parents=True, exist_ok=True)
+        selection = select_design_brief_context(
+            user_request=original_request,
+            conversation=transcript,
+            schema_version="bim-json/2.1",
+        )
+        schema = load_design_brief_schema("text2ifc/design-brief/2.1")
+        renderer_inputs = {
+            "USER_REQUEST": original_request,
+            "CONVERSATION": transcript,
+            "DESIGN_BRIEF_SCHEMA": schema,
+            "EVIDENCE_CATALOG": selection["evidence"],
+            "FEW_SHOTS": selection["few_shots"],
+        }
+        rendered = render_prompt(
+            template_id=DESIGN_BRIEF_TEMPLATE_ID,
+            inputs=renderer_inputs,
+        )
+        request = {
+            "model": config.model,
+            "messages": [{"role": "user", "content": rendered["text"]}],
+            "temperature": 0,
+            "response_format": {"type": "json_object"},
+        }
+        request.update(token_limit_request(config))
+        # Persist the attempt before transport/parsing: even an unusable response
+        # is real evidence, and must not disappear from the review lineage.
+        _write_json(call_dir / "conversation.json", transcript)
+        _write_json(call_dir / "context-selection.json", selection)
+        _write_json(call_dir / "prompt-render-input.json", renderer_inputs)
+        (call_dir / "prompt-rendered.md").write_text(rendered["text"], encoding="utf-8")
+        _write_json(call_dir / "request.redacted.json", request)
+        try:
+            response = client.chat.completions.create(**request)
+        except Exception as error:
+            failure = {"exception_type": type(error).__name__, "status": "transport_failed"}
+            _write_json(call_dir / "transport-failure.json", failure)
+            # Provider exceptions may contain credentials or private endpoint URLs.
+&gt;           raise OpenAICompatError("Design Brief transport failed", evidence=failure) from None
+E           text2ifc_agent.openai_compat.OpenAICompatError: Design Brief transport failed
+
+src\text2ifc_agent\interactive_cli_flow.py:194: OpenAICompatError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-evidence-collision-red-02/test_repeated_call_index_canno2')
+existing = 'transport-failure.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+        config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'OPENAI_BASE_URL': 'https://example.invalid',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+        invoke = make_openai_design_brief_invoker(config=config, run_dir=tmp_path,
+            client_factory=lambda **_: SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+&gt;       with pytest.raises(Exception, match='DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS'
+E        Input: 'Design Brief transport failed'
+
+tests\agent\test_design_brief_attempt_preservation.py:50: AssertionError</failure></testcase></testsuite></testsuites>

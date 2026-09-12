@@ -1,0 +1,229 @@
+{
+  "schema_version": "text2ifc/design-geometry-expectation/1.0",
+  "case_id": "5cd2006f0891913f",
+  "source": "design_brief_expected_facts",
+  "units": "METRE",
+  "tolerance": 0.05,
+  "complete": false,
+  "spaces": {
+    "space-storey-1-space-reading-lobby": {
+      "bbox": {
+        "x": [
+          0.0,
+          6.8
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "storey_id": "storey-1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/0"
+      ]
+    },
+    "space-storey-1-space-stair-hall-1": {
+      "bbox": {
+        "x": [
+          7.0,
+          9.0
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          0.0,
+          3.0
+        ]
+      },
+      "storey_id": "storey-1",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/1"
+      ]
+    },
+    "space-storey-2-space-activity-hall": {
+      "bbox": {
+        "x": [
+          0.0,
+          6.8
+        ],
+        "y": [
+          0.0,
+          8.0
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "storey_id": "storey-2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/0"
+      ]
+    },
+    "space-storey-2-space-stair-platform-2": {
+      "bbox": {
+        "x": [
+          7.0,
+          9.0
+        ],
+        "y": [
+          6.6,
+          8.0
+        ],
+        "z": [
+          3.15,
+          6.15
+        ]
+      },
+      "storey_id": "storey-2",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/1"
+      ]
+    }
+  },
+  "walls": {},
+  "slabs": {
+    "ground-slab": {
+      "bbox": {
+        "x": [
+          -0.2,
+          9.2
+        ],
+        "y": [
+          -0.2,
+          8.2
+        ],
+        "z": [
+          -0.15,
+          0.0
+        ]
+      },
+      "datum": "slab_top",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/0"
+      ],
+      "must_touch_walls": []
+    },
+    "second-floor-slab": {
+      "bbox": {
+        "x": [
+          -0.2,
+          9.2
+        ],
+        "y": [
+          -0.2,
+          8.2
+        ],
+        "z": [
+          3.0,
+          3.15
+        ]
+      },
+      "datum": "slab_top",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1"
+      ],
+      "must_touch_walls": []
+    }
+  },
+  "roof": {
+    "roof-slab": {
+      "bbox": {
+        "x": [
+          -0.2,
+          9.2
+        ],
+        "y": [
+          -0.2,
+          8.2
+        ],
+        "z": [
+          6.15,
+          6.3
+        ]
+      },
+      "datum": "roof_bottom",
+      "source_fact_refs": [
+        "/known_facts/roof_slab"
+      ]
+    }
+  },
+  "stairs": {
+    "stair-1": {
+      "flight_ids": [
+        "stair-flight-1"
+      ],
+      "bbox": {
+        "x": [
+          7.4,
+          8.6
+        ],
+        "y": [
+          1.2,
+          6.6
+        ],
+        "z": [
+          0.0,
+          3.15
+        ]
+      },
+      "bbox_issue_code": "STAIR_BBOX_MISMATCH",
+      "require_steps": true,
+      "source_fact_refs": [
+        "/known_facts/stairs/0"
+      ]
+    }
+  },
+  "floor_openings": {
+    "opening-second-floor-slab-stair": {
+      "bbox": {
+        "x": [
+          7.2,
+          8.8
+        ],
+        "y": [
+          1.2,
+          6.6
+        ],
+        "z": [
+          3.0,
+          3.15
+        ]
+      },
+      "host_slab_id": "second-floor-slab",
+      "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
+      "source_fact_refs": [
+        "/known_facts/floor_slabs/1/openings/0"
+      ]
+    }
+  },
+  "products": {},
+  "unresolved": [
+    {
+      "path": "/known_facts/storeys/0/walls/interior/0",
+      "reason": "shared_boundary_not_unique_or_wall_thickness_missing",
+      "source_fact_refs": [
+        "/known_facts/storeys/0/spaces/0",
+        "/known_facts/storeys/0/spaces/1",
+        "/known_facts/storeys/0/walls/interior/0"
+      ]
+    },
+    {
+      "path": "/known_facts/storeys/1/walls/interior/0",
+      "reason": "shared_boundary_not_unique_or_wall_thickness_missing",
+      "source_fact_refs": [
+        "/known_facts/storeys/1/spaces/0",
+        "/known_facts/storeys/1/spaces/1",
+        "/known_facts/storeys/1/walls/interior/0"
+      ]
+    }
+  ],
+  "doors": {},
+  "windows": {}
+}

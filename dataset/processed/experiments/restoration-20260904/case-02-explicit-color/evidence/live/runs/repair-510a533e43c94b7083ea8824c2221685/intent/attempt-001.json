@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "c7016a83-6990-4d3f-8b79-20bdb958fd59",
+    "session_id": "ifc-repair-intent-request-447c486fcb61361c",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 12653,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 12180,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 24833
+    }
+  },
+  "response_excerpt": "{\n  \"schema_version\": \"text2ifc/ifc-repair-intent-body/0.9\",\n  \"operations\": [\n    {\n      \"operation_id\": \"restore-beam-1\",\n      \"operation_type\": \"add_beam\",\n      \"routing_intent\": {\n        \"component_family\": \"beam\",\n        \"action\": \"add\",\n        \"operation_profile\": \"beam.add.v0.3\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"在标高7恢复一根缺失的水平直线矩形梁，中心轴从 (-3316.629521, -3863.522838, -285) mm 到 (-3316.629521, -8803.522838, -285) mm，截面宽 455 mm、高 570 mm，并精确复用 GlobalId 为 17tPjyQtf2L9JnbXXmcTTd、名称为 S_支撑梁-1-ZC1 700x800 C30 的现有 IfcBeamType；同时精确复用现有 IfcMaterial `C_钢筋砼C30` 作为这根恢复梁的 occurrence-level Material，并将新恢复梁的表面颜色设为 RGB=(0.92, 0.12, 0.18)。\"\n        }\n      },\n      \"target_query\": {\n        \"schema_version\": \"text2ifc/ifc-target-query/0.1\",\n        \"allowed_ifc_classes\": [\n          \"IfcBuildingStorey\"\n        ],\n        \"names\": [\n          \"标高7\"\n        ]\n      },\n      \"parameters\": {\n        \"axis\": {\n          \"start\": {\n            \"x_mm\": -3316.629521,\n            \"y_mm\": -3863.522838,\n            \"z_mm\": -285\n          },\n          \"end\": {\n            \"x_mm\": -3316.629521,\n            \"y_mm\": -8803.522838,\n            \"z_mm\": -285\n          }\n        },\n        \"section\": {\n          \"shape\": \"rectangle\",\n          \"width_mm\": 455,\n          \"height_mm\": 570\n        }\n      },\n      \"attribute_intents\": [\n        {\n          \"intent_kind\": \"material\",\n          \"name\": \"Material\",\n          \"value\": \"C_钢筋砼C30\",\n          \"source\": {\n            \"source_kind\": \"user_request\",\n            \"reference\": \"public-request\",\n            \"excerpt\": \"同时精确复用现有 IfcMaterial `C_钢筋砼C30` 作为这根恢复梁的 occurrence-level Material\"\n          }\n        }\n      ],\n      \"property_intents\": [],\n      \"semantic_bundle_refs\": [],\n      \"quantity_intents\": [],\n      \"occurrence_reuse_intent\": null,\n      \"prototype_intent\": {\n        \"reference_kind\": \"global_id\",\n        \"reference\": \"17tPjyQtf2L9JnbXXmcTTd\",\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"并精确复用 GlobalId 为 17tPjyQtf2L9JnbXXmcTTd、名称为 S_支撑梁-1-ZC1 700x800 C30 的现有 IfcBeamType\"\n        }\n      },\n      \"appearance_intent\": {\n        \"intent_kind\": \"surface_color_rgb\",\n        \"red\": 0.92,\n        \"green\": 0.12,\n        \"blue\": 0.18,\n        \"source\": {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"并将新恢复梁的表面颜色设为 RGB=(0.92, 0.12, 0.18)\"\n        }\n      },\n      \"provenance\": [\n        {\n          \"source_kind\": \"user_request\",\n          \"reference\": \"public-request\",\n          \"excerpt\": \"在标高7恢复一根缺失的水平直线矩形梁，中心轴从 (-3316.629521, -3863.522838, -285) mm 到 (-3316.629521, -8803.522838, -285) mm，截面宽 455 mm、高 570 mm，并精确复用 GlobalId 为 17tPjyQtf2L9JnbXXmcTTd、名称为 S_支撑梁-1-ZC1 700x800 C30 的现有 IfcBeamType；同时精确复用现有 IfcMaterial `C_钢筋砼C30` 作为这根恢复梁的 occurrence-level Material，并将新恢复梁的表面颜色设为 RGB=(0.92, 0.12, 0.18)。\"\n        }\n      ]\n    }\n  ],\n  \"unsupported_requests\": [],\n  \"semantic_bundles\": [],\n  \"provenance\": [\n    {\n      \"source_kind\": \"user_request\",\n      \"reference\": \"public-request\",\n      \"excerpt\": \"在标高7恢复一根缺失的水平直线矩形梁，中心轴从 (-3316.629521, -3863.522838, -285) mm 到 (-3316.629521, -8803.522838, -285) mm，截面宽 455 mm、高 570 mm，并精确复用 GlobalId 为 17tPjyQtf2L9JnbXXmcTTd、名称为 S_支撑梁-1-ZC1 700x800 C30 的现有 IfcBeamType；同时精确复用现有 IfcMaterial `C_钢筋砼C30` 作为这根恢复梁的 occurrence-level Material，并将新恢复梁的表面颜色设为 RGB=(0.92, 0.12, 0.18)。\"\n    }\n  ]\n}",
+  "response_sha256": "sha256:f4637ceebabd4c512779c00995792330f74d95232fdc6bc145e4528f4f9db91b",
+  "status": "valid"
+}

@@ -1,0 +1,203 @@
+{
+  "role": "post-run factual closeout, not acceptance or capability evaluation",
+  "created_at": "2026-09-10T04:48:19.279585+00:00",
+  "code_head_at_execution": "79af819373a9eabfb2429ff36c8f91cd08051047",
+  "historical_files_checked": 174,
+  "historical_files_changed": [],
+  "reference_ifc": {
+    "path": "dataset/processed/ifc-presentation-validation/three-storey-human-review-20260909/generated.ifc",
+    "sha256": "756cf1ad4b8175ecb2571ce09483bd6ab83edfd562ae2f66c33a650b9e610d63",
+    "unchanged": true
+  },
+  "requests_equal_original_sha256": true,
+  "new_provider_attempts": 8,
+  "A": {
+    "session_hash": "60b27145d6d8d3a3",
+    "execution_status": "budget_blocked",
+    "new_provider_attempts": 2,
+    "inherited_provider_attempts": 4,
+    "budget": {
+      "schema_version": "text2ifc/generation-budget/1.0",
+      "limits": {
+        "max_calls": 6,
+        "max_tokens": 800000,
+        "max_active_seconds": 1800
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "design-brief",
+          "status": "completed",
+          "tokens_charged": 43558,
+          "reserved_tokens": 123537,
+          "elapsed_seconds": 99.25
+        },
+        {
+          "attempt": 2,
+          "stage": "generate",
+          "status": "completed",
+          "tokens_charged": 102128,
+          "reserved_tokens": 176794,
+          "elapsed_seconds": 232.45299999999952
+        },
+        {
+          "attempt": 3,
+          "stage": "audit",
+          "status": "completed",
+          "tokens_charged": 60968,
+          "reserved_tokens": 215070,
+          "elapsed_seconds": 41.17199999999957
+        },
+        {
+          "attempt": 4,
+          "stage": "changeset",
+          "status": "completed",
+          "tokens_charged": 81808,
+          "reserved_tokens": 254000,
+          "elapsed_seconds": 73.875
+        },
+        {
+          "attempt": 5,
+          "stage": "generate",
+          "status": "completed",
+          "tokens_charged": 90395,
+          "reserved_tokens": 176794,
+          "elapsed_seconds": 181.5
+        },
+        {
+          "attempt": 6,
+          "stage": "audit",
+          "status": "completed",
+          "tokens_charged": 53769,
+          "reserved_tokens": 209693,
+          "elapsed_seconds": 20.56300000000192
+        }
+      ],
+      "calls_used": 6,
+      "tokens_used_or_reserved": 432626,
+      "active_seconds": 648.813000000001
+    },
+    "ifc_available": false,
+    "saved_response_metadata": {
+      "c3ed9c6c-b6da-4d6b-aac7-db6da09fda9d": [
+        "A-revise/runtime/runs/60b27145d6d8d3a3/audit/response-metadata.json",
+        "A-revise/runtime/runs/60b27145d6d8d3a3/evaluation-rounds/round-01/audit/response-metadata.json"
+      ],
+      "c302b904-4c8c-4fe2-ae76-06e35753bdfe": [
+        "A-revise/runtime/runs/60b27145d6d8d3a3/design-brief/response-metadata.json",
+        "A-revise/runtime/runs/60b27145d6d8d3a3/calls/01-design-brief/response-metadata.json"
+      ],
+      "b5a04813-887d-46fd-ab9e-7452b9a2bfac": [
+        "A-revise/runtime/runs/60b27145d6d8d3a3/generator/response-metadata.json"
+      ]
+    },
+    "copied_brief_is_not_a_new_call": true
+  },
+  "B": {
+    "session_hash": "51592773914118fb",
+    "execution_status": "exception",
+    "new_provider_attempts": 6,
+    "known_reported_tokens_first_five": 320167,
+    "last_reported_usage_status": "unknown; conservative budget reservation charged",
+    "budget": {
+      "schema_version": "text2ifc/generation-budget/1.0",
+      "limits": {
+        "max_calls": 6,
+        "max_tokens": 800000,
+        "max_active_seconds": 1800
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "design-brief",
+          "status": "completed",
+          "tokens_charged": 36848,
+          "reserved_tokens": 122928,
+          "elapsed_seconds": 68.85900000000038
+        },
+        {
+          "attempt": 2,
+          "stage": "generate",
+          "status": "completed",
+          "tokens_charged": 72267,
+          "reserved_tokens": 172406,
+          "elapsed_seconds": 127.75
+        },
+        {
+          "attempt": 3,
+          "stage": "audit",
+          "status": "completed",
+          "tokens_charged": 56732,
+          "reserved_tokens": 182464,
+          "elapsed_seconds": 67.71900000000096
+        },
+        {
+          "attempt": 4,
+          "stage": "changeset",
+          "status": "completed",
+          "tokens_charged": 63145,
+          "reserved_tokens": 207450,
+          "elapsed_seconds": 63.46900000000096
+        },
+        {
+          "attempt": 5,
+          "stage": "audit",
+          "status": "completed",
+          "tokens_charged": 91175,
+          "reserved_tokens": 300678,
+          "elapsed_seconds": 29.90700000000288
+        },
+        {
+          "attempt": 6,
+          "stage": "changeset",
+          "status": "failed",
+          "tokens_charged": 208955,
+          "reserved_tokens": 208955,
+          "elapsed_seconds": 293.8279999999977
+        }
+      ],
+      "calls_used": 6,
+      "tokens_used_or_reserved": 529122,
+      "active_seconds": 651.5320000000029
+    },
+    "saved_response_metadata": {
+      "1b95aa8c-0696-4efc-9d58-d15056b67f6b": [
+        "B-retain/runtime/runs/51592773914118fb/audit/response-metadata.json",
+        "B-retain/runtime/runs/51592773914118fb/evaluation-rounds/round-02/audit/response-metadata.json"
+      ],
+      "e3a711d6-273a-4ea4-8beb-ec226421a287": [
+        "B-retain/runtime/runs/51592773914118fb/changeset-round-01/response-metadata.json"
+      ],
+      "199c507b-6cc2-4b49-a741-4d23f3aee7c5": [
+        "B-retain/runtime/runs/51592773914118fb/design-brief/response-metadata.json",
+        "B-retain/runtime/runs/51592773914118fb/calls/01-design-brief/response-metadata.json"
+      ],
+      "c5a38d05-4e9a-4724-a6a1-69da4696519f": [
+        "B-retain/runtime/runs/51592773914118fb/generator/response-metadata.json",
+        "B-retain/runtime/runs/51592773914118fb/generator-before-changesets/response-metadata.json"
+      ],
+      "f31ac579-e482-466c-9778-73ec2a2df238": [
+        "B-retain/runtime/runs/51592773914118fb/evaluation-rounds/round-01/audit/response-metadata.json"
+      ]
+    },
+    "candidate_role": "diagnostic only; not final published or accepted IFC",
+    "candidate_ifc_sha256": "9ed8ebb7ba8c52ed84340ff39da0614560bc99198341da1a8f33c6e8fc002922",
+    "independent_request_checks_passed": 290,
+    "production_geometry_issue_counts": {
+      "MISSING_STAIR_OPENING": 2,
+      "MISSING_STAIR_FLIGHT": 2
+    },
+    "mesh_products": 40,
+    "mesh_failures": [],
+    "clearance_sample_count": 108,
+    "minimum_sampled_gap_m": 0.0,
+    "zero_gap_count": 3
+  },
+  "full_preflight_run": false,
+  "accepted_proof_curator_run": false,
+  "proof_registered": false,
+  "human_review_status": "pending, diagnostic candidate only",
+  "visual_check": "Codex inspected four actual IFC mesh renderings; coordinated colors and basic box geometry; no fancy/publication-ready claim",
+  "render_environment": "IFC export used repository .venv; PNG rendering of exported JSON meshes used bundled Python 26.905.11957 after repository .venv lacked PIL; no production environment changes",
+  "github_push_performed": false
+}

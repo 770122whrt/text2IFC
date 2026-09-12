@@ -1,0 +1,96 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.4",
+  "draft_id": "changeset-7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "base_model_fingerprint": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+  "source_request_hash": "sha256:7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:d83e6eb9d00ec8b134d3b20642bab6189b8d7d3681b7356eb2360059f1c410fa",
+  "semantic_summary": {
+    "required": 32,
+    "conditional": 22,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "0jltRti3rFigAmdXYhXxqI",
+      "1B$rgWypT66viEf30I1iIv",
+      "1vTeahUkP60PdWqwCTjUuM",
+      "1vTeahUkP60PdWqwCTjeRs",
+      "2CsmzAChHF6O6maGXlo6yJ",
+      "2IUEnGd5v4Yfg1ZkLtd0qa"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/fill-door-1/context/candidate_targets/0",
+    "resolved:/operations/fill-door-2/context/candidate_targets/0",
+    "resolved:/operations/install-window-1/context/candidate_targets/0",
+    "resolved:/operations/install-window-2/context/candidate_targets/0",
+    "resolved:/operations/restore-beam-5/context/candidate_targets/0",
+    "resolved:/operations/restore-column-6/context/candidate_targets/0"
+  ],
+  "preconditions": [],
+  "postconditions": [],
+  "operations": [
+    {
+      "appearance": null,
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-5/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-5",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": -285.0
+          },
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": -285.0
+          }
+        },
+        "section": {
+          "height_mm": 570,
+          "shape": "rectangle",
+          "width_mm": 455
+        }
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+      }
+    },
+    {
+      "appearance": null,
+      "evidence_refs": [
+        "resolved:/operations/restore-column-6/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-column-6",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "depth_mm": 500,
+          "shape": "rectangle",
+          "width_mm": 500
+        }
+      },
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      }
+    }
+  ]
+}

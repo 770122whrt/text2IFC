@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="4" skipped="0" tests="4" time="0.632" timestamp="2026-09-08T23:00:12.972075+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_changeset_context_selection" name="test_field_context_omits_unrelated_examples_and_registry_classes" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'">def test_field_context_omits_unrelated_examples_and_registry_classes():
+        value = candidate()
+        original = copy.deepcopy(value)
+&gt;       context = select(candidate=value, scope={'entity_ids':['style-0'],'relationship_ids':[]},
+                         field_recovery=True)
+
+tests\agent\test_changeset_context_selection.py:15: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'candidate': {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'propert...est'}, 'relationships': [], ...}, 'field_recovery': True, 'scope': {'entity_ids': ['style-0'], 'relationship_ids': []}}
+
+    def select(**kwargs):
+&gt;       from text2ifc_agent.changeset_context import select_changeset_context
+E       ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'
+
+tests\agent\test_changeset_context_selection.py:8: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_changeset_context_selection" name="test_shared_type_context_includes_users_from_separate_relationships" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'">def test_shared_type_context_includes_users_from_separate_relationships():
+        value = candidate()
+        value['entities'].append({'id':'wall-other','ifc_class':'IfcWall','attributes':{}})
+        for n, entity_id in enumerate(['wall-1','wall-other']):
+            value['relationships'].append({'id':f'type-rel-{n}','ifc_class':'IfcRelDefinesByType',
+                'attributes':{'RelatingType':'style-0','RelatedObjects':[entity_id]}})
+        scope = {'entity_ids':['wall-1'],'relationship_ids':[]}
+        original = copy.deepcopy(scope)
+&gt;       context = select(candidate=value, scope=scope)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_context_selection.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'candidate': {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'propert... 'type-rel-1', 'ifc_class': 'IfcRelDefinesByType'}], ...}, 'scope': {'entity_ids': ['wall-1'], 'relationship_ids': []}}
+
+    def select(**kwargs):
+&gt;       from text2ifc_agent.changeset_context import select_changeset_context
+E       ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'
+
+tests\agent\test_changeset_context_selection.py:8: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_changeset_context_selection" name="test_staged_context_uses_exact_package_references_without_granting_writes" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'">def test_staged_context_uses_exact_package_references_without_granting_writes():
+        value = candidate()
+        package = {'kind':'storey_local','allowed_reference_ids':['wall-1'],
+            'owned_component_ids':['new-wall'], 'owned_component_classes':{'new-wall':'IfcWall'}}
+        scope = {'entity_ids':['new-wall'],'relationship_ids':[]}
+&gt;       context = select(candidate=value, scope=scope, package=package)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_changeset_context_selection.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'candidate': {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'propert...wall': 'IfcWall'}, 'owned_component_ids': ['new-wall']}, 'scope': {'entity_ids': ['new-wall'], 'relationship_ids': []}}
+
+    def select(**kwargs):
+&gt;       from text2ifc_agent.changeset_context import select_changeset_context
+E       ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'
+
+tests\agent\test_changeset_context_selection.py:8: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_changeset_context_selection" name="test_cross_storey_context_keeps_stair_coordinate_examples" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'">def test_cross_storey_context_keeps_stair_coordinate_examples():
+&gt;       context = select(candidate=candidate(), scope={'entity_ids':[],'relationship_ids':[]},
+            package={'kind':'cross_storey','allowed_reference_ids':[], 'owned_component_ids':['flight']})
+
+tests\agent\test_changeset_context_selection.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+kwargs = {'candidate': {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'propert...': [], 'kind': 'cross_storey', 'owned_component_ids': ['flight']}, 'scope': {'entity_ids': [], 'relationship_ids': []}}
+
+    def select(**kwargs):
+&gt;       from text2ifc_agent.changeset_context import select_changeset_context
+E       ModuleNotFoundError: No module named 'text2ifc_agent.changeset_context'
+
+tests\agent\test_changeset_context_selection.py:8: ModuleNotFoundError</failure></testcase></testsuite></testsuites>

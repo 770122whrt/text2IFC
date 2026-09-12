@@ -1,0 +1,63 @@
+{
+  "blocking": true,
+  "design_review": {
+    "concerns": [
+      {
+        "description": "参考模型发现一层通往二层楼梯接近北端平台时被反向梯段遮挡、局部净空为零。用户 turn-user-003 选择调整内部布局且不向外扩建：三层分隔墙西移至 X=7300~7500（厚 200、Y=0~8400），大厅净范围改为 X=0~7300，楼梯间与平台净范围改为 X=7500~10000；第一段梯段平面改为 X=7500~8700，第二段改为 X=8800~10000（均 Y=1500~6900、宽 1200、18 踏面 300、18 踢面 175、起止标高 0→3150 与 3150→6300），二层楼板洞口改为 X=7500~8700、三层洞口改为 X=8800~10000 并各自穿透 150 毫米楼板，两樘分隔墙门随墙西移 300 毫米（门中心 X=7400）。逐项比对 generator/candidate.json：各层分隔墙 ObjectPlacement.origin=[7400,4200,0] 且轮廓 8400×200（即 X=7300~7500、Y=0~8400），stair-1 原点 [7500,1500,0]、stair-2 原点 [8800,6900,0]，opening-storey-2-slab-stair 原点 [3100,0,0]、opening-storey-3-slab-stair 原点 [4400,0,0]（相对楼板原点 [5000,4200,-150]，即平面 X=7500~8700 与 X=8800~10000、Y=1500~6900），三樘分隔墙门洞局部偏移 -3500 / +3450 / -3500 对应全局 Y=700 / 7650 / 700，均与确认修订一致，未发现违反该确认修订之处，外轮廓、层高、外墙门窗、材料与配色也未被改动。但本轮 IFC 编译/重开验证失败、几何指标为空，无法对错位后两段梯段行人的踏步净空作独立几何核实，故只能给 not_verified：本项仅为模型层面的一致性对照，不是独立工程验证；用户已确认接受每层大厅净面积减少 2.52 平方米的布局影响。",
+        "evidence_paths": [
+          "design-review-context.json"
+        ],
+        "id": "reference-stair-walking-clearance",
+        "status": "not_verified"
+      }
+    ],
+    "limitations": [
+      "未进行完整建筑规范审查。",
+      "未做结构、耐火、疏散与楼梯踏步净空等独立工程核算；Audit 与本次对照仅为模型层面检查，不构成工程结论。",
+      "确定性 IFC 编译/重开 gate 失败且 geometry_feedback.metrics 为空，未取得可用于净空复核的独立几何指标。",
+      "参考模型与当前候选模型分别陈述：参考模型用于提出净空疑虑，当前候选模型仅用于核对已确认修订是否被落实，两者不可互相替代。"
+    ],
+    "scope": "limited_review_not_code_compliance"
+  },
+  "deterministic_gate_status": "failed",
+  "evidence_paths": [
+    "geometry-feedback.json",
+    "gate-summary.json",
+    "repair/route.json",
+    "repair/metrics.json",
+    "generator/candidate.json",
+    "semantic-coverage.json",
+    "design-review-context.json"
+  ],
+  "findings": [
+    {
+      "code": "COMPILE_REOPEN_FAILED_BLOCKING",
+      "component_ids": [
+        "stair-1",
+        "stair-flight-1",
+        "stair-2",
+        "stair-flight-2"
+      ],
+      "evidence_paths": [
+        "geometry-feedback.json",
+        "gate-summary.json",
+        "generator/candidate.json"
+      ],
+      "message": "确定性 gate 判定为失败：bim_json_validation=true 但 ifc_compile_reopen=false、geometry_success=false、gate_summary_passed=false，geometry_feedback 报告 code=COMPILE_REOPEN_FAILED、path=/output.ifc，metrics 为空。Audit 不得覆盖确定性 gate，因此即使语义审查未发现与 turn-user-003 确认修订的偏离，本轮仍必须保持 blocking，并将结果判为 revise。IFC 层失败未给出构件级归因，下列 component_ids 仅为表示法最不常规的构件（多边形拉伸梯段及其 IfcStair 容器），用作定位提示，不构成归因结论。",
+      "severity": "blocking"
+    },
+    {
+      "code": "REPAIR_ROUTE_EVIDENCE_MISMATCH",
+      "evidence_paths": [
+        "repair/route.json",
+        "repair/metrics.json",
+        "geometry-feedback.json",
+        "gate-summary.json"
+      ],
+      "message": "repair/route.json 与 metrics.json 报告 route=no_repair_needed、geometry_issue_count=0、repair_attempt_count=0，但同一轮 geometry-feedback.json 报告 success=false、issues[0].code=COMPILE_REOPEN_FAILED，gate-summary.json 报告 geometry_success=false、gate_summary_passed=false。可见编译/重开失败未被 repair 路由识别或处理，缺失指标也使任何后续几何复核无据可依。该不一致本身不改变 blocking 结论，但说明失败原因仍待定位。",
+      "severity": "non_blocking"
+    }
+  ],
+  "recommendation": "revise",
+  "schema_version": "text2ifc/audit/3.0"
+}

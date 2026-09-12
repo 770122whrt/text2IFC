@@ -1,0 +1,53 @@
+......F
+================================== FAILURES ===================================
+_______ test_live_cli_runs_design_brief_case_through_injected_provider ________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/brief-evidence-firstfail/test_live_cli_runs_design_brie0')
+capsys = <_pytest.capture.CaptureFixture object at 0x000001A255690FB0>
+
+    def test_live_cli_runs_design_brief_case_through_injected_provider(
+        tmp_path: Path, capsys
+    ):
+        script_path = Path("scripts/agent/run_phase6_1_live.py")
+        assert script_path.is_file(), "Phase 6.1 live CLI is missing"
+        spec = importlib.util.spec_from_file_location("run_phase6_1_live", script_path)
+        assert spec is not None and spec.loader is not None
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        case = complete_room_case()
+        payload = _valid_ready_brief(case)
+        payload["schema_version"] = "text2ifc/design-brief/2.1"
+        provider = _RecordingLiveProvider(payload)
+    
+        exit_code = module.main(
+            [
+                "--stage",
+                "design-brief",
+                "--case",
+                "complete-room",
+                "--live",
+                "--output-dir",
+                str(tmp_path),
+            ],
+            provider_factory=lambda: provider,
+        )
+    
+        output = json.loads(capsys.readouterr().out)
+>       assert exit_code == 0
+E       assert 2 == 0
+
+tests\agent\test_phase6_1_live.py:372: AssertionError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\_pytest\cacheprovider.py:475
+  E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path E:\code for project\bimnet\.pytest_cache\v\cache\nodeids: [WinError 5] �ܾ����ʡ�: 'E:\\code for project\\bimnet\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv\Lib\site-packages\_pytest\cacheprovider.py:429
+  E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\cacheprovider.py:429: PytestCacheWarning: could not create cache path E:\code for project\bimnet\.pytest_cache\v\cache\lastfailed: [WinError 5] �ܾ����ʡ�: 'E:\\code for project\\bimnet\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/agent/test_phase6_1_live.py::test_live_cli_runs_design_brief_case_through_injected_provider
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 6 passed, 2 warnings in 3.59s

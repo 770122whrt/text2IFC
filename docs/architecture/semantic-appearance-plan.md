@@ -260,7 +260,7 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 
 运行与查看：
 
-- [四模板中文展示入口](../../dataset/processed/ifc-presentation-validation/semantic-appearance-20260908-final/REPORT.md)。图像来自实际重读 IFC 三角网格的固定正交投影，不能代替真实 viewer 人工审查。
+- [四模板中文展示入口](../../dataset/processed/experiments/semantic-appearance-20260908-final/REPORT.md)。图像来自实际重读 IFC 三角网格的固定正交投影，不能代替真实 viewer 人工审查。
 - 离线重建：`.venv\Scripts\python.exe scripts/presentation/validate_semantic_appearance.py --output-dir <新的目录>`；已存在目录拒绝覆盖。
 - 公共离线编译：`.venv\Scripts\python.exe scripts/bim_json/compile_ifc.py <candidate.json> <output.ifc>`。
 - 现有交互入口 `scripts/agent/run_phase6_2_cli.py` 使用新 Brief/Generator 合同；本任务未调用其真实 Provider。Repair 通过既有 `RepairAPI.start` / `continue_with_answer` 接入。
@@ -274,13 +274,13 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 - 第一组阶段范围回归：406 passed / 1 failed；畸形 Type 引用的材料继承异常修复后，相关 91 项通过。
 - 扩大的阶段范围回归：451 passed / 1 failed；在编辑新 Prompt/hash 时读到短暂不一致，冻结文件后相关 47 项通过。失败记录保留，不将该整轮标成全绿。
 - 首轮 Brief 降版防护与新旧公共调用兼容的最终复验：75 passed / 0 failed。旧版回放显式选择 `design_brief_schema_version="text2ifc/design-brief/2.0"`；新调用默认 2.1 并拒绝降版响应。
-- 四个展示 IFC、8 个 SVG XML/本地链接检查通过。机器记录与完整 pytest XML 见[离线验证 evidence](../../dataset/processed/ifc-presentation-validation/semantic-appearance-20260908-final/evidence/README.md)。各组有重叠，不合并为独立案例总数或能力分数。
+- 四个展示 IFC、8 个 SVG XML/本地链接检查通过。机器记录与完整 pytest XML 见[离线验证 evidence](../../dataset/processed/experiments/semantic-appearance-20260908-final/evidence/README.md)。各组有重叠，不合并为独立案例总数或能力分数。
 
 本轮 Code HEAD 为 `82476b5b`。框/面板为受限、关闭状态的矩形实体，左右门向以 IFC2X3 DoorStyle 表达；不提供开门动画或复杂五金。仅支持本页定义的竖直矩形墙/开口及合法参数，超出范围阻断。人工 viewer/主题审查、真实 Provider 验证和正式 accepted Proof 安装均未进行，不能由这些离线结果替代。
 
 ## 12. 2026-09-08 真实运行与通用边界调试
 
-用户后续明确授权 DeepSeek 真实调用及两条链路的人工检查材料。上节“未调用真实 Provider”是此前离线检查点；当前待验收入口为 [真实运行报告](../../dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/REPORT.md)。它位于展示验证目录，尚未安装 accepted Proof。
+用户后续明确授权 DeepSeek 真实调用及两条链路的人工检查材料。上节“未调用真实 Provider”是此前离线检查点；当前待验收入口为 [真实运行报告](../../dataset/processed/experiments/live-semantic-20260908-01/REPORT.md)。它位于展示验证目录，尚未安装 accepted Proof。
 
 - Repair：dataset `vvo.ifc` 在执行前冻结为 private_ground_truth，仅删除一个实例属性关系。公共 API 实际只接收 damaged 与公开请求；成功 live-04 有 2 次真实调用，完整 IFC 发布并通过独立四项有类型属性核对。原有 STEP 实体均未改动，三份文件各 152 个构件的网格和样式一致。此前真实失败 attempt-02 及离线回归分别保留。公共 conditional L2 的 not_required 标签不用于证明请求值，报告链接独立重读结果。
 - Generation：真实 Brief 澄清／恢复及两次 Generator 均保留。第二次真实候选纠正局部坐标重复旋转；未经手改候选，修复确定性代码后编译、重读、候选和几何检查通过，45 项独立用户预期核对通过。整体、门窗近景已由 Agent 查看；人工审查待确认。用户明确授权具体载荷后，真实 Audit 接受且最终发布验收通过；最终 IFC 再独立核对 45 项通过。该结果经历开发纠错及同例复验，不是完整真实 CLI 首次成功或盲测能力提升，accepted Proof 仍待人工确认。
@@ -301,7 +301,7 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 
 用户要求保留单层案例，新增更完整的双层 Generation，并尽量使用工程师语言定位 Repair 目标。单层案例仍待人工检查、未登记。Repair 的待检查报告已补充平面定位图及属性前后中文解释，原始技术请求和三份 IFC 字节未改；18 个报告链接及四份核心文件绑定检查通过。当前无 GUID 的“标高0层、长约2.22米、厚240毫米”查询确实返回两个候选，未强行选中；`direction` 描述轴线朝向，不能冒充外立面方位。任意“北侧／从西数第二个／距转角若干米”的组合定位尚未实现，本次报告中的人类表达示意没有作为新 Provider 输入执行。
 
-新增[双层开发记录](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/REPORT.md)：运行前冻结输入和预期，设计包含上下两层活动厅、直跑楼梯与实际楼板洞口、10 窗／3 门和协调主题。累计 5 次真实响应（2 Brief、3 Generator）均保留。首次 Brief 因文本末尾换行回显差异被拒绝；随后公共 CLI 候选存在 IFC2X3 楼梯属性名、DoorStyle 与局部坐标轴错误。既有反馈接口纠正一次返回空正文，有限重试返回完整 JSON，但十个 WindowStyle 使用非法 ConstructionType=`WINDOW`，离线原样重放确认阻断。当前没有可交付双层 IFC，本轮真实调用已停止；未运行新 Audit、最终验收或双层视觉检查，未收纳为成功 Proof。
+新增[双层开发记录](../../dataset/processed/experiments/two-storey-human-review-20260908/REPORT.md)：运行前冻结输入和预期，设计包含上下两层活动厅、直跑楼梯与实际楼板洞口、10 窗／3 门和协调主题。累计 5 次真实响应（2 Brief、3 Generator）均保留。首次 Brief 因文本末尾换行回显差异被拒绝；随后公共 CLI 候选存在 IFC2X3 楼梯属性名、DoorStyle 与局部坐标轴错误。既有反馈接口纠正一次返回空正文，有限重试返回完整 JSON，但十个 WindowStyle 使用非法 ConstructionType=`WINDOW`，离线原样重放确认阻断。当前没有可交付双层 IFC，本轮真实调用已停止；未运行新 Audit、最终验收或双层视觉检查，未收纳为成功 Proof。
 
 两组新增聚焦回归为 54 passed 与 59 passed（离线、存在重叠），复用并核对既有同阶段准入源哈希；没有修改生产代码或已注册 Prompt／Schema／profile，没有运行 Full Preflight。下一步先冻结枚举约束、无 Type 请求最小附件与公共纠错案例族，再评估通用修复；若继续真实调用须基于适用的离线复验，保留这些失败。新成功案例只需既有 Proof 格式与实际 IFC 静态图，不另建网页；仍须等用户人工确认后登记。
 
@@ -328,9 +328,9 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 
 本轮聚焦运行 `test_repair_fact_delta.py`、`test_generator_failure_routing.py`、`test_phase6_5_changeset_apply.py`、`test_phase6_5_scoped_loop.py`、`test_phase6_5_staged_generation.py`、`test_phase6_4_feedback_loop.py`：**57 passed**。测试为离线 seam／fake，不代表真实恢复成功。额外只读／内存探针证明枚举路由阻断、合法字段改名被权限拦截、只修一个样式仍剩九错、门的 Type 未进入自动 scope；没有保存修改后的候选或编译 IFC。
 
-- [测试 XML](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-inspection-01.xml)
-- [合同／权限／早期恢复探针](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-inspection-01.json)
-- [Type 依赖探针](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-type-scope-01.json)
+- [测试 XML](../../dataset/processed/experiments/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-inspection-01.xml)
+- [合同／权限／早期恢复探针](../../dataset/processed/experiments/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-inspection-01.json)
+- [Type 依赖探针](../../dataset/processed/experiments/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-type-scope-01.json)
 
 方法参考：[Self-Debugging](https://arxiv.org/abs/2304.05128) 在代码任务中使用执行反馈与失败预测复用；[自纠错边界研究](https://arxiv.org/abs/2310.01798) 说明无外部反馈的自我修正并不可靠，不能将其标题概括成所有模型均不能纠错。这些研究支持优先验证反馈质量，但不证明 text2IFC 上的改进幅度。[DeepSeek JSON Output](https://api-docs.deepseek.com/guides/json_mode/) 明确说明 JSON 模式可能返回空正文；[strict Tool Calls](https://api-docs.deepseek.com/guides/tool_calls/) 是另一个具有 schema 子集和 Beta 端点要求的能力，当前仓库未接入，本轮没有测试其真实效果。严格输出也不能替代关系、几何、用户语义和 IFC 重读校验，且适配不能迫使缺省普通属性填 null。
 
@@ -354,7 +354,7 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 
 预算合同：公共 Generation 新任务默认最多 32 次调用、累计 2,000,000 token、3,600 秒已测 Provider 活动时间；这是拒绝继续调用的工程上限，不是新真实调用授权。每次调用先预留 UTF-8 输入字节数＋既有 Provider 输出上限，不下调输出长度来绕过预算；已返回且有合法 usage 的调用按实际消耗结算，空／失败／中断用量不明时保留预留量。旧会话逐文件收纳既有 response/request 的预算占用，记录来源哈希；无法判断的副本保守重复计数，历史未测耗时明确标记未知。恢复不能静默扩大额度，锁冲突或损坏状态阻断。活动时间门禁不会中断正在执行的 transport；最终发布前再次检查。直接调用内部 stage helper 不构成完整任务预算入口。
 
-本轮收尾证据：[本地离线记录](../../dataset/processed/ifc-presentation-validation/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-implementation-20260908/verification.json)。各轮测试存在重叠，失败 XML 同样保留，不合并为独立案例成功率。新增错误组测试只使用测试场景；此前双层真实候选没有被手改、重编译或登记为成功 Proof。
+本轮收尾证据：[本地离线记录](../../dataset/processed/experiments/two-storey-human-review-20260908/scoped-offline-evidence/pipeline-stability-implementation-20260908/verification.json)。各轮测试存在重叠，失败 XML 同样保留，不合并为独立案例成功率。新增错误组测试只使用测试场景；此前双层真实候选没有被手改、重编译或登记为成功 Proof。
 
 下一步明确为 **Generation Stage Preflight／新准入**，随后才能恢复真实双层开发验收；该阶段尚未执行。当前改动证明确定性约束、恢复及预算机制的离线行为，不能声称真实修复成功率已提高。仍未实现任意字段别名推断、自动解决真实用户门向／材料／exact Type 冲突、跨 IFC Type 复用、Repair 工程师语言空间定位或 strict Provider 适配。已有 Proof 的人工确认与登记要求不变。
 
@@ -430,7 +430,7 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 
 验证：修正新测试夹具的缺参数／staged revision 后，冻结有效红结果 **9 failed／4 passed**；首次实现得到 **63 passed／2 failed**，两项失败暴露真实公共路径的 fallback 绕行；补齐该路径后，两策略聚焦 **2 passed**，最后完整相关回归 **72 passed**。范围包括分类、混合顺序、正反例、停止决定、公共生成／正常局部纠错／两策略共享链路；staged 初始生成使用明确 fake seam，后续编译、门禁、Audit 路由和终端检查使用实际代码。首次夹具失败日志保留，不能当作产品失败计数。
 
-对已揭示双层运行的原样确定性重放，决策从 regenerate_json／retry=true 变为 gate_issue／retry=false；六份源文件哈希不变，未新增 Provider 调用。证据位于 [R3 离线记录](../../dataset/processed/ifc-presentation-validation/pipeline-gate-routing-20260909/verification.json)。相关 compileall 与 diff 检查通过；未运行 Full Preflight 或新 live admission，当前代码变化后不能直接复用旧 Provider 准入。
+对已揭示双层运行的原样确定性重放，决策从 regenerate_json／retry=true 变为 gate_issue／retry=false；六份源文件哈希不变，未新增 Provider 调用。证据位于 [R3 离线记录](../../dataset/processed/experiments/pipeline-gate-routing-20260909/verification.json)。相关 compileall 与 diff 检查通过；未运行 Full Preflight 或新 live admission，当前代码变化后不能直接复用旧 Provider 准入。
 
 本批只证明路由／回退缺陷已修复，不证明实际生成成功率提高。R1 明确事实完整性、R2 洞口身份、R3 其他合法 missing_facts 地址转换和 R4 中断状态收尾仍未完成；已批准后续继续，无需再次讨论既定产品选择。人工已验收 Proof 的机器阻断状态和原始证据保持不变。
 
@@ -438,7 +438,7 @@ Generation 当前 `geometry_v2.py` 限定 `extruded_profile`，compiler 对应�
 
 R2 已接入新的 `design-geometry-expectation/1.1`：冻结事实中已有的洞口 ID 严格匹配；只有系统派生 ID 不存在时，才允许独立重读 IFC，根据唯一 IfcSlab 宿主、唯一 Voids 关系及精确世界坐标包围盒建立一对一绑定。位置匹配上限为 1 微米，不沿用普通几何检查的 5 厘米容差来猜身份。错误宿主、重复身份、多个匹配、一个洞口承担多项预期、不可读几何均阻断。投影中的重复洞口 ID 和缺少边界不再静默覆盖／丢弃。保留显式选择 1.0 的旧行为；已揭示旧例的 1.0 投影与冻结文件完全一致。
 
-验证：首组红测试 9 failed／7 passed，第一轮绿测试 16 passed；追加边界红测试 2 failed／19 passed，最终相关回归 **80 passed**，包括编译后重读、毫米级位置偏差、旋转、唯一性、公共 Generation 和两策略相关路径。原样重读旧双层 IFC 后，阻断从三项减少为两项墙预期缺失；八份原始文件哈希不变，没有改模型或重新宣告旧 Audit 成功。详见 [R2 离线复验](../../dataset/processed/ifc-presentation-validation/pipeline-opening-binding-20260909/frozen-case-replay.json)。
+验证：首组红测试 9 failed／7 passed，第一轮绿测试 16 passed；追加边界红测试 2 failed／19 passed，最终相关回归 **80 passed**，包括编译后重读、毫米级位置偏差、旋转、唯一性、公共 Generation 和两策略相关路径。原样重读旧双层 IFC 后，阻断从三项减少为两项墙预期缺失；八份原始文件哈希不变，没有改模型或重新宣告旧 Audit 成功。详见 [R2 离线复验](../../dataset/processed/experiments/pipeline-opening-binding-20260909/frozen-case-replay.json)。
 
 R1 本批为 partial：新增 Brief 2.3 与 ChangeSet 1.5，两个公共 Brief 入口及新语义 ChangeSet 路径使用新版本；已有 Prompt 字节不变。合同明确完整墙界／中心线优先于 connects，净房间之间允许已确认墙厚，局部平台不缩短显式墙体，真实冲突仍澄清。四项跨轴／局部平台测试验证已有事实投影保留完整墙界且缺失事实不猜测；版本接入先红后绿，公共调用、澄清恢复、registry 和 ChangeSet 相关首轮 44 passed，补新旧 ChangeSet 真实代码载荷／版本绑定后 **46 passed**。这是合同及确定性传递验证，不能证明真实 LLM 已不再漏提取事实。
 
@@ -477,11 +477,11 @@ R1 本批为 partial：新增 Brief 2.3 与 ChangeSet 1.5，两个公共 Brief �
 
 用户最新顺序为：简单收尾 → 与上一组接近难度的三层楼验证并出报告 → 再做光庭。本轮不扩展光庭能力。采用三层社区阅读活动楼，增加第二段楼梯和第二处楼板洞口，保持正交墙、基本门窗及原配色／材料边界；该例是新的相关开发案例，不是分组隔离的盲测。
 
-当前输入、预期及独立 IFC 检查器已冻结于[三层案例目录](../../dataset/processed/ifc-presentation-validation/three-storey-human-review-20260909/request.txt)。与旧阶段准入相比，十个已登记文件变化均来自前两批有界修复；依赖、其余源文件和基础阶段证据哈希核对通过。当前路由／公共入口／澄清／版本／ChangeSet 相关 106 passed，复用上一批洞口 80 passed 和墙合同 46 passed，形成同阶段补充准入，未执行 Full Preflight。相关测试有重叠，不相加为独立成功率。
+当前输入、预期及独立 IFC 检查器已冻结于[三层案例目录](../../dataset/processed/experiments/three-storey-human-review-20260909/request.txt)。与旧阶段准入相比，十个已登记文件变化均来自前两批有界修复；依赖、其余源文件和基础阶段证据哈希核对通过。当前路由／公共入口／澄清／版本／ChangeSet 相关 106 passed，复用上一批洞口 80 passed 和墙合同 46 passed，形成同阶段补充准入，未执行 Full Preflight。相关测试有重叠，不相加为独立成功率。
 
 首次 transport 被自动审批要求具体载荷／目的地授权后拒绝，没有产生 Provider attempt。用户随后明确批准本案例向 `api.deepseek.com / deepseek-v4-flash` 的有界 Generation／Audit，真实公共 CLI 已启动，默认 legacy_full。Brief 首次 ready，三层完整墙界及两个洞口身份／宿主均保留；最终 IFC、Audit 和人工状态以后续实际报告为准。原双层模型、旧 attempts、未知预算及人工验收状态均未改动。
 
-最终[三层报告](../../dataset/processed/ifc-presentation-validation/three-storey-human-review-20260909/REPORT.md)：公共链路首次 compiled／Audit accept，共3次完成响应、183,829 reported token，无 Repair／ChangeSet。IFC 246,275字节，重读请求检查290项通过，40个实体构件网格化成功。独立表格比较器首轮两项因二进制浮点精确比较误报，原结果保留；新增v2仅修正数值比较，六个边界检查通过，同评分器重算旧双层负例仍失败。生产门禁与原模型未改。本例使用显式洞口身份，派生身份兼容和失败循环分支未在此次 live 中触发，不能据此宣称其真实成功率提高。
+最终[三层报告](../../dataset/processed/experiments/three-storey-human-review-20260909/REPORT.md)：公共链路首次 compiled／Audit accept，共3次完成响应、183,829 reported token，无 Repair／ChangeSet。IFC 246,275字节，重读请求检查290项通过，40个实体构件网格化成功。独立表格比较器首轮两项因二进制浮点精确比较误报，原结果保留；新增v2仅修正数值比较，六个边界检查通过，同评分器重算旧双层负例仍失败。生产门禁与原模型未改。本例使用显式洞口身份，派生身份兼容和失败循环分支未在此次 live 中触发，不能据此宣称其真实成功率提高。
 
 额外工程复核发现阻断：测试输入由 Codex 将两段反向楼梯安排在同一平面，实际网格在第一段到达端的上方间隙降至0。现有门禁及 Audit 未检查行走净空。机器接受事实保留，但单独记录 `engineering_review_status=needs_design_revision`、人工待审、未登记 Proof。建议先修订为不遮挡的楼梯布局，并用跨层梯段／楼板／梁案例补有界净空诊断；不把尺寸符合请求当成建筑可用性。本轮止于三层检查报告，光庭继续后置。
 
@@ -527,7 +527,7 @@ Audit 3.0 必须逐项保留已知问题和局限，不能降级、遗漏、重�
 
 ### A 首次真实尝试与共用缺陷暂停（2026-09-10）
 
-用户随后明确回复“支持授权真实运行”。再次核对现有文件／依赖及两个分支 dry run 后，A 会话 `48dcf264b1a6df16` 完成 Brief、Generator、Audit、ChangeSet 共4次真实响应，288,462 reported token、446.750秒 Provider 活动时间。Brief ready 并提取修订布局；首个候选 JSON 合同通过，但18个 Type 的材料作用域被门禁拒绝，另有2个跨层楼梯名称误报。Audit 3.0 保留修订决定并标记 `not_verified`，没有越过技术硬门；ChangeSet 因授权字段不匹配返回 Draft，最终 `audit_blocked`，无新 IFC。详见[本次真实运行报告](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/REPORT.md)。
+用户随后明确回复“支持授权真实运行”。再次核对现有文件／依赖及两个分支 dry run 后，A 会话 `48dcf264b1a6df16` 完成 Brief、Generator、Audit、ChangeSet 共4次真实响应，288,462 reported token、446.750秒 Provider 活动时间。Brief ready 并提取修订布局；首个候选 JSON 合同通过，但18个 Type 的材料作用域被门禁拒绝，另有2个跨层楼梯名称误报。Audit 3.0 保留修订决定并标记 `not_verified`，没有越过技术硬门；ChangeSet 因授权字段不匹配返回 Draft，最终 `audit_blocked`，无新 IFC。详见[本次真实运行报告](../../dataset/processed/experiments/three-storey-clarification-branches-20260910/REPORT.md)。
 
 离线原样复现确认 `_targeted_issues` 将具体 `/materials` 字段压成 `#/attributes`，Change Scope 因而不允许修正门禁所指材料；模型提出的范围澄清不能作为需要用户再次批准建筑设计的理由。另一个问题是名称检查将合法起止层描述中的到达层误作归属冲突；两段楼梯到达层均与冻结 Expected Facts 相符。4个合成字段探针中3个不满足精确路径目标、1个未知目标保全通过；没有修改生产行为或旧运行证据，不是修复成功证据。
 
@@ -559,7 +559,7 @@ Audit 3.0 必须逐项保留已知问题和局限，不能降级、遗漏、重�
 
 ### A/B 续跑结果与再次暂停（2026-09-10）
 
-准入和具体授权冻结后真实执行8次新增调用，详见[续跑报告](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/continuation-20260910/REPORT.md)。A 新会话 `60b27145d6d8d3a3` 复用真实 Brief，Generator／Audit 共2次；新候选再次增加39个 Type／Style、39条关联及34项普通属性，语义门拒绝。累计6次达到上限，最终 budget_blocked，无 IFC。新增144,164 reported token、202.063秒；含首次累计432,626 token、648.813秒。准确拦截不是自动修复成功，本轮仍未扩展 Type 删除或继承值迁移。
+准入和具体授权冻结后真实执行8次新增调用，详见[续跑报告](../../dataset/processed/experiments/three-storey-clarification-branches-20260910/continuation-20260910/REPORT.md)。A 新会话 `60b27145d6d8d3a3` 复用真实 Brief，Generator／Audit 共2次；新候选再次增加39个 Type／Style、39条关联及34项普通属性，语义门拒绝。累计6次达到上限，最终 budget_blocked，无 IFC。新增144,164 reported token、202.063秒；含首次累计432,626 token、648.813秒。准确拦截不是自动修复成功，本轮仍未扩展 Type 删除或继承值迁移。
 
 B 会话 `51592773914118fb` 执行 Brief、Generator、Audit、ChangeSet、Audit、ChangeSet 共6次。最终留下的候选 IFC 可编译重读，独立请求检查290项通过，40个可见实体网格成功；但生产几何门仍有2项 MISSING_STAIR_OPENING、2项 MISSING_STAIR_FLIGHT。第1轮补丁修正两处梯段名称，身份问题保留；第2轮响应 finish_reason=length，抛出 OpenAICompatError，流程未完成发布。前5次 reported token 合计320,167；第6次实际用量没有保存，按208,955预留 token 保守计账后预算为529,122，不是真实总用量。Provider 活动时间651.532秒。
 
@@ -567,7 +567,7 @@ B 会话 `51592773914118fb` 执行 Brief、Generator、Audit、ChangeSet、Audit
 
 另有证据保存缺陷：OpenAI-compatible 解析器收到截断响应后携带 evidence 抛错，ChangeSet 调用路径未持久化该异常证据；本次第6次响应正文、响应 ID 和实际用量未落盘。已有输入、异常类型、预算和终端观察保留，不能补造丢失响应。下一小步优先公共截断／畸形响应证据落盘，再统一身份合同；修复进展按各阻断项分别记录，保留名称修复的局部进展事实，避免把任意变更误称整体修复。Type 图处理仍另行限定范围。
 
-B Audit 持续记录 retained_known_issue；独立108点净空采样最小0米、3点为0，已知缺陷保留。图片来自实际候选 IFC，Codex 已做整体／剖开／门窗检查，配色协调但造型基础，无人工验收或合理性通过结论。候选只供诊断，未登记 Proof。新 [RUN-HOLD.json](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/continuation-20260910/RUN-HOLD.json) 暂停后续调用，原准入／旧暂停／174份历史冻结文件及参考 IFC 不改写；两案均耗尽6次预算。继续前需先离线修复、适用复核及新的调用预算，不追加重试，不运行 Full Preflight。本次未推送 GitHub。
+B Audit 持续记录 retained_known_issue；独立108点净空采样最小0米、3点为0，已知缺陷保留。图片来自实际候选 IFC，Codex 已做整体／剖开／门窗检查，配色协调但造型基础，无人工验收或合理性通过结论。候选只供诊断，未登记 Proof。新 [RUN-HOLD.json](../../dataset/processed/experiments/three-storey-clarification-branches-20260910/continuation-20260910/RUN-HOLD.json) 暂停后续调用，原准入／旧暂停／174份历史冻结文件及参考 IFC 不改写；两案均耗尽6次预算。继续前需先离线修复、适用复核及新的调用预算，不追加重试，不运行 Full Preflight。本次未推送 GitHub。
 
 ### A 起点澄清与 B 有界根因修复（2026-09-10）
 
@@ -618,7 +618,7 @@ B 四张实际 IFC 图片本轮重新查看：浅暖墙、深色框与蓝灰玻�
 
 本轮代码闭环完成，允许结论为 **Bug fixed（离线）**。原始174份与续跑335份冻结文件、参考 IFC 及 B 诊断 IFC 的哈希均不变。B 已有身份和失败证据修复保持通过，其用户确认保留的净空缺陷不改。下一步真实 A/B 必须使用当前 Prompt／应用合同、覆盖完整 loop 的新预算及适用 Stage Admission；新操作权限改变了执行边界，旧准入与 RUN-HOLD 不能直接转为放行。仍未执行新的 Stage／Full Preflight、真实 Provider、人工验收、Proof 安装或 push；不声明模型收敛率或系统能力已经提高。
 
-2026-09-10 后续全新 A/B 运行准备：用户已要求真实重新运行，新增 append-only `three-storey-clarification-branches-20260910/rerun-20260910/`。两分支均从新的 Brief 开始，不接续旧候选、Brief 或6次账本；新运行器离线 A/B 公共编译测试2 passed。针对操作权限合同刷新 Stage Admission：环节243、公共完整链路124、IFC重读120项，共487 passed，零失败/错误/跳过，compileall和diff检查通过；绑定619份文件。不是 Full Preflight，未改变产品行为或既有 Prompt。旧509份冻结文件哈希保持。首次真实启动在创建进程前被自动审批层拒绝，要求对本次具体载荷再次发送到 `api.deepseek.com` 明确确认；已向用户集中请求 A/B 两条完整 loop 的授权确认。此时实际 Provider 调用为0，没有新 IFC、视觉审查或 Proof；不能把此审批阻断记为 Provider 失败。新[运行报告](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/rerun-20260910/REPORT.md)与载荷预览保存当前状态。
+2026-09-10 后续全新 A/B 运行准备：用户已要求真实重新运行，新增 append-only `three-storey-clarification-branches-20260910/rerun-20260910/`。两分支均从新的 Brief 开始，不接续旧候选、Brief 或6次账本；新运行器离线 A/B 公共编译测试2 passed。针对操作权限合同刷新 Stage Admission：环节243、公共完整链路124、IFC重读120项，共487 passed，零失败/错误/跳过，compileall和diff检查通过；绑定619份文件。不是 Full Preflight，未改变产品行为或既有 Prompt。旧509份冻结文件哈希保持。首次真实启动在创建进程前被自动审批层拒绝，要求对本次具体载荷再次发送到 `api.deepseek.com` 明确确认；已向用户集中请求 A/B 两条完整 loop 的授权确认。此时实际 Provider 调用为0，没有新 IFC、视觉审查或 Proof；不能把此审批阻断记为 Provider 失败。新[运行报告](../../dataset/processed/experiments/three-storey-clarification-branches-20260910/rerun-20260910/REPORT.md)与载荷预览保存当前状态。
 
 随后用户明确批准该载荷和目的地，外部审批阻断已解决。新 A 会话 `026823cac75af845` 从真实 Brief 开始完成 Brief/Generator/Audit 3次调用，共172,308 reported token、259.907秒 Provider活动时间，最终 `audit_blocked` / `scope_unresolved`，无 IFC；B 暂未启动。真正根因不是初步怀疑的 seed：Brief 的 `appearance.style_notes` 被整个复制到硬性请求投影，比较器逐键要求候选包含该说明，而 BIM JSON 2.1 顶层 appearance 仅允许 profile/seed 且禁止额外字段。相同冻结说明被 Brief/expected facts 重复投影，生成两条误报；编译前置门阻断后，`/appearance` 又无法定位局部实体/关系 scope。新候选75实体、0额外 Type/Style、4项动态门通过，但没有 IFC，因此不声明几何/材料/外观通过。只读原案复现证实去 seed 仍失败，内存中仅排除 style_notes 的机器比较后该项误报消失；跨主题/中英文说明/seed边界14例中4例合法说明误报，红结果保存在新包 diagnostics。下一步先作受支持外观字段的类型化投影，保留说明及来源供 Audit/报告使用，并覆盖真正值冲突和恢复保全；不直接扩大全文 ChangeSet 权限，不改旧 Schema/Prompt。真实失败与新 RUN-HOLD 保留，先离线修复和适用准入复核再继续 A/B。当前未作此产品修复、B调用、视觉审查、Proof安装或push。
 
@@ -654,7 +654,7 @@ Brief 语义校正限定一次 Agent 调用，计入同一任务预算，只能�
 - 2026-09-10 该材料源值修复已完成离线验证：从实际 BIM JSON 2.1 materialAssignment 及其引用定义校验，非法值不冻结，合法单材料/分层及作用域保持。新失败族先27失败/14通过，修复后116项源头/外观/保全检查、87项公共生成/语义闭环检查通过（共203项）；实际失败 Brief 重放拒绝1项空材料并保留19项合法要求。未改变已注册 Prompt/Schema。typed-appearance 包219份文件已冻结，1326份旧机器证据与参考IFC哈希未变。**仍 pending：重读语义失败的具体原因需传递到修复路由；再生成后 Audit 的 ProviderOutputError 需正常收尾；此后重新准入，A额外预算需获批才可真实重跑。B未运行，A/B交付及人工审查均未完成。**
 - 2026-09-10 后续两个通用流程缺口已完成离线修复：未完成编译/重读时，几何检查明确记为未执行，真正的上游失败继续阻断；Audit接收原始 input_issues/ifc_issues，Brief源值错误归属Brief，原生重读失败归属编译器，实际几何问题仍走原局部修复。仅当真实上游失败存在时才允许几何检查记为skipped。Audit首轮或修复后轮次抛出ProviderOutputError时，公共流程持久化provider_failed与路由、停止后续调用并返回无发布结果；失败轮次输入/响应单独保存，重复失败不覆盖旧尝试。本轮所有注册版本保持不变。错误归属失败族先12失败/2通过，Audit失败族先8失败；修复后62项聚焦、2项跳过保护、84项公共生成/修复/Audit回归通过（148项），仍为离线回归证据。准备failure-recovery-rerun新目录与阶段准入；A既有22槽位与1925775含预留token继续计费，不自动扩大200万上限，预算追加预览只是提案。B仍0次，本轮尚未恢复真实调用；A/B完整交付仍pending。
 - 2026-09-10 上述流程修复提交 `d12ed931`，阶段准入绑定789项有效检查。用户随后明确批准A追加100万token，累计上限改为300万，32槽位/3600秒保持，22槽位与1925775已用或预留token全量保留；B仍按原200万上限。授权作用于新运行账本，原账本字节不改；不允许未批准、历史哈希不符、调用数/活动时间变更或未结算账本扩容。新增9项预算边界先失败，修复后连同原重试检查14项通过，另1项完整离线新Brief→生成→Audit→IFC检查通过。等待更新此局部准入绑定后，使用同一冻结输入恢复真实A/B；不把离线预算验证称为真实交付。
-- 2026-09-10 A/B本轮真实重跑已完成，当前审查入口为 [failure-recovery-rerun报告](../../dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/failure-recovery-rerun-20260910/REPORT.md)。A `6b4c8ce023e02a07` 从新Brief开始，3次真实响应，无修复轮次；独立原生IFC检查290/290，108点最小垂直净空约3米、零净空0点。A累计25槽位、2092740已用/失败预留token、1929.642秒，批准的300万上限内。B `8b3add702299a50f` 5次真实响应、324504 token、327.827秒；首候选两处楼板洞口局部Z多下移150毫米，被几何gate捕获，一轮受限ChangeSet仅修正两个origin.z，再次Audit通过。稳定ID逐项比较确认其余候选值未改变；B独立290/290，108点中仍3个零净空点，Audit为retained_known_issue。两者各补充6项Type检查通过，仅4个必需门Style，无额外Type材料/属性；共8张原生视图已由助手查看。有效准入799项，Full Preflight未运行。1545份历史冻结证据、原参考IFC、833项运行时准入绑定及39个报告链接已核实。**A/B均为待人工审查，未验收、未登记Proof、未push。** 这是同案例重试与一次实际loop收敛证据，不是盲测或普遍成功率提升。此次调用已结束；原准入作为运行时快照保留，后续真实调用须重新确认适用绑定，不能把本条收尾记录当新调用授权。
+- 2026-09-10 A/B本轮真实重跑已完成，当前审查入口为 [failure-recovery-rerun报告](../../dataset/processed/proof/generation/phase6.6/three-storey-clarification-ab-20260910/evidence/frozen/REPORT.md)。A `6b4c8ce023e02a07` 从新Brief开始，3次真实响应，无修复轮次；独立原生IFC检查290/290，108点最小垂直净空约3米、零净空0点。A累计25槽位、2092740已用/失败预留token、1929.642秒，批准的300万上限内。B `8b3add702299a50f` 5次真实响应、324504 token、327.827秒；首候选两处楼板洞口局部Z多下移150毫米，被几何gate捕获，一轮受限ChangeSet仅修正两个origin.z，再次Audit通过。稳定ID逐项比较确认其余候选值未改变；B独立290/290，108点中仍3个零净空点，Audit为retained_known_issue。两者各补充6项Type检查通过，仅4个必需门Style，无额外Type材料/属性；共8张原生视图已由助手查看。有效准入799项，Full Preflight未运行。1545份历史冻结证据、原参考IFC、833项运行时准入绑定及39个报告链接已核实。**A/B均为待人工审查，未验收、未登记Proof、未push。** 这是同案例重试与一次实际loop收敛证据，不是盲测或普遍成功率提升。此次调用已结束；原准入作为运行时快照保留，后续真实调用须重新确认适用绑定，不能把本条收尾记录当新调用授权。
 
 ### 2026-09-10：A/B人工验收与下一组稳定性观察
 

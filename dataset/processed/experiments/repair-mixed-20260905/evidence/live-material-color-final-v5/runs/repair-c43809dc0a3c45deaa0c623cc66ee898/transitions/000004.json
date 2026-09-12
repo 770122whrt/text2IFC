@@ -1,0 +1,105 @@
+{
+  "answer": null,
+  "clarification": {
+    "answer_modes": [
+      "add_detail",
+      "cancel"
+    ],
+    "answer_schema": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "add_detail"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 2,
+            "required": [
+              "kind",
+              "detail"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "cancel"
+              }
+            }
+          },
+          "then": {
+            "maxProperties": 1,
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      ],
+      "properties": {
+        "authorized": {
+          "const": true
+        },
+        "candidate_token": {
+          "maxLength": 256,
+          "minLength": 1,
+          "type": "string"
+        },
+        "detail": {
+          "maxLength": 4096,
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "enum": [
+            "add_detail",
+            "cancel"
+          ]
+        },
+        "preview_hash": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "type": "object"
+    },
+    "candidates": [],
+    "claim_id": null,
+    "clarification_id": "clarify-004",
+    "operation_id": "add-window-1",
+    "property_preview": null,
+    "question": "目标不唯一或证据不足，请选择候选、补充说明或取消。",
+    "reason_code": "additional_target_detail",
+    "resume_stage": "intent_ready",
+    "run_id": "repair-c43809dc0a3c45deaa0c623cc66ee898",
+    "schema_version": "text2ifc/ifc-repair-clarification/0.2",
+    "stage": "targets_resolved",
+    "state_version": 4
+  },
+  "created_at": "2026-09-06T08:58:15.209222+00:00",
+  "from_stage": "intent_ready",
+  "previous_hash": "sha256:e2cfc17fcf89100cf5adcebc841dbdffad0ef09a8a0888ad76f31969cf66f688",
+  "reason_code": "not_found",
+  "record_hash": "sha256:11704c6f07fa6aff77141689f941162b731a0ba115d8d042134501d1dc873e24",
+  "result_artifacts": {},
+  "schema_version": "text2ifc/ifc-repair-transition/0.1",
+  "stage_hash": "sha256:b3ada5db84fc18a59baa350c82c3a32b4c8c0763879dc82162508c5bb64a9833",
+  "stage_payload": {
+    "resolution": {
+      "path": "resolution-v004.json",
+      "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+      "sha256": "sha256:ac73d55f5633769725a22000c128f046ce26ebcb86e464801236a7e03428eadf"
+    }
+  },
+  "state_version": 4,
+  "to_stage": "clarification_required",
+  "transition_id": 4
+}

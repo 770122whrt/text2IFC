@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="12" skipped="0" tests="12" time="1.699" timestamp="2026-09-08T22:51:49.754403+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_early_field_recovery" name="test_multiple_enum_errors_are_one_stable_atomic_group" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">def test_multiple_enum_errors_are_one_stable_atomic_group():
+        value = candidate()
+        original = copy.deepcopy(value)
+&gt;       g = group(value)
+            ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[partial]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">mode = 'partial'
+
+    @pytest.mark.parametrize('mode', ['partial', 'unrelated', 'stale'])
+    def test_group_never_promotes_partial_or_out_of_scope_result(mode):
+        value = candidate()
+        original = copy.deepcopy(value)
+&gt;       g = group(value)
+            ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[unrelated]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">mode = 'unrelated'
+
+    @pytest.mark.parametrize('mode', ['partial', 'unrelated', 'stale'])
+    def test_group_never_promotes_partial_or_out_of_scope_result(mode):
+        value = candidate()
+        original = copy.deepcopy(value)
+&gt;       g = group(value)
+            ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_group_never_promotes_partial_or_out_of_scope_result[stale]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">mode = 'stale'
+
+    @pytest.mark.parametrize('mode', ['partial', 'unrelated', 'stale'])
+    def test_group_never_promotes_partial_or_out_of_scope_result(mode):
+        value = candidate()
+        original = copy.deepcopy(value)
+&gt;       g = group(value)
+            ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_registry_derived_unique_field_rename_preserves_value_and_other_attributes" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">def test_registry_derived_unique_field_rename_preserves_value_and_other_attributes():
+        value = _candidate()
+        value['schema_version'] = 'bim-json/2.1'
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        wall['attributes']['Names'] = wall['attributes'].pop('Name', 'Wall')
+&gt;       g = group(value)
+            ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....-1', 'ifc_class': 'IfcWall', ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[unknown]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">change = 'unknown'
+
+    @pytest.mark.parametrize('change', ['unknown', 'collision', 'wrong_value', 'duplicate_id', 'conflict'])
+    def test_unproven_routes_fail_closed(change):
+        value = candidate()
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        if change == 'unknown':
+            wall['attributes']['UnrelatedTypo'] = 1
+        elif change == 'collision':
+            wall['attributes'].update(Name='retained', Names='different')
+        elif change == 'wrong_value':
+            wall['attributes']['Names'] = 10
+        elif change == 'duplicate_id':
+            value['entities'].append(copy.deepcopy(wall))
+        else:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            assert not build_field_recovery_group(value, [{'code':'BASIC_FILLING_CONSTRAINT_CONFLICT',
+                'path':'/entities/1/attributes/Representation'}])['eligible']
+            return
+&gt;       assert not group(value)['eligible']
+                   ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[collision]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">change = 'collision'
+
+    @pytest.mark.parametrize('change', ['unknown', 'collision', 'wrong_value', 'duplicate_id', 'conflict'])
+    def test_unproven_routes_fail_closed(change):
+        value = candidate()
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        if change == 'unknown':
+            wall['attributes']['UnrelatedTypo'] = 1
+        elif change == 'collision':
+            wall['attributes'].update(Name='retained', Names='different')
+        elif change == 'wrong_value':
+            wall['attributes']['Names'] = 10
+        elif change == 'duplicate_id':
+            value['entities'].append(copy.deepcopy(wall))
+        else:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            assert not build_field_recovery_group(value, [{'code':'BASIC_FILLING_CONSTRAINT_CONFLICT',
+                'path':'/entities/1/attributes/Representation'}])['eligible']
+            return
+&gt;       assert not group(value)['eligible']
+                   ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[wrong_value]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">change = 'wrong_value'
+
+    @pytest.mark.parametrize('change', ['unknown', 'collision', 'wrong_value', 'duplicate_id', 'conflict'])
+    def test_unproven_routes_fail_closed(change):
+        value = candidate()
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        if change == 'unknown':
+            wall['attributes']['UnrelatedTypo'] = 1
+        elif change == 'collision':
+            wall['attributes'].update(Name='retained', Names='different')
+        elif change == 'wrong_value':
+            wall['attributes']['Names'] = 10
+        elif change == 'duplicate_id':
+            value['entities'].append(copy.deepcopy(wall))
+        else:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            assert not build_field_recovery_group(value, [{'code':'BASIC_FILLING_CONSTRAINT_CONFLICT',
+                'path':'/entities/1/attributes/Representation'}])['eligible']
+            return
+&gt;       assert not group(value)['eligible']
+                   ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[duplicate_id]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">change = 'duplicate_id'
+
+    @pytest.mark.parametrize('change', ['unknown', 'collision', 'wrong_value', 'duplicate_id', 'conflict'])
+    def test_unproven_routes_fail_closed(change):
+        value = candidate()
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        if change == 'unknown':
+            wall['attributes']['UnrelatedTypo'] = 1
+        elif change == 'collision':
+            wall['attributes'].update(Name='retained', Names='different')
+        elif change == 'wrong_value':
+            wall['attributes']['Names'] = 10
+        elif change == 'duplicate_id':
+            value['entities'].append(copy.deepcopy(wall))
+        else:
+            from text2ifc_agent.early_recovery import build_field_recovery_group
+            assert not build_field_recovery_group(value, [{'code':'BASIC_FILLING_CONSTRAINT_CONFLICT',
+                'path':'/entities/1/attributes/Representation'}])['eligible']
+            return
+&gt;       assert not group(value)['eligible']
+                   ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....-1', 'ifc_class': 'IfcWall', ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_unproven_routes_fail_closed[conflict]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">change = 'conflict'
+
+    @pytest.mark.parametrize('change', ['unknown', 'collision', 'wrong_value', 'duplicate_id', 'conflict'])
+    def test_unproven_routes_fail_closed(change):
+        value = candidate()
+        wall = next(e for e in value['entities'] if e['ifc_class'] == 'IfcWall')
+        if change == 'unknown':
+            wall['attributes']['UnrelatedTypo'] = 1
+        elif change == 'collision':
+            wall['attributes'].update(Name='retained', Names='different')
+        elif change == 'wrong_value':
+            wall['attributes']['Names'] = 10
+        elif change == 'duplicate_id':
+            value['entities'].append(copy.deepcopy(wall))
+        else:
+&gt;           from text2ifc_agent.early_recovery import build_field_recovery_group
+E           ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:107: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_semantic_dependencies_are_read_only_including_other_type_users" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">def test_semantic_dependencies_are_read_only_including_other_type_users():
+&gt;       from text2ifc_agent.early_recovery import semantic_dependency_context
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:115: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_early_field_recovery" name="test_public_repair_stage_uses_bounded_changeset_for_invalid_formal" time="0.957"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stability-t2-red/test_public_repair_stage_uses_0')
+
+    def test_public_repair_stage_uses_bounded_changeset_for_invalid_formal(tmp_path):
+        from text2ifc_agent.live_pipeline import run_repair_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        value = candidate()
+&gt;       g = group(value)
+            ^^^^^^^^^^^^
+
+tests\agent\test_early_field_recovery.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+value = {'entities': [{'attributes': {'Name': 'Project'}, 'id': 'project-1', 'ifc_class': 'IfcProject', 'property_sets': {}, ....Style', 'property_sets': {}, ...}], 'ifc_schema': 'IFC2X3', 'provenance': {'source': 'test'}, 'relationships': [], ...}
+
+    def group(value):
+&gt;       from text2ifc_agent.early_recovery import build_field_recovery_group
+E       ModuleNotFoundError: No module named 'text2ifc_agent.early_recovery'
+
+tests\agent\test_early_field_recovery.py:22: ModuleNotFoundError</failure></testcase></testsuite></testsuites>

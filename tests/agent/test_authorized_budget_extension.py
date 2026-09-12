@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 ROOT=Path(__file__).resolve().parents[2]
-RUNNER=ROOT/'dataset/processed/ifc-presentation-validation/three-storey-clarification-branches-20260910/failure-recovery-rerun-20260910/run_branches.py'
+RUNNER=ROOT/'dataset/processed/proof/generation/phase6.6/three-storey-clarification-ab-20260910/evidence/frozen/run_branches.py'
 
 
 def harness():

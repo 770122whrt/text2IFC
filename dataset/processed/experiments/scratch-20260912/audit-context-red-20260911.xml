@@ -1,0 +1,824 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="28" skipped="0" tests="28" time="3.939" timestamp="2026-09-11T00:05:12.868035+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_audit_context" name="test_smaller_actual_prompt_preserves_all_transmitted_values[False-wall]" time="0.117"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">family = 'wall', review = False
+
+    @pytest.mark.parametrize("family", ["wall", "window", "stair-flight"])
+    @pytest.mark.parametrize("review", [False, True])
+    def test_smaller_actual_prompt_preserves_all_transmitted_values(family, review):
+        inputs = _inputs(family, review=review)
+        before = deepcopy(inputs)
+        baseline = render_prompt(template_id="audit.v3" if review else "audit.v2", inputs=inputs)
+&gt;       rendered, record = _render(inputs, review=review)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_smaller_actual_prompt_preserves_all_transmitted_values[False-window]" time="0.091"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">family = 'window', review = False
+
+    @pytest.mark.parametrize("family", ["wall", "window", "stair-flight"])
+    @pytest.mark.parametrize("review", [False, True])
+    def test_smaller_actual_prompt_preserves_all_transmitted_values(family, review):
+        inputs = _inputs(family, review=review)
+        before = deepcopy(inputs)
+        baseline = render_prompt(template_id="audit.v3" if review else "audit.v2", inputs=inputs)
+&gt;       rendered, record = _render(inputs, review=review)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_smaller_actual_prompt_preserves_all_transmitted_values[False-stair-flight]" time="0.087"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">family = 'stair-flight', review = False
+
+    @pytest.mark.parametrize("family", ["wall", "window", "stair-flight"])
+    @pytest.mark.parametrize("review", [False, True])
+    def test_smaller_actual_prompt_preserves_all_transmitted_values(family, review):
+        inputs = _inputs(family, review=review)
+        before = deepcopy(inputs)
+        baseline = render_prompt(template_id="audit.v3" if review else "audit.v2", inputs=inputs)
+&gt;       rendered, record = _render(inputs, review=review)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_smaller_actual_prompt_preserves_all_transmitted_values[True-wall]" time="0.092"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">family = 'wall', review = True
+
+    @pytest.mark.parametrize("family", ["wall", "window", "stair-flight"])
+    @pytest.mark.parametrize("review", [False, True])
+    def test_smaller_actual_prompt_preserves_all_transmitted_values(family, review):
+        inputs = _inputs(family, review=review)
+        before = deepcopy(inputs)
+        baseline = render_prompt(template_id="audit.v3" if review else "audit.v2", inputs=inputs)
+&gt;       rendered, record = _render(inputs, review=review)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_smaller_actual_prompt_preserves_all_transmitted_values[True-window]" time="0.088"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">family = 'window', review = True
+
+    @pytest.mark.parametrize("family", ["wall", "window", "stair-flight"])
+    @pytest.mark.parametrize("review", [False, True])
+    def test_smaller_actual_prompt_preserves_all_transmitted_values(family, review):
+        inputs = _inputs(family, review=review)
+        before = deepcopy(inputs)
+        baseline = render_prompt(template_id="audit.v3" if review else "audit.v2", inputs=inputs)
+&gt;       rendered, record = _render(inputs, review=review)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_smaller_actual_prompt_preserves_all_transmitted_values[True-stair-flight]" time="0.092"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">family = 'stair-flight', review = True
+
+    @pytest.mark.parametrize("family", ["wall", "window", "stair-flight"])
+    @pytest.mark.parametrize("review", [False, True])
+    def test_smaller_actual_prompt_preserves_all_transmitted_values(family, review):
+        inputs = _inputs(family, review=review)
+        before = deepcopy(inputs)
+        baseline = render_prompt(template_id="audit.v3" if review else "audit.v2", inputs=inputs)
+&gt;       rendered, record = _render(inputs, review=review)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:58: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_near_duplicates_never_hide_conflicts_or_typed_values[revision]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">mutation = 'revision'
+
+    @pytest.mark.parametrize("mutation", ["revision", "success", "actual", "order", "scalar_types"])
+    def test_near_duplicates_never_hide_conflicts_or_typed_values(mutation):
+        inputs = _inputs()
+        changed = inputs["REVISION_EVIDENCE"]["gate_evidence"]["local"]
+        if mutation == "revision":
+            changed["revision"] = "previous"
+        elif mutation == "success":
+            changed["success"] = False
+            changed["issues"] = [{"code": "FAILED", "value": 0}]
+        elif mutation == "actual":
+            changed["measurements"][0]["height_mm"] = 2800
+        elif mutation == "order":
+            changed["measurements"].reverse()
+        else:
+            changed["values"] = [None, 0, False, 0.0, "0", [], {}]
+&gt;       rendered, _ = _render(inputs)
+                      ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_near_duplicates_never_hide_conflicts_or_typed_values[success]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">mutation = 'success'
+
+    @pytest.mark.parametrize("mutation", ["revision", "success", "actual", "order", "scalar_types"])
+    def test_near_duplicates_never_hide_conflicts_or_typed_values(mutation):
+        inputs = _inputs()
+        changed = inputs["REVISION_EVIDENCE"]["gate_evidence"]["local"]
+        if mutation == "revision":
+            changed["revision"] = "previous"
+        elif mutation == "success":
+            changed["success"] = False
+            changed["issues"] = [{"code": "FAILED", "value": 0}]
+        elif mutation == "actual":
+            changed["measurements"][0]["height_mm"] = 2800
+        elif mutation == "order":
+            changed["measurements"].reverse()
+        else:
+            changed["values"] = [None, 0, False, 0.0, "0", [], {}]
+&gt;       rendered, _ = _render(inputs)
+                      ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_near_duplicates_never_hide_conflicts_or_typed_values[actual]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">mutation = 'actual'
+
+    @pytest.mark.parametrize("mutation", ["revision", "success", "actual", "order", "scalar_types"])
+    def test_near_duplicates_never_hide_conflicts_or_typed_values(mutation):
+        inputs = _inputs()
+        changed = inputs["REVISION_EVIDENCE"]["gate_evidence"]["local"]
+        if mutation == "revision":
+            changed["revision"] = "previous"
+        elif mutation == "success":
+            changed["success"] = False
+            changed["issues"] = [{"code": "FAILED", "value": 0}]
+        elif mutation == "actual":
+            changed["measurements"][0]["height_mm"] = 2800
+        elif mutation == "order":
+            changed["measurements"].reverse()
+        else:
+            changed["values"] = [None, 0, False, 0.0, "0", [], {}]
+&gt;       rendered, _ = _render(inputs)
+                      ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_near_duplicates_never_hide_conflicts_or_typed_values[order]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">mutation = 'order'
+
+    @pytest.mark.parametrize("mutation", ["revision", "success", "actual", "order", "scalar_types"])
+    def test_near_duplicates_never_hide_conflicts_or_typed_values(mutation):
+        inputs = _inputs()
+        changed = inputs["REVISION_EVIDENCE"]["gate_evidence"]["local"]
+        if mutation == "revision":
+            changed["revision"] = "previous"
+        elif mutation == "success":
+            changed["success"] = False
+            changed["issues"] = [{"code": "FAILED", "value": 0}]
+        elif mutation == "actual":
+            changed["measurements"][0]["height_mm"] = 2800
+        elif mutation == "order":
+            changed["measurements"].reverse()
+        else:
+            changed["values"] = [None, 0, False, 0.0, "0", [], {}]
+&gt;       rendered, _ = _render(inputs)
+                      ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_near_duplicates_never_hide_conflicts_or_typed_values[scalar_types]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">mutation = 'scalar_types'
+
+    @pytest.mark.parametrize("mutation", ["revision", "success", "actual", "order", "scalar_types"])
+    def test_near_duplicates_never_hide_conflicts_or_typed_values(mutation):
+        inputs = _inputs()
+        changed = inputs["REVISION_EVIDENCE"]["gate_evidence"]["local"]
+        if mutation == "revision":
+            changed["revision"] = "previous"
+        elif mutation == "success":
+            changed["success"] = False
+            changed["issues"] = [{"code": "FAILED", "value": 0}]
+        elif mutation == "actual":
+            changed["measurements"][0]["height_mm"] = 2800
+        elif mutation == "order":
+            changed["measurements"].reverse()
+        else:
+            changed["values"] = [None, 0, False, 0.0, "0", [], {}]
+&gt;       rendered, _ = _render(inputs)
+                      ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_default_is_the_identical_registered_full_prompt[False]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">review = False
+
+    @pytest.mark.parametrize("review", [False, True])
+    def test_default_is_the_identical_registered_full_prompt(review):
+        inputs = _inputs(review=review)
+&gt;       rendered, record = _render(inputs, review=review, mode="full")
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_default_is_the_identical_registered_full_prompt[True]" time="0.003"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">review = True
+
+    @pytest.mark.parametrize("review", [False, True])
+    def test_default_is_the_identical_registered_full_prompt(review):
+        inputs = _inputs(review=review)
+&gt;       rendered, record = _render(inputs, review=review, mode="full")
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_unhelpful_or_ambiguous_encoding_falls_back_without_losing_data[small]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">reason = 'small'
+
+    @pytest.mark.parametrize("reason", ["small", "marker_collision"])
+    def test_unhelpful_or_ambiguous_encoding_falls_back_without_losing_data(reason):
+        inputs = _inputs()
+        if reason == "small":
+            inputs["DETERMINISTIC_GATES"] = {"geometry_success": True}
+            inputs["REVISION_EVIDENCE"] = {"status": "not_applicable"}
+        else:
+            inputs["REVISION_EVIDENCE"]["original"] = {"audit_ref": "user-owned-value"}
+&gt;       rendered, record = _render(inputs)
+                           ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_unhelpful_or_ambiguous_encoding_falls_back_without_losing_data[marker_collision]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">reason = 'marker_collision'
+
+    @pytest.mark.parametrize("reason", ["small", "marker_collision"])
+    def test_unhelpful_or_ambiguous_encoding_falls_back_without_losing_data(reason):
+        inputs = _inputs()
+        if reason == "small":
+            inputs["DETERMINISTIC_GATES"] = {"geometry_success": True}
+            inputs["REVISION_EVIDENCE"] = {"status": "not_applicable"}
+        else:
+            inputs["REVISION_EVIDENCE"]["original"] = {"audit_ref": "user-owned-value"}
+&gt;       rendered, record = _render(inputs)
+                           ^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:113: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_damaged_internal_references_fail_closed[missing]" time="0.001"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">damage = 'missing'
+
+    @pytest.mark.parametrize("damage", ["missing", "cycle", "version", "mixed_marker", "unused"])
+    def test_damaged_internal_references_fail_closed(damage):
+&gt;       rendered, _ = _render(_inputs())
+                      ^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_damaged_internal_references_fail_closed[cycle]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">damage = 'cycle'
+
+    @pytest.mark.parametrize("damage", ["missing", "cycle", "version", "mixed_marker", "unused"])
+    def test_damaged_internal_references_fail_closed(damage):
+&gt;       rendered, _ = _render(_inputs())
+                      ^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_damaged_internal_references_fail_closed[version]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">damage = 'version'
+
+    @pytest.mark.parametrize("damage", ["missing", "cycle", "version", "mixed_marker", "unused"])
+    def test_damaged_internal_references_fail_closed(damage):
+&gt;       rendered, _ = _render(_inputs())
+                      ^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_damaged_internal_references_fail_closed[mixed_marker]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">damage = 'mixed_marker'
+
+    @pytest.mark.parametrize("damage", ["missing", "cycle", "version", "mixed_marker", "unused"])
+    def test_damaged_internal_references_fail_closed(damage):
+&gt;       rendered, _ = _render(_inputs())
+                      ^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_damaged_internal_references_fail_closed[unused]" time="0.002"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">damage = 'unused'
+
+    @pytest.mark.parametrize("damage", ["missing", "cycle", "version", "mixed_marker", "unused"])
+    def test_damaged_internal_references_fail_closed(damage):
+&gt;       rendered, _ = _render(_inputs())
+                      ^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_audit_context.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:49: in _render
+    return _module().render_audit_context(inputs=inputs, review_enabled=review, mode=mode)
+           ^^^^^^^^^
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_public_audit_uses_compact_wire_but_original_hard_gates[False-False]" time="0.067"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_public_audit_uses_compact0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C2525AAD80&gt;
+review = False, failed = False
+
+    @pytest.mark.parametrize("review", [False, True])
+    @pytest.mark.parametrize("failed", [False, True])
+    def test_public_audit_uses_compact_wire_but_original_hard_gates(tmp_path, monkeypatch, review, failed):
+        root = _public_case(tmp_path, monkeypatch, failed=failed, review=review)
+        provider = _RecordingLiveProvider(_audit() if review else _ordinary_audit())
+&gt;       result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                      audit_context_mode="deduplicated")
+E       TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:161: TypeError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_public_audit_uses_compact_wire_but_original_hard_gates[False-True]" time="0.053"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_public_audit_uses_compact1')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C2525AAE70&gt;
+review = True, failed = False
+
+    @pytest.mark.parametrize("review", [False, True])
+    @pytest.mark.parametrize("failed", [False, True])
+    def test_public_audit_uses_compact_wire_but_original_hard_gates(tmp_path, monkeypatch, review, failed):
+        root = _public_case(tmp_path, monkeypatch, failed=failed, review=review)
+        provider = _RecordingLiveProvider(_audit() if review else _ordinary_audit())
+&gt;       result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                      audit_context_mode="deduplicated")
+E       TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:161: TypeError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_public_audit_uses_compact_wire_but_original_hard_gates[True-False]" time="0.038"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_public_audit_uses_compact2')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C2525A98E0&gt;
+review = False, failed = True
+
+    @pytest.mark.parametrize("review", [False, True])
+    @pytest.mark.parametrize("failed", [False, True])
+    def test_public_audit_uses_compact_wire_but_original_hard_gates(tmp_path, monkeypatch, review, failed):
+        root = _public_case(tmp_path, monkeypatch, failed=failed, review=review)
+        provider = _RecordingLiveProvider(_audit() if review else _ordinary_audit())
+&gt;       result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                      audit_context_mode="deduplicated")
+E       TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:161: TypeError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_public_audit_uses_compact_wire_but_original_hard_gates[True-True]" time="0.046"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_public_audit_uses_compact3')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C2525A9490&gt;
+review = True, failed = True
+
+    @pytest.mark.parametrize("review", [False, True])
+    @pytest.mark.parametrize("failed", [False, True])
+    def test_public_audit_uses_compact_wire_but_original_hard_gates(tmp_path, monkeypatch, review, failed):
+        root = _public_case(tmp_path, monkeypatch, failed=failed, review=review)
+        provider = _RecordingLiveProvider(_audit() if review else _ordinary_audit())
+&gt;       result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                      audit_context_mode="deduplicated")
+E       TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:161: TypeError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_public_bad_encoding_stops_before_provider" time="0.042"><failure message="ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_public_bad_encoding_stops0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C2525A97F0&gt;
+
+    def test_public_bad_encoding_stops_before_provider(tmp_path, monkeypatch):
+        root = _public_case(tmp_path, monkeypatch)
+        provider = _RecordingLiveProvider(_ordinary_audit())
+&gt;       monkeypatch.setattr(_module(), "restore_audit_evidence", lambda _: {})
+                            ^^^^^^^^^
+
+tests\agent\test_audit_context.py:180: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\agent\test_audit_context.py:18: in _module
+    return importlib.import_module("text2ifc_agent.audit_context")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E:\anaconda\Lib\importlib\__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+&lt;frozen importlib._bootstrap&gt;:1387: in _gcd_import
+    ???
+&lt;frozen importlib._bootstrap&gt;:1360: in _find_and_load
+    ???
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'text2ifc_agent.audit_context'
+import_ = &lt;function _gcd_import at 0x000001C226D080E0&gt;
+
+&gt;   ???
+E   ModuleNotFoundError: No module named 'text2ifc_agent.audit_context'
+
+&lt;frozen importlib._bootstrap&gt;:1324: ModuleNotFoundError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_public_unknown_mode_stops_before_provider" time="0.037"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_public_unknown_mode_stops0')
+
+    def test_public_unknown_mode_stops_before_provider(tmp_path):
+        root = _write_auditable_case_dir(tmp_path / "case")
+        provider = _RecordingLiveProvider(_ordinary_audit())
+        with pytest.raises(ValueError, match="AUDIT_CONTEXT"):
+&gt;           live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                  audit_context_mode="summarize")
+E           TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:191: TypeError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_failed_and_resumed_calls_preserve_exact_compact_input" time="0.037"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_failed_and_resumed_calls_0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C25258ED80&gt;
+
+    def test_failed_and_resumed_calls_preserve_exact_compact_input(tmp_path, monkeypatch):
+        root = _public_case(tmp_path, monkeypatch)
+        class FailingProvider:
+            prompts = []
+    
+            def generate_live(self, *, prompt, **kwargs):
+                self.prompts.append(prompt)
+                raise ProviderOutputError("fixture malformed response")
+    
+        provider = FailingProvider()
+        for index in range(2):
+            with pytest.raises(ProviderOutputError):
+&gt;               live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                      audit_context_mode="deduplicated")
+E               TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:208: TypeError</failure></testcase><testcase classname="tests.agent.test_audit_context" name="test_invalid_model_json_is_still_blocked_in_compact_mode" time="0.034"><failure message="TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/audit-context-tests-20260911/test_invalid_model_json_is_sti0')
+monkeypatch = &lt;_pytest.monkeypatch.MonkeyPatch object at 0x000001C25258D520&gt;
+
+    def test_invalid_model_json_is_still_blocked_in_compact_mode(tmp_path, monkeypatch):
+        root = _public_case(tmp_path, monkeypatch)
+        provider = _RecordingLiveProvider(_ordinary_audit(), fenced=True)
+&gt;       result = live_pipeline.run_audit_report_stage(provider=provider, case_dir=root, case_id="fixture",
+                                                      audit_context_mode="deduplicated")
+E       TypeError: run_audit_report_stage() got an unexpected keyword argument 'audit_context_mode'
+
+tests\agent\test_audit_context.py:222: TypeError</failure></testcase></testsuite></testsuites>

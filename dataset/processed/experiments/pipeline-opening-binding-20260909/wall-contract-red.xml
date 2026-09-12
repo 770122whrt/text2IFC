@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="5" time="1.652" timestamp="2026-09-09T22:57:18.395835+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_explicit_wall_fact_contract" name="test_explicit_wall_bounds_are_not_shortened_to_net_room_overlap[False-x]" time="0.004" /><testcase classname="tests.agent.test_explicit_wall_fact_contract" name="test_explicit_wall_bounds_are_not_shortened_to_net_room_overlap[False-y]" time="0.001" /><testcase classname="tests.agent.test_explicit_wall_fact_contract" name="test_explicit_wall_bounds_are_not_shortened_to_net_room_overlap[True-x]" time="0.001" /><testcase classname="tests.agent.test_explicit_wall_fact_contract" name="test_explicit_wall_bounds_are_not_shortened_to_net_room_overlap[True-y]" time="0.001" /><testcase classname="tests.agent.test_explicit_wall_fact_contract" name="test_current_brief_entrypoints_select_versioned_explicit_fact_contract" time="1.087"><failure message="AssertionError: assert 'design-brief.v2.2' == 'design-brief.v2.3'&#10;  &#10;  - design-brief.v2.3&#10;  ?                 ^&#10;  + design-brief.v2.2&#10;  ?                 ^">def test_current_brief_entrypoints_select_versioned_explicit_fact_contract():
+        from text2ifc_agent import live_pipeline, interactive_cli_flow
+&gt;       assert live_pipeline.DESIGN_BRIEF_TEMPLATE_ID==interactive_cli_flow.DESIGN_BRIEF_TEMPLATE_ID=='design-brief.v2.3'
+E       AssertionError: assert 'design-brief.v2.2' == 'design-brief.v2.3'
+E         
+E         - design-brief.v2.3
+E         ?                 ^
+E         + design-brief.v2.2
+E         ?                 ^
+
+tests\agent\test_explicit_wall_fact_contract.py:41: AssertionError</failure></testcase></testsuite></testsuites>

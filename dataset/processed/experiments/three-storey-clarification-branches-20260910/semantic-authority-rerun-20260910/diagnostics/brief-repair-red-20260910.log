@@ -1,0 +1,65 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+______ test_bounded_brief_repair_preserves_every_nonsemantic_fact[none] _______
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-repair-red-20260910/test_bounded_brief_repair_pres0')
+attack = 'none'
+
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'original_request', 'unknown_source', 'still_missing'])
+    def test_bounded_brief_repair_preserves_every_nonsemantic_fact(tmp_path, attack):
+>       from text2ifc_agent.brief_semantic_repair import repair_semantic_brief
+E       ModuleNotFoundError: No module named 'text2ifc_agent.brief_semantic_repair'
+
+tests\agent\test_semantic_authority_completeness.py:94: ModuleNotFoundError
+____ test_bounded_brief_repair_preserves_every_nonsemantic_fact[geometry] _____
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-repair-red-20260910/test_bounded_brief_repair_pres1')
+attack = 'geometry'
+
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'original_request', 'unknown_source', 'still_missing'])
+    def test_bounded_brief_repair_preserves_every_nonsemantic_fact(tmp_path, attack):
+>       from text2ifc_agent.brief_semantic_repair import repair_semantic_brief
+E       ModuleNotFoundError: No module named 'text2ifc_agent.brief_semantic_repair'
+
+tests\agent\test_semantic_authority_completeness.py:94: ModuleNotFoundError
+_ test_bounded_brief_repair_preserves_every_nonsemantic_fact[original_request] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-repair-red-20260910/test_bounded_brief_repair_pres2')
+attack = 'original_request'
+
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'original_request', 'unknown_source', 'still_missing'])
+    def test_bounded_brief_repair_preserves_every_nonsemantic_fact(tmp_path, attack):
+>       from text2ifc_agent.brief_semantic_repair import repair_semantic_brief
+E       ModuleNotFoundError: No module named 'text2ifc_agent.brief_semantic_repair'
+
+tests\agent\test_semantic_authority_completeness.py:94: ModuleNotFoundError
+_ test_bounded_brief_repair_preserves_every_nonsemantic_fact[unknown_source] __
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-repair-red-20260910/test_bounded_brief_repair_pres3')
+attack = 'unknown_source'
+
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'original_request', 'unknown_source', 'still_missing'])
+    def test_bounded_brief_repair_preserves_every_nonsemantic_fact(tmp_path, attack):
+>       from text2ifc_agent.brief_semantic_repair import repair_semantic_brief
+E       ModuleNotFoundError: No module named 'text2ifc_agent.brief_semantic_repair'
+
+tests\agent\test_semantic_authority_completeness.py:94: ModuleNotFoundError
+__ test_bounded_brief_repair_preserves_every_nonsemantic_fact[still_missing] __
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-brief-repair-red-20260910/test_bounded_brief_repair_pres4')
+attack = 'still_missing'
+
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'original_request', 'unknown_source', 'still_missing'])
+    def test_bounded_brief_repair_preserves_every_nonsemantic_fact(tmp_path, attack):
+>       from text2ifc_agent.brief_semantic_repair import repair_semantic_brief
+E       ModuleNotFoundError: No module named 'text2ifc_agent.brief_semantic_repair'
+
+tests\agent\test_semantic_authority_completeness.py:94: ModuleNotFoundError
+- generated xml file: E:\code for project\bimnet\.tmp\brief-repair-red-20260910.xml -
+=========================== short test summary info ===========================
+FAILED tests/agent/test_semantic_authority_completeness.py::test_bounded_brief_repair_preserves_every_nonsemantic_fact[none]
+FAILED tests/agent/test_semantic_authority_completeness.py::test_bounded_brief_repair_preserves_every_nonsemantic_fact[geometry]
+FAILED tests/agent/test_semantic_authority_completeness.py::test_bounded_brief_repair_preserves_every_nonsemantic_fact[original_request]
+FAILED tests/agent/test_semantic_authority_completeness.py::test_bounded_brief_repair_preserves_every_nonsemantic_fact[unknown_source]
+FAILED tests/agent/test_semantic_authority_completeness.py::test_bounded_brief_repair_preserves_every_nonsemantic_fact[still_missing]
+5 failed, 17 deselected in 2.02s

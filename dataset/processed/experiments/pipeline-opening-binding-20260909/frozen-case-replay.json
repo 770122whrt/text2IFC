@@ -1,0 +1,427 @@
+{
+  "evidence_mode": "offline deterministic replay of disclosed live case",
+  "new_provider_calls": 0,
+  "legacy_projection_equals_frozen": true,
+  "source": "dataset\\processed\\ifc-presentation-validation\\two-storey-human-review-20260909\\geometry-continuation\\runs\\5cd2006f0891913f",
+  "unchanged_source_hashes": {
+    "candidate.json": "70d3d3806bbab7e353a6808a43058c3c441ebb696e526e841c1457978fba49ed",
+    "design-brief.json": "967fd92af15022e29d9cc8f275117adaa9d7e769b88ef393a87e9d1c54216c3a",
+    "expected-facts.json": "72fb21bcaa97c2dec2769e1b9f58e6b88439d9cc17af54c92bfa4c5fb370ce47",
+    "semantic-geometry-expectation.json": "edf29723b87a8190077ed247168767c1bb597ea44445fdda6a1ea334c42685d0",
+    "output.ifc": "e000c6da3a9c355aab47db0a6862b3d9e8977e556ca6df38a7dd089f01929059",
+    "geometry-feedback.json": "c3065f9ee5eed2e9f6314ef89058bd2c29e7876b0377175fac73a0a183a26853",
+    "audit/audit-report.json": "fd3f1a9f349e30ec863007831c6be7aea97f984a9ff6a57d364a447a5f4acc91",
+    "generation-budget.json": "ff91d710fa5313094b301d855413ab38f3dcb35eb82638c79c877ced3ab8b551"
+  },
+  "results": {
+    "1.0": {
+      "success": false,
+      "issues": [
+        {
+          "code": "MISSING_STAIR_OPENING",
+          "path": "/floor_openings/opening-second-floor-slab-stair",
+          "message": "Expected component 'opening-second-floor-slab-stair' was not found in the IFC.",
+          "entity_ids": [
+            "opening-second-floor-slab-stair"
+          ],
+          "source_fact_refs": [
+            "/known_facts/floor_slabs/1/openings/0"
+          ]
+        },
+        {
+          "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+          "path": "/known_facts/storeys/0/walls/interior/0",
+          "message": "Required geometry could not be derived from confirmed facts.",
+          "actual": {
+            "reason": "shared_boundary_not_unique_or_wall_thickness_missing"
+          },
+          "source_fact_refs": [
+            "/known_facts/storeys/0/spaces/0",
+            "/known_facts/storeys/0/spaces/1",
+            "/known_facts/storeys/0/walls/interior/0"
+          ]
+        },
+        {
+          "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+          "path": "/known_facts/storeys/1/walls/interior/0",
+          "message": "Required geometry could not be derived from confirmed facts.",
+          "actual": {
+            "reason": "shared_boundary_not_unique_or_wall_thickness_missing"
+          },
+          "source_fact_refs": [
+            "/known_facts/storeys/1/spaces/0",
+            "/known_facts/storeys/1/spaces/1",
+            "/known_facts/storeys/1/walls/interior/0"
+          ]
+        }
+      ],
+      "metrics": {
+        "case_id": "5cd2006f0891913f",
+        "wall_set_convention": "primary",
+        "walls": {},
+        "slabs": {
+          "ground-slab": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -0.20000000000000018,
+                9.2
+              ],
+              "y": [
+                -0.20000000000000018,
+                8.2
+              ],
+              "z": [
+                -0.15,
+                0.0
+              ]
+            }
+          },
+          "second-floor-slab": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -0.20000000000000018,
+                9.2
+              ],
+              "y": [
+                -0.20000000000000018,
+                8.2
+              ],
+              "z": [
+                3.0,
+                3.15
+              ]
+            }
+          }
+        },
+        "spaces": {
+          "space-storey-1-space-reading-lobby": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                0.0,
+                6.8
+              ],
+              "y": [
+                0.0,
+                8.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            }
+          },
+          "space-storey-1-space-stair-hall-1": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                7.0,
+                9.0
+              ],
+              "y": [
+                0.0,
+                8.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            }
+          },
+          "space-storey-2-space-activity-hall": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                0.0,
+                6.8
+              ],
+              "y": [
+                0.0,
+                8.0
+              ],
+              "z": [
+                3.15,
+                6.15
+              ]
+            }
+          },
+          "space-storey-2-space-stair-platform-2": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                7.0,
+                9.0
+              ],
+              "y": [
+                6.6,
+                8.0
+              ],
+              "z": [
+                3.15,
+                6.15
+              ]
+            }
+          }
+        },
+        "roof": {
+          "roof-slab": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -0.20000000000000018,
+                9.2
+              ],
+              "y": [
+                -0.20000000000000018,
+                8.2
+              ],
+              "z": [
+                6.15,
+                6.300000000000001
+              ]
+            }
+          }
+        },
+        "floor_openings": {},
+        "products": {},
+        "stairs": {
+          "stair-1": {
+            "flight_ids": [
+              "stair-flight-1"
+            ],
+            "bbox": {
+              "x": [
+                7.4,
+                8.6
+              ],
+              "y": [
+                1.2,
+                6.6000000000000005
+              ],
+              "z": [
+                0.0,
+                3.15
+              ]
+            },
+            "has_stepped_profile": true,
+            "wall_intersections": []
+          }
+        },
+        "expectation_complete": false,
+        "unresolved_expectation_count": 2
+      }
+    },
+    "1.1": {
+      "success": false,
+      "issues": [
+        {
+          "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+          "path": "/known_facts/storeys/0/walls/interior/0",
+          "message": "Required geometry could not be derived from confirmed facts.",
+          "actual": {
+            "reason": "shared_boundary_not_unique_or_wall_thickness_missing"
+          },
+          "source_fact_refs": [
+            "/known_facts/storeys/0/spaces/0",
+            "/known_facts/storeys/0/spaces/1",
+            "/known_facts/storeys/0/walls/interior/0"
+          ]
+        },
+        {
+          "code": "GEOMETRY_EXPECTATION_INCOMPLETE",
+          "path": "/known_facts/storeys/1/walls/interior/0",
+          "message": "Required geometry could not be derived from confirmed facts.",
+          "actual": {
+            "reason": "shared_boundary_not_unique_or_wall_thickness_missing"
+          },
+          "source_fact_refs": [
+            "/known_facts/storeys/1/spaces/0",
+            "/known_facts/storeys/1/spaces/1",
+            "/known_facts/storeys/1/walls/interior/0"
+          ]
+        }
+      ],
+      "metrics": {
+        "case_id": "5cd2006f0891913f",
+        "wall_set_convention": "primary",
+        "walls": {},
+        "slabs": {
+          "ground-slab": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -0.20000000000000018,
+                9.2
+              ],
+              "y": [
+                -0.20000000000000018,
+                8.2
+              ],
+              "z": [
+                -0.15,
+                0.0
+              ]
+            }
+          },
+          "second-floor-slab": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -0.20000000000000018,
+                9.2
+              ],
+              "y": [
+                -0.20000000000000018,
+                8.2
+              ],
+              "z": [
+                3.0,
+                3.15
+              ]
+            }
+          }
+        },
+        "spaces": {
+          "space-storey-1-space-reading-lobby": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                0.0,
+                6.8
+              ],
+              "y": [
+                0.0,
+                8.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            }
+          },
+          "space-storey-1-space-stair-hall-1": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                7.0,
+                9.0
+              ],
+              "y": [
+                0.0,
+                8.0
+              ],
+              "z": [
+                0.0,
+                3.0
+              ]
+            }
+          },
+          "space-storey-2-space-activity-hall": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                0.0,
+                6.8
+              ],
+              "y": [
+                0.0,
+                8.0
+              ],
+              "z": [
+                3.15,
+                6.15
+              ]
+            }
+          },
+          "space-storey-2-space-stair-platform-2": {
+            "ifc_class": "IfcSpace",
+            "bbox": {
+              "x": [
+                7.0,
+                9.0
+              ],
+              "y": [
+                6.6,
+                8.0
+              ],
+              "z": [
+                3.15,
+                6.15
+              ]
+            }
+          }
+        },
+        "roof": {
+          "roof-slab": {
+            "ifc_class": "IfcSlab",
+            "bbox": {
+              "x": [
+                -0.20000000000000018,
+                9.2
+              ],
+              "y": [
+                -0.20000000000000018,
+                8.2
+              ],
+              "z": [
+                6.15,
+                6.300000000000001
+              ]
+            }
+          }
+        },
+        "floor_openings": {
+          "opening-second-floor-slab-stair": {
+            "ifc_class": "IfcOpeningElement",
+            "bbox": {
+              "x": [
+                7.2,
+                8.8
+              ],
+              "y": [
+                1.1999999999999997,
+                6.6
+              ],
+              "z": [
+                3.0,
+                3.15
+              ]
+            },
+            "binding_basis": "unique_host_and_bounds",
+            "resolved_bim_json_id": "opening-second-floor-stair-void",
+            "resolved_global_id": "2StcUTY3fIRxc2bYQSBIke",
+            "host_slab_id": "second-floor-slab"
+          }
+        },
+        "products": {},
+        "stairs": {
+          "stair-1": {
+            "flight_ids": [
+              "stair-flight-1"
+            ],
+            "bbox": {
+              "x": [
+                7.4,
+                8.6
+              ],
+              "y": [
+                1.2,
+                6.6000000000000005
+              ],
+              "z": [
+                0.0,
+                3.15
+              ]
+            },
+            "has_stepped_profile": true,
+            "wall_intersections": []
+          }
+        },
+        "expectation_complete": false,
+        "unresolved_expectation_count": 2
+      }
+    }
+  }
+}

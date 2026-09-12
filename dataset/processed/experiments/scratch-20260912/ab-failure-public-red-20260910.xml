@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="13" time="2.625" timestamp="2026-09-10T14:13:18.359489+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[True-truncated]" time="0.226" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[True-no_choices]" time="0.204" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[True-forbidden]" time="0.203" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[False-truncated]" time="0.205" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[False-no_choices]" time="0.187" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_failed_public_stage_preserves_received_response_and_budget[False-forbidden]" time="0.186" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_normal_or_malformed_json_keeps_existing_stage_contract[valid]" time="0.105" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_normal_or_malformed_json_keeps_existing_stage_contract[malformed]" time="0.105" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_budget_exhaustion_still_escapes_before_provider_attempt" time="0.109" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_public_loops_stop_after_truncation_without_promoting_candidate[scoped]" time="0.130" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_public_loops_stop_after_truncation_without_promoting_candidate[staged]" time="0.113" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_transport_failure_has_no_fabricated_response" time="0.089" /><testcase classname="tests.agent.test_changeset_failure_evidence" name="test_result_carrying_provider_error_keeps_its_evidence" time="0.090"><failure message="AssertionError: assert False&#10; +  where False = is_file()&#10; +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-failure-public-red-20260910/test_result_carrying_provider_0') / 'response.raw.json').is_file">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-failure-public-red-20260910/test_result_carrying_provider_0')
+
+    def test_result_carrying_provider_error_keeps_its_evidence(tmp_path):
+        from text2ifc_agent.providers import ProviderOutputError
+        from tests.agent.test_phase6_5_changeset_stage import RecordingProvider
+        delegate = RecordingProvider(_changeset(_candidate(), _expected()))
+        class FailedResult:
+            def generate_live(self, **kwargs):
+                result = delegate.generate_live(**kwargs)
+                raise ProviderOutputError('output rejected', live_result=result)
+        result = _run(tmp_path, FailedResult())
+        assert result['classification'] == 'provider_failed'
+&gt;       assert (tmp_path/'response.raw.json').is_file()
+E       AssertionError: assert False
+E        +  where False = is_file()
+E        +    where is_file = (WindowsPath('E:/code for project/bimnet/.tmp/pytest-ab-failure-public-red-20260910/test_result_carrying_provider_0') / 'response.raw.json').is_file
+
+tests\agent\test_changeset_failure_evidence.py:127: AssertionError</failure></testcase></testsuite></testsuites>

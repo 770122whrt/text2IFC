@@ -1,0 +1,229 @@
+{
+  "scope": "isolated IFC2X3 API feasibility only; no production integration, whole-file schema gate, viewer, Provider or accepted Proof validation",
+  "ifcopenshell": "0.8.5",
+  "observed_parameter_requirement": "DOUBLE_PANEL_VERTICAL requires two panel_properties entries; omitted list produced IndexError in initial probe",
+  "cases": [
+    {
+      "kind": "window",
+      "variant": "SINGLE_PANEL",
+      "units": "mm",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 2,
+        "Framing": 1,
+        "Glazing": 1
+      },
+      "body_items": 4,
+      "vertices": 56,
+      "extent_m": [
+        1.2,
+        0.075,
+        1.5
+      ],
+      "width_height_match": true,
+      "serialized_bytes": 3556
+    },
+    {
+      "kind": "window",
+      "variant": "DOUBLE_PANEL_VERTICAL",
+      "units": "mm",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 4,
+        "Framing": 2,
+        "Glazing": 2
+      },
+      "body_items": 8,
+      "vertices": 112,
+      "extent_m": [
+        1.2,
+        0.075,
+        1.5
+      ],
+      "width_height_match": true,
+      "serialized_bytes": 5932
+    },
+    {
+      "kind": "door",
+      "variant": "SINGLE_SWING_LEFT",
+      "units": "mm",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 5,
+        "Framing": 3
+      },
+      "body_items": 8,
+      "vertices": 104,
+      "extent_m": [
+        0.9500000000000001,
+        0.115,
+        2.125
+      ],
+      "width_height_match": false,
+      "serialized_bytes": 5479
+    },
+    {
+      "kind": "door",
+      "variant": "SINGLE_SWING_RIGHT",
+      "units": "mm",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 5,
+        "Framing": 3
+      },
+      "body_items": 8,
+      "vertices": 104,
+      "extent_m": [
+        0.9500000000000001,
+        0.115,
+        2.125
+      ],
+      "width_height_match": false,
+      "serialized_bytes": 5470
+    },
+    {
+      "kind": "window",
+      "variant": "SINGLE_PANEL",
+      "units": "m",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 2,
+        "Framing": 1,
+        "Glazing": 1
+      },
+      "body_items": 4,
+      "vertices": 56,
+      "extent_m": [
+        1.2,
+        0.075,
+        1.5
+      ],
+      "width_height_match": true,
+      "serialized_bytes": 4191
+    },
+    {
+      "kind": "window",
+      "variant": "DOUBLE_PANEL_VERTICAL",
+      "units": "m",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 4,
+        "Framing": 2,
+        "Glazing": 2
+      },
+      "body_items": 8,
+      "vertices": 112,
+      "extent_m": [
+        1.2,
+        0.075,
+        1.5
+      ],
+      "width_height_match": true,
+      "serialized_bytes": 7380
+    },
+    {
+      "kind": "door",
+      "variant": "SINGLE_SWING_LEFT",
+      "units": "m",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 5,
+        "Framing": 3
+      },
+      "body_items": 8,
+      "vertices": 104,
+      "extent_m": [
+        0.95,
+        0.115,
+        2.125
+      ],
+      "width_height_match": false,
+      "serialized_bytes": 6682
+    },
+    {
+      "kind": "door",
+      "variant": "SINGLE_SWING_RIGHT",
+      "units": "m",
+      "schema": "IFC2X3",
+      "roles": {
+        "Lining": 5,
+        "Framing": 3
+      },
+      "body_items": 8,
+      "vertices": 104,
+      "extent_m": [
+        0.95,
+        0.115,
+        2.125
+      ],
+      "width_height_match": false,
+      "serialized_bytes": 6615
+    }
+  ],
+  "elapsed_seconds": 0.214,
+  "bounded_door_probe": {
+    "settings": "CasingDepth/CasingThickness/ThresholdThickness/ThresholdDepth all zero; only a feasibility choice, not a production default",
+    "cases": [
+      {
+        "variant": "SINGLE_SWING_LEFT",
+        "units": "mm",
+        "extent_m": [
+          0.9,
+          0.115,
+          2.1
+        ],
+        "width_height_match": true,
+        "body_items": 5,
+        "roles": [
+          "Lining",
+          "Framing"
+        ]
+      },
+      {
+        "variant": "SINGLE_SWING_RIGHT",
+        "units": "mm",
+        "extent_m": [
+          0.9,
+          0.115,
+          2.1
+        ],
+        "width_height_match": true,
+        "body_items": 5,
+        "roles": [
+          "Lining",
+          "Framing"
+        ]
+      },
+      {
+        "variant": "SINGLE_SWING_LEFT",
+        "units": "m",
+        "extent_m": [
+          0.9,
+          0.115,
+          2.1
+        ],
+        "width_height_match": true,
+        "body_items": 5,
+        "roles": [
+          "Lining",
+          "Framing"
+        ]
+      },
+      {
+        "variant": "SINGLE_SWING_RIGHT",
+        "units": "m",
+        "extent_m": [
+          0.9,
+          0.115,
+          2.1
+        ],
+        "width_height_match": true,
+        "body_items": 5,
+        "roles": [
+          "Lining",
+          "Framing"
+        ]
+      }
+    ]
+  }
+}

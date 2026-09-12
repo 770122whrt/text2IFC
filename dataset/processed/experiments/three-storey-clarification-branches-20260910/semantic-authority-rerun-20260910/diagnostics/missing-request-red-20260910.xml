@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="4.408" timestamp="2026-09-10T17:56:47.842299+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_authority_completeness" name="test_candidate_without_any_request_authority_cannot_publish" time="2.060"><failure message="assert not True">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-missing-request-red-20260910/test_candidate_without_any_req0')
+
+    def test_candidate_without_any_request_authority_cannot_publish(tmp_path):
+        from text2ifc_agent.live_pipeline import run_candidate_gate_stage
+        from tests.agent.test_semantic_scope_and_type_policy import _write
+        candidate, *_ = fixture()
+        for e in candidate['entities']:
+            e['materials'], e['property_sets'] = [], {}
+        candidate['entities'] = [e for e in candidate['entities'] if not e['ifc_class'].endswith('Type')]
+        candidate['relationships'] = [r for r in candidate['relationships'] if r['ifc_class'] != 'IfcRelDefinesByType']
+        _write(tmp_path/'generator/candidate.json', candidate)
+        result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='missing-source')
+&gt;       assert not result['compile_reopen_success']
+E       assert not True
+
+tests\agent\test_semantic_authority_completeness.py:215: AssertionError</failure></testcase></testsuite></testsuites>

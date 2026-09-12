@@ -1,0 +1,26 @@
+{
+  "status": "suspended",
+  "created_at": "2026-09-10T04:48:19.236431+00:00",
+  "role": "post-run operational suspension; admission.json remains the frozen pre-run state",
+  "blocked_actions": [
+    "further A/B provider transport",
+    "acceptance or Proof registration as successful output"
+  ],
+  "reasons": [
+    "A and B each used their cumulative 6-call limit",
+    "B parent/child stair and opening identity disagreement remains unresolved",
+    "B truncated ChangeSet response body and usage were not persisted"
+  ],
+  "remaining_calls": {
+    "A-revise": 0,
+    "B-retain": 0
+  },
+  "required_before_retry": [
+    "offline red-capable failure families and fixes for the applicable shared defects",
+    "scoped admission revalidation; do not escalate to Full Preflight automatically",
+    "explicit additional provider budget"
+  ],
+  "github_push_authorized": false,
+  "proof_registered": false,
+  "human_acceptance": "not accepted for these new outputs"
+}

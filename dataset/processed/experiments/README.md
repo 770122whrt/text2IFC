@@ -29,3 +29,19 @@ C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次
 ## 光庭设计与修复实验
 
 两版光庭成品和全部过程自包含收纳到 [光庭Proof](../proof/generation/phase6.6/courtyard-library-20260912/REPORT.md)。失败归因、原始attempt、累计token和12个一次性测试脚本见 [过程入口](../proof/generation/phase6.6/courtyard-library-20260912/evidence/README.md)，不重复复制一份实验目录。第二版人工验收不提升第一版设计状态。
+
+## 其他案例与开发目录归档（2026-09-12）
+
+[统一整理记录](../../../docs/reports/development-cleanup-20260912/REPORT.md) 说明删除结果、验证及保留边界。[旧路径映射](development-retirement-20260912.json) 定位每份原文件；已有 Proof 副本直接复用，没有重复复制。下列目录是冻结历史，不是新的待执行计划。
+
+| 内容 | 入口 |
+|---|---|
+| A/B 分支早期失败、重试、预算和运行器 | [完整历史](three-storey-clarification-branches-20260910/)；[最终 Proof](../proof/generation/phase6.6/three-storey-clarification-ab-20260910/REPORT.md) |
+| 三层与两层旧展示过程 | [三层](three-storey-human-review-20260909/)；[两层](two-storey-human-review-20260908/) |
+| 语义、材料与外观试验 | [初始](semantic-appearance-20260908/)；[第二轮](semantic-appearance-20260908-02/)；[收尾](semantic-appearance-20260908-final/) |
+| 开口绑定与门禁路由 | [绑定](pipeline-opening-binding-20260909/)；[路由](pipeline-gate-routing-20260909/) |
+| 早期 Repair／Generation 运行 | [A1](live-a1-20260904/)；[语义](live-semantic-20260908-01/)；[混合修复](repair-mixed-20260905/)；[恢复](restoration-20260904/)；[交付](deliverables/) |
+| 离线与准入快照 | [offline](offline-20260904T0431/)；[preflight](preflight-20260904T0431/)；[Phase12](phase12-preflight-20260904/) |
+| 一次性诊断脚本、XML、日志与试验输出 | [文件](scratch-20260912/)；[原路径映射与 ZIP 成员](scratch-retirement-20260912.json) |
+
+同名 `success-cases` 的 80 份文件全部复用现有 Repair Proof，按映射访问。调试源码仅作历史审计；保留通用回归在 `tests/`，不会因已通过而删除其覆盖。

@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="13" skipped="0" tests="17" time="4.551" timestamp="2026-09-10T08:14:52.932384+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension-]" time="0.043" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension- ]" time="0.003"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = ' ', conflict = False
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension-\t\r\n]" time="0.005"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = '\t\r\n', conflict = False
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[missing-dimension-\u3000]" time="0.004"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">answer = '\u3000', conflict = False
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+        before = copy.deepcopy(controller.to_dict())
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            return _call(index, _brief(status="ready"))
+    
+&gt;       with pytest.raises(ClarificationError, match="non-empty"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:47: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict-]" time="0.003"><failure message="text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs">answer = '', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+&gt;       controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_clarification_answer_boundary.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='answer-boundary', original_request='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', transcript=(Clar...ntent='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', question_ids=()),), calls=(), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=1, response_id='msg_live_1', prompt_template_id='design-brief.v2.1', prompt_template_hash...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -&gt; "ClarificationController":
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+&gt;           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs
+
+src\text2ifc_agent\clarification.py:109: ClarificationError</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict- ]" time="0.003"><failure message="text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs">answer = ' ', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+&gt;       controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_clarification_answer_boundary.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='answer-boundary', original_request='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', transcript=(Clar...ntent='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', question_ids=()),), calls=(), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=1, response_id='msg_live_1', prompt_template_id='design-brief.v2.1', prompt_template_hash...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -&gt; "ClarificationController":
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+&gt;           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs
+
+src\text2ifc_agent\clarification.py:109: ClarificationError</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict-\t\r\n]" time="0.003"><failure message="text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs">answer = '\t\r\n', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+&gt;       controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_clarification_answer_boundary.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='answer-boundary', original_request='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', transcript=(Clar...ntent='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', question_ids=()),), calls=(), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=1, response_id='msg_live_1', prompt_template_id='design-brief.v2.1', prompt_template_hash...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -&gt; "ClarificationController":
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+&gt;           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs
+
+src\text2ifc_agent\clarification.py:109: ClarificationError</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_blank_answer_does_not_invoke_or_change_pending_state[layout-conflict-\u3000]" time="0.002"><failure message="text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs">answer = '\u3000', conflict = True
+
+    @pytest.mark.parametrize("answer", ["", " ", "\t\r\n", "\u3000"])
+    @pytest.mark.parametrize("conflict", [False, True], ids=["missing-dimension", "layout-conflict"])
+    def test_blank_answer_does_not_invoke_or_change_pending_state(answer, conflict):
+        controller = ClarificationController.start(case_id="answer-boundary", user_request=REQUEST)
+&gt;       controller = controller.record_model_call(_call(1, _pending(conflict=conflict)))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_clarification_answer_boundary.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='answer-boundary', original_request='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', transcript=(Clar...ntent='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', question_ids=()),), calls=(), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=1, response_id='msg_live_1', prompt_template_id='design-brief.v2.1', prompt_template_hash...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -&gt; "ClarificationController":
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+&gt;           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs
+
+src\text2ifc_agent\clarification.py:109: ClarificationError</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[needs_clarification]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'needs_clarification'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[ready]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'ready'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[draft_required]" time="0.003"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'draft_required'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn[blocked]" time="0.002"><failure message="Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;">status = 'blocked'
+
+    @pytest.mark.parametrize("status", ["needs_clarification", "ready", "draft_required", "blocked"])
+    def test_new_brief_cannot_replace_waiting_or_terminal_state_without_user_turn(status):
+        controller = ClarificationController.start(case_id="transition-boundary", user_request=REQUEST)
+        controller = controller.record_model_call(_call(1, _brief(status=status)))
+        before = copy.deepcopy(controller.to_dict())
+&gt;       with pytest.raises(ClarificationError, match="awaiting_model"):
+E       Failed: DID NOT RAISE &lt;class 'text2ifc_agent.clarification.ClarificationError'&gt;
+
+tests\agent\test_clarification_answer_boundary.py:58: Failed</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_nonblank_answer_is_preserved_and_result_is_not_forced_ready[  \u5899\u539a\u4e3a200\u6beb\u7c73\u3002\n-ready]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_nonblank_answer_is_preserved_and_result_is_not_forced_ready[  \u6211\u4e0d\u77e5\u9053\u3002\n-draft_required]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_nonblank_answer_is_preserved_and_result_is_not_forced_ready[\u5148\u786e\u8ba4\u5899\u539a\uff0c\u5176\u4ed6\u95ee\u9898\u8fd8\u9700\u8981\u8ba8\u8bba\u3002-needs_clarification]" time="0.002" /><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable[initial-loop]" time="0.113"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'non-empty'&#10; Input: 'invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/clarification-boundary-red-20260910/test_public_loop_rejects_blank0')
+resume = False
+
+    @pytest.mark.parametrize("resume", [False, True], ids=["initial-loop", "reopened-session"])
+    def test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable(tmp_path, resume):
+        db = tmp_path / "sessions.sqlite"
+        store = SessionStore.open(db, artifact_root=tmp_path)
+        session = store.create_session(original_input=REQUEST)
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            brief = _pending(conflict=True) if index == 1 else _brief(status="ready")
+            directory = session.run_dir / "calls" / f"{index:02d}-design-brief"
+            directory.mkdir(parents=True, exist_ok=False)
+            (directory / "design-brief.json").write_text(json.dumps(brief), encoding="utf-8")
+            (directory / "context-selection.json").write_text(
+                json.dumps({"evidence": EVIDENCE}), encoding="utf-8"
+            )
+            return _call(index, brief)
+    
+        try:
+            if resume:
+                run_design_brief_clarification_loop(
+                    store=store, session=session.session_hash,
+                    invoke_design_brief=invoke, user_answers=[],
+                )
+                store.close()
+                store = SessionStore.open(db, artifact_root=tmp_path)
+    
+            with pytest.raises(ClarificationError, match="non-empty"):
+&gt;               run_design_brief_clarification_loop(
+                    store=store, session=session.session_hash,
+                    invoke_design_brief=invoke, user_answers=[" \t\u3000"],
+                )
+
+tests\agent\test_clarification_answer_boundary.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:388: in run_design_brief_clarification_loop
+    controller = controller.record_model_call(first_call)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='6be29d396182d9c2', original_request='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', transcript=(Cla...ntent='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', question_ids=()),), calls=(), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=1, response_id='msg_live_1', prompt_template_id='design-brief.v2.1', prompt_template_hash...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -&gt; "ClarificationController":
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+&gt;           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs
+
+src\text2ifc_agent\clarification.py:109: ClarificationError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/clarification-boundary-red-20260910/test_public_loop_rejects_blank0')
+resume = False
+
+    @pytest.mark.parametrize("resume", [False, True], ids=["initial-loop", "reopened-session"])
+    def test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable(tmp_path, resume):
+        db = tmp_path / "sessions.sqlite"
+        store = SessionStore.open(db, artifact_root=tmp_path)
+        session = store.create_session(original_input=REQUEST)
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            brief = _pending(conflict=True) if index == 1 else _brief(status="ready")
+            directory = session.run_dir / "calls" / f"{index:02d}-design-brief"
+            directory.mkdir(parents=True, exist_ok=False)
+            (directory / "design-brief.json").write_text(json.dumps(brief), encoding="utf-8")
+            (directory / "context-selection.json").write_text(
+                json.dumps({"evidence": EVIDENCE}), encoding="utf-8"
+            )
+            return _call(index, brief)
+    
+        try:
+            if resume:
+                run_design_brief_clarification_loop(
+                    store=store, session=session.session_hash,
+                    invoke_design_brief=invoke, user_answers=[],
+                )
+                store.close()
+                store = SessionStore.open(db, artifact_root=tmp_path)
+    
+&gt;           with pytest.raises(ClarificationError, match="non-empty"):
+E           AssertionError: Regex pattern did not match.
+E            Regex: 'non-empty'
+E            Input: 'invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs'
+
+tests\agent\test_clarification_answer_boundary.py:113: AssertionError</failure></testcase><testcase classname="tests.agent.test_clarification_answer_boundary" name="test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable[reopened-session]" time="0.102"><failure message="text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/clarification-boundary-red-20260910/test_public_loop_rejects_blank1')
+resume = True
+
+    @pytest.mark.parametrize("resume", [False, True], ids=["initial-loop", "reopened-session"])
+    def test_public_loop_rejects_blank_before_followup_and_keeps_question_recoverable(tmp_path, resume):
+        db = tmp_path / "sessions.sqlite"
+        store = SessionStore.open(db, artifact_root=tmp_path)
+        session = store.create_session(original_input=REQUEST)
+        calls = []
+    
+        def invoke(transcript, index):
+            calls.append(index)
+            brief = _pending(conflict=True) if index == 1 else _brief(status="ready")
+            directory = session.run_dir / "calls" / f"{index:02d}-design-brief"
+            directory.mkdir(parents=True, exist_ok=False)
+            (directory / "design-brief.json").write_text(json.dumps(brief), encoding="utf-8")
+            (directory / "context-selection.json").write_text(
+                json.dumps({"evidence": EVIDENCE}), encoding="utf-8"
+            )
+            return _call(index, brief)
+    
+        try:
+            if resume:
+&gt;               run_design_brief_clarification_loop(
+                    store=store, session=session.session_hash,
+                    invoke_design_brief=invoke, user_answers=[],
+                )
+
+tests\agent\test_clarification_answer_boundary.py:106: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:388: in run_design_brief_clarification_loop
+    controller = controller.record_model_call(first_call)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = ClarificationController(case_id='6746c65d5515c0a2', original_request='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', transcript=(Cla...ntent='请创建一个长6米、宽4米、高3米的单层矩形房间，四面墙闭合。', question_ids=()),), calls=(), status='awaiting_model', pending_question_ids=())
+call = ClarificationCall(call_index=1, response_id='msg_live_1', prompt_template_id='design-brief.v2.1', prompt_template_hash...json-v2:representation'}, {'evidence_id': 'capability:IFC2X3:IfcSpace'}, {'evidence_id': 'capability:IFC2X3:IfcWall'}])
+
+    def record_model_call(
+        self,
+        call: ClarificationCall,
+    ) -&gt; "ClarificationController":
+        expected_index = len(self.calls) + 1
+        if call.call_index != expected_index:
+            raise ClarificationError(
+                f"expected call_index {expected_index}, got {call.call_index}"
+            )
+        if not call.response_id:
+            raise ClarificationError("live Design Brief call is missing response_id")
+        if not call.prompt_template_id or not call.prompt_template_hash:
+            raise ClarificationError("live Design Brief call is missing prompt identity")
+    
+        issues = validate_design_brief(
+            call.brief,
+            evidence_catalog=call.evidence_catalog,
+        )
+        if issues:
+            rendered = ", ".join(
+                f"{issue.code}@{issue.path}" for issue in issues
+            )
+&gt;           raise ClarificationError(f"invalid Design Brief call: {rendered}")
+E           text2ifc_agent.clarification.ClarificationError: invalid Design Brief call: INVALID_STRUCTURE@/ambiguities/0/evidence_refs
+
+src\text2ifc_agent\clarification.py:109: ClarificationError</failure></testcase></testsuite></testsuites>

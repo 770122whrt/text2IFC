@@ -1,0 +1,107 @@
+ {
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.4",
+  "draft_id": "repair-changeset-draft-7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "base_model_fingerprint": "sha256:4a0116d439bcc286e501f459afb4fe31c9607d9233f18fb373921d991c436e66",
+  "source_request_hash": "sha256:7af95e2e5cb9145ac697505812f53ad2b60a227e77e848e027f956f48bd708bd",
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:abe5014b28dc082b2ddfb552905a7971ecfd129e2d701aaa6838f28be4a1442a",
+  "semantic_summary": {
+    "required": 32,
+    "conditional": 22,
+    "not_required": 0
+  },
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "0jltRti3rFigAmdXYhXxqI",
+      "1B$rgWypT66viEf30I1iIv",
+      "1vTeahUkP60PdWqwCTjUuM",
+      "1vTeahUkP60PdWqwCTjeRs",
+      "2CsmzAChHF6O6maGXlo6yJ",
+      "2IUEnGd5v4Yfg1ZkLtd0qa"
+    ]
+  },
+  "evidence_refs": [
+    "resolved:/operations/beam-1/context/candidate_targets/0",
+    "resolved:/operations/column-1/context/candidate_targets/0",
+    "resolved:/operations/door-1/context/candidate_targets/0",
+    "resolved:/operations/door-2/context/candidate_targets/0",
+    "resolved:/operations/window-1/context/candidate_targets/0",
+    "resolved:/operations/window-2/context/candidate_targets/0"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized"
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound",
+    "column_geometry_matches",
+    "column_contained_in_base_storey",
+    "column_type_bound"
+  ],
+  "operations": [
+    {
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjUuM"
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": -3316.629521,
+            "y_mm": -3863.522838,
+            "z_mm": -285.0
+          },
+          "end": {
+            "x_mm": -3316.629521,
+            "y_mm": -8803.522838,
+            "z_mm": -285.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 455,
+          "height_mm": 570
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/beam-1/context/candidate_targets/0"
+      ],
+      "appearance": null
+    },
+    {
+      "operation_id": "column-1",
+      "operation_type": "add_column",
+      "target": {
+        "storey_global_id": "1vTeahUkP60PdWqwCTjeRs"
+      },
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -3307.426702,
+            "y_mm": -9061.78314,
+            "z_mm": 3712.059993
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 500,
+          "depth_mm": 500
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/column-1/context/candidate_targets/0"
+      ],
+      "appearance": null
+    }
+  ]
+}

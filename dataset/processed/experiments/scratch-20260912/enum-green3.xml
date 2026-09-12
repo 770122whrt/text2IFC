@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="13" time="28.787" timestamp="2026-09-11T14:34:29.974077+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcSpace-InteriorOrExternalSpace-INTERNAL-InteriorOrExteriorSpace]" time="1.018"><failure message="AssertionError: assert [{'attributes...ce': 'test'}}] == [{'attributes...ce': 'test'}}]&#10;  &#10;  At index 0 diff: {'id': 'aggregate-flight', 'ifc_class': 'IfcRelAggregates', 'attributes': {'RelatingObject': 'stair-1', 'RelatedObjects': ['stair-flight-1']}, 'provenance': {'source': 'test'}} != {'id': 'void-1', 'ifc_class': 'IfcRelVoidsElement', 'attributes': {'RelatingBuildingElement': 'wall-1', 'RelatedOpeningElement': 'opening-1'}, 'provenance': {'source': 'test'}}&#10;  Use -v to get more diff">cls = 'IfcSpace', old = 'InteriorOrExternalSpace', value = 'INTERNAL'
+new = 'InteriorOrExteriorSpace'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}, 'property_sets': {}, 'provenance': {'source': 'test'}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+        assert g['eligible']
+        assert set(g['scope']['allowed_paths'][entity['id']]) == {f'/attributes/{old}', f'/attributes/{new}'}
+        result = apply(doc, g, proposal(doc, g))
+        assert result['valid'], result['issues']
+        assert doc == before
+&gt;       assert result['candidate']['relationships'] == doc['relationships']
+E       AssertionError: assert [{'attributes...ce': 'test'}}] == [{'attributes...ce': 'test'}}]
+E         
+E         At index 0 diff: {'id': 'aggregate-flight', 'ifc_class': 'IfcRelAggregates', 'attributes': {'RelatingObject': 'stair-1', 'RelatedObjects': ['stair-flight-1']}, 'provenance': {'source': 'test'}} != {'id': 'void-1', 'ifc_class': 'IfcRelVoidsElement', 'attributes': {'RelatingBuildingElement': 'wall-1', 'RelatedOpeningElement': 'opening-1'}, 'provenance': {'source': 'test'}}
+E         Use -v to get more diff
+
+tests\agent\test_enum_field_recovery.py:61: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcSpace-SpaceExposure-EXTERNAL-InteriorOrExteriorSpace]" time="1.621"><failure message="AssertionError: assert [{'attributes...ce': 'test'}}] == [{'attributes...ce': 'test'}}]&#10;  &#10;  At index 0 diff: {'id': 'aggregate-flight', 'ifc_class': 'IfcRelAggregates', 'attributes': {'RelatingObject': 'stair-1', 'RelatedObjects': ['stair-flight-1']}, 'provenance': {'source': 'test'}} != {'id': 'void-1', 'ifc_class': 'IfcRelVoidsElement', 'attributes': {'RelatingBuildingElement': 'wall-1', 'RelatedOpeningElement': 'opening-1'}, 'provenance': {'source': 'test'}}&#10;  Use -v to get more diff">cls = 'IfcSpace', old = 'SpaceExposure', value = 'EXTERNAL'
+new = 'InteriorOrExteriorSpace'
+
+    @pytest.mark.parametrize('cls,old,value,new', [
+        ('IfcSpace', 'InteriorOrExternalSpace', 'INTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InteriorOrExteriorSpace'),
+        ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
+    ])
+    def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+        if cls == 'IfcSpace':
+            doc, entity = candidate(cls, old, value)
+        else:
+            doc = _candidate()
+            doc['schema_version'] = 'bim-json/2.1'
+            entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}, 'property_sets': {}, 'provenance': {'source': 'test'}}
+            doc['entities'].append(entity)
+        before = copy.deepcopy(doc)
+        g = group(doc)
+        assert g['eligible']
+        assert set(g['scope']['allowed_paths'][entity['id']]) == {f'/attributes/{old}', f'/attributes/{new}'}
+        result = apply(doc, g, proposal(doc, g))
+        assert result['valid'], result['issues']
+        assert doc == before
+&gt;       assert result['candidate']['relationships'] == doc['relationships']
+E       AssertionError: assert [{'attributes...ce': 'test'}}] == [{'attributes...ce': 'test'}}]
+E         
+E         At index 0 diff: {'id': 'aggregate-flight', 'ifc_class': 'IfcRelAggregates', 'attributes': {'RelatingObject': 'stair-1', 'RelatedObjects': ['stair-flight-1']}, 'provenance': {'source': 'test'}} != {'id': 'void-1', 'ifc_class': 'IfcRelVoidsElement', 'attributes': {'RelatingBuildingElement': 'wall-1', 'RelatedOpeningElement': 'opening-1'}, 'provenance': {'source': 'test'}}
+E         Use -v to get more diff
+
+tests\agent\test_enum_field_recovery.py:61: AssertionError</failure></testcase><testcase classname="tests.agent.test_enum_field_recovery" name="test_unique_closed_enum_offers_only_rename_and_preserves_source[IfcWindowStyle-PanelOperation-SINGLE_PANEL-OperationType]" time="2.638" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[ambiguous]" time="1.898" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[existing]" time="1.471" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[unknown]" time="1.628" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[number]" time="1.537" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[feedback]" time="0.004" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_unproven_enum_identity_or_conflicting_sources_fail_closed[two_sources]" time="1.990" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[value]" time="2.534" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[unrelated]" time="1.571" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_out_of_scope_or_changed_value_rolls_back[relationship]" time="1.665" /><testcase classname="tests.agent.test_enum_field_recovery" name="test_public_formal_repair_uses_changeset_and_preserves_all_relationships" time="8.573"><failure message="AssertionError: assert [{'attributes...ce': 'test'}}] == [{'attributes...ce': 'test'}}]&#10;  &#10;  At index 0 diff: {'attributes': {'RelatedObjects': ['stair-flight-1'], 'RelatingObject': 'stair-1'}, 'id': 'aggregate-flight', 'ifc_class': 'IfcRelAggregates', 'provenance': {'source': 'test'}} != {'id': 'void-1', 'ifc_class': 'IfcRelVoidsElement', 'attributes': {'RelatingBuildingElement': 'wall-1', 'RelatedOpeningElement': 'opening-1'}, 'provenance': {'source': 'test'}}&#10;  Use -v to get more diff">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/enum-green3-tmp/test_public_formal_repair_uses0')
+
+    def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp_path):
+        from text2ifc_agent.live_pipeline import run_repair_stage
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        doc, _ = candidate()
+        g = group(doc)
+        assert g['eligible']
+        source = tmp_path / 'generator'
+        source.mkdir()
+        (source / 'input.txt').write_text('建立一个内部空间，保留其所在楼层。', encoding='utf-8')
+        expected = _expected_facts()
+        records = {'conversation': [], 'design-brief': {'schema_version': 'text2ifc/design-brief/2.1', 'known_facts': expected},
+            'parsed-output': doc, 'validation': {'valid': False, 'issues': [vars(i) for i in validate_v2_document(doc)]},
+            'metrics': {'contract_valid': False, 'classification': 'formal'}}
+        for name, data in records.items():
+            (source / f'{name}.json').write_text(json.dumps(data), encoding='utf-8')
+        (tmp_path / 'expected-facts.json').write_text(json.dumps(expected), encoding='utf-8')
+        result = run_repair_stage(provider_factory=lambda: SequenceProvider([proposal(doc, g)]),
+            output_dir=tmp_path / 'repair', generator_source_dir=source, case_id='enum-field-family')
+        assert result['valid'] and result['provider_call_count'] == 1
+        after = json.loads((tmp_path / 'repair/repaired-candidate.json').read_text(encoding='utf-8'))
+&gt;       assert after['relationships'] == doc['relationships']
+E       AssertionError: assert [{'attributes...ce': 'test'}}] == [{'attributes...ce': 'test'}}]
+E         
+E         At index 0 diff: {'attributes': {'RelatedObjects': ['stair-flight-1'], 'RelatingObject': 'stair-1'}, 'id': 'aggregate-flight', 'ifc_class': 'IfcRelAggregates', 'provenance': {'source': 'test'}} != {'id': 'void-1', 'ifc_class': 'IfcRelVoidsElement', 'attributes': {'RelatingBuildingElement': 'wall-1', 'RelatedOpeningElement': 'opening-1'}, 'provenance': {'source': 'test'}}
+E         Use -v to get more diff
+
+tests\agent\test_enum_field_recovery.py:126: AssertionError</failure></testcase></testsuite></testsuites>
