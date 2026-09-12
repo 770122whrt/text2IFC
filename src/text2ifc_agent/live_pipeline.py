@@ -166,6 +166,8 @@ def run_design_brief_stage(
     except FileExistsError:
         raise ValueError('DESIGN_BRIEF_ATTEMPT_ALREADY_EXISTS') from None
     user_request = str(case["user_request"])
+    from .brief_conversation import require_brief_conversation
+    require_brief_conversation(case["conversation"])
     conversation = list(case["conversation"])
     if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4'}:
         raise ValueError('Unsupported Design Brief stage contract.')

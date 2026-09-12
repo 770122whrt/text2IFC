@@ -65,6 +65,8 @@ def semantic_repair_eligible(brief, issues):
 
 def repair_semantic_brief(*, provider, output_dir, brief, case, evidence_catalog, session_id):
     """Caller owns the shared budget. Every attempt is retained, success is atomic."""
+    from .brief_conversation import require_brief_conversation
+    require_brief_conversation(case['conversation'])
     root = Path(output_dir)
     root.mkdir(parents=True, exist_ok=False)
     version = brief.get('schema_version')

@@ -153,8 +153,8 @@ def make_openai_design_brief_invoker(
     from .generation_budget import GenerationBudget
 
     def invoke(transcript: list[dict[str, Any]], call_index: int) -> ClarificationCall:
-        if not transcript:
-            raise ValueError("Design Brief invocation requires transcript")
+        from .brief_conversation import require_brief_conversation
+        require_brief_conversation(transcript)
         original_request = str(transcript[0].get("content", ""))
         call_dir = root / "calls" / f"{call_index:02d}-design-brief"
         try:

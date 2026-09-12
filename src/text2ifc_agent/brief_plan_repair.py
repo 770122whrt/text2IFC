@@ -32,6 +32,8 @@ def _fixed(brief,paths):
 
 
 def repair_plan_brief(*,provider,output_dir,brief,case,evidence_catalog,session_id):
+    from .brief_conversation import require_brief_conversation
+    require_brief_conversation(case['conversation'])
     root=Path(output_dir);root.mkdir(parents=True,exist_ok=False)
     def write(name,value):(root/name).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     issues=validate_design_brief(brief,evidence_catalog=evidence_catalog,expected_schema_version=VERSION,conversation=case['conversation'])
