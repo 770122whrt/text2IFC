@@ -161,6 +161,27 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
     from .brief_semantic_roles import filter_roles
     expectations, role_issues = filter_roles(brief, expectations)
     issues.extend(role_issues)
+    if brief.get('schema_version') == 'text2ifc/design-brief/2.7':
+        from .brief_semantic_roles import role_index
+        from text2ifc_contract.property_validation import validate_property_sets
+        from text2ifc_knowledge.registry import load_ifc2x3_registry
+        identities, _ = role_index(brief)
+        registry = load_ifc2x3_registry()
+        executable = []
+        for row in expectations:
+            if row['kind'] != 'property':
+                executable.append(row)
+                continue
+            cls = identities.get(row['entity_id'], {}).get('ifc_class')
+            rejected = validate_property_sets(cls, {row['pset']: {row['property']: row['value']}},
+                path=row['source_path'] + '/property_sets', registry=registry)
+            if rejected:
+                issues.extend({'code': 'SEMANTIC_PROPERTY_NOT_ADMISSIBLE', 'path': i.path,
+                    'message': f'{i.code}: {i.message} Correct extraction from the user request; native IFC attributes are not Pset properties. Do not invent a replacement property or discard an explicit unsupported request.'}
+                    for i in rejected)
+            else:
+                executable.append(row)
+        expectations = executable
     from .part_appearance import validate_part_requests
     issues.extend(validate_part_requests(brief, expectations))
     if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:

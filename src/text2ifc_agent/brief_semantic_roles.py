@@ -83,6 +83,11 @@ def filter_roles(brief,expectations):
     bindings={}
     for row in expectations:
         issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'})
+        if brief.get('schema_version') == 'text2ifc/design-brief/2.7' and row['kind'] == 'appearance' and identities.get(row['entity_id'], {}).get('ifc_class') == 'IfcStair':
+            from .cross_storey_identity import stair_flight_ids
+            flights = stair_flight_ids(identities[row['entity_id']]['record'], row['entity_id'])
+            issue = {'code': 'SEMANTIC_APPEARANCE_TARGET_ROLE', 'path': row['source_path'],
+                'message': f'IfcStair is the assembly, not the visible flight body. Preserve the requested appearance on its flight identities {flights!r}; keep assembly material and all geometry unchanged.'}
         if issue:issues.append(issue)
         else:
             valid.append(row)
@@ -148,6 +153,11 @@ def recoverable_value_loss(before,after):
         return None
     for record in records:
         identity=record.get('entity_id',record.get('id'))
+        if before.get('schema_version') == 'text2ifc/design-brief/2.7' and 'appearance' in record and identities.get(identity, {}).get('ifc_class') == 'IfcStair':
+            from .cross_storey_identity import stair_flight_ids
+            flights = stair_flight_ids(identities[identity]['record'], identity)
+            if any(not any(r['entity_id'] == flight and r['kind'] == 'appearance' and r['value'] == record['appearance'] and r['scope'] == record.get('scope', 'effective') for r in values) for flight in flights):
+                return True
         material=record.get('material')
         if material is None and isinstance(record.get('materials'),list) and len(record['materials'])==1:material=record['materials'][0]
         content=material_content(material)

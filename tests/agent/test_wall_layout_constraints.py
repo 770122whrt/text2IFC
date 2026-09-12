@@ -96,6 +96,6 @@ def test_selected_layout_repair_is_atomic_and_cannot_remove_authority(tmp_path, 
 
 def test_prompt_and_generation_contract_selection_are_explicit():
     from text2ifc_agent.semantic_requirements import generation_schema_version
-    assert design_brief_template_id('text2ifc/design-brief/2.7', design_review_enabled=False) == 'design-brief.v2.22'
-    assert design_brief_template_id('text2ifc/design-brief/2.7', design_review_enabled=True) == 'design-brief.v2.23'
+    assert design_brief_template_id('text2ifc/design-brief/2.7', design_review_enabled=False) == 'design-brief.v2.24'
+    assert design_brief_template_id('text2ifc/design-brief/2.7', design_review_enabled=True) == 'design-brief.v2.25'
     assert generation_schema_version({'schema_version': 'text2ifc/design-brief/2.7'}) == 'bim-json/2.3'
