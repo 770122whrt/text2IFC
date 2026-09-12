@@ -14,7 +14,9 @@ progress:
 
 # Project State
 
-## 当前工作：光庭收纳完成，清理其他已完成案例（2026-09-12）
+## 当前工作：光庭收纳与已完成 Phase 工作区清理完成（2026-09-12）
+
+光庭、其他展示案例及更早 Phase 6、9–12 的清理已完成：464 个清单目录、352 个单独文件、4 个旧测试链接退役，共 253,690 个旧文件／约 9.76 GiB 源字节。57 个早期 Phase 工作区的完整内容压缩保存到 experiments；当前 few-shot、Plan07 来源及其他有依赖的 26 个目录保留。Proof 字节及人工状态不变，没有新 Provider 或 Full Preflight。清理前备份均已普通推送，最终记录随收尾提交；见 [执行报告](../docs/reports/development-cleanup-20260912/REPORT.md) 和 [实验入口](../dataset/processed/experiments/README.md)。
 
 光庭第二版按概念图右上角深化为两层南侧敞开U形、外露楼梯、20柱6梁、14细杆护栏、44窗6门，不含家具植物。第一版完整包532a4a4c已保留并推送，未按新方案验收。当前分支codex/workflow-dataset-links；通用修复2cf18d56区分开敞墙布局检查与完整墙环，ee94b2a4前移属性校验并明确梯段外观目标，1e46a1fb补严格等价矩形表示转换。
 
