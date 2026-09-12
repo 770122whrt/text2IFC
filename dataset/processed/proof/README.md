@@ -7,15 +7,16 @@
 | [generation/phase6.6/generation-examples](generation/phase6.6/generation-examples/REPORT.md) | accepted | 6 |
 | [generation/phase6.6/three-storey-clarification-ab-20260910](generation/phase6.6/three-storey-clarification-ab-20260910/REPORT.md) | accepted；人工已验收，B保留已知问题 | 2 |
 | [三层C型教学楼](generation/phase6.6/c-shaped-teaching-20260911/REPORT.md) | accepted；人工已验收 | 1 |
+| [光庭阅读馆两版](generation/phase6.6/courtyard-library-20260912/REPORT.md) | 第二版人工已验收；第一版历史参考 | 2 |
 | [repair/phase11/live-uat](repair/phase11/live-uat/REPORT.md) | historical | 1 |
 | [repair/phase11/reference-cases](repair/phase11/reference-cases/REPORT.md) | accepted | 16 |
 | [repair/phase12/plan07-v2](repair/phase12/plan07-v2/REPORT.md) | accepted | 10 |
 | [repair/phase12/presentation-cases](repair/phase12/presentation-cases/REPORT.md) | pending_human_review | 3 |
 | [repair/phase12.1/r1](repair/phase12.1/r1/REPORT.md) | accepted | 12 |
 
-共 51 个直接展示案例。历史 live UAT 另引用 reference-cases 的两个成功案，不重复收纳。Plan07 已经用户人工审查通过；材质外观集合等待人工审查；整理不关闭 Phase、不提升模型能力结论。
+共 53 个直接展示案例。历史 live UAT 另引用 reference-cases 的两个成功案，不重复收纳。Plan07 已经用户人工审查通过；材质外观集合等待人工审查；整理不关闭 Phase、不提升模型能力结论。
 
-另有[双层社区阅读活动楼的人工验收记录](generation/phase6.6/two-storey-community-20260909/REPORT.md)：用户于 2026-09-09 验收模型与展示，工程门禁仍为 blocked，未完成终端发布。该独立 review 集合不计入上述 51 案或 accepted machine 索引。
+另有[双层社区阅读活动楼的人工验收记录](generation/phase6.6/two-storey-community-20260909/REPORT.md)：用户于 2026-09-09 验收模型与展示，工程门禁仍为 blocked，未完成终端发布。该独立 review 集合不计入上述 53 案或 accepted machine 索引。
 
 ## 如何读案例
 

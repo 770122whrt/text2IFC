@@ -1,0 +1,33 @@
+{
+  "destination": "https://api.deepseek.com",
+  "model": "deepseek-v4-flash",
+  "fresh_from_request": true,
+  "inputs": [
+    "request.txt",
+    "conversation.json",
+    "reference-design-review.json",
+    "versioned public prompts/schema/authoring context",
+    "this run generated Brief/candidate/check feedback and run metadata"
+  ],
+  "request_sha256": "6413a94bcbbd3e05820d21b86eb0baeb98c967ebc0311ebc72e00d67ca79daf7",
+  "changes": "User-delegated palette adjustment only; new Brief2.7 separated planar checks; fresh full loop, no candidate reuse.",
+  "exclusions": [
+    "prior IFC/raw evidence",
+    "private Gold",
+    "expected-independent.json and local checker",
+    "other-task data",
+    "credential contents"
+  ],
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "inherited_usage": {
+    "calls": 10,
+    "tokens": 828490,
+    "active_seconds": 1627.375000000029
+  },
+  "single_call_max_completion_tokens": 98304,
+  "single_call_max_input_tokens": 131072
+}

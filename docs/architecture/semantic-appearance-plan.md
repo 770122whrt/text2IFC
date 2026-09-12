@@ -1,6 +1,6 @@
 # Repair 与 Generation 的 Type、材质、属性和外观计划
 
-更新：2026-09-12。**A/B/C 已分别人工验收并收入 Proof；当前在工作分支继续两层光庭阅读馆的真实 Generation。** 设计和局部修复状态见 [光庭设计](courtyard-library-design.md#7-2026-09-12-运行与局部修复状态)。C 的独立结果为 run `05c6de3a19ed20f9`、485/485 项通过，见 [C Proof](../../dataset/processed/proof/generation/phase6.6/c-shaped-teaching-20260911/REPORT.md)。本文件保留语义/外观范围与实施历史，不把下方旧阻断记录当作当前未完成事项。
+更新：2026-09-12。**A/B/C 已分别人工验收并收入 Proof；光庭第二版现已人工验收，正在完成工作分支的证据收纳和运行目录退役。** 最终结果见 [光庭Proof](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/REPORT.md)，设计和局部修复状态见 [光庭设计](courtyard-library-design.md#7-2026-09-12-运行与局部修复状态)。C 的独立结果为 run `05c6de3a19ed20f9`、485/485 项通过，见 [C Proof](../../dataset/processed/proof/generation/phase6.6/c-shaped-teaching-20260911/REPORT.md)。本文件保留语义/外观范围与实施历史，不把下方旧阻断记录当作当前未完成事项。
 
 阅读顺序：第1—10节保留产品范围与最初实施合同；第11—18节为按日期追加的实施/失败/验收记录，应以较新的明确结果判断状态；C 的最终结果与人工状态以本页顶部链接及 STATE 为准。Token研究已移至[独立计划](token-efficiency-plan.md)，进一步实验仍后置；当前完成已批准的光庭设计，其他外观能力扩展不自动纳入。
 

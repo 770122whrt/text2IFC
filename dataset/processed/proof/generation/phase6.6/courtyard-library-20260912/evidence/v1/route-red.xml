@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="8" skipped="0" tests="8" time="1.751" timestamp="2026-09-12T13:43:42.895100+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_TYPE_TARGET_ROLE]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_TYPE_TARGET_ROLE'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_TYPE_FAMILY_MISMATCH]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_TYPE_FAMILY_MISMATCH'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_TYPE_MULTIPLE]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_TYPE_MULTIPLE'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_ROLE_IDENTITY_AMBIGUOUS]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_ROLE_IDENTITY_AMBIGUOUS'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_TEMPLATE_TARGET_ROLE]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_TEMPLATE_TARGET_ROLE'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_MATERIAL_SCOPE_MISMATCH]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_MATERIAL_SCOPE_MISMATCH'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_MATERIAL_AXIS_MISMATCH]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_MATERIAL_AXIS_MISMATCH'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase><testcase classname="tests.agent.test_brief_semantic_roles" name="test_role_diagnostics_return_to_brief_not_candidate_repair[SEMANTIC_VALUE_CONFLICT]" time="0.001"><failure message="AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')&#10;  &#10;  At index 0 diff: 'repair' != 'design_brief'&#10;  Use -v to get more diff">code = 'SEMANTIC_VALUE_CONFLICT'
+
+    @pytest.mark.parametrize('code',['SEMANTIC_TYPE_TARGET_ROLE','SEMANTIC_TYPE_FAMILY_MISMATCH',
+        'SEMANTIC_TYPE_MULTIPLE','SEMANTIC_ROLE_IDENTITY_AMBIGUOUS','SEMANTIC_TEMPLATE_TARGET_ROLE',
+        'SEMANTIC_MATERIAL_SCOPE_MISMATCH','SEMANTIC_MATERIAL_AXIS_MISMATCH','SEMANTIC_VALUE_CONFLICT'])
+    def test_role_diagnostics_return_to_brief_not_candidate_repair(code):
+        from text2ifc_agent.issue_normalizers import normalize_validation_issues
+        issue=normalize_validation_issues([{'code':code,'path':'/known_facts/semantic_requirements/0','message':'Role conflict'}],
+            source='semantic_validation')[0]
+&gt;       assert (issue.owner,issue.suggested_route)==('design_brief','revise_design_brief')
+E       AssertionError: assert ('repair', 'repair_json') == ('design_brie...design_brief')
+E         
+E         At index 0 diff: 'repair' != 'design_brief'
+E         Use -v to get more diff
+
+tests\agent\test_brief_semantic_roles.py:120: AssertionError</failure></testcase></testsuite></testsuites>

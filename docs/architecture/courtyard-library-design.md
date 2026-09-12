@@ -1,6 +1,7 @@
 # 两层光庭阅读馆设计
 
-> 2026-09-12 后续状态：第一版已完成真实 Generator、确定性关系恢复、真实 Audit 和最终 IFC 发布，详见[保留报告](../../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/continuation-01/REPORT.md)。用户指出概念偏差并要求保留旧模型，按概念图右上角重新准备。下文为第一版历史设计依据，不再作为下一版的完整围合、封闭楼梯间或整片玻璃栏板要求。用户未验收第一版设计；真实 Audit 的 accept 与人工状态分开。
+> 2026-09-12 收纳更新：最新第二版已人工验收，见[光庭 Proof](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/REPORT.md)。第一版作为历史参考；下文保留设计/调试时点的叙述。
+> 2026-09-12 后续状态：第一版已完成真实 Generator、确定性关系恢复、真实 Audit 和最终 IFC 发布，详见[保留报告](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v1/continuation-01/REPORT.md)。用户指出概念偏差并要求保留旧模型，按概念图右上角重新准备。下文为第一版历史设计依据，不再作为下一版的完整围合、封闭楼梯间或整片玻璃栏板要求。用户未验收第一版设计；真实 Audit 的 accept 与人工状态分开。
 
 2026-09-12。状态：按用户授权确定的建模设计方案，尚未完成整栋几何验证。用户确认露天矩形光庭与二层围庭回廊，随后明确“具体没有要求，但是尽可能美观好看，系统支持的能力都要做在里面”，授权本例由 Agent 决定未指定的尺寸、布局和材料搭配。本轮未生成 IFC、未调用 Provider，不改既有 Proof。
 
@@ -114,22 +115,22 @@
 
 ## 7. 2026-09-12 运行与局部修复状态
 
-第一版已冻结为 [中文请求](../../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/request.txt)。首个真实 Brief 完整返回但语义格式不合法，未进入整栋 Generator/Audit。问题不是输出截断：实际71,204 token，finish_reason=stop。
+第一版已冻结为 [中文请求](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v1/request.txt)。首个真实 Brief 完整返回但语义格式不合法，未进入整栋 Generator/Audit。问题不是输出截断：实际71,204 token，finish_reason=stop。
 
 用户批准的小步修复已实施：Brief 2.4 的 Type／实例／材料／模板角色校验；只迁移明确语义叶子的原子恢复；屋盖洞口的身份、分包及重开检查。新增 Prompt v2.16/v2.17 与语义恢复 v1.2，保留旧注册内容及其他 Brief 版本。以实际 IFC 类别和明确身份判断，不按光庭案例名称、坐标或数量特判；不改变既定设计、不扩展栏杆模板。
 
-聚焦离线检查通过；真实重跑、整栋 IFC 和视觉验收仍待完成。完整诊断、历史修复比较、测试失败与通过记录见 [运行报告](../../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/REPORT.md)。首次运行准入只代表旧代码快照，重跑需更新局部准入并继承旧预算。
+聚焦离线检查通过；真实重跑、整栋 IFC 和视觉验收仍待完成。完整诊断、历史修复比较、测试失败与通过记录见 [运行报告](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v1/REPORT.md)。首次运行准入只代表旧代码快照，重跑需更新局部准入并继承旧预算。
 
 ## 8. 第二版开敞光庭：当前执行合同
 
 本节取代上方第一版的闭合围庭、室内楼梯和整片玻璃栏板设计。第一版完整包 `532a4a4c` 已保留；它经过真实 Brief/Generator、确定性关系恢复及后续真实 Audit，不称为全新不中断完整 loop，也未按第二版设计登记 accepted Proof。
 
-用户要求按概念图右上角重新从输入完整运行，排除家具植物，授权必要梁柱及有界栏杆能力。第二版采用两层24×18米、南侧敞开的U形楼板/屋盖、沿庭外露直跑楼梯与上端平台、20柱6梁、14段金属细杆护栏、44双竖面板窗及6单开木门。最新冻结输入和独立预期见 [rerun-01](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-01/request.txt)；具体尺寸由Agent在委托范围内制定，不伪称用户逐字原话。
+用户要求按概念图右上角重新从输入完整运行，排除家具植物，授权必要梁柱及有界栏杆能力。第二版采用两层24×18米、南侧敞开的U形楼板/屋盖、沿庭外露直跑楼梯与上端平台、20柱6梁、14段金属细杆护栏、44双竖面板窗及6单开木门。最新冻结输入和独立预期见 [rerun-01](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-01/request.txt)；具体尺寸由Agent在委托范围内制定，不伪称用户逐字原话。
 
-第二版首次真实 Brief 被错误的 full-envelope 声明拦截，78,490 token，未进入 Generator。通用修复 `2cf18d56` 新增 Brief2.7 和独立 wall_layout checks，将轮廓内、不重叠与完整墙环区分，保留旧检查、几何及原子修正边界；303项阶段验证和1项新运行包装器检查通过，均为离线证据。详见 [诊断](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/brief-envelope-debug/REPORT.md)。跨轮约束来源、替代和有效状态管理仍是后续小步，未宣称已完成。
+第二版首次真实 Brief 被错误的 full-envelope 声明拦截，78,490 token，未进入 Generator。通用修复 `2cf18d56` 新增 Brief2.7 和独立 wall_layout checks，将轮廓内、不重叠与完整墙环区分，保留旧检查、几何及原子修正边界；303项阶段验证和1项新运行包装器检查通过，均为离线证据。详见 [诊断](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/brief-envelope-debug/REPORT.md)。跨轮约束来源、替代和有效状态管理仍是后续小步，未宣称已完成。
 
 用户随后委托微调颜色：主体暖米白#E6E0D3、梁柱浅砂#D2C7B3、框/栏杆深青灰#304B4D、门扇暖木#A66F43，玻璃透明度仍0.65。此次仅调整颜色，物理材料、尺寸、位置和构件数量不变，不增加未请求性能。新完整真实 loop 继承10次/828,490 token历史账本及32次/200万token/3600秒累计上限。结果须以本次执行、独立重开与实际视图为准，待用户人工审阅后才能收纳为 accepted Proof。
 
-第二版重跑 d2c21f51c9bb69f6 已真实完成 Brief/Generator/候选修复，但被属性及事实保全门禁阻断，未进入 Audit。后续小步将现有属性合法性校验前移至 Brief2.7，并明确可见楼梯颜色应指向梯段。详见 [属性与外观诊断](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/property-debug/REPORT.md)。下一次 [rerun-02](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-02/request.txt) 保持 rerun-01 输入字节、全部几何和颜色不变，继承13次真实尝试账本。
+第二版重跑 d2c21f51c9bb69f6 已真实完成 Brief/Generator/候选修复，但被属性及事实保全门禁阻断，未进入 Audit。后续小步将现有属性合法性校验前移至 Brief2.7，并明确可见楼梯颜色应指向梯段。详见 [属性与外观诊断](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/property-debug/REPORT.md)。下一次 [rerun-02](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-02/request.txt) 保持 rerun-01 输入字节、全部几何和颜色不变，继承13次真实尝试账本。
 
-最终rerun-03（ce8116ce095acdcf）已完成全新真实Brief/Generator/Audit，无候选修复调用，317,533token。正式IFC独立545项通过，实际视觉检查完成，待用户人工验收，不登记accepted Proof。[交付与限制](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/REPORT.md)；保留HEX评价修订的原始失败/统一重算与Audit文字勘误，不声称施工合规或盲测能力提升。
+最终rerun-03（ce8116ce095acdcf）已完成全新真实Brief/Generator/Audit，无候选修复调用，317,533token。正式IFC独立545项通过，实际视觉检查完成，待用户人工验收，不登记accepted Proof。[交付与限制](../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/REPORT.md)；保留HEX评价修订的原始失败/统一重算与Audit文字勘误，不声称施工合规或盲测能力提升。

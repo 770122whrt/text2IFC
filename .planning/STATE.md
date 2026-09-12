@@ -14,15 +14,15 @@ progress:
 
 # Project State
 
-## 当前工作：光庭阅读馆 Generation（2026-09-12）
+## 当前工作：光庭人工验收与目录收纳（2026-09-12）
 
 光庭第二版按概念图右上角深化为两层南侧敞开U形、外露楼梯、20柱6梁、14细杆护栏、44窗6门，不含家具植物。第一版完整包532a4a4c已保留并推送，未按新方案验收。当前分支codex/workflow-dataset-links；通用修复2cf18d56区分开敞墙布局检查与完整墙环，ee94b2a4前移属性校验并明确梯段外观目标，1e46a1fb补严格等价矩形表示转换。
 
-第二版rerun-03（ce8116ce095acdcf）已从全新真实Brief完成Generator/Audit并发布IFC，无候选修复调用；本loop317,533 token。独立正式IFC复核545项通过、111实体网格化成功；Agent实际视图检查完成，待用户人工验收，尚未登记accepted Proof。最终文件SHA256：650accdb5131b1ae3fdc26e5af000029deb4860fe6f38571dcad174d8ff9b39d。
+第二版rerun-03（ce8116ce095acdcf）已从全新真实Brief完成Generator/Audit并发布IFC，无候选修复调用；本loop317,533 token。独立正式IFC复核545项通过、111实体网格化成功；Agent实际视图检查完成；用户于2026-09-12人工验收，已收入光庭Proof。最终文件SHA256：650accdb5131b1ae3fdc26e5af000029deb4860fe6f38571dcad174d8ff9b39d。
 
 全部失败保留，累计17次、1,591,587 token、2723.014活动秒。主要局部复验245项、139项与运行包装器1项通过，不累加为能力指标；未运行仓库Full Preflight。报告保留原浮点颜色失败与统一HEX重算、Audit强度等级文字勘误。跨轮约束来源与替代管理仍待后续小步。
 
-入口：[交付报告](../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/REPORT.md)、[最终IFC](../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/generated-open-court.ifc)、[输入](../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/request.txt)。A/B/C历史验收保持；下方是历史检查点。
+入口：[交付报告](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/REPORT.md)、[最终IFC](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/generated.ifc)、[输入](../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/request.txt)。A/B/C历史验收保持；下方是历史检查点。
 
 ## 历史工作：仓库清理与 main 整合（2026-09-12）
 

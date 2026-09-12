@@ -1,0 +1,3191 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:profile",
+        "capability:IFC2X3:IfcBuilding"
+      ],
+      "path": "/known_facts/building",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "capability:IFC2X3:IfcBuildingStorey"
+      ],
+      "path": "/known_facts/storeys",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:attributes",
+        "capability:IFC2X3:IfcWall"
+      ],
+      "path": "/known_facts/storeys/0/walls",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:profile",
+        "capability:IFC2X3:IfcSpace"
+      ],
+      "path": "/known_facts/storeys/0/spaces",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcDoor"
+      ],
+      "path": "/known_facts/storeys/0/doors",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/storeys/0/windows",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:profile",
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "path": "/known_facts/floor_slabs",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSlab",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/roof_slab",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcStair",
+        "schema:bim-json-v2:attributes"
+      ],
+      "path": "/known_facts/stairs",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcRailing",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/railings",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "capability:IFC2X3:IfcDoor",
+        "capability:IFC2X3:IfcWindow"
+      ],
+      "path": "/known_facts/types",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:profile"
+      ],
+      "path": "/known_facts/plan_constraints",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/semantic_requirements",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:root"
+      ],
+      "path": "/known_facts/appearance",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "appearance": {
+      "profile": "warm-residential",
+      "style_notes": "整体风格 warm-residential。墙面颜色 #D8D4CA；窗框与门框 #333D40；木门扇 #A87950；玻璃保持透明；栏板透明度 0.75；板面为浅暖灰，与主体协调。窗框、门框、门扇、玻璃属于基本门窗模板的部件样式层级，由模板的框/玻璃/门扇部件样式承担，不作为整构件颜色覆盖；不从颜色反推材料、强度、耐火或热工属性。"
+    },
+    "building": {
+      "light_court": {
+        "bounds": {
+          "x": [
+            8000,
+            16000
+          ],
+          "y": [
+            6000,
+            12000
+          ]
+        },
+        "expressed_as_space": false,
+        "floor_retained_on": "storey-1",
+        "open_to_sky": true
+      },
+      "name": "光庭阅读馆",
+      "outline": {
+        "polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            24000,
+            0
+          ],
+          [
+            24000,
+            18000
+          ],
+          [
+            0,
+            18000
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "x_max": 24000,
+        "x_min": 0,
+        "y_max": 18000,
+        "y_min": 0
+      },
+      "units": "MILLIMETRE"
+    },
+    "floor_slabs": [
+      {
+        "bottom_elevation_mm": -200,
+        "id": "storey-1-floor-slab",
+        "ifc_class": "IfcSlab",
+        "openings": [],
+        "polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            24000,
+            0
+          ],
+          [
+            24000,
+            18000
+          ],
+          [
+            0,
+            18000
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "predefined_type": "FLOOR",
+        "storey": "storey-1",
+        "thickness_mm": 200,
+        "top_elevation_mm": 0
+      },
+      {
+        "bottom_elevation_mm": 3400,
+        "id": "storey-2-floor-slab",
+        "ifc_class": "IfcSlab",
+        "openings": [
+          {
+            "bounds": {
+              "x": [
+                1000,
+                2500
+              ],
+              "y": [
+                5000,
+                11000
+              ]
+            },
+            "id": "storey-2-floor-slab-opening-stair",
+            "purpose": "stair"
+          },
+          {
+            "bounds": {
+              "x": [
+                8000,
+                16000
+              ],
+              "y": [
+                6000,
+                12000
+              ]
+            },
+            "id": "storey-2-floor-slab-opening-light-court",
+            "purpose": "light_court"
+          }
+        ],
+        "polygon": [
+          [
+            0,
+            0
+          ],
+          [
+            24000,
+            0
+          ],
+          [
+            24000,
+            18000
+          ],
+          [
+            0,
+            18000
+          ],
+          [
+            0,
+            0
+          ]
+        ],
+        "predefined_type": "FLOOR",
+        "storey": "storey-2",
+        "thickness_mm": 200,
+        "top_elevation_mm": 3600
+      }
+    ],
+    "plan_constraints": [
+      {
+        "derived_wall_ids": [],
+        "id": "pc-storey-1",
+        "kind": "inside_wall_envelope",
+        "outline_ref": "/known_facts/building/outline/polygon",
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "storey_ref": "/known_facts/storeys/0",
+        "thickness_mm": 240
+      },
+      {
+        "derived_wall_ids": [],
+        "id": "pc-storey-2",
+        "kind": "inside_wall_envelope",
+        "outline_ref": "/known_facts/building/outline/polygon",
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "storey_ref": "/known_facts/storeys/1",
+        "thickness_mm": 240
+      }
+    ],
+    "railings": [
+      {
+        "end_mm": [
+          16020,
+          5990,
+          3600
+        ],
+        "height_mm": 1100,
+        "id": "railing-court-south",
+        "position_note": "落在二层楼板侧，底在完成面3.6米",
+        "start_mm": [
+          7980,
+          5990,
+          3600
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 20
+      },
+      {
+        "end_mm": [
+          16020,
+          12010,
+          3600
+        ],
+        "height_mm": 1100,
+        "id": "railing-court-north",
+        "position_note": "落在二层楼板侧，底在完成面3.6米",
+        "start_mm": [
+          7980,
+          12010,
+          3600
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 20
+      },
+      {
+        "end_mm": [
+          7990,
+          12000,
+          3600
+        ],
+        "height_mm": 1100,
+        "id": "railing-court-west",
+        "position_note": "落在二层楼板侧，底在完成面3.6米",
+        "start_mm": [
+          7990,
+          6000,
+          3600
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 20
+      },
+      {
+        "end_mm": [
+          16010,
+          12000,
+          3600
+        ],
+        "height_mm": 1100,
+        "id": "railing-court-east",
+        "position_note": "落在二层楼板侧，底在完成面3.6米",
+        "start_mm": [
+          16010,
+          6000,
+          3600
+        ],
+        "storey": "storey-2",
+        "thickness_mm": 20
+      }
+    ],
+    "roof_slab": {
+      "bottom_elevation_mm": 7000,
+      "id": "roof-slab",
+      "ifc_class": "IfcSlab",
+      "name": "平屋盖（屋面用途IfcSlab，独立带洞板，不另建IfcRoof容器）",
+      "openings": [
+        {
+          "aligned_with": "storey-2-floor-slab-opening-light-court",
+          "bounds": {
+            "x": [
+              8000,
+              16000
+            ],
+            "y": [
+              6000,
+              12000
+            ]
+          },
+          "id": "roof-slab-opening-light-court",
+          "purpose": "light_court"
+        }
+      ],
+      "polygon": [
+        [
+          0,
+          0
+        ],
+        [
+          24000,
+          0
+        ],
+        [
+          24000,
+          18000
+        ],
+        [
+          0,
+          18000
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "predefined_type": "ROOF",
+      "storey": "storey-2",
+      "thickness_mm": 200,
+      "top_elevation_mm": 7200
+    },
+    "semantic_requirements": [
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-ext-south",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-ext-north",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-ext-west",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-ext-east",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-part-south",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-part-north",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-part-west",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-part-east",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-stair-west",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-1-wall-stair-east",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-ext-south",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-ext-north",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-ext-west",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-ext-east",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-part-south",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-part-north",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-part-west",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-part-east",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-stair-west",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "appearance": {
+          "color": [
+            0.847,
+            0.831,
+            0.792
+          ]
+        },
+        "entity_id": "storey-2-wall-stair-east",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "砂浆20-混凝土200-砂浆20",
+          "layers": [
+            {
+              "name": "砂浆",
+              "thickness": 20
+            },
+            {
+              "name": "混凝土",
+              "thickness": 200
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "storey-1-door-part-south-west",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-left"
+      },
+      {
+        "entity_id": "storey-1-door-part-south-east",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-1-door-part-north-west",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-left"
+      },
+      {
+        "entity_id": "storey-1-door-part-north-east",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-1-door-part-east",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-1-door-part-west",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-1-door-stair",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-stair-900x2100-right"
+      },
+      {
+        "entity_id": "storey-1-door-entry",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-entry-1400x2600-left"
+      },
+      {
+        "entity_id": "storey-2-door-part-south-west",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-left"
+      },
+      {
+        "entity_id": "storey-2-door-part-south-east",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-2-door-part-north-west",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-left"
+      },
+      {
+        "entity_id": "storey-2-door-part-north-east",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-2-door-part-east",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-2-door-part-west",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-right",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-single-1000x2400-right"
+      },
+      {
+        "entity_id": "storey-2-door-stair",
+        "material": {
+          "kind": "single_material",
+          "name": "木材"
+        },
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-door-stair-900x2100-left"
+      },
+      {
+        "entity_id": "storey-1-window-ext-south-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-south-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-south-3",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-south-4",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-north-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-north-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-north-3",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-north-4",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-east-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-east-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-1-window-ext-west-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-single-1000x1800"
+      },
+      {
+        "entity_id": "storey-1-window-ext-west-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-single-1000x1800"
+      },
+      {
+        "entity_id": "storey-1-window-part-south-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-south-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-north-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-north-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-east-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-east-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-west-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-1-window-part-west-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-ext-south-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-south-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-south-3",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-south-4",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-north-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-north-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-north-3",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-north-4",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-east-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-east-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-2000x2400"
+      },
+      {
+        "entity_id": "storey-2-window-ext-west-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-single-1000x1800"
+      },
+      {
+        "entity_id": "storey-2-window-ext-west-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-single-1000x1800"
+      },
+      {
+        "entity_id": "storey-2-window-part-south-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-south-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-north-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-north-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-east-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-east-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-west-1",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "entity_id": "storey-2-window-part-west-2",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        },
+        "type_id": "type-window-double-vertical-1600x2100"
+      },
+      {
+        "appearance": {
+          "transparency": 0.75
+        },
+        "entity_id": "railing-court-south",
+        "material": {
+          "kind": "single_material",
+          "name": "玻璃"
+        },
+        "scope": "direct",
+        "source": "user",
+        "type_id": "type-railing-glass-court-south-north"
+      },
+      {
+        "appearance": {
+          "transparency": 0.75
+        },
+        "entity_id": "railing-court-north",
+        "material": {
+          "kind": "single_material",
+          "name": "玻璃"
+        },
+        "scope": "direct",
+        "source": "user",
+        "type_id": "type-railing-glass-court-south-north"
+      },
+      {
+        "appearance": {
+          "transparency": 0.75
+        },
+        "entity_id": "railing-court-west",
+        "material": {
+          "kind": "single_material",
+          "name": "玻璃"
+        },
+        "scope": "direct",
+        "source": "user",
+        "type_id": "type-railing-glass-court-east-west"
+      },
+      {
+        "appearance": {
+          "transparency": 0.75
+        },
+        "entity_id": "railing-court-east",
+        "material": {
+          "kind": "single_material",
+          "name": "玻璃"
+        },
+        "scope": "direct",
+        "source": "user",
+        "type_id": "type-railing-glass-court-east-west"
+      },
+      {
+        "entity_id": "storey-1-floor-slab",
+        "material": {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "混凝土180-砂浆20",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 180
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "storey-2-floor-slab",
+        "material": {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "混凝土180-砂浆20",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 180
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "roof-slab",
+        "material": {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "混凝土180-砂浆20",
+          "layers": [
+            {
+              "name": "混凝土",
+              "thickness": 180
+            },
+            {
+              "name": "砂浆",
+              "thickness": 20
+            }
+          ],
+          "offset_from_reference_line": 0
+        },
+        "scope": "direct",
+        "source": "user"
+      }
+    ],
+    "semantic_review": {
+      "appearance": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "specified"
+      },
+      "material": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "specified"
+      },
+      "property": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "not_specified"
+      },
+      "template": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "specified"
+      },
+      "type": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "specified"
+      }
+    },
+    "stairs": [
+      {
+        "bounds": {
+          "x": [
+            1000,
+            2500
+          ],
+          "y": [
+            5000,
+            11000
+          ]
+        },
+        "end_elevation_mm": 3600,
+        "from_storey": "storey-1",
+        "handrail_implemented": false,
+        "handrail_note": "斜向抓握扶手不在本次实现范围内，禁止虚构立柱、扶手或栏杆假细节；楼梯仅包含梯段、两侧实体围护墙与两扇楼梯间门。",
+        "id": "stair-1",
+        "landing_note": "上端平台利用二层既有楼板，不叠加平台板；下端候梯区利用首层地面。",
+        "landing_slab_added": false,
+        "lower_landing_bounds": {
+          "x": [
+            1000,
+            2500
+          ],
+          "y": [
+            3980,
+            5000
+          ]
+        },
+        "number_of_risers": 20,
+        "number_of_treads": 20,
+        "opening_bounds": {
+          "x": [
+            1000,
+            2500
+          ],
+          "y": [
+            5000,
+            11000
+          ]
+        },
+        "opening_host": "storey-2-floor-slab",
+        "riser_height_mm": 180,
+        "run_direction": "from_south_to_north",
+        "start_elevation_mm": 0,
+        "to_storey": "storey-2",
+        "tread_depth_mm": 300,
+        "upper_landing_bounds": {
+          "x": [
+            1000,
+            2500
+          ],
+          "y": [
+            11000,
+            12600
+          ]
+        },
+        "width_mm": 1500
+      }
+    ],
+    "storeys": [
+      {
+        "doors": [
+          {
+            "center_global_mm": [
+              7000,
+              3860
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-part-south",
+            "id": "storey-1-door-part-south-west",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              17000,
+              3860
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-part-south",
+            "id": "storey-1-door-part-south-east",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              7000,
+              14140
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-part-north",
+            "id": "storey-1-door-part-north-west",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              17000,
+              14140
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-part-north",
+            "id": "storey-1-door-part-north-east",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              18140,
+              9000
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-part-east",
+            "id": "storey-1-door-part-east",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              5860,
+              9000
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-part-west",
+            "id": "storey-1-door-part-west",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              2620,
+              4500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-stair-east",
+            "id": "storey-1-door-stair",
+            "width_mm": 900
+          },
+          {
+            "center_global_mm": [
+              12000,
+              120
+            ],
+            "height_mm": 2600,
+            "host_wall": "storey-1-wall-ext-south",
+            "id": "storey-1-door-entry",
+            "width_mm": 1400
+          }
+        ],
+        "elevation_mm": 0,
+        "id": "storey-1",
+        "name": "首层",
+        "net_height_mm": 3400,
+        "spaces": [
+          {
+            "bounds": {
+              "x": [
+                240,
+                23760
+              ],
+              "y": [
+                240,
+                3740
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-south-reception",
+            "interior_or_exterior": "internal",
+            "name": "南侧接待与交流区"
+          },
+          {
+            "bounds": {
+              "x": [
+                240,
+                23760
+              ],
+              "y": [
+                14260,
+                17760
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-north-reading",
+            "interior_or_exterior": "internal",
+            "name": "北侧安静阅读区"
+          },
+          {
+            "bounds": {
+              "x": [
+                18260,
+                23760
+              ],
+              "y": [
+                3980,
+                14020
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-east-shared",
+            "interior_or_exterior": "internal",
+            "name": "东侧共享阅读区"
+          },
+          {
+            "bounds": {
+              "x": [
+                240,
+                5740
+              ],
+              "y": [
+                3980,
+                14020
+              ]
+            },
+            "contains_stair": "stair-1",
+            "height_mm": 3400,
+            "id": "storey-1-space-west-service",
+            "interior_or_exterior": "internal",
+            "name": "西侧服务与楼梯区（含楼梯的功能区）"
+          },
+          {
+            "bounds": {
+              "x": [
+                5980,
+                18020
+              ],
+              "y": [
+                3980,
+                6000
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-corridor-south",
+            "interior_or_exterior": "external",
+            "name": "南回廊（有顶半室外）"
+          },
+          {
+            "bounds": {
+              "x": [
+                5980,
+                18020
+              ],
+              "y": [
+                12000,
+                14020
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-corridor-north",
+            "interior_or_exterior": "external",
+            "name": "北回廊（有顶半室外）"
+          },
+          {
+            "bounds": {
+              "x": [
+                5980,
+                8000
+              ],
+              "y": [
+                6000,
+                12000
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-corridor-west",
+            "interior_or_exterior": "external",
+            "name": "西回廊（有顶半室外）"
+          },
+          {
+            "bounds": {
+              "x": [
+                16000,
+                18020
+              ],
+              "y": [
+                6000,
+                12000
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-1-space-corridor-east",
+            "interior_or_exterior": "external",
+            "name": "东回廊（有顶半室外）"
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  24000
+                ],
+                "y": [
+                  0,
+                  240
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-ext-south",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  24000
+                ],
+                "y": [
+                  17760,
+                  18000
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-ext-north",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  240
+                ],
+                "y": [
+                  240,
+                  17760
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-ext-west",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  23760,
+                  24000
+                ],
+                "y": [
+                  240,
+                  17760
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-ext-east",
+              "thickness_mm": 240
+            }
+          ],
+          "interior": [
+            {
+              "bounds": {
+                "x": [
+                  240,
+                  23760
+                ],
+                "y": [
+                  3740,
+                  3980
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-part-south",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  240,
+                  23760
+                ],
+                "y": [
+                  14020,
+                  14260
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-part-north",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  5740,
+                  5980
+                ],
+                "y": [
+                  3980,
+                  14020
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-part-west",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  18020,
+                  18260
+                ],
+                "y": [
+                  3980,
+                  14020
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-part-east",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  760,
+                  1000
+                ],
+                "y": [
+                  3980,
+                  12600
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-stair-west",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  2500,
+                  2740
+                ],
+                "y": [
+                  3980,
+                  12600
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-1-wall-stair-east",
+              "thickness_mm": 240
+            }
+          ]
+        },
+        "windows": [
+          {
+            "center_global_mm": [
+              3000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-south",
+            "id": "storey-1-window-ext-south-1",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              8000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-south",
+            "id": "storey-1-window-ext-south-2",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              16000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-south",
+            "id": "storey-1-window-ext-south-3",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              21000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-south",
+            "id": "storey-1-window-ext-south-4",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              3000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-north",
+            "id": "storey-1-window-ext-north-1",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              8000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-north",
+            "id": "storey-1-window-ext-north-2",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              16000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-north",
+            "id": "storey-1-window-ext-north-3",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              21000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-north",
+            "id": "storey-1-window-ext-north-4",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              23880,
+              6500
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-east",
+            "id": "storey-1-window-ext-east-1",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              23880,
+              11500
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-1-wall-ext-east",
+            "id": "storey-1-window-ext-east-2",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              120,
+              2000
+            ],
+            "height_mm": 1800,
+            "host_wall": "storey-1-wall-ext-west",
+            "id": "storey-1-window-ext-west-1",
+            "sill_height_mm": 1200,
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              120,
+              16000
+            ],
+            "height_mm": 1800,
+            "host_wall": "storey-1-wall-ext-west",
+            "id": "storey-1-window-ext-west-2",
+            "sill_height_mm": 1200,
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              10000,
+              3860
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-south",
+            "id": "storey-1-window-part-south-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              14000,
+              3860
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-south",
+            "id": "storey-1-window-part-south-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              10000,
+              14140
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-north",
+            "id": "storey-1-window-part-north-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              14000,
+              14140
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-north",
+            "id": "storey-1-window-part-north-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              18140,
+              6500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-east",
+            "id": "storey-1-window-part-east-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              18140,
+              11500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-east",
+            "id": "storey-1-window-part-east-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              5860,
+              6500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-west",
+            "id": "storey-1-window-part-west-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              5860,
+              11500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-1-wall-part-west",
+            "id": "storey-1-window-part-west-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          }
+        ]
+      },
+      {
+        "doors": [
+          {
+            "center_global_mm": [
+              7000,
+              3860
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-part-south",
+            "id": "storey-2-door-part-south-west",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              17000,
+              3860
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-part-south",
+            "id": "storey-2-door-part-south-east",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              7000,
+              14140
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-part-north",
+            "id": "storey-2-door-part-north-west",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              17000,
+              14140
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-part-north",
+            "id": "storey-2-door-part-north-east",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              18140,
+              9000
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-part-east",
+            "id": "storey-2-door-part-east",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              5860,
+              9000
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-part-west",
+            "id": "storey-2-door-part-west",
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              2620,
+              11800
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-stair-east",
+            "id": "storey-2-door-stair",
+            "width_mm": 900
+          }
+        ],
+        "elevation_mm": 3600,
+        "id": "storey-2",
+        "name": "二层",
+        "net_height_mm": 3400,
+        "spaces": [
+          {
+            "bounds": {
+              "x": [
+                240,
+                23760
+              ],
+              "y": [
+                240,
+                3740
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-south-reception",
+            "interior_or_exterior": "internal",
+            "name": "南侧接待与交流区"
+          },
+          {
+            "bounds": {
+              "x": [
+                240,
+                23760
+              ],
+              "y": [
+                14260,
+                17760
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-north-reading",
+            "interior_or_exterior": "internal",
+            "name": "北侧安静阅读区"
+          },
+          {
+            "bounds": {
+              "x": [
+                18260,
+                23760
+              ],
+              "y": [
+                3980,
+                14020
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-east-shared",
+            "interior_or_exterior": "internal",
+            "name": "东侧共享阅读区"
+          },
+          {
+            "bounds": {
+              "x": [
+                240,
+                5740
+              ],
+              "y": [
+                3980,
+                14020
+              ]
+            },
+            "contains_stair_opening": "storey-2-floor-slab-opening-stair",
+            "height_mm": 3400,
+            "id": "storey-2-space-west-service",
+            "interior_or_exterior": "internal",
+            "name": "西侧服务与楼梯区（含楼梯洞口的功能区）"
+          },
+          {
+            "bounds": {
+              "x": [
+                5980,
+                18020
+              ],
+              "y": [
+                3980,
+                6000
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-corridor-south",
+            "interior_or_exterior": "external",
+            "name": "南回廊（有顶半室外）"
+          },
+          {
+            "bounds": {
+              "x": [
+                5980,
+                18020
+              ],
+              "y": [
+                12000,
+                14020
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-corridor-north",
+            "interior_or_exterior": "external",
+            "name": "北回廊（有顶半室外）"
+          },
+          {
+            "bounds": {
+              "x": [
+                5980,
+                8000
+              ],
+              "y": [
+                6000,
+                12000
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-corridor-west",
+            "interior_or_exterior": "external",
+            "name": "西回廊（有顶半室外）"
+          },
+          {
+            "bounds": {
+              "x": [
+                16000,
+                18020
+              ],
+              "y": [
+                6000,
+                12000
+              ]
+            },
+            "height_mm": 3400,
+            "id": "storey-2-space-corridor-east",
+            "interior_or_exterior": "external",
+            "name": "东回廊（有顶半室外）"
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  24000
+                ],
+                "y": [
+                  0,
+                  240
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-ext-south",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  24000
+                ],
+                "y": [
+                  17760,
+                  18000
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-ext-north",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  0,
+                  240
+                ],
+                "y": [
+                  240,
+                  17760
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-ext-west",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  23760,
+                  24000
+                ],
+                "y": [
+                  240,
+                  17760
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-ext-east",
+              "thickness_mm": 240
+            }
+          ],
+          "interior": [
+            {
+              "bounds": {
+                "x": [
+                  240,
+                  23760
+                ],
+                "y": [
+                  3740,
+                  3980
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-part-south",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  240,
+                  23760
+                ],
+                "y": [
+                  14020,
+                  14260
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-part-north",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  5740,
+                  5980
+                ],
+                "y": [
+                  3980,
+                  14020
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-part-west",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  18020,
+                  18260
+                ],
+                "y": [
+                  3980,
+                  14020
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-part-east",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  760,
+                  1000
+                ],
+                "y": [
+                  3980,
+                  12600
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-stair-west",
+              "thickness_mm": 240
+            },
+            {
+              "bounds": {
+                "x": [
+                  2500,
+                  2740
+                ],
+                "y": [
+                  3980,
+                  12600
+                ]
+              },
+              "height_mm": 3400,
+              "id": "storey-2-wall-stair-east",
+              "thickness_mm": 240
+            }
+          ]
+        },
+        "windows": [
+          {
+            "center_global_mm": [
+              3000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-south",
+            "id": "storey-2-window-ext-south-1",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              8000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-south",
+            "id": "storey-2-window-ext-south-2",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              16000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-south",
+            "id": "storey-2-window-ext-south-3",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              21000,
+              120
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-south",
+            "id": "storey-2-window-ext-south-4",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              3000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-north",
+            "id": "storey-2-window-ext-north-1",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              8000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-north",
+            "id": "storey-2-window-ext-north-2",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              16000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-north",
+            "id": "storey-2-window-ext-north-3",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              21000,
+              17880
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-north",
+            "id": "storey-2-window-ext-north-4",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              23880,
+              6500
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-east",
+            "id": "storey-2-window-ext-east-1",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              23880,
+              11500
+            ],
+            "height_mm": 2400,
+            "host_wall": "storey-2-wall-ext-east",
+            "id": "storey-2-window-ext-east-2",
+            "sill_height_mm": 600,
+            "width_mm": 2000
+          },
+          {
+            "center_global_mm": [
+              120,
+              2000
+            ],
+            "height_mm": 1800,
+            "host_wall": "storey-2-wall-ext-west",
+            "id": "storey-2-window-ext-west-1",
+            "sill_height_mm": 1200,
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              120,
+              16000
+            ],
+            "height_mm": 1800,
+            "host_wall": "storey-2-wall-ext-west",
+            "id": "storey-2-window-ext-west-2",
+            "sill_height_mm": 1200,
+            "width_mm": 1000
+          },
+          {
+            "center_global_mm": [
+              10000,
+              3860
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-south",
+            "id": "storey-2-window-part-south-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              14000,
+              3860
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-south",
+            "id": "storey-2-window-part-south-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              10000,
+              14140
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-north",
+            "id": "storey-2-window-part-north-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              14000,
+              14140
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-north",
+            "id": "storey-2-window-part-north-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              18140,
+              6500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-east",
+            "id": "storey-2-window-part-east-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              18140,
+              11500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-east",
+            "id": "storey-2-window-part-east-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              5860,
+              6500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-west",
+            "id": "storey-2-window-part-west-1",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "center_global_mm": [
+              5860,
+              11500
+            ],
+            "height_mm": 2100,
+            "host_wall": "storey-2-wall-part-west",
+            "id": "storey-2-window-part-west-2",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          }
+        ]
+      }
+    ],
+    "types": [
+      {
+        "id": "type-door-single-1000x2400-left",
+        "ifc_class": "IfcDoorStyle",
+        "name": "单开木门1000x2400-左开"
+      },
+      {
+        "id": "type-door-single-1000x2400-right",
+        "ifc_class": "IfcDoorStyle",
+        "name": "单开木门1000x2400-右开"
+      },
+      {
+        "id": "type-door-stair-900x2100-right",
+        "ifc_class": "IfcDoorStyle",
+        "name": "楼梯围护单开门900x2100-右开"
+      },
+      {
+        "id": "type-door-stair-900x2100-left",
+        "ifc_class": "IfcDoorStyle",
+        "name": "楼梯围护单开门900x2100-左开"
+      },
+      {
+        "id": "type-door-entry-1400x2600-left",
+        "ifc_class": "IfcDoorStyle",
+        "name": "入口单开木门1400x2600-左开"
+      },
+      {
+        "id": "type-window-double-vertical-2000x2400",
+        "ifc_class": "IfcWindowStyle",
+        "name": "双竖面板窗2000x2400（窗台600）"
+      },
+      {
+        "id": "type-window-single-1000x1800",
+        "ifc_class": "IfcWindowStyle",
+        "name": "单面板窗1000x1800（窗台1200）"
+      },
+      {
+        "id": "type-window-double-vertical-1600x2100",
+        "ifc_class": "IfcWindowStyle",
+        "name": "双竖面板窗1600x2100（窗台900，内侧）"
+      },
+      {
+        "id": "type-railing-glass-court-south-north",
+        "ifc_class": "IfcRailingType",
+        "name": "光庭玻璃栏板-南北同规格"
+      },
+      {
+        "id": "type-railing-glass-court-east-west",
+        "ifc_class": "IfcRailingType",
+        "name": "光庭玻璃栏板-东西同规格"
+      }
+    ]
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "请建一座两层的光庭阅读馆，采用完整围合的矩形建筑，中间是露天光庭，二层有连续的围庭回廊。建筑要安静、明亮、有秩序：浅暖灰主体、深灰细窗框、通透的玻璃栏板、少量木色门扇。请建真实的建筑本体，不建花草、家具、文字招牌、设备和复杂五金。下面是我委托设计后确认采用的方案参数，不需要再询问风格、尺寸和布置；若参数相互矛盾或系统确实不能表达，请指出，不要擅自修改。\n\n以外轮廓西南角为原点，东为X正向，北为Y正向，向上为Z正向，以下平面距离单位为米，IFC采用毫米。外轮廓东西24米、南北18米。露天光庭的平面范围为X=8到16、Y=6到12，8米乘6米；从首层地面向天空敞开，二层楼板和屋盖在这里真实开洞，不能只画线、藏板或拿玻璃封顶。首层地面在光庭范围保留。\n\n首层和二层完成面标高为0和3.6米。两层墙高均3.4米。首层楼板底面-0.2米、顶面0米，二层楼板底面3.4米、顶面3.6米；两块板厚200毫米，外轮廓24乘18米。平屋盖底面7米、顶面7.2米，外轮廓同建筑，厚200毫米，光庭洞口与二层的8乘6米洞口对齐。本例屋盖明确用屋面用途的IfcSlab表达，作为一块独立带洞的板，不要求额外IfcRoof容器，也不要重复建两块屋盖。三块板均归属对应的建筑楼层，屋盖归属二层，不另建第三层。二层楼板另有下述楼梯洞口。\n\n每层外墙厚240毫米、全部在建筑外轮廓内。南北外墙各贯通24米，实体Y范围分别0到0.24、17.76到18；东西外墙实体X范围分别0到0.24、23.76到24，Y范围0.24到17.76，四角只相接不相互重叠。\n\n每层阅读房间与围庭交通区之间设四条厚240毫米的分隔墙。南侧分隔墙X=0.24到23.76、Y=3.74到3.98；北侧X相同、Y=14.02到14.26；西侧分隔墙X=5.74到5.98、Y=3.98到14.02；东侧X=18.02到18.26、Y=3.98到14.02。墙端对接，不能重复堆叠。光庭与回廊之间不设通高墙或玻璃幕墙，回廊是有顶半室外空间。屋盖覆盖回廊和房间，只有光庭露天。\n\n每层明确设四个室内功能空间和四段半室外回廊空间，各空间高3.4米：南侧接待与交流区净范围X=0.24到23.76、Y=0.24到3.74；北侧安静阅读区X=0.24到23.76、Y=14.26到17.76；东侧共享阅读区X=18.26到23.76、Y=3.98到14.02；西侧服务与楼梯区X=0.24到5.74、Y=3.98到14.02。南回廊X=5.98到18.02、Y=3.98到6；北回廊X=5.98到18.02、Y=12到14.02；西回廊X=5.98到8、Y=6到12；东回廊X=16到18.02、Y=6到12。回廊四段相连且互不正面积重叠，光庭本身不创建跨层室内空间。西侧空间是包含楼梯的功能区，不能将空间包围楼梯洞口本身误报为实体碰撞。\n\n楼梯位于西侧区内：一条从南向北上升的直跑楼梯连接首层0米与二层3.6米，净宽1.5米，平面X=1到2.5、Y=5到11，共20级，每级180毫米高，水平踏步进深300毫米。二层洞口平面X=1到2.5、Y=5到11，穿透200毫米板。下端候梯区Y=3.98到5，上端平台Y=11到12.6，利用既有楼板，不叠加平台板。梯段两侧设置实体围护墙：X=0.76到1及X=2.5到2.74，Y=3.98到12.6，每层墙高3.4米。首层在东侧楼梯围护墙设宽900毫米、高2100毫米右单开门，中心Y=4.5米；二层在同侧墙设同尺寸左单开门，中心Y=11.8米。门洞距墙端的实心墙至少50毫米，开启方向朝楼梯间外的服务区，不占梯段。楼梯上端可从平台出门经西侧服务区进入回廊。斜向抓握扶手不是本次已实现细节，不要虚构；报告中明确这项限制。\n\n二层回廊靠光庭一侧设四块连续透明玻璃栏板，高1100毫米、厚20毫米，底部在完成面3.6米。南栏板X=7.98到16.02、Y=5.98到6；北栏板X相同、Y=12到12.02；西栏板X=7.98到8、Y=6到12；东栏板X=16到16.02、Y=6到12。四角实体边界相接不重叠，板落在楼板侧。回廊通行带从分隔墙内表面量至栏板通行侧表面，至少2米。玻璃栏板分别为IfcRailing，不做一块横跨光庭的板，不增加立柱和扶手假细节。\n\n各层南、北侧分隔墙各两扇宽1000毫米、高2400毫米的基本单开木门，中心X=7和17米；两侧各自西门左单开、东门右单开。东西侧分隔墙各一扇同尺寸右单开门，中心Y=9米。门底与本层完成面齐平，门扇朝房间一侧开启。首层南外墙另设一扇宽1400毫米、高2600毫米左单开入口门，中心X=12米，二层不复制入口。加上楼梯间两扇门，总计15扇门。每扇门有自己独立的开口、宿主、基本门框和门扇，不使用双扇或推拉门模板。\n\n每层南、北外墙各四扇双竖面板窗，中心X=3、8、16、21米；东外墙两扇双竖面板窗，中心Y=6.5、11.5米；西外墙两扇单面板窗，中心Y=2和16米。双面板窗宽2000毫米、高2400毫米，窗台高600毫米；单面板窗宽1000毫米、高1800毫米，窗台高1200毫米。每层南、北分隔墙各两扇双竖面板窗，中心X=10和14米；东分隔墙两扇、西分隔墙两扇双竖面板窗，中心Y=6.5和11.5米，这八扇内侧窗宽1600毫米、高2100毫米、窗台高900毫米。每层共20窗，总计40窗。窗头均距本层完成面3米，上下层同轴对齐；窗、洞口和宿主墙一一对应，框和玻璃有部件分色。\n\n外墙、分隔墙和楼梯围护墙均采用20毫米砂浆、200毫米混凝土、20毫米砂浆的三层材料，厚度总计240毫米。三块水平板均为180毫米混凝土加20毫米砂浆面层，总厚200毫米。门整体材料为木材；栏板整体材料为玻璃。窗采用基本窗模板的框与玻璃部件样式，不将整窗谎称为纯铝或纯玻璃，也不要求当前合同不能表达的逐部件物理材料附件。\n\n整体现有warm-residential风格，墙面颜色#D8D4CA、窗框和门框#333D40、木门扇#A87950；玻璃保持透明，栏板透明度0.75。板面为浅暖灰，与主体协调。相同用途、相同规格和相同开启方向的门窗明确共享本项目内Type/Style；两组不同宽度的双面板窗不得错误共享同一规格；楼梯围护门与普通房门、入口门分别组织，南北两块同规格栏板可共享，东西两块同规格栏板可共享。不同墙长不强制共享类型。实际Type只在本模型中创建，不引入外部资产。\n\n本例先完成以上完整建筑，不额外添加没有明确位置的梁柱、雨篷、幕墙和饰面构件。名称、楼层、用途及明确内外部属性忠实表达；我没有要求强度、耐火、热工等性能，不要填入这些属性，更不能填零、null或未知。颜色不能用来反证材料。请输出完整IFC2X3并在报告中区分需求符合性、机器检查和未验证的工程合理性，不称为可直接施工或已全面合规。\n",
+  "provenance": {
+    "few_shot_ids": [],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:root",
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:attributes",
+      "schema:bim-json-v2:representation",
+      "schema:bim-json-v2:profile",
+      "schema:bim-json-v2:object-placement",
+      "schema:bim-json-v2:relationship",
+      "capability:IFC2X3:IfcBuilding",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcStair",
+      "capability:IFC2X3:IfcRailing",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement",
+      "registry:IFC2X3:manifest"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.4",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

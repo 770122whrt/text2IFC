@@ -1,4 +1,4 @@
-# C 型建造与 token 实验记录
+# 实验与失败诊断记录
 
 本目录独立保存实验和调试历史，含成功、失败、原始Provider响应、token账本、配置、脚本和验证记录。它们不因最终C被验收而自动成为accepted Proof。旧报告中的“下一步”和pending为当时状态，原字节不改。旧路径至当前路径、大小与SHA-256见 [归档索引](c-token-archive-20260911.json)。不收纳可重建的 __pycache__。
 
@@ -25,3 +25,7 @@
 C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次/171,516 token。各阶段累计值不可求和。reasoning已包含在output中。不同代码、Prompt和随机输出下的两次C运行不是受控token消融。
 
 冻结admission、数据库引用和日志里的原绝对路径仅表示历史环境；不能直接复用为新真实调用准入。原脚本原样保存用于审计，受影响的回归测试应改用本归档路径；任何真实重跑须创建新运行目录并建立当前准入。
+
+## 光庭设计与修复实验
+
+两版光庭成品和全部过程自包含收纳到 [光庭Proof](../proof/generation/phase6.6/courtyard-library-20260912/REPORT.md)。失败归因、原始attempt、累计token和12个一次性测试脚本见 [过程入口](../proof/generation/phase6.6/courtyard-library-20260912/evidence/README.md)，不重复复制一份实验目录。第二版人工验收不提升第一版设计状态。

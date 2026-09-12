@@ -1,0 +1,33 @@
+{
+  "destination": "https://api.deepseek.com",
+  "model": "deepseek-v4-flash",
+  "fresh_from_request": true,
+  "inputs": [
+    "request.txt",
+    "conversation.json",
+    "reference-design-review.json",
+    "versioned public prompts/schema/authoring context",
+    "this run generated Brief/candidate/check feedback and run metadata"
+  ],
+  "request_sha256": "6413a94bcbbd3e05820d21b86eb0baeb98c967ebc0311ebc72e00d67ca79daf7",
+  "changes": "Same frozen geometry and palette as rerun-01; shared property registry checks now run before Brief authority freezes. New full loop, no previous candidate reuse.",
+  "exclusions": [
+    "prior IFC/raw evidence",
+    "private Gold",
+    "expected-independent.json and local checker",
+    "other-task data",
+    "credential contents"
+  ],
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "inherited_usage": {
+    "calls": 13,
+    "tokens": 1198096,
+    "active_seconds": 2158.468000000081
+  },
+  "single_call_max_completion_tokens": 98304,
+  "single_call_max_input_tokens": 131072
+}
