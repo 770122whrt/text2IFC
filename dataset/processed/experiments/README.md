@@ -47,3 +47,7 @@ C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次
 同名 `success-cases` 的 80 份文件全部复用现有 Repair Proof，按映射访问。调试源码仅作历史审计；保留通用回归在 `tests/`，不会因已通过而删除其覆盖。
 
 三个旧目录经删除前复核发现 Windows 权限隐藏的子目录，追加保存 883 文件；[补充映射](development-retirement-permission-supplement-20260912.json) 与原映射共同组成完整来源记录，未覆盖先前归档。
+
+## 更早 Phase 的运行与调试
+
+[Phase 6、9–12 历史归档](phase-history-20260912/README.md) 收纳 57 个旧工作区的 10,759 份文件，原始约 6.15 GiB，新增压缩文件约 263.66 MiB。真实失败、响应和账本均保留；相同内容复用 Proof 或同一归档成员，旧路径仍可逐项追溯。

@@ -16,7 +16,7 @@
 
 两个日志从 383,419,299 字节压缩为 19,914,355 字节，解压成员与原文 SHA-256 相同。归档不把旧失败或待审结果升级为已验收，不改原始响应和历史判断；若原目录与现有 Proof 中同名文件的字节不同，两份都保留。
 
-每次执行结果另存 `deletion-*.json`，完成后由本报告补充实际数量。清理脚本 [retire.ps1](retire.ps1) 只处理清单范围。权限错误、目录内容变化或缺失保留证据均停止该目标并记录，不重设 ACL、不操作活动工作树。
+追加批次已完成：17 个旧案例目录、315 个 pytest 目录、328 个单独文件，实际删除 193,368 文件、3,138,312,816 字节。加光庭首批共 242,931 文件、3,882,821,572 字节；此处不含下述更早 Phase 批次。精确执行结果另存 `deletion-*.json`。清理脚本 [retire.ps1](retire.ps1) 只处理清单范围。权限错误、目录内容变化或缺失保留证据均停止该目标并记录，不重设 ACL、不操作活动工作树。
 
 **权限复核补存：** 三个目录的删除前检查发现不同 Windows 上下文的文件可见性不一致；首次归档遍历遗漏了权限隐藏的子目录。删除门禁保留了这三个目录。补存另外 883 文件、19,390,141 字节（包括原有离线矩阵、修复破坏材料及 5 个历史 pytest-cache 文件），原始复制索引不改，使用 [追加映射](../../../dataset/processed/experiments/development-retirement-permission-supplement-20260912.json)。补充材料全部逐字节验证，凭据扫描无发现；见 [补存验证](permission-supplement-verification.json)。不得仅凭原归档“绑定通过”推断原目录完整性。
 
@@ -32,6 +32,14 @@
 
 ## 保留边界
 
-`agent-demo` 中仍被测试、验证器或数据构建使用的输入，`ifc-repair`／`ifc-repair-runs` 中独立真实尝试、来源材料、private Gold 及权限不明项继续保留；依据见 [旧目录用途清单](legacy-root-inventory.json)。这些内容尚不具备可用副本或可重建夹具的退役依据。保留活动 `.tmp/main-integration-20260912` 工作树、数据下载目录、会话恢复材料、外部 IFC 压缩包、ifc-bench 及归属不明的根目录 composite-evidence 文件夹。
+`agent-demo` 中仍被测试、验证器或数据构建使用的输入，以及 `ifc-repair`／`ifc-repair-runs` 中当前 curator 和 Plan07 使用的案例与源基线继续保留；依据见 [旧目录用途清单](legacy-root-inventory.json) 和 [Phase 范围及依赖](phase-scope.json)。独立真实尝试和 private Gold 可归档但不能销毁或混入 Provider 输入。保留活动 `.tmp/main-integration-20260912` 工作树、数据下载目录、会话恢复材料、外部 IFC 压缩包、ifc-bench 及归属不明的根目录 composite-evidence 文件夹。
 
 冻结记录中的原绝对路径是历史来源，通过归档索引追溯；不改写冻结数据库或旧 admission。新真实运行须创建新工作区并遵循当前准入。
+
+## 用户追加：更早的 Phase
+
+用户明确要求范围不止 A/B。追加处理 Phase 6、9–12 共 57 个历史目录，26 个仍有依赖或需要单独判断的目录保留，未删除早期 SPEC、Prompt、Schema 或通用回归测试。
+
+两种 Windows 上下文合并盘点后，10,759 个文件的集合完整，无未解释的访问缺口。归档约 6.15 GiB 源字节，新增 54 个 ZIP／276,467,242 字节；复用 Proof 的 305 个文件，并合并完全相同的字节。每个原路径独立映射，历史角色不会因去重而合并。见 [归档入口](../../../dataset/processed/experiments/phase-history-20260912/README.md) 和 [完整绑定验证](phase-archive-verification.json)。
+
+初次普通用户盘点遇到旧测试故意构造的链接并停止，未跟随目标。最终记录 4 个链接及其目标；删除时只移除链接条目，逐个删除已备份且仍匹配的源文件，再删除清单内的空目录，不递归触及链接目标。删除前须推送此批完整备份。旧机器结论保持，未运行新 Provider 或完整 curator。
