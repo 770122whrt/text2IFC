@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="7" time="6.660" timestamp="2026-09-12T17:39:37.904629+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_railing_generation_contract" name="test_new_brief_selects_new_generation_and_prompt_versions" time="0.103"><failure message="AssertionError: assert 'bim-json/2.1' == 'bim-json/2.3'&#10;  &#10;  - bim-json/2.3&#10;  ?            ^&#10;  + bim-json/2.1&#10;  ?            ^">def test_new_brief_selects_new_generation_and_prompt_versions():
+&gt;       assert generation_schema_version(brief())=='bim-json/2.3'
+E       AssertionError: assert 'bim-json/2.1' == 'bim-json/2.3'
+E         
+E         - bim-json/2.3
+E         ?            ^
+E         + bim-json/2.1
+E         ?            ^
+
+tests\agent\test_railing_generation_contract.py:25: AssertionError</failure></testcase><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[none]" time="0.054" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[old_version]" time="0.043" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[wrong_family]" time="0.035"><failure message="AssertionError: {'authority_declared': True, 'expectations': [{'entity_id': 'opaque-door', 'kind': 'template', 'scope': 'effective', '.../0', ...}], 'expectations_hash': '3962d95c19667f32f69a9779e6b53df0168e7ce651193de3c960eeff26f5a199', 'issues': [], ...}&#10;assert True == ('wrong_family' == 'none'&#10;  &#10;  - none&#10;  + wrong_family)">attack = 'wrong_family'
+
+    @pytest.mark.parametrize('attack',['none','old_version','wrong_family','inherited','type_target'])
+    def test_railing_template_authority_requires_new_occurrence_family_contract(attack):
+        b=brief();row=b['known_facts']['semantic_requirements'][0]
+        if attack=='old_version':b['schema_version']='text2ifc/design-brief/2.5'
+        if attack=='wrong_family':row['entity_id']='opaque-door'
+        if attack=='inherited':row['scope']='inherited'
+        if attack=='type_target':row['entity_id']='opaque-door-type'
+        before=deepcopy(b);projected=project_semantic_requirements(b)
+&gt;       assert projected['valid']==(attack=='none'),projected
+E       AssertionError: {'authority_declared': True, 'expectations': [{'entity_id': 'opaque-door', 'kind': 'template', 'scope': 'effective', '.../0', ...}], 'expectations_hash': '3962d95c19667f32f69a9779e6b53df0168e7ce651193de3c960eeff26f5a199', 'issues': [], ...}
+E       assert True == ('wrong_family' == 'none'
+E         
+E         - none
+E         + wrong_family)
+
+tests\agent\test_railing_generation_contract.py:38: AssertionError</failure></testcase><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[inherited]" time="0.045"><failure message="AssertionError: {'authority_declared': True, 'expectations': [{'entity_id': 'guard', 'kind': 'template', 'scope': 'inherited', 'source.../0', ...}], 'expectations_hash': '768ce1534e0f6b3bc82c1360a296ef41373fb64add93db5a57c1b4ee7abb235c', 'issues': [], ...}&#10;assert True == ('inherited' == 'none'&#10;  &#10;  - none&#10;  + inherited)">attack = 'inherited'
+
+    @pytest.mark.parametrize('attack',['none','old_version','wrong_family','inherited','type_target'])
+    def test_railing_template_authority_requires_new_occurrence_family_contract(attack):
+        b=brief();row=b['known_facts']['semantic_requirements'][0]
+        if attack=='old_version':b['schema_version']='text2ifc/design-brief/2.5'
+        if attack=='wrong_family':row['entity_id']='opaque-door'
+        if attack=='inherited':row['scope']='inherited'
+        if attack=='type_target':row['entity_id']='opaque-door-type'
+        before=deepcopy(b);projected=project_semantic_requirements(b)
+&gt;       assert projected['valid']==(attack=='none'),projected
+E       AssertionError: {'authority_declared': True, 'expectations': [{'entity_id': 'guard', 'kind': 'template', 'scope': 'inherited', 'source.../0', ...}], 'expectations_hash': '768ce1534e0f6b3bc82c1360a296ef41373fb64add93db5a57c1b4ee7abb235c', 'issues': [], ...}
+E       assert True == ('inherited' == 'none'
+E         
+E         - none
+E         + inherited)
+
+tests\agent\test_railing_generation_contract.py:38: AssertionError</failure></testcase><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[type_target]" time="0.043"><failure message="AssertionError: {'authority_declared': True, 'expectations': [{'entity_id': 'opaque-door-type', 'kind': 'template', 'scope': 'effectiv.../0', ...}], 'expectations_hash': '3704136811bca73786130280295ba6c44078bc41bbd8aacbd03e244e70a15cc9', 'issues': [], ...}&#10;assert True == ('type_target' == 'none'&#10;  &#10;  - none&#10;  + type_target)">attack = 'type_target'
+
+    @pytest.mark.parametrize('attack',['none','old_version','wrong_family','inherited','type_target'])
+    def test_railing_template_authority_requires_new_occurrence_family_contract(attack):
+        b=brief();row=b['known_facts']['semantic_requirements'][0]
+        if attack=='old_version':b['schema_version']='text2ifc/design-brief/2.5'
+        if attack=='wrong_family':row['entity_id']='opaque-door'
+        if attack=='inherited':row['scope']='inherited'
+        if attack=='type_target':row['entity_id']='opaque-door-type'
+        before=deepcopy(b);projected=project_semantic_requirements(b)
+&gt;       assert projected['valid']==(attack=='none'),projected
+E       AssertionError: {'authority_declared': True, 'expectations': [{'entity_id': 'opaque-door-type', 'kind': 'template', 'scope': 'effectiv.../0', ...}], 'expectations_hash': '3704136811bca73786130280295ba6c44078bc41bbd8aacbd03e244e70a15cc9', 'issues': [], ...}
+E       assert True == ('type_target' == 'none'
+E         
+E         - none
+E         + type_target)
+
+tests\agent\test_railing_generation_contract.py:38: AssertionError</failure></testcase><testcase classname="tests.agent.test_railing_generation_contract" name="test_sloping_railing_preserves_endpoints_in_geometry_and_staged_ownership" time="0.050"><failure message="AssertionError: {'issues': [{'code': 'PACKAGE_PRODUCT_GEOMETRY_INCOMPLETE', 'message': 'A product requires complete explicit linear di...etry'}], 'packages': [], 'schema_version': 'text2ifc/generation-package-manifest/1.0', 'status': 'draft_required', ...}&#10;assert 'draft_required' == 'ready'&#10;  &#10;  - ready&#10;  + draft_required">def test_sloping_railing_preserves_endpoints_in_geometry_and_staged_ownership():
+        b=brief()
+        # Minimal geometry input isolates this public projection seam; no Provider.
+        b.pop('schema_version')
+        b['known_facts']['storeys']=[{'id':'storey-1','elevation_mm':0,'net_height_mm':3400}]
+        b['known_facts']['railings'][0]['geometry_kind']='basic_railing_segment'
+        facts=build_expected_facts(case_id='slope',design_brief=b)
+&gt;       assert facts['generation_package_manifest']['status']=='ready',facts['generation_package_manifest']
+E       AssertionError: {'issues': [{'code': 'PACKAGE_PRODUCT_GEOMETRY_INCOMPLETE', 'message': 'A product requires complete explicit linear di...etry'}], 'packages': [], 'schema_version': 'text2ifc/generation-package-manifest/1.0', 'status': 'draft_required', ...}
+E       assert 'draft_required' == 'ready'
+E         
+E         - ready
+E         + draft_required
+
+tests\agent\test_railing_generation_contract.py:49: AssertionError</failure></testcase></testsuite></testsuites>

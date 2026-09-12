@@ -1,0 +1,2253 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="23" skipped="0" tests="53" time="33.816" timestamp="2026-09-12T17:56:25.875600+08:00" hostname="what-do-matter"><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[0-0-0]" time="1.594" /><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[0-90-4200]" time="1.546" /><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[1800-0-0]" time="1.553" /><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[1800-90-4200]" time="1.543" /><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[-1800-0-4200]" time="1.570" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch0]" time="0.333" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch1]" time="0.297" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch2]" time="0.326" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch3]" time="0.293" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch4]" time="0.328" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch5]" time="0.295" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch6]" time="0.054" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch7]" time="0.054" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch8]" time="0.060" /><testcase classname="tests.compiler.test_basic_railing" name="test_legacy_representation_contract_does_not_acquire_new_railing_meaning" time="0.067" /><testcase classname="tests.compiler.test_basic_railing" name="test_railing_template_cannot_be_attached_to_a_column" time="0.329" /><testcase classname="tests.compiler.test_basic_railing" name="test_reopened_verifier_rejects_geometry_and_provenance_tampering[remove_picket]" time="1.577" /><testcase classname="tests.compiler.test_basic_railing" name="test_reopened_verifier_rejects_geometry_and_provenance_tampering[solid_panel]" time="1.646" /><testcase classname="tests.compiler.test_basic_railing" name="test_reopened_verifier_rejects_geometry_and_provenance_tampering[wrong_provenance]" time="1.601" /><testcase classname="tests.compiler.test_basic_railing" name="test_reopened_verifier_rejects_geometry_and_provenance_tampering[move]" time="1.602" /><testcase classname="tests.compiler.test_basic_railing" name="test_frozen_template_request_is_verified_from_actual_ifc[none]" time="1.649" /><testcase classname="tests.compiler.test_basic_railing" name="test_frozen_template_request_is_verified_from_actual_ifc[wrong_parameters]" time="1.487" /><testcase classname="tests.compiler.test_basic_railing" name="test_frozen_template_request_is_verified_from_actual_ifc[missing_picket]" time="1.501" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_new_brief_selects_new_generation_and_prompt_versions" time="0.018" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[none]" time="0.016" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[old_version]" time="0.015" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[wrong_family]" time="0.014" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[inherited]" time="0.014" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_railing_template_authority_requires_new_occurrence_family_contract[type_target]" time="0.014" /><testcase classname="tests.agent.test_railing_generation_contract" name="test_sloping_railing_preserves_endpoints_in_geometry_and_staged_ownership" time="0.065" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.6-legacy_full]" time="1.634"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv0')
+strategy = 'legacy_full', template = 'window-single', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all(('2.3' if brief_version == '2.6' else '2.2' if brief_version == '2.5' else '2.1') in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+&gt;           result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:611: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.6-staged]" time="0.516"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv1')
+strategy = 'staged', template = 'window-single', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+&gt;           result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+
+tests\agent\test_semantic_public_paths.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.6-legacy_full]" time="0.212"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv2')
+strategy = 'legacy_full', template = 'window-double-vertical'
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all(('2.3' if brief_version == '2.6' else '2.2' if brief_version == '2.5' else '2.1') in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+&gt;           result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:611: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.6-staged]" time="0.298"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv3')
+strategy = 'staged', template = 'window-double-vertical', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+&gt;           result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+
+tests\agent\test_semantic_public_paths.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.6-legacy_full]" time="0.253"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv4')
+strategy = 'legacy_full', template = 'door-left', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all(('2.3' if brief_version == '2.6' else '2.2' if brief_version == '2.5' else '2.1') in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+&gt;           result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:611: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.6-staged]" time="0.266"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv5')
+strategy = 'staged', template = 'door-left', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+&gt;           result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+
+tests\agent\test_semantic_public_paths.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.6-legacy_full]" time="0.254"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv6')
+strategy = 'legacy_full', template = 'door-right', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+            result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+            assert result['valid'], result
+            candidate = result['candidate']
+            assert all(('2.3' if brief_version == '2.6' else '2.2' if brief_version == '2.5' else '2.1') in call['schema'].get('$id','') or 'changeset' in call['schema'].get('$id','') for call in provider.calls)
+        else:
+            candidate = copy.deepcopy(skeleton)
+            for group in values:
+                for item in group:
+                    candidate['relationships' if item['ifc_class'].startswith('IfcRel') else 'entities'].append(item)
+            source = tmp_path/'design-brief';source.mkdir()
+            (source/'input.txt').write_text('墙体材料为砖，耐火设计要求60分钟。',encoding='utf-8')
+            for name, payload in [('conversation',[]),('design-brief',brief),('context-selection',{'evidence':[]})]:
+                (source/(name+'.json')).write_text(json.dumps(payload),encoding='utf-8')
+            provider = SequenceProvider([candidate])
+&gt;           result = run_generator_stage(provider=provider,output_dir=tmp_path/'generator',design_source_dir=source,case_id='public')
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_semantic_public_paths.py:81: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:611: in run_generator_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.6-staged]" time="0.262"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_strategies_preserv7')
+strategy = 'staged', template = 'door-right', brief_version = '2.6'
+
+    @pytest.mark.parametrize('strategy', ['legacy_full', 'staged'])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    @pytest.mark.parametrize('template', ['window-single','window-double-vertical','door-left','door-right'])
+    def test_public_strategies_preserve_explicit_material_and_property(tmp_path, strategy, template, brief_version):
+        skeleton, manifest, expected, values = _fixture(1)
+        skeleton['schema_version'] = 'bim-json/2.1'
+        skeleton['appearance'] = {'profile': 'warm-residential', 'seed': 'public-frozen'}
+        for group in values:
+            for item in group:
+                if item['ifc_class'] == 'IfcSpace':
+                    item['attributes']['InteriorOrExteriorSpace'] = 'INTERNAL'
+        wall = next(e for e in values[0] if e['id'] == 'wall-1')
+        wall['attributes']['Representation']['profile']['x'] = 4000
+        opening = next(e for e in values[0] if e['id'] == 'opening-1')
+        opening['attributes']['Representation']['depth'] = 2100
+        filling = next(e for e in values[0] if e['id'] == 'window-1')
+        filling['ifc_class'] = 'IfcDoor' if template.startswith('door') else 'IfcWindow'
+        filling['attributes'].update(OverallWidth=1000, OverallHeight=2100)
+        filling['attributes']['Representation'] = {'kind':'basic_filling', 'template_id':template,
+            'template_version':'text2ifc/basic-filling/1.0', 'width':1000, 'height':2100, 'depth':200, 'parameters':{}}
+        wall['materials'] = [{'kind':'single_material','name':'Requested brick'}]
+        wall['property_sets'] = {'Pset_WallCommon': {'FireRating':'60'}}
+        brief = {'schema_version':f'text2ifc/design-brief/{brief_version}','status':'ready','known_facts': {
+            'appearance': {**skeleton['appearance'], 'style_notes': '外观协调；材料和性能仍以明确请求为准。'},
+            'semantic_requirements':[{'entity_id':'wall-1', 'material':wall['materials'][0],
+                                      'property_sets':wall['property_sets']},
+                {'entity_id':'window-1', 'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0'}}]}}
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True)
+        if brief_version in {'2.5', '2.6'}:
+            skeleton['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            filling['part_appearance'] = {'frame': {'color': [.12, .25, .38]}}
+            brief['known_facts']['semantic_requirements'][-1]['part_appearance'] = copy.deepcopy(filling['part_appearance'])
+            brief['known_facts']['semantic_review'] = review(material=True, property=True, template=True, appearance=True)
+            brief['known_facts']['storeys'] = [{'id': 'level', 'doors' if template.startswith('door') else 'windows': [{'id':'window-1'}]}]
+            expected['generation_schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+        if strategy == 'staged':
+            provider = SequenceProvider(_changesets(skeleton,manifest,expected,values))
+&gt;           result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+                user_request='墙体材料为砖，耐火设计要求60分钟。',conversation=[],design_brief=brief,
+                expected_facts=expected,skeleton=skeleton,manifest=manifest)
+
+tests\agent\test_semantic_public_paths.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-False-False]" time="0.269"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai0')
+detailed = False, canonical_ids = False, recover_field = False
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-False-True]" time="0.170"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai1')
+detailed = True, canonical_ids = False, recover_field = False
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-True-False]" time="0.274"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai2')
+detailed = False, canonical_ids = True, recover_field = False
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-True-True]" time="0.302"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai3')
+detailed = True, canonical_ids = True, recover_field = False
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-False-False]" time="0.310"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai4')
+detailed = False, canonical_ids = False, recover_field = True
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-False-True]" time="0.316"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai5')
+detailed = True, canonical_ids = False, recover_field = True
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-True-False]" time="0.298"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai6')
+detailed = False, canonical_ids = True, recover_field = True
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-True-True]" time="0.319"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_ready_session_public_chai7')
+detailed = True, canonical_ids = True, recover_field = True
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('detailed', [False, True])
+    @pytest.mark.parametrize('canonical_ids', [False, True])
+    @pytest.mark.parametrize('recover_field', [False, True])
+    @pytest.mark.parametrize('brief_version', ['2.1', '2.2', '2.3', '2.4', '2.5', '2.6'])
+    def test_ready_session_public_chain_reaches_final_acceptance(tmp_path, detailed, canonical_ids, recover_field, brief_version):
+        from text2ifc_agent.live_pipeline import run_design_brief_stage
+        from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
+        from text2ifc_agent.session_store import SessionStore
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        brief['schema_version']=f'text2ifc/design-brief/{brief_version}'
+        if brief_version in {'2.4', '2.5', '2.6'}:
+            brief['known_facts']['plan_constraints'] = []
+        brief['known_facts']['appearance'] = {'profile': 'warm-residential', 'style_notes': '浅墙深框；风格文字待视觉审查。'}
+        brief['original_request'] += ' 墙体使用Requested brick，耐火设计要求60分钟。'
+        brief['provenance'].update(selected_evidence_ids=[], few_shot_ids=[])
+        brief['known_facts']['semantic_requirements']=[{'entity_id':'wall-south',
+            'material':{'kind':'single_material','name':'Requested brick'},
+            'property_sets':{'Pset_WallCommon':{'FireRating':'60'}}}]
+        candidate = _outside_boundary_center_overlap_candidate()
+        candidate['schema_version']='bim-json/2.1'
+        candidate['appearance'] = {'profile': 'warm-residential'}
+        if detailed:
+            by_id={e['id']:e for e in candidate['entities']}
+            for filling_id, template in [('door-1','door-left'),('window-1','window-double-vertical')]:
+                record=by_id[filling_id]
+                opening=by_id[record['attributes']['ObjectPlacement']['relative_to']]
+                opening_rep=opening['attributes']['Representation']
+                host=by_id[opening['attributes']['ObjectPlacement']['relative_to']]
+                width=opening_rep['profile']['x'];height=opening_rep['depth'];depth=host['attributes']['Representation']['profile']['y']
+                record['attributes'].update(OverallWidth=width,OverallHeight=height)
+                record['attributes']['Representation']={'kind':'basic_filling','template_id':template,
+                    'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth,'parameters':{}}
+                brief['known_facts']['semantic_requirements'].append({'entity_id':filling_id,
+                    'template':{'template_id':template,'template_version':'text2ifc/basic-filling/1.0','width':width,'height':height,'depth':depth}})
+                brief['original_request'] += f' {filling_id}使用{template}，总体宽{width}高{height}、开口深{depth}毫米。'
+        for record in candidate['entities']:
+            record['property_sets']={}
+            record.pop('materials',None)
+            if record['id']=='wall-south':
+                record['materials']=[brief['known_facts']['semantic_requirements'][0]['material']]
+                record['property_sets']={'Pset_WallCommon':{'FireRating':'60'}}
+        if brief_version in {'2.5', '2.6'}:
+            candidate['schema_version'] = 'bim-json/2.3' if brief_version == '2.6' else 'bim-json/2.2'
+            if detailed:
+                by_id['door-1']['part_appearance'] = {'frame': {'color': [.12, .25, .38]}, 'panel': {'color': [.62, .43, .24]}}
+                by_id['window-1']['part_appearance'] = {'glazing': {'transparency': .75}}
+                for identity in ('door-1', 'window-1'):
+                    brief['known_facts']['semantic_requirements'].append({'entity_id': identity, 'part_appearance': copy.deepcopy(by_id[identity]['part_appearance'])})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=brief['original_request'])
+        if brief_version in {'2.2', '2.3', '2.4', '2.5', '2.6'}:
+            from tests.agent.test_semantic_authority_completeness import review
+            declared = {'material': True, 'property': True}
+            if detailed:
+                declared['template'] = True
+                if brief_version in {'2.5', '2.6'}: declared['appearance'] = True
+            brief['known_facts']['semantic_review'] = review(**declared)
+&gt;       design = run_design_brief_stage(provider=SequenceProvider([brief]),
+            case={'case_id':session.session_hash,'user_request':brief['original_request'],
+                  'conversation':[{'turn_id':'turn-user-001','role':'user','content':brief['original_request']}]},
+            output_dir=session.run_dir/'design-brief', design_brief_schema_version=brief['schema_version'])
+
+tests\agent\test_semantic_public_paths.py:198: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\live_pipeline.py:190: in run_design_brief_stage
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[none-False-2.6]" time="0.697"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_part_cleanup_is_sc0')
+keep_requested = False, attack = 'none', brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    @pytest.mark.parametrize('keep_requested', [False, True])
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
+    def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
+        candidate, brief, expected, filling = fixture()
+        candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+        requested = {'frame': {'color': [.1, .2, .3]}}
+        filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
+        brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
+        brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
+        if keep_requested:
+            brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
+                'template': {'template_id': 'door-left', 'template_version': 'text2ifc/basic-filling/1.0'}}]
+        for name, payload in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), payload)
+        assert not run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='part-cleanup')['compile_reopen_success']
+        before = copy.deepcopy(candidate); hashes = build_candidate_index(candidate)['component_hashes']
+        class Provider:
+            def generate_live(self, **kwargs):
+                root = tmp_path/'round'
+                scope = json.loads((root/'change-scope.json').read_text(encoding='utf-8'))
+                rev = json.loads((root/'base-revision.json').read_text(encoding='utf-8'))
+                edit = {'changes': {'/part_appearance': requested}} if keep_requested else {'remove_paths': ['/part_appearance']}
+                if attack == 'geometry': edit.setdefault('changes', {})['/attributes/OverallWidth'] = 999
+                if attack == 'erase_requested' and keep_requested: edit = {'remove_paths': ['/part_appearance']}
+                payload = {'schema_version': kwargs['schema']['properties']['schema_version']['const'],
+                    'changeset_id':'part-cleanup', 'base_revision_id':rev['revision_id'],
+                    'base_candidate_hash':rev['candidate_hash'], 'expected_facts_hash':rev['expected_facts_hash'],
+                    'scope_id':scope['scope_id'], 'source_issue_ids':scope['source_issue_ids'],
+                    'operations':[{'operation_id':'part-edit', 'op':'update_entity', 'target_id':filling['id'],
+                        'target_component_hash':hashes[filling['id']],
+                        'evidence_refs':[i+':/actual' for i in scope['source_issue_ids']], **edit}]}
+                return SequenceProvider([payload]).generate_live(**kwargs)
+&gt;       result = run_scoped_changeset_round(provider=Provider(), output_dir=tmp_path/'round', case_id='part-cleanup',
+            round_number=1, user_request='框保留指定色，其他通道遵循默认主题。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_part_appearance_recovery.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[none-True-2.6]" time="0.535"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_part_cleanup_is_sc1')
+keep_requested = True, attack = 'none', brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    @pytest.mark.parametrize('keep_requested', [False, True])
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
+    def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
+        candidate, brief, expected, filling = fixture()
+        candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+        requested = {'frame': {'color': [.1, .2, .3]}}
+        filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
+        brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
+        brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
+        if keep_requested:
+            brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
+                'template': {'template_id': 'door-left', 'template_version': 'text2ifc/basic-filling/1.0'}}]
+        for name, payload in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), payload)
+        assert not run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='part-cleanup')['compile_reopen_success']
+        before = copy.deepcopy(candidate); hashes = build_candidate_index(candidate)['component_hashes']
+        class Provider:
+            def generate_live(self, **kwargs):
+                root = tmp_path/'round'
+                scope = json.loads((root/'change-scope.json').read_text(encoding='utf-8'))
+                rev = json.loads((root/'base-revision.json').read_text(encoding='utf-8'))
+                edit = {'changes': {'/part_appearance': requested}} if keep_requested else {'remove_paths': ['/part_appearance']}
+                if attack == 'geometry': edit.setdefault('changes', {})['/attributes/OverallWidth'] = 999
+                if attack == 'erase_requested' and keep_requested: edit = {'remove_paths': ['/part_appearance']}
+                payload = {'schema_version': kwargs['schema']['properties']['schema_version']['const'],
+                    'changeset_id':'part-cleanup', 'base_revision_id':rev['revision_id'],
+                    'base_candidate_hash':rev['candidate_hash'], 'expected_facts_hash':rev['expected_facts_hash'],
+                    'scope_id':scope['scope_id'], 'source_issue_ids':scope['source_issue_ids'],
+                    'operations':[{'operation_id':'part-edit', 'op':'update_entity', 'target_id':filling['id'],
+                        'target_component_hash':hashes[filling['id']],
+                        'evidence_refs':[i+':/actual' for i in scope['source_issue_ids']], **edit}]}
+                return SequenceProvider([payload]).generate_live(**kwargs)
+&gt;       result = run_scoped_changeset_round(provider=Provider(), output_dir=tmp_path/'round', case_id='part-cleanup',
+            round_number=1, user_request='框保留指定色，其他通道遵循默认主题。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_part_appearance_recovery.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[geometry-False-2.6]" time="0.457"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_part_cleanup_is_sc2')
+keep_requested = False, attack = 'geometry', brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    @pytest.mark.parametrize('keep_requested', [False, True])
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
+    def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
+        candidate, brief, expected, filling = fixture()
+        candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+        requested = {'frame': {'color': [.1, .2, .3]}}
+        filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
+        brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
+        brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
+        if keep_requested:
+            brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
+                'template': {'template_id': 'door-left', 'template_version': 'text2ifc/basic-filling/1.0'}}]
+        for name, payload in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), payload)
+        assert not run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='part-cleanup')['compile_reopen_success']
+        before = copy.deepcopy(candidate); hashes = build_candidate_index(candidate)['component_hashes']
+        class Provider:
+            def generate_live(self, **kwargs):
+                root = tmp_path/'round'
+                scope = json.loads((root/'change-scope.json').read_text(encoding='utf-8'))
+                rev = json.loads((root/'base-revision.json').read_text(encoding='utf-8'))
+                edit = {'changes': {'/part_appearance': requested}} if keep_requested else {'remove_paths': ['/part_appearance']}
+                if attack == 'geometry': edit.setdefault('changes', {})['/attributes/OverallWidth'] = 999
+                if attack == 'erase_requested' and keep_requested: edit = {'remove_paths': ['/part_appearance']}
+                payload = {'schema_version': kwargs['schema']['properties']['schema_version']['const'],
+                    'changeset_id':'part-cleanup', 'base_revision_id':rev['revision_id'],
+                    'base_candidate_hash':rev['candidate_hash'], 'expected_facts_hash':rev['expected_facts_hash'],
+                    'scope_id':scope['scope_id'], 'source_issue_ids':scope['source_issue_ids'],
+                    'operations':[{'operation_id':'part-edit', 'op':'update_entity', 'target_id':filling['id'],
+                        'target_component_hash':hashes[filling['id']],
+                        'evidence_refs':[i+':/actual' for i in scope['source_issue_ids']], **edit}]}
+                return SequenceProvider([payload]).generate_live(**kwargs)
+&gt;       result = run_scoped_changeset_round(provider=Provider(), output_dir=tmp_path/'round', case_id='part-cleanup',
+            round_number=1, user_request='框保留指定色，其他通道遵循默认主题。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_part_appearance_recovery.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[geometry-True-2.6]" time="0.502"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_part_cleanup_is_sc3')
+keep_requested = True, attack = 'geometry', brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    @pytest.mark.parametrize('keep_requested', [False, True])
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
+    def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
+        candidate, brief, expected, filling = fixture()
+        candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+        requested = {'frame': {'color': [.1, .2, .3]}}
+        filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
+        brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
+        brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
+        if keep_requested:
+            brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
+                'template': {'template_id': 'door-left', 'template_version': 'text2ifc/basic-filling/1.0'}}]
+        for name, payload in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), payload)
+        assert not run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='part-cleanup')['compile_reopen_success']
+        before = copy.deepcopy(candidate); hashes = build_candidate_index(candidate)['component_hashes']
+        class Provider:
+            def generate_live(self, **kwargs):
+                root = tmp_path/'round'
+                scope = json.loads((root/'change-scope.json').read_text(encoding='utf-8'))
+                rev = json.loads((root/'base-revision.json').read_text(encoding='utf-8'))
+                edit = {'changes': {'/part_appearance': requested}} if keep_requested else {'remove_paths': ['/part_appearance']}
+                if attack == 'geometry': edit.setdefault('changes', {})['/attributes/OverallWidth'] = 999
+                if attack == 'erase_requested' and keep_requested: edit = {'remove_paths': ['/part_appearance']}
+                payload = {'schema_version': kwargs['schema']['properties']['schema_version']['const'],
+                    'changeset_id':'part-cleanup', 'base_revision_id':rev['revision_id'],
+                    'base_candidate_hash':rev['candidate_hash'], 'expected_facts_hash':rev['expected_facts_hash'],
+                    'scope_id':scope['scope_id'], 'source_issue_ids':scope['source_issue_ids'],
+                    'operations':[{'operation_id':'part-edit', 'op':'update_entity', 'target_id':filling['id'],
+                        'target_component_hash':hashes[filling['id']],
+                        'evidence_refs':[i+':/actual' for i in scope['source_issue_ids']], **edit}]}
+                return SequenceProvider([payload]).generate_live(**kwargs)
+&gt;       result = run_scoped_changeset_round(provider=Provider(), output_dir=tmp_path/'round', case_id='part-cleanup',
+            round_number=1, user_request='框保留指定色，其他通道遵循默认主题。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_part_appearance_recovery.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[erase_requested-False-2.6]" time="0.473"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_part_cleanup_is_sc4')
+keep_requested = False, attack = 'erase_requested', brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    @pytest.mark.parametrize('keep_requested', [False, True])
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
+    def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
+        candidate, brief, expected, filling = fixture()
+        candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+        requested = {'frame': {'color': [.1, .2, .3]}}
+        filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
+        brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
+        brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
+        if keep_requested:
+            brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
+                'template': {'template_id': 'door-left', 'template_version': 'text2ifc/basic-filling/1.0'}}]
+        for name, payload in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), payload)
+        assert not run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='part-cleanup')['compile_reopen_success']
+        before = copy.deepcopy(candidate); hashes = build_candidate_index(candidate)['component_hashes']
+        class Provider:
+            def generate_live(self, **kwargs):
+                root = tmp_path/'round'
+                scope = json.loads((root/'change-scope.json').read_text(encoding='utf-8'))
+                rev = json.loads((root/'base-revision.json').read_text(encoding='utf-8'))
+                edit = {'changes': {'/part_appearance': requested}} if keep_requested else {'remove_paths': ['/part_appearance']}
+                if attack == 'geometry': edit.setdefault('changes', {})['/attributes/OverallWidth'] = 999
+                if attack == 'erase_requested' and keep_requested: edit = {'remove_paths': ['/part_appearance']}
+                payload = {'schema_version': kwargs['schema']['properties']['schema_version']['const'],
+                    'changeset_id':'part-cleanup', 'base_revision_id':rev['revision_id'],
+                    'base_candidate_hash':rev['candidate_hash'], 'expected_facts_hash':rev['expected_facts_hash'],
+                    'scope_id':scope['scope_id'], 'source_issue_ids':scope['source_issue_ids'],
+                    'operations':[{'operation_id':'part-edit', 'op':'update_entity', 'target_id':filling['id'],
+                        'target_component_hash':hashes[filling['id']],
+                        'evidence_refs':[i+':/actual' for i in scope['source_issue_ids']], **edit}]}
+                return SequenceProvider([payload]).generate_live(**kwargs)
+&gt;       result = run_scoped_changeset_round(provider=Provider(), output_dir=tmp_path/'round', case_id='part-cleanup',
+            round_number=1, user_request='框保留指定色，其他通道遵循默认主题。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_part_appearance_recovery.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[erase_requested-True-2.6]" time="0.450"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_public_part_cleanup_is_sc5')
+keep_requested = True, attack = 'erase_requested', brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    @pytest.mark.parametrize('keep_requested', [False, True])
+    @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
+    def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
+        candidate, brief, expected, filling = fixture()
+        candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+        requested = {'frame': {'color': [.1, .2, .3]}}
+        filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
+        brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
+        brief['known_facts']['semantic_review'] = review(**({'appearance': True, 'template': True} if keep_requested else {}))
+        if keep_requested:
+            brief['known_facts']['semantic_requirements'] = [{'entity_id': filling['id'], 'part_appearance': requested,
+                'template': {'template_id': 'door-left', 'template_version': 'text2ifc/basic-filling/1.0'}}]
+        for name, payload in [('generator/candidate', candidate), ('design-brief', brief), ('expected-facts', expected)]:
+            _write(tmp_path/(name+'.json'), payload)
+        assert not run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='part-cleanup')['compile_reopen_success']
+        before = copy.deepcopy(candidate); hashes = build_candidate_index(candidate)['component_hashes']
+        class Provider:
+            def generate_live(self, **kwargs):
+                root = tmp_path/'round'
+                scope = json.loads((root/'change-scope.json').read_text(encoding='utf-8'))
+                rev = json.loads((root/'base-revision.json').read_text(encoding='utf-8'))
+                edit = {'changes': {'/part_appearance': requested}} if keep_requested else {'remove_paths': ['/part_appearance']}
+                if attack == 'geometry': edit.setdefault('changes', {})['/attributes/OverallWidth'] = 999
+                if attack == 'erase_requested' and keep_requested: edit = {'remove_paths': ['/part_appearance']}
+                payload = {'schema_version': kwargs['schema']['properties']['schema_version']['const'],
+                    'changeset_id':'part-cleanup', 'base_revision_id':rev['revision_id'],
+                    'base_candidate_hash':rev['candidate_hash'], 'expected_facts_hash':rev['expected_facts_hash'],
+                    'scope_id':scope['scope_id'], 'source_issue_ids':scope['source_issue_ids'],
+                    'operations':[{'operation_id':'part-edit', 'op':'update_entity', 'target_id':filling['id'],
+                        'target_component_hash':hashes[filling['id']],
+                        'evidence_refs':[i+':/actual' for i in scope['source_issue_ids']], **edit}]}
+                return SequenceProvider([payload]).generate_live(**kwargs)
+&gt;       result = run_scoped_changeset_round(provider=Provider(), output_dir=tmp_path/'round', case_id='part-cleanup',
+            round_number=1, user_request='框保留指定色，其他通道遵循默认主题。', conversation=[],
+            design_brief=brief, expected_facts=expected, candidate=candidate,
+            issues=normalize_gate_sidecars(tmp_path), max_attempts=1)
+
+tests\agent\test_part_appearance_recovery.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:103: in run_changeset_stage
+    rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_new_brief_clarification_resumes_after_reopen_without_replaying_call[2.6]" time="0.180"><failure message="text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-public-01/test_new_brief_clarification_r0')
+brief_version = '2.6'
+
+    @pytest.mark.parametrize('brief_version',['2.5','2.6'])
+    def test_new_brief_clarification_resumes_after_reopen_without_replaying_call(tmp_path,brief_version):
+        from types import SimpleNamespace
+        from tests.agent.test_interactive_cli_flow import _brief
+        from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker, run_design_brief_clarification_loop
+        from text2ifc_agent.openai_compat import load_openai_compatible_runtime_config
+        from text2ifc_agent.session_store import SessionStore
+        request = '创建6米乘4米房间和墙体。房门左单开，框为深灰色；整门又要求白色，请确认如何表达。'
+        first = _brief(original_request=request, status='needs_clarification')
+        ready = _brief(original_request=request, status='ready', source_turns=['turn-user-001', 'turn-user-003'])
+        for b in (first, ready):
+            b['schema_version'] = 'text2ifc/design-brief/'+brief_version
+            b['known_facts'].update(plan_constraints=[], semantic_review=review(appearance=True, template=True))
+            b['known_facts']['semantic_requirements'] = [{'entity_id':'door-request',
+                'template':{'template_id':'door-left','template_version':'text2ifc/basic-filling/1.0'},
+                'part_appearance':{'frame':{'color':[.1,.2,.3]}}}]
+        first['known_facts']['semantic_requirements'][0]['appearance'] = {'color':[1,1,1]}
+        first['missing_facts'][0].update(code='PART_APPEARANCE_CONFLICT', path='/known_facts/semantic_requirements',
+            message='整门白色与深灰框冲突。', reason='整件与部件样式需要确定一种表达。')
+        first['clarification_questions'][0].update(text='保留深灰框，取消整门统一白色吗？', reason='解决整件和部件外观冲突。')
+        for e in ready['known_facts']['semantic_review'].values(): e['source_turns'] = ['turn-user-001', 'turn-user-003']
+        payloads = [first, ready]; sent = []
+        def create(**kwargs):
+            sent.append(kwargs)
+            result={'id':f'fake-clarification-{len(sent)}','model':'fake',
+                'choices':[{'finish_reason':'stop','message':{'content':json.dumps(payloads.pop(0))}}],
+                'usage':{'prompt_tokens':10,'completion_tokens':20,'total_tokens':30}}
+            return SimpleNamespace(model_dump=lambda:result)
+        config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'fake-key',
+            'OPENAI_BASE_URL':'https://example.invalid','TEXT2IFC_DEEPSEEK_MODEL':'fake'})
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input=request)
+        def invoker():
+            return make_openai_design_brief_invoker(config=config, run_dir=session.run_dir,
+                design_brief_schema_version='text2ifc/design-brief/'+brief_version,
+                client_factory=lambda **_:SimpleNamespace(chat=SimpleNamespace(completions=SimpleNamespace(create=create))))
+&gt;       result=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoker(),user_answers=[])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_part_appearance_recovery.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:430: in run_design_brief_clarification_loop
+    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:180: in invoke
+    rendered = render_prompt(
+src\text2ifc_agent\prompt_registry.py:79: in render_prompt
+    registry = load_prompt_registry(registry_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+registry_path = WindowsPath('E:/code for project/bimnet/prompts/agent/registry.json')
+
+    def load_prompt_registry(
+        registry_path: Path | str = DEFAULT_REGISTRY_PATH,
+    ) -&gt; dict[str, dict[str, Any]]:
+        """Load templates keyed by ID and verify their content hashes."""
+        path = Path(registry_path)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        templates = payload.get("templates")
+        if not isinstance(templates, list):
+            raise PromptRegistryError("prompt registry templates must be a list")
+    
+        registry: dict[str, dict[str, Any]] = {}
+        for raw_template in templates:
+            if not isinstance(raw_template, dict):
+                raise PromptRegistryError("prompt registry template must be an object")
+            missing = [field for field in REQUIRED_TEMPLATE_FIELDS if field not in raw_template]
+            if missing:
+                raise PromptRegistryError(
+                    "prompt template missing required fields: " + ", ".join(missing)
+                )
+            template = dict(raw_template)
+            template_id = str(template["template_id"])
+            if template_id in registry:
+                raise PromptRegistryError(f"duplicate prompt template_id: {template_id}")
+            template_path = _project_path(str(template["path"]))
+            actual_hash = _template_sha256(template_path)
+            if template["sha256"] != actual_hash:
+&gt;               raise PromptRegistryError(
+                    f"prompt template hash mismatch for {template_id}: {actual_hash}"
+                )
+E               text2ifc_agent.prompt_registry.PromptRegistryError: prompt template hash mismatch for design-brief.v2.20: sha256:e24a6d49134c5532e951182fa50478d4f24fbc65d88515da8ed8e08dcdbd7cb8
+
+src\text2ifc_agent\prompt_registry.py:65: PromptRegistryError</failure></testcase></testsuite></testsuites>

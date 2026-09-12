@@ -20,4 +20,12 @@
 
 第一版真实运行保存在[报告](../../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/continuation-01/REPORT.md)，提交532a4a4c，人工未验收。原自动loop失败、确定性修复和后续真实Audit成功分别记录。
 
-第二版使用新目录及独立输入，不覆盖旧数据。新的完整运行不复用候选；共享费用账本继续保留此前9次/750000 token，预算改变须明确说明。当前尚未冻结第二版最终输入，尚未执行新的真实调用。后续运行保留每个阶段原始响应、失败、修复原因、token和最终IFC，最终实际出图交人工检查后再决定Proof。
+第二版使用新目录及独立输入，不覆盖旧数据。新的完整运行不复用候选；共享费用账本继续保留此前9次/750000 token，预算改变须明确说明。本段记录设计初稿时的检查点；最终输入与后续进度见下节，新的真实调用尚未执行。后续运行保留每个阶段原始响应、失败、修复原因、token和最终IFC，最终实际出图交人工检查后再决定Proof。
+
+## 2026-09-12 实施与新输入位置
+
+第一版532a4a4c已按用户明确授权推送。梁柱公共语义修复为7df706b2；有界细杆护栏及新版本公共接入的代码与离线验证正在收尾，尚未宣称第二版真实生成完成。
+
+[第二版输入](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/request.txt)已按委托设计冻结；[独立预期](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/expected-independent.json)在Provider候选出现前建立，不作为模型输入。两层开敞U形，外露北上直梯和连接平台，20根柱、6条梁、14段水平/斜细杆护栏；不建家具植物。精确几何以冻结请求为准。
+
+新增合同：Brief2.6→BIM JSON2.3；Draft1.3、ChangeSet1.3；basic_railing的metal-picket模板text2ifc/basic-railing/1.0。仅在新版本中允许新表示，旧版默认与Repair几何不变。实际杆件、坡向及参数来源需从重开IFC核对。完整失败/成功记录见[调试报告](../../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/railing-debug/REPORT.md)。本轮是具体缺陷修复和可行性验证，不是盲测能力提升或建筑施工合规证明。

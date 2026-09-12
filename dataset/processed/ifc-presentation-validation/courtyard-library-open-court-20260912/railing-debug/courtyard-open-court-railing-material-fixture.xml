@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="5" skipped="0" tests="16" time="22.638" timestamp="2026-09-12T17:31:31.166000+08:00" hostname="what-do-matter"><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[0-0-0]" time="1.943"><failure message="AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),))&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),)).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-rail-pytest-03/test_serialized_railing_has_re0')
+rise = 0, yaw = 0, elevation = 0
+
+    @pytest.mark.parametrize("rise,yaw,elevation", [(0,0,0),(0,90,4200),(1800,0,0),(1800,90,4200),(-1800,0,4200)])
+    def test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope(tmp_path,rise,yaw,elevation):
+        source=document(rise=rise,yaw=yaw,elevation=elevation);before=deepcopy(source)
+        result=compile_document(source,tmp_path/'railing.ifc')
+&gt;       assert result.success,(result.input_issues,result.ifc_issues)
+E       AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),))
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),)).success
+
+tests\compiler\test_basic_railing.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[0-90-4200]" time="3.290"><failure message="AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),))&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),)).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-rail-pytest-03/test_serialized_railing_has_re1')
+rise = 0, yaw = 90, elevation = 4200
+
+    @pytest.mark.parametrize("rise,yaw,elevation", [(0,0,0),(0,90,4200),(1800,0,0),(1800,90,4200),(-1800,0,4200)])
+    def test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope(tmp_path,rise,yaw,elevation):
+        source=document(rise=rise,yaw=yaw,elevation=elevation);before=deepcopy(source)
+        result=compile_document(source,tmp_path/'railing.ifc')
+&gt;       assert result.success,(result.input_issues,result.ifc_issues)
+E       AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),))
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),)).success
+
+tests\compiler\test_basic_railing.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[1800-0-0]" time="3.352"><failure message="AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),))&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),)).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-rail-pytest-03/test_serialized_railing_has_re2')
+rise = 1800, yaw = 0, elevation = 0
+
+    @pytest.mark.parametrize("rise,yaw,elevation", [(0,0,0),(0,90,4200),(1800,0,0),(1800,90,4200),(-1800,0,4200)])
+    def test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope(tmp_path,rise,yaw,elevation):
+        source=document(rise=rise,yaw=yaw,elevation=elevation);before=deepcopy(source)
+        result=compile_document(source,tmp_path/'railing.ifc')
+&gt;       assert result.success,(result.input_issues,result.ifc_issues)
+E       AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),))
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),)).success
+
+tests\compiler\test_basic_railing.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[1800-90-4200]" time="3.263"><failure message="AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),))&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),)).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-rail-pytest-03/test_serialized_railing_has_re3')
+rise = 1800, yaw = 90, elevation = 4200
+
+    @pytest.mark.parametrize("rise,yaw,elevation", [(0,0,0),(0,90,4200),(1800,0,0),(1800,90,4200),(-1800,0,4200)])
+    def test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope(tmp_path,rise,yaw,elevation):
+        source=document(rise=rise,yaw=yaw,elevation=elevation);before=deepcopy(source)
+        result=compile_document(source,tmp_path/'railing.ifc')
+&gt;       assert result.success,(result.input_issues,result.ifc_issues)
+E       AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),))
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),)).success
+
+tests\compiler\test_basic_railing.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_basic_railing" name="test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope[-1800-0-4200]" time="3.433"><failure message="AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),))&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;, &quot;top_rail_height&quot;: &quot;text2ifc/basic-railing/1.0:metal-picket&quot;}\'}}.'),)).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-rail-pytest-03/test_serialized_railing_has_re4')
+rise = -1800, yaw = 0, elevation = 4200
+
+    @pytest.mark.parametrize("rise,yaw,elevation", [(0,0,0),(0,90,4200),(1800,0,0),(1800,90,4200),(-1800,0,4200)])
+    def test_serialized_railing_has_real_pickets_and_handrails_inside_frozen_envelope(tmp_path,rise,yaw,elevation):
+        source=document(rise=rise,yaw=yaw,elevation=elevation);before=deepcopy(source)
+        result=compile_document(source,tmp_path/'railing.ifc')
+&gt;       assert result.success,(result.input_issues,result.ifc_issues)
+E       AssertionError: ((), (IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', entity='guard', attribute='property_sets', message='Authored di...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),))
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(), ifc_issues=(IfcValidationIssue(code='IFC_SEMANTIC_MISMATCH', enti...th": "text2ifc/basic-railing/1.0:metal-picket", "top_rail_height": "text2ifc/basic-railing/1.0:metal-picket"}\'}}.'),)).success
+
+tests\compiler\test_basic_railing.py:37: AssertionError</failure></testcase><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch0]" time="0.804" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch1]" time="0.584" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch2]" time="0.588" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch3]" time="0.628" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch4]" time="0.596" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch5]" time="0.596" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch6]" time="0.148" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch7]" time="0.163" /><testcase classname="tests.compiler.test_basic_railing" name="test_invalid_railing_parameters_do_not_replace_an_existing_output[patch8]" time="0.144" /><testcase classname="tests.compiler.test_basic_railing" name="test_legacy_representation_contract_does_not_acquire_new_railing_meaning" time="0.153" /><testcase classname="tests.compiler.test_basic_railing" name="test_railing_template_cannot_be_attached_to_a_column" time="0.705" /></testsuite></testsuites>

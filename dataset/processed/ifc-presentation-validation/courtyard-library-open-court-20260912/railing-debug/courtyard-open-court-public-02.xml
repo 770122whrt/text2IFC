@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="10" skipped="0" tests="23" time="64.916" timestamp="2026-09-12T17:57:28.739315+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.6-legacy_full]" time="2.336" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-single-2.6-staged]" time="0.948"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:65: in test_public_strategies_preserve_explicit_material_and_property
+    result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.6-legacy_full]" time="2.192" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[window-double-vertical-2.6-staged]" time="0.945"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:65: in test_public_strategies_preserve_explicit_material_and_property
+    result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.6-legacy_full]" time="2.225" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-left-2.6-staged]" time="0.937"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:65: in test_public_strategies_preserve_explicit_material_and_property
+    result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.6-legacy_full]" time="2.266" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_public_strategies_preserve_explicit_material_and_property[door-right-2.6-staged]" time="0.973"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:65: in test_public_strategies_preserve_explicit_material_and_property
+    result = run_staged_generation(provider=provider,output_dir=tmp_path/'generator',case_id='public',
+src\text2ifc_agent\staged_generation.py:136: in run_staged_generation
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-False-False]" time="6.570" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-False-True]" time="6.968" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-True-False]" time="6.340" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-False-True-True]" time="6.703" /><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-False-False]" time="4.687"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:246: in test_ready_session_public_chain_reaches_final_acceptance
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:732: in _run_ready_session_to_ifc
+    repair = run_repair_stage(
+src\text2ifc_agent\live_pipeline.py:955: in run_repair_stage
+    scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-False-True]" time="4.784"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:246: in test_ready_session_public_chain_reaches_final_acceptance
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:732: in _run_ready_session_to_ifc
+    repair = run_repair_stage(
+src\text2ifc_agent\live_pipeline.py:955: in run_repair_stage
+    scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-True-False]" time="4.754"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:246: in test_ready_session_public_chain_reaches_final_acceptance
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:732: in _run_ready_session_to_ifc
+    repair = run_repair_stage(
+src\text2ifc_agent\live_pipeline.py:955: in run_repair_stage
+    scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_semantic_public_paths" name="test_ready_session_public_chain_reaches_final_acceptance[2.6-True-True-True]" time="4.697"><failure message="IndexError: list index out of range">tests\agent\test_semantic_public_paths.py:246: in test_ready_session_public_chain_reaches_final_acceptance
+    result=run_ready_session_to_ifc(store=store,session=session.session_hash,provider_factory=lambda:provider)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_agent\interactive_cli_flow.py:509: in run_ready_session_to_ifc
+    return _run_ready_session_to_ifc(store=store, session=session,
+src\text2ifc_agent\interactive_cli_flow.py:732: in _run_ready_session_to_ifc
+    repair = run_repair_stage(
+src\text2ifc_agent\live_pipeline.py:955: in run_repair_stage
+    scoped = run_scoped_changeset_round(provider=provider_factory(), output_dir=output/'scoped',
+src\text2ifc_agent\scoped_loop.py:156: in run_scoped_changeset_round
+    stage = run_changeset_stage(
+src\text2ifc_agent\changeset_stage.py:112: in run_changeset_stage
+    result = provider.generate_live(
+src\text2ifc_agent\generation_budget.py:174: in generate_live
+    result = self.provider.generate_live(**kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_phase6_5_staged_generation.py:200: in generate_live
+    payload = self.payloads[len(self.calls)]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   IndexError: list index out of range</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[none-False-2.6]" time="0.574"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': 'Optional field removal requires an ex...semantic correction, current field and scope.', 'path': '/operations/0'}], 'preservation': None, 'revision': None, ...}&#10;assert False is True">tests\agent\test_part_appearance_recovery.py:53: in test_public_part_cleanup_is_scoped_and_atomic
+    assert result['valid'] is success, result
+E   AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': 'Optional field removal requires an ex...semantic correction, current field and scope.', 'path': '/operations/0'}], 'preservation': None, 'revision': None, ...}
+E   assert False is True</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[none-True-2.6]" time="0.888" /><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[geometry-False-2.6]" time="0.520" /><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[geometry-True-2.6]" time="0.562" /><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[erase_requested-False-2.6]" time="0.500"><failure message="AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': 'Optional field removal requires an ex...semantic correction, current field and scope.', 'path': '/operations/0'}], 'preservation': None, 'revision': None, ...}&#10;assert False is True">tests\agent\test_part_appearance_recovery.py:53: in test_public_part_cleanup_is_scoped_and_atomic
+    assert result['valid'] is success, result
+E   AssertionError: {'candidate': None, 'issues': [{'code': 'CHANGESET_SCOPE_VIOLATION', 'message': 'Optional field removal requires an ex...semantic correction, current field and scope.', 'path': '/operations/0'}], 'preservation': None, 'revision': None, ...}
+E   assert False is True</failure></testcase><testcase classname="tests.agent.test_part_appearance_recovery" name="test_public_part_cleanup_is_scoped_and_atomic[erase_requested-True-2.6]" time="0.505" /><testcase classname="tests.agent.test_part_appearance_recovery" name="test_new_brief_clarification_resumes_after_reopen_without_replaying_call[2.6]" time="0.499" /></testsuite></testsuites>
