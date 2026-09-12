@@ -54,6 +54,8 @@ C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次
 
 ## main 已保留的开发历史与 Zcode 记录
 
+[Zcode 历史恢复与重构参考](zcode-history-20260913/README.md) 接续原根 archive：保留轻量合同、清单与 66 份重构代码差异，完整旧运行／失败／数据快照通过固定 Git/LFS 修订恢复。整套旧镜像不再作为待合并任务；当前 Proof 不迁移。
+
 [开发辅助归档](development-support-20260912/README.md) 保存此前收纳的 319 份脚本与测试记录；其旧目录是否已退役，以最新[整理报告](../../../docs/reports/development-cleanup-20260912/REPORT.md)及逐路径映射为准。
 
 [Zcode C1–C5 历史离线记录](repair-c1-c5-offline-20260903-v2/README.md) 与[真实运行 Proof](../proof/repair/phase12/c1-c5-damage-restoration/REPORT.md) 分开保留，不将 offline replay 计为真实 Provider 成功。
