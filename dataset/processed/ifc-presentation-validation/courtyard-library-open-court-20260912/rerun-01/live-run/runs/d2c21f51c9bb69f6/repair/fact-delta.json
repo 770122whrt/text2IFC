@@ -1,0 +1,156 @@
+{
+  "change_count": 16,
+  "changes": [
+    {
+      "after": {},
+      "before": null,
+      "kind": "added",
+      "path": "/entities/10/property_sets"
+    },
+    {
+      "after": null,
+      "before": true,
+      "kind": "removed",
+      "path": "/entities/10/property_sets/Pset_SpaceCommon/IsExternal"
+    },
+    {
+      "after": {},
+      "before": null,
+      "kind": "added",
+      "path": "/entities/14/property_sets"
+    },
+    {
+      "after": null,
+      "before": true,
+      "kind": "removed",
+      "path": "/entities/14/property_sets/Pset_SpaceCommon/IsExternal"
+    },
+    {
+      "after": {},
+      "before": null,
+      "kind": "added",
+      "path": "/entities/15/property_sets"
+    },
+    {
+      "after": null,
+      "before": true,
+      "kind": "removed",
+      "path": "/entities/15/property_sets/Pset_SpaceCommon/IsExternal"
+    },
+    {
+      "after": {},
+      "before": null,
+      "kind": "added",
+      "path": "/entities/16/property_sets"
+    },
+    {
+      "after": null,
+      "before": true,
+      "kind": "removed",
+      "path": "/entities/16/property_sets/Pset_SpaceCommon/IsExternal"
+    },
+    {
+      "after": {},
+      "before": null,
+      "kind": "added",
+      "path": "/entities/8/property_sets"
+    },
+    {
+      "after": null,
+      "before": true,
+      "kind": "removed",
+      "path": "/entities/8/property_sets/Pset_SpaceCommon/IsExternal"
+    },
+    {
+      "after": {},
+      "before": null,
+      "kind": "added",
+      "path": "/entities/9/property_sets"
+    },
+    {
+      "after": null,
+      "before": true,
+      "kind": "removed",
+      "path": "/entities/9/property_sets/Pset_SpaceCommon/IsExternal"
+    },
+    {
+      "after": "回廊空间的 EXTERNAL 语义仅通过 IfcSpace.InteriorOrExteriorSpace 表达，未再写校验未声明的 Pset_SpaceCommon.IsExternal 属性。",
+      "before": "外观只写冻结 semantic_requirements 中对应 entity_id 的显式值：墙/板/楼梯整件 #E6E0D3，梁柱 #D2C7B3，护栏 #304B4D 不透明；门窗不使用整件色，仅用 part_appearance（框 #304B4D、门扇 #A66F43、玻璃透明度 0.65，保留默认色）。",
+      "kind": "changed",
+      "path": "/provenance/report/determinism_checks/6"
+    },
+    {
+      "after": "外观只写冻结 semantic_requirements 中对应 entity_id 的显式值：墙/板/楼梯整件 #E6E0D3，梁柱 #D2C7B3，护栏 #304B4D 不透明；门窗不使用整件色，仅用 part_appearance（框 #304B4D、门扇 #A66F43、玻璃透明度 0.65，保留默认色）。",
+      "before": "未创建用户未请求的用户自定义 Type/Style；basic_filling 的最小门/窗样式交由编译器确定性生成。",
+      "kind": "changed",
+      "path": "/provenance/report/determinism_checks/7"
+    },
+    {
+      "after": "未创建用户未请求的用户自定义 Type/Style；basic_filling 的最小门/窗样式交由编译器确定性生成。",
+      "before": null,
+      "kind": "added",
+      "path": "/provenance/report/determinism_checks/8"
+    },
+    {
+      "after": "本次为单次证据约束修复：依据校验反馈 UNKNOWN_STANDARD_PROPERTY，删除 6 个回廊 IfcSpace 上校验未声明的 Pset_SpaceCommon.IsExternal 属性；回廊 EXTERNAL 语义仍由 IfcSpace.InteriorOrExteriorSpace = EXTERNAL 承载，未新增任何事实、构件、尺寸或关系。",
+      "before": null,
+      "kind": "added",
+      "path": "/provenance/report/repair_note"
+    }
+  ],
+  "issue_count": 10,
+  "issues": [
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/entities/10/property_sets"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/entities/14/property_sets"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/entities/15/property_sets"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/entities/16/property_sets"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/entities/8/property_sets"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/entities/9/property_sets"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/provenance/report/determinism_checks/6"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/provenance/report/determinism_checks/7"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/provenance/report/determinism_checks/8"
+    },
+    {
+      "code": "UNPERMITTED_FACT_DELTA",
+      "message": "Repair changed a path outside deterministic feedback.",
+      "path": "/provenance/report/repair_note"
+    }
+  ],
+  "schema_version": "text2ifc/repair-fact-delta/1.0",
+  "valid": false
+}

@@ -1,0 +1,101 @@
+{
+  "status": "pending_human_review",
+  "machine_status": "compiled_and_audit_accepted",
+  "human_status": "not_reviewed",
+  "ifc": "generated-open-court.ifc",
+  "ifc_sha256": "650accdb5131b1ae3fdc26e5af000029deb4860fe6f38571dcad174d8ff9b39d",
+  "ifc_bytes": 1161796,
+  "source_ifc": "live-run/runs/ce8116ce095acdcf/output.ifc",
+  "run_id": "ce8116ce095acdcf",
+  "full_fresh_provider_loop": true,
+  "provider": "api.deepseek.com",
+  "model": "deepseek-v4-flash",
+  "stages": [
+    "design-brief",
+    "generate",
+    "audit"
+  ],
+  "repair_provider_calls": 0,
+  "independent_check": "independent-final-v3.json",
+  "independent_checks_passed": 545,
+  "evaluator_revision": "requested-hex8-readback/2.1",
+  "visual_review": "Agent inspected actual IFC overall, open front, roof-hidden courtyard, stair, window, door and railing; no added geometry or recolouring.",
+  "not_proven": [
+    "engineering/code compliance",
+    "structural performance",
+    "system-level reliability improvement",
+    "publication-ready scientific figure quality"
+  ],
+  "proof_registered": false,
+  "usage": [
+    {
+      "stage": "Brief",
+      "usage": {
+        "completion_tokens": 49984,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 30208,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 25856,
+        "prompt_cache_miss_tokens": 185,
+        "prompt_tokens": 26041,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 25856
+        },
+        "total_tokens": 76025
+      }
+    },
+    {
+      "stage": "Generator",
+      "usage": {
+        "completion_tokens": 59334,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 18753,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 4992,
+        "prompt_cache_miss_tokens": 54385,
+        "prompt_tokens": 59377,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 4992
+        },
+        "total_tokens": 118711
+      }
+    },
+    {
+      "stage": "Audit",
+      "usage": {
+        "completion_tokens": 12034,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 9729,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 1024,
+        "prompt_cache_miss_tokens": 109739,
+        "prompt_tokens": 110763,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 1024
+        },
+        "total_tokens": 122797
+      }
+    }
+  ],
+  "current_loop_tokens": 317533,
+  "cumulative_calls": 17,
+  "cumulative_tokens": 1591587,
+  "cumulative_active_seconds": 2723.014000000083,
+  "production_commits": [
+    "2cf18d56",
+    "ee94b2a4",
+    "1e46a1fb"
+  ]
+}

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="7" time="2.708" timestamp="2026-09-12T19:47:51.413555+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_stair_appearance_target" name="test_assembly_style_is_rejected_and_actual_flight_targets_are_legal[access-None]" time="0.099"><failure message="AssertionError: assert 'SEMANTIC_APPEARANCE_TARGET_ROLE' in set()">identity = 'access', flights = None
+
+    @pytest.mark.parametrize('identity,flights', [('access', None), ('stair-east', ['rise-a', 'rise-b'])])
+    def test_assembly_style_is_rejected_and_actual_flight_targets_are_legal(identity, flights):
+        from text2ifc_agent.cross_storey_identity import stair_flight_ids
+        _, brief = stair_brief(identity, flights)
+        before = copy.deepcopy(brief)
+        bad = project_semantic_requirements(brief)
+&gt;       assert 'SEMANTIC_APPEARANCE_TARGET_ROLE' in {x['code'] for x in bad['issues']}
+E       AssertionError: assert 'SEMANTIC_APPEARANCE_TARGET_ROLE' in set()
+
+tests\agent\test_stair_appearance_target.py:26: AssertionError</failure></testcase><testcase classname="tests.agent.test_stair_appearance_target" name="test_assembly_style_is_rejected_and_actual_flight_targets_are_legal[stair-east-flights1]" time="0.080"><failure message="AssertionError: assert 'SEMANTIC_APPEARANCE_TARGET_ROLE' in set()">identity = 'stair-east', flights = ['rise-a', 'rise-b']
+
+    @pytest.mark.parametrize('identity,flights', [('access', None), ('stair-east', ['rise-a', 'rise-b'])])
+    def test_assembly_style_is_rejected_and_actual_flight_targets_are_legal(identity, flights):
+        from text2ifc_agent.cross_storey_identity import stair_flight_ids
+        _, brief = stair_brief(identity, flights)
+        before = copy.deepcopy(brief)
+        bad = project_semantic_requirements(brief)
+&gt;       assert 'SEMANTIC_APPEARANCE_TARGET_ROLE' in {x['code'] for x in bad['issues']}
+E       AssertionError: assert 'SEMANTIC_APPEARANCE_TARGET_ROLE' in set()
+
+tests\agent\test_stair_appearance_target.py:26: AssertionError</failure></testcase><testcase classname="tests.agent.test_stair_appearance_target" name="test_correcting_assembly_target_cannot_erase_or_redirect_colour[missing]" time="0.052"><failure message="AssertionError: assert False&#10; +  where False = recoverable_value_loss({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...}, {'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...})">attack = 'missing'
+
+    @pytest.mark.parametrize('attack', ['missing', 'other_target', 'changed_colour'])
+    def test_correcting_assembly_target_cannot_erase_or_redirect_colour(attack):
+        _, before = stair_brief('access', ['first', 'second'])
+        after = copy.deepcopy(before)
+        rows = [{**before['known_facts']['semantic_requirements'][0], 'entity_id': t} for t in ['first', 'second']]
+        if attack == 'missing': rows.pop()
+        if attack == 'other_target': rows[0]['entity_id'] = 'unrelated'
+        if attack == 'changed_colour': rows[0]['appearance'] = {'color': [0, 0, 0]}
+        after['known_facts']['semantic_requirements'] = rows
+&gt;       assert recoverable_value_loss(before, after)
+E       AssertionError: assert False
+E        +  where False = recoverable_value_loss({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...}, {'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...})
+
+tests\agent\test_stair_appearance_target.py:45: AssertionError</failure></testcase><testcase classname="tests.agent.test_stair_appearance_target" name="test_correcting_assembly_target_cannot_erase_or_redirect_colour[other_target]" time="0.054"><failure message="AssertionError: assert False&#10; +  where False = recoverable_value_loss({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...}, {'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...})">attack = 'other_target'
+
+    @pytest.mark.parametrize('attack', ['missing', 'other_target', 'changed_colour'])
+    def test_correcting_assembly_target_cannot_erase_or_redirect_colour(attack):
+        _, before = stair_brief('access', ['first', 'second'])
+        after = copy.deepcopy(before)
+        rows = [{**before['known_facts']['semantic_requirements'][0], 'entity_id': t} for t in ['first', 'second']]
+        if attack == 'missing': rows.pop()
+        if attack == 'other_target': rows[0]['entity_id'] = 'unrelated'
+        if attack == 'changed_colour': rows[0]['appearance'] = {'color': [0, 0, 0]}
+        after['known_facts']['semantic_requirements'] = rows
+&gt;       assert recoverable_value_loss(before, after)
+E       AssertionError: assert False
+E        +  where False = recoverable_value_loss({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...}, {'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...})
+
+tests\agent\test_stair_appearance_target.py:45: AssertionError</failure></testcase><testcase classname="tests.agent.test_stair_appearance_target" name="test_correcting_assembly_target_cannot_erase_or_redirect_colour[changed_colour]" time="0.148"><failure message="AssertionError: assert False&#10; +  where False = recoverable_value_loss({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...}, {'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...})">attack = 'changed_colour'
+
+    @pytest.mark.parametrize('attack', ['missing', 'other_target', 'changed_colour'])
+    def test_correcting_assembly_target_cannot_erase_or_redirect_colour(attack):
+        _, before = stair_brief('access', ['first', 'second'])
+        after = copy.deepcopy(before)
+        rows = [{**before['known_facts']['semantic_requirements'][0], 'entity_id': t} for t in ['first', 'second']]
+        if attack == 'missing': rows.pop()
+        if attack == 'other_target': rows[0]['entity_id'] = 'unrelated'
+        if attack == 'changed_colour': rows[0]['appearance'] = {'color': [0, 0, 0]}
+        after['known_facts']['semantic_requirements'] = rows
+&gt;       assert recoverable_value_loss(before, after)
+E       AssertionError: assert False
+E        +  where False = recoverable_value_loss({'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...}, {'ambiguities': [], 'clarification_questions': [], 'fact_sources': [], 'known_facts': {'plan_constraints': [], 'semant...rn-user-001'], 'status': 'not_specified'}, ...}, 'stairs': [{'flight_ids': ['first', 'second'], 'id': 'access'}]}, ...})
+
+tests\agent\test_stair_appearance_target.py:45: AssertionError</failure></testcase><testcase classname="tests.agent.test_stair_appearance_target" name="test_legacy_contract_keeps_prior_target_rules" time="0.062" /><testcase classname="tests.agent.test_stair_appearance_target" name="test_public_semantic_repair_retargets_only_appearance" time="0.391"><failure message="AssertionError: {'issues': [], 'status': 'not_eligible', 'valid': False}&#10;assert False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/stair-target-red/test_public_semantic_repair_re0')
+
+    def test_public_semantic_repair_retargets_only_appearance(tmp_path):
+        from text2ifc_agent.brief_semantic_repair import repair_semantic_brief
+        from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+        case, before = stair_brief()
+        after = copy.deepcopy(before)
+        after['known_facts']['semantic_requirements'][0]['entity_id'] = 'access-flight'
+        result = repair_semantic_brief(provider=SequenceProvider([after]), output_dir=tmp_path/'repair',
+            brief=before, case=case, evidence_catalog=[], session_id='stair-target')
+&gt;       assert result['valid'], result
+E       AssertionError: {'issues': [], 'status': 'not_eligible', 'valid': False}
+E       assert False
+
+tests\agent\test_stair_appearance_target.py:62: AssertionError</failure></testcase></testsuite></testsuites>

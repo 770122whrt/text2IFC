@@ -16,9 +16,13 @@ progress:
 
 ## 当前工作：光庭阅读馆 Generation（2026-09-12）
 
-用户要求开启 goal 完成光庭 IFC。`ff2e23cd`（Brief语义角色和受限恢复）与 `e390c046`（屋盖洞口投影／重开验证）已推送当前 `codex/workflow-dataset-links` 分支。新运行器完成3项预算继承／公共完成／失败阻断离线检查，局部准入已准备。真实启动被自动审批要求具体载荷与 api.deepseek.com 的明确授权而拦截；当前没有新 Provider attempt，累计仍1次／71,204 token。原始失败、预算和已有Proof保留，尚无光庭整栋IFC，不登记Proof。
+光庭第二版按概念图右上角深化为两层南侧敞开U形、外露楼梯、20柱6梁、14细杆护栏、44窗6门，不含家具植物。第一版完整包532a4a4c已保留并推送，未按新方案验收。当前分支codex/workflow-dataset-links；通用修复2cf18d56区分开敞墙布局检查与完整墙环，ee94b2a4前移属性校验并明确梯段外观目标，1e46a1fb补严格等价矩形表示转换。
 
-执行入口与证据：[光庭设计](../docs/architecture/courtyard-library-design.md)、[运行报告](../dataset/processed/ifc-presentation-validation/courtyard-library-20260912/REPORT.md)。A/B/C历史验收结论不变；下方清理与Phase记录是旧检查点。
+第二版rerun-03（ce8116ce095acdcf）已从全新真实Brief完成Generator/Audit并发布IFC，无候选修复调用；本loop317,533 token。独立正式IFC复核545项通过、111实体网格化成功；Agent实际视图检查完成，待用户人工验收，尚未登记accepted Proof。最终文件SHA256：650accdb5131b1ae3fdc26e5af000029deb4860fe6f38571dcad174d8ff9b39d。
+
+全部失败保留，累计17次、1,591,587 token、2723.014活动秒。主要局部复验245项、139项与运行包装器1项通过，不累加为能力指标；未运行仓库Full Preflight。报告保留原浮点颜色失败与统一HEX重算、Audit强度等级文字勘误。跨轮约束来源与替代管理仍待后续小步。
+
+入口：[交付报告](../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/REPORT.md)、[最终IFC](../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/generated-open-court.ifc)、[输入](../dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/rerun-03/request.txt)。A/B/C历史验收保持；下方是历史检查点。
 
 ## 历史工作：仓库清理与 main 整合（2026-09-12）
 

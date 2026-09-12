@@ -1,0 +1,209 @@
+{
+  "status": "blocked_prompt_defect",
+  "evidence_class": "live",
+  "request_sha256": "ce0072859af9e96de38d194d78eb18d156ddcc52482890fdd7fc5e79f91e36e3",
+  "started_at": "2026-09-12T10:49:25.492686+00:00",
+  "limits": {
+    "max_calls": 32,
+    "max_tokens": 2000000,
+    "max_active_seconds": 3600
+  },
+  "prior_budget_sha256": "2a557f466bcafbb2e5a171f89ead69ba6217e4621e3eaff9dbad0e156f5c6f75",
+  "preseeded_concerns": true,
+  "reused_design_brief": false,
+  "reference_ifc_supplied": false,
+  "generation_strategy": "legacy_full",
+  "run_id": "f6ff16398bbd1f6e",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\courtyard-library-open-court-20260912\\live-run\\runs\\f6ff16398bbd1f6e",
+  "budget_before": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 71204,
+        "reserved_tokens": 139497,
+        "elapsed_seconds": 177.125
+      },
+      {
+        "attempt": 2,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 65768,
+        "reserved_tokens": 141346,
+        "elapsed_seconds": 151.48399999999674
+      },
+      {
+        "attempt": 3,
+        "stage": "design-brief-semantic-repair",
+        "status": "completed",
+        "tokens_charged": 86005,
+        "reserved_tokens": 149538,
+        "elapsed_seconds": 270.0780000000086
+      },
+      {
+        "attempt": 4,
+        "stage": "design-brief",
+        "status": "failed",
+        "tokens_charged": 87291,
+        "reserved_tokens": 141394,
+        "elapsed_seconds": 227.56299999999464
+      },
+      {
+        "attempt": 5,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 65486,
+        "reserved_tokens": 174162,
+        "elapsed_seconds": 160.64000000001397
+      },
+      {
+        "attempt": 6,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 74010,
+        "reserved_tokens": 176763,
+        "elapsed_seconds": 178.76600000000326
+      },
+      {
+        "attempt": 7,
+        "stage": "design-brief-semantic-repair",
+        "status": "completed",
+        "tokens_charged": 59125,
+        "reserved_tokens": 206783,
+        "elapsed_seconds": 64.21900000001187
+      },
+      {
+        "attempt": 8,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 117369,
+        "reserved_tokens": 273680,
+        "elapsed_seconds": 185.46900000001187
+      },
+      {
+        "attempt": 9,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 123742,
+        "reserved_tokens": 422340,
+        "elapsed_seconds": 43.578000000008615
+      }
+    ],
+    "calls_used": 9,
+    "tokens_used_or_reserved": 750000,
+    "active_seconds": 1458.9220000000496
+  },
+  "brief_result": {
+    "case_id": "f6ff16398bbd1f6e",
+    "stage": "design-brief",
+    "status": "blocked_prompt_defect",
+    "valid": false,
+    "schema_semantic_valid": false,
+    "strict_output_contract_valid": true,
+    "output_dir": "dataset/processed/ifc-presentation-validation/courtyard-library-open-court-20260912/live-run/runs/f6ff16398bbd1f6e/calls/01-design-brief",
+    "response_id": "bd62dc6d-f8cd-4ac2-81ff-21e9668aa489",
+    "evidence_class": "live"
+  },
+  "budget_after": {
+    "schema_version": "text2ifc/generation-budget/1.0",
+    "limits": {
+      "max_calls": 32,
+      "max_tokens": 2000000,
+      "max_active_seconds": 3600
+    },
+    "attempts": [
+      {
+        "attempt": 1,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 71204,
+        "reserved_tokens": 139497,
+        "elapsed_seconds": 177.125
+      },
+      {
+        "attempt": 2,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 65768,
+        "reserved_tokens": 141346,
+        "elapsed_seconds": 151.48399999999674
+      },
+      {
+        "attempt": 3,
+        "stage": "design-brief-semantic-repair",
+        "status": "completed",
+        "tokens_charged": 86005,
+        "reserved_tokens": 149538,
+        "elapsed_seconds": 270.0780000000086
+      },
+      {
+        "attempt": 4,
+        "stage": "design-brief",
+        "status": "failed",
+        "tokens_charged": 87291,
+        "reserved_tokens": 141394,
+        "elapsed_seconds": 227.56299999999464
+      },
+      {
+        "attempt": 5,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 65486,
+        "reserved_tokens": 174162,
+        "elapsed_seconds": 160.64000000001397
+      },
+      {
+        "attempt": 6,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 74010,
+        "reserved_tokens": 176763,
+        "elapsed_seconds": 178.76600000000326
+      },
+      {
+        "attempt": 7,
+        "stage": "design-brief-semantic-repair",
+        "status": "completed",
+        "tokens_charged": 59125,
+        "reserved_tokens": 206783,
+        "elapsed_seconds": 64.21900000001187
+      },
+      {
+        "attempt": 8,
+        "stage": "generate",
+        "status": "completed",
+        "tokens_charged": 117369,
+        "reserved_tokens": 273680,
+        "elapsed_seconds": 185.46900000001187
+      },
+      {
+        "attempt": 9,
+        "stage": "audit",
+        "status": "completed",
+        "tokens_charged": 123742,
+        "reserved_tokens": 422340,
+        "elapsed_seconds": 43.578000000008615
+      },
+      {
+        "attempt": 10,
+        "stage": "design-brief",
+        "status": "completed",
+        "tokens_charged": 78490,
+        "reserved_tokens": 185307,
+        "elapsed_seconds": 168.4529999999795
+      }
+    ],
+    "calls_used": 10,
+    "tokens_used_or_reserved": 828490,
+    "active_seconds": 1627.375000000029
+  },
+  "prior_budget_unchanged": true,
+  "finished_at": "2026-09-12T10:52:17.136201+00:00"
+}
