@@ -60,7 +60,7 @@ from text2ifc_ifc_repair.semantic_facts import (
 )
 
 try:
-    from scripts.ifc_repair.validate_success_cases import (
+    from text2ifc_proof.validate_success_cases import (
         _independent_expected_facts,
     )
 except ModuleNotFoundError:  # pragma: no cover - direct script execution

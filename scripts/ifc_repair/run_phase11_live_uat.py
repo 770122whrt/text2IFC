@@ -20,7 +20,7 @@ if str(ROOT) not in sys.path:
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from scripts.ifc_repair.validate_success_cases import (  # noqa: E402
+from text2ifc_proof.validate_success_cases import (  # noqa: E402
     audit_repaired_operations,
 )
 from text2ifc_agent.openai_compat import load_openai_compatible_config  # noqa: E402

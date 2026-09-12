@@ -11,9 +11,15 @@
 
 这验证职责迁移及已覆盖路径的兼容，不代表发现了既有 Gold 泄漏，也不代表系统修复成功率提高。
 
-## 2. Proof 校验独立成包：接入中
+## 2. Proof 校验独立成包：已接入
 
-保留当前校验器中后续新增的结构恢复与冻结路径处理，提取审计与运行器之间的循环依赖。旧 Python 导入、CLI 和冻结证据路径保留。
+`text2ifc_proof` 承接当前集合校验、Door 三方审计和 live transcript 审计。校验器不再导入 curator／runner，10 个脚本消费者直接使用新包；两处旧脚本保留 CLI 与 Python 模块别名。当前后续新增的结构恢复与冻结路径处理保留；集合投影仍使用仓库既有 `scripts/proof/package.py`，本次没有把整个项目改造成独立可分发的 Proof 产品。
+
+103 个 validator 定义、33 个 Door auditor 定义在去除 import 调整后与基线 AST 一致；39 个共享 live 审计定义的 AST 完全一致。新增导入／CLI 检查初始 5 failed，提取后通过。入口／UAT 回归 117 passed、1 failed；R1／结构 Proof 回归 51 passed、15 failed。
+
+16 个失败均在固定提交 `2d1a18bb` 的原始四个脚本上复现：4 个仍读已退役 Proof 路径，11 个旧模拟 transcript 在 profile 路由门被拒绝，1 个缺少旧 v2 准入文件。基线在子进程内加载 Git 原代码，普通导入和按文件加载均绑定原代码，工作树不回滚；未改测试断言。原始失败与基线分别保留在 [本次结果](proof-authority-tests.xml)、[原代码复核](proof-original-baseline.xml)，提取核对见 [JSON](proof-extraction-checks.json)。首次定位还运行过 R1 `-x`（16 passed、1 failed）及结构 Proof `-x`（25 passed、1 failed），均属同一失败，不能重复计入通过总数。
+
+因此这一步是结构接入与已覆盖行为保持，不是全套 Proof 检查通过。后续修复测试数据绑定时必须恢复其原来的关键断言覆盖，不允许更新冻结 Prompt 或恢复撤回的验收资格来凑通过。缺失的 live 准入继续阻止真实调用。
 
 ## 3. 运行脚本分类：待接入
 

@@ -18,7 +18,7 @@ from scripts.ifc_repair.run_phase12_live_uat import (
     _read_json,
     _safe_artifact_path,
 )
-from scripts.ifc_repair.validate_success_cases import audit_repaired_operations
+from text2ifc_proof.validate_success_cases import audit_repaired_operations
 
 PROOF_VALIDATION_PENDING = "pending_composite_curation"
 

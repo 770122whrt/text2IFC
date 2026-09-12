@@ -16,7 +16,7 @@ from typing import Any, Mapping
 import ifcopenshell
 
 try:
-    from scripts.ifc_repair.validate_success_cases import (
+    from text2ifc_proof.validate_success_cases import (
         validate_proof_validation_document,
         validate_success_case_collection,
     )

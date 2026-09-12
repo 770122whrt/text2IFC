@@ -15,7 +15,7 @@ from pathlib import Path
 from typing import Any, Mapping
 
 try:
-    from scripts.ifc_repair.validate_success_cases import (
+    from text2ifc_proof.validate_success_cases import (
         validate_proof_validation_document_v03,
         validate_r1_proof_collection,
     )

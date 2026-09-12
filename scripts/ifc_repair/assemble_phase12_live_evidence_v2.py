@@ -29,7 +29,7 @@ if str(SRC) not in sys.path:
 
 from scripts.ifc_repair import curate_phase12_live_proof as legacy  # noqa: E402
 from scripts.ifc_repair import run_phase12_live_uat_v2 as live_v2  # noqa: E402
-from scripts.ifc_repair.validate_success_cases import (  # noqa: E402
+from text2ifc_proof.validate_success_cases import (  # noqa: E402
     audit_repaired_operations,
 )
 from text2ifc_ifc_repair.operations import create_default_registry  # noqa: E402

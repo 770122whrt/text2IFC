@@ -39,7 +39,7 @@ _prepare_windows_torch_runtime()
 
 import ifcopenshell  # noqa: E402
 
-from scripts.ifc_repair.validate_success_cases import (  # noqa: E402
+from text2ifc_proof.validate_success_cases import (  # noqa: E402
     audit_repaired_operations,
 )
 from text2ifc_agent.openai_compat import (  # noqa: E402
@@ -70,6 +70,20 @@ from text2ifc_knowledge.property_runtime import (  # noqa: E402
     create_property_runtime_from_environment,
 )
 
+from text2ifc_proof.live_audit import (
+    CLARIFICATION_PROPERTY_IDENTITY,
+    CLARIFICATION_REQUEST,
+    COMPLETE_REQUEST,
+    DEFAULT_CASES,
+    LIVE_EVIDENCE_MODE,
+    LiveCase,
+    PROGRAM_GUARD_REASON,
+    PROGRAM_GUARD_REQUEST,
+    REQUIRED_CASE_IDS,
+    WINDOW_SEMANTIC_REQUEST,
+    _few_shot_binding_map,
+)
+
 
 DEFAULT_OUTPUT = ROOT / "dataset/processed/ifc-repair-runs/phase12-live"
 DEFAULT_PROOF_ROOT = (
@@ -87,7 +101,6 @@ FROZEN_SOURCE_SHA256 = (
     "de8202d63dbc7a488ef633ab40eb6127"
 )
 TOKEN_GUARD = 65_536
-LIVE_EVIDENCE_MODE = "live"
 PROOF_VALIDATION_PENDING = "pending_plan_12_14"
 APPROVED_DEEPSEEK_ENDPOINT = ("https", "api.deepseek.com", None, ("", "/"))
 FORBIDDEN_EVIDENCE_MODES = frozenset(
@@ -129,97 +142,7 @@ REQUIRED_CHANGED_SCOPE_FILES = frozenset(
     }
 )
 
-COMPLETE_REQUEST = (
-    'On the IFC Building Storey named "Level 1", add one horizontal straight '
-    "rectangular Beam with center axis from (120000, 120000, 3000) mm to "
-    "(126000, 120000, 3000) mm and a rectangular section 300 mm wide and "
-    "500 mm high. On the same Storey, add one vertical straight rectangular "
-    "Column with center-axis base (123000, 124000, 0) mm and top "
-    "(123000, 124000, 3000) mm, a section 400 mm wide and 600 mm deep, and "
-    "local width direction (0, 1). Create both in one atomic ChangeSet, "
-    "generate dedicated structural Types, state that the Beam is load "
-    "bearing, and state that the Column is load bearing."
-)
-CLARIFICATION_REQUEST = (
-    'On the IFC Building Storey named "Level 1", add one vertical straight '
-    "rectangular Column with center-axis base (120000, 120000, 0) mm and top "
-    "(120000, 120000, 6000) mm, a section 400 mm wide and 600 mm deep, and "
-    "local width direction (0, 1). Set its natural-language property "
-    '"load bearing status or external status" to true, but do not choose '
-    "between those two meanings without clarification."
-)
-CLARIFICATION_PROPERTY_IDENTITY = (
-    "ifc2x3:Pset_ColumnCommon.LoadBearing"
-)
-WINDOW_SEMANTIC_REQUEST = (
-    'For the IfcWindow with GlobalId "1PkWQ2IbXBH9Ib7VGdBY7r", set '
-    "外窗=true on this occurrence only. Do not change its Type or any "
-    "other Window."
-)
-PROGRAM_GUARD_REQUEST = (
-    'On the IFC Building Storey named "Level 1", add a straight rectangular '
-    "Beam and attach a structural analysis node; structural analysis "
-    "relationships are outside this operation contract."
-)
-PROGRAM_GUARD_REASON = "STRUCTURAL_ANALYSIS_UNSUPPORTED"
 
-
-class LiveCase:
-    """One fixed public live case; intentionally simple for importlib seams."""
-
-    __slots__ = (
-        "case_id",
-        "request",
-        "feedback",
-        "feedback_kind",
-        "expect_program_guard",
-    )
-
-    def __init__(
-        self,
-        *,
-        case_id: str,
-        request: str,
-        feedback: str | None = None,
-        feedback_kind: str | None = None,
-        expect_program_guard: bool = False,
-    ) -> None:
-        if not case_id or not request.strip():
-            raise ValueError("LIVE_CASE_ID_AND_REQUEST_REQUIRED")
-        self.case_id = case_id
-        self.request = request
-        self.feedback = feedback
-        self.expect_program_guard = bool(expect_program_guard)
-        if feedback is None:
-            if feedback_kind is not None:
-                raise ValueError("LIVE_CASE_FEEDBACK_KIND_WITHOUT_FEEDBACK")
-            self.feedback_kind = None
-        else:
-            resolved_kind = feedback_kind or "add_detail"
-            if resolved_kind not in {"add_detail", "select_candidate"}:
-                raise ValueError("LIVE_CASE_FEEDBACK_KIND_UNSUPPORTED")
-            self.feedback_kind = resolved_kind
-
-
-DEFAULT_CASES = (
-    LiveCase(case_id="complete", request=COMPLETE_REQUEST),
-    LiveCase(
-        case_id="clarification-resume",
-        request=CLARIFICATION_REQUEST,
-        feedback=CLARIFICATION_PROPERTY_IDENTITY,
-        feedback_kind="select_candidate",
-    ),
-    LiveCase(
-        case_id="window-semantic-canary",
-        request=WINDOW_SEMANTIC_REQUEST,
-    ),
-    LiveCase(
-        case_id="program-guard",
-        request=PROGRAM_GUARD_REQUEST,
-        expect_program_guard=True,
-    ),
-)
-REQUIRED_CASE_IDS = tuple(case.case_id for case in DEFAULT_CASES)
 FROZEN_CASE_MATRIX_SHA256 = (
     "sha256:8d5dec1c09a2b66ec10703930b340437"
     "cb3ae9de02f502e0b9c22ef186e14f5c"
@@ -1758,27 +1681,6 @@ def _counts(attempts: Iterable[Mapping[str, Any]]) -> dict[str, int]:
         stage = str(attempt.get("stage"))
         if stage in result:
             result[stage] += 1
-    return result
-
-
-def _few_shot_binding_map(value: Any) -> dict[str, str] | None:
-    if not isinstance(value, list):
-        return None
-    result: dict[str, str] = {}
-    for item in value:
-        if not isinstance(item, Mapping):
-            return None
-        few_shot_id = item.get("few_shot_id")
-        few_shot_hash = item.get("few_shot_hash")
-        if (
-            not isinstance(few_shot_id, str)
-            or not few_shot_id.strip()
-            or not isinstance(few_shot_hash, str)
-            or re.fullmatch(r"sha256:[0-9a-f]{64}", few_shot_hash) is None
-            or few_shot_id in result
-        ):
-            return None
-        result[few_shot_id] = few_shot_hash
     return result
 
 

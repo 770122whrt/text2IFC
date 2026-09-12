@@ -17,7 +17,7 @@ if str(ROOT) not in sys.path:
 if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
-from scripts.ifc_repair.audit_door_repair_triplet import audit_case  # noqa: E402
+from text2ifc_proof.audit_door_repair_triplet import audit_case  # noqa: E402
 
 
 SOURCE_IFC = (

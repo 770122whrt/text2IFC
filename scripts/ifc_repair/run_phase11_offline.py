@@ -66,7 +66,7 @@ from text2ifc_ifc_repair.spatial import (  # noqa: E402
 from text2ifc_ifc_repair.validation_cache import (  # noqa: E402
     ValidationCache,
 )
-from scripts.ifc_repair.audit_door_repair_triplet import (  # noqa: E402
+from text2ifc_proof.audit_door_repair_triplet import (  # noqa: E402
     audit_case,
 )
 

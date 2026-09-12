@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping
 
 try:
-    from scripts.ifc_repair.validate_success_cases import (
+    from text2ifc_proof.validate_success_cases import (
         validate_r1_proof_collection,
     )
 except ModuleNotFoundError:  # Direct script execution.
