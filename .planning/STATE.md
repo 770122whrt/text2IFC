@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前重构：接入 Zcode 有效实现（2026-09-13）
+
+用户明确要求实际接入重构。生产／基准评估已分离，211 项聚焦离线检查通过；继续将 Proof 校验独立成包并整理运行入口。以当前实现为基线保留后续修复、旧入口和冻结合同，不整包覆盖旧镜像。见[执行记录](../docs/reports/zcode-refactor-adoption-20260913/REPORT.md)与[范围](../docs/architecture/repository-organization-refactor.md)。
+
 ## 当前整理：根 archive 已退役（2026-09-13）
 
 按用户批准方向，将 Zcode 原历史合同、恢复清单和 66 份重构代码差异／37 份文档收纳为约 1.85 MiB 轻量包，备份提交 `dbb94668` 已推送。根 archive 的 18 个文件／2,688,981,263 字节和三个空目录已退役；完整旧运行、真实失败、数据快照和镜像仍可从固定 Git/LFS 修订 `d1639232` 恢复，六个远端对象可用性检查通过。现有 Proof 不改写；历史 Prompt 回归通过，C1–C5 人读包核对通过，未调用 Provider 或 Full Preflight。旧镜像不再作为待整包合并任务；保留两项后续结构优化候选，详见[报告](../docs/reports/archive-retirement-20260913/REPORT.md)与[历史入口](../dataset/processed/experiments/zcode-history-20260913/README.md)。main 与其独立工作树未在本轮同步。

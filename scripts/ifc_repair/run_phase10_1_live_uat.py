@@ -29,9 +29,11 @@ from text2ifc_agent.openai_compat import (  # noqa: E402
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
 from text2ifc_ifc_repair.apply import apply_changeset  # noqa: E402
-from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
-    BenchmarkEvaluationInputs,
+from text2ifc_ifc_repair.production_evaluation import (
     ProductionEvaluationInputs,
+)
+from text2ifc_ifc_repair.benchmark_evaluation import (
+    BenchmarkEvaluationInputs,
     evaluate_benchmark,
 )
 from text2ifc_ifc_repair.mutation import remove_window_and_opening  # noqa: E402

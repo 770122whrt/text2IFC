@@ -53,7 +53,7 @@ from text2ifc_agent.providers import (  # noqa: E402
     redact_provider_payload,
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
-from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
+from text2ifc_ifc_repair.production_evaluation import (
     evaluate_production,
 )
 from text2ifc_ifc_repair.evaluation import (  # noqa: E402

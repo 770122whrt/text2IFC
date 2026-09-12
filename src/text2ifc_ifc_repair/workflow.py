@@ -15,9 +15,11 @@ from text2ifc_agent.providers import ProviderOutput
 from text2ifc_text.splits import atomic_write_text
 
 from .apply import apply_changeset
+from .production_evaluation import (
+    ProductionEvaluationInputs,
+)
 from .benchmark_evaluation import (
     BenchmarkEvaluationInputs,
-    ProductionEvaluationInputs,
     evaluate_benchmark,
 )
 from .context import build_repair_context

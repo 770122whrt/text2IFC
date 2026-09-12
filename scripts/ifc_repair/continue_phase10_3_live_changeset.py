@@ -12,11 +12,13 @@ if str(ROOT / "src") not in sys.path:
     sys.path.insert(0, str(ROOT / "src"))
 
 from text2ifc_ifc_repair.apply import apply_changeset
+from text2ifc_ifc_repair.production_evaluation import (
+    ProductionEvaluationInputs,
+    evaluate_production,
+)
 from text2ifc_ifc_repair.benchmark_evaluation import (
     BenchmarkEvaluationInputs,
-    ProductionEvaluationInputs,
     evaluate_benchmark,
-    evaluate_production,
 )
 from text2ifc_ifc_repair.evaluation import evaluation_to_dict
 from text2ifc_ifc_repair.operations import create_default_registry

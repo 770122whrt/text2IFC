@@ -48,11 +48,13 @@ from text2ifc_agent.openai_compat import (  # noqa: E402
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
 import text2ifc_ifc_repair.occurrence_fidelity as occurrence_fidelity_module  # noqa: E402
 from text2ifc_ifc_repair.apply import apply_changeset  # noqa: E402
-from text2ifc_ifc_repair.benchmark_evaluation import (  # noqa: E402
-    BenchmarkEvaluationInputs,
+from text2ifc_ifc_repair.production_evaluation import (
     ProductionEvaluationInputs,
-    evaluate_benchmark,
     evaluate_production,
+)
+from text2ifc_ifc_repair.benchmark_evaluation import (
+    BenchmarkEvaluationInputs,
+    evaluate_benchmark,
 )
 from text2ifc_ifc_repair.evaluation import EvaluationExecutionPolicy  # noqa: E402
 from text2ifc_ifc_repair.compare import (  # noqa: E402

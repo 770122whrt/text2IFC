@@ -7,9 +7,9 @@ from pathlib import Path
 import ifcopenshell
 import pytest
 
-import text2ifc_ifc_repair.benchmark_evaluation as benchmark_evaluation_module
+import text2ifc_ifc_repair.production_evaluation as production_evaluation_module
 import text2ifc_ifc_repair.evaluation as evaluation_module
-from text2ifc_ifc_repair.benchmark_evaluation import (
+from text2ifc_ifc_repair.production_evaluation import (
     ProductionEvaluationInputs,
     evaluate_production,
 )
@@ -337,7 +337,7 @@ def test_evaluate_production_uses_green_accelerated_scheduler(
         record_execute,
     )
     monkeypatch.setattr(
-        benchmark_evaluation_module,
+        production_evaluation_module,
         "aggregate_repair",
         lambda **kwargs: type(
             "ProductionSchedulerProbe",
