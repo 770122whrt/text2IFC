@@ -72,7 +72,7 @@ def apply_coordinated_appearance(model, document, context):
             for item in representation.Items:
                 part = part_roles.get(item.id(), role)
                 if explicit:
-                    spec = AppearanceSpec('explicit-user', *explicit['color'], transparency=explicit.get('transparency', 0.0))
+                    spec = AppearanceSpec('explicit-user', *explicit.get('color', palette[part]), transparency=explicit.get('transparency', 0.0))
                 elif part in overrides:
                     channels = overrides[part]
                     spec = AppearanceSpec(f'explicit-user:{part}', *channels.get('color', palette[part]),
@@ -114,7 +114,7 @@ def verify_appearance(model, document):
                 values = item_appearance_signatures(item)
                 valid = len(values) == 1 and all(0 <= float(values[0][k]) <= 1 for k in ('red','green','blue','transparency'))
                 role = roles.get(item.id(), _role(product))
-                wanted = [*explicit['color'], explicit.get('transparency', 0.0)] if explicit else [*palette[role], .45 if role == 'glazing' else 0.0]
+                wanted = [*explicit.get('color', palette[role]), explicit.get('transparency', 0.0)] if explicit else [*palette[role], .45 if role == 'glazing' else 0.0]
                 if role in overrides:
                     channels = overrides[role]
                     wanted = [*channels.get('color', palette[role]), channels.get('transparency', .45 if role == 'glazing' else 0.)]

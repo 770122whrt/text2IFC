@@ -109,7 +109,13 @@ def verify_semantic_expectations(ifc_file_or_path, expectations: Sequence[Mappin
                 items = [item for shape in representation.Representations if shape.RepresentationIdentifier == 'Body' for item in shape.Items] if representation else []
                 signatures = [item_appearance_signatures(item) for item in items]
                 actual = signatures
-                if items and all(len(values) == 1 and all(math.isclose(values[0][key], value, abs_tol=1e-6) for key, value in zip(('red','green','blue','transparency'), [*wanted.get('color', []), wanted.get('transparency', 0.0)])) for values in signatures) and len(wanted.get('color', [])) == 3:
+                channels = dict(zip(('red','green','blue'), wanted.get('color', [])))
+                if 'transparency' in wanted:
+                    channels['transparency'] = wanted['transparency']
+                colour_valid = 'color' not in wanted or len(wanted['color']) == 3
+                if items and channels and colour_valid and set(wanted) <= {'color', 'transparency'} and all(len(values) == 1 and all(
+                        math.isclose(values[0][key], value, abs_tol=1e-6)
+                        for key, value in channels.items()) for values in signatures):
                     actual = wanted
             elif kind == 'part_appearance':
                 from text2ifc_presentation.part_readback import part_request_matches
