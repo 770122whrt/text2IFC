@@ -1,0 +1,4518 @@
+{
+  "schema_version": "text2ifc/ifc-difference-report/0.1",
+  "comparison_status": "completed",
+  "before": {
+    "path": "E:\\code for project\\bimnet-zcode\\w\\dataset\\processed\\proof\\repair-damage-restoration\\c1-c5-live-20260904-combined\\C3\\01-original.ifc",
+    "sha256": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
+    "schema": "IFC2X3"
+  },
+  "after": {
+    "path": "E:\\code for project\\bimnet-zcode\\w\\dataset\\processed\\proof\\repair-damage-restoration\\c1-c5-live-20260904-combined\\C3\\03-repaired.ifc",
+    "sha256": "sha256:cb194e3f7a268f54d38ec626e843ba65212260d9ebb6bfe44559e3c90b076161",
+    "schema": "IFC2X3"
+  },
+  "summary": {
+    "created_root_count": 29,
+    "modified_root_count": 4,
+    "removed_root_count": 41,
+    "changed_product_count": 8,
+    "changed_product_classes": {
+      "IfcBeam": 4,
+      "IfcColumn": 2,
+      "IfcDoor": 2
+    }
+  },
+  "changed_products": [
+    {
+      "change_kind": "created",
+      "global_id": "0Z4jXh_NbPVx9uMW5zayxl",
+      "ifc_class": "IfcDoor",
+      "before": null,
+      "after": {
+        "ifc_class": "IfcDoor",
+        "name": "Text2IFC door door-1-fill",
+        "tag": "door-1-fill",
+        "type_global_ids": [
+          "08DlcJHzb8WfJZDTGZFHKZ"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_GblRwJ"
+        ],
+        "placement": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5564.198019
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            2655.691628
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:959c97f615677bdae3e8f5414c16d516e5b3b24f82159275434efb240ceed9b3"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "1pvnaHe_9VdQNrNsJw1O9M",
+            "set_name": "Pset_DoorCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "1pvnaHe_9VdQNrNsJw1O9M",
+            "set_name": "Pset_DoorCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "PKM0920"
+          },
+          {
+            "property_set_global_id": "3FJ6Ht4ATMsPsRA6crFqNn",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "PKM0920"
+          }
+        ]
+      }
+    },
+    {
+      "change_kind": "created",
+      "global_id": "2s$OZ3oVLG3eDAzPS5FPE1",
+      "ifc_class": "IfcBeam",
+      "before": null,
+      "after": {
+        "ifc_class": "IfcBeam",
+        "name": "Text2IFC beam beam-2-add",
+        "tag": "beam-2-add",
+        "type_global_ids": [
+          "1EazmrnrP3p9dtRknlmbVD"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_Gblgiw"
+        ],
+        "placement": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -1214.984822
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            7682.971531
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            2715.45254
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:aa9095bea08371022071a24d7cecca4254757b4fa0d7aff7002759fce082f989"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "0CrScVEFbShBKYNuMrJcA2",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "0CrScVEFbShBKYNuMrJcA2",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "0CrScVEFbShBKYNuMrJcA2",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Slope",
+            "value_type": "IfcPlaneAngleMeasure",
+            "value": 0.0
+          },
+          {
+            "property_set_global_id": "1GmHgUA5nGROsQOS_TiLrM",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "37u5Fyu65IBQH1ai5q4Wtj",
+            "set_name": "Pset_ReinforcementBarPitchOfBeam",
+            "property_name": "Reference",
+            "value_type": "IfcLabel",
+            "value": "100x400 2"
+          }
+        ]
+      }
+    },
+    {
+      "change_kind": "created",
+      "global_id": "3YQzfCl9nGSPdxvRjxCPkl",
+      "ifc_class": "IfcColumn",
+      "before": null,
+      "after": {
+        "ifc_class": "IfcColumn",
+        "name": "Text2IFC column column-1-add",
+        "tag": "column-1-add",
+        "type_global_ids": [
+          "1Wn_dXmF1DSBE14cb07uXZ"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_GblRwJ"
+        ],
+        "placement": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -1060.889019
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            3602.521083
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:0abf8ac6f214dddcdcbf20d032d44b1a78f5be3ebe3b6ebbd1fa0bdf050c43a6"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "2PQBvSx2nUUw3ugeZ$X_ii",
+            "set_name": "Pset_ColumnCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "2PQBvSx2nUUw3ugeZ$X_ii",
+            "set_name": "Pset_ColumnCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "柱 9"
+          },
+          {
+            "property_set_global_id": "2PQBvSx2nUUw3ugeZ$X_ii",
+            "set_name": "Pset_ColumnCommon",
+            "property_name": "Slope",
+            "value_type": "IfcPlaneAngleMeasure",
+            "value": 0.0
+          },
+          {
+            "property_set_global_id": "2gmDRK_$DP$xRviOijYHrM",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "柱 9"
+          },
+          {
+            "property_set_global_id": "3dGrNkNrbLFxOgR4MNJmik",
+            "set_name": "Pset_ReinforcementBarPitchOfColumn",
+            "property_name": "Reference",
+            "value_type": "IfcLabel",
+            "value": "柱 9"
+          }
+        ]
+      }
+    },
+    {
+      "change_kind": "created",
+      "global_id": "3dDCGbVHnS5x2DfaUPs0PK",
+      "ifc_class": "IfcBeam",
+      "before": null,
+      "after": {
+        "ifc_class": "IfcBeam",
+        "name": "Text2IFC beam beam-1-add",
+        "tag": "beam-1-add",
+        "type_global_ids": [
+          "1EazmrnrP3p9dtRknlmbVD"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_Gblgiw"
+        ],
+        "placement": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -2964.984822
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            6426.971531
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            2715.45254
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:94cd1950d2c4f2bb6a8f04ede36e12aa5daa05f49d224dad193bcec1a558566c"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "0VzArgGffM_fmDQJtUmubw",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "0VzArgGffM_fmDQJtUmubw",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "0VzArgGffM_fmDQJtUmubw",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Slope",
+            "value_type": "IfcPlaneAngleMeasure",
+            "value": 0.0
+          },
+          {
+            "property_set_global_id": "3NtswyvyfHXxWvIHYr5DOQ",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "2C9uSdRATI8BSpvlWpojpY",
+            "set_name": "Pset_ReinforcementBarPitchOfBeam",
+            "property_name": "Reference",
+            "value_type": "IfcLabel",
+            "value": "100x400 2"
+          }
+        ]
+      }
+    },
+    {
+      "change_kind": "removed",
+      "global_id": "08DlcJHzb8WfJZDS4ZFHLL",
+      "ifc_class": "IfcDoor",
+      "before": {
+        "ifc_class": "IfcDoor",
+        "name": "木门:PKM0920:307752",
+        "tag": "307752",
+        "type_global_ids": [
+          "08DlcJHzb8WfJZDTGZFHKZ"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_GblRwJ"
+        ],
+        "placement": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            5384.198019
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0,
+            3355.66319
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:54bbc08fb289d1b4d544965b754ca2ff1f313d4066ee22ad5c3035d453bf123e"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "0NdZCm2ML6cxG4pS3fImtM",
+            "set_name": "Pset_ConcreteElementGeneral",
+            "property_name": "FireRating",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "FireRating",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "08DlcJHzb8WfJZFZ4ZFHLL",
+            "set_name": "Pset_DoorCommon",
+            "property_name": "FireRating",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "FireRating",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "08DlcJHzb8WfJZFZ4ZFHLL",
+            "set_name": "Pset_DoorCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "08DlcJHzb8WfJZFZ4ZFHLL",
+            "set_name": "Pset_DoorCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "PKM0920"
+          },
+          {
+            "property_set_global_id": "2gm$a_Xr18IBXaEsc$rwGX",
+            "set_name": "Pset_ManufacturerTypeInformation",
+            "property_name": "Manufacturer",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "Manufacturer",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "2No2GvjunBmQadcS0Mimk4",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "PKM0920"
+          }
+        ]
+      },
+      "after": null
+    },
+    {
+      "change_kind": "removed",
+      "global_id": "1RnWak0Kr6GxkeYF4Sd_XV",
+      "ifc_class": "IfcBeam",
+      "before": {
+        "ifc_class": "IfcBeam",
+        "name": "混凝土梁-矩形砼梁-有标记:100x400 2:300428",
+        "tag": "300428",
+        "type_global_ids": [
+          "1EazmrnrP3p9dtRknlmbVD"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_Gblgiw"
+        ],
+        "placement": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -2964.984822
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            6426.971531
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            2840.45254
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:f4ef3266aebd1fe6cf3a0ee1de2317c23a51a99517c33c64f9c7e007db5a1552"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_XV",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "FireRating",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "FireRating",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_XV",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_XV",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_XV",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Slope",
+            "value_type": "IfcPlaneAngleMeasure",
+            "value": 0.0
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_XV",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Span",
+            "value_type": "IfcPositiveLengthMeasure",
+            "value": 1520.0
+          },
+          {
+            "property_set_global_id": "1R0JUeDfz7fPHdj_xyom3z",
+            "set_name": "Pset_ConcreteElementGeneral",
+            "property_name": "FireRating",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "FireRating",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "2OlxH65OfByOMdzXeZtAwx",
+            "set_name": "Pset_ManufacturerTypeInformation",
+            "property_name": "Manufacturer",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "Manufacturer",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "26D7UVQM9E4PnETpXGHfps",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "0DNUcUw3X0Tvxvrg1zyYOG",
+            "set_name": "Pset_ReinforcementBarPitchOfBeam",
+            "property_name": "Reference",
+            "value_type": "IfcLabel",
+            "value": "100x400 2"
+          }
+        ]
+      },
+      "after": null
+    },
+    {
+      "change_kind": "removed",
+      "global_id": "1RnWak0Kr6GxkeYF4Sd_ld",
+      "ifc_class": "IfcBeam",
+      "before": {
+        "ifc_class": "IfcBeam",
+        "name": "混凝土梁-矩形砼梁-有标记:100x400 2:300596",
+        "tag": "300596",
+        "type_global_ids": [
+          "1EazmrnrP3p9dtRknlmbVD"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_Gblgiw"
+        ],
+        "placement": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -1241.984822
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            7682.971531
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            2840.45254
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:33db85a2719116cddc5380c8c448076c038cc254814161545adac25618f722f6"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_ld",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "FireRating",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "FireRating",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_ld",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_ld",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_ld",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Slope",
+            "value_type": "IfcPlaneAngleMeasure",
+            "value": 0.0
+          },
+          {
+            "property_set_global_id": "1RnWak0Kr6GxkeWnWSd_ld",
+            "set_name": "Pset_BeamCommon",
+            "property_name": "Span",
+            "value_type": "IfcPositiveLengthMeasure",
+            "value": 2700.0
+          },
+          {
+            "property_set_global_id": "2lKufnpY18IO7yTMeDoTS7",
+            "set_name": "Pset_ConcreteElementGeneral",
+            "property_name": "FireRating",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "FireRating",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "02DY4z0UbB3esbVgo$2l5Y",
+            "set_name": "Pset_ManufacturerTypeInformation",
+            "property_name": "Manufacturer",
+            "value_type": "IfcPropertySingleValue",
+            "value": {
+              "ifc_class": "IfcPropertySingleValue",
+              "attributes": {
+                "Name": "Manufacturer",
+                "Description": null,
+                "NominalValue": null,
+                "Unit": null
+              }
+            }
+          },
+          {
+            "property_set_global_id": "3x47pLr052DviUrzSTmXHA",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "100x400 2"
+          },
+          {
+            "property_set_global_id": "2XQ$qXs6L5090vHLQvkNvs",
+            "set_name": "Pset_ReinforcementBarPitchOfBeam",
+            "property_name": "Reference",
+            "value_type": "IfcLabel",
+            "value": "100x400 2"
+          }
+        ]
+      },
+      "after": null
+    },
+    {
+      "change_kind": "removed",
+      "global_id": "1Wn_dXmF1DSBE14cb07uXX",
+      "ifc_class": "IfcColumn",
+      "before": {
+        "ifc_class": "IfcColumn",
+        "name": "柱 9:柱 9:293474",
+        "tag": "293474",
+        "type_global_ids": [
+          "1Wn_dXmF1DSBE14cb07uXZ"
+        ],
+        "container_global_ids": [
+          "0K_MqVdrL0JOCMi_GblRwJ"
+        ],
+        "placement": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "geometry": {
+          "available": true,
+          "representation_sha256": "sha256:d14b2b27731441fc81209c1c20d6050c6d2606287da0ecf687c7f5e5c1171459"
+        },
+        "direct_properties": [
+          {
+            "property_set_global_id": "2bKoxrhjLBH9M0y4O455dg",
+            "set_name": "Pset_ColumnCommon",
+            "property_name": "IsExternal",
+            "value_type": "IfcBoolean",
+            "value": false
+          },
+          {
+            "property_set_global_id": "2bKoxrhjLBH9M0y4O455dg",
+            "set_name": "Pset_ColumnCommon",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "柱 9"
+          },
+          {
+            "property_set_global_id": "2bKoxrhjLBH9M0y4O455dg",
+            "set_name": "Pset_ColumnCommon",
+            "property_name": "Slope",
+            "value_type": "IfcPlaneAngleMeasure",
+            "value": 0.0
+          },
+          {
+            "property_set_global_id": "1K3T39c8LFuAkfJo6ivhcm",
+            "set_name": "Pset_QuantityTakeOff",
+            "property_name": "Reference",
+            "value_type": "IfcIdentifier",
+            "value": "柱 9"
+          },
+          {
+            "property_set_global_id": "2Ne0fUVb19NPkG8Bt24kvK",
+            "set_name": "Pset_ReinforcementBarPitchOfColumn",
+            "property_name": "Reference",
+            "value_type": "IfcLabel",
+            "value": "柱 9"
+          }
+        ]
+      },
+      "after": null
+    }
+  ],
+  "changed_roots": {
+    "created": [
+      {
+        "change_kind": "created",
+        "global_id": "0CrScVEFbShBKYNuMrJcA2",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:d8003070a6343a4cc304e48316be8033a91c73e0f8ccfee8cf45067d86bbfb70"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0MgPY58UnM0QCq9R9l4qC1",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3YQzfCl9nGSPdxvRjxCPkl"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcColumnType",
+              "global_id": "1Wn_dXmF1DSBE14cb07uXZ"
+            }
+          },
+          "content_sha256": "sha256:1539232a8c783a0fcfcb78c55e569b3b6dc1a6be30f83f882894681801debe7e"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0V7k6BldrSPfmEpdoesKvg",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "3dDCGbVHnS5x2DfaUPs0PK"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "3NtswyvyfHXxWvIHYr5DOQ"
+            }
+          },
+          "content_sha256": "sha256:e6ea4e0a5d61c8f3eb6c47c3b38ad82545793d9f3f9a066189829616d8e1ca9a"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0VzArgGffM_fmDQJtUmubw",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:6de544b0225c8ad1adfd715392e4dc7b75fba01e72fc14bc1260ff25914adfda"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0Z4jXh_NbPVx9uMW5zayxl",
+        "ifc_class": "IfcDoor",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcDoor",
+          "name": "Text2IFC door door-1-fill",
+          "attributes": {
+            "ObjectType": "PKM0920",
+            "Tag": "door-1-fill",
+            "OverallHeight": 2000.0,
+            "OverallWidth": 900.0
+          },
+          "placement": [
+            [
+              0.0,
+              -1.0,
+              0.0,
+              5564.198019
+            ],
+            [
+              1.0,
+              0.0,
+              0.0,
+              2655.691628
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_GblRwJ"
+          ],
+          "types": [
+            "08DlcJHzb8WfJZDTGZFHKZ"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:a1fce7d1fb6255b293b49241814bb8bef5918891f9ad01ff2d76df6eba1d6819"
+          },
+          "content_sha256": "sha256:a87a89e88f89885f2d01e99287eef859fe77232f1541cb9b95cc20a39d28770d"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0Zzi5OuT5QExiT1MevQBJb",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "3dDCGbVHnS5x2DfaUPs0PK"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "0VzArgGffM_fmDQJtUmubw"
+            }
+          },
+          "content_sha256": "sha256:556dd4cd458b01144e2a2723cd76b16b3c23c559a9ca309bab89a6f89e7fe469"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0gMroPD4THMh$fge8Mwap8",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelFillsElement",
+          "name": null,
+          "attributes": {
+            "RelatingOpeningElement": {
+              "ifc_class": "IfcOpeningElement",
+              "global_id": "08DlcJHzb8WfJZDT8ZFHLL"
+            },
+            "RelatedBuildingElement": {
+              "ifc_class": "IfcDoor",
+              "global_id": "0Z4jXh_NbPVx9uMW5zayxl"
+            }
+          },
+          "content_sha256": "sha256:8e9d396c4f7fa5bc9bdf7a06bf19437af56d623a4461b89e70d235e3f6578b7c"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "0gdZvK8EvRJ8cNCwAlr5cb",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "3dDCGbVHnS5x2DfaUPs0PK"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2C9uSdRATI8BSpvlWpojpY"
+            }
+          },
+          "content_sha256": "sha256:6c4d300562160a02cf4c3648342dd6a0a749926115f0ed34a92a7ca07a81be83"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "1DNTz7N9vUFQ53x$4hNhiE",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0Z4jXh_NbPVx9uMW5zayxl"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcDoorStyle",
+              "global_id": "08DlcJHzb8WfJZDTGZFHKZ"
+            }
+          },
+          "content_sha256": "sha256:d3d9ad387751b39cfec2a37040548e311a6ace63ce37cf098a4ce8c931937954"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "1GmHgUA5nGROsQOS_TiLrM",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:b11b4f922ad86a1211506e911200b18305ed16eb8b59cfc387565b5008f5706c"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "1PcYCO2_jNsB3lhu3MA8_y",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2s$OZ3oVLG3eDAzPS5FPE1"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "0CrScVEFbShBKYNuMrJcA2"
+            }
+          },
+          "content_sha256": "sha256:717ae7afb9800a89456fcc988a853d59279334fb22d68b71702b0f964f21cfa6"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "1pvnaHe_9VdQNrNsJw1O9M",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_DoorCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "PKM0920"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:4c767a4444bd032ccb9380c1bde65a56447f59ba6bcd0adeef98dd3c019c7222"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "1s8fDw7YzG6hWpZe18BP0Q",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2s$OZ3oVLG3eDAzPS5FPE1"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1GmHgUA5nGROsQOS_TiLrM"
+            }
+          },
+          "content_sha256": "sha256:ac99bb1fab4678a1710476cbab39b4c084114009bf88f4af276c63b9ecd119ca"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "2C9uSdRATI8BSpvlWpojpY",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfBeam",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:ef4a54ac9d16f67bc9dc714cb74881547d4b55f3817b6fc044d1f8f2b4cfe8f5"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "2PQBvSx2nUUw3ugeZ$X_ii",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ColumnCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "柱 9"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:9cec647bff4442012c216281af5f3c6739364abbae9c526cdae589995e146c98"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "2QTcqeafXO8uJsoCwU_g8d",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2s$OZ3oVLG3eDAzPS5FPE1"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "37u5Fyu65IBQH1ai5q4Wtj"
+            }
+          },
+          "content_sha256": "sha256:88eae5a2875adbe5ca9b01af4a7efbeeb301d88d6ba0a55454c5206904cc9a76"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "2gmDRK_$DP$xRviOijYHrM",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "柱 9"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:ba829a6aaf30dbc42da0c63103367e27c539b5b991cab7750e4671f0814e1daa"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "2n20j0NULH2u5RFVAYzHkb",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3YQzfCl9nGSPdxvRjxCPkl"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "3dGrNkNrbLFxOgR4MNJmik"
+            }
+          },
+          "content_sha256": "sha256:8b8fb6bb5e440d6fa5a49016ba0b87d4085bf02d2ab2496eee9dfff4714b16d6"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "2s$OZ3oVLG3eDAzPS5FPE1",
+        "ifc_class": "IfcBeam",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcBeam",
+          "name": "Text2IFC beam beam-2-add",
+          "attributes": {
+            "ObjectType": "Beam",
+            "Tag": "beam-2-add"
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -1214.984822
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              7682.971531
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              2715.45254
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_Gblgiw"
+          ],
+          "types": [
+            "1EazmrnrP3p9dtRknlmbVD"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:1bb4a82dceb8d05a14605a8c9237f9618b5f85368ae692f933657f3eda7e5db5"
+          },
+          "content_sha256": "sha256:05a0639485e6aeb94fd085d247a722eb0018e4b0c315c9d0e77b2de1c881fb5b"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "37u5Fyu65IBQH1ai5q4Wtj",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfBeam",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:adaf355d7fae57bd3659ee25fa8c0a218ecaca684f4dc79f085ff2616587558a"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3FJ6Ht4ATMsPsRA6crFqNn",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "PKM0920"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:74cc80d1ddad945e719cf506107e3f43db1d9a789ed5029f18696114f9bb9748"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3NtswyvyfHXxWvIHYr5DOQ",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:b1e8704103923d02706447be1d6d189299924880a3356dba7da0504e599e7e1e"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3TjAfJf3rIo9Y0tNIlVACj",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3YQzfCl9nGSPdxvRjxCPkl"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2PQBvSx2nUUw3ugeZ$X_ii"
+            }
+          },
+          "content_sha256": "sha256:389e5fabe3679ba0ad1686959845fd3127d4ba1182f9e982a6aff8864300f04f"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3XfACpkJfR0foANMAv_UqX",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0Z4jXh_NbPVx9uMW5zayxl"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "3FJ6Ht4ATMsPsRA6crFqNn"
+            }
+          },
+          "content_sha256": "sha256:ad83533e35621b786a2887f0b39fbde048c6c5831870c6030064a1a3da7760b9"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3YQzfCl9nGSPdxvRjxCPkl",
+        "ifc_class": "IfcColumn",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcColumn",
+          "name": "Text2IFC column column-1-add",
+          "attributes": {
+            "ObjectType": "Column",
+            "Tag": "column-1-add"
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -1060.889019
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              3602.521083
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_GblRwJ"
+          ],
+          "types": [
+            "1Wn_dXmF1DSBE14cb07uXZ"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:d4a573b46affdf5854095654d5b34cdeb0ade12b86ce0110870ef0234aed4c51"
+          },
+          "content_sha256": "sha256:e4f54f22111e8efea27ba15e8db682c2614d2a2aaaccf765da538bbdda3a1445"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3dDCGbVHnS5x2DfaUPs0PK",
+        "ifc_class": "IfcBeam",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcBeam",
+          "name": "Text2IFC beam beam-1-add",
+          "attributes": {
+            "ObjectType": "Beam",
+            "Tag": "beam-1-add"
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -2964.984822
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              6426.971531
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              2715.45254
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_Gblgiw"
+          ],
+          "types": [
+            "1EazmrnrP3p9dtRknlmbVD"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:51998f88852cc8bc9e70270cba781edb2f63272c889a933730555d942637a5d3"
+          },
+          "content_sha256": "sha256:f277b6736ac1897a579bf18a55c2359b5fb5360ea1af876092f7df2196c35612"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3dGrNkNrbLFxOgR4MNJmik",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfColumn",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "柱 9"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:8e74e2903b867d01f4e87b890caae85723604ecdd380be0a06b115f0ab582ee0"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3e8HI4ecvLaOsLBA7e4l2V",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3YQzfCl9nGSPdxvRjxCPkl"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2gmDRK_$DP$xRviOijYHrM"
+            }
+          },
+          "content_sha256": "sha256:54da414e948a425b8782e7d5d169dda990c7b8b45cf3aa444fde69577d0784d7"
+        }
+      },
+      {
+        "change_kind": "created",
+        "global_id": "3fUQw8bCrST8VX50qPhIm_",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": null,
+        "after": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0Z4jXh_NbPVx9uMW5zayxl"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1pvnaHe_9VdQNrNsJw1O9M"
+            }
+          },
+          "content_sha256": "sha256:5361e29382c071b874e93fb76a701874cea5205096e1d39604ceac7b1e60e978"
+        }
+      }
+    ],
+    "modified": [
+      {
+        "change_kind": "modified",
+        "global_id": "02QbeQvUTCkwcZYu_rVE6s",
+        "ifc_class": "IfcRelAssociatesMaterial",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHQO"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "08DlcJHzb8WfJZDTGZFHKZ"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DHo"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DIB"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$De$"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dlf"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0GV2WDNFvAQPlKb1oc$DGi"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0GV2WDNFvAQPlKb1oc$Dkb"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0fAoF0ckP0LfE0neQFAiK_"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0fAoF0ckP0LfE0neQFAiP$"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0fAoF0ckP0LfE0neQFAiTY"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAhEm"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiI1"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiIp"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiNX"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterial",
+              "attributes": {
+                "Name": "M_木质"
+              }
+            }
+          },
+          "content_sha256": "sha256:47ba8ce7c44a4dd18c3e2b0239854f0b409ca24f48837a087f8119c2dc03a4e2"
+        },
+        "after": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHQO"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "08DlcJHzb8WfJZDTGZFHKZ"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DHo"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DIB"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$De$"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dlf"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0GV2WDNFvAQPlKb1oc$DGi"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0GV2WDNFvAQPlKb1oc$Dkb"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0fAoF0ckP0LfE0neQFAiK_"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0fAoF0ckP0LfE0neQFAiP$"
+              },
+              {
+                "ifc_class": "IfcDoorStyle",
+                "global_id": "0fAoF0ckP0LfE0neQFAiTY"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAhEm"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiI1"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiIp"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiNX"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterial",
+              "attributes": {
+                "Name": "M_木质"
+              }
+            }
+          },
+          "content_sha256": "sha256:0c5e62c765b10d0ab1887e3751d5e2f0e5556da07d2c909b03c02244331198e2"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "1_B2m18bfAEx7cd0f$3198",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_Ya"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_bw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_i1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_iq"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_jN"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kE"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kQ"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ky"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcBeamType",
+              "global_id": "1EazmrnrP3p9dtRknlmbVD"
+            }
+          },
+          "content_sha256": "sha256:5a2d9644ff55bedb61fbb52a0537931d1a53bbe5ec26c627062edb70a89d4568"
+        },
+        "after": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_Ya"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_bw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_i1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_iq"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_jN"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kE"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kQ"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ky"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2s$OZ3oVLG3eDAzPS5FPE1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "3dDCGbVHnS5x2DfaUPs0PK"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcBeamType",
+              "global_id": "1EazmrnrP3p9dtRknlmbVD"
+            }
+          },
+          "content_sha256": "sha256:a8b9021abd8431a8998ec0e84e2f1e42b61233f68b2bda9f65727abf8e1002d8"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "1vK3KfqgSHqv5Y0066FnIY",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igW8V"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igW8y"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWAl"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWBq"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWDp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWF_"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igWKv"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igWLh"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igWNP"
+              },
+              {
+                "ifc_class": "IfcStair",
+                "global_id": "088FZ3AAHFlREhYJ2iglfF"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHQO"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$D2b"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DHo"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DIB"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DIw"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DNF"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$De$"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dgc"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DiJ"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dk8"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dlf"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0Ox3SqwHP4fuzFcq6Zdk3I"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAhEm"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAhfV"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiI1"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiIp"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiNX"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPeXq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPeju"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPeu6"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPexl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPf8X"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPf9u"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPfAG"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "0jsP$50AP6xhaXdShCPfWs"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1KCxb4vhz4teFLiG92QDGr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBWCz"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXBy"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXKJ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXac"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXcF"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBY7r"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBYkG"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlr8r"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrAq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrDC"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrb1"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrem"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlroc"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrrP"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrx0"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrya"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uKn"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uMw"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uXX"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uYi"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uYv"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07ubM"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uky"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTDb"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTrL"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTwl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTy2"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTzU"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqUfH"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqUvS"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2GE47ovmD4evkkTBiI5Gms"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2Nk7b"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2Nk8P"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NkCq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NkEi"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NkL1"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NlvP"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NlxU"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3MKkmT54bAMAG8irjvzWDx"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3MKkmT54bAMAG8irjvzWPo"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3MKkmT54bAMAG8irjvzXe9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ4ub"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ4w$"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5$x"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ52P"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ598"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5EZ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5ax"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5cv"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5ds"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5mY"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5nR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5rR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5wV"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5zp"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZA5V"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZA7H"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZA9N"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZADQ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZAJ9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZASN"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "3dldEzenf9LvnDJYNNzLXB"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "3dldEzenf9LvnDJYNNzLZv"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLeI"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLgR"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLhW"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "3dldEzenf9LvnDJYNNzLjq"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLkp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLlQ"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLlp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLqC"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLsH"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRnXT"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRnak"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRniB"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRnxR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRsgl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRsiI"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRssT"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRsxQ"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+            }
+          },
+          "content_sha256": "sha256:f1def283c15e7407249af63363cd55866811b4644f23629a1ce73415d1d9c64a"
+        },
+        "after": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igW8V"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igW8y"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWAl"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWBq"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWDp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "088FZ3AAHFlREhYJ2igWF_"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igWKv"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igWLh"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "088FZ3AAHFlREhYJ2igWNP"
+              },
+              {
+                "ifc_class": "IfcStair",
+                "global_id": "088FZ3AAHFlREhYJ2iglfF"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHQO"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$D2b"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DHo"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DIB"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DIw"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DNF"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$De$"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dgc"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$DiJ"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dk8"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0GV2WDNFvAQPlKb0cc$Dlf"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0Ox3SqwHP4fuzFcq6Zdk3I"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0Z4jXh_NbPVx9uMW5zayxl"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAhEm"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAhfV"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiI1"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiIp"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0fAoF0ckP0LfE0nfEFAiNX"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPeXq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPeju"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPeu6"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPexl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPf8X"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPf9u"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0jsP$50AP6xhaXdShCPfAG"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "0jsP$50AP6xhaXdShCPfWs"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1KCxb4vhz4teFLiG92QDGr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBWCz"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXBy"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXKJ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXac"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBXcF"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBY7r"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1PkWQ2IbXBH9Ib7VGdBYkG"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlr8r"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrAq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrDC"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrb1"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrem"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlroc"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrrP"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrx0"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1TsZt68Gj0feXhmKwhlrya"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uKn"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uMw"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uYi"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uYv"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07ubM"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "1Wn_dXmF1DSBE14cb07uky"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTDb"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTrL"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTwl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTy2"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqTzU"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqUfH"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1xdSP7gD14x8wf9_haqUvS"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2GE47ovmD4evkkTBiI5Gms"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2Nk7b"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2Nk8P"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NkCq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NkEi"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NkL1"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NlvP"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2SMG3m3ZD6FeFrynu2NlxU"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3MKkmT54bAMAG8irjvzWDx"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3MKkmT54bAMAG8irjvzWPo"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3MKkmT54bAMAG8irjvzXe9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ4ub"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ4w$"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5$x"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ52P"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ598"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5EZ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5ax"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5cv"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5ds"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5mY"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5nR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5rR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5wV"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZ5zp"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZA5V"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZA7H"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZA9N"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZADQ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZAJ9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3Scept4sbAChDvWeRzZASN"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3YQzfCl9nGSPdxvRjxCPkl"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "3dldEzenf9LvnDJYNNzLXB"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "3dldEzenf9LvnDJYNNzLZv"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLeI"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLgR"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLhW"
+              },
+              {
+                "ifc_class": "IfcRailing",
+                "global_id": "3dldEzenf9LvnDJYNNzLjq"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLkp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLlQ"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLlp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLqC"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "3dldEzenf9LvnDJYNNzLsH"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRnXT"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRnak"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRniB"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRnxR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRsgl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRsiI"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRssT"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3o4dJuKR91TvUQAb4uRsxQ"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+            }
+          },
+          "content_sha256": "sha256:09ddcf40e99e423bcfcd27418df80c6855648fc8709c9e011ca445692dad060a"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "3ZXEKsuff1$xCg4bI9EXGa",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_Ya"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_bw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_i1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_iq"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_jN"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kE"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kQ"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ky"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              },
+              {
+                "ifc_class": "IfcCovering",
+                "global_id": "3QP$9D8in4mfOudqI0EQ$5"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "0K_MqVdrL0JOCMi_Gblgiw"
+            }
+          },
+          "content_sha256": "sha256:ba3ff94e4e66c70c72b1a7e8a37432a1e44a1c03ba744878a26f7aa3fd7cd3c7"
+        },
+        "after": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_Ya"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_bw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_i1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_iq"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_jN"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kE"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_kQ"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ky"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2s$OZ3oVLG3eDAzPS5FPE1"
+              },
+              {
+                "ifc_class": "IfcCovering",
+                "global_id": "3QP$9D8in4mfOudqI0EQ$5"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "3dDCGbVHnS5x2DfaUPs0PK"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "0K_MqVdrL0JOCMi_Gblgiw"
+            }
+          },
+          "content_sha256": "sha256:1f53af2603f040f16d3eb2fdc4fb5e1232c34235f5242bbe79ffae5783c789be"
+        }
+      }
+    ],
+    "removed": [
+      {
+        "change_kind": "removed",
+        "global_id": "02DY4z0UbB3esbVgo$2l5Y",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ManufacturerTypeInformation",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Manufacturer",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:7d3c5d87e437e60b450ecc2e16a648d27910205e40244f1f8b36a88eb8f46a73"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "08DlcJHzb8WfJZDS4ZFHLL",
+        "ifc_class": "IfcDoor",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcDoor",
+          "name": "木门:PKM0920:307752",
+          "attributes": {
+            "ObjectType": "木门:PKM0920",
+            "Tag": "307752",
+            "OverallHeight": 2000.0,
+            "OverallWidth": 900.0
+          },
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              5384.198019
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              3355.66319
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_GblRwJ"
+          ],
+          "types": [
+            "08DlcJHzb8WfJZDTGZFHKZ"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:ca7affb1aab5e1a12570a3e50ffe373958e569df79fca2f0f1c658e8e34acd29"
+          },
+          "content_sha256": "sha256:369feac4519ccf9a53c0c85b17ed23e3a35f50ca340d16d347bd310d2bce215d"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "08DlcJHzb8WfJZFZ4ZFHLL",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_DoorCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "PKM0920"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:fa48a9b6061264a192a993df9136510c8bf0ce647fb239adcdbc4716a82fffa4"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0DNUcUw3X0Tvxvrg1zyYOG",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfBeam",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:f1729d23c38e797a748a79c805a143ebcfd770bf71ed04c78aaba886f79727f8"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0ENBHwILX7MePfh8TeImdA",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uXX"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1K3T39c8LFuAkfJo6ivhcm"
+            }
+          },
+          "content_sha256": "sha256:2ba1a50fe189bc1df0c6df24a682eac8be4997ffadbdf9ae9dd44f9b82d9bb8f"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0JTZg5dRzDMfmz8gUx_O0R",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1RnWak0Kr6GxkeWnWSd_ld"
+            }
+          },
+          "content_sha256": "sha256:ca16250151200f117a89e4509b0b7b1a34be1024bdef47b12a5a331a770313c9"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0N39ym2I56jQ3pLtQc81Ok",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2gm$a_Xr18IBXaEsc$rwGX"
+            }
+          },
+          "content_sha256": "sha256:bdfadfe135d3be0b482d91f3100ff9cc824c45f5d5c444db58e88f60a5b75f19"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0NdZCm2ML6cxG4pS3fImtM",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ConcreteElementGeneral",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:c2a81f0a76fcaa324c887163c6cfd801b092a704d6bdaba84dc6948c0d467c9a"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0X6z3Tyw9Bm8uk36m4j3vF",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uXX"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2Ne0fUVb19NPkG8Bt24kvK"
+            }
+          },
+          "content_sha256": "sha256:a3c2f5dc7ecd52e384c7e13283005efa3f1d6622e55dc4186eacd5ef7171a979"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0crQWJ4Ej2dwvd8g$BQBWv",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "3x47pLr052DviUrzSTmXHA"
+            }
+          },
+          "content_sha256": "sha256:d65f43b4608b506197ae1b3ce61a24e08cc4427555fedecc0470a5d47846b8d5"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0s_FwJpKbCeeXWRZX1dn3G",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uXX"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2bKoxrhjLBH9M0y4O455dg"
+            }
+          },
+          "content_sha256": "sha256:187209cc69935b9ad36347a834b0e2934fb2576499b06f3be03cef757c4ec6d3"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1FB6S0kOb1YxaeeHJwdNX2",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "08DlcJHzb8WfJZFZ4ZFHLL"
+            }
+          },
+          "content_sha256": "sha256:eff7d24de7d40dc018a7592dcf76106e8d368fa2103e0326a0796517f06fb603"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1K3T39c8LFuAkfJo6ivhcm",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "柱 9"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:18ce8f0cf07338f216640f02d0fd08b2c54c24751d0ba692aa4b5c42c335bae0"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1R0JUeDfz7fPHdj_xyom3z",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ConcreteElementGeneral",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:e80f1b138387c8793e6b733f4db6ac05e04b88414f58ffe56337a34de77abf43"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1RnWak0Kr6GxkeWnWSd_XV",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Span",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPositiveLengthMeasure",
+                    "attributes": {
+                      "wrappedValue": 1520.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:a03450a973ed9d1d331fb2ded2ed5a4bcd60616cea8d29d4623ca8af8366ae62"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1RnWak0Kr6GxkeWnWSd_ld",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Span",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPositiveLengthMeasure",
+                    "attributes": {
+                      "wrappedValue": 2700.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:f58722f20c3c5d25222383dffbad9388776a39001731459200e37db92f78ed09"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1RnWak0Kr6GxkeYF4Sd_XV",
+        "ifc_class": "IfcBeam",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcBeam",
+          "name": "混凝土梁-矩形砼梁-有标记:100x400 2:300428",
+          "attributes": {
+            "ObjectType": "混凝土梁-矩形砼梁-有标记:100x400 2",
+            "Tag": "300428"
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -2964.984822
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              6426.971531
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              2840.45254
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_Gblgiw"
+          ],
+          "types": [
+            "1EazmrnrP3p9dtRknlmbVD"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:ba6cee9e3d6891bd6b7e5226862b5e9067536c1685ec945ecb704f393ba290d9"
+          },
+          "content_sha256": "sha256:cdb4eb6252fc3aac12e668a08880c727a640ef061b364d123539d25fd82eeb69"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1RnWak0Kr6GxkeYF4Sd_ld",
+        "ifc_class": "IfcBeam",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcBeam",
+          "name": "混凝土梁-矩形砼梁-有标记:100x400 2:300596",
+          "attributes": {
+            "ObjectType": "混凝土梁-矩形砼梁-有标记:100x400 2",
+            "Tag": "300596"
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -1241.984822
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              7682.971531
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              2840.45254
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_Gblgiw"
+          ],
+          "types": [
+            "1EazmrnrP3p9dtRknlmbVD"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:ea90eba311c4b6deb5d554b5abbaa3e440175d99379fbdbb3856e9f3848c6c93"
+          },
+          "content_sha256": "sha256:70841623debfc50ef029a0b708fea02f2ab5624b1510256ced55eb496acf5b1d"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1Wn_dXmF1DSBE14cb07uXX",
+        "ifc_class": "IfcColumn",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcColumn",
+          "name": "柱 9:柱 9:293474",
+          "attributes": {
+            "ObjectType": "柱 9:柱 9",
+            "Tag": "293474"
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "0K_MqVdrL0JOCMi_GblRwJ"
+          ],
+          "types": [
+            "1Wn_dXmF1DSBE14cb07uXZ"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:b66b64df920d6f2c30c1f260691849e4928a7b4770f6467b92461a4eb12e7a2b"
+          },
+          "content_sha256": "sha256:c8e2e2eb9c59ec6a16b260d2045a58880f54b6a800b1e24634081ba98e5559af"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1gxhNfZoj6jvF5D4k0NUyt",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcDoorStyle",
+              "global_id": "08DlcJHzb8WfJZDTGZFHKZ"
+            }
+          },
+          "content_sha256": "sha256:d1ac6c2b6fad8a7d60f18cf2d3812f6f7087ecfbf5c6820e90b2adff006b6a4e"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1kTM98nC59gOLe__KhVicQ",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2XQ$qXs6L5090vHLQvkNvs"
+            }
+          },
+          "content_sha256": "sha256:9bb2b809cfc00f7d41dfb5f596a6f84a7b755a2d5a875a57e7aca9ec64c7b621"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "1vLYiVciX9TQT7cZhqfQCy",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1Wn_dXmF1DSBE14cb07uXX"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcColumnType",
+              "global_id": "1Wn_dXmF1DSBE14cb07uXZ"
+            }
+          },
+          "content_sha256": "sha256:e94c68aaf44f62046a0c87e14bf123c1df1c12e75b9de0171deb8e0da95212a3"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "204E2VP6XDBwYS5TxvdNcD",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2lKufnpY18IO7yTMeDoTS7"
+            }
+          },
+          "content_sha256": "sha256:e7ee4f6bab8809c2213be9cda3dd87ae9bb759a57355788abd0791e9ea660bd2"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "21fl8$bNbDwBWk7eyD0J9h",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2No2GvjunBmQadcS0Mimk4"
+            }
+          },
+          "content_sha256": "sha256:ca920dd5af00aaf48db315ce7c20daaaf86206cc49e71900ba41c8b8d87a278e"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "26D7UVQM9E4PnETpXGHfps",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:5f4a61fcadf59aa147f86a5a7f8fb47696b8accc08ba9b9eee56e8e0e9cd320d"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2Boel7Bj11txIfiXhCkS4d",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "0DNUcUw3X0Tvxvrg1zyYOG"
+            }
+          },
+          "content_sha256": "sha256:53b7903a4717ab4034a033955df64afc535d36ff79e6fdbde13b8d2d83ff5dec"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2Ne0fUVb19NPkG8Bt24kvK",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfColumn",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "柱 9"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:1d5a6fc171156f810a94a6ec9c3021e29ec5ea208707d6f394078e870c7a4b22"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2Nkybtym94M9B$l5y1MmoD",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1R0JUeDfz7fPHdj_xyom3z"
+            }
+          },
+          "content_sha256": "sha256:870ea4009453a1ba8743c6abfd24b8960770b3bc65cd7f120bf312b1b83d2885"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2No2GvjunBmQadcS0Mimk4",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "PKM0920"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:82d97f6f49d28ba09b3632086977985f8f63838152a7fbf9a2d3e2620a999527"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2OlxH65OfByOMdzXeZtAwx",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ManufacturerTypeInformation",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Manufacturer",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:d59d4db5c03a4df81b2de48c9314dd51fa79a6b4926aa4d416e52a0239eb5b51"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2UHYDvuW5BuPCRgkswiIM9",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelFillsElement",
+          "name": null,
+          "attributes": {
+            "RelatingOpeningElement": {
+              "ifc_class": "IfcOpeningElement",
+              "global_id": "08DlcJHzb8WfJZDT8ZFHLL"
+            },
+            "RelatedBuildingElement": {
+              "ifc_class": "IfcDoor",
+              "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+            }
+          },
+          "content_sha256": "sha256:a461e9330ec1dde095a348847471cc171fe5b22c7351e20aaf23bc8e2c5d83e4"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2XQ$qXs6L5090vHLQvkNvs",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfBeam",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:f2851ef5eabe244e15f6c4955a8ac823bdddb0908d8058aa172715deee115054"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2bKoxrhjLBH9M0y4O455dg",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ColumnCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "柱 9"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:25f324faeb392514f49c54fa24e3dd64fe3f0d631ccdc78701c9325f4e47805d"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2gm$a_Xr18IBXaEsc$rwGX",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ManufacturerTypeInformation",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Manufacturer",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:908113cb62b7bf8c2dfae582f8105f7d4ff5f05fe42b7d07c99011cbcbf5a64d"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2iLwBgLgfEuAmemc3lmRkq",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1RnWak0Kr6GxkeWnWSd_XV"
+            }
+          },
+          "content_sha256": "sha256:bf7c03b3f85853dc290286c9ebeef84937c22b2e3df709fbd1b2d9efd069b129"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2lKufnpY18IO7yTMeDoTS7",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ConcreteElementGeneral",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": null,
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:c62d7b910d8244c783a8d8585c0d5602a388943b1f4d7baa6182b18827f41dea"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3BQQQ6Nb152AO_1NZ7HIwE",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2OlxH65OfByOMdzXeZtAwx"
+            }
+          },
+          "content_sha256": "sha256:46e714e007a01f25716ae45672b91e4b6002e69acbe42a2b8e497e01aeb745ad"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3FLOWc3av4uQA$iKNBrbkY",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_XV"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "26D7UVQM9E4PnETpXGHfps"
+            }
+          },
+          "content_sha256": "sha256:6c57cc5c0993ef4a81c475ea62599c3ed84d4f3f1a72890c3a685f1f28d3a16e"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3TDsV7fSjCqvGnG6uwM3Bv",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "08DlcJHzb8WfJZDS4ZFHLL"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "0NdZCm2ML6cxG4pS3fImtM"
+            }
+          },
+          "content_sha256": "sha256:693cdbaee4e9966e01278ebb2f8179e268b01fbaff66ff2e23b72030d643de45"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3dtyTSay90_9jV2dxQdEb6",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1RnWak0Kr6GxkeYF4Sd_ld"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "02DY4z0UbB3esbVgo$2l5Y"
+            }
+          },
+          "content_sha256": "sha256:622b2ba5bff0ec4c6bfc2e0e79707317bec91916a0c6a3ce364eb5f336cdf8b4"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3x47pLr052DviUrzSTmXHA",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "100x400 2"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:20435b3ed670b38621da4749d410fc26d996609b36fbcbff36f7d690f0c34bae"
+        },
+        "after": null
+      }
+    ]
+  },
+  "comparison_metrics": {
+    "algorithm_version": "text2ifc/ifc-root-fingerprint/0.2",
+    "strategy": "aligned_step_certificate",
+    "timeout_seconds": 900.0,
+    "before_root_count": 1629,
+    "after_root_count": 1617,
+    "before_entity_count": 69051,
+    "after_entity_count": 69070,
+    "dirty_before_record_count": 106,
+    "dirty_after_record_count": 125,
+    "candidate_root_count": 15,
+    "before_propagated_entity_count": 106,
+    "after_propagated_entity_count": 125,
+    "root_index_seconds": 0.031193,
+    "record_scan_seconds": 1.807053,
+    "propagation_seconds": 0.00192,
+    "before_fingerprint_seconds": 0.950998,
+    "after_fingerprint_seconds": 0.958612,
+    "detail_seconds": 0.027447,
+    "total_seconds": 3.777344,
+    "before": {
+      "hashed_non_root_entities": 6136,
+      "shared_entity_cache_hits": 4413,
+      "cached_non_root_entities": 6136,
+      "cycle_edges": 0,
+      "root_count": 56,
+      "schema_declaration_count": 37
+    },
+    "after": {
+      "hashed_non_root_entities": 6140,
+      "shared_entity_cache_hits": 4373,
+      "cached_non_root_entities": 6140,
+      "cycle_edges": 0,
+      "root_count": 44,
+      "schema_declaration_count": 35
+    }
+  }
+}

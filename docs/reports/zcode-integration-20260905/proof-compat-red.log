@@ -1,0 +1,831 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.4, pytest-8.4.2, pluggy-1.6.0 -- E:\code for project\bimnet-zcode\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\code for project\bimnet-zcode
+configfile: pyproject.toml
+plugins: anyio-4.14.2
+collecting ... collected 2 items
+
+tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection FAILED [ 50%]
+tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed ERROR [100%]
+
+=================================== ERRORS ====================================
+_ ERROR at setup of test_valid_beam_column_public_proof_is_strictly_recomputed _
+tests\ifc_repair\test_phase12_success_cases.py:303: in structural_proof_base
+    run_public_repair(
+scripts\ifc_repair\run_phase12_public_structural_repair.py:664: in run_public_repair
+    return _run_public_repair_with_resolver(
+scripts\ifc_repair\run_phase12_public_structural_repair.py:541: in _run_public_repair_with_resolver
+    raise RuntimeError(
+E   RuntimeError: PUBLIC_STRUCTURAL_EVALUATION_FAILED:{"schema_version": "text2ifc/ifc-repair-evaluation/0.2", "policy_version": "phase8.1", "status": "not_evaluable", "reason": "Application, preservation, and mandatory L1/L2 are strict gates.", "evidence": [{"fact_id": "run.summary", "source_kind": "evaluation_policy", "source_ref": "phase8.1", "expected_state": "available", "actual_state": "available", "expected_value": "all mandatory gates passed", "actual_value": "not_evaluable", "provenance": ["evaluation_policy", "phase8.1"]}], "application": {"check_id": "application.valid", "policy_id": "evaluation.phase8", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The deterministic application must complete and publish its candidate.", "evidence": [{"fact_id": "application.valid.evidence", "source_kind": "application_result", "source_ref": "application.valid", "expected_state": "available", "actual_state": "available", "expected_value": "passed", "actual_value": {"published": true, "valid": true}, "provenance": ["application_result", "application.valid"]}]}, "preservation": {"check_id": "preservation.valid", "policy_id": "evaluation.phase8", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "Independent L1 evidence must authorize preservation and scope effects.", "evidence": [{"fact_id": "preservation.valid.evidence", "source_kind": "application_result", "source_ref": "preservation.valid", "expected_state": "available", "actual_state": "available", "expected_value": "passed", "actual_value": {"l1_status": "not_evaluable"}, "provenance": ["application_result", "preservation.valid"]}]}, "operations": [{"operation_id": "proof-beam-1", "operation_type": "add_beam", "mandatory": true, "policy_id": "beam.add.l2", "policy_version": "0.1", "status": "not_evaluable", "reason": "Mandatory L1 and L2 jointly determine operation success.", "evidence": [{"fact_id": "operation.proof-beam-1", "source_kind": "operation_policy", "source_ref": "beam.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "L1 and L2 passed", "actual_value": {"l1": "not_evaluable", "l2": "passed"}, "provenance": ["operation_policy", "beam.add.l2"]}], "levels": [{"level": "L1", "status": "not_evaluable", "reason": "Independent reopened IFC L1 authorization and measurement.", "evidence": [{"fact_id": "l1.summary", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "readable policy-authorized physical repair", "actual_value": {"check_count": 8, "readable": true}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}], "checks": [{"check_id": "l1.output.readable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Both source and repaired IFC artifacts must reopen independently.", "evidence": [{"fact_id": "l1.output.readable.evidence", "source_kind": "ifc_reopen", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": {"after_readable": true, "before_readable": true}, "actual_value": {"after_error": null, "after_readable": true, "before_error": null, "before_readable": true}, "provenance": ["ifc_reopen", "repaired-ifc"]}]}, {"check_id": "l1.output.schema", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The repaired IFC schema must match the source IFC schema.", "evidence": [{"fact_id": "l1.output.schema.evidence", "source_kind": "ifc_schema", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "IFC2X3", "actual_value": "IFC2X3", "provenance": ["ifc_schema", "repaired-ifc"]}]}, {"check_id": "l1.output.validation", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "Accelerated validation/diff must complete within resource bounds.", "evidence": [{"fact_id": "l1.output.validation.evidence", "source_kind": "evaluation_execution", "source_ref": "damaged-to-repaired", "expected_state": "available", "actual_state": "available", "expected_value": {"status": "passed"}, "actual_value": {"error": "BrokenProcessPool:A process in the process pool was terminated abruptly while the future was running or pending.", "metrics": {"mode": "accelerated", "peak_rss_bytes": 212504576, "wall_seconds": 16.985000000000582, "worker_count": 2}, "reason_code": "EVALUATION_WORKER_FAILED", "results": {}, "status": "failed"}, "provenance": ["evaluation_execution", "damaged-to-repaired"]}]}, {"check_id": "l1.scope.created-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.created-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.modified-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.modified-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.relations", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.relations.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.removed-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.removed-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.source.immutable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The source IFC must remain bound to the declared base fingerprint.", "evidence": [{"fact_id": "l1.source.immutable.evidence", "source_kind": "source_fingerprint", "source_ref": "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc", "expected_state": "available", "actual_state": "available", "expected_value": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "actual_value": {"after": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "before": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7"}, "provenance": ["source_fingerprint", "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc"]}]}]}, {"level": "L2", "status": "passed", "reason": "Policy-owned semantic facts are compared through authorized evidence.", "evidence": [{"fact_id": "l2.summary", "source_kind": "semantic_policy", "source_ref": "beam.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "all mandatory L2 checks passed", "actual_value": {"check_count": 4}, "provenance": ["semantic_policy", "beam.add.l2"]}], "checks": [{"check_id": "beam.type", "policy_id": "beam.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:type", "source_kind": "deterministic_policy", "source_ref": "generated-type:35ijtY2K5HT9r9tuMg3ZMq", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-beam-1", "inherited": true, "pset_path": null, "unit": null, "value": "35ijtY2K5HT9r9tuMg3ZMq", "value_type": "IfcBeamType"}, "actual_value": {"entity_source": "IfcBeam:2vfXTT_mPGT8GnL9IoXXBv", "inherited": false, "pset_path": null, "unit": null, "value": "35ijtY2K5HT9r9tuMg3ZMq", "value_type": "IfcBeamType"}, "provenance": ["operation:proof-beam-1", "generated-type-template:0.1", "repaired:application-role:beam:proof-beam-1"]}]}, {"check_id": "beam.storey", "policy_id": "beam.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:storey", "source_kind": "deterministic_policy", "source_ref": "resolved:/operations/proof-beam-1/target", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-beam-1", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "actual_value": {"entity_source": "IfcBeam:2vfXTT_mPGT8GnL9IoXXBv", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "provenance": ["operation:proof-beam-1", "registered-beam-storey-policy:0.1", "repaired:application-role:beam:proof-beam-1"]}]}, {"check_id": "beam.pset:pset:Pset_BeamCommon.LoadBearing", "policy_id": "beam.add.l2", "applicability": "conditional", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "pset:Pset_BeamCommon.LoadBearing", "source_kind": "explicit_request", "source_ref": "request:/operations/0/properties/0", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-beam-1", "inherited": false, "pset_path": "Pset_BeamCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "actual_value": {"entity_source": "IfcBeam:2vfXTT_mPGT8GnL9IoXXBv", "inherited": false, "pset_path": "Pset_BeamCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "provenance": ["request-source:user_request", "request-evidence:request:/operations/0/properties/0", "operation:proof-beam-1", "property-hash:sha256:a436cdf839282206c74e2c2b94e2270db880cc7dd6c0cdc25202fabfc2e94dcc", "source_fact_key:pset:Pset_BeamCommon.LoadBearing", "repaired:application-role:beam:proof-beam-1", "repaired:ifcopenshell.util.element.get_psets", "repaired:normalized-private-evaluator-key", "repaired:ifcopenshell.util.element.get_psets:direct"]}]}, {"check_id": "beam.material", "policy_id": "beam.add.l2", "applicability": "conditional", "mandatory": false, "status": "not_required", "reason": "No authorized source establishes this conditional semantic fact", "evidence": [{"fact_id": "beam.material", "source_kind": "source_search", "source_ref": "beam.add.l2/beam.material", "expected_state": "unavailable", "actual_state": "not_applicable", "expected_value": null, "actual_value": null, "provenance": ["searched:explicit_request", "searched:surviving_target", "searched:surviving_type", "searched:approved_prototype", "searched:authorized_type_cohort", "searched:deterministic_policy", "searched:private_original"]}]}]}, {"level": "L3", "status": "not_required", "reason": "L3 authoring and identity exactness is not required in v1.1.", "evidence": [{"fact_id": "l3.summary", "source_kind": "policy_boundary", "source_ref": "v1.1", "expected_state": "available", "actual_state": "available", "expected_value": "not required", "actual_value": "observed", "provenance": ["policy_boundary", "v1.1"]}], "checks": [{"check_id": "l3.authoring-identity", "policy_id": "l3.v1.1-observation", "applicability": "informational", "mandatory": false, "status": "failed", "reason": "Original identity is observational and never gates v1.1 repair success.", "evidence": [{"fact_id": "l3.authoring-identity", "source_kind": "identity_observation", "source_ref": "operation:proof-beam-1", "expected_state": "available", "actual_state": "available", "expected_value": null, "actual_value": "2vfXTT_mPGT8GnL9IoXXBv", "provenance": ["identity_observation", "operation:proof-beam-1"]}]}]}]}, {"operation_id": "proof-column-1", "operation_type": "add_column", "mandatory": true, "policy_id": "column.add.l2", "policy_version": "0.1", "status": "not_evaluable", "reason": "Mandatory L1 and L2 jointly determine operation success.", "evidence": [{"fact_id": "operation.proof-column-1", "source_kind": "operation_policy", "source_ref": "column.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "L1 and L2 passed", "actual_value": {"l1": "not_evaluable", "l2": "passed"}, "provenance": ["operation_policy", "column.add.l2"]}], "levels": [{"level": "L1", "status": "not_evaluable", "reason": "Independent reopened IFC L1 authorization and measurement.", "evidence": [{"fact_id": "l1.summary", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "readable policy-authorized physical repair", "actual_value": {"check_count": 8, "readable": true}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}], "checks": [{"check_id": "l1.output.readable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Both source and repaired IFC artifacts must reopen independently.", "evidence": [{"fact_id": "l1.output.readable.evidence", "source_kind": "ifc_reopen", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": {"after_readable": true, "before_readable": true}, "actual_value": {"after_error": null, "after_readable": true, "before_error": null, "before_readable": true}, "provenance": ["ifc_reopen", "repaired-ifc"]}]}, {"check_id": "l1.output.schema", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The repaired IFC schema must match the source IFC schema.", "evidence": [{"fact_id": "l1.output.schema.evidence", "source_kind": "ifc_schema", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "IFC2X3", "actual_value": "IFC2X3", "provenance": ["ifc_schema", "repaired-ifc"]}]}, {"check_id": "l1.output.validation", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "Accelerated validation/diff must complete within resource bounds.", "evidence": [{"fact_id": "l1.output.validation.evidence", "source_kind": "evaluation_execution", "source_ref": "damaged-to-repaired", "expected_state": "available", "actual_state": "available", "expected_value": {"status": "passed"}, "actual_value": {"error": "BrokenProcessPool:A process in the process pool was terminated abruptly while the future was running or pending.", "metrics": {"mode": "accelerated", "peak_rss_bytes": 212504576, "wall_seconds": 16.985000000000582, "worker_count": 2}, "reason_code": "EVALUATION_WORKER_FAILED", "results": {}, "status": "failed"}, "provenance": ["evaluation_execution", "damaged-to-repaired"]}]}, {"check_id": "l1.scope.created-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.created-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.modified-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.modified-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.relations", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.relations.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.removed-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.removed-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.source.immutable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The source IFC must remain bound to the declared base fingerprint.", "evidence": [{"fact_id": "l1.source.immutable.evidence", "source_kind": "source_fingerprint", "source_ref": "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc", "expected_state": "available", "actual_state": "available", "expected_value": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "actual_value": {"after": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "before": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7"}, "provenance": ["source_fingerprint", "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc"]}]}]}, {"level": "L2", "status": "passed", "reason": "Policy-owned semantic facts are compared through authorized evidence.", "evidence": [{"fact_id": "l2.summary", "source_kind": "semantic_policy", "source_ref": "column.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "all mandatory L2 checks passed", "actual_value": {"check_count": 4}, "provenance": ["semantic_policy", "column.add.l2"]}], "checks": [{"check_id": "column.type", "policy_id": "column.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:type", "source_kind": "deterministic_policy", "source_ref": "generated-type:3OzZLg3SnLh9ZXiAg$mAcj", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-column-1", "inherited": true, "pset_path": null, "unit": null, "value": "3OzZLg3SnLh9ZXiAg$mAcj", "value_type": "IfcColumnType"}, "actual_value": {"entity_source": "IfcColumn:1NbzfBRYfGPvt8KirM3qqS", "inherited": false, "pset_path": null, "unit": null, "value": "3OzZLg3SnLh9ZXiAg$mAcj", "value_type": "IfcColumnType"}, "provenance": ["operation:proof-column-1", "generated-type-template:0.1", "repaired:application-role:column:proof-column-1"]}]}, {"check_id": "column.storey", "policy_id": "column.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:storey", "source_kind": "deterministic_policy", "source_ref": "resolved:/operations/proof-column-1/target", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-column-1", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "actual_value": {"entity_source": "IfcColumn:1NbzfBRYfGPvt8KirM3qqS", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "provenance": ["operation:proof-column-1", "registered-column-base-storey-policy:0.1", "repaired:application-role:column:proof-column-1"]}]}, {"check_id": "column.pset:pset:Pset_ColumnCommon.LoadBearing", "policy_id": "column.add.l2", "applicability": "conditional", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "pset:Pset_ColumnCommon.LoadBearing", "source_kind": "explicit_request", "source_ref": "request:/operations/1/properties/0", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-column-1", "inherited": false, "pset_path": "Pset_ColumnCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "actual_value": {"entity_source": "IfcColumn:1NbzfBRYfGPvt8KirM3qqS", "inherited": false, "pset_path": "Pset_ColumnCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "provenance": ["request-source:user_request", "request-evidence:request:/operations/1/properties/0", "operation:proof-column-1", "property-hash:sha256:abf930bfb7d1973a62af1ecaa0e1126087b2aa75927f598e7eac69e5f14213a7", "source_fact_key:pset:Pset_ColumnCommon.LoadBearing", "repaired:application-role:column:proof-column-1", "repaired:ifcopenshell.util.element.get_psets", "repaired:normalized-private-evaluator-key", "repaired:ifcopenshell.util.element.get_psets:direct"]}]}, {"check_id": "column.material", "policy_id": "column.add.l2", "applicability": "conditional", "mandatory": false, "status": "not_required", "reason": "No authorized source establishes this conditional semantic fact", "evidence": [{"fact_id": "column.material", "source_kind": "source_search", "source_ref": "column.add.l2/column.material", "expected_state": "unavailable", "actual_state": "not_applicable", "expected_value": null, "actual_value": null, "provenance": ["searched:explicit_request", "searched:surviving_target", "searched:surviving_type", "searched:approved_prototype", "searched:authorized_type_cohort", "searched:deterministic_policy", "searched:private_original"]}]}]}, {"level": "L3", "status": "not_required", "reason": "L3 authoring and identity exactness is not required in v1.1.", "evidence": [{"fact_id": "l3.summary", "source_kind": "policy_boundary", "source_ref": "v1.1", "expected_state": "available", "actual_state": "available", "expected_value": "not required", "actual_value": "observed", "provenance": ["policy_boundary", "v1.1"]}], "checks": [{"check_id": "l3.authoring-identity", "policy_id": "l3.v1.1-observation", "applicability": "informational", "mandatory": false, "status": "failed", "reason": "Original identity is observational and never gates v1.1 repair success.", "evidence": [{"fact_id": "l3.authoring-identity", "source_kind": "identity_observation", "source_ref": "operation:proof-column-1", "expected_state": "available", "actual_state": "available", "expected_value": null, "actual_value": "1NbzfBRYfGPvt8KirM3qqS", "provenance": ["identity_observation", "operation:proof-column-1"]}]}]}]}], "complete_repair_success": false, "successful_artifact_publishable": false, "diagnostic_artifact_retained": true}
+---------------------------- Captured stdout setup ----------------------------
+============================= test session starts =============================
+
+platform win32 -- Python 3.12.4, pytest-8.4.2, pluggy-1.6.0 -- E:\code for project\bimnet-zcode\.venv\Scripts\python.exe
+
+cachedir: .pytest_cache
+
+rootdir: E:\code for project\bimnet-zcode
+
+configfile: pyproject.toml
+
+plugins: anyio-4.14.2
+
+collecting ... ============================= test session starts =============================
+
+platform win32 -- Python 3.12.4, pytest-8.4.2, pluggy-1.6.0 -- E:\code for project\bimnet-zcode\.venv\Scripts\python.exe
+
+cachedir: .pytest_cache
+
+rootdir: E:\code for project\bimnet-zcode
+
+configfile: pyproject.toml
+
+plugins: anyio-4.14.2
+
+collecting ... collected 2 items
+
+
+
+tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection collected 2 items
+
+
+
+tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection FAILED [ 50%]FAILED [ 50%]
+
+tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed 
+
+tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed ERROR [100%]ERROR [100%]
+
+
+
+=================================== ERRORS ====================================
+
+_ ERROR at setup of test_valid_beam_column_public_proof_is_strictly_recomputed _
+
+tests\ifc_repair\test_phase12_success_cases.py:303: in structural_proof_base
+
+    run_public_repair(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:664: in run_public_repair
+
+    return _run_public_repair_with_resolver(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:529: in _run_public_repair_with_resolver
+
+    evaluate_production(
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:166: in evaluate_production
+
+    return _evaluate(inputs, private_original_path=None, private_mapping={})
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:423: in _evaluate
+
+    l1 = evaluate_independent_l1(
+
+src\text2ifc_ifc_repair\evaluation.py:912: in evaluate_independent_l1
+
+    accelerated = execute_validation_and_diff(
+
+src\text2ifc_ifc_repair\evaluation.py:129: in execute_validation_and_diff
+
+    return _execute_default_accelerated(
+
+src\text2ifc_ifc_repair\evaluation.py:445: in _execute_default_accelerated
+
+    role: executor.submit(
+
+E:\anaconda\Lib\concurrent\futures\process.py:830: in submit
+
+    self._adjust_process_count()
+
+E:\anaconda\Lib\concurrent\futures\process.py:789: in _adjust_process_count
+
+    self._spawn_process()
+
+E:\anaconda\Lib\concurrent\futures\process.py:807: in _spawn_process
+
+    p.start()
+
+E:\anaconda\Lib\multiprocessing\process.py:121: in start
+
+    self._popen = self._Popen(self)
+
+                  ^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\context.py:337: in _Popen
+
+    return Popen(process_obj)
+
+           ^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\popen_spawn_win32.py:46: in __init__
+
+    prep_data = spawn.get_preparation_data(process_obj._name)
+
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\spawn.py:164: in get_preparation_data
+
+    _check_not_importing_main()
+
+E:\anaconda\Lib\multiprocessing\spawn.py:140: in _check_not_importing_main
+
+    raise RuntimeError('''
+
+E   RuntimeError: 
+
+E           An attempt has been made to start a new process before the
+
+E           current process has finished its bootstrapping phase.
+
+E   
+
+E           This probably means that you are not using fork to start your
+
+E           child processes and you have forgotten to use the proper idiom
+
+E           in the main module:
+
+E   
+
+E               if __name__ == '__main__':
+
+E                   freeze_support()
+
+E                   ...
+
+E   
+
+E           The "freeze_support()" line can be omitted if the program
+
+E           is not going to be frozen to produce an executable.
+
+E   
+
+E           To fix this issue, refer to the "Safe importing of main module"
+
+E           section in https://docs.python.org/3/library/multiprocessing.html
+
+================================== FAILURES ===================================
+
+___ test_property_authority_replay_accepts_public_user_candidate_selection ____
+
+tests\ifc_repair\test_phase12_success_cases.py:1705: in test_property_authority_replay_accepts_public_user_candidate_selection
+
+    assert final["status"] == "succeeded"
+
+E   AssertionError: assert 'not_publishable' == 'succeeded'
+
+E     
+
+E     - succeeded
+
+E     + not_publishable
+
+- generated xml file: E:\code for project\bimnet-zcode\.tmp\zcode-integration\proof-compat-red.junit.xml -
+
+=========================== short test summary info ===========================
+
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection - AssertionError: assert 'not_publishable' == 'succeeded'
+
+  
+
+  - succeeded
+
+  + not_publishable
+
+ERROR tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed - RuntimeError: 
+
+        An attempt has been made to start a new process before the
+
+        current process has finished its bootstrapping phase.
+
+
+
+        This probably means that you are not using fork to start your
+
+        child processes and you have forgotten to use the proper idiom
+
+        in the main module:
+
+
+
+            if __name__ == '__main__':
+
+                freeze_support()
+
+                ...
+
+
+
+        The "freeze_support()" line can be omitted if the program
+
+        is not going to be frozen to produce an executable.
+
+
+
+        To fix this issue, refer to the "Safe importing of main module"
+
+        section in https://docs.python.org/3/library/multiprocessing.html
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 2 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+========================= 1 failed, 1 error in 15.18s =========================
+
+
+
+
+
+=================================== ERRORS ====================================
+
+_ ERROR at setup of test_valid_beam_column_public_proof_is_strictly_recomputed _
+
+tests\ifc_repair\test_phase12_success_cases.py:303: in structural_proof_base
+
+    run_public_repair(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:664: in run_public_repair
+
+    return _run_public_repair_with_resolver(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:529: in _run_public_repair_with_resolver
+
+    evaluate_production(
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:166: in evaluate_production
+
+    return _evaluate(inputs, private_original_path=None, private_mapping={})
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:423: in _evaluate
+
+    l1 = evaluate_independent_l1(
+
+src\text2ifc_ifc_repair\evaluation.py:912: in evaluate_independent_l1
+
+    accelerated = execute_validation_and_diff(
+
+src\text2ifc_ifc_repair\evaluation.py:129: in execute_validation_and_diff
+
+    return _execute_default_accelerated(
+
+src\text2ifc_ifc_repair\evaluation.py:445: in _execute_default_accelerated
+
+    role: executor.submit(
+
+E:\anaconda\Lib\concurrent\futures\process.py:830: in submit
+
+    self._adjust_process_count()
+
+E:\anaconda\Lib\concurrent\futures\process.py:789: in _adjust_process_count
+
+    self._spawn_process()
+
+E:\anaconda\Lib\concurrent\futures\process.py:807: in _spawn_process
+
+    p.start()
+
+E:\anaconda\Lib\multiprocessing\process.py:121: in start
+
+    self._popen = self._Popen(self)
+
+                  ^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\context.py:337: in _Popen
+
+    return Popen(process_obj)
+
+           ^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\popen_spawn_win32.py:46: in __init__
+
+    prep_data = spawn.get_preparation_data(process_obj._name)
+
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\spawn.py:164: in get_preparation_data
+
+    _check_not_importing_main()
+
+E:\anaconda\Lib\multiprocessing\spawn.py:140: in _check_not_importing_main
+
+    raise RuntimeError('''
+
+E   RuntimeError: 
+
+E           An attempt has been made to start a new process before the
+
+E           current process has finished its bootstrapping phase.
+
+E   
+
+E           This probably means that you are not using fork to start your
+
+E           child processes and you have forgotten to use the proper idiom
+
+E           in the main module:
+
+E   
+
+E               if __name__ == '__main__':
+
+E                   freeze_support()
+
+E                   ...
+
+E   
+
+E           The "freeze_support()" line can be omitted if the program
+
+E           is not going to be frozen to produce an executable.
+
+E   
+
+E           To fix this issue, refer to the "Safe importing of main module"
+
+E           section in https://docs.python.org/3/library/multiprocessing.html
+
+================================== FAILURES ===================================
+
+___ test_property_authority_replay_accepts_public_user_candidate_selection ____
+
+tests\ifc_repair\test_phase12_success_cases.py:1705: in test_property_authority_replay_accepts_public_user_candidate_selection
+
+    assert final["status"] == "succeeded"
+
+E   AssertionError: assert 'not_publishable' == 'succeeded'
+
+E     
+
+E     - succeeded
+
+E     + not_publishable
+
+- generated xml file: E:\code for project\bimnet-zcode\.tmp\zcode-integration\proof-compat-red.junit.xml -
+
+=========================== short test summary info ===========================
+
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection - AssertionError: assert 'not_publishable' == 'succeeded'
+
+  
+
+  - succeeded
+
+  + not_publishable
+
+ERROR tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed - RuntimeError: 
+
+        An attempt has been made to start a new process before the
+
+        current process has finished its bootstrapping phase.
+
+
+
+        This probably means that you are not using fork to start your
+
+        child processes and you have forgotten to use the proper idiom
+
+        in the main module:
+
+
+
+            if __name__ == '__main__':
+
+                freeze_support()
+
+                ...
+
+
+
+        The "freeze_support()" line can be omitted if the program
+
+        is not going to be frozen to produce an executable.
+
+
+
+        To fix this issue, refer to the "Safe importing of main module"
+
+        section in https://docs.python.org/3/library/multiprocessing.html
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 2 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+========================= 1 failed, 1 error in 15.18s =========================
+
+================================== FAILURES ===================================
+___ test_property_authority_replay_accepts_public_user_candidate_selection ____
+tests\ifc_repair\test_phase12_success_cases.py:1705: in test_property_authority_replay_accepts_public_user_candidate_selection
+    assert final["status"] == "succeeded"
+E   AssertionError: assert 'not_publishable' == 'succeeded'
+E     
+E     - succeeded
+E     + not_publishable
+---------------------------- Captured stdout call -----------------------------
+============================= test session starts =============================
+
+platform win32 -- Python 3.12.4, pytest-8.4.2, pluggy-1.6.0 -- E:\code for project\bimnet-zcode\.venv\Scripts\python.exe
+
+cachedir: .pytest_cache
+
+rootdir: E:\code for project\bimnet-zcode
+
+configfile: pyproject.toml
+
+plugins: anyio-4.14.2
+
+collecting ... ============================= test session starts =============================
+
+platform win32 -- Python 3.12.4, pytest-8.4.2, pluggy-1.6.0 -- E:\code for project\bimnet-zcode\.venv\Scripts\python.exe
+
+cachedir: .pytest_cache
+
+rootdir: E:\code for project\bimnet-zcode
+
+configfile: pyproject.toml
+
+plugins: anyio-4.14.2
+
+collecting ... collected 2 items
+
+
+
+tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection collected 2 items
+
+
+
+tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection FAILED [ 50%]FAILED [ 50%]
+
+tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed 
+
+tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed ERROR [100%]ERROR [100%]
+
+
+
+=================================== ERRORS ====================================
+
+_ ERROR at setup of test_valid_beam_column_public_proof_is_strictly_recomputed _
+
+tests\ifc_repair\test_phase12_success_cases.py:303: in structural_proof_base
+
+    run_public_repair(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:664: in run_public_repair
+
+    return _run_public_repair_with_resolver(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:529: in _run_public_repair_with_resolver
+
+    evaluate_production(
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:166: in evaluate_production
+
+    return _evaluate(inputs, private_original_path=None, private_mapping={})
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:423: in _evaluate
+
+    l1 = evaluate_independent_l1(
+
+src\text2ifc_ifc_repair\evaluation.py:912: in evaluate_independent_l1
+
+    accelerated = execute_validation_and_diff(
+
+src\text2ifc_ifc_repair\evaluation.py:129: in execute_validation_and_diff
+
+    return _execute_default_accelerated(
+
+src\text2ifc_ifc_repair\evaluation.py:445: in _execute_default_accelerated
+
+    role: executor.submit(
+
+E:\anaconda\Lib\concurrent\futures\process.py:830: in submit
+
+    self._adjust_process_count()
+
+E:\anaconda\Lib\concurrent\futures\process.py:789: in _adjust_process_count
+
+    self._spawn_process()
+
+E:\anaconda\Lib\concurrent\futures\process.py:807: in _spawn_process
+
+    p.start()
+
+E:\anaconda\Lib\multiprocessing\process.py:121: in start
+
+    self._popen = self._Popen(self)
+
+                  ^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\context.py:337: in _Popen
+
+    return Popen(process_obj)
+
+           ^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\popen_spawn_win32.py:46: in __init__
+
+    prep_data = spawn.get_preparation_data(process_obj._name)
+
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\spawn.py:164: in get_preparation_data
+
+    _check_not_importing_main()
+
+E:\anaconda\Lib\multiprocessing\spawn.py:140: in _check_not_importing_main
+
+    raise RuntimeError('''
+
+E   RuntimeError: 
+
+E           An attempt has been made to start a new process before the
+
+E           current process has finished its bootstrapping phase.
+
+E   
+
+E           This probably means that you are not using fork to start your
+
+E           child processes and you have forgotten to use the proper idiom
+
+E           in the main module:
+
+E   
+
+E               if __name__ == '__main__':
+
+E                   freeze_support()
+
+E                   ...
+
+E   
+
+E           The "freeze_support()" line can be omitted if the program
+
+E           is not going to be frozen to produce an executable.
+
+E   
+
+E           To fix this issue, refer to the "Safe importing of main module"
+
+E           section in https://docs.python.org/3/library/multiprocessing.html
+
+================================== FAILURES ===================================
+
+___ test_property_authority_replay_accepts_public_user_candidate_selection ____
+
+tests\ifc_repair\test_phase12_success_cases.py:1705: in test_property_authority_replay_accepts_public_user_candidate_selection
+
+    assert final["status"] == "succeeded"
+
+E   AssertionError: assert 'not_publishable' == 'succeeded'
+
+E     
+
+E     - succeeded
+
+E     + not_publishable
+
+- generated xml file: E:\code for project\bimnet-zcode\.tmp\zcode-integration\proof-compat-red.junit.xml -
+
+=========================== short test summary info ===========================
+
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection - AssertionError: assert 'not_publishable' == 'succeeded'
+
+  
+
+  - succeeded
+
+  + not_publishable
+
+ERROR tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed - RuntimeError: 
+
+        An attempt has been made to start a new process before the
+
+        current process has finished its bootstrapping phase.
+
+
+
+        This probably means that you are not using fork to start your
+
+        child processes and you have forgotten to use the proper idiom
+
+        in the main module:
+
+
+
+            if __name__ == '__main__':
+
+                freeze_support()
+
+                ...
+
+
+
+        The "freeze_support()" line can be omitted if the program
+
+        is not going to be frozen to produce an executable.
+
+
+
+        To fix this issue, refer to the "Safe importing of main module"
+
+        section in https://docs.python.org/3/library/multiprocessing.html
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 2 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+========================= 1 failed, 1 error in 18.01s =========================
+
+
+
+
+
+=================================== ERRORS ====================================
+
+_ ERROR at setup of test_valid_beam_column_public_proof_is_strictly_recomputed _
+
+tests\ifc_repair\test_phase12_success_cases.py:303: in structural_proof_base
+
+    run_public_repair(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:664: in run_public_repair
+
+    return _run_public_repair_with_resolver(
+
+scripts\ifc_repair\run_phase12_public_structural_repair.py:529: in _run_public_repair_with_resolver
+
+    evaluate_production(
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:166: in evaluate_production
+
+    return _evaluate(inputs, private_original_path=None, private_mapping={})
+
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+src\text2ifc_ifc_repair\benchmark_evaluation.py:423: in _evaluate
+
+    l1 = evaluate_independent_l1(
+
+src\text2ifc_ifc_repair\evaluation.py:912: in evaluate_independent_l1
+
+    accelerated = execute_validation_and_diff(
+
+src\text2ifc_ifc_repair\evaluation.py:129: in execute_validation_and_diff
+
+    return _execute_default_accelerated(
+
+src\text2ifc_ifc_repair\evaluation.py:445: in _execute_default_accelerated
+
+    role: executor.submit(
+
+E:\anaconda\Lib\concurrent\futures\process.py:830: in submit
+
+    self._adjust_process_count()
+
+E:\anaconda\Lib\concurrent\futures\process.py:789: in _adjust_process_count
+
+    self._spawn_process()
+
+E:\anaconda\Lib\concurrent\futures\process.py:807: in _spawn_process
+
+    p.start()
+
+E:\anaconda\Lib\multiprocessing\process.py:121: in start
+
+    self._popen = self._Popen(self)
+
+                  ^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\context.py:337: in _Popen
+
+    return Popen(process_obj)
+
+           ^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\popen_spawn_win32.py:46: in __init__
+
+    prep_data = spawn.get_preparation_data(process_obj._name)
+
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+E:\anaconda\Lib\multiprocessing\spawn.py:164: in get_preparation_data
+
+    _check_not_importing_main()
+
+E:\anaconda\Lib\multiprocessing\spawn.py:140: in _check_not_importing_main
+
+    raise RuntimeError('''
+
+E   RuntimeError: 
+
+E           An attempt has been made to start a new process before the
+
+E           current process has finished its bootstrapping phase.
+
+E   
+
+E           This probably means that you are not using fork to start your
+
+E           child processes and you have forgotten to use the proper idiom
+
+E           in the main module:
+
+E   
+
+E               if __name__ == '__main__':
+
+E                   freeze_support()
+
+E                   ...
+
+E   
+
+E           The "freeze_support()" line can be omitted if the program
+
+E           is not going to be frozen to produce an executable.
+
+E   
+
+E           To fix this issue, refer to the "Safe importing of main module"
+
+E           section in https://docs.python.org/3/library/multiprocessing.html
+
+================================== FAILURES ===================================
+
+___ test_property_authority_replay_accepts_public_user_candidate_selection ____
+
+tests\ifc_repair\test_phase12_success_cases.py:1705: in test_property_authority_replay_accepts_public_user_candidate_selection
+
+    assert final["status"] == "succeeded"
+
+E   AssertionError: assert 'not_publishable' == 'succeeded'
+
+E     
+
+E     - succeeded
+
+E     + not_publishable
+
+- generated xml file: E:\code for project\bimnet-zcode\.tmp\zcode-integration\proof-compat-red.junit.xml -
+
+=========================== short test summary info ===========================
+
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection - AssertionError: assert 'not_publishable' == 'succeeded'
+
+  
+
+  - succeeded
+
+  + not_publishable
+
+ERROR tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed - RuntimeError: 
+
+        An attempt has been made to start a new process before the
+
+        current process has finished its bootstrapping phase.
+
+
+
+        This probably means that you are not using fork to start your
+
+        child processes and you have forgotten to use the proper idiom
+
+        in the main module:
+
+
+
+            if __name__ == '__main__':
+
+                freeze_support()
+
+                ...
+
+
+
+        The "freeze_support()" line can be omitted if the program
+
+        is not going to be frozen to produce an executable.
+
+
+
+        To fix this issue, refer to the "Safe importing of main module"
+
+        section in https://docs.python.org/3/library/multiprocessing.html
+
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 2 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+
+========================= 1 failed, 1 error in 17.99s =========================
+
+- generated xml file: E:\code for project\bimnet-zcode\.tmp\zcode-integration\proof-compat-red.junit.xml -
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_phase12_success_cases.py::test_property_authority_replay_accepts_public_user_candidate_selection - AssertionError: assert 'not_publishable' == 'succeeded'
+  
+  - succeeded
+  + not_publishable
+ERROR tests/ifc_repair/test_phase12_success_cases.py::test_valid_beam_column_public_proof_is_strictly_recomputed - RuntimeError: PUBLIC_STRUCTURAL_EVALUATION_FAILED:{"schema_version": "text2ifc/ifc-repair-evaluation/0.2", "policy_version": "phase8.1", "status": "not_evaluable", "reason": "Application, preservation, and mandatory L1/L2 are strict gates.", "evidence": [{"fact_id": "run.summary", "source_kind": "evaluation_policy", "source_ref": "phase8.1", "expected_state": "available", "actual_state": "available", "expected_value": "all mandatory gates passed", "actual_value": "not_evaluable", "provenance": ["evaluation_policy", "phase8.1"]}], "application": {"check_id": "application.valid", "policy_id": "evaluation.phase8", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The deterministic application must complete and publish its candidate.", "evidence": [{"fact_id": "application.valid.evidence", "source_kind": "application_result", "source_ref": "application.valid", "expected_state": "available", "actual_state": "available", "expected_value": "passed", "actual_value": {"published": true, "valid": true}, "provenance": ["application_result", "application.valid"]}]}, "preservation": {"check_id": "preservation.valid", "policy_id": "evaluation.phase8", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "Independent L1 evidence must authorize preservation and scope effects.", "evidence": [{"fact_id": "preservation.valid.evidence", "source_kind": "application_result", "source_ref": "preservation.valid", "expected_state": "available", "actual_state": "available", "expected_value": "passed", "actual_value": {"l1_status": "not_evaluable"}, "provenance": ["application_result", "preservation.valid"]}]}, "operations": [{"operation_id": "proof-beam-1", "operation_type": "add_beam", "mandatory": true, "policy_id": "beam.add.l2", "policy_version": "0.1", "status": "not_evaluable", "reason": "Mandatory L1 and L2 jointly determine operation success.", "evidence": [{"fact_id": "operation.proof-beam-1", "source_kind": "operation_policy", "source_ref": "beam.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "L1 and L2 passed", "actual_value": {"l1": "not_evaluable", "l2": "passed"}, "provenance": ["operation_policy", "beam.add.l2"]}], "levels": [{"level": "L1", "status": "not_evaluable", "reason": "Independent reopened IFC L1 authorization and measurement.", "evidence": [{"fact_id": "l1.summary", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "readable policy-authorized physical repair", "actual_value": {"check_count": 8, "readable": true}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}], "checks": [{"check_id": "l1.output.readable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Both source and repaired IFC artifacts must reopen independently.", "evidence": [{"fact_id": "l1.output.readable.evidence", "source_kind": "ifc_reopen", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": {"after_readable": true, "before_readable": true}, "actual_value": {"after_error": null, "after_readable": true, "before_error": null, "before_readable": true}, "provenance": ["ifc_reopen", "repaired-ifc"]}]}, {"check_id": "l1.output.schema", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The repaired IFC schema must match the source IFC schema.", "evidence": [{"fact_id": "l1.output.schema.evidence", "source_kind": "ifc_schema", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "IFC2X3", "actual_value": "IFC2X3", "provenance": ["ifc_schema", "repaired-ifc"]}]}, {"check_id": "l1.output.validation", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "Accelerated validation/diff must complete within resource bounds.", "evidence": [{"fact_id": "l1.output.validation.evidence", "source_kind": "evaluation_execution", "source_ref": "damaged-to-repaired", "expected_state": "available", "actual_state": "available", "expected_value": {"status": "passed"}, "actual_value": {"error": "BrokenProcessPool:A process in the process pool was terminated abruptly while the future was running or pending.", "metrics": {"mode": "accelerated", "peak_rss_bytes": 212504576, "wall_seconds": 16.985000000000582, "worker_count": 2}, "reason_code": "EVALUATION_WORKER_FAILED", "results": {}, "status": "failed"}, "provenance": ["evaluation_execution", "damaged-to-repaired"]}]}, {"check_id": "l1.scope.created-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.created-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.modified-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.modified-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.relations", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.relations.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.removed-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.removed-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.source.immutable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The source IFC must remain bound to the declared base fingerprint.", "evidence": [{"fact_id": "l1.source.immutable.evidence", "source_kind": "source_fingerprint", "source_ref": "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc", "expected_state": "available", "actual_state": "available", "expected_value": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "actual_value": {"after": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "before": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7"}, "provenance": ["source_fingerprint", "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc"]}]}]}, {"level": "L2", "status": "passed", "reason": "Policy-owned semantic facts are compared through authorized evidence.", "evidence": [{"fact_id": "l2.summary", "source_kind": "semantic_policy", "source_ref": "beam.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "all mandatory L2 checks passed", "actual_value": {"check_count": 4}, "provenance": ["semantic_policy", "beam.add.l2"]}], "checks": [{"check_id": "beam.type", "policy_id": "beam.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:type", "source_kind": "deterministic_policy", "source_ref": "generated-type:35ijtY2K5HT9r9tuMg3ZMq", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-beam-1", "inherited": true, "pset_path": null, "unit": null, "value": "35ijtY2K5HT9r9tuMg3ZMq", "value_type": "IfcBeamType"}, "actual_value": {"entity_source": "IfcBeam:2vfXTT_mPGT8GnL9IoXXBv", "inherited": false, "pset_path": null, "unit": null, "value": "35ijtY2K5HT9r9tuMg3ZMq", "value_type": "IfcBeamType"}, "provenance": ["operation:proof-beam-1", "generated-type-template:0.1", "repaired:application-role:beam:proof-beam-1"]}]}, {"check_id": "beam.storey", "policy_id": "beam.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:storey", "source_kind": "deterministic_policy", "source_ref": "resolved:/operations/proof-beam-1/target", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-beam-1", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "actual_value": {"entity_source": "IfcBeam:2vfXTT_mPGT8GnL9IoXXBv", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "provenance": ["operation:proof-beam-1", "registered-beam-storey-policy:0.1", "repaired:application-role:beam:proof-beam-1"]}]}, {"check_id": "beam.pset:pset:Pset_BeamCommon.LoadBearing", "policy_id": "beam.add.l2", "applicability": "conditional", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "pset:Pset_BeamCommon.LoadBearing", "source_kind": "explicit_request", "source_ref": "request:/operations/0/properties/0", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-beam-1", "inherited": false, "pset_path": "Pset_BeamCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "actual_value": {"entity_source": "IfcBeam:2vfXTT_mPGT8GnL9IoXXBv", "inherited": false, "pset_path": "Pset_BeamCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "provenance": ["request-source:user_request", "request-evidence:request:/operations/0/properties/0", "operation:proof-beam-1", "property-hash:sha256:a436cdf839282206c74e2c2b94e2270db880cc7dd6c0cdc25202fabfc2e94dcc", "source_fact_key:pset:Pset_BeamCommon.LoadBearing", "repaired:application-role:beam:proof-beam-1", "repaired:ifcopenshell.util.element.get_psets", "repaired:normalized-private-evaluator-key", "repaired:ifcopenshell.util.element.get_psets:direct"]}]}, {"check_id": "beam.material", "policy_id": "beam.add.l2", "applicability": "conditional", "mandatory": false, "status": "not_required", "reason": "No authorized source establishes this conditional semantic fact", "evidence": [{"fact_id": "beam.material", "source_kind": "source_search", "source_ref": "beam.add.l2/beam.material", "expected_state": "unavailable", "actual_state": "not_applicable", "expected_value": null, "actual_value": null, "provenance": ["searched:explicit_request", "searched:surviving_target", "searched:surviving_type", "searched:approved_prototype", "searched:authorized_type_cohort", "searched:deterministic_policy", "searched:private_original"]}]}]}, {"level": "L3", "status": "not_required", "reason": "L3 authoring and identity exactness is not required in v1.1.", "evidence": [{"fact_id": "l3.summary", "source_kind": "policy_boundary", "source_ref": "v1.1", "expected_state": "available", "actual_state": "available", "expected_value": "not required", "actual_value": "observed", "provenance": ["policy_boundary", "v1.1"]}], "checks": [{"check_id": "l3.authoring-identity", "policy_id": "l3.v1.1-observation", "applicability": "informational", "mandatory": false, "status": "failed", "reason": "Original identity is observational and never gates v1.1 repair success.", "evidence": [{"fact_id": "l3.authoring-identity", "source_kind": "identity_observation", "source_ref": "operation:proof-beam-1", "expected_state": "available", "actual_state": "available", "expected_value": null, "actual_value": "2vfXTT_mPGT8GnL9IoXXBv", "provenance": ["identity_observation", "operation:proof-beam-1"]}]}]}]}, {"operation_id": "proof-column-1", "operation_type": "add_column", "mandatory": true, "policy_id": "column.add.l2", "policy_version": "0.1", "status": "not_evaluable", "reason": "Mandatory L1 and L2 jointly determine operation success.", "evidence": [{"fact_id": "operation.proof-column-1", "source_kind": "operation_policy", "source_ref": "column.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "L1 and L2 passed", "actual_value": {"l1": "not_evaluable", "l2": "passed"}, "provenance": ["operation_policy", "column.add.l2"]}], "levels": [{"level": "L1", "status": "not_evaluable", "reason": "Independent reopened IFC L1 authorization and measurement.", "evidence": [{"fact_id": "l1.summary", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "readable policy-authorized physical repair", "actual_value": {"check_count": 8, "readable": true}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}], "checks": [{"check_id": "l1.output.readable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Both source and repaired IFC artifacts must reopen independently.", "evidence": [{"fact_id": "l1.output.readable.evidence", "source_kind": "ifc_reopen", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": {"after_readable": true, "before_readable": true}, "actual_value": {"after_error": null, "after_readable": true, "before_error": null, "before_readable": true}, "provenance": ["ifc_reopen", "repaired-ifc"]}]}, {"check_id": "l1.output.schema", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The repaired IFC schema must match the source IFC schema.", "evidence": [{"fact_id": "l1.output.schema.evidence", "source_kind": "ifc_schema", "source_ref": "repaired-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "IFC2X3", "actual_value": "IFC2X3", "provenance": ["ifc_schema", "repaired-ifc"]}]}, {"check_id": "l1.output.validation", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "Accelerated validation/diff must complete within resource bounds.", "evidence": [{"fact_id": "l1.output.validation.evidence", "source_kind": "evaluation_execution", "source_ref": "damaged-to-repaired", "expected_state": "available", "actual_state": "available", "expected_value": {"status": "passed"}, "actual_value": {"error": "BrokenProcessPool:A process in the process pool was terminated abruptly while the future was running or pending.", "metrics": {"mode": "accelerated", "peak_rss_bytes": 212504576, "wall_seconds": 16.985000000000582, "worker_count": 2}, "reason_code": "EVALUATION_WORKER_FAILED", "results": {}, "status": "failed"}, "provenance": ["evaluation_execution", "damaged-to-repaired"]}]}, {"check_id": "l1.scope.created-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.created-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.modified-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.modified-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.relations", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.relations.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.scope.removed-roots", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "not_evaluable", "reason": "The blocking global preservation comparator did not produce complete trustworthy evidence.", "evidence": [{"fact_id": "l1.scope.removed-roots.evidence", "source_kind": "ifc_actual_diff", "source_ref": "reopened-ifc", "expected_state": "available", "actual_state": "available", "expected_value": "complete fail-closed global preservation evidence", "actual_value": {"error": "EVALUATION_WORKER_FAILED: accelerated evaluation failed", "error_code": "EVALUATION_WORKER_FAILED"}, "provenance": ["ifc_actual_diff", "reopened-ifc"]}]}, {"check_id": "l1.source.immutable", "policy_id": "l1.common", "applicability": "required", "mandatory": true, "status": "passed", "reason": "The source IFC must remain bound to the declared base fingerprint.", "evidence": [{"fact_id": "l1.source.immutable.evidence", "source_kind": "source_fingerprint", "source_ref": "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc", "expected_state": "available", "actual_state": "available", "expected_value": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "actual_value": {"after": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7", "before": "sha256:43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7"}, "provenance": ["source_fingerprint", "E:\\code for project\\bimnet-zcode\\.pytest-tmp-zcode-20260905-200316-062752\\phase12-structural-proof0\\runner-output\\damaged.ifc"]}]}]}, {"level": "L2", "status": "passed", "reason": "Policy-owned semantic facts are compared through authorized evidence.", "evidence": [{"fact_id": "l2.summary", "source_kind": "semantic_policy", "source_ref": "column.add.l2", "expected_state": "available", "actual_state": "available", "expected_value": "all mandatory L2 checks passed", "actual_value": {"check_count": 4}, "provenance": ["semantic_policy", "column.add.l2"]}], "checks": [{"check_id": "column.type", "policy_id": "column.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:type", "source_kind": "deterministic_policy", "source_ref": "generated-type:3OzZLg3SnLh9ZXiAg$mAcj", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-column-1", "inherited": true, "pset_path": null, "unit": null, "value": "3OzZLg3SnLh9ZXiAg$mAcj", "value_type": "IfcColumnType"}, "actual_value": {"entity_source": "IfcColumn:1NbzfBRYfGPvt8KirM3qqS", "inherited": false, "pset_path": null, "unit": null, "value": "3OzZLg3SnLh9ZXiAg$mAcj", "value_type": "IfcColumnType"}, "provenance": ["operation:proof-column-1", "generated-type-template:0.1", "repaired:application-role:column:proof-column-1"]}]}, {"check_id": "column.storey", "policy_id": "column.add.l2", "applicability": "required", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "relationship:storey", "source_kind": "deterministic_policy", "source_ref": "resolved:/operations/proof-column-1/target", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-column-1", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "actual_value": {"entity_source": "IfcColumn:1NbzfBRYfGPvt8KirM3qqS", "inherited": false, "pset_path": null, "unit": null, "value": "0K_MqVdrL0JOCMi_GblRwJ", "value_type": "IfcBuildingStorey"}, "provenance": ["operation:proof-column-1", "registered-column-base-storey-policy:0.1", "repaired:application-role:column:proof-column-1"]}]}, {"check_id": "column.pset:pset:Pset_ColumnCommon.LoadBearing", "policy_id": "column.add.l2", "applicability": "conditional", "mandatory": true, "status": "passed", "reason": "Authorized semantic fact is present and equivalent in repaired output", "evidence": [{"fact_id": "pset:Pset_ColumnCommon.LoadBearing", "source_kind": "explicit_request", "source_ref": "request:/operations/1/properties/0", "expected_state": "available", "actual_state": "available", "expected_value": {"entity_source": "semantic-manifest:proof-column-1", "inherited": false, "pset_path": "Pset_ColumnCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "actual_value": {"entity_source": "IfcColumn:1NbzfBRYfGPvt8KirM3qqS", "inherited": false, "pset_path": "Pset_ColumnCommon.LoadBearing", "unit": null, "value": true, "value_type": "IfcBoolean"}, "provenance": ["request-source:user_request", "request-evidence:request:/operations/1/properties/0", "operation:proof-column-1", "property-hash:sha256:abf930bfb7d1973a62af1ecaa0e1126087b2aa75927f598e7eac69e5f14213a7", "source_fact_key:pset:Pset_ColumnCommon.LoadBearing", "repaired:application-role:column:proof-column-1", "repaired:ifcopenshell.util.element.get_psets", "repaired:normalized-private-evaluator-key", "repaired:ifcopenshell.util.element.get_psets:direct"]}]}, {"check_id": "column.material", "policy_id": "column.add.l2", "applicability": "conditional", "mandatory": false, "status": "not_required", "reason": "No authorized source establishes this conditional semantic fact", "evidence": [{"fact_id": "column.material", "source_kind": "source_search", "source_ref": "column.add.l2/column.material", "expected_state": "unavailable", "actual_state": "not_applicable", "expected_value": null, "actual_value": null, "provenance": ["searched:explicit_request", "searched:surviving_target", "searched:surviving_type", "searched:approved_prototype", "searched:authorized_type_cohort", "searched:deterministic_policy", "searched:private_original"]}]}]}, {"level": "L3", "status": "not_required", "reason": "L3 authoring and identity exactness is not required in v1.1.", "evidence": [{"fact_id": "l3.summary", "source_kind": "policy_boundary", "source_ref": "v1.1", "expected_state": "available", "actual_state": "available", "expected_value": "not required", "actual_value": "observed", "provenance": ["policy_boundary", "v1.1"]}], "checks": [{"check_id": "l3.authoring-identity", "policy_id": "l3.v1.1-observation", "applicability": "informational", "mandatory": false, "status": "failed", "reason": "Original identity is observational and never gates v1.1 repair success.", "evidence": [{"fact_id": "l3.authoring-identity", "source_kind": "identity_observation", "source_ref": "operation:proof-column-1", "expected_state": "available", "actual_state": "available", "expected_value": null, "actual_value": "1NbzfBRYfGPvt8KirM3qqS", "provenance": ["identity_observation", "operation:proof-column-1"]}]}]}]}], "complete_repair_success": false, "successful_artifact_publishable": false, "diagnostic_artifact_retained": true}
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 2 failures !!!!!!!!!!!!!!!!!!!!!!!!!!
+========================= 1 failed, 1 error in 57.41s =========================

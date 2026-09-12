@@ -519,7 +519,7 @@ def test_h1_mixed_binder_rejects_property_target_drift(
     assert result["changeset"] is None
 
 
-def test_h1_mixed_binder_rejects_reordered_canonical_scope(
+def test_h1_mixed_binder_accepts_set_equivalent_scope_without_identity_drift(
     tmp_path: Path,
 ) -> None:
     operations = [deepcopy(item) for item in _mixed_resolved_operations()]
@@ -554,11 +554,13 @@ def test_h1_mixed_binder_rejects_reordered_canonical_scope(
         },
     )
 
-    assert result["valid"] is False
-    assert {issue["code"] for issue in result["issues"]} == {
-        "DRAFT_AUTHORITY_SCOPE_MISMATCH"
+    # Root's frozen set-semantics family permits identifier reordering while
+    # rejecting missing, extra and duplicate identifiers. Exact authority
+    # membership remains mandatory regardless of the draft's identifier order.
+    assert result["valid"] is True
+    assert set(result["changeset"]["scope"]["target_ids"]) == {
+        WINDOW_ID, H1_STOREY_ID
     }
-    assert result["changeset"] is None
 
 
 def test_stage2_few_shot_expected_cannot_drift_from_declared_schema(

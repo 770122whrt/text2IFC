@@ -352,9 +352,9 @@ def test_stage2_receives_only_used_full_profile_and_records_hashes(
     selection = json.loads(
         (tmp_path / "prompt-profile-selection.json").read_text(encoding="utf-8")
     )
-    assert selection["profile_ids"] == ["window.add-with-opening"]
+    assert selection["profile_ids"] == ["window.add-with-opening.v0.3"]
     assert selection["few_shot_ids"] == []
     assert selection["profile_hashes"][0].startswith("sha256:")
     prompt = provider.calls[0]["prompt"]
-    assert '"profile_id": "window.add-with-opening"' in prompt
+    assert '"profile_id": "window.add-with-opening.v0.3"' in prompt
     assert "door.add.complete" not in prompt

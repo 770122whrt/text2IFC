@@ -1,0 +1,18 @@
+{
+ "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+ "example_id": "door.add.v0.3.clarification",
+ "profile_id": "door.add-with-opening.v0.3",
+ "case": "clarification",
+ "user_text": "EXAMPLE_ONLY: add a door to the named wall; swing, dimensions and position are not stated",
+ "expected": {
+  "operation_type": "add_door_with_opening_to_wall",
+  "status": "clarification_required",
+  "parameters": {},
+  "omitted_unknown_slots": [
+   "/parameters/door",
+   "/parameters/position",
+   "/parameters/opening"
+  ],
+  "rule": "omit unknown numeric and enum fields; never emit null placeholders"
+ }
+}

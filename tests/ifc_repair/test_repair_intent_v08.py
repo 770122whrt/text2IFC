@@ -272,11 +272,13 @@ def test_v08_stage1_uses_every_current_compact_profile_without_full_fewshots(
     assert all("few_shots" not in item for item in catalog)
     serialized = json.dumps(renderer_input, ensure_ascii=False)
     assert "beam.add.v0.3.complete" not in serialized
+    assert "door.add-with-opening.v0.3.complete" not in serialized
     assert "door.add-with-opening.v0.2.complete" not in serialized
 
 
-def test_repair_api_defaults_to_v08_without_mutating_v07_callers() -> None:
+def test_repair_api_default_has_advanced_but_v08_remains_explicit() -> None:
     default = inspect.signature(RepairAPI.__init__).parameters[
         "intent_schema_version"
     ].default
-    assert default == ENVELOPE_VERSION
+    assert default == "text2ifc/ifc-repair-intent/0.10"
+    assert load_repair_intent_schema(ENVELOPE_VERSION)["$id"] == ENVELOPE_VERSION

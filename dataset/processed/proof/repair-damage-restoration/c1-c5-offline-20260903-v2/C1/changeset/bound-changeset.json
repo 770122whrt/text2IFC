@@ -1,0 +1,515 @@
+{
+  "base_model_fingerprint": "sha256:df78acdeb823224384b87eecdabf3f42984c50ee02f8f3717053de5c9189e13e",
+  "binding_status": "bound",
+  "changeset_id": "changeset-damage-restoration-c1-c5",
+  "evidence_refs": [
+    "resolved:/operations/restore-beam-1/context/candidate_targets/0",
+    "resolved:/operations/restore-beam-2/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 19290.0,
+            "y_mm": 29005.0,
+            "z_mm": -575.0
+          },
+          "start": {
+            "x_mm": 19290.0,
+            "y_mm": 36452.5,
+            "z_mm": -575.0
+          }
+        },
+        "section": {
+          "height_mm": 450.0,
+          "shape": "rectangle",
+          "width_mm": 250.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "attribute:PredefinedType",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0OvyTYAaD5pfeQsZGtwMGy",
+            "type_record:0OvyTYAaD5pfeQsZGtwMGy",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "attribute:PredefinedType",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0OvyTYAaD5pfeQsZGtwMGy",
+          "unit": null,
+          "value": "BEAM",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0OvyTYAaD5pfeQsZGtwMGy",
+            "type_record:0OvyTYAaD5pfeQsZGtwMGy",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0OvyTYAaD5pfeQsZGtwMGy",
+          "unit": null,
+          "value": "28_SF_AT_balk vierkant beton:balk vierkant_gen_250x710 (C25/30)",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.FireRating",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-1",
+            "property-hash:sha256:729fe66f94fd13fa5071ad35ce99917212152bcdf85ec6b44902a10d55ec15f8",
+            "source_fact_key:pset:Pset_BeamCommon.FireRating"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.FireRating",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "120",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.IsExternal",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-1",
+            "property-hash:sha256:840be46f7b543fb61c6ca62f7a56910e08123cbd3223c4f00540577290fb3cd4",
+            "source_fact_key:pset:Pset_BeamCommon.IsExternal"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-1",
+            "property-hash:sha256:2e01f13485205e165f2fde07a20de944084837a8969c727595d2f7c4814afb70",
+            "source_fact_key:pset:Pset_BeamCommon.LoadBearing"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Reference",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-1",
+            "property-hash:sha256:943e32c3326389990a18fab0c2c5cf963db840a69e220b4351b67f9613810eda",
+            "source_fact_key:pset:Pset_BeamCommon.Reference"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "balk vierkant_gen_250x710 (C25/30)",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Slope",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-1",
+            "property-hash:sha256:4e6f9bae36425d238204cde8ab0f8bc6f8fe566f436c07dfe863c9e3ff744722",
+            "source_fact_key:pset:Pset_BeamCommon.Slope"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Slope",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": 0.0,
+          "value_type": "IfcPlaneAngleMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:02GkOQJZz4x9WAhoZkKFPX",
+            "resolved-host:02GkOQJZz4x9WAhoZkKFPX",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:02GkOQJZz4x9WAhoZkKFPX",
+          "unit": null,
+          "value": "02GkOQJZz4x9WAhoZkKFPX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:restore-beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/restore-beam-1/target",
+          "unit": null,
+          "value": "02GkOQJZz4x9WAhoZkKFPX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0OvyTYAaD5pfeQsZGtwMGy",
+          "unit": null,
+          "value": "0OvyTYAaD5pfeQsZGtwMGy",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-19acb5e06a0b48303e2631c1",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "02GkOQJZz4x9WAhoZkKFPX"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-2/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-2",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 22590.0,
+            "y_mm": 29005.0,
+            "z_mm": -575.0
+          },
+          "start": {
+            "x_mm": 22590.0,
+            "y_mm": 36452.5,
+            "z_mm": -575.0
+          }
+        },
+        "section": {
+          "height_mm": 450.0,
+          "shape": "rectangle",
+          "width_mm": 250.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "attribute:PredefinedType",
+          "operation_id": "restore-beam-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0OvyTYAaD5pfeQsZGtwMGy",
+            "type_record:0OvyTYAaD5pfeQsZGtwMGy",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-2"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "attribute:PredefinedType",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0OvyTYAaD5pfeQsZGtwMGy",
+          "unit": null,
+          "value": "BEAM",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "restore-beam-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:0OvyTYAaD5pfeQsZGtwMGy",
+            "type_record:0OvyTYAaD5pfeQsZGtwMGy",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-2"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0OvyTYAaD5pfeQsZGtwMGy",
+          "unit": null,
+          "value": "28_SF_AT_balk vierkant beton:balk vierkant_gen_250x710 (C25/30)",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.FireRating",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-2",
+            "property-hash:sha256:99800e391519855916ca4a38e634cd2656108661f3288b93a06cd9827e4853f9",
+            "source_fact_key:pset:Pset_BeamCommon.FireRating"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.FireRating",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "120",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.IsExternal",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-2",
+            "property-hash:sha256:d7581529ae30e6339f86fd8bfdebec368bc1fab4e01480997815a4025edf8da4",
+            "source_fact_key:pset:Pset_BeamCommon.IsExternal"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-2",
+            "property-hash:sha256:d2d0ff7ec97719a79e6da14618705fb43e4ebac10027c068233c846e615b8b46",
+            "source_fact_key:pset:Pset_BeamCommon.LoadBearing"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Reference",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-2",
+            "property-hash:sha256:ab85fae15fcd79df65e68f47ef51ff9873c0659fb0607619aac15ee4df5e1813",
+            "source_fact_key:pset:Pset_BeamCommon.Reference"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "balk vierkant_gen_250x710 (C25/30)",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Slope",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:restore-beam-2",
+            "property-hash:sha256:dc71c8954ee442812c3a5151d7b225c3ddff50f97ad92c6d4d0b0d4a613b23fe",
+            "source_fact_key:pset:Pset_BeamCommon.Slope"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Slope",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": 0.0,
+          "value_type": "IfcPlaneAngleMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:02GkOQJZz4x9WAhoZkKFPX",
+            "resolved-host:02GkOQJZz4x9WAhoZkKFPX",
+            "operation:restore-beam-2"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:02GkOQJZz4x9WAhoZkKFPX",
+          "unit": null,
+          "value": "02GkOQJZz4x9WAhoZkKFPX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "restore-beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:restore-beam-2",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/restore-beam-2/target",
+          "unit": null,
+          "value": "02GkOQJZz4x9WAhoZkKFPX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "restore-beam-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-2"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:0OvyTYAaD5pfeQsZGtwMGy",
+          "unit": null,
+          "value": "0OvyTYAaD5pfeQsZGtwMGy",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-06e5db684bbc110a16144cc3",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "02GkOQJZz4x9WAhoZkKFPX"
+      }
+    }
+  ],
+  "postconditions": [],
+  "preconditions": [],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "02GkOQJZz4x9WAhoZkKFPX"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:160b0140d487a9c42ff3592a91d9a32bd8ecd382a49a7adf2506c1dae6eb6dcf",
+  "source_request_hash": "sha256:69b62e9c1778c1d8989bf21eb4b803bb185421448b410ce64c692f44a885a9a0"
+}

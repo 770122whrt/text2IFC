@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import replace
 from pathlib import Path
 import re
 from typing import Any, Mapping
@@ -321,6 +322,7 @@ def generate_repair_intent(
                         registry=registry,
                         require_complete=False,
                     )
+                    intent = canonicalize_semantic_bundle_claims(intent)
                 except OperationRegistryError as error:
                     issues.append(
                         _issue(
@@ -374,6 +376,7 @@ def generate_repair_intent(
                 and not missing_properties
             ):
                 intent = RepairIntent.from_dict(intent.to_dict(), registry=registry)
+                intent = canonicalize_semantic_bundle_claims(intent)
             classification = (
                 "unsupported"
                 if unsupported_operations
@@ -615,6 +618,18 @@ def _profile_id_for_intent_contract(
     *,
     intent_schema_version: str,
 ) -> str:
+    # Old request contracts retain the profile catalog published on the
+    # current product branch; new teaching is selected only by intent 0.10+.
+    if intent_schema_version in {
+        REPAIR_INTENT_SCHEMA_VERSION_0_5, REPAIR_INTENT_SCHEMA_VERSION_0_6,
+        REPAIR_INTENT_SCHEMA_VERSION_0_7, REPAIR_INTENT_SCHEMA_VERSION_0_8,
+        REPAIR_INTENT_SCHEMA_VERSION_0_9,
+    }:
+        profile_id = {
+            "door.add-with-opening.v0.4": "door.add-with-opening.v0.2",
+            "door.fill-existing-opening.v0.4": "door.fill-existing-opening.v0.2",
+            "window.add-with-opening.v0.3": "window.add-with-opening",
+        }.get(profile_id, profile_id)
     structural_profiles = {
         "beam.add.v0.3": "beam.add",
         "column.add.v0.3": "column.add",
@@ -670,6 +685,35 @@ def _validate_operation_routing(
                 f"expected={expected!r} actual={actual!r}",
                 path=f"/operations/{index}/routing_intent",
             )
+
+
+def canonicalize_semantic_bundle_claims(intent: RepairIntent) -> RepairIntent:
+    """Expose the existing bundle expansion to every downstream consumer.
+
+    Use the same slot, scope and local-override rules as resolution. Preserve
+    the raw Provider response separately; this is the canonical parsed intent.
+    """
+    from .occurrence_semantics import expand_semantic_bundles
+
+    if not any(operation.semantic_bundle_refs for operation in intent.operations):
+        return intent
+    operations = []
+    for operation in intent.operations:
+        if not operation.semantic_bundle_refs:
+            operations.append(operation)
+            continue
+        properties, quantities = expand_semantic_bundles(
+            operation, intent.semantic_bundles
+        )
+        operations.append(
+            replace(
+                operation,
+                property_intents=properties,
+                quantity_intents=quantities,
+                semantic_bundle_refs=(),
+            )
+        )
+    return replace(intent, operations=tuple(operations))
 
 
 def _validate_stable_internal_operation_ids(

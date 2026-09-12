@@ -1,0 +1,216 @@
+{
+  "base_model_fingerprint": "sha256:e64ba6778db7e9f9cd63de40bda72a0d354862690beeb04433ceebb948086f17",
+  "draft_id": "draft-damage-restoration-c1-c5",
+  "evidence_refs": [
+    "resolved:/operations/restore-beam-1/context/candidate_targets/0",
+    "resolved:/operations/restore-beam-2/context/candidate_targets/0",
+    "resolved:/operations/restore-beam-3/context/candidate_targets/0",
+    "resolved:/operations/restore-column-1/context/candidate_targets/0",
+    "resolved:/operations/restore-door-1/context/candidate_targets/0",
+    "resolved:/operations/restore-window-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -1339.984822,
+            "y_mm": 3283.971531,
+            "z_mm": -125.0
+          },
+          "start": {
+            "x_mm": -1339.984822,
+            "y_mm": 7807.971531,
+            "z_mm": -125.0
+          }
+        },
+        "section": {
+          "height_mm": 250.0,
+          "shape": "rectangle",
+          "width_mm": 250.0
+        }
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_Gblgiw"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-2/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-2",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 537.015178,
+            "y_mm": 4044.971531,
+            "z_mm": -125.0
+          },
+          "start": {
+            "x_mm": 537.015178,
+            "y_mm": 7557.971531,
+            "z_mm": -125.0
+          }
+        },
+        "section": {
+          "height_mm": 250.0,
+          "shape": "rectangle",
+          "width_mm": 250.0
+        }
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_Gblgiw"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-3/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-3",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -385.984822,
+            "y_mm": 4102.971531,
+            "z_mm": -125.0
+          },
+          "start": {
+            "x_mm": -385.984822,
+            "y_mm": 7557.971531,
+            "z_mm": -125.0
+          }
+        },
+        "section": {
+          "height_mm": 250.0,
+          "shape": "rectangle",
+          "width_mm": 250.0
+        }
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_Gblgiw"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-column-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": 1919.110981,
+            "y_mm": 3602.521083,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": 1919.110981,
+            "y_mm": 3602.521083,
+            "z_mm": 2840.0
+          }
+        },
+        "section": {
+          "depth_mm": 200.0,
+          "shape": "rectangle",
+          "width_mm": 200.0
+        }
+      },
+      "target": {
+        "storey_global_id": "0K_MqVdrL0JOCMi_GblRwJ"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-door-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-door-1",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:1f61d1791e29c0f30f87b74805e49bdf8a2dca35c5af695cad6fc6afb1f1477a",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:08DlcJHzb8WfJZDT8ZFHLL"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "source": "explicit_notdefined_acceptance"
+          },
+          "operation_type": "NOTDEFINED",
+          "overall_height_mm": 2000.0,
+          "overall_width_mm": 900.0
+        },
+        "host_wall_global_id": "3MKkmT54bAMAG8irjvzWPo",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:08DlcJHzb8WfJZDT8ZFHLL"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2000.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 900.0
+        },
+        "position": {
+          "center_offset_mm": 6379.138963,
+          "reference": "wall_local_start"
+        }
+      },
+      "target": {
+        "opening_global_id": "08DlcJHzb8WfJZDT8ZFHLL"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-window-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-window-1",
+      "operation_type": "add_window_with_opening_to_wall",
+      "parameters": {
+        "opening": {
+          "height_mm": 1500.0,
+          "sill_height_mm": 392.0,
+          "width_mm": 1200.0
+        },
+        "position": {
+          "center_offset_mm": 1015.0,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "target": {
+        "wall_global_id": "0jsP$50AP6xhaXdShCPeu6"
+      }
+    }
+  ],
+  "postconditions": [],
+  "preconditions": [],
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "08DlcJHzb8WfJZDT8ZFHLL",
+      "0K_MqVdrL0JOCMi_GblRwJ",
+      "0K_MqVdrL0JOCMi_Gblgiw",
+      "0jsP$50AP6xhaXdShCPeu6"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:9bc5e1a748565c3f76b554d24ee59974612aa5a3991f3bab2d3c9fbf4290270e",
+  "semantic_summary": {
+    "conditional": 51,
+    "not_required": 0,
+    "required": 23
+  },
+  "source_request_hash": "sha256:94b615eab29b29b8d2ff9feb3b34e30903a47727215a2c3cb298d953a8dd8647"
+}

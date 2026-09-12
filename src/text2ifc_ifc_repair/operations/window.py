@@ -34,6 +34,9 @@ from text2ifc_ifc_repair.evaluation_policy import (
 from text2ifc_ifc_repair.registry import OperationDefinition, OperationRegistryError
 from text2ifc_ifc_repair.type_templates import ensure_bound_type
 from text2ifc_presentation import apply_repair_appearance_on_occurrence
+from text2ifc_ifc_repair.window_geometry import (
+    select_window_placement_in_opening,
+)
 from text2ifc_ifc_repair.operations.hosted_opening import (
     body_context as hosted_body_context,
     deterministic_global_id as hosted_deterministic_global_id,
@@ -390,7 +393,7 @@ def window_operation_definition() -> OperationDefinition:
         generated_type_template=_generated_window_type_template,
         generated_occurrence_facts=_generated_window_occurrence_facts,
         operation_conflict_checker=_operation_conflict_checker,
-        prompt_profile_id="window.add-with-opening",
+        prompt_profile_id="window.add-with-opening.v0.3",
         semantic_scope_roles={
             "window": "window_occurrence",
             "opening": "opening_occurrence",
@@ -459,11 +462,6 @@ def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
     from text2ifc_ifc_repair.semantic_facts import SemanticFact
 
     operation_id = str(operation["operation_id"])
-    canonical_occurrence_contract = any(
-        isinstance(item, Mapping)
-        and item.get("kind") == "authorized_occurrence_assignment"
-        for item in operation.get("authorized_semantics", ())
-    )
     opening = operation["parameters"]["opening"]
     width = float(opening["width_mm"])
     height = float(opening["height_mm"])
@@ -508,11 +506,12 @@ def _semantic_policy_facts(*, operation: Mapping[str, Any]) -> tuple[Any, ...]:
             source_kind=EvidenceSourceKind.DETERMINISTIC_POLICY,
             source_ref=f"resolved:/operations/{operation_id}/parameters/opening",
             provenance=(f"operation:{operation_id}", "registered-window-parameter-policy:0.2"),
-            canonical_source_kind=(
-                "deterministic_derived"
-                if canonical_occurrence_contract
-                else None
-            ),
+            # The parameter facts are registry policy, so their canonical kind
+            # is deterministic_derived regardless of authorized occurrence
+            # assignments.  Gating it kept the manifest at v0.1 vocabulary,
+            # which cannot coexist with v0.3 structural manifests under one
+            # bound envelope (mixed-family changesets failed binding).
+            canonical_source_kind="deterministic_derived",
         )
         for fact_key, value, value_type, unit in values
     )
@@ -799,19 +798,24 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     uses_mapped_representation = bool(
         window_type is not None and window_type.RepresentationMaps
     )
-    window.ObjectPlacement = _local_placement(
-        model,
-        relative_to=opening.ObjectPlacement,
-        location=(
-            0.0,
-            (
-                -millimetres_to_project_units(model, thickness / 2.0)
-                if uses_mapped_representation
-                else 0.0
-            ),
-            0.0,
-        ),
-    )
+    if uses_mapped_representation:
+        placement = select_window_placement_in_opening(
+            window,
+            opening,
+            window_type,
+        )
+        window.ObjectPlacement = _local_placement(
+            model,
+            relative_to=opening.ObjectPlacement,
+            location=placement["location"],
+            ref_direction=placement["ref_direction"],
+        )
+    else:
+        window.ObjectPlacement = _local_placement(
+            model,
+            relative_to=opening.ObjectPlacement,
+            location=(0.0, 0.0, 0.0),
+        )
 
     voids = model.create_entity(
         "IfcRelVoidsElement",

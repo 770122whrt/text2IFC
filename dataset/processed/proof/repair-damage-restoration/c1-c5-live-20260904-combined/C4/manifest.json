@@ -1,0 +1,140 @@
+{
+  "schema_version": "text2ifc/damage-restoration-proof/0.3",
+  "case_id": "C4",
+  "status": "passed",
+  "provider_evidence_mode": "genuine_live_provider",
+  "synthetic_fallback_used": false,
+  "claim_level": "case_viability_and_reliability_only",
+  "source_batch": "batch-02",
+  "damage_reconstruction_guid_trace": [
+    {
+      "role": "beam-1",
+      "repaired_tag": "beam-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "1RnWak0Kr6GxkeYF4Sd_bw",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "1ZAaeOoW1L1QUUJRz5EhnR"
+    },
+    {
+      "role": "beam-2",
+      "repaired_tag": "beam-2",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "1RnWak0Kr6GxkeYF4Sd_kE",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "00$k1uEtXUYgTtGkFkvwrV"
+    },
+    {
+      "role": "beam-3",
+      "repaired_tag": "beam-3",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcBeam",
+      "original_global_id": "1RnWak0Kr6GxkeYF4Sd_kQ",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcBeam",
+      "repaired_global_id": "2PnlSRoz9I8BHns4YBqd1c"
+    },
+    {
+      "role": "column-1",
+      "repaired_tag": "column-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcColumn",
+      "original_global_id": "1Wn_dXmF1DSBE14cb07uYi",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcColumn",
+      "repaired_global_id": "1Nfeo7SvXVThFmLIBARQN8"
+    },
+    {
+      "role": "door-1",
+      "repaired_tag": "door-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcDoor",
+      "original_global_id": "08DlcJHzb8WfJZDS4ZFHLL",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcDoor",
+      "repaired_global_id": "2eo6ilO$vOXwD_jyQVR$O1"
+    },
+    {
+      "role": "door-opening-1",
+      "repaired_tag": null,
+      "damage_action": "retained",
+      "original_ifc_class": "IfcOpeningElement",
+      "original_global_id": "08DlcJHzb8WfJZDT8ZFHLL",
+      "repair_action": "reused",
+      "repaired_ifc_class": "IfcOpeningElement",
+      "repaired_global_id": "08DlcJHzb8WfJZDT8ZFHLL"
+    },
+    {
+      "role": "window-1",
+      "repaired_tag": "window-1",
+      "damage_action": "removed",
+      "original_ifc_class": "IfcWindow",
+      "original_global_id": "1PkWQ2IbXBH9Ib7VGdBWCz",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcWindow",
+      "repaired_global_id": "2lKOLlncPVzefMXnEzM78Q"
+    },
+    {
+      "role": "window-opening-1",
+      "repaired_tag": null,
+      "damage_action": "removed",
+      "original_ifc_class": "IfcOpeningElement",
+      "original_global_id": "1PkWQ2IbXBH9Ib7USdBWCz",
+      "repair_action": "rebuilt",
+      "repaired_ifc_class": "IfcOpeningElement",
+      "repaired_global_id": "1JeofDfsDPzwRPwgmwo$VO"
+    }
+  ],
+  "focused_ifccompare_status": "passed",
+  "generic_ifccompare_summary": {
+    "created_root_count": 47,
+    "modified_root_count": 5,
+    "removed_root_count": 63,
+    "changed_product_count": 14,
+    "changed_product_classes": {
+      "IfcBeam": 6,
+      "IfcColumn": 2,
+      "IfcDoor": 2,
+      "IfcOpeningElement": 2,
+      "IfcWindow": 2
+    }
+  },
+  "whole_model_identity_equivalent": false,
+  "damage": {
+    "beams_removed": 3,
+    "columns_removed": 1,
+    "doors_removed": 1,
+    "windows_removed": 1
+  },
+  "artifacts": [
+    "01-original.ifc",
+    "02-damaged.ifc",
+    "03-repaired.ifc",
+    "REPORT.md",
+    "agent/intent-renderer-input.json",
+    "agent/live-attempts.json",
+    "agent/rendered-intent-prompt.md",
+    "agent/repair-intent.json",
+    "changeset/bound-changeset.json",
+    "changeset/prompt-profile-selection.json",
+    "changeset/semantic-manifest-beam-1.json",
+    "changeset/semantic-manifest-beam-2.json",
+    "changeset/semantic-manifest-beam-3.json",
+    "changeset/semantic-manifest-column-1.json",
+    "changeset/semantic-manifest-door-1.json",
+    "changeset/semantic-manifest-window-1.json",
+    "changeset/semantic-manifests.json",
+    "input/frozen-request.txt",
+    "input/request.txt",
+    "terminal/evidence.json",
+    "terminal/state.json",
+    "validation/case-result.json",
+    "validation/damage-reconstruction-guid-trace.json",
+    "validation/generic-ifccompare.json",
+    "validation/ifccompare-geometry-property-debug.json",
+    "validation/public-evaluation.json"
+  ]
+}

@@ -1,0 +1,656 @@
+{
+  "base_model_fingerprint": "sha256:77fd51c48b38fc322c905bd1e1e4c4c31d8c83e4f6b49e6f9bc849692ebeb0f0",
+  "binding_status": "bound",
+  "changeset_id": "changeset/changeset/e8024ae2885343ecb8b3d1395e8e2422c6a3bdd02192317956f1a04338dd4f44",
+  "evidence_refs": [
+    "resolved:/operations/restore-beam-1/context/candidate_targets/0",
+    "resolved:/operations/restore-door-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -216.820945,
+            "y_mm": 5648.800821,
+            "z_mm": -300.0
+          },
+          "start": {
+            "x_mm": -2116.820945,
+            "y_mm": 5648.800821,
+            "z_mm": -300.0
+          }
+        },
+        "section": {
+          "height_mm": 600,
+          "shape": "rectangle",
+          "width_mm": 200
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "attribute:PredefinedType",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2kMW8XyZv1d9XdPJLihM2H",
+            "type_record:2kMW8XyZv1d9XdPJLihM2H",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "attribute:PredefinedType",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2kMW8XyZv1d9XdPJLihM2H",
+          "unit": null,
+          "value": "BEAM",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2kMW8XyZv1d9XdPJLihM2H",
+            "type_record:2kMW8XyZv1d9XdPJLihM2H",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2kMW8XyZv1d9XdPJLihM2H",
+          "unit": null,
+          "value": "200x300",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.FireRating",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2kMW8XyZv1d9XdPJLihM2H",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2kMW8XyZv1d9XdPJLihM2H",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.FireRating",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2kMW8XyZv1d9XdPJLihM2H",
+          "unit": null,
+          "value": null,
+          "value_type": "IfcPropertySingleValue"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.IsExternal",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-beam-1",
+            "property-hash:sha256:e339792a74a024e05e5285f870be3963cc9afe7e6801948158584af59459ae82",
+            "source_fact_key:pset:Pset_BeamCommon.IsExternal"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Reference",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-beam-1",
+            "property-hash:sha256:05890c0a4b56feb3f40d2c689e000a6f04b3e140abf330d0b99315f6dbfdcdfe",
+            "source_fact_key:pset:Pset_BeamCommon.Reference"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": "200x300",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.Slope",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-beam-1",
+            "property-hash:sha256:759055fb46d9d9b441cb1022de604e321f5bab1fa4064a01773dc5f46f1d00fc",
+            "source_fact_key:pset:Pset_BeamCommon.Slope"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.Slope",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": 0,
+          "value_type": "IfcPlaneAngleMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_ConcreteElementGeneral.FireRating",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2kMW8XyZv1d9XdPJLihM2H",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2kMW8XyZv1d9XdPJLihM2H",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_ConcreteElementGeneral.FireRating",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2kMW8XyZv1d9XdPJLihM2H",
+          "unit": null,
+          "value": null,
+          "value_type": "IfcPropertySingleValue"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2kMW8XyZv1d9XdPJLihM2H",
+            "ifcopenshell.util.element.get_psets:direct",
+            "type_record:2kMW8XyZv1d9XdPJLihM2H",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2kMW8XyZv1d9XdPJLihM2H",
+          "unit": null,
+          "value": null,
+          "value_type": "IfcPropertySingleValue"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-beam-1",
+            "property-hash:sha256:13833ebf599b7e795fd37dbd98eaf5af219269a837b727d71162fd28e3095667",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": "200x300",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_ReinforcementBarPitchOfBeam.Reference",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-beam-1",
+            "property-hash:sha256:d150ed923a94cc28dc86d4ac382f971296b17061b5c869d87b52eef0642acb22",
+            "source_fact_key:pset:Pset_ReinforcementBarPitchOfBeam.Reference"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_ReinforcementBarPitchOfBeam.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": "200x300",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:3D1Nijvnv6WAopLsL3UBYN",
+            "resolved-host:3D1Nijvnv6WAopLsL3UBYN",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:3D1Nijvnv6WAopLsL3UBYN",
+          "unit": null,
+          "value": "3D1Nijvnv6WAopLsL3UBYN",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "restore-beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:restore-beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/restore-beam-1/target",
+          "unit": null,
+          "value": "3D1Nijvnv6WAopLsL3UBYN",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "restore-beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:restore-beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2kMW8XyZv1d9XdPJLihM2H",
+          "unit": null,
+          "value": "2kMW8XyZv1d9XdPJLihM2H",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-0de511d4a1cf4abe5cf4043f",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "3D1Nijvnv6WAopLsL3UBYN"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/restore-door-1/context/candidate_targets/0"
+      ],
+      "operation_id": "restore-door-1",
+      "operation_type": "fill_existing_opening_with_door",
+      "parameters": {
+        "derivation": {
+          "digest": "sha256:4562768225905a7721ddb2e3aef4de042261b40a5f786340ab0c8c5b2dc474c0",
+          "position": {
+            "formula": "existing_opening_center",
+            "source_anchor": "opening:2AJ6T3vZDDZRJL7kCpGl86"
+          }
+        },
+        "door": {
+          "operation_derivation": {
+            "formal_attribute": "OperationType",
+            "source": "door_style:2AJ6T3vZDDZRJL7kKpGlCF"
+          },
+          "operation_type": "SINGLE_SWING_LEFT",
+          "overall_height_mm": 2300.0,
+          "overall_width_mm": 720.0
+        },
+        "host_wall_global_id": "2AJ6T3vZDDZRJL7l0pGeM6",
+        "opening": {
+          "derivation": {
+            "formula": "fit_existing_opening",
+            "source": "opening:2AJ6T3vZDDZRJL7kCpGl86"
+          },
+          "dimension_meaning": "overall_opening",
+          "height_mm": 2300.0,
+          "sill_height_mm": 0.0,
+          "width_mm": 720.0
+        },
+        "position": {
+          "center_offset_mm": 580.341581,
+          "reference": "wall_local_start"
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallHeight",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:restore-door-1",
+            "registered-door-parameter-policy:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "attribute:OverallHeight",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/restore-door-1/parameters/door",
+          "unit": null,
+          "value": 2300.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "set_attribute",
+          "derivation": null,
+          "fact_key": "attribute:OverallWidth",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:restore-door-1",
+            "registered-door-parameter-policy:0.1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "attribute:OverallWidth",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/restore-door-1/parameters/door",
+          "unit": null,
+          "value": 720.0,
+          "value_type": "IfcPositiveLengthMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "label:Name",
+          "operation_id": "restore-door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "type-index:type:2AJ6T3vZDDZRJL7kKpGlCF",
+            "type_record:2AJ6T3vZDDZRJL7kKpGlCF",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "label:Name",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2AJ6T3vZDDZRJL7kKpGlCF",
+          "unit": null,
+          "value": "0915 x 2134mm 5",
+          "value_type": "IfcLabel"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "material:u-38d5537dd248cf1d",
+          "operation_id": "restore-door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "current_ifc:#6825",
+            "IfcRelAssociatesMaterial:#20740",
+            "IfcMaterialList:#6830",
+            "authority-source:user-approved-prototype:2AJ6T3vZDDZRJL7kKpGlCF",
+            "relationship:guid:1zZTY_U_PEUvWfv6g2DTA4",
+            "resource:step:6830",
+            "type_record:2AJ6T3vZDDZRJL7kKpGlCF",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "material:u-38d5537dd248cf1d",
+          "source_kind": "type_inherited",
+          "source_ref": "resource:step:6830",
+          "unit": null,
+          "value": "门 - 框架",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "material:u-4d1d09b2c92573d0",
+          "operation_id": "restore-door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "current_ifc:#6825",
+            "IfcRelAssociatesMaterial:#20740",
+            "IfcMaterialList:#6830",
+            "authority-source:user-approved-prototype:2AJ6T3vZDDZRJL7kKpGlCF",
+            "relationship:guid:1zZTY_U_PEUvWfv6g2DTA4",
+            "resource:step:6830",
+            "type_record:2AJ6T3vZDDZRJL7kKpGlCF",
+            "user_authorization:explicit_request_reference",
+            "operation:restore-door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "material:u-4d1d09b2c92573d0",
+          "source_kind": "type_inherited",
+          "source_ref": "resource:step:6830",
+          "unit": null,
+          "value": "门 - 嵌板",
+          "value_type": "IfcMaterial"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.IsExternal",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-door-1",
+            "property-hash:sha256:363286963e6db8ad6ba0a7e71a69b82851c6f95eda77559b721991b8bc03827a",
+            "source_fact_key:pset:Pset_DoorCommon.IsExternal"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.IsExternal",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.Reference",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-door-1",
+            "property-hash:sha256:8e08d302f5cd0d423a9bce3916d7a46724f51087bb2f30d041cb64ec0e006410",
+            "source_fact_key:pset:Pset_DoorCommon.Reference"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": "0915 x 2134mm 5",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_DoorCommon.ThermalTransmittance",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-door-1",
+            "property-hash:sha256:cc5a6a22dacbd5300cd1b2b0d685c91ab767c9a9373af5eef8f79dd50f6fb52f",
+            "source_fact_key:pset:Pset_DoorCommon.ThermalTransmittance"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_DoorCommon.ThermalTransmittance",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": 3.7021,
+          "value_type": "IfcThermalTransmittanceMeasure"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:public request",
+            "operation:restore-door-1",
+            "property-hash:sha256:9145389275ef000ce55468d62e175a2ca3109567dd3b4ed62fe8f69be13a4be0",
+            "source_fact_key:pset:Pset_QuantityTakeOff.Reference"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "pset:Pset_QuantityTakeOff.Reference",
+          "source_kind": "explicit_value",
+          "source_ref": "public request",
+          "unit": null,
+          "value": "0915 x 2134mm 5",
+          "value_type": "IfcIdentifier"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:restore-door-1",
+            "resolved-target:2AJ6T3vZDDZRJL7kCpGl86",
+            "current-host-relationship:2AJ6T3vZDDZRJL7l0pGeM6"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-relationship:host:2AJ6T3vZDDZRJL7l0pGeM6",
+          "unit": null,
+          "value": "2AJ6T3vZDDZRJL7l0pGeM6",
+          "value_type": "IfcWallStandardCase"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "restore-door-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:2AJ6T3vZDDZRJL7kCpGl86",
+            "operation:restore-door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-target-storey:3D1Nijvnv6WAopLsL3U$tM",
+          "unit": null,
+          "value": "3D1Nijvnv6WAopLsL3U$tM",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": null,
+          "fact_key": "relationship:type",
+          "operation_id": "restore-door-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "user_authorization:explicit_request_reference",
+            "operation:restore-door-1"
+          ],
+          "scope": "door_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "type_inherited",
+          "source_ref": "user-approved-prototype:2AJ6T3vZDDZRJL7kKpGlCF",
+          "unit": null,
+          "value": "2AJ6T3vZDDZRJL7kKpGlCF",
+          "value_type": "IfcDoorStyle"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-adcc6f5a6924d6c2491819c7",
+        "policy_id": "door.fill-existing-opening.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "opening_global_id": "2AJ6T3vZDDZRJL7kCpGl86"
+      }
+    }
+  ],
+  "postconditions": [
+    "beam_geometry_matches",
+    "beam_contained_in_storey",
+    "beam_type_bound",
+    "door_fills_opening",
+    "door_contained_in_storey",
+    "door_type_bound"
+  ],
+  "preconditions": [
+    "target_exists",
+    "structural_axis_available",
+    "structural_type_authorized",
+    "opening_available",
+    "opening_within_wall"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2AJ6T3vZDDZRJL7kCpGl86",
+      "3D1Nijvnv6WAopLsL3UBYN"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:3b0acec64174f25d9a43a46ec027f504ce4210053e7822b47d91d4a51f65799e",
+  "source_request_hash": "sha256:e8024ae2885343ecb8b3d1395e8e2422c6a3bdd02192317956f1a04338dd4f44"
+}

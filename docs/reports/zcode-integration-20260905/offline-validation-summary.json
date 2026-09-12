@@ -1,0 +1,28 @@
+{
+  "name": "pytest",
+  "errors": "0",
+  "failures": "1",
+  "skipped": "0",
+  "tests": "557",
+  "time": "1143.947",
+  "timestamp": "2026-09-05T20:08:25.399560+08:00",
+  "hostname": "what-do-matter",
+  "command": ".venv/Scripts/python.exe -u .tmp/zcode-integration/offline_tests.py --changed-scope -vv --tb=short --junitxml=.tmp/zcode-integration/changed-scope-v2.junit.xml",
+  "network": "socket connections blocked in parent and spawned children",
+  "scope": "40 changed modules plus 3 transaction/publication modules; composite_evidence excluded",
+  "evidence_level": "offline regression, not a live Provider or capability evaluation",
+  "invalid_prior_run": "changed-scope.log/xml and proof-compat-red.log/xml used a wrapper without Windows multiprocessing main guard; not production failures",
+  "only_failure": "The preflight test forbids .pytest-tmp anywhere in command paths; the v2 harness used .pytest-tmp-zcode as its own temporary parent.",
+  "targeted_v3_retest": {
+    "name": "pytest",
+    "errors": "0",
+    "failures": "0",
+    "skipped": "0",
+    "tests": "1",
+    "time": "1.443",
+    "timestamp": "2026-09-05T20:23:10.439019+08:00",
+    "hostname": "what-do-matter"
+  },
+  "v3_retest_command": ".venv/Scripts/python.exe -u .tmp/zcode-integration/offline_tests_v3.py tests/ifc_repair/test_phase12_live_uat.py::test_preflight_pytest_commands_use_run_local_temp_and_cache -q --tb=short --junitxml=.tmp/zcode-integration/preflight-path-green-v3.junit.xml",
+  "retest_limit": "The whole 557-item suite was not repeated after changing only the validation harness temporary parent. Production code and tests were unchanged."
+}

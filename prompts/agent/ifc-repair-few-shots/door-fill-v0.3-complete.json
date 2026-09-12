@@ -1,0 +1,18 @@
+{
+ "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+ "example_id": "door.fill.v0.3.complete",
+ "profile_id": "door.fill-existing-opening.v0.3",
+ "case": "complete",
+ "user_text": "EXAMPLE_ONLY: fill Opening EXAMPLE_OPENING_GUID with a SINGLE_SWING_LEFT door",
+ "expected": {
+  "operation_type": "fill_existing_opening_with_door",
+  "status": "complete",
+  "parameters": {
+   "fit_existing_opening": true,
+   "door": {
+    "operation_type": "SINGLE_SWING_LEFT",
+    "formal_enum_explicit": true
+   }
+  }
+ }
+}

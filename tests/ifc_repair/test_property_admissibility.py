@@ -590,3 +590,51 @@ def test_passed_result_routes_through_existing_exact_resolver_and_binder(
     assert fact.value is True
     assert fact.value_type == "IfcBoolean"
     assert fact.ownership == "occurrence_direct"
+
+
+def test_plane_angle_slope_passes_standard_admissibility_and_binder(
+    knowledge,
+) -> None:
+    registry, by_path = knowledge
+    record = by_path["Pset_BeamCommon.Slope"]
+    claim = _claim(phrase="slope", value=0.0)
+    query = _query(claim)
+    candidate_set = _candidate_set(
+        query,
+        [_candidate(record, rank=1, score=0.92)],
+    )
+    result = _admit(
+        {
+            "registry": registry,
+            "records": (record,),
+            "claim": claim,
+            "query": query,
+            "candidate_set": candidate_set,
+            "decision": _decision(
+                "confirmed",
+                selected=candidate_set["candidates"][0]["candidate_id"],
+            ),
+            "decision_trace": _trace(query, candidate_set),
+            "policy": _policy(),
+        }
+    )
+
+    assert result.status == "passed"
+    assert result.exact_intent is not None
+    assert result.exact_intent.requested_value_type == "IfcPlaneAngleMeasure"
+    assert result.exact_intent.value == 0.0
+    assert result.exact_intent.requested_unit is None
+
+    fact = _module().authorize_admissible_standard_property(
+        result,
+        registry=registry,
+        target_ifc_class="IfcBeam",
+        existing_facts=(),
+        operation_id="restore-beam",
+        target_global_id="new-beam-guid",
+        request_hash="request-binding",
+        model_fingerprint="model-binding",
+    )
+    assert fact.value_type == "IfcPlaneAngleMeasure"
+    assert fact.value == 0.0
+    assert fact.unit is None

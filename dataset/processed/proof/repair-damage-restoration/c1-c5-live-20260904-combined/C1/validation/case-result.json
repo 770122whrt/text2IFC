@@ -1,0 +1,2217 @@
+{
+  "status": "succeeded",
+  "reason_code": null,
+  "run_id": "repair-0d9d9dc0705d4a9eb6933e23d562cb15",
+  "state_version": 36,
+  "complete_repair_success": true,
+  "successful_artifact_publishable": true,
+  "artifacts": {
+    "evaluation": ".terminal-bundles/db7866c40c9b495a937d13305d15616c/evaluation/public-evaluation.json",
+    "manifest": ".terminal-bundles/db7866c40c9b495a937d13305d15616c/manifest.json",
+    "successful_ifc": ".terminal-bundles/db7866c40c9b495a937d13305d15616c/successful/repaired.ifc"
+  },
+  "damage": {
+    "beams_removed": 2,
+    "columns_removed": 0,
+    "doors_removed": 0,
+    "windows_removed": 0,
+    "beam_count": [
+      354,
+      352
+    ],
+    "column_count": [
+      387,
+      387
+    ],
+    "door_count": [
+      0,
+      0
+    ],
+    "window_count": [
+      0,
+      0
+    ],
+    "damaged_sha256": "sha256:df78acdeb823224384b87eecdabf3f42984c50ee02f8f3717053de5c9189e13e",
+    "source_sha256": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+    "type_reuse_preflight": {
+      "status": "passed",
+      "types": [
+        {
+          "damage_key": "beams",
+          "type_class": "IfcBeamType",
+          "type_global_id": "0OvyTYAaD5pfeQsZGtwMGy",
+          "fingerprint": "sha256:50d0bb7f46308fa547ecf1560fd9890b093e9050cab3af393efae1460a2efd11"
+        },
+        {
+          "damage_key": "beams",
+          "type_class": "IfcBeamType",
+          "type_global_id": "0OvyTYAaD5pfeQsZGtwMGy",
+          "fingerprint": "sha256:50d0bb7f46308fa547ecf1560fd9890b093e9050cab3af393efae1460a2efd11"
+        }
+      ]
+    }
+  },
+  "latency_seconds": 446.297,
+  "original_comparison": {
+    "schema_version": "text2ifc/ifc-repair-comparison/0.1",
+    "comparison_status": "passed",
+    "comparison_error_code": null,
+    "comparison_error": null,
+    "before_readable": true,
+    "after_readable": true,
+    "before_schema": "IFC2X3",
+    "after_schema": "IFC2X3",
+    "schema_preserved": true,
+    "added_ids": [
+      "0PHy0Z4ATS3AnyPFMvZ9yN",
+      "0R_Zpu3CbM4fO6FrActfW9",
+      "1NmDFR8RfI7gdKbH5dlX4Q",
+      "1VcZXBjsbVbu6zMmHkJXyl",
+      "2E0h2gk3vPJAvz0UIB8rTU",
+      "30Hgp$wrvP$eg_NKuhBg3H"
+    ],
+    "removed_ids": [
+      "07ykdjoGLBROeD1VZtZebp",
+      "07ykdjoGLBROeD1VZtZex9",
+      "07ykdjoGLBROeD3X7tZebp",
+      "07ykdjoGLBROeD3X7tZex9",
+      "0bghZ6$9j6$QQ0REin7L9H",
+      "0mabA3nmf50Pp6o5qwb1Pm",
+      "0zdoAdrbj1Of$O4wYYI_88",
+      "1H7x2SWQX4AgbCgSxaMzE6",
+      "1zMRCDcc9D4Qh2RmgOXA6W",
+      "2ADiWD8vjCSwED8a9gWQpX",
+      "2HDMPsWE5FngoUlPRhygU_",
+      "2WXfHulmL6HOey_sZKTfZQ",
+      "2f9YLPEZT7_BUsbbrErGbz",
+      "318yHQLSX518U5102GPzNg"
+    ],
+    "modified_ids": [
+      "0Kt_dvIHbB2wArvDddI0hh",
+      "19WBHvznvCMx$EtM_8qRKJ",
+      "1KKvDUuYz9oR4pgR2sZ63_",
+      "1lRnUz08jD$esA3KZYRtrV",
+      "2mC29A06H6bOfoZYchGsGX"
+    ],
+    "allowed_changed_ids": [],
+    "unexpected_changed_ids": [
+      "07ykdjoGLBROeD1VZtZebp",
+      "07ykdjoGLBROeD1VZtZex9",
+      "07ykdjoGLBROeD3X7tZebp",
+      "07ykdjoGLBROeD3X7tZex9",
+      "0Kt_dvIHbB2wArvDddI0hh",
+      "0PHy0Z4ATS3AnyPFMvZ9yN",
+      "0R_Zpu3CbM4fO6FrActfW9",
+      "0bghZ6$9j6$QQ0REin7L9H",
+      "0mabA3nmf50Pp6o5qwb1Pm",
+      "0zdoAdrbj1Of$O4wYYI_88",
+      "19WBHvznvCMx$EtM_8qRKJ",
+      "1H7x2SWQX4AgbCgSxaMzE6",
+      "1KKvDUuYz9oR4pgR2sZ63_",
+      "1NmDFR8RfI7gdKbH5dlX4Q",
+      "1VcZXBjsbVbu6zMmHkJXyl",
+      "1lRnUz08jD$esA3KZYRtrV",
+      "1zMRCDcc9D4Qh2RmgOXA6W",
+      "2ADiWD8vjCSwED8a9gWQpX",
+      "2E0h2gk3vPJAvz0UIB8rTU",
+      "2HDMPsWE5FngoUlPRhygU_",
+      "2WXfHulmL6HOey_sZKTfZQ",
+      "2f9YLPEZT7_BUsbbrErGbz",
+      "2mC29A06H6bOfoZYchGsGX",
+      "30Hgp$wrvP$eg_NKuhBg3H",
+      "318yHQLSX518U5102GPzNg"
+    ],
+    "drift": {
+      "0Kt_dvIHbB2wArvDddI0hh": {
+        "before": {
+          "ifc_class": "IfcRelAssociatesClassification",
+          "name": "Uniformat Classification",
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZebp"
+              }
+            ],
+            "RelatingClassification": {
+              "ifc_class": "IfcClassificationReference",
+              "attributes": {
+                "Location": "http://www.csiorg.net/uniformat",
+                "ItemReference": "28.11",
+                "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                "ReferencedSource": {
+                  "ifc_class": "IfcClassification",
+                  "attributes": {
+                    "Source": "http://www.csiorg.net/uniformat",
+                    "Edition": "1998",
+                    "EditionDate": null,
+                    "Name": "Uniformat"
+                  }
+                }
+              }
+            }
+          },
+          "content_sha256": "sha256:80ea98dd15695f41e580f8eb86cc432bbab7729e61eb4b2b776a7af1deb6d753"
+        },
+        "after": {
+          "ifc_class": "IfcRelAssociatesClassification",
+          "name": "Uniformat Classification",
+          "attributes": {
+            "RelatedObjects": [],
+            "RelatingClassification": {
+              "ifc_class": "IfcClassificationReference",
+              "attributes": {
+                "Location": "http://www.csiorg.net/uniformat",
+                "ItemReference": "28.11",
+                "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                "ReferencedSource": {
+                  "ifc_class": "IfcClassification",
+                  "attributes": {
+                    "Source": "http://www.csiorg.net/uniformat",
+                    "Edition": "1998",
+                    "EditionDate": null,
+                    "Name": "Uniformat"
+                  }
+                }
+              }
+            }
+          },
+          "content_sha256": "sha256:6fa3cfd0bc7fe1aa75c4ff5634f7ed23cbdccdcc7b0b73d9ccdb70fd62d60ca7"
+        }
+      },
+      "19WBHvznvCMx$EtM_8qRKJ": {
+        "before": {
+          "ifc_class": "IfcRelAssociatesClassification",
+          "name": "Uniformat Classification",
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZex9"
+              }
+            ],
+            "RelatingClassification": {
+              "ifc_class": "IfcClassificationReference",
+              "attributes": {
+                "Location": "http://www.csiorg.net/uniformat",
+                "ItemReference": "28.11",
+                "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                "ReferencedSource": {
+                  "ifc_class": "IfcClassification",
+                  "attributes": {
+                    "Source": "http://www.csiorg.net/uniformat",
+                    "Edition": "1998",
+                    "EditionDate": null,
+                    "Name": "Uniformat"
+                  }
+                }
+              }
+            }
+          },
+          "content_sha256": "sha256:e8b616a1adc3f8e05353f227ab6afdfdd76818db216f0028f603357c0702d1a0"
+        },
+        "after": {
+          "ifc_class": "IfcRelAssociatesClassification",
+          "name": "Uniformat Classification",
+          "attributes": {
+            "RelatedObjects": [],
+            "RelatingClassification": {
+              "ifc_class": "IfcClassificationReference",
+              "attributes": {
+                "Location": "http://www.csiorg.net/uniformat",
+                "ItemReference": "28.11",
+                "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                "ReferencedSource": {
+                  "ifc_class": "IfcClassification",
+                  "attributes": {
+                    "Source": "http://www.csiorg.net/uniformat",
+                    "Edition": "1998",
+                    "EditionDate": null,
+                    "Name": "Uniformat"
+                  }
+                }
+              }
+            }
+          },
+          "content_sha256": "sha256:e7cb9bf998082b4dcdc991572da73b72093e50285a632ab404e8e85e8df66078"
+        }
+      },
+      "1KKvDUuYz9oR4pgR2sZ63_": {
+        "before": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZebp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeC"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeE"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeG"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZeeI"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeM"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeU"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "07ykdjoGLBROeD1VZtZeh9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehO"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehW"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehb"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehd"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehe"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehg"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehi"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehk"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehs"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZex9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0Q0Ge1j4vFrfPFU0zGosbB"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0UfjOdEzP5cheHOg51ij5p"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0UfjOdEzP5cheHOg51ij89"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8W"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8Y"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8c"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8i"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0sk_mm4QzFvg$gTy0eQQKH"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0sk_mm4QzFvg$gTy0eQQKV"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "0wg1$hCMLDKvTPQst2hGsa"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KG"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KI"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KM"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5NW"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5NY"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Na"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nc"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Ne"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Ng"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Ni"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nk"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nu"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nw"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1_AFpqXun0weDCiDbifjR3"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1y7gzd3r11XuD2LvryB1pE"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1y7gzd3r11XuD2LvryB1r4"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2UdoXKJ8DFzhCQtWkNjlzG"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2UdoXKJ8DFzhCQtWkNjlzM"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrm"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrq"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrs"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrw"
+              },
+              {
+                "ifc_class": "IfcGrid",
+                "global_id": "3smhs89Ef9zQtfSWPi4O5M"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "02GkOQJZz4x9WAhoZkKFPX"
+            }
+          },
+          "content_sha256": "sha256:398cb11a852d4ade10f1034f27566729bf310abb747d8c7af59770f655fc43a7"
+        },
+        "after": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeC"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeE"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeG"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZeeI"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeM"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "07ykdjoGLBROeD1VZtZeeU"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "07ykdjoGLBROeD1VZtZeh9"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehO"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehW"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehb"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehd"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehe"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehg"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehi"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehk"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehq"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehs"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "07ykdjoGLBROeD1VZtZehw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PHy0Z4ATS3AnyPFMvZ9yN"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0Q0Ge1j4vFrfPFU0zGosbB"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0UfjOdEzP5cheHOg51ij5p"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0UfjOdEzP5cheHOg51ij89"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8W"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8Y"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8c"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0YksV2jw977Qnp9f97dD8i"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0sk_mm4QzFvg$gTy0eQQKH"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0sk_mm4QzFvg$gTy0eQQKV"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "0wg1$hCMLDKvTPQst2hGsa"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KG"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KI"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5KM"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5NW"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5NY"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Na"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nc"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Ne"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Ng"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Ni"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nk"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nu"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "14MG3KZxDC3O6kqcixf5Nw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1VcZXBjsbVbu6zMmHkJXyl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1_AFpqXun0weDCiDbifjR3"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1y7gzd3r11XuD2LvryB1pE"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "1y7gzd3r11XuD2LvryB1r4"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2UdoXKJ8DFzhCQtWkNjlzG"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2UdoXKJ8DFzhCQtWkNjlzM"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrm"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrq"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrs"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "2k2MjzFaP6nOnc2lkDqFrw"
+              },
+              {
+                "ifc_class": "IfcGrid",
+                "global_id": "3smhs89Ef9zQtfSWPi4O5M"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "02GkOQJZz4x9WAhoZkKFPX"
+            }
+          },
+          "content_sha256": "sha256:837c7fe7baffc37e48bd2e1dd226e63c8a0159ffc629a1d91478f7cffb053f65"
+        }
+      },
+      "1lRnUz08jD$esA3KZYRtrV": {
+        "before": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZebp"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZex9"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcBeamType",
+              "global_id": "0OvyTYAaD5pfeQsZGtwMGy"
+            }
+          },
+          "content_sha256": "sha256:c56bf3780357444cc95f7807155d4d757dab6789eb0723b458d0e66938c328df"
+        },
+        "after": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PHy0Z4ATS3AnyPFMvZ9yN"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1VcZXBjsbVbu6zMmHkJXyl"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcBeamType",
+              "global_id": "0OvyTYAaD5pfeQsZGtwMGy"
+            }
+          },
+          "content_sha256": "sha256:dff6e92fe6e18c3ce9e78ade00e9c0057bdfc31058e9a59d5474ee9e0d6bf4e4"
+        }
+      },
+      "2mC29A06H6bOfoZYchGsGX": {
+        "before": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZebp"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "07ykdjoGLBROeD1VZtZex9"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterial",
+              "attributes": {
+                "Name": "f2_beton ihwg_C25/30"
+              }
+            }
+          },
+          "content_sha256": "sha256:0e3449b36d692254d2498e1f23471883f1fcc8c02efc67023fafa8b36dddd734"
+        },
+        "after": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterial",
+              "attributes": {
+                "Name": "f2_beton ihwg_C25/30"
+              }
+            }
+          },
+          "content_sha256": "sha256:4cbac18baccda0eb218b5136841f6f9bfd64cb561b3ce2a27884330b451a8f1c"
+        }
+      }
+    },
+    "comparison_metrics": {
+      "algorithm_version": "text2ifc/ifc-root-fingerprint/0.2",
+      "strategy": "aligned_step_certificate",
+      "timeout_seconds": 120.0,
+      "before_root_count": 15275,
+      "after_root_count": 15267,
+      "before_entity_count": 117040,
+      "after_entity_count": 117042,
+      "dirty_before_record_count": 52,
+      "dirty_after_record_count": 54,
+      "candidate_root_count": 5,
+      "before_propagated_entity_count": 52,
+      "after_propagated_entity_count": 54,
+      "root_index_seconds": 0.429334,
+      "record_scan_seconds": 4.686687,
+      "propagation_seconds": 0.003126,
+      "before_fingerprint_seconds": 0.025744,
+      "after_fingerprint_seconds": 0.019814,
+      "detail_seconds": 0.017205,
+      "total_seconds": 5.183251,
+      "before": {
+        "hashed_non_root_entities": 71,
+        "shared_entity_cache_hits": 39,
+        "cached_non_root_entities": 71,
+        "cycle_edges": 0,
+        "root_count": 19,
+        "schema_declaration_count": 32
+      },
+      "after": {
+        "hashed_non_root_entities": 64,
+        "shared_entity_cache_hits": 17,
+        "cached_non_root_entities": 64,
+        "cycle_edges": 0,
+        "root_count": 11,
+        "schema_declaration_count": 27
+      }
+    },
+    "complete_preservation_success": false,
+    "comparator": "text2ifc_ifc_repair.compare.compare_ifc_models",
+    "comparison_mode": "private_post_repair_original_comparison",
+    "added_ids_count": 6,
+    "removed_ids_count": 14,
+    "modified_ids_count": 5,
+    "unexpected_changed_ids_count": 25,
+    "class_counts": {
+      "IfcBeam": {
+        "original": 354,
+        "repaired": 354
+      },
+      "IfcColumn": {
+        "original": 387,
+        "repaired": 387
+      },
+      "IfcWall": {
+        "original": 299,
+        "repaired": 299
+      },
+      "IfcDoor": {
+        "original": 0,
+        "repaired": 0
+      },
+      "IfcWindow": {
+        "original": 0,
+        "repaired": 0
+      },
+      "IfcOpeningElement": {
+        "original": 1284,
+        "repaired": 1284
+      }
+    },
+    "class_counts_restored": true,
+    "exact_type_reuse": {
+      "status": "passed",
+      "type_counts_unchanged": true,
+      "type_graphs_unchanged": true,
+      "occurrence_bindings_exact": true
+    },
+    "restoration_operation_bindings": {
+      "beams": [
+        "add-support-beam-1",
+        "add-support-beam-2"
+      ],
+      "columns": [],
+      "doors": [],
+      "windows": []
+    },
+    "focused_geometry_property_debug": {
+      "schema_version": "text2ifc/damage-restoration-ifccompare-debug/0.1",
+      "comparison_mode": "private_post_repair_role_mapped_debug",
+      "comparator": "text2ifc_ifc_repair.compare.compare_ifc_models",
+      "inputs": {
+        "original_sha256": "sha256:79f294c643438ac7a494e4871857244c2de0eefa536eda5977af20640a301a22",
+        "repaired_sha256": "sha256:ffce3597d8f4217df163cd1a65d3acc9155d6b3e48ce2ec621db1b7e267f7e1c",
+        "private_mapping_source": "frozen_damage_recipe",
+        "repaired_binding_source": "bound_changeset_operation_ids"
+      },
+      "status": "passed",
+      "member_count": 2,
+      "failed_member_count": 0,
+      "members": [
+        {
+          "member_kind": "beams",
+          "ifc_class": "IfcBeam",
+          "original_global_id": "07ykdjoGLBROeD1VZtZex9",
+          "repaired_global_id": "0PHy0Z4ATS3AnyPFMvZ9yN",
+          "repaired_tag": "add-support-beam-1",
+          "status": "passed",
+          "geometry": {
+            "status": "passed",
+            "original": {
+              "axis_start_mm": [
+                19290.0,
+                36452.5,
+                -575.0
+              ],
+              "axis_end_mm": [
+                19290.0,
+                29005.0,
+                -575.0
+              ],
+              "axis_direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "axis_extent_mm": 7447.5,
+              "section": {
+                "shape": "rectangle",
+                "width_mm": 249.999999999999,
+                "height_mm": 449.999999999997
+              },
+              "orientation": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "representation_type": "SweptSolid",
+              "profile_local_section_mm": {
+                "shape": "rectangle",
+                "width_mm": 450.0,
+                "height_mm": 250.0
+              },
+              "profile_axis_mapping": {
+                "profile_x_is_vertical": true
+              }
+            },
+            "requested": {
+              "axis_start_mm": [
+                19290.0,
+                36452.5,
+                -575.0
+              ],
+              "axis_end_mm": [
+                19290.0,
+                29005.0,
+                -575.0
+              ],
+              "axis_direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "axis_extent_mm": 7447.5,
+              "section": {
+                "shape": "rectangle",
+                "width_mm": 250.0,
+                "height_mm": 450.0
+              }
+            },
+            "repaired": {
+              "axis_start_mm": [
+                19290.0,
+                36452.5,
+                -575.0
+              ],
+              "axis_end_mm": [
+                19290.0,
+                29005.0,
+                -575.0
+              ],
+              "axis_direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "axis_extent_mm": 7447.5,
+              "section": {
+                "shape": "rectangle",
+                "width_mm": 250.0,
+                "height_mm": 450.0
+              },
+              "orientation": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "representation_type": "SweptSolid",
+              "profile_local_section_mm": {
+                "shape": "rectangle",
+                "width_mm": 250.0,
+                "height_mm": 450.0
+              },
+              "profile_axis_mapping": {
+                "profile_x_is_vertical": false
+              }
+            },
+            "original_vs_repaired_tolerance_mm": 0.1,
+            "request_vs_repaired_tolerance_mm": 0.001,
+            "original_vs_repaired_differences": [],
+            "request_vs_repaired_differences": [],
+            "differences": []
+          },
+          "properties": {
+            "status": "passed",
+            "property_count": 5,
+            "properties": [
+              {
+                "property": "Pset_BeamCommon.LoadBearing",
+                "requested": true,
+                "original": true,
+                "repaired": true,
+                "requested_value_type": "IfcBoolean",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.IsExternal",
+                "requested": false,
+                "original": false,
+                "repaired": false,
+                "requested_value_type": "IfcBoolean",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.FireRating",
+                "requested": "120",
+                "original": "120",
+                "repaired": "120",
+                "requested_value_type": "IfcLabel",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.Slope",
+                "requested": 0.0,
+                "original": 0.0,
+                "repaired": 0.0,
+                "requested_value_type": "IfcPlaneAngleMeasure",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.Reference",
+                "requested": "balk vierkant_gen_250x710 (C25/30)",
+                "original": "balk vierkant_gen_250x710 (C25/30)",
+                "repaired": "balk vierkant_gen_250x710 (C25/30)",
+                "requested_value_type": "IfcIdentifier",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              }
+            ]
+          },
+          "type_reuse": {
+            "status": "passed",
+            "expected_type_global_id": "0OvyTYAaD5pfeQsZGtwMGy",
+            "original_type_global_id": "0OvyTYAaD5pfeQsZGtwMGy",
+            "repaired_type_global_id": "0OvyTYAaD5pfeQsZGtwMGy"
+          }
+        },
+        {
+          "member_kind": "beams",
+          "ifc_class": "IfcBeam",
+          "original_global_id": "07ykdjoGLBROeD1VZtZebp",
+          "repaired_global_id": "1VcZXBjsbVbu6zMmHkJXyl",
+          "repaired_tag": "add-support-beam-2",
+          "status": "passed",
+          "geometry": {
+            "status": "passed",
+            "original": {
+              "axis_start_mm": [
+                22590.0,
+                36452.5,
+                -575.0
+              ],
+              "axis_end_mm": [
+                22590.0,
+                29005.0,
+                -575.0
+              ],
+              "axis_direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "axis_extent_mm": 7447.5,
+              "section": {
+                "shape": "rectangle",
+                "width_mm": 249.999999999995,
+                "height_mm": 449.999999999997
+              },
+              "orientation": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "representation_type": "SweptSolid",
+              "profile_local_section_mm": {
+                "shape": "rectangle",
+                "width_mm": 450.0,
+                "height_mm": 250.0
+              },
+              "profile_axis_mapping": {
+                "profile_x_is_vertical": true
+              }
+            },
+            "requested": {
+              "axis_start_mm": [
+                22590.0,
+                36452.5,
+                -575.0
+              ],
+              "axis_end_mm": [
+                22590.0,
+                29005.0,
+                -575.0
+              ],
+              "axis_direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "axis_extent_mm": 7447.5,
+              "section": {
+                "shape": "rectangle",
+                "width_mm": 250.0,
+                "height_mm": 450.0
+              }
+            },
+            "repaired": {
+              "axis_start_mm": [
+                22590.0,
+                36452.5,
+                -575.0
+              ],
+              "axis_end_mm": [
+                22590.0,
+                29005.0,
+                -575.0
+              ],
+              "axis_direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "axis_extent_mm": 7447.5,
+              "section": {
+                "shape": "rectangle",
+                "width_mm": 250.0,
+                "height_mm": 450.0
+              },
+              "orientation": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "representation_type": "SweptSolid",
+              "profile_local_section_mm": {
+                "shape": "rectangle",
+                "width_mm": 250.0,
+                "height_mm": 450.0
+              },
+              "profile_axis_mapping": {
+                "profile_x_is_vertical": false
+              }
+            },
+            "original_vs_repaired_tolerance_mm": 0.1,
+            "request_vs_repaired_tolerance_mm": 0.001,
+            "original_vs_repaired_differences": [],
+            "request_vs_repaired_differences": [],
+            "differences": []
+          },
+          "properties": {
+            "status": "passed",
+            "property_count": 5,
+            "properties": [
+              {
+                "property": "Pset_BeamCommon.LoadBearing",
+                "requested": true,
+                "original": true,
+                "repaired": true,
+                "requested_value_type": "IfcBoolean",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.IsExternal",
+                "requested": false,
+                "original": false,
+                "repaired": false,
+                "requested_value_type": "IfcBoolean",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.FireRating",
+                "requested": "120",
+                "original": "120",
+                "repaired": "120",
+                "requested_value_type": "IfcLabel",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.Slope",
+                "requested": 0.0,
+                "original": 0.0,
+                "repaired": 0.0,
+                "requested_value_type": "IfcPlaneAngleMeasure",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              },
+              {
+                "property": "Pset_BeamCommon.Reference",
+                "requested": "balk vierkant_gen_250x710 (C25/30)",
+                "original": "balk vierkant_gen_250x710 (C25/30)",
+                "repaired": "balk vierkant_gen_250x710 (C25/30)",
+                "requested_value_type": "IfcIdentifier",
+                "status": "passed",
+                "request_vs_original_differences": [],
+                "original_vs_repaired_differences": []
+              }
+            ]
+          },
+          "type_reuse": {
+            "status": "passed",
+            "expected_type_global_id": "0OvyTYAaD5pfeQsZGtwMGy",
+            "original_type_global_id": "0OvyTYAaD5pfeQsZGtwMGy",
+            "repaired_type_global_id": "0OvyTYAaD5pfeQsZGtwMGy"
+          }
+        }
+      ],
+      "whole_model_ifccompare": {
+        "schema_version": "text2ifc/ifc-repair-comparison/0.1",
+        "comparison_status": "passed",
+        "comparison_error_code": null,
+        "comparison_error": null,
+        "before_readable": true,
+        "after_readable": true,
+        "before_schema": "IFC2X3",
+        "after_schema": "IFC2X3",
+        "schema_preserved": true,
+        "added_ids": [
+          "0PHy0Z4ATS3AnyPFMvZ9yN",
+          "0R_Zpu3CbM4fO6FrActfW9",
+          "1NmDFR8RfI7gdKbH5dlX4Q",
+          "1VcZXBjsbVbu6zMmHkJXyl",
+          "2E0h2gk3vPJAvz0UIB8rTU",
+          "30Hgp$wrvP$eg_NKuhBg3H"
+        ],
+        "removed_ids": [
+          "07ykdjoGLBROeD1VZtZebp",
+          "07ykdjoGLBROeD1VZtZex9",
+          "07ykdjoGLBROeD3X7tZebp",
+          "07ykdjoGLBROeD3X7tZex9",
+          "0bghZ6$9j6$QQ0REin7L9H",
+          "0mabA3nmf50Pp6o5qwb1Pm",
+          "0zdoAdrbj1Of$O4wYYI_88",
+          "1H7x2SWQX4AgbCgSxaMzE6",
+          "1zMRCDcc9D4Qh2RmgOXA6W",
+          "2ADiWD8vjCSwED8a9gWQpX",
+          "2HDMPsWE5FngoUlPRhygU_",
+          "2WXfHulmL6HOey_sZKTfZQ",
+          "2f9YLPEZT7_BUsbbrErGbz",
+          "318yHQLSX518U5102GPzNg"
+        ],
+        "modified_ids": [
+          "0Kt_dvIHbB2wArvDddI0hh",
+          "19WBHvznvCMx$EtM_8qRKJ",
+          "1KKvDUuYz9oR4pgR2sZ63_",
+          "1lRnUz08jD$esA3KZYRtrV",
+          "2mC29A06H6bOfoZYchGsGX"
+        ],
+        "allowed_changed_ids": [],
+        "unexpected_changed_ids": [
+          "07ykdjoGLBROeD1VZtZebp",
+          "07ykdjoGLBROeD1VZtZex9",
+          "07ykdjoGLBROeD3X7tZebp",
+          "07ykdjoGLBROeD3X7tZex9",
+          "0Kt_dvIHbB2wArvDddI0hh",
+          "0PHy0Z4ATS3AnyPFMvZ9yN",
+          "0R_Zpu3CbM4fO6FrActfW9",
+          "0bghZ6$9j6$QQ0REin7L9H",
+          "0mabA3nmf50Pp6o5qwb1Pm",
+          "0zdoAdrbj1Of$O4wYYI_88",
+          "19WBHvznvCMx$EtM_8qRKJ",
+          "1H7x2SWQX4AgbCgSxaMzE6",
+          "1KKvDUuYz9oR4pgR2sZ63_",
+          "1NmDFR8RfI7gdKbH5dlX4Q",
+          "1VcZXBjsbVbu6zMmHkJXyl",
+          "1lRnUz08jD$esA3KZYRtrV",
+          "1zMRCDcc9D4Qh2RmgOXA6W",
+          "2ADiWD8vjCSwED8a9gWQpX",
+          "2E0h2gk3vPJAvz0UIB8rTU",
+          "2HDMPsWE5FngoUlPRhygU_",
+          "2WXfHulmL6HOey_sZKTfZQ",
+          "2f9YLPEZT7_BUsbbrErGbz",
+          "2mC29A06H6bOfoZYchGsGX",
+          "30Hgp$wrvP$eg_NKuhBg3H",
+          "318yHQLSX518U5102GPzNg"
+        ],
+        "drift": {
+          "0Kt_dvIHbB2wArvDddI0hh": {
+            "before": {
+              "ifc_class": "IfcRelAssociatesClassification",
+              "name": "Uniformat Classification",
+              "attributes": {
+                "RelatedObjects": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZebp"
+                  }
+                ],
+                "RelatingClassification": {
+                  "ifc_class": "IfcClassificationReference",
+                  "attributes": {
+                    "Location": "http://www.csiorg.net/uniformat",
+                    "ItemReference": "28.11",
+                    "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                    "ReferencedSource": {
+                      "ifc_class": "IfcClassification",
+                      "attributes": {
+                        "Source": "http://www.csiorg.net/uniformat",
+                        "Edition": "1998",
+                        "EditionDate": null,
+                        "Name": "Uniformat"
+                      }
+                    }
+                  }
+                }
+              },
+              "content_sha256": "sha256:80ea98dd15695f41e580f8eb86cc432bbab7729e61eb4b2b776a7af1deb6d753"
+            },
+            "after": {
+              "ifc_class": "IfcRelAssociatesClassification",
+              "name": "Uniformat Classification",
+              "attributes": {
+                "RelatedObjects": [],
+                "RelatingClassification": {
+                  "ifc_class": "IfcClassificationReference",
+                  "attributes": {
+                    "Location": "http://www.csiorg.net/uniformat",
+                    "ItemReference": "28.11",
+                    "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                    "ReferencedSource": {
+                      "ifc_class": "IfcClassification",
+                      "attributes": {
+                        "Source": "http://www.csiorg.net/uniformat",
+                        "Edition": "1998",
+                        "EditionDate": null,
+                        "Name": "Uniformat"
+                      }
+                    }
+                  }
+                }
+              },
+              "content_sha256": "sha256:6fa3cfd0bc7fe1aa75c4ff5634f7ed23cbdccdcc7b0b73d9ccdb70fd62d60ca7"
+            }
+          },
+          "19WBHvznvCMx$EtM_8qRKJ": {
+            "before": {
+              "ifc_class": "IfcRelAssociatesClassification",
+              "name": "Uniformat Classification",
+              "attributes": {
+                "RelatedObjects": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZex9"
+                  }
+                ],
+                "RelatingClassification": {
+                  "ifc_class": "IfcClassificationReference",
+                  "attributes": {
+                    "Location": "http://www.csiorg.net/uniformat",
+                    "ItemReference": "28.11",
+                    "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                    "ReferencedSource": {
+                      "ifc_class": "IfcClassification",
+                      "attributes": {
+                        "Source": "http://www.csiorg.net/uniformat",
+                        "Edition": "1998",
+                        "EditionDate": null,
+                        "Name": "Uniformat"
+                      }
+                    }
+                  }
+                }
+              },
+              "content_sha256": "sha256:e8b616a1adc3f8e05353f227ab6afdfdd76818db216f0028f603357c0702d1a0"
+            },
+            "after": {
+              "ifc_class": "IfcRelAssociatesClassification",
+              "name": "Uniformat Classification",
+              "attributes": {
+                "RelatedObjects": [],
+                "RelatingClassification": {
+                  "ifc_class": "IfcClassificationReference",
+                  "attributes": {
+                    "Location": "http://www.csiorg.net/uniformat",
+                    "ItemReference": "28.11",
+                    "Name": "hoofddraagconstructies; kolommen en liggers, kolom-/liggerconstructies",
+                    "ReferencedSource": {
+                      "ifc_class": "IfcClassification",
+                      "attributes": {
+                        "Source": "http://www.csiorg.net/uniformat",
+                        "Edition": "1998",
+                        "EditionDate": null,
+                        "Name": "Uniformat"
+                      }
+                    }
+                  }
+                }
+              },
+              "content_sha256": "sha256:e7cb9bf998082b4dcdc991572da73b72093e50285a632ab404e8e85e8df66078"
+            }
+          },
+          "1KKvDUuYz9oR4pgR2sZ63_": {
+            "before": {
+              "ifc_class": "IfcRelContainedInSpatialStructure",
+              "name": null,
+              "attributes": {
+                "RelatedElements": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZebp"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeC"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeE"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeG"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeI"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeK"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeM"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeU"
+                  },
+                  {
+                    "ifc_class": "IfcSlab",
+                    "global_id": "07ykdjoGLBROeD1VZtZeh9"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehO"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehW"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehb"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehd"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehe"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehg"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehi"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehk"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehq"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehs"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZex9"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "0Q0Ge1j4vFrfPFU0zGosbB"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "0UfjOdEzP5cheHOg51ij5p"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "0UfjOdEzP5cheHOg51ij89"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8W"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8Y"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8c"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8i"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0sk_mm4QzFvg$gTy0eQQKH"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0sk_mm4QzFvg$gTy0eQQKV"
+                  },
+                  {
+                    "ifc_class": "IfcSlab",
+                    "global_id": "0wg1$hCMLDKvTPQst2hGsa"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KG"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KI"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KK"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KM"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5NW"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5NY"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Na"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nc"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Ne"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Ng"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Ni"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nk"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nu"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nw"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "1_AFpqXun0weDCiDbifjR3"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "1y7gzd3r11XuD2LvryB1pE"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "1y7gzd3r11XuD2LvryB1r4"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "2UdoXKJ8DFzhCQtWkNjlzG"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "2UdoXKJ8DFzhCQtWkNjlzM"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrm"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrq"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrs"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrw"
+                  },
+                  {
+                    "ifc_class": "IfcGrid",
+                    "global_id": "3smhs89Ef9zQtfSWPi4O5M"
+                  }
+                ],
+                "RelatingStructure": {
+                  "ifc_class": "IfcBuildingStorey",
+                  "global_id": "02GkOQJZz4x9WAhoZkKFPX"
+                }
+              },
+              "content_sha256": "sha256:398cb11a852d4ade10f1034f27566729bf310abb747d8c7af59770f655fc43a7"
+            },
+            "after": {
+              "ifc_class": "IfcRelContainedInSpatialStructure",
+              "name": null,
+              "attributes": {
+                "RelatedElements": [
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeC"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeE"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeG"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeI"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeK"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeM"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "07ykdjoGLBROeD1VZtZeeU"
+                  },
+                  {
+                    "ifc_class": "IfcSlab",
+                    "global_id": "07ykdjoGLBROeD1VZtZeh9"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehO"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehW"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehb"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehd"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehe"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehg"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehi"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehk"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehq"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehs"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "07ykdjoGLBROeD1VZtZehw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PHy0Z4ATS3AnyPFMvZ9yN"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "0Q0Ge1j4vFrfPFU0zGosbB"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "0UfjOdEzP5cheHOg51ij5p"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "0UfjOdEzP5cheHOg51ij89"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8W"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8Y"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8c"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0YksV2jw977Qnp9f97dD8i"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0sk_mm4QzFvg$gTy0eQQKH"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0sk_mm4QzFvg$gTy0eQQKV"
+                  },
+                  {
+                    "ifc_class": "IfcSlab",
+                    "global_id": "0wg1$hCMLDKvTPQst2hGsa"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KG"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KI"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KK"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5KM"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5NW"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5NY"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Na"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nc"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Ne"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Ng"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Ni"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nk"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nu"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "14MG3KZxDC3O6kqcixf5Nw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1VcZXBjsbVbu6zMmHkJXyl"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "1_AFpqXun0weDCiDbifjR3"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "1y7gzd3r11XuD2LvryB1pE"
+                  },
+                  {
+                    "ifc_class": "IfcColumn",
+                    "global_id": "1y7gzd3r11XuD2LvryB1r4"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "2UdoXKJ8DFzhCQtWkNjlzG"
+                  },
+                  {
+                    "ifc_class": "IfcWallStandardCase",
+                    "global_id": "2UdoXKJ8DFzhCQtWkNjlzM"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrm"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrq"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrs"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "2k2MjzFaP6nOnc2lkDqFrw"
+                  },
+                  {
+                    "ifc_class": "IfcGrid",
+                    "global_id": "3smhs89Ef9zQtfSWPi4O5M"
+                  }
+                ],
+                "RelatingStructure": {
+                  "ifc_class": "IfcBuildingStorey",
+                  "global_id": "02GkOQJZz4x9WAhoZkKFPX"
+                }
+              },
+              "content_sha256": "sha256:837c7fe7baffc37e48bd2e1dd226e63c8a0159ffc629a1d91478f7cffb053f65"
+            }
+          },
+          "1lRnUz08jD$esA3KZYRtrV": {
+            "before": {
+              "ifc_class": "IfcRelDefinesByType",
+              "name": null,
+              "attributes": {
+                "RelatedObjects": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZebp"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZex9"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+                  }
+                ],
+                "RelatingType": {
+                  "ifc_class": "IfcBeamType",
+                  "global_id": "0OvyTYAaD5pfeQsZGtwMGy"
+                }
+              },
+              "content_sha256": "sha256:c56bf3780357444cc95f7807155d4d757dab6789eb0723b458d0e66938c328df"
+            },
+            "after": {
+              "ifc_class": "IfcRelDefinesByType",
+              "name": null,
+              "attributes": {
+                "RelatedObjects": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PHy0Z4ATS3AnyPFMvZ9yN"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1VcZXBjsbVbu6zMmHkJXyl"
+                  }
+                ],
+                "RelatingType": {
+                  "ifc_class": "IfcBeamType",
+                  "global_id": "0OvyTYAaD5pfeQsZGtwMGy"
+                }
+              },
+              "content_sha256": "sha256:dff6e92fe6e18c3ce9e78ade00e9c0057bdfc31058e9a59d5474ee9e0d6bf4e4"
+            }
+          },
+          "2mC29A06H6bOfoZYchGsGX": {
+            "before": {
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "name": null,
+              "attributes": {
+                "RelatedObjects": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZebp"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "07ykdjoGLBROeD1VZtZex9"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+                  }
+                ],
+                "RelatingMaterial": {
+                  "ifc_class": "IfcMaterial",
+                  "attributes": {
+                    "Name": "f2_beton ihwg_C25/30"
+                  }
+                }
+              },
+              "content_sha256": "sha256:0e3449b36d692254d2498e1f23471883f1fcc8c02efc67023fafa8b36dddd734"
+            },
+            "after": {
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "name": null,
+              "attributes": {
+                "RelatedObjects": [
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_87"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0$RIVnfCX8oAAtt7kUU_Fw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAa0W"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "0PlwGGcLHCAQLNhDCdAaSD"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfbodw"
+                  },
+                  {
+                    "ifc_class": "IfcBeam",
+                    "global_id": "1UIEr2Og9FQeOC6qXfboeK"
+                  }
+                ],
+                "RelatingMaterial": {
+                  "ifc_class": "IfcMaterial",
+                  "attributes": {
+                    "Name": "f2_beton ihwg_C25/30"
+                  }
+                }
+              },
+              "content_sha256": "sha256:4cbac18baccda0eb218b5136841f6f9bfd64cb561b3ce2a27884330b451a8f1c"
+            }
+          }
+        },
+        "comparison_metrics": {
+          "algorithm_version": "text2ifc/ifc-root-fingerprint/0.2",
+          "strategy": "aligned_step_certificate",
+          "timeout_seconds": 120.0,
+          "before_root_count": 15275,
+          "after_root_count": 15267,
+          "before_entity_count": 117040,
+          "after_entity_count": 117042,
+          "dirty_before_record_count": 52,
+          "dirty_after_record_count": 54,
+          "candidate_root_count": 5,
+          "before_propagated_entity_count": 52,
+          "after_propagated_entity_count": 54,
+          "root_index_seconds": 0.429334,
+          "record_scan_seconds": 4.686687,
+          "propagation_seconds": 0.003126,
+          "before_fingerprint_seconds": 0.025744,
+          "after_fingerprint_seconds": 0.019814,
+          "detail_seconds": 0.017205,
+          "total_seconds": 5.183251,
+          "before": {
+            "hashed_non_root_entities": 71,
+            "shared_entity_cache_hits": 39,
+            "cached_non_root_entities": 71,
+            "cycle_edges": 0,
+            "root_count": 19,
+            "schema_declaration_count": 32
+          },
+          "after": {
+            "hashed_non_root_entities": 64,
+            "shared_entity_cache_hits": 17,
+            "cached_non_root_entities": 64,
+            "cycle_edges": 0,
+            "root_count": 11,
+            "schema_declaration_count": 27
+          }
+        },
+        "complete_preservation_success": false
+      },
+      "identity_boundary": "Restored occurrences may have new GlobalIds. Geometry, requested occurrence properties, and exact surviving Type bindings are therefore compared through the frozen private role mapping."
+    },
+    "identity_equivalent": false,
+    "restoration_acceptance_status": "passed"
+  },
+  "repaired_ifc_path": "E:\\code for project\\bimnet-zcode\\w\\dataset\\processed\\ifc-repair-runs\\repair-damage-restoration-c1-c2-live-20260904-v9\\cases\\C1\\runtime\\runs\\repair-0d9d9dc0705d4a9eb6933e23d562cb15\\.terminal-bundles\\db7866c40c9b495a937d13305d15616c\\successful\\repaired.ifc"
+}

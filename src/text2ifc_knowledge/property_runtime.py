@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -260,6 +261,7 @@ def create_property_runtime(
     if not records:
         raise PropertyRuntimeError("PROPERTY_CORPUS_EMPTY")
     storage_version = _storage_version(
+        active_records=records,
         corpus_version=corpus_version,
         embedding_model_version=embedding_model_version,
         document_renderer_version=document_renderer_version,
@@ -661,15 +663,25 @@ def _validate_policy(document: Mapping[str, Any]) -> dict[str, Any]:
 
 def _storage_version(
     *,
+    active_records: Iterable[PropertyKnowledgeRecord],
     corpus_version: str,
     embedding_model_version: str,
     document_renderer_version: str,
     collection_version: str,
 ) -> str:
+    active_fingerprint = hashlib.sha256(
+        json.dumps(
+            [record.to_dict() for record in active_records],
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
     return "|".join(
         (
             collection_version,
             f"records={PROPERTY_RECORD_SCHEMA_VERSION}",
+            f"active={active_fingerprint}",
             f"corpus={corpus_version}",
             f"model={embedding_model_version}",
             f"renderer={document_renderer_version}",

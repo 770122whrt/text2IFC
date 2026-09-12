@@ -38,42 +38,54 @@ def select_door_placement_in_opening(
     height_mm = _millimetres(door, float(door.OverallHeight))
     candidates = []
     for sign in (1.0, -1.0):
-        location_x = (
+        rotated_center_y = sign * _center(local_bounds["y"])
+        location_y = opening_center_y - rotated_center_y
+        location_z = opening_bounds["z"][0] - local_bounds["z"][0]
+        nominal_edge_x = (
             opening_bounds["x"][0]
             if sign > 0
             else opening_bounds["x"][1]
         )
-        rotated_center_y = sign * _center(local_bounds["y"])
-        location_y = opening_center_y - rotated_center_y
-        location_z = opening_bounds["z"][0]
-        actual_bounds = _placed_axis_aligned_bounds(
-            local_bounds,
-            sign=sign,
-            location_mm=(location_x, location_y, location_z),
+        geometry_centered_x = (
+            _center(opening_bounds["x"])
+            - sign * _center(local_bounds["x"])
         )
-        nominal_bounds = {
-            "x": sorted((location_x, location_x + sign * width_mm)),
-            "y": [location_y, location_y],
-            "z": [location_z, location_z + height_mm],
-        }
-        diagnostics = _alignment_diagnostics(
-            door_bounds=actual_bounds,
-            opening_bounds=opening_bounds,
-            nominal_bounds=nominal_bounds,
-            axis_deviation_degrees=0.0,
-        )
-        candidates.append(
-            {
-                "sign": sign,
-                "location_mm": (location_x, location_y, location_z),
-                "diagnostics": diagnostics,
+        for placement_kind, location_x in (
+            ("nominal_edge", nominal_edge_x),
+            ("geometry_center", geometry_centered_x),
+        ):
+            actual_bounds = _placed_axis_aligned_bounds(
+                local_bounds,
+                sign=sign,
+                location_mm=(location_x, location_y, location_z),
+            )
+            nominal_bounds = {
+                "x": sorted((location_x, location_x + sign * width_mm)),
+                "y": [location_y, location_y],
+                "z": [location_z, location_z + height_mm],
             }
-        )
+            diagnostics = _alignment_diagnostics(
+                door_bounds=actual_bounds,
+                opening_bounds=opening_bounds,
+                nominal_bounds=nominal_bounds,
+                axis_deviation_degrees=0.0,
+            )
+            candidates.append(
+                {
+                    "sign": sign,
+                    "placement_kind": placement_kind,
+                    "location_mm": (location_x, location_y, location_z),
+                    "diagnostics": diagnostics,
+                }
+            )
     selected = max(
         candidates,
         key=lambda item: (
+            item["diagnostics"]["valid"],
             item["diagnostics"]["projected_overlap_ratio"],
+            -item["diagnostics"]["geometry_placement_excess_mm"],
             -item["diagnostics"]["geometry_center_deviation_mm"],
+            item["placement_kind"] == "geometry_center",
             item["sign"],
         ),
     )
@@ -163,6 +175,22 @@ def _alignment_diagnostics(
             for axis in ("x", "y", "z")
         )
     )
+    geometry_center_by_axis = {
+        axis: abs(
+            _center(door_bounds[axis])
+            - _center(opening_bounds[axis])
+        )
+        for axis in ("x", "y", "z")
+    }
+    geometry_base_deviation = abs(
+        float(door_bounds["z"][0]) - float(opening_bounds["z"][0])
+    )
+    geometry_placement_excess = max(
+        0.0,
+        geometry_center_by_axis["x"] - MAX_CENTER_DEVIATION_MM,
+        geometry_center_by_axis["y"] - MAX_CENTER_DEVIATION_MM,
+        geometry_base_deviation - MAX_CENTER_DEVIATION_MM,
+    )
     width_deviation = abs(
         _extent(nominal_bounds["x"]) - _extent(opening_bounds["x"])
     )
@@ -172,7 +200,7 @@ def _alignment_diagnostics(
     valid = (
         projected_overlap >= MIN_PROJECTED_OVERLAP_RATIO
         and intersection_y > 0.0
-        and nominal_center_deviation <= MAX_CENTER_DEVIATION_MM
+        and geometry_placement_excess <= 0.0
         and axis_deviation_degrees <= MAX_AXIS_DEVIATION_DEGREES
         and width_deviation <= MAX_DIMENSION_DEVIATION_MM
         and height_deviation <= MAX_DIMENSION_DEVIATION_MM
@@ -186,6 +214,16 @@ def _alignment_diagnostics(
         ),
         "geometry_center_deviation_mm": round(
             geometry_center_deviation, 6
+        ),
+        "geometry_center_deviation_by_axis_mm": {
+            axis: round(value, 6)
+            for axis, value in geometry_center_by_axis.items()
+        },
+        "geometry_base_deviation_mm": round(
+            geometry_base_deviation, 6
+        ),
+        "geometry_placement_excess_mm": round(
+            geometry_placement_excess, 6
         ),
         "axis_deviation_degrees": round(axis_deviation_degrees, 6),
         "width_deviation_mm": round(width_deviation, 6),

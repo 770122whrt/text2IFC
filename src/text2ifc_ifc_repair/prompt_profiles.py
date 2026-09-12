@@ -40,6 +40,7 @@ PROFILE_SCHEMA_VERSION_0_2 = "text2ifc/ifc-repair-prompt-profile/0.2"
 PROFILE_SCHEMA_VERSION_0_3 = "text2ifc/ifc-repair-prompt-profile/0.3"
 STAGE2_OPERATION_SCHEMA_VERSION = "text2ifc/ifc-repair-stage2-operation/0.1"
 _PROFILE_SCHEMA_PATHS = {
+    "text2ifc/ifc-repair-prompt-profile/0.4": PROJECT_ROOT / "schemas" / "agent" / "ifc-repair-prompt-profile-0.4.schema.json",
     PROFILE_SCHEMA_VERSION: PROFILE_SCHEMA_PATH,
     PROFILE_SCHEMA_VERSION_0_2: PROFILE_SCHEMA_PATH_0_2,
     PROFILE_SCHEMA_VERSION_0_3: PROFILE_SCHEMA_PATH_0_3,

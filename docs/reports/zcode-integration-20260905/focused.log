@@ -1,0 +1,50 @@
+.....................................................................F.. [ 63%]
+.........................................                                [100%]
+================================== FAILURES ===================================
+___________ test_h1_mixed_binder_rejects_reordered_canonical_scope ____________
+
+tmp_path = WindowsPath('E:/code for project/bimnet-zcode/.pytest-tmp-zcode-20260905-144326-461518/test_h1_mixed_binder_rejects_r0')
+
+    def test_h1_mixed_binder_rejects_reordered_canonical_scope(
+        tmp_path: Path,
+    ) -> None:
+        operations = [deepcopy(item) for item in _mixed_resolved_operations()]
+        operations[0]["target_global_id"] = H1_STOREY_ID
+        operations[0]["scope_ids"] = [H1_STOREY_ID]
+        operations[0]["context"]["candidate_targets"][0]["ifc_global_id"] = (
+            H1_STOREY_ID
+        )
+        draft = _mixed_draft()
+        draft["scope"]["target_ids"] = [H1_STOREY_ID, WINDOW_ID]
+        draft["operations"][0]["target"] = {
+            "storey_global_id": H1_STOREY_ID
+        }
+    
+        result = generate_bound_changeset(
+            provider=_Provider(draft),
+            case_id="r1-h1-reordered-scope",
+            repair_request="Add the Beam and set Window FireRating atomically.",
+            source_request_hash=REQUEST,
+            resolved_operations=operations,
+            model_fingerprint=MODEL,
+            registry=create_default_registry(),
+            output_dir=tmp_path / "h1-reordered-scope",
+            max_attempts=1,
+            semantic_manifests=(
+                _manifest("beam-1", "add_beam"),
+                _property_manifest(),
+            ),
+            semantic_manifest_hashes={
+                "beam-1": MANIFEST_HASH,
+                "window-property-1": MANIFEST_HASH,
+            },
+        )
+    
+>       assert result["valid"] is False
+E       assert True is False
+
+tests\ifc_repair\test_structural_stage2_contract.py:557: AssertionError
+- generated xml file: E:\code for project\bimnet-zcode\.tmp\zcode-integration\focused.junit.xml -
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_structural_stage2_contract.py::test_h1_mixed_binder_rejects_reordered_canonical_scope
+1 failed, 112 passed in 41.68s

@@ -325,7 +325,12 @@ def build_semantic_manifest(
     )
     use_v03 = use_v02 and any(
         fact.occurrence_scope
-        in {"door_occurrence", "beam_occurrence", "column_occurrence"}
+        in {
+            "window_occurrence",
+            "door_occurrence",
+            "beam_occurrence",
+            "column_occurrence",
+        }
         for fact in facts
     )
     assignments: list[dict[str, Any]] = []

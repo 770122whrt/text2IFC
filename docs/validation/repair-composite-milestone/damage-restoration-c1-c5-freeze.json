@@ -1,0 +1,1528 @@
+{
+ "schema_version": "text2ifc/damage-restoration-c1-c5-freeze/0.2",
+ "semantics": "Damage-restoration: original (members exist) -> damage (deterministic removal) -> repair (restore at the removed members own exact storey-local centre-axis geometry and reuse each surviving original Type) -> repaired compared with original (class counts, geometry, Type bindings, properties, host relationships and preservation).",
+ "cases": [
+  {
+   "case_id": "C1",
+   "difficulty": "single",
+   "model": "sixty5",
+   "source": "dataset/external/ifc-bench/projects/sixty5/str.ifc",
+   "damage": {
+    "beams": [
+     {
+      "gid": "07ykdjoGLBROeD1VZtZex9",
+      "storey": "12 twaalfde verdieping",
+      "axis": {
+       "start": {
+        "x_mm": 19290.0,
+        "y_mm": 36452.5,
+        "z_mm": -575.0
+       },
+       "end": {
+        "x_mm": 19290.0,
+        "y_mm": 29005.0,
+        "z_mm": -575.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 450.0
+      },
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "0OvyTYAaD5pfeQsZGtwMGy"
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "LoadBearing",
+        "raw_value": true,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "FireRating",
+        "raw_value": "120",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "balk vierkant_gen_250x710 (C25/30)",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ]
+     },
+     {
+      "gid": "07ykdjoGLBROeD1VZtZebp",
+      "storey": "12 twaalfde verdieping",
+      "axis": {
+       "start": {
+        "x_mm": 22590.0,
+        "y_mm": 36452.5,
+        "z_mm": -575.0
+       },
+       "end": {
+        "x_mm": 22590.0,
+        "y_mm": 29005.0,
+        "z_mm": -575.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 450.0
+      },
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "0OvyTYAaD5pfeQsZGtwMGy"
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "LoadBearing",
+        "raw_value": true,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "FireRating",
+        "raw_value": "120",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "balk vierkant_gen_250x710 (C25/30)",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ]
+     }
+    ]
+   },
+   "request": "On storey \"12 twaalfde verdieping\" of this building, restore the two missing support beams in one atomic ChangeSet. Each beam has a rectangular section 250 mm wide (horizontal) by 450 mm deep (vertical). Beam 1 occupies the centerline from (19290.0, 36452.5, -575.0) mm to (19290.0, 29005.0, -575.0) mm (storey-local); beam 2 occupies the centerline from (22590.0, 36452.5, -575.0) mm to (22590.0, 29005.0, -575.0) mm. Each axis is fully determined by its start and end points; do not state a scalar length. Reuse the existing beam type with GlobalId 0OvyTYAaD5pfeQsZGtwMGy for both beams; do not generate new types. Restore both beams with their common properties: load bearing = true, external = false, FireRating = \"120\" (a text label), slope = 0.0, reference = \"balk vierkant_gen_250x710 (C25/30)\"."
+  },
+  {
+   "case_id": "C2",
+   "difficulty": "beam-door",
+   "model": "1px",
+   "source": "dataset/ifc/train/1px.ifc",
+   "damage": {
+    "beams": [
+     {
+      "gid": "2kMW8XyZv1d9XdPJLihM2E",
+      "storey": "天花板",
+      "axis": {
+       "start": {
+        "x_mm": -2116.820945,
+        "y_mm": 5648.800821,
+        "z_mm": -300.0
+       },
+       "end": {
+        "x_mm": -216.820945,
+        "y_mm": 5648.800821,
+        "z_mm": -300.0
+       }
+      },
+      "section": {
+       "width_mm": 200.0,
+       "height_mm": 600.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "200x300",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "200x300",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "200x300",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "2kMW8XyZv1d9XdPJLihM2H"
+      }
+     }
+    ],
+    "doors": [
+     {
+      "gid": "2AJ6T3vZDDZRJL7l0pGl86",
+      "preserve_opening": true,
+      "opening": {
+       "gid": "2AJ6T3vZDDZRJL7kCpGl86",
+       "width_mm": 720.0,
+       "height_mm": 2300.0,
+       "depth_mm": 100.0,
+       "center_offset_mm": 580.3,
+       "sill_height_mm": 0.0
+      },
+      "wall_query": {
+       "direction": "east",
+       "length_mm": 1000.3,
+       "height_mm": 2680.0,
+       "thickness_mm": 100.0
+      },
+      "storey": "地板",
+      "door_type": "SINGLE_SWING_LEFT",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "Reference",
+        "raw_value": "0915 x 2134mm 5",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "ThermalTransmittance",
+        "raw_value": 3.7021,
+        "raw_unit": null,
+        "requested_value_type": "IfcThermalTransmittanceMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "0915 x 2134mm 5",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "2AJ6T3vZDDZRJL7kKpGlCF"
+      }
+     }
+    ]
+   },
+   "request": "Restore the 2 missing members of this building in one atomic ChangeSet. Beam 1 is on storey \"天花板\" with centre axis from (-2116.820945, 5648.800821, -300) mm to (-216.820945, 5648.800821, -300) mm (storey-local), a rectangular section 200 mm wide horizontally by 600 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 2kMW8XyZv1d9XdPJLihM2H; do not generate a new Type. Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"200x300\", Pset_QuantityTakeOff.Reference = \"200x300\", Pset_ReinforcementBarPitchOfBeam.Reference = \"200x300\". Door 1 must fill the retained empty opening that is 720 mm wide, 2300 mm high and 100 mm deep, at wall-local centre offset 580.3 mm and sill 0 mm, without creating another opening; use operation type SINGLE_SWING_LEFT and reuse the existing IfcDoorStyle with GlobalId 2AJ6T3vZDDZRJL7kKpGlCF, including its mapped representation; do not generate a new Type. Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"0915 x 2134mm 5\", Pset_DoorCommon.ThermalTransmittance = 3.7021, Pset_QuantityTakeOff.Reference = \"0915 x 2134mm 5\". Every structural axis is fully determined by its endpoints; do not substitute a scalar length. All listed operations are mandatory and atomic."
+  },
+  {
+   "case_id": "C3",
+   "difficulty": "beams-column-door",
+   "model": "d7n",
+   "source": "dataset/ifc/test/d7n.ifc",
+   "damage": {
+    "beams": [
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_XV",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": -2964.984822,
+        "y_mm": 6426.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": -1464.984822,
+        "y_mm": 6426.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     },
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_ld",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": -1214.984822,
+        "y_mm": 7682.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": 1333.015178,
+        "y_mm": 7682.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     }
+    ],
+    "doors": [
+     {
+      "gid": "08DlcJHzb8WfJZDS4ZFHLL",
+      "preserve_opening": true,
+      "opening": {
+       "gid": "08DlcJHzb8WfJZDT8ZFHLL",
+       "width_mm": 900.0,
+       "height_mm": 2000.0,
+       "depth_mm": 180.0,
+       "center_offset_mm": 6379.1,
+       "sill_height_mm": 0.0
+      },
+      "wall_query": {
+       "direction": "north",
+       "length_mm": 9194.7,
+       "height_mm": 2409.2,
+       "thickness_mm": 180.0
+      },
+      "storey": "Level 1",
+      "door_type": "NOTDEFINED",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "08DlcJHzb8WfJZDTGZFHKZ"
+      }
+     }
+    ],
+    "columns": [
+     {
+      "gid": "1Wn_dXmF1DSBE14cb07uXX",
+      "storey": "Level 1",
+      "axis": {
+       "base": {
+        "x_mm": -1060.889019,
+        "y_mm": 3602.521083,
+        "z_mm": 0.0
+       },
+       "top": {
+        "x_mm": -1060.889019,
+        "y_mm": 3602.521083,
+        "z_mm": 2840.0
+       }
+      },
+      "section": {
+       "width_mm": 200.0,
+       "depth_mm": 200.0
+      },
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1Wn_dXmF1DSBE14cb07uXZ"
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ColumnCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ColumnCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ColumnCommon",
+        "property_name": "Reference",
+        "raw_value": "柱 9",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "柱 9",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfColumn",
+        "property_name": "Reference",
+        "raw_value": "柱 9",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ]
+     }
+    ]
+   },
+   "request": "Restore the 4 missing members of this building in one atomic ChangeSet. Beam 1 is on storey \"Level 3\" with centre axis from (-2964.984822, 6426.971531, -125) mm to (-1464.984822, 6426.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Beam 2 is on storey \"Level 3\" with centre axis from (-1214.984822, 7682.971531, -125) mm to (1333.015178, 7682.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 2 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Column 1 is on storey \"Level 1\" with vertical centre axis from (-1060.889019, 3602.521083, 0) mm to (-1060.889019, 3602.521083, 2840) mm (storey-local), a square section 200 by 200 mm, and must reuse the existing IfcColumnType with GlobalId 1Wn_dXmF1DSBE14cb07uXZ; do not generate a new Type. Give column 1 these exact occurrence properties: Pset_ColumnCommon.IsExternal = false, Pset_ColumnCommon.Slope = 0, Pset_ColumnCommon.Reference = \"柱 9\", Pset_QuantityTakeOff.Reference = \"柱 9\", Pset_ReinforcementBarPitchOfColumn.Reference = \"柱 9\". Door 1 must fill the retained empty opening that is 900 mm wide, 2000 mm high and 180 mm deep, at wall-local centre offset 6379.1 mm and sill 0 mm, without creating another opening; use operation type NOTDEFINED and reuse the existing IfcDoorStyle with GlobalId 08DlcJHzb8WfJZDTGZFHKZ, including its mapped representation; do not generate a new Type. Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"PKM0920\", Pset_QuantityTakeOff.Reference = \"PKM0920\". Every structural axis is fully determined by its endpoints; do not substitute a scalar length. All listed operations are mandatory and atomic."
+  },
+  {
+   "case_id": "C4",
+   "difficulty": "beams-column-door-window",
+   "model": "d7n",
+   "source": "dataset/ifc/test/d7n.ifc",
+   "damage": {
+    "beams": [
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_bw",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": -1339.984822,
+        "y_mm": 7807.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": -1339.984822,
+        "y_mm": 3283.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     },
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_kE",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": 537.015178,
+        "y_mm": 7557.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": 537.015178,
+        "y_mm": 4044.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     },
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_kQ",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": -385.984822,
+        "y_mm": 7557.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": -385.984822,
+        "y_mm": 4102.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     }
+    ],
+    "doors": [
+     {
+      "gid": "08DlcJHzb8WfJZDS4ZFHLL",
+      "preserve_opening": true,
+      "opening": {
+       "gid": "08DlcJHzb8WfJZDT8ZFHLL",
+       "width_mm": 900.0,
+       "height_mm": 2000.0,
+       "depth_mm": 180.0,
+       "center_offset_mm": 6379.1,
+       "sill_height_mm": 0.0
+      },
+      "wall_query": {
+       "direction": "north",
+       "length_mm": 9194.7,
+       "height_mm": 2409.2,
+       "thickness_mm": 180.0
+      },
+      "storey": "Level 1",
+      "door_type": "NOTDEFINED",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "08DlcJHzb8WfJZDTGZFHKZ"
+      }
+     }
+    ],
+    "windows": [
+     {
+      "gid": "1PkWQ2IbXBH9Ib7VGdBWCz",
+      "opening_gid": "1PkWQ2IbXBH9Ib7USdBWCz",
+      "opening": {
+       "width_mm": 1200.0,
+       "height_mm": 1500.0,
+       "sill_height_mm": 392.0,
+       "center_offset_mm": 1015.0
+      },
+      "wall_query": {
+       "direction": "east",
+       "length_mm": 2030.0,
+       "height_mm": 2087.4,
+       "thickness_mm": 240.0,
+       "storey_elevation_mm": 0.0,
+       "wall_global_id": "0jsP$50AP6xhaXdShCPeu6"
+      },
+      "storey": "Level 1",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "TLC1215",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "IsExternal",
+        "raw_value": true,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "Reference",
+        "raw_value": "TLC1215",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "ThermalTransmittance",
+        "raw_value": 3.6886,
+        "raw_unit": null,
+        "requested_value_type": "IfcThermalTransmittanceMeasure",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1PkWQ2IbXBH9Ib7U4dBXbS"
+      }
+     }
+    ],
+    "columns": [
+     {
+      "gid": "1Wn_dXmF1DSBE14cb07uYi",
+      "storey": "Level 1",
+      "axis": {
+       "base": {
+        "x_mm": 1919.110981,
+        "y_mm": 3602.521083,
+        "z_mm": 0.0
+       },
+       "top": {
+        "x_mm": 1919.110981,
+        "y_mm": 3602.521083,
+        "z_mm": 2840.0
+       }
+      },
+      "section": {
+       "width_mm": 200.0,
+       "depth_mm": 200.0
+      },
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1Wn_dXmF1DSBE14cb07uYk"
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ColumnCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ColumnCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ColumnCommon",
+        "property_name": "Reference",
+        "raw_value": "柱 9",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "柱 9",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfColumn",
+        "property_name": "Reference",
+        "raw_value": "柱 9",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ]
+     }
+    ]
+   },
+   "request": "Restore the 6 missing members of this building in one atomic ChangeSet. Beam 1 is on storey \"Level 3\" with centre axis from (-1339.984822, 7807.971531, -125) mm to (-1339.984822, 3283.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Beam 2 is on storey \"Level 3\" with centre axis from (537.015178, 7557.971531, -125) mm to (537.015178, 4044.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 2 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Beam 3 is on storey \"Level 3\" with centre axis from (-385.984822, 7557.971531, -125) mm to (-385.984822, 4102.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 3 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Column 1 is on storey \"Level 1\" with vertical centre axis from (1919.110981, 3602.521083, 0) mm to (1919.110981, 3602.521083, 2840) mm (storey-local), a square section 200 by 200 mm, and must reuse the existing IfcColumnType with GlobalId 1Wn_dXmF1DSBE14cb07uYk; do not generate a new Type. Give column 1 these exact occurrence properties: Pset_ColumnCommon.IsExternal = false, Pset_ColumnCommon.Slope = 0, Pset_ColumnCommon.Reference = \"柱 9\", Pset_QuantityTakeOff.Reference = \"柱 9\", Pset_ReinforcementBarPitchOfColumn.Reference = \"柱 9\". Door 1 must fill the retained empty opening that is 900 mm wide, 2000 mm high and 180 mm deep, at wall-local centre offset 6379.1 mm and sill 0 mm, without creating another opening; use operation type NOTDEFINED and reuse the existing IfcDoorStyle with GlobalId 08DlcJHzb8WfJZDTGZFHKZ, including its mapped representation; do not generate a new Type. Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"PKM0920\", Pset_QuantityTakeOff.Reference = \"PKM0920\". Window 1 must be restored on the straight wall running east, 2030 mm long, 2087.4 mm high and 240 mm thick, storey elevation 0 mm, with an opening 1200 mm wide by 1500 mm high, sill 392 mm and centre offset 1015 mm from wall start; reuse the existing IfcWindowStyle with GlobalId 1PkWQ2IbXBH9Ib7U4dBXbS, including its mapped representation; do not generate a new Type. Give window 1 these exact occurrence properties: Pset_QuantityTakeOff.Reference = \"TLC1215\", Pset_WindowCommon.IsExternal = true, Pset_WindowCommon.Reference = \"TLC1215\", Pset_WindowCommon.ThermalTransmittance = 3.6886. Every structural axis is fully determined by its endpoints; do not substitute a scalar length. All listed operations are mandatory and atomic."
+  },
+  {
+   "case_id": "C5",
+   "difficulty": "multi-family-hero",
+   "model": "d7n",
+   "source": "dataset/ifc/test/d7n.ifc",
+   "damage": {
+    "beams": [
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_i1",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": 2429.015178,
+        "y_mm": 9150.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": 2429.015178,
+        "y_mm": 3290.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     },
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_iq",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": 3355.015178,
+        "y_mm": 9148.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": 3355.015178,
+        "y_mm": 3268.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     },
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_jN",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": 832.015178,
+        "y_mm": 9142.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": 832.015178,
+        "y_mm": 7807.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     },
+     {
+      "gid": "1RnWak0Kr6GxkeYF4Sd_ky",
+      "storey": "Level 3",
+      "axis": {
+       "start": {
+        "x_mm": 1458.015178,
+        "y_mm": 9150.971531,
+        "z_mm": -125.0
+       },
+       "end": {
+        "x_mm": 1458.015178,
+        "y_mm": 4030.971531,
+        "z_mm": -125.0
+       }
+      },
+      "section": {
+       "width_mm": 250.0,
+       "height_mm": 250.0
+      },
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Slope",
+        "raw_value": 0.0,
+        "raw_unit": null,
+        "requested_value_type": "IfcPlaneAngleMeasure",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_BeamCommon",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_ReinforcementBarPitchOfBeam",
+        "property_name": "Reference",
+        "raw_value": "100x400 2",
+        "raw_unit": null,
+        "requested_value_type": "IfcLabel",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1EazmrnrP3p9dtRknlmbVD"
+      }
+     }
+    ],
+    "doors": [
+     {
+      "gid": "08DlcJHzb8WfJZDS4ZFHLL",
+      "preserve_opening": true,
+      "opening": {
+       "gid": "08DlcJHzb8WfJZDT8ZFHLL",
+       "width_mm": 900.0,
+       "height_mm": 2000.0,
+       "depth_mm": 180.0,
+       "center_offset_mm": 6379.1,
+       "sill_height_mm": 0.0
+      },
+      "wall_query": {
+       "direction": "north",
+       "length_mm": 9194.7,
+       "height_mm": 2409.2,
+       "thickness_mm": 180.0
+      },
+      "storey": "Level 1",
+      "door_type": "NOTDEFINED",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "08DlcJHzb8WfJZDTGZFHKZ"
+      }
+     },
+     {
+      "gid": "08DlcJHzb8WfJZDS4ZFHQO",
+      "preserve_opening": true,
+      "opening": {
+       "gid": "08DlcJHzb8WfJZDT8ZFHQO",
+       "width_mm": 900.0,
+       "height_mm": 2000.0,
+       "depth_mm": 180.0,
+       "center_offset_mm": 2879.1,
+       "sill_height_mm": 0.0
+      },
+      "wall_query": {
+       "direction": "north",
+       "length_mm": 9194.7,
+       "height_mm": 2409.2,
+       "thickness_mm": 180.0
+      },
+      "storey": "Level 1",
+      "door_type": "NOTDEFINED",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "IsExternal",
+        "raw_value": false,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_DoorCommon",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "PKM0920",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "0fAoF0ckP0LfE0neQFAiTY"
+      }
+     }
+    ],
+    "windows": [
+     {
+      "gid": "1PkWQ2IbXBH9Ib7VGdBWCz",
+      "opening_gid": "1PkWQ2IbXBH9Ib7USdBWCz",
+      "opening": {
+       "width_mm": 1200.0,
+       "height_mm": 1500.0,
+       "sill_height_mm": 392.0,
+       "center_offset_mm": 1015.0
+      },
+      "wall_query": {
+       "direction": "east",
+       "length_mm": 2030.0,
+       "height_mm": 2087.4,
+       "thickness_mm": 240.0,
+       "storey_elevation_mm": 0.0,
+       "wall_global_id": "0jsP$50AP6xhaXdShCPeu6"
+      },
+      "storey": "Level 1",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "TLC1215",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "IsExternal",
+        "raw_value": true,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "Reference",
+        "raw_value": "TLC1215",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "ThermalTransmittance",
+        "raw_value": 3.6886,
+        "raw_unit": null,
+        "requested_value_type": "IfcThermalTransmittanceMeasure",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1PkWQ2IbXBH9Ib7U4dBXbS"
+      }
+     },
+     {
+      "gid": "1PkWQ2IbXBH9Ib7VGdBXBy",
+      "opening_gid": "1PkWQ2IbXBH9Ib7USdBXBy",
+      "opening": {
+       "width_mm": 2000.0,
+       "height_mm": 1800.0,
+       "sill_height_mm": 409.2,
+       "center_offset_mm": 6715.0
+      },
+      "wall_query": {
+       "direction": "south",
+       "length_mm": 16758.0,
+       "height_mm": 2409.2,
+       "thickness_mm": 240.0,
+       "storey_elevation_mm": 0.0,
+       "wall_global_id": "1KCxb4vhz4teFLiG92QDGr"
+      },
+      "storey": "Level 1",
+      "property_intents": [
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_QuantityTakeOff",
+        "property_name": "Reference",
+        "raw_value": "BY2018",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "IsExternal",
+        "raw_value": true,
+        "raw_unit": null,
+        "requested_value_type": "IfcBoolean",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "Reference",
+        "raw_value": "BY2018",
+        "raw_unit": null,
+        "requested_value_type": "IfcIdentifier",
+        "scope": "occurrence_direct"
+       },
+       {
+        "intent_kind": "exact_property",
+        "set_name": "Pset_WindowCommon",
+        "property_name": "ThermalTransmittance",
+        "raw_value": 3.7021,
+        "raw_unit": null,
+        "requested_value_type": "IfcThermalTransmittanceMeasure",
+        "scope": "occurrence_direct"
+       }
+      ],
+      "prototype_intent": {
+       "reference_kind": "global_id",
+       "reference": "1PkWQ2IbXBH9Ib7U4dBYvz"
+      }
+     }
+    ]
+   },
+   "request": "Restore the 8 missing members of this building in one atomic ChangeSet. Beam 1 is on storey \"Level 3\" with centre axis from (2429.015178, 9150.971531, -125) mm to (2429.015178, 3290.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 1 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Beam 2 is on storey \"Level 3\" with centre axis from (3355.015178, 9148.971531, -125) mm to (3355.015178, 3268.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 2 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Beam 3 is on storey \"Level 3\" with centre axis from (832.015178, 9142.971531, -125) mm to (832.015178, 7807.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 3 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Beam 4 is on storey \"Level 3\" with centre axis from (1458.015178, 9150.971531, -125) mm to (1458.015178, 4030.971531, -125) mm (storey-local), a rectangular section 250 mm wide horizontally by 250 mm deep vertically, and must reuse the existing IfcBeamType with GlobalId 1EazmrnrP3p9dtRknlmbVD; do not generate a new Type. Give beam 4 these exact occurrence properties: Pset_BeamCommon.IsExternal = false, Pset_BeamCommon.Slope = 0, Pset_BeamCommon.Reference = \"100x400 2\", Pset_QuantityTakeOff.Reference = \"100x400 2\", Pset_ReinforcementBarPitchOfBeam.Reference = \"100x400 2\". Door 1 must fill the retained empty opening that is 900 mm wide, 2000 mm high and 180 mm deep, at wall-local centre offset 6379.1 mm and sill 0 mm, without creating another opening; use operation type NOTDEFINED and reuse the existing IfcDoorStyle with GlobalId 08DlcJHzb8WfJZDTGZFHKZ, including its mapped representation; do not generate a new Type. Give door 1 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"PKM0920\", Pset_QuantityTakeOff.Reference = \"PKM0920\". Door 2 must fill the retained empty opening that is 900 mm wide, 2000 mm high and 180 mm deep, at wall-local centre offset 2879.1 mm and sill 0 mm, without creating another opening; use operation type NOTDEFINED and reuse the existing IfcDoorStyle with GlobalId 0fAoF0ckP0LfE0neQFAiTY, including its mapped representation; do not generate a new Type. Give door 2 these exact occurrence properties: Pset_DoorCommon.IsExternal = false, Pset_DoorCommon.Reference = \"PKM0920\", Pset_QuantityTakeOff.Reference = \"PKM0920\". Window 1 must be restored on the straight wall running east, 2030 mm long, 2087.4 mm high and 240 mm thick, storey elevation 0 mm, with an opening 1200 mm wide by 1500 mm high, sill 392 mm and centre offset 1015 mm from wall start; reuse the existing IfcWindowStyle with GlobalId 1PkWQ2IbXBH9Ib7U4dBXbS, including its mapped representation; do not generate a new Type. Give window 1 these exact occurrence properties: Pset_QuantityTakeOff.Reference = \"TLC1215\", Pset_WindowCommon.IsExternal = true, Pset_WindowCommon.Reference = \"TLC1215\", Pset_WindowCommon.ThermalTransmittance = 3.6886. Window 2 must be restored on the straight wall running south, 16758 mm long, 2409.2 mm high and 240 mm thick, storey elevation 0 mm, with an opening 2000 mm wide by 1800 mm high, sill 409.2 mm and centre offset 6715 mm from wall start; reuse the existing IfcWindowStyle with GlobalId 1PkWQ2IbXBH9Ib7U4dBYvz, including its mapped representation; do not generate a new Type. Give window 2 these exact occurrence properties: Pset_QuantityTakeOff.Reference = \"BY2018\", Pset_WindowCommon.IsExternal = true, Pset_WindowCommon.Reference = \"BY2018\", Pset_WindowCommon.ThermalTransmittance = 3.7021. Every structural axis is fully determined by its endpoints; do not substitute a scalar length. All listed operations are mandatory and atomic."
+  }
+ ]
+}

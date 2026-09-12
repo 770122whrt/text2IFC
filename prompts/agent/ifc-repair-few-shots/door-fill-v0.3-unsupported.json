@@ -1,0 +1,18 @@
+{
+ "schema_version": "text2ifc/ifc-repair-few-shot/0.1",
+ "example_id": "door.fill.v0.3.unsupported",
+ "profile_id": "door.fill-existing-opening.v0.3",
+ "case": "unsupported",
+ "user_text": "EXAMPLE_ONLY: fill the opening with a FOLDING_TO_LEFT door",
+ "expected": {
+  "operation_type": "fill_existing_opening_with_door",
+  "parameters": {
+   "fit_existing_opening": true,
+   "door": {
+    "operation_type": "FOLDING_TO_LEFT"
+   }
+  },
+  "status": "unsupported",
+  "capability_code": "DOOR_OPERATION_TYPE_UNSUPPORTED"
+ }
+}

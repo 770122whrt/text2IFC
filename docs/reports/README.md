@@ -6,6 +6,7 @@
 
 ## 项目总结
 
+- [2026-09-05 Zcode 整合与恢复核查](zcode-integration-20260905/REPORT.md)
 - [项目研究思路与 Pipeline 总结](project-research-summary.md)
 - [LLM Generation / IFC Repair / Demo Paper 后续方向记录（2026-09-03）](llm-generation-repair-demo-next-direction-2026-09-03.md)
 

@@ -63,11 +63,25 @@ PROFILE_PROMPT = json.dumps(
 )
 
 
-def _module():
+def _module(*, offline_fixture: bool = True):
     spec = importlib.util.spec_from_file_location("phase12_live", SCRIPT)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
+    if offline_fixture:
+        # Explicit test-only source injection. This withdrawn material is never
+        # reinstalled as accepted Proof or a production Provider default.
+        source = ROOT / "tests/ifc_repair/fixtures/historical-plan07-base/damaged.ifc"
+        assert "sha256:" + hashlib.sha256(source.read_bytes()).hexdigest() == module.FROZEN_SOURCE_SHA256
+        module.SOURCE = source
+        for name, parameter in (
+            ("_production_case_executor", "source_path"),
+            ("run_live_uat", "source_path"),
+            ("_strict_reopen_verification", "expected_source_path"),
+            ("_case_contract_pass", "expected_source_path"),
+        ):
+            # Preserve executor function identity for the paired-seam guard.
+            getattr(module, name).__kwdefaults__[parameter] = source
     return module
 
 
@@ -1305,24 +1319,12 @@ def test_fixed_live_requests_have_exact_public_structural_authority() -> None:
     )
 
 
-def test_live_runner_uses_only_the_curated_public_damaged_d7n_input() -> None:
-    module = _module()
-
-    expected = (
-        ROOT
-        / "dataset/processed/proof/ifc-repair-success-cases"
-        / "structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc"
-    ).resolve()
-    assert module.SOURCE.resolve() == expected
-    assert module.SOURCE.name == "damaged.ifc"
-    assert module.SOURCE.is_file()
-    assert module.FROZEN_SOURCE_SHA256 == (
-        "sha256:25240558bcbe23c1bbf4916d0b9a0fbb"
-        "de8202d63dbc7a488ef633ab40eb6127"
-    )
-    assert "sha256:" + hashlib.sha256(module.SOURCE.read_bytes()).hexdigest() == (
-        module.FROZEN_SOURCE_SHA256
-    )
+def test_retired_live_default_is_not_rebound_to_withdrawn_fixture() -> None:
+    module = _module(offline_fixture=False)
+    fixture = ROOT / "tests/ifc_repair/fixtures/historical-plan07-base/damaged.ifc"
+    assert not module.SOURCE.is_file()
+    assert module.SOURCE.resolve() != fixture.resolve()
+    assert "sha256:" + hashlib.sha256(fixture.read_bytes()).hexdigest() == module.FROZEN_SOURCE_SHA256
 
 
 def test_fixed_live_matrix_is_bound_to_an_independent_reviewed_digest() -> None:

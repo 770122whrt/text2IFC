@@ -171,7 +171,9 @@ def test_large_building_damaged_ifc_plus_text_passes_production_and_private_l2(t
     public_report = json.loads((run_dir / result.artifacts["evaluation"]).read_text(encoding="utf-8"))
     assert _levels(public_report) == {"L1": "passed", "L2": "passed", "L3": "not_required"}
     changeset = json.loads((run_dir / "changeset.json").read_text(encoding="utf-8"))
-    assert changeset["schema_version"] == "text2ifc/ifc-repair-changeset/0.2"
+    # Window v0.2 profile emits canonical semantic facts (v0.3 manifest),
+    # so a window-only changeset now negotiates the 0.4 envelope.
+    assert changeset["schema_version"] == "text2ifc/ifc-repair-changeset/0.4"
     assert changeset["binding_status"] == "bound"
     assert changeset["operations"][0]["semantic_assignments"]
     expected_facts = semantic_manifest_expected_facts(
