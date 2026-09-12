@@ -904,6 +904,9 @@ def run_repair_stage(
     candidate = repair_source.document
     validation_issues = list(validation.get("issues", []))
     geometry_issues = [dict(issue) for issue in list(geometry_feedback or [])]
+    from .filling_relationship_recovery import recover_filling_relationships
+    attachment_recovery = (recover_filling_relationships(candidate, design_brief, case_id=case_id)
+        if candidate and not geometry_issues and prior_attempt_count < 3 else {'eligible': False})
     from .early_recovery import build_field_recovery_group
     field_group = build_field_recovery_group(candidate, validation_issues) if candidate and not geometry_issues else {'eligible': False}
     route = route_generation_failure(
@@ -931,7 +934,19 @@ def run_repair_stage(
     fact_delta: dict[str, Any] | None = None
     repair_diagnostics: list[dict[str, Any]] = []
     repair_template_id = REPAIR_TEMPLATE_ID
-    if field_group['eligible'] and prior_attempt_count < 3:
+    if attachment_recovery['eligible']:
+        repaired_document = attachment_recovery['candidate']
+        repaired_artifact_name = 'repaired-candidate.json'
+        _write_json(output/repaired_artifact_name, repaired_document)
+        _write_json(output/'attachment-recovery.json',
+                    {k: v for k, v in attachment_recovery.items() if k != 'candidate'})
+        valid = True
+        evidence_class = 'deterministic-derived-no-call'
+        route = {'route': 'repair_attempted', 'recovery_contract': attachment_recovery['contract'],
+                 'repair_attempts': [{'attempt_number': 1, 'result_status': 'improved',
+                                      'provider_call_count': 0}],
+                 'attachment_evidence': 'attachment-recovery.json'}
+    elif field_group['eligible'] and prior_attempt_count < 3:
         from .scoped_loop import run_scoped_changeset_round
         from .expected_facts import build_expected_facts
         expected_path = source.parent / 'expected-facts.json'

@@ -1171,6 +1171,14 @@ def _maybe_promote_scaffold_from_generator_failure(
         return None
     if (run_dir / "generator" / "candidate.json").is_file():
         return None
+    # Prefer the bounded attachment repair over a whole-building replacement.
+    parsed_path = run_dir / 'generator' / 'parsed-output.json'
+    if parsed_path.is_file():
+        from .filling_relationship_recovery import recover_filling_relationships
+        missing_links = recover_filling_relationships(
+            _read_required_json(parsed_path), design_brief, case_id=stored_session.session_hash)
+        if missing_links['eligible']:
+            return None
     expected_facts_path = run_dir / "expected-facts.json"
     if not expected_facts_path.is_file():
         return None
@@ -2261,6 +2269,15 @@ def _promote_repaired_candidate(run_dir: Path, repaired_candidate: Path) -> None
         }
     )
     _write_json(metrics_path, metrics)
+    recovery = _read_optional_json(repaired_candidate.parent/'attachment-recovery.json')
+    if recovery and recovery.get('eligible'):
+        origin = _read_optional_json(run_dir/'candidate-origin.json') or {}
+        # Eligibility describes the derivation route, as for the normal model
+        # path; actual live/fake evidence remains in the source call metrics.
+        # Never promote a previously excluded scaffold origin.
+        _write_candidate_origin(run_dir, candidate_origin='model_with_deterministic_attachments',
+            live_acceptance_eligible=origin.get('live_acceptance_eligible', True),
+            route=str(recovery['contract']))
 
 
 def _restore_design_brief_call(row: Mapping[str, Any], run_dir: Path) -> ClarificationCall:
