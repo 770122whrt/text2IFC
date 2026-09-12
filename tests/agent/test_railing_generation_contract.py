@@ -50,8 +50,9 @@ def test_sloping_railing_preserves_endpoints_in_geometry_and_staged_ownership():
     assert geometry['products']['guard']['bbox']=={'x':[.98,1.02],'y':[2,6],'z':[0,2.9]}
 
 
+@pytest.mark.parametrize('brief_version',['2.6','2.7'])
 @pytest.mark.parametrize('strategy',['legacy_full','staged'])
-def test_new_railing_runs_through_public_generation_and_actual_ifc(tmp_path,strategy):
+def test_new_railing_runs_through_public_generation_and_actual_ifc(tmp_path,strategy,brief_version):
     import json
     import ifcopenshell
     from tests.compiler.test_basic_railing import document
@@ -61,7 +62,7 @@ def test_new_railing_runs_through_public_generation_and_actual_ifc(tmp_path,stra
     from text2ifc_agent.live_pipeline import run_design_brief_stage, run_generator_stage
     from text2ifc_agent.interactive_cli_flow import run_ready_session_to_ifc
     from text2ifc_agent.session_store import SessionStore
-    b=_outside_boundary_design_brief();b['schema_version']='text2ifc/design-brief/2.6'
+    b=_outside_boundary_design_brief();b['schema_version']='text2ifc/design-brief/'+brief_version
     b['original_request']='在一层外侧建立四米长的钢制细杆护栏，沿北向升高1.8米，栏高1.1米，深40毫米，使用深灰色。'
     b['provenance'].update(selected_evidence_ids=[],few_shot_ids=[])
     b['known_facts']={'storeys':[{'id':'level','elevation_mm':0,'net_height_mm':3400}],

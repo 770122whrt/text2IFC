@@ -12,12 +12,12 @@ from text2ifc_agent.scoped_loop import run_scoped_changeset_round
 from text2ifc_agent.candidate_index import build_candidate_index
 
 
-@pytest.mark.parametrize('brief_version',['2.5','2.6'])
+@pytest.mark.parametrize('brief_version',['2.5','2.6','2.7'])
 @pytest.mark.parametrize('keep_requested', [False, True])
 @pytest.mark.parametrize('attack', ['none', 'geometry', 'erase_requested'])
 def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, attack, brief_version):
     candidate, brief, expected, filling = fixture()
-    candidate['schema_version'] = 'bim-json/2.3' if brief_version=='2.6' else 'bim-json/2.2'; filling.pop('appearance')
+    candidate['schema_version'] = 'bim-json/2.3' if brief_version in {'2.6','2.7'} else 'bim-json/2.2'; filling.pop('appearance')
     requested = {'frame': {'color': [.1, .2, .3]}}
     filling['part_appearance'] = {**copy.deepcopy(requested), 'panel': {'color': [.4, .5, .6], 'transparency': .8}}
     brief['schema_version'] = 'text2ifc/design-brief/'+brief_version
@@ -61,7 +61,7 @@ def test_public_part_cleanup_is_scoped_and_atomic(tmp_path, keep_requested, atta
         assert result['preservation']['unrelated_component_preservation_rate'] == 1
 
 
-@pytest.mark.parametrize('brief_version',['2.5','2.6'])
+@pytest.mark.parametrize('brief_version',['2.5','2.6','2.7'])
 def test_new_brief_clarification_resumes_after_reopen_without_replaying_call(tmp_path,brief_version):
     from types import SimpleNamespace
     from tests.agent.test_interactive_cli_flow import _brief

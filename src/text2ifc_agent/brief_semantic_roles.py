@@ -78,11 +78,11 @@ def role_issue(row,identities,*,railing_enabled=False):
     return None
 
 def filter_roles(brief,expectations):
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:return expectations,[]
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:return expectations,[]
     identities,issues=role_index(brief);valid=[]
     bindings={}
     for row in expectations:
-        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')=='text2ifc/design-brief/2.6')
+        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'})
         if issue:issues.append(issue)
         else:
             valid.append(row)
@@ -105,7 +105,7 @@ def filter_roles(brief,expectations):
 
 def removable_semantic_paths(brief):
     """Explicit products/types may lose semantic leaves only, never identity data."""
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:return []
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:return []
     from .semantic_requirements import SEMANTIC_FIELDS
     identities,issues=role_index(brief)
     if issues:return []

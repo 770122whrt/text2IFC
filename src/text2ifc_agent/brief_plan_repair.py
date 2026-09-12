@@ -43,7 +43,7 @@ def repair_plan_brief(*,provider,output_dir,brief,case,evidence_catalog,session_
     schema=load_design_brief_schema(brief['schema_version'])
     inputs={'USER_REQUEST':case['user_request'],'CONVERSATION':case['conversation'],'PREVIOUS_BRIEF':brief,
         'VALIDATION_ISSUES':[asdict(i) for i in issues],'ALLOWED_PATHS':paths,'DESIGN_BRIEF_SCHEMA':schema}
-    rendered=render_prompt(template_id='design-brief-plan-repair.v1',inputs=inputs)
+    rendered=render_prompt(template_id='design-brief-plan-repair.v1.1' if brief['schema_version']=='text2ifc/design-brief/2.7' else 'design-brief-plan-repair.v1',inputs=inputs)
     write('prompt-render-input.json',inputs);write('prompt-identity.json',rendered['metadata'])
     (root/'prompt-rendered.md').write_text(rendered['text'],encoding='utf-8')
     try:

@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'part_appearance', 'template'}
-SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
 SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
@@ -71,7 +71,7 @@ def _project_appearance(selection, source_path):
 
 
 def generation_schema_version(brief: Mapping[str, Any]) -> str:
-    if brief.get('schema_version') == 'text2ifc/design-brief/2.6':
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
         return 'bim-json/2.3'
     if brief.get('schema_version') == 'text2ifc/design-brief/2.5':
         return 'bim-json/2.2'
@@ -110,7 +110,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
-        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'} and not path.startswith('/known_facts/semantic_requirements/'):
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} and not path.startswith('/known_facts/semantic_requirements/'):
             issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
                            'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
@@ -163,7 +163,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
     issues.extend(role_issues)
     from .part_appearance import validate_part_requests
     issues.extend(validate_part_requests(brief, expectations))
-    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
         review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
         for kind in sorted(SEMANTIC_KINDS):
             entry = review.get(kind, {}) if isinstance(review, Mapping) else {}

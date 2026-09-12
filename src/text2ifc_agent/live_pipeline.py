@@ -169,15 +169,15 @@ def run_design_brief_stage(
     from .brief_conversation import require_brief_conversation
     require_brief_conversation(case["conversation"])
     conversation = list(case["conversation"])
-    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:
+    if design_brief_schema_version not in {'text2ifc/design-brief/2.0','text2ifc/design-brief/2.1','text2ifc/design-brief/2.2','text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
         raise ValueError('Unsupported Design Brief stage contract.')
-    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}
+    new_semantics = design_brief_schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
     if design_review_enabled and not new_semantics:
         raise ValueError('Design review requires Design Brief 2.1')
     selection = select_design_brief_context(
         user_request=user_request,
         conversation=conversation,
-        schema_version='bim-json/2.3' if design_brief_schema_version == 'text2ifc/design-brief/2.6' else 'bim-json/2.2' if design_brief_schema_version == 'text2ifc/design-brief/2.5' else 'bim-json/2.1' if new_semantics else 'bim-json/2.0',
+        schema_version='bim-json/2.3' if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} else 'bim-json/2.2' if design_brief_schema_version == 'text2ifc/design-brief/2.5' else 'bim-json/2.1' if new_semantics else 'bim-json/2.0',
     )
     schema = load_design_brief_schema(design_brief_schema_version)
     renderer_inputs = {

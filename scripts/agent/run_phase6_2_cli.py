@@ -91,7 +91,7 @@ def main(
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--live", action="store_true")
     parser.add_argument("--stop-after", choices=("design-brief", "ifc"))
-    parser.add_argument('--design-brief-schema-version', choices=('2.1', '2.2', '2.3', '2.4', '2.5', '2.6'), default='2.1')
+    parser.add_argument('--design-brief-schema-version', choices=('2.1', '2.2', '2.3', '2.4', '2.5', '2.6', '2.7'), default='2.1')
     parser.add_argument("--resume")
     arguments = parser.parse_args(argv)
     load_env_file(arguments.env_file)

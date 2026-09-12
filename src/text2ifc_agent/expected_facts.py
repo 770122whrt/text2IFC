@@ -33,7 +33,7 @@ def build_expected_facts(
     design_brief: Mapping[str, Any],
 ) -> dict[str, Any]:
     """Build dynamic expected facts without mutating the Design Brief."""
-    if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6'}:
+    if design_brief.get('schema_version') in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
         from jsonschema import Draft202012Validator
         from .design_brief import load_design_brief_schema
         from .brief_plan_constraints import validate_plan_constraints
@@ -180,7 +180,7 @@ def build_expected_facts(
         or _singular_stair_record(known_facts, storeys)
         or _stair_records_from_nested(nested_storeys, storeys)
     )
-    products = _product_records(known_facts, railing_enabled=design_brief.get('schema_version') == 'text2ifc/design-brief/2.6')
+    products = _product_records(known_facts, railing_enabled=design_brief.get('schema_version') in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'})
     roof = _roof_record(known_facts)
     if design_brief.get("status") == "ready" and not storeys:
         raise ExpectedFactsError(

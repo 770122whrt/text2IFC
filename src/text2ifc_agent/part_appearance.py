@@ -27,7 +27,7 @@ def validate_part_requests(brief, expectations):
         families = template_families.get(identity, set())
         if cls is None and len(families) == 1:
             cls = next(iter(families))
-        if (brief.get('schema_version') not in {'text2ifc/design-brief/2.5','text2ifc/design-brief/2.6'}
+        if (brief.get('schema_version') not in {'text2ifc/design-brief/2.5','text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
                 or cls not in {'IfcDoor', 'IfcWindow'} or row['scope'] == 'inherited'
                 or not valid_part_appearance(value, cls) or identity not in templates
                 or families != {cls}

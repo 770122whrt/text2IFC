@@ -166,7 +166,7 @@ def make_openai_design_brief_invoker(
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
-            schema_version="bim-json/2.3" if design_brief_schema_version == "text2ifc/design-brief/2.6" else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
+            schema_version="bim-json/2.3" if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
         )
         from .design_brief import design_brief_template_id
         schema = load_design_brief_schema(design_brief_schema_version)
