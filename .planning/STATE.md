@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前整理：根 archive 已退役（2026-09-13）
+
+按用户批准方向，将 Zcode 原历史合同、恢复清单和 66 份重构代码差异／37 份文档收纳为约 1.85 MiB 轻量包，备份提交 `dbb94668` 已推送。根 archive 的 18 个文件／2,688,981,263 字节和三个空目录已退役；完整旧运行、真实失败、数据快照和镜像仍可从固定 Git/LFS 修订 `d1639232` 恢复，六个远端对象可用性检查通过。现有 Proof 不改写；历史 Prompt 回归通过，C1–C5 人读包核对通过，未调用 Provider 或 Full Preflight。旧镜像不再作为待整包合并任务；保留两项后续结构优化候选，详见[报告](../docs/reports/archive-retirement-20260913/REPORT.md)与[历史入口](../dataset/processed/experiments/zcode-history-20260913/README.md)。main 与其独立工作树未在本轮同步。
+
 ## 当前整理：processed 与根目录（2026-09-13）
 
 当前分支已快进到上一轮 main 整合 b4eb7ccf。processed 派生产物集中到 derived，顶层 17→7 个目录；经用户批准删除根目录 composite 模拟输出等 15 个目标。Proof 字节与人工状态不变，50 项聚焦回归通过，无新 Provider／Full Preflight。见[整理报告](../docs/reports/processed-cleanup-20260913/REPORT.md)。

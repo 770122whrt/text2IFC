@@ -250,8 +250,10 @@ jsonfix 等模块按任务进入；目录存在不等于当前任务要重构它
 [2026-09-13 映射](../../dataset/manifests/processed-layout-20260913.json)，更早归档从
 experiments 和各 Proof 集合的 manifest 查找，不改写冻结报告中的原始路径。
 
-`.planning/` 保存状态和 Phase 合同，`docs/` 保存跨阶段说明，`archive/` 保存历史
-归档。根目录的 `.venv`、`.deps`、`.cache`、`.env` 是运行环境或本地配置；不输出
+`.planning/` 保存状态和 Phase 合同，`docs/` 保存跨阶段说明。原根 `archive/` 已退役，
+从 [Zcode 历史入口](../../dataset/processed/experiments/zcode-history-20260913/README.md)
+查找轻量参考和固定 Git/LFS 修订，不能根据旧报告再恢复一套活动镜像。
+根目录的 `.venv`、`.deps`、`.cache`、`.env` 是运行环境或本地配置；不输出
 凭据，也不把 `.tmp` 中的活动 Git 工作树当作测试垃圾。
 
 ## 3. 按任务选择必读材料

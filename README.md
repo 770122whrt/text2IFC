@@ -40,7 +40,6 @@ Python 要求见 [pyproject.toml](pyproject.toml)（当前为 ≥3.12），本�
 | [dataset/](dataset/data_organization.md) | 数据来源、授权／路径清单、派生数据、运行基线与 Proof |
 | [docs/](docs/README.md) | 架构、操作指南、参考、验证、报告和专项交接 |
 | [.planning/](.planning/STATE.md) | 当前执行状态、里程碑与 Phase SPEC／PLAN／VALIDATION |
-| [archive/](archive/) | 历史归档，包括 Zcode 重构工作区；不等于已接入的生产实现 |
 
 `dataset/processed/` 按用途保留七个目录：
 
@@ -53,6 +52,8 @@ Python 要求见 [pyproject.toml](pyproject.toml)（当前为 ≥3.12），本�
 - [ifc-repair-runs/](dataset/processed/ifc-repair-runs/)：现有 Plan07 测试和运行器依赖的源基线。
 
 旧路径从 [processed 说明](dataset/processed/README.md)与[迁移映射](dataset/manifests/processed-layout-20260913.json)查找。临时测试用 `tmp_path`，一次性诊断用 `.tmp/`；该目录也可能含活动 Git 工作树，不能整目录删除。
+
+根 `archive/` 已退役。[Zcode 历史恢复与重构参考](dataset/processed/experiments/zcode-history-20260913/README.md)保留轻量合同、清单和代码差异，完整原始运行／失败／数据快照通过固定 Git/LFS 修订恢复；不是尚待整包合并的生产代码。
 
 ## 当前设计与验证入口
 

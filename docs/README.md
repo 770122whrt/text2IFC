@@ -25,6 +25,7 @@
 - [按工作流与 Phase 阅读 Proof](../dataset/processed/proof/README.md)
 - [processed 七类目录与历史路径入口](../dataset/processed/README.md)
 - [processed 与根目录整理结果（2026-09-13）](reports/processed-cleanup-20260913/REPORT.md)
+- [根 archive 退役结果](reports/archive-retirement-20260913/REPORT.md)与[Zcode 轻量历史入口](../dataset/processed/experiments/zcode-history-20260913/README.md)：原始大包保留固定 Git/LFS 恢复路径，当前 Proof 不迁移
 - [main 与 Zcode 整合后的交接快照](handoffs/repository-handoff-2026-09-13.md)
 - [目录瘦身设计及历史执行记录](architecture/repository-organization-refactor.md)；当前结果以 STATE 和最新整理报告为准
 - [归档的 CLI 终端记录](reports/terminal-session-history.md)

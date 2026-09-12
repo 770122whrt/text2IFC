@@ -2,6 +2,8 @@
 
 记录日期：2026-09-13。本快照面向下一位 Agent 或维护者，记录本次文档更新前核实的仓库状态。长期目录与代码地图见[接管指南](../how-to/agent-takeover.md)，重要文档见[总索引](../README.md)。本文件不替代产品合同，也不授权自动开始实验、删除文件或合并分支。
 
+同日后续：用户已批准并完成根 archive 退役，保留包提交为 `dbb94668`。见[退役报告](../reports/archive-retirement-20260913/REPORT.md)和[轻量恢复入口](../../dataset/processed/experiments/zcode-history-20260913/README.md)；下文 Git 基线和保留项列表仍是文档首次编写时的快照。
+
 ## 1. 接手时先确认什么
 
 本地根目录为 `E:\code for project\bimnet`，产品名称为 **text2IFC**。以下提交号是本快照的基线，后续以实际 Git 状态为准：
@@ -46,7 +48,7 @@
 | 已完成事项 | 继续查证的位置 |
 |---|---|
 | 当前分支与 Zcode 的生产／合同／Proof 整合 | [首次 main 整合报告](../reports/main-integration-20260912/REPORT.md)、[后续 main 同步报告](../reports/main-sync-20260912/REPORT.md) |
-| Zcode 原重构工作区保留 | [refactor-workspace.zip](../../archive/zcode-local-20260905/refactor-workspace.zip)；归档存在不表示其中全部设计已经实施 |
+| Zcode 原重构工作区保留 | 原 `archive/zcode-local-20260905/refactor-workspace.zip` 现从[固定 Git/LFS 修订恢复](../../dataset/processed/experiments/zcode-history-20260913/README.md)，当前只保留有价值差异；不表示旧设计已实施 |
 | 光庭及更早 Phase 开发目录退役 | [开发清理报告](../reports/development-cleanup-20260912/REPORT.md)、[实验入口](../../dataset/processed/experiments/README.md) |
 | processed 派生目录归并、根 composite 清理 | [2026-09-13 整理报告](../reports/processed-cleanup-20260913/REPORT.md)、[80 份文件的路径映射](../../dataset/manifests/processed-layout-20260913.json) |
 | 经明确批准的本轮删除 | [15 项清单](../reports/processed-cleanup-20260913/DELETE-LIST.md)、[执行回执](../reports/processed-cleanup-20260913/deletion-result.json)：97 文件、4,274,221 字节 |

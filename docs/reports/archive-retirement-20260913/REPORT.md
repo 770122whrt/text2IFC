@@ -2,9 +2,13 @@
 
 日期：2026-09-13。用户批准按已讨论方向处理根 `archive`，保留 Proof 中的重要内容。当前工作分支为 `codex/workflow-dataset-links`；基线 `d1639232`。本轮不合 main、不做生产重构或 Provider 调用。
 
+后续指示：用户明确要求将有价值的 Zcode 重构实际接入当前代码。接下来逐项实施评估拆分、Proof 包提取和 runner 整理；本报告只记录已完成的 archive 退役，不把参考包保留当作重构实施完成。
+
 ## 当前执行状态
 
-保留包与恢复核查已完成，旧目录尚未删除。先提交并推送保留包，再按本报告的准确清单执行已经获批的退役，随后记录实际结果。
+**已完成退役。** 保留包提交 `dbb94668734c69075c9a3113e30fbba63fd3b2b8` 已普通推送且远端 SHA 一致，随后按清单删除 18 个旧文件／2,688,981,263 字节和三个空目录，根 archive 已不存在。逐文件回执见 [deletion-result.json](deletion-result.json)。本报告随最终删除／导航收尾提交发布；main 未在本轮同步。
+
+准备完成时轻量包总计 1,935,939 字节（约 1.85 MiB）。移除量是当前工作目录的逻辑文件字节，不包含 `.git/lfs` 存储或另一 main 工作树的副本，也不代表 GitHub LFS 历史占用下降。
 
 ## 保留了什么
 
@@ -26,11 +30,13 @@
 |---|---|
 | 路径修改前原回归 | 1 passed，1.30 秒；不是新能力实验 |
 | 路径修改后同一回归 | [1 passed，1.17 秒](focused-tests.xml)，原有正反断言不变 |
+| 原 archive 删除后 | [同一回归 1 passed，1.14 秒](focused-tests-after-deletion.xml)；[C1–C5 五案绑定仍通过](proof-preservation-after.json)，关闭 IFC 重开 |
 | C1–C5 现行人读包 | [5 案、20 份展示绑定通过](proof-preservation-before.json)，包含包内冻结字节和角色检查，关闭 IFC 重开；不是完整 curator |
 | 原 18 文件与保留材料 | 原 ZIP 对照 Git LFS OID／大小，普通文本对照 Git blob 与既有 CRLF 检出约定；小包字节一致 |
 | 六个远端 LFS 对象 | [6/6 可获取](remote-availability.json)，各读取 1 字节，HTTP 206、对象总大小一致 |
 | 旧重构与当前代码 | 结构／来源差异核对；没有执行旧镜像，不宣称两套实现等价 |
 | Git 格式与历史字节 | 首次全 staged diff 检查提示历史合同 CRLF 和 Prompt 尾空行；保持四份原合同文件字节，只对本轮新写内容执行格式门，不宣称历史字节也通过 whitespace 检查 |
+| 最终导航与依赖 | [253 条本地链接通过](final-verification.json)，生产／脚本／测试无旧 archive 直接引用，Proof diff 为零 |
 
 没有重新执行 Full Preflight、完整 curator、真实 Provider、全仓哈希或 Git/LFS 历史压缩。远端范围读取证明对象可用，不冒充重新完整下载校验；历史独立下载与当前六个本地 ZIP 的哈希核对分别保留其真实范围。
 
