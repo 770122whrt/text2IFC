@@ -5,6 +5,7 @@ from text2ifc_contract.materials import (
 )
 
 COLLECTION_CLASSES = {'walls':'IfcWall','doors':'IfcDoor','windows':'IfcWindow',
+    'columns':'IfcColumn','beams':'IfcBeam',
     'spaces':'IfcSpace','floor_slabs':'IfcSlab','slabs':'IfcSlab','roof_slab':'IfcSlab',
     'roof':'IfcRoof','railings':'IfcRailing','stairs':'IfcStair','storeys':'IfcBuildingStorey'}
 

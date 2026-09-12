@@ -379,6 +379,21 @@ def _check_component_bboxes(
             continue
         actual_bbox = _bbox_for_product(product)
         metrics[str(component_id)] = {"ifc_class": product.is_a(), "bbox": actual_bbox}
+        expected_class = expected_component.get("ifc_class")
+        if isinstance(expected_class, str) and not product.is_a(expected_class):
+            issues.append(_issue("PRODUCT_CLASS_MISMATCH", f"/{path_prefix}/{component_id}/ifc_class",
+                "The reopened IFC component has a different class from the explicit expectation.",
+                entity_ids=[str(component_id)], expected=expected_class, actual=product.is_a()))
+        expected_storey = expected_component.get("storey_id")
+        if isinstance(expected_storey, str):
+            container = ifcopenshell.util.element.get_container(product)
+            actual_storey = (ifcopenshell.util.element.get_psets(container).get(IDENTITY_PSET, {}).get(IDENTITY_PROPERTY)
+                            if container is not None and container.is_a("IfcBuildingStorey") else None)
+            metrics[str(component_id)]["storey_id"] = actual_storey
+            if actual_storey != expected_storey:
+                issues.append(_issue("PRODUCT_STOREY_MISMATCH", f"/{path_prefix}/{component_id}/storey_id",
+                    "The reopened IFC containment differs from the explicitly requested storey.",
+                    entity_ids=[str(component_id)], expected=expected_storey, actual=actual_storey))
         expected_bbox = expected_component.get("bbox")
         if isinstance(expected_bbox, Mapping) and not _bbox_matches(
             actual_bbox, expected_bbox, tolerance

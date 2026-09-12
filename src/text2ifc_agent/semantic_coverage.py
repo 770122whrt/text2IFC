@@ -6,6 +6,8 @@ from math import hypot
 import re
 from typing import Any, Mapping
 
+from .product_geometry import world_box_bbox
+
 
 ACCEPTED_COVERAGE_STATES = {"represented", "compiler_generated", "waived_by_user"}
 BLOCKING_COVERAGE_STATES = {"unsupported_draft", "blocked_unknown_capability"}
@@ -201,7 +203,8 @@ def build_design_geometry_expectation(
         ifc_class = _string(product.get("ifc_class"))
         geometry = product.get("geometry")
         path = f"/products/{product_index}/geometry"
-        linear_bbox = _linear_product_bbox(geometry)
+        box_bbox = world_box_bbox(geometry)
+        linear_bbox = box_bbox or _linear_product_bbox(geometry)
         if product_id is None or ifc_class is None or linear_bbox is None:
             unresolved.append(
                 _unresolved_geometry(path=path, reason="linear_product_geometry_missing")
@@ -209,11 +212,13 @@ def build_design_geometry_expectation(
             continue
         record = {
             "ifc_class": ifc_class,
-            "geometry_kind": "linear_segment",
+            "geometry_kind": "world_axis_aligned_box" if box_bbox else "linear_segment",
             "bbox": linear_bbox,
-            "bbox_issue_code": "LINEAR_PRODUCT_BBOX_MISMATCH",
+            "bbox_issue_code": "PRODUCT_BBOX_MISMATCH" if box_bbox else "LINEAR_PRODUCT_BBOX_MISMATCH",
             "source_fact_refs": [path],
         }
+        if box_bbox:
+            record["storey_id"] = product.get("storey")
         alignment_target = _string(product.get("alignment_target"))
         if alignment_target is not None:
             record["alignment_target"] = alignment_target

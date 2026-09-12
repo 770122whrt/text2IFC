@@ -14,6 +14,8 @@ from .generation_packages import build_generation_package_manifest
 EXPECTED_FACTS_SCHEMA_VERSION = "text2ifc/expected-facts/1.0"
 
 _PRODUCT_FAMILY_SPECS = {
+    "columns": {"ifc_class": "IfcColumn", "geometry_kind": "world_axis_aligned_box"},
+    "beams": {"ifc_class": "IfcBeam", "geometry_kind": "world_axis_aligned_box"},
     "railings": {
         "ifc_class": "IfcRailing",
         "geometry_kind": "linear_segment",
@@ -194,6 +196,7 @@ def build_expected_facts(
     from .cross_storey_identity import cross_storey_entity_records
     entity_id_contract.update(cross_storey_entity_records(slabs=slabs, stairs=stairs, roof=roof))
     technical_ids = [record['entity_id'] for records in entity_id_contract.values() for record in records]
+    technical_ids.extend(product['id'] for product in products if isinstance(product.get('id'), str))
     if len(technical_ids) != len(set(technical_ids)):
         raise ExpectedFactsError('ENTITY_IDENTITY_AMBIGUOUS: technical IDs must have unique component roles.')
 
@@ -1183,6 +1186,13 @@ def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
     products: list[dict[str, Any]] = []
     for collection, spec in _PRODUCT_FAMILY_SPECS.items():
         expected_class = str(spec["ifc_class"])
+        if collection in {"columns", "beams"} and collection in known_facts:
+            supplied = known_facts[collection]
+            if not isinstance(supplied, list) or any(
+                not isinstance(item, Mapping) or not isinstance(item.get("id"), str) or not item["id"].strip()
+                for item in supplied
+            ):
+                raise ExpectedFactsError("DESIGN_BRIEF_PRODUCT_IDENTITY: explicit structural products require a list of named records.")
         for index, item in enumerate(_records(known_facts.get(collection))):
             declared_class = item.get("ifc_class")
             if declared_class is not None and declared_class != expected_class:
@@ -1196,7 +1206,8 @@ def _product_records(known_facts: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "id": item.get("id"),
                 "ifc_class": expected_class,
                 "storey": item.get("storey"),
-                "geometry": _linear_product_geometry(
+                "geometry": {"kind": "world_axis_aligned_box", "bounds_mm": deepcopy(item.get("bounds_mm"))}
+                if spec["geometry_kind"] == "world_axis_aligned_box" else _linear_product_geometry(
                     item,
                     geometry_kind=str(spec["geometry_kind"]),
                 ),

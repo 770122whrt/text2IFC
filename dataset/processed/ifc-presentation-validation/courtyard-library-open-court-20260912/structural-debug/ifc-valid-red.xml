@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="5" time="14.605" timestamp="2026-09-12T17:18:43.474253+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_structural_product_expectations" name="test_reopened_ifc_must_match_structural_family_storey_and_world_bounds[none]" time="2.543" /><testcase classname="tests.agent.test_structural_product_expectations" name="test_reopened_ifc_must_match_structural_family_storey_and_world_bounds[wrong_class]" time="2.647"><failure message="AssertionError: GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...'IfcBeam', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}})&#10;assert True == ('wrong_class' == 'none'&#10; +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...'IfcBeam', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}}).success&#10;  &#10;  - none&#10;  + wrong_class)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-pytest-04/test_reopened_ifc_must_match_s1')
+mutation = 'wrong_class'
+
+    @pytest.mark.parametrize("mutation", ["none", "wrong_class", "wrong_storey", "shift", "missing"])
+    def test_reopened_ifc_must_match_structural_family_storey_and_world_bounds(tmp_path, mutation):
+        from text2ifc_compiler import compile_document
+        from text2ifc_quality.generated_ifc import check_generated_ifc
+        source=brief();expected=build_expected_facts(case_id="structural",design_brief=source)
+        geometry=build_design_geometry_expectation(case_id="structural",design_brief=source,expected_facts=expected)
+        doc=_model(family="IfcBeam" if mutation=="wrong_class" else "IfcColumn",
+            storey="ground" if mutation=="wrong_storey" else "upper",
+            shift=100 if mutation=="shift" else 0,include=mutation!="missing")
+        result=compile_document(doc,tmp_path/'structural.ifc')
+        assert result.success,(result.input_issues,result.ifc_issues)
+        checked=check_generated_ifc(result.output_path,geometry)
+&gt;       assert checked.success == (mutation=="none"),checked
+E       AssertionError: GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...'IfcBeam', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}})
+E       assert True == ('wrong_class' == 'none'
+E        +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...'IfcBeam', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}}).success
+E         
+E         - none
+E         + wrong_class)
+
+tests\agent\test_structural_product_expectations.py:96: AssertionError</failure></testcase><testcase classname="tests.agent.test_structural_product_expectations" name="test_reopened_ifc_must_match_structural_family_storey_and_world_bounds[wrong_storey]" time="2.598"><failure message="AssertionError: GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...fcColumn', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}})&#10;assert True == ('wrong_storey' == 'none'&#10; +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...fcColumn', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}}).success&#10;  &#10;  - none&#10;  + wrong_storey)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/courtyard-open-court-pytest-04/test_reopened_ifc_must_match_s2')
+mutation = 'wrong_storey'
+
+    @pytest.mark.parametrize("mutation", ["none", "wrong_class", "wrong_storey", "shift", "missing"])
+    def test_reopened_ifc_must_match_structural_family_storey_and_world_bounds(tmp_path, mutation):
+        from text2ifc_compiler import compile_document
+        from text2ifc_quality.generated_ifc import check_generated_ifc
+        source=brief();expected=build_expected_facts(case_id="structural",design_brief=source)
+        geometry=build_design_geometry_expectation(case_id="structural",design_brief=source,expected_facts=expected)
+        doc=_model(family="IfcBeam" if mutation=="wrong_class" else "IfcColumn",
+            storey="ground" if mutation=="wrong_storey" else "upper",
+            shift=100 if mutation=="shift" else 0,include=mutation!="missing")
+        result=compile_document(doc,tmp_path/'structural.ifc')
+        assert result.success,(result.input_issues,result.ifc_issues)
+        checked=check_generated_ifc(result.output_path,geometry)
+&gt;       assert checked.success == (mutation=="none"),checked
+E       AssertionError: GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...fcColumn', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}})
+E       assert True == ('wrong_storey' == 'none'
+E        +  where True = GeneratedIfcCheckResult(success=True, issues=[], metrics={'case_id': 'structural', 'wall_set_convention': 'primary', '...fcColumn', 'bbox': {'x': [-1.5999999999999999, -1.3], 'y': [5.2, 5.500000000000001], 'z': [4.2, 7.6]}}}, 'stairs': {}}).success
+E         
+E         - none
+E         + wrong_storey)
+
+tests\agent\test_structural_product_expectations.py:96: AssertionError</failure></testcase><testcase classname="tests.agent.test_structural_product_expectations" name="test_reopened_ifc_must_match_structural_family_storey_and_world_bounds[shift]" time="2.754" /><testcase classname="tests.agent.test_structural_product_expectations" name="test_reopened_ifc_must_match_structural_family_storey_and_world_bounds[missing]" time="2.617" /></testsuite></testsuites>
