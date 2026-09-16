@@ -9,6 +9,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from text2ifc_agent.openai_compat import OpenAICompatError
 from text2ifc_agent.prompt_registry import render_prompt
 from text2ifc_agent.providers import ProviderOutput, ProviderOutputError, redact_provider_payload
 from text2ifc_text.splits import atomic_write_text
@@ -18,10 +19,11 @@ from .writing import assemble_sectioned_description, build_fact_index
 
 
 LLM_RUN_SCHEMA_VERSION = "text2ifc/ifc2text-llm-run/0.1"
-DEFAULT_OUTLINE_TEMPLATE = "ifc2text-outline.v0.1"
+DEFAULT_OUTLINE_TEMPLATE = "ifc2text-outline.v0.2"
 DEFAULT_SECTION_TEMPLATE = "ifc2text-section-writer.v0.1"
 DEFAULT_MERGE_TEMPLATE = "ifc2text-merge.v0.1"
 MAX_WRITING_SECTIONS = 24
+MAX_PRIMARY_FACTS_PER_SECTION = 12
 
 
 class IFC2TextLLMError(RuntimeError):
@@ -122,13 +124,14 @@ def _run_stage(
             schema=schema,
             state=state,
         )
-    except (ProviderOutputError, IFC2TextLLMError) as error:
+    except (ProviderOutputError, OpenAICompatError, IFC2TextLLMError) as error:
+        evidence = getattr(error, "evidence", getattr(error, "details", {}))
         failure = {
             "stage": stage,
             "session_id": session_id,
             "error_type": type(error).__name__,
             "message": str(error),
-            "details": redact_provider_payload(getattr(error, "details", {})),
+            "details": redact_provider_payload(evidence if isinstance(evidence, dict) else {}),
         }
         _write_json(output_dir / "failure.json", failure)
         raise
@@ -197,6 +200,8 @@ def _validate_outline(outline: dict[str, Any], fact_index: dict[str, Any]) -> No
         required = set(section["required_fact_refs"])
         primary = set(section["primary_owned_fact_refs"])
         limitations = set(section["required_limitations"])
+        if len(primary) > MAX_PRIMARY_FACTS_PER_SECTION:
+            raise IFC2TextLLMError("IFC2TEXT_OUTLINE_PRIMARY_FACT_LIMIT_EXCEEDED")
         if not allowed.issubset(fact_refs):
             raise IFC2TextLLMError("IFC2TEXT_OUTLINE_UNKNOWN_ALLOWED_FACT")
         if not required.issubset(allowed):

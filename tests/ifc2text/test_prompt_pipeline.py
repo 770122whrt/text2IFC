@@ -21,6 +21,7 @@ def test_ifc2text_prompt_versions_are_registered_and_renderable() -> None:
     registry = load_prompt_registry()
     expected = {
         "ifc2text-outline.v0.1": "ifc2text_outline",
+        "ifc2text-outline.v0.2": "ifc2text_outline",
         "ifc2text-section-writer.v0.1": "ifc2text_section_writer",
         "ifc2text-merge.v0.1": "ifc2text_merge",
     }
@@ -30,7 +31,7 @@ def test_ifc2text_prompt_versions_are_registered_and_renderable() -> None:
         assert registry[template_id]["sha256"].startswith("sha256:")
 
     outline = render_prompt(
-        template_id="ifc2text-outline.v0.1",
+        template_id="ifc2text-outline.v0.2",
         inputs={
             "BUILDING_FACTS": {"storey_count": 2},
             "FACT_INDEX": {"records": [{"fact_ref": "S01"}]},
@@ -57,6 +58,7 @@ def test_ifc2text_prompt_versions_are_registered_and_renderable() -> None:
             "MERGE_SCHEMA": _load_schema("merge-0.1.schema.json"),
         },
     )
+    assert "最多 12 个" in outline["text"]
     for rendered in (outline, section, merge):
         assert "{{" not in rendered["text"]
         assert rendered["metadata"]["template_hash"].startswith("sha256:")

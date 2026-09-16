@@ -2757,6 +2757,28 @@
       ]
     },
     {
+      "template_id": "ifc2text-outline.v0.2",
+      "role": "ifc2text_outline",
+      "mode": "plan_bounded_sections",
+      "path": "prompts/agent/ifc2text/ifc2text-outline-v0.2.md",
+      "sha256": "sha256:26c1513bd650e95c359237e499a89595740aa894b87cba20601538b7ccb3f3fe",
+      "required_inputs": [
+        "BUILDING_FACTS",
+        "FACT_INDEX",
+        "EXTRACTION_ISSUES",
+        "OUTLINE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "invented_building_fact",
+        "unbounded_primary_fact_section"
+      ]
+    },
+    {
       "template_id": "ifc2text-section-writer.v0.1",
       "role": "ifc2text_section_writer",
       "mode": "write_bounded_section",

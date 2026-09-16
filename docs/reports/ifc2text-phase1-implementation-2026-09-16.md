@@ -419,3 +419,20 @@ prompt-safe fact index
 第一次串联暴露两个有效门禁：缺 Design Brief sidecar 时 run report 阻断；离线 sidecar 缺 usage 时 GenerationBudget 按最保守方式计费并阻断。测试没有绕过这两个门禁，而是补齐可审计 sidecar 与明确 fake usage 后继续。最终公共桥测试 1 passed。
 
 同时在 `llm_pipeline.py` 增加 `MAX_WRITING_SECTIONS = 24`。Outline 超过 24 个 section 时在任何 Section Provider 调用前 fail closed，防止模型把每个构件拆成一次调用造成不受控调用量。对应负例与公共桥合计 7 项通过。这部分需要先作为新的固定提交点推送，再在该 SHA 上重跑完整 Stage Admission。
+
+## 13. 首次真实写作运行与 v0.2 修正
+
+在 `a333f68b` 离线 Admission 后，使用 `deepseek-openai-compatible / deepseek-v4-flash` 对 `dataset/external/bimnet/hxp.ifc` 执行首次真实 IFC2Text 写作。运行目录为 `dataset/processed/experiments/ifc2text-phase1-20260917/hxp-live-writing-v01/`。本次固定单调用 input ≤64k、output ≤8k，整轮最多 26 次调用，并用持久化预算账本限制最多 500000 token、1800 秒 active time。
+
+真实 Outline 成功并产生 12 个 section，但把 S01 的 34 面墙全部放进单个 `s01-walls` section。前三个 Section 正常完成，第 4 个 `s01-walls` Provider 响应以 `finish_reason=length` 截断，公共 OpenAI-compatible adapter 按合同 fail closed，没有生成半截正式 section，也没有继续后续写作或 Generation。
+
+预算账本保留 5 次真实 attempt：Outline 25464 token；前三个成功 Section 分别 2337、1746、4207 token；失败墙体 Section 19378 token。该失败案例没有删除，也不把后续同案例修正后的成功当作 blind capability improvement。
+
+这次运行暴露两个机制问题：
+
+1. `ifc2text-outline.v0.1` 只有“总 section 数 ≤24”的调用量门禁，没有限制一个 section 内的高基数主要事实；
+2. `llm_pipeline._run_stage` 没有捕获 `OpenAICompatError`，因此虽然 `BudgetedProvider` 已保存失败计费，具体 IFC2Text stage 没有自己的 `failure.json`。
+
+按照已运行 Prompt 不原地修改的规则，保留 `ifc2text-outline.v0.1`，新增 `ifc2text-outline.v0.2`。v0.2 要求每个 section 的 `primary_owned_fact_refs` 最多 12 个，高基数墙、开口、门窗或空间必须分块；确定性 validator 同时执行 `MAX_PRIMARY_FACTS_PER_SECTION = 12`，不能仅信 Prompt 自律。`_run_stage` 也扩展为捕获 `OpenAICompatError` 并保存脱敏 evidence 到 `failure.json`。
+
+对应离线测试新增“13 个 primary facts 阻断”和“OpenAI-compatible failure evidence 落盘”，并将默认 Outline 切换到 v0.2。IFC2Text 全套与 Prompt registry 聚焦回归为 29 passed，`compileall` 通过。因为 Prompt 和 stage 行为发生变化，2026-09-17 早先针对 `a333f68b` 的 Admission 按其 invalidation contract 失效；v0.2 在提交后必须重新执行 Stage Admission，再允许第二次真实尝试。

@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from text2ifc_agent.openai_compat import OpenAICompatError
 from text2ifc_agent.providers import FakeAgentProvider
 from text2ifc_ifc2text.llm_pipeline import IFC2TextLLMError, run_llm_description
 
@@ -214,6 +215,66 @@ def test_outline_section_limit_blocks_runaway_section_calls(tmp_path: Path) -> N
             run_id=run_id,
         )
     assert not (tmp_path / "run" / "sections").exists()
+
+
+def test_outline_primary_fact_limit_blocks_oversized_component_batch(tmp_path: Path) -> None:
+    run_id = "offline-primary-limit"
+    facts = json.loads(json.dumps(_facts()))
+    prototype = facts["storeys"][0]["walls"][0]
+    walls = []
+    refs = []
+    for index in range(1, 14):
+        wall = json.loads(json.dumps(prototype))
+        wall["label"] = f"W{index:03d}"
+        wall["source_global_id"] = f"wall-source-{index:03d}"
+        wall["axis_start_mm"] = [0, index * 300, 0]
+        wall["axis_end_mm"] = [5000, index * 300, 0]
+        walls.append(wall)
+        refs.append(f"S01:W{index:03d}")
+    facts["storeys"][0]["walls"] = walls
+    facts["capability"]["wall_count"] = len(walls)
+    outline = _outline()
+    wall_section = outline["sections"][1]
+    wall_section["allowed_fact_refs"] = refs
+    wall_section["required_fact_refs"] = refs
+    wall_section["primary_owned_fact_refs"] = refs
+    responses = _responses(run_id)
+    responses[f"{run_id}:outline"]["text"] = json.dumps(outline, ensure_ascii=False)
+    with pytest.raises(IFC2TextLLMError, match="PRIMARY_FACT_LIMIT_EXCEEDED"):
+        run_llm_description(
+            facts=facts,
+            output_dir=tmp_path / "run",
+            provider=FakeAgentProvider(responses),
+            run_id=run_id,
+        )
+    assert not (tmp_path / "run" / "sections").exists()
+
+
+def test_openai_compat_failure_is_persisted_with_redacted_evidence(tmp_path: Path) -> None:
+    class FailingProvider:
+        def generate_live(self, *, session_id, prompt, schema, state):
+            del session_id, prompt, schema, state
+            raise OpenAICompatError(
+                "OpenAI-compatible chat completion is truncated: finish_reason=length",
+                evidence={
+                    "failure_class": "truncated",
+                    "finish_reason": "length",
+                    "usage": {"prompt_tokens": 10, "completion_tokens": 20},
+                },
+            )
+
+    with pytest.raises(OpenAICompatError, match="finish_reason=length"):
+        run_llm_description(
+            facts=_facts(),
+            output_dir=tmp_path / "run",
+            provider=FailingProvider(),
+            run_id="offline-openai-failure",
+        )
+    failure = json.loads((tmp_path / "run" / "outline" / "failure.json").read_text(encoding="utf-8"))
+    assert failure["stage"] == "outline"
+    assert failure["error_type"] == "OpenAICompatError"
+    assert failure["details"]["failure_class"] == "truncated"
+    assert failure["details"]["finish_reason"] == "length"
 
 
 def test_outline_unknown_fact_ref_fails_closed_before_section_calls(tmp_path: Path) -> None:
