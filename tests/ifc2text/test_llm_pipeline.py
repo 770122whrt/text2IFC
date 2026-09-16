@@ -185,6 +185,37 @@ def test_full_fake_pipeline_writes_final_text_and_prompt_safe_trace(tmp_path: Pa
     assert (tmp_path / "run" / "merge" / "semantic-validation.json").is_file()
 
 
+def test_outline_section_limit_blocks_runaway_section_calls(tmp_path: Path) -> None:
+    run_id = "offline-section-limit"
+    responses = _responses(run_id)
+    outline = _outline()
+    middle = []
+    for index in range(23):
+        middle.append(
+            {
+                "section_id": f"extra-{index:02d}",
+                "kind": "storey_overview",
+                "title": f"额外段落 {index}",
+                "storey": "S01",
+                "allowed_fact_refs": ["S01"],
+                "required_fact_refs": [],
+                "primary_owned_fact_refs": [],
+                "required_limitations": [],
+            }
+        )
+    outline["sections"] = [outline["sections"][0], *middle, outline["sections"][1], outline["sections"][2]]
+    assert len(outline["sections"]) == 26
+    responses[f"{run_id}:outline"]["text"] = json.dumps(outline, ensure_ascii=False)
+    with pytest.raises(IFC2TextLLMError, match="SECTION_LIMIT_EXCEEDED"):
+        run_llm_description(
+            facts=_facts(),
+            output_dir=tmp_path / "run",
+            provider=FakeAgentProvider(responses),
+            run_id=run_id,
+        )
+    assert not (tmp_path / "run" / "sections").exists()
+
+
 def test_outline_unknown_fact_ref_fails_closed_before_section_calls(tmp_path: Path) -> None:
     run_id = "offline-unknown"
     responses = _responses(run_id)

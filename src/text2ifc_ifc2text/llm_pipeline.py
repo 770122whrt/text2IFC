@@ -21,6 +21,7 @@ LLM_RUN_SCHEMA_VERSION = "text2ifc/ifc2text-llm-run/0.1"
 DEFAULT_OUTLINE_TEMPLATE = "ifc2text-outline.v0.1"
 DEFAULT_SECTION_TEMPLATE = "ifc2text-section-writer.v0.1"
 DEFAULT_MERGE_TEMPLATE = "ifc2text-merge.v0.1"
+MAX_WRITING_SECTIONS = 24
 
 
 class IFC2TextLLMError(RuntimeError):
@@ -178,6 +179,8 @@ def _validate_outline(outline: dict[str, Any], fact_index: dict[str, Any]) -> No
     fact_refs = {record["fact_ref"] for record in records}
     issue_refs = {issue["issue_ref"] for issue in fact_index["issues"]}
     sections = outline["sections"]
+    if len(sections) > MAX_WRITING_SECTIONS:
+        raise IFC2TextLLMError("IFC2TEXT_OUTLINE_SECTION_LIMIT_EXCEEDED")
     section_ids = [section["section_id"] for section in sections]
     if len(section_ids) != len(set(section_ids)):
         raise IFC2TextLLMError("IFC2TEXT_OUTLINE_DUPLICATE_SECTION_ID")

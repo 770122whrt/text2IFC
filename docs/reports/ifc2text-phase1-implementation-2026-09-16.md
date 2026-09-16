@@ -411,3 +411,11 @@ prompt-safe fact index
 运行器同时增加确定性 fail-closed：Outline 不得引用未知 fact；required / primary refs 必须属于 allowed refs；每个主要建筑事实必须被 section 覆盖或明确 unresolved；Section 不得静默遗漏 required fact；Merge 必须对所有计划 section 做 ordered/blocked 完整记账，且不能把有 required omission 的 section 放入正文。
 
 新增 `tests/ifc2text/test_llm_pipeline.py`。当前离线写作链测试 14 项通过，覆盖完整 text 产出、非法 JSON、未知 fact ref、required fact 静默遗漏、Merge 丢 section，以及 source identity 不进入 prompt。另运行现有 Prompt registry 与 `run_ready_session_to_ifc` 成功公共路径 12 项通过，确认现有 Generation fake seam 未被本次实现破坏。两组均为 zero-network scoped validation，尚不是 Stage Admission；下一步先提交并推送这版代码，再基于该固定 commit 生成正式 admission。
+
+## 12. 离线公共桥与调用量门禁
+
+在第二提交点之后补充 `tests/ifc2text/test_offline_public_bridge.py`。该测试不把两条链路的绿灯拼成结论，而是实际把 IFC2Text fake 写作得到的最终 `design-description-llm.md` 作为 `SessionStore.original_input`，通过真实 `run_design_brief_clarification_loop` 与真实 `run_ready_session_to_ifc`，仅将 Design Brief / Generator / Audit 的 Provider 响应替换为明确标记的冻结离线夹具。公共 run report、GenerationBudget、Gate、compile、IFC reopen 与 final acceptance 仍按生产代码执行。最终测试达到 `compiled` 并产生 IFC，证明离线条件下文本确实穿过公共 Generation 路径，而不是分别调用两个内部 helper。
+
+第一次串联暴露两个有效门禁：缺 Design Brief sidecar 时 run report 阻断；离线 sidecar 缺 usage 时 GenerationBudget 按最保守方式计费并阻断。测试没有绕过这两个门禁，而是补齐可审计 sidecar 与明确 fake usage 后继续。最终公共桥测试 1 passed。
+
+同时在 `llm_pipeline.py` 增加 `MAX_WRITING_SECTIONS = 24`。Outline 超过 24 个 section 时在任何 Section Provider 调用前 fail closed，防止模型把每个构件拆成一次调用造成不受控调用量。对应负例与公共桥合计 7 项通过。这部分需要先作为新的固定提交点推送，再在该 SHA 上重跑完整 Stage Admission。
