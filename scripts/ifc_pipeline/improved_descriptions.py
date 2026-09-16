@@ -15,7 +15,7 @@ from pathlib import Path
 
 sys.stdout.reconfigure(encoding='utf-8')
 
-with open('E:/code for project/bimnet/dataset/processed/ifc_parsed_enhanced.json', 'r', encoding='utf-8') as f:
+with open('E:/code for project/bimnet/dataset/processed/derived/ifc_parsed_enhanced.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
 
@@ -408,7 +408,7 @@ def describe_model(d):
 
 
 # ── Main ──
-output_dir = Path("E:/code for project/bimnet/dataset/processed/descriptions")
+output_dir = Path("E:/code for project/bimnet/dataset/processed/derived/descriptions")
 output_dir.mkdir(parents=True, exist_ok=True)
 
 for d in data:

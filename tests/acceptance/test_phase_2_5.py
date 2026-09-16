@@ -14,6 +14,7 @@ AUDIT = (
     ROOT
     / "dataset"
     / "processed"
+    / "derived"
     / "bim-json-2.0"
     / "extraction-audit.json"
 )
@@ -21,6 +22,7 @@ FAMILIES = (
     ROOT
     / "dataset"
     / "processed"
+    / "derived"
     / "bim-json-2.0"
     / "scene-families.json"
 )

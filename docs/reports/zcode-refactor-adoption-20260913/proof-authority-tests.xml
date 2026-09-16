@@ -1,0 +1,2887 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="15" skipped="0" tests="66" time="161.347" timestamp="2026-09-13T01:59:09.129269+08:00" hostname="what-do-matter"><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_proof_validation_v03_represents_all_frozen_r1_terminal_families" time="0.010" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicates_recompute_exact_value_and_preservation[IfcWindow-Pset_WindowCommon-IsExternal-IfcBoolean-True]" time="0.275" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicates_recompute_exact_value_and_preservation[IfcDoor-Pset_DoorCommon-FireRating-IfcLabel-EI60]" time="0.220" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicates_recompute_exact_value_and_preservation[IfcBeam-Pset_BeamCommon-Reference-IfcIdentifier-B-204]" time="0.225" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicates_recompute_exact_value_and_preservation[IfcColumn-Pset_ColumnCommon-LoadBearing-IfcBoolean-True]" time="0.289" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicates_recompute_exact_value_and_preservation[IfcWallStandardCase-Pset_WallCommon-AcousticRating-IfcLabel-Rw 50]" time="0.264" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicate_fails_closed_on_tampered_value" time="0.225" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicate_fails_closed_on_target_or_property[target-proof.predicate.occurrence_operation]" time="0.282" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_property_predicate_fails_closed_on_target_or_property[property-proof.predicate.occurrence_property]" time="0.230" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_occurrence_preservation_fails_closed_on_placement_tamper" time="0.245" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_no_output_terminal_records_are_formal_and_fail_closed[terminal_record0]" time="0.021" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_no_output_terminal_records_are_formal_and_fail_closed[terminal_record1]" time="0.020" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_no_output_terminal_records_are_formal_and_fail_closed[terminal_record2]" time="0.019" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_no_output_terminal_rejects_stage2_leakage" time="0.024" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_clarification_terminal_rejects_dynamic_candidate_rank_identity" time="0.022" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_incompatible_value_replays_property_identity_before_type_rejection" time="0.244" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_stage15_authority_replay_accepts_pure_window_occurrence" time="0.197"><failure message="FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_r1_stage15_authority_repl0')
+
+    def test_r1_stage15_authority_replay_accepts_pure_window_occurrence(
+        tmp_path: Path,
+    ) -&gt; None:
+        from scripts.ifc_repair import run_phase12_live_uat as live_uat
+        from tests.ifc_repair.test_phase12_live_uat import _ProductionPathTransport
+        from tests.ifc_repair.test_property_resolution_family_e2e import (
+            _runtime as offline_property_runtime,
+        )
+    
+        case = next(
+            item
+            for item in live_uat.DEFAULT_CASES
+            if item.case_id == "window-semantic-canary"
+        )
+        provider = live_uat.TranscriptProvider(_ProductionPathTransport())
+        provider.set_case(case.case_id)
+        case_root = tmp_path / "window"
+&gt;       final = live_uat._production_case_executor(
+            case,
+            provider,
+            case_root,
+            property_knowledge_runtime=offline_property_runtime(),
+        )
+
+tests\ifc_repair\test_repair_milestone_r1_proof.py:612: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\run_phase12_live_uat.py:1565: in _production_case_executor
+    source_sha256_before = _path_sha256(source)
+                           ^^^^^^^^^^^^^^^^^^^^
+scripts\ifc_repair\run_phase12_live_uat.py:162: in _path_sha256
+    with path.open("rb") as stream:
+         ^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/dataset/processed/proof/ifc-repair-success-cases/structural/batch/phase12-d7n-beam-column-atomic/damaged.ifc')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+&gt;       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\batch\\phase12-d7n-beam-column-atomic\\damaged.ifc'
+
+E:\anaconda\Lib\pathlib.py:1013: FileNotFoundError</failure></testcase><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_no_output_terminal_accepts_without_fabricated_repaired_ifc" time="0.033" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_collection_rejects_profile_terminal_contract_drift" time="0.088" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_profile_is_machine_readable_and_bound_to_the_accepted_freeze" time="0.011" /><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_structural_add_predicate_reuses_frozen_beam_column_proof[phase12-vvo-beam-material-present-predicate0]" time="0.001"><failure message="FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\dataset\processed\proof\ifc-repair-success-cases\structural\single\phase12-vvo-beam-material-present\damaged.ifc'.">case_name = 'phase12-vvo-beam-material-present'
+predicate = {'axis_end_mm': [203000, 204000, 0], 'axis_start_mm': [200000, 200000, 0], 'kind': 'structural_add', 'operation_type': 'add_beam', ...}
+
+    @pytest.mark.parametrize(
+        ("case_name", "predicate"),
+        (
+            (
+                "phase12-vvo-beam-material-present",
+                {
+                    "predicate_id": "beam-add",
+                    "kind": "structural_add",
+                    "operation_type": "add_beam",
+                    "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+                    "axis_start_mm": [200000, 200000, 0],
+                    "axis_end_mm": [203000, 204000, 0],
+                    "section_width_mm": 300,
+                    "section_height_mm": 500,
+                    "type_policy": "generated",
+                },
+            ),
+            (
+                "phase12-vvo-column-material-absent",
+                {
+                    "predicate_id": "column-add",
+                    "kind": "structural_add",
+                    "operation_type": "add_column",
+                    "storey_global_id": "1vTeahUkP60PdWqwCTjeRs",
+                    "axis_start_mm": [210000, 210000, 0],
+                    "axis_end_mm": [210000, 210000, 6000],
+                    "section_width_mm": 400,
+                    "section_height_mm": 600,
+                    "orientation_xy": [0, 1],
+                    "type_policy": "generated",
+                },
+            ),
+        ),
+    )
+    def test_r1_structural_add_predicate_reuses_frozen_beam_column_proof(
+        case_name: str,
+        predicate: dict[str, Any],
+    ) -&gt; None:
+        case_root = (
+            ROOT
+            / "dataset/processed/proof/ifc-repair-success-cases/structural/single"
+            / case_name
+        )
+        result = proof_validator.audit_r1_artifact_predicates(
+&gt;           source_model=ifcopenshell.open(str(case_root / "damaged.ifc")),
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            repaired_model=ifcopenshell.open(str(case_root / "repaired.ifc")),
+            changeset=json.loads((case_root / "changeset.json").read_text(encoding="utf-8")),
+            application=json.loads((case_root / "application.json").read_text(encoding="utf-8")),
+            predicates=[predicate],
+        )
+
+tests\ifc_repair\test_repair_milestone_r1_proof.py:888: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('E:/code for project/bimnet/dataset/processed/proof/ifc-repair-success-cases/structural/single/phase12-vvo-beam-material-present/damaged.ifc')
+format = None, should_stream = False, readonly = False, mmap = False
+bypass_types = None
+
+    def open(
+        path: Union[os.PathLike, str],
+        format: SupportedFormat = None,
+        should_stream: bool = False,
+        readonly: bool = False,
+        mmap: bool = False,
+        bypass_types: Optional[Sequence[str]] = None,
+    ) -&gt; Union[_file, sqlite, _stream]:
+        """Loads an IFC dataset from a filepath
+    
+        :param should_stream: Whether to open the file in streaming mode. Could be useful
+            for reading large files.
+    
+        You can specify a file format. If no format is given, it is guessed from
+        its extension.
+    
+        You can then filter by element ID, class, etc, and subscript by id or guid.
+    
+        Example:
+    
+        .. code:: python
+    
+            model = ifcopenshell.open("/path/to/model.ifc")
+            model = ifcopenshell.open("/path/to/model.ifcXML")
+            model = ifcopenshell.open("/path/to/model.any_extension", ".ifc")
+    
+            products = model.by_type("IfcProduct")
+            print(products[0].id(), products[0].GlobalId) # 122 2XQ$n5SLP5MBLyL442paFx
+            print(products[0] == model[122] == model["2XQ$n5SLP5MBLyL442paFx"]) # True
+        """
+        path = Path(path)
+        if not path.exists():
+&gt;           raise FileNotFoundError(f"Path does not exist: '{path}'.")
+E           FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\dataset\processed\proof\ifc-repair-success-cases\structural\single\phase12-vvo-beam-material-present\damaged.ifc'.
+
+.deps\python312\ifcopenshell\__init__.py:178: FileNotFoundError</failure></testcase><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_structural_add_predicate_reuses_frozen_beam_column_proof[phase12-vvo-column-material-absent-predicate1]" time="0.001"><failure message="FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\dataset\processed\proof\ifc-repair-success-cases\structural\single\phase12-vvo-column-material-absent\damaged.ifc'.">case_name = 'phase12-vvo-column-material-absent'
+predicate = {'axis_end_mm': [210000, 210000, 6000], 'axis_start_mm': [210000, 210000, 0], 'kind': 'structural_add', 'operation_type': 'add_column', ...}
+
+    @pytest.mark.parametrize(
+        ("case_name", "predicate"),
+        (
+            (
+                "phase12-vvo-beam-material-present",
+                {
+                    "predicate_id": "beam-add",
+                    "kind": "structural_add",
+                    "operation_type": "add_beam",
+                    "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+                    "axis_start_mm": [200000, 200000, 0],
+                    "axis_end_mm": [203000, 204000, 0],
+                    "section_width_mm": 300,
+                    "section_height_mm": 500,
+                    "type_policy": "generated",
+                },
+            ),
+            (
+                "phase12-vvo-column-material-absent",
+                {
+                    "predicate_id": "column-add",
+                    "kind": "structural_add",
+                    "operation_type": "add_column",
+                    "storey_global_id": "1vTeahUkP60PdWqwCTjeRs",
+                    "axis_start_mm": [210000, 210000, 0],
+                    "axis_end_mm": [210000, 210000, 6000],
+                    "section_width_mm": 400,
+                    "section_height_mm": 600,
+                    "orientation_xy": [0, 1],
+                    "type_policy": "generated",
+                },
+            ),
+        ),
+    )
+    def test_r1_structural_add_predicate_reuses_frozen_beam_column_proof(
+        case_name: str,
+        predicate: dict[str, Any],
+    ) -&gt; None:
+        case_root = (
+            ROOT
+            / "dataset/processed/proof/ifc-repair-success-cases/structural/single"
+            / case_name
+        )
+        result = proof_validator.audit_r1_artifact_predicates(
+&gt;           source_model=ifcopenshell.open(str(case_root / "damaged.ifc")),
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            repaired_model=ifcopenshell.open(str(case_root / "repaired.ifc")),
+            changeset=json.loads((case_root / "changeset.json").read_text(encoding="utf-8")),
+            application=json.loads((case_root / "application.json").read_text(encoding="utf-8")),
+            predicates=[predicate],
+        )
+
+tests\ifc_repair\test_repair_milestone_r1_proof.py:888: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('E:/code for project/bimnet/dataset/processed/proof/ifc-repair-success-cases/structural/single/phase12-vvo-column-material-absent/damaged.ifc')
+format = None, should_stream = False, readonly = False, mmap = False
+bypass_types = None
+
+    def open(
+        path: Union[os.PathLike, str],
+        format: SupportedFormat = None,
+        should_stream: bool = False,
+        readonly: bool = False,
+        mmap: bool = False,
+        bypass_types: Optional[Sequence[str]] = None,
+    ) -&gt; Union[_file, sqlite, _stream]:
+        """Loads an IFC dataset from a filepath
+    
+        :param should_stream: Whether to open the file in streaming mode. Could be useful
+            for reading large files.
+    
+        You can specify a file format. If no format is given, it is guessed from
+        its extension.
+    
+        You can then filter by element ID, class, etc, and subscript by id or guid.
+    
+        Example:
+    
+        .. code:: python
+    
+            model = ifcopenshell.open("/path/to/model.ifc")
+            model = ifcopenshell.open("/path/to/model.ifcXML")
+            model = ifcopenshell.open("/path/to/model.any_extension", ".ifc")
+    
+            products = model.by_type("IfcProduct")
+            print(products[0].id(), products[0].GlobalId) # 122 2XQ$n5SLP5MBLyL442paFx
+            print(products[0] == model[122] == model["2XQ$n5SLP5MBLyL442paFx"]) # True
+        """
+        path = Path(path)
+        if not path.exists():
+&gt;           raise FileNotFoundError(f"Path does not exist: '{path}'.")
+E           FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\dataset\processed\proof\ifc-repair-success-cases\structural\single\phase12-vvo-column-material-absent\damaged.ifc'.
+
+.deps\python312\ifcopenshell\__init__.py:178: FileNotFoundError</failure></testcase><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_structural_add_predicate_fails_closed_on_tampered_geometry" time="0.001"><failure message="FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\dataset\processed\proof\ifc-repair-success-cases\structural\single\phase12-vvo-beam-material-present\damaged.ifc'.">def test_r1_structural_add_predicate_fails_closed_on_tampered_geometry() -&gt; None:
+        case_root = (
+            ROOT
+            / "dataset/processed/proof/ifc-repair-success-cases/structural/single"
+            / "phase12-vvo-beam-material-present"
+        )
+        predicate = {
+            "predicate_id": "beam-add",
+            "kind": "structural_add",
+            "operation_type": "add_beam",
+            "storey_global_id": "1vTeahUkP60PdWqwCTjUuM",
+            "axis_start_mm": [200001, 200000, 0],
+            "axis_end_mm": [203000, 204000, 0],
+            "section_width_mm": 300,
+            "section_height_mm": 500,
+            "type_policy": "generated",
+        }
+        with pytest.raises(ValueError, match="proof.predicate.structural_geometry"):
+            proof_validator.audit_r1_artifact_predicates(
+&gt;               source_model=ifcopenshell.open(str(case_root / "damaged.ifc")),
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                repaired_model=ifcopenshell.open(str(case_root / "repaired.ifc")),
+                changeset=json.loads((case_root / "changeset.json").read_text(encoding="utf-8")),
+                application=json.loads((case_root / "application.json").read_text(encoding="utf-8")),
+                predicates=[predicate],
+            )
+
+tests\ifc_repair\test_repair_milestone_r1_proof.py:922: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+path = WindowsPath('E:/code for project/bimnet/dataset/processed/proof/ifc-repair-success-cases/structural/single/phase12-vvo-beam-material-present/damaged.ifc')
+format = None, should_stream = False, readonly = False, mmap = False
+bypass_types = None
+
+    def open(
+        path: Union[os.PathLike, str],
+        format: SupportedFormat = None,
+        should_stream: bool = False,
+        readonly: bool = False,
+        mmap: bool = False,
+        bypass_types: Optional[Sequence[str]] = None,
+    ) -&gt; Union[_file, sqlite, _stream]:
+        """Loads an IFC dataset from a filepath
+    
+        :param should_stream: Whether to open the file in streaming mode. Could be useful
+            for reading large files.
+    
+        You can specify a file format. If no format is given, it is guessed from
+        its extension.
+    
+        You can then filter by element ID, class, etc, and subscript by id or guid.
+    
+        Example:
+    
+        .. code:: python
+    
+            model = ifcopenshell.open("/path/to/model.ifc")
+            model = ifcopenshell.open("/path/to/model.ifcXML")
+            model = ifcopenshell.open("/path/to/model.any_extension", ".ifc")
+    
+            products = model.by_type("IfcProduct")
+            print(products[0].id(), products[0].GlobalId) # 122 2XQ$n5SLP5MBLyL442paFx
+            print(products[0] == model[122] == model["2XQ$n5SLP5MBLyL442paFx"]) # True
+        """
+        path = Path(path)
+        if not path.exists():
+&gt;           raise FileNotFoundError(f"Path does not exist: '{path}'.")
+E           FileNotFoundError: Path does not exist: 'E:\code for project\bimnet\dataset\processed\proof\ifc-repair-success-cases\structural\single\phase12-vvo-beam-material-present\damaged.ifc'.
+
+.deps\python312\ifcopenshell\__init__.py:178: FileNotFoundError</failure></testcase><testcase classname="tests.ifc_repair.test_repair_milestone_r1_proof" name="test_r1_curator_rejects_injected_validation_for_noncanonical_collection" time="0.111" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_live_curator_validates_the_production_runstore_transition_ledger" time="0.090" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_valid_beam_column_public_proof_is_strictly_recomputed" time="17.067" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_saved_success_cannot_mask_endpoint_error_beyond_five_mm" time="4.738" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_saved_success_cannot_mask_second_type_relationship" time="4.646" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_saved_success_cannot_mask_missing_structural_type" time="4.665" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_saved_success_cannot_mask_partial_atomic_output" time="4.703" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_saved_success_cannot_mask_requested_pset_semantic_defect" time="4.709" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_saved_success_cannot_mask_generated_type_contract_defect" time="4.824" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_missing_or_stale_proof_hash_is_a_specific_blocking_check[&lt;lambda&gt;-proof.hash.required]" time="0.290" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_missing_or_stale_proof_hash_is_a_specific_blocking_check[&lt;lambda&gt;-proof.hash.sha256]" time="0.264" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_indexed_structural_proof_artifact_cannot_be_missing" time="0.276" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_rehashed_request_cannot_spoof_bound_structural_provenance" time="1.520" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_rehashed_intent_cannot_spoof_bound_structural_operation_identity" time="1.498" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_rehashed_resolution_cannot_spoof_structural_model_binding" time="1.710" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_duplicate_requested_pset_relationship_is_not_collapsed_to_a_set" time="4.858" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_rehashed_manifest_and_ifc_cannot_invent_unrequested_semantic_value" time="4.612" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_relationship_extension_cannot_hide_owner_history_mutation" time="5.807" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_undeclared_ifcroot_preservation_drift_is_blocking" time="5.619" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_private_gold_input_boundary_drift_is_blocking" time="3.818" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_camel_case_private_gold_key_is_blocking" time="3.807" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_synthetic_fallback_cannot_be_promoted_by_saved_success" time="1.142" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_collection_cannot_relabel_live_source_run_as_offline" time="3.699" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_plan07_attempt_audit_accepts_only_reviewed_stage2_profile_generations[profile_ids0-text2ifc/ifc-repair-changeset-draft/0.2]" time="0.906" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_plan07_attempt_audit_accepts_only_reviewed_stage2_profile_generations[profile_ids1-text2ifc/ifc-repair-changeset-draft/0.3]" time="0.843" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_plan07_attempt_audit_rejects_cross_generation_stage2_profile_mix" time="0.560" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_withdrawn_live_structural_proof_cannot_regain_restoration_acceptance" time="6.341"><failure message="AssertionError: assert ['phase12-liv...ING_MISMATCH'] == ['phase12-liv...UCTABLE:beam']&#10;  &#10;  At index 0 diff: 'phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH' != 'phase12-live-deepseek-complete: STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:beam'&#10;  Use -v to get more diff">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_withdrawn_live_structural0')
+
+    def test_withdrawn_live_structural_proof_cannot_regain_restoration_acceptance(
+        tmp_path: Path,
+    ) -&gt; None:
+        collection, _case_root = _live_proof_collection(tmp_path)
+    
+        result = validate_success_case_collection(collection)
+    
+        # The 2026-09-03 structural-restoration erratum withdrew this exact fixture.
+        # A valid-looking transcript must not override its invalid damage authority.
+        # Legitimate structural proof still has a separate positive recomputation test.
+        assert result.status == "failed", result.errors
+&gt;       assert result.errors == [
+            f"{LIVE_CASE_ID}: STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:beam"
+        ]
+E       AssertionError: assert ['phase12-liv...ING_MISMATCH'] == ['phase12-liv...UCTABLE:beam']
+E         
+E         At index 0 diff: 'phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH' != 'phase12-live-deepseek-complete: STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:beam'
+E         Use -v to get more diff
+
+tests\ifc_repair\test_phase12_success_cases.py:1685: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_property_authority_replay_accepts_public_user_candidate_selection" time="19.764" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_live_proof_cannot_bypass_underlying_damage_authority[schema_downgrade-l0.structural.live:source_manifest_schema]" time="6.516"><failure message="AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']&#10;assert False&#10; +  where False = any(&lt;generator object test_live_proof_cannot_bypass_underlying_damage_authority.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000278A6662740&gt;)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_live_proof_cannot_bypass_0')
+defect = 'schema_downgrade'
+check_id = 'l0.structural.live:source_manifest_schema'
+
+    @pytest.mark.parametrize(
+        ("defect", "check_id"),
+        (
+            ("schema_downgrade", "l0.structural.live:source_manifest_schema"),
+            ("missing_base", "l0.structural.live:base_damage_manifest_missing"),
+            ("base_binding", "l0.structural.live:base_damage_binding"),
+        ),
+    )
+    def test_live_proof_cannot_bypass_underlying_damage_authority(
+        tmp_path: Path,
+        defect: str,
+        check_id: str,
+    ) -&gt; None:
+        collection, case_root = _live_proof_collection(tmp_path)
+        source_manifest_path = case_root / "manifest.json"
+        source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+        if defect == "schema_downgrade":
+            source_manifest["schema_version"] = "text2ifc/phase12-offline-case/0.1"
+        elif defect == "missing_base":
+            (case_root / "base-damage-source-manifest.json").unlink()
+        elif defect == "base_binding":
+            source_manifest["base_damage_contract"]["damaged_ifc_sha256"] = (
+                "sha256:" + "0" * 64
+            )
+        else:  # pragma: no cover - the parametrization is exhaustive.
+            raise AssertionError(defect)
+        _write_json(source_manifest_path, source_manifest)
+        _refresh_live_proof(case_root)
+    
+        result = validate_success_case_collection(collection)
+    
+        assert result.status == "failed"
+&gt;       assert any(check_id in error for error in result.errors), result.errors
+E       AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']
+E       assert False
+E        +  where False = any(&lt;generator object test_live_proof_cannot_bypass_underlying_damage_authority.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000278A6662740&gt;)
+
+tests\ifc_repair\test_phase12_success_cases.py:1830: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_live_proof_cannot_bypass_underlying_damage_authority[missing_base-l0.structural.live:base_damage_manifest_missing]" time="6.409"><failure message="AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']&#10;assert False&#10; +  where False = any(&lt;generator object test_live_proof_cannot_bypass_underlying_damage_authority.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000278FDB1D220&gt;)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_live_proof_cannot_bypass_1')
+defect = 'missing_base'
+check_id = 'l0.structural.live:base_damage_manifest_missing'
+
+    @pytest.mark.parametrize(
+        ("defect", "check_id"),
+        (
+            ("schema_downgrade", "l0.structural.live:source_manifest_schema"),
+            ("missing_base", "l0.structural.live:base_damage_manifest_missing"),
+            ("base_binding", "l0.structural.live:base_damage_binding"),
+        ),
+    )
+    def test_live_proof_cannot_bypass_underlying_damage_authority(
+        tmp_path: Path,
+        defect: str,
+        check_id: str,
+    ) -&gt; None:
+        collection, case_root = _live_proof_collection(tmp_path)
+        source_manifest_path = case_root / "manifest.json"
+        source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+        if defect == "schema_downgrade":
+            source_manifest["schema_version"] = "text2ifc/phase12-offline-case/0.1"
+        elif defect == "missing_base":
+            (case_root / "base-damage-source-manifest.json").unlink()
+        elif defect == "base_binding":
+            source_manifest["base_damage_contract"]["damaged_ifc_sha256"] = (
+                "sha256:" + "0" * 64
+            )
+        else:  # pragma: no cover - the parametrization is exhaustive.
+            raise AssertionError(defect)
+        _write_json(source_manifest_path, source_manifest)
+        _refresh_live_proof(case_root)
+    
+        result = validate_success_case_collection(collection)
+    
+        assert result.status == "failed"
+&gt;       assert any(check_id in error for error in result.errors), result.errors
+E       AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']
+E       assert False
+E        +  where False = any(&lt;generator object test_live_proof_cannot_bypass_underlying_damage_authority.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000278FDB1D220&gt;)
+
+tests\ifc_repair\test_phase12_success_cases.py:1830: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_live_proof_cannot_bypass_underlying_damage_authority[base_binding-l0.structural.live:base_damage_binding]" time="6.338"><failure message="AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']&#10;assert False&#10; +  where False = any(&lt;generator object test_live_proof_cannot_bypass_underlying_damage_authority.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000278A6273850&gt;)">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_live_proof_cannot_bypass_2')
+defect = 'base_binding', check_id = 'l0.structural.live:base_damage_binding'
+
+    @pytest.mark.parametrize(
+        ("defect", "check_id"),
+        (
+            ("schema_downgrade", "l0.structural.live:source_manifest_schema"),
+            ("missing_base", "l0.structural.live:base_damage_manifest_missing"),
+            ("base_binding", "l0.structural.live:base_damage_binding"),
+        ),
+    )
+    def test_live_proof_cannot_bypass_underlying_damage_authority(
+        tmp_path: Path,
+        defect: str,
+        check_id: str,
+    ) -&gt; None:
+        collection, case_root = _live_proof_collection(tmp_path)
+        source_manifest_path = case_root / "manifest.json"
+        source_manifest = json.loads(source_manifest_path.read_text(encoding="utf-8"))
+        if defect == "schema_downgrade":
+            source_manifest["schema_version"] = "text2ifc/phase12-offline-case/0.1"
+        elif defect == "missing_base":
+            (case_root / "base-damage-source-manifest.json").unlink()
+        elif defect == "base_binding":
+            source_manifest["base_damage_contract"]["damaged_ifc_sha256"] = (
+                "sha256:" + "0" * 64
+            )
+        else:  # pragma: no cover - the parametrization is exhaustive.
+            raise AssertionError(defect)
+        _write_json(source_manifest_path, source_manifest)
+        _refresh_live_proof(case_root)
+    
+        result = validate_success_case_collection(collection)
+    
+        assert result.status == "failed"
+&gt;       assert any(check_id in error for error in result.errors), result.errors
+E       AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']
+E       assert False
+E        +  where False = any(&lt;generator object test_live_proof_cannot_bypass_underlying_damage_authority.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000278A6273850&gt;)
+
+tests\ifc_repair\test_phase12_success_cases.py:1830: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_validator_cli_accepts_the_frozen_root_option" time="0.016" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_proof_validation_v02_formalizes_the_validator_curator_boundary" time="0.006" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_unrecomputed_property_authority_distinguishes_non_property_from_alias" time="0.017" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_live_curator_rejects_non_v02_or_non_strict_property_authority[old-contract]" time="0.014" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_live_curator_rejects_non_v02_or_non_strict_property_authority[required-property-case-not-applicable]" time="0.014" /><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_runs_validator_in_a_separate_process_before_install" time="3.255"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'&#10; Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_runs_valida0')
+
+    def test_public_curate_runs_validator_in_a_separate_process_before_install(
+        tmp_path: Path,
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+        calls: list[tuple[tuple[str, ...], Path]] = []
+    
+        def failed_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            calls.append((tuple(str(item) for item in command), cwd))
+            return subprocess.CompletedProcess(
+                command,
+                1,
+                json.dumps(
+                    {
+                        "schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
+                        "status": "failed",
+                        "case_count": 2,
+                        "independently_recomputed_case_count": 0,
+                        "legacy_unverifiable_case_count": 0,
+                        "errors": ["injected independent failure"],
+                        "cases": [],
+                    }
+                ),
+                "",
+            )
+    
+        with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+&gt;           curator.curate(
+                source,
+                proof,
+                validator_runner=failed_validator,
+            )
+
+tests\ifc_repair\test_phase12_success_cases.py:2374: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_runs_valida0')
+
+    def test_public_curate_runs_validator_in_a_separate_process_before_install(
+        tmp_path: Path,
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+        calls: list[tuple[tuple[str, ...], Path]] = []
+    
+        def failed_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            calls.append((tuple(str(item) for item in command), cwd))
+            return subprocess.CompletedProcess(
+                command,
+                1,
+                json.dumps(
+                    {
+                        "schema_version": "text2ifc/ifc-repair-proof-validation/0.2",
+                        "status": "failed",
+                        "case_count": 2,
+                        "independently_recomputed_case_count": 0,
+                        "legacy_unverifiable_case_count": 0,
+                        "errors": ["injected independent failure"],
+                        "cases": [],
+                    }
+                ),
+                "",
+            )
+    
+&gt;       with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'
+E        Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+
+tests\ifc_repair\test_phase12_success_cases.py:2373: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_installs_only_two_strict_success_cases_after_validation" time="3.203"><failure message="ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_installs_on0')
+
+    def test_public_curate_installs_only_two_strict_success_cases_after_validation(
+        tmp_path: Path,
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        scratch = source / "preflight" / "pytest-full-suite" / "unbound"
+        scratch.mkdir(parents=True)
+        _write_json(scratch / "FILES.json", {"not": "declared evidence"})
+        proof = _empty_proof(tmp_path / "proof")
+        calls: list[tuple[tuple[str, ...], Path]] = []
+    
+        def passed_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            calls.append((tuple(str(item) for item in command), cwd))
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(_strict_validator_payload()),
+                "",
+            )
+    
+&gt;       result = curator.curate(
+            source,
+            proof,
+            validator_runner=passed_validator,
+        )
+
+tests\ifc_repair\test_phase12_success_cases.py:2416: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_resolves_the_latest_timestamped_runner_directory" time="3.518"><failure message="ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_resolves_th0')
+
+    def test_public_curate_resolves_the_latest_timestamped_runner_directory(
+        tmp_path: Path,
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        live_root = tmp_path / "phase12-live"
+        live_root.mkdir()
+        timestamped = live_root / "uat-20260817T120000000000Z"
+        shutil.copytree(source, timestamped)
+        proof = _empty_proof(tmp_path / "proof")
+    
+        def passed_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(_strict_validator_payload()),
+                "",
+            )
+    
+&gt;       result = curator.curate(
+            live_root,
+            proof,
+            validator_runner=passed_validator,
+        )
+
+tests\ifc_repair\test_phase12_success_cases.py:2470: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-case-ids]" time="3.235"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'&#10; Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for0')
+forged_payload = {'case_count': 2, 'cases': [{'case_id': 'wrong-complete', 'current_property_acceptance_eligible': True, 'live_transcri...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 2, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+        with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+&gt;           curator.curate(source, proof, validator_runner=forged_validator)
+
+tests\ifc_repair\test_phase12_success_cases.py:2513: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for0')
+forged_payload = {'case_count': 2, 'cases': [{'case_id': 'wrong-complete', 'current_property_acceptance_eligible': True, 'live_transcri...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 2, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+&gt;       with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'
+E        Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+
+tests\ifc_repair\test_phase12_success_cases.py:2512: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-count]" time="3.201"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'&#10; Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for1')
+forged_payload = {'case_count': 3, 'cases': [{'case_id': 'phase12-live-deepseek-complete', 'current_property_acceptance_eligible': True...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 2, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+        with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+&gt;           curator.curate(source, proof, validator_runner=forged_validator)
+
+tests\ifc_repair\test_phase12_success_cases.py:2513: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for1')
+forged_payload = {'case_count': 3, 'cases': [{'case_id': 'phase12-live-deepseek-complete', 'current_property_acceptance_eligible': True...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 2, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+&gt;       with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'
+E        Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+
+tests\ifc_repair\test_phase12_success_cases.py:2512: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_rejects_forged_passed_validator_summary_without_install[not-recomputed]" time="3.216"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'&#10; Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for2')
+forged_payload = {'case_count': 2, 'cases': [{'case_id': 'phase12-live-deepseek-complete', 'current_property_acceptance_eligible': True...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 1, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+        with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+&gt;           curator.curate(source, proof, validator_runner=forged_validator)
+
+tests\ifc_repair\test_phase12_success_cases.py:2513: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for2')
+forged_payload = {'case_count': 2, 'cases': [{'case_id': 'phase12-live-deepseek-complete', 'current_property_acceptance_eligible': True...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 1, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+&gt;       with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'
+E        Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+
+tests\ifc_repair\test_phase12_success_cases.py:2512: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_phase12_success_cases" name="test_public_curate_rejects_forged_passed_validator_summary_without_install[legacy]" time="3.238"><failure message="AssertionError: Regex pattern did not match.&#10; Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'&#10; Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for3')
+forged_payload = {'case_count': 2, 'cases': [{'case_id': 'phase12-live-deepseek-complete', 'current_property_acceptance_eligible': True...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 2, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+        with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+&gt;           curator.curate(source, proof, validator_runner=forged_validator)
+
+tests\ifc_repair\test_phase12_success_cases.py:2513: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\ifc_repair\curate_phase12_live_proof.py:774: in curate
+    audit = audit_live_uat_result(result)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src\text2ifc_proof\live_audit.py:888: in audit_live_uat_result
+    attempts, counts, case_models = _audit_attempts(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+case_id = 'complete'
+raw_attempts = [{'attempt_id': 'complete:stage1:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}, {'attemp...one, ...}, {'attempt_id': 'complete:stage2:001', 'case_id': 'complete', 'correction_reason': None, 'error': None, ...}]
+
+    def _audit_attempts(
+        case_id: str,
+        raw_attempts: Any,
+        *,
+        contract: Mapping[str, Any] | None = None,
+    ) -&gt; tuple[list[Mapping[str, Any]], dict[str, int], set[tuple[str, str]]]:
+        if not isinstance(raw_attempts, list) or not raw_attempts:
+            raise ValueError("LIVE_CASE_ATTEMPTS_REQUIRED")
+        attempts: list[Mapping[str, Any]] = []
+        ordinals = {"stage1": 0, "property_resolution": 0, "stage2": 0}
+        stage_ranks = {"stage1": 0, "property_resolution": 1, "stage2": 2}
+        previous: str | None = None
+        previous_stage: str | None = None
+        previous_stage_attempt: int | None = None
+        previous_lineage: str | None = None
+        previous_stage_rank = -1
+        round_contract = (
+            None if contract is None else contract.get("rounds")
+        )
+        round_index = 0
+        round_stage_index = 0
+        provider_models: set[tuple[str, str]] = set()
+        seen_ids: set[str] = set()
+        expected_evidence_mode = (
+            LIVE_EVIDENCE_MODE
+            if contract is None
+            else str(contract["evidence_mode"])
+        )
+        expected_provider = (
+            LIVE_PROVIDER if contract is None else str(contract["provider"])
+        )
+        expected_model = None if contract is None else str(contract["model"])
+        for raw in raw_attempts:
+            if not isinstance(raw, Mapping):
+                raise ValueError("LIVE_ATTEMPT_OBJECT_REQUIRED")
+            stage = str(raw.get("stage") or "")
+            if stage not in ordinals:
+                raise ValueError("LIVE_ATTEMPT_STAGE_INVALID")
+            stage_rank = stage_ranks[stage]
+            if round_contract is None:
+                if stage_rank &lt; previous_stage_rank:
+                    raise ValueError("LIVE_ATTEMPT_STAGE_ORDER_INVALID")
+            else:
+                assert isinstance(round_contract, list)
+                if (
+                    previous_lineage is not None
+                    and raw.get("lineage") != previous_lineage
+                ):
+                    current_stages = round_contract[round_index]["stages"]
+                    if round_stage_index != len(current_stages) - 1:
+                        raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                    round_index += 1
+                    round_stage_index = 0
+                    previous_stage = None
+                    previous_stage_attempt = None
+                if round_index &gt;= len(round_contract):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+                expected_round = round_contract[round_index]
+                if raw.get("lineage") != expected_round["lineage"]:
+                    raise ValueError("LIVE_ATTEMPT_ROUND_LINEAGE_INVALID")
+                if previous_stage is not None and stage != previous_stage:
+                    round_stage_index += 1
+                expected_stages = expected_round["stages"]
+                if (
+                    round_stage_index &gt;= len(expected_stages)
+                    or stage != expected_stages[round_stage_index]
+                ):
+                    raise ValueError("LIVE_ATTEMPT_ROUND_SEQUENCE_INVALID")
+            ordinals[stage] += 1
+            if raw.get("ordinal") != ordinals[stage]:
+                raise ValueError("LIVE_ATTEMPT_ORDINAL_MISMATCH")
+            attempt_id = str(raw.get("attempt_id") or "")
+            expected_id = f"{case_id}:{stage}:{ordinals[stage]:03d}"
+            if attempt_id != expected_id or attempt_id in seen_ids:
+                raise ValueError("LIVE_ATTEMPT_ID_MISMATCH")
+            seen_ids.add(attempt_id)
+            if raw.get("case_id") != case_id:
+                raise ValueError("LIVE_ATTEMPT_CASE_MISMATCH")
+            if raw.get("parent_attempt_id") != previous:
+                raise ValueError("LIVE_ATTEMPT_PARENT_MISMATCH")
+            previous = attempt_id
+            stage_attempt = raw.get("stage_attempt")
+            if not isinstance(stage_attempt, int) or stage_attempt &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_STAGE_ATTEMPT_INVALID")
+            if stage == "property_resolution" and stage_attempt &gt; 2:
+                raise ValueError("LIVE_ATTEMPT_STAGE15_RETRY_EXHAUSTED")
+            correction = raw.get("correction_reason")
+            if stage_attempt &gt; 1 and (
+                not isinstance(correction, str) or not correction.strip()
+            ):
+                raise ValueError("LIVE_ATTEMPT_CORRECTION_REASON_REQUIRED")
+            if stage != previous_stage:
+                if stage_attempt != 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            elif stage == "property_resolution":
+                assert previous_stage_attempt is not None
+                if (
+                    stage_attempt != 1
+                    and stage_attempt != previous_stage_attempt + 1
+                ):
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            else:
+                assert previous_stage_attempt is not None
+                if stage_attempt != previous_stage_attempt + 1:
+                    raise ValueError(
+                        "LIVE_ATTEMPT_STAGE_ATTEMPT_SEQUENCE_INVALID"
+                    )
+            previous_stage = stage
+            previous_stage_attempt = stage_attempt
+            previous_lineage = str(raw.get("lineage") or "")
+            previous_stage_rank = stage_rank
+            if contract is not None and contract.get(stage) is None:
+                raise ValueError("LIVE_ATTEMPT_STAGE_NOT_EXPECTED")
+            if (
+                raw.get("evidence_class") != expected_evidence_mode
+                or raw.get("http_status") != 200
+                or raw.get("error") is not None
+                or raw.get("private_evidence_detected") is not False
+            ):
+                raise ValueError("LIVE_ATTEMPT_TRANSPORT_INVALID")
+            fallback = raw.get("fallback_flags")
+            if (
+                not isinstance(fallback, Mapping)
+                or set(fallback) != FORBIDDEN_FALLBACK_FLAGS
+                or any(fallback[key] is not False for key in FORBIDDEN_FALLBACK_FLAGS)
+            ):
+                raise ValueError("LIVE_ATTEMPT_FALLBACK_FLAG")
+            provider = _require_text(
+                raw.get("provider"), "LIVE_ATTEMPT_PROVIDER_REQUIRED"
+            )
+            if provider != expected_provider:
+                raise ValueError("LIVE_ATTEMPT_PROVIDER_IDENTITY_INVALID")
+            model = _require_text(raw.get("model"), "LIVE_ATTEMPT_MODEL_REQUIRED")
+            if expected_model is not None and model != expected_model:
+                raise ValueError("LIVE_ATTEMPT_MODEL_IDENTITY_INVALID")
+            provider_models.add((provider, model))
+            usage = raw.get("usage")
+            if not isinstance(usage, Mapping) or not usage:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            if any(
+                not isinstance(usage.get(key), int) or int(usage[key]) &lt; 0
+                for key in ("prompt_tokens", "completion_tokens", "total_tokens")
+            ) or int(usage["total_tokens"]) &lt; 1:
+                raise ValueError("LIVE_ATTEMPT_USAGE_REQUIRED")
+            request = raw.get("request")
+            response = raw.get("response")
+            if request is None or response is None:
+                raise ValueError("LIVE_ATTEMPT_RAW_RESPONSE_REQUIRED")
+            if not _valid_sha256(raw.get("raw_request_sha256")) or not _valid_sha256(
+                raw.get("raw_response_sha256")
+            ):
+                raise ValueError("LIVE_ATTEMPT_RAW_HASH_REQUIRED")
+            try:
+                request_hash = _canonical_sha256(request)
+                response_hash = _canonical_sha256(response)
+            except (TypeError, ValueError) as error:
+                raise ValueError("LIVE_ATTEMPT_REDACTED_PAYLOAD_INVALID") from error
+            if (
+                raw.get("request_sha256") != request_hash
+                or raw.get("response_sha256") != response_hash
+            ):
+                raise ValueError("LIVE_ATTEMPT_REDACTED_HASH_MISMATCH")
+            metadata = raw.get("metadata")
+            if not isinstance(metadata, Mapping):
+                raise ValueError("LIVE_ATTEMPT_METADATA_REQUIRED")
+            _require_text(
+                metadata.get("response_id"), "LIVE_ATTEMPT_RESPONSE_ID_REQUIRED"
+            )
+            if (
+                metadata.get("provider") != provider
+                or metadata.get("model") != model
+                or metadata.get("evidence_class") != expected_evidence_mode
+                or metadata.get("usage") != usage
+                or not isinstance(metadata.get("transport_attempts"), int)
+                or int(metadata["transport_attempts"]) &lt; 1
+            ):
+                raise ValueError("LIVE_ATTEMPT_METADATA_INVALID")
+            if contract is not None:
+                request_configuration = metadata.get("request_configuration")
+                request_extra_body = (
+                    request.get("extra_body") if isinstance(request, Mapping) else None
+                )
+                expected_thinking = contract["thinking"]
+                if (
+                    not isinstance(request, Mapping)
+                    or request.get("model") != expected_model
+                    or not isinstance(request_extra_body, Mapping)
+                    or request_extra_body.get("thinking") != expected_thinking
+                    or not isinstance(request_configuration, Mapping)
+                    or request_configuration.get("thinking") != expected_thinking
+                ):
+                    raise ValueError("LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID")
+                if expected_thinking.get("type") == "enabled":
+                    temperature = request_configuration.get("temperature")
+                    if (
+                        not isinstance(temperature, Mapping)
+                        or temperature.get("effective") is not False
+                    ):
+                        raise ValueError(
+                            "LIVE_ATTEMPT_THINKING_CONFIGURATION_INVALID"
+                        )
+            profile_ids = raw.get("profile_ids")
+            profile_versions = raw.get("profile_versions")
+            profile_hashes = raw.get("profile_hashes")
+            if stage == "property_resolution":
+                expected_template = (
+                    {
+                        "template_id": PROPERTY_RESOLUTION_TEMPLATE_ID,
+                        "template_hash": PROPERTY_RESOLUTION_TEMPLATE_HASH,
+                    }
+                    if contract is None
+                    else contract["property_resolution"]
+                )
+                assert isinstance(expected_template, Mapping)
+                if raw.get("template_id") != expected_template["template_id"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ID_REQUIRED")
+                if raw.get("template_hash") != expected_template["template_hash"]:
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_HASH_REQUIRED")
+                if any(
+                    raw.get(key) not in (None, [])
+                    for key in (
+                        "profile_ids",
+                        "profile_versions",
+                        "profile_hashes",
+                        "few_shot_ids",
+                        "few_shot_hashes",
+                        "few_shot_bindings",
+                    )
+                ):
+                    raise ValueError("LIVE_ATTEMPT_TEMPLATE_ROUTING_MISMATCH")
+            else:
+                if (
+                    not isinstance(profile_ids, list)
+                    or not profile_ids
+                    or not isinstance(profile_versions, list)
+                    or not profile_versions
+                    or not isinstance(profile_hashes, list)
+                    or not profile_hashes
+                    or any(not _valid_sha256(value) for value in profile_hashes)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_HASH_REQUIRED")
+                if (
+                    len(profile_ids) != len(profile_versions)
+                    or len(profile_ids) != len(profile_hashes)
+                    or len(set(map(str, profile_ids))) != len(profile_ids)
+                ):
+                    raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+                if contract is None:
+                    if stage == "stage1":
+                        expected_profile_generation = EXPECTED_STAGE1_PROFILES
+                    else:
+                        if not isinstance(response, Mapping):
+                            raise ValueError("LIVE_ATTEMPT_STAGE2_RESPONSE_INVALID")
+                        expected_profile_generation = (
+                            _expected_plan07_stage2_profiles(
+                                case_id,
+                                _stage2_response_schema(response),
+                            )
+                        )
+                    if frozenset(map(str, profile_ids)) != expected_profile_generation:
+&gt;                       raise ValueError("LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH")
+E                       ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH
+
+src\text2ifc_proof\live_audit.py:739: ValueError
+
+During handling of the above exception, another exception occurred:
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/zcode-proof-authority/test_public_curate_rejects_for3')
+forged_payload = {'case_count': 2, 'cases': [{'case_id': 'phase12-live-deepseek-complete', 'current_property_acceptance_eligible': True...authority_coverage': 'strict_stage_1_5_recomputed', ...}], 'errors': [], 'independently_recomputed_case_count': 2, ...}
+
+    @pytest.mark.parametrize(
+        "forged_payload",
+        (
+            _strict_validator_payload(case_ids=("wrong-complete", "wrong-resume")),
+            _strict_validator_payload(case_count=3),
+            _strict_validator_payload(independently_recomputed=1),
+            _strict_validator_payload(legacy_unverifiable=1),
+        ),
+        ids=("wrong-case-ids", "wrong-count", "not-recomputed", "legacy"),
+    )
+    def test_public_curate_rejects_forged_passed_validator_summary_without_install(
+        tmp_path: Path,
+        forged_payload: Mapping[str, Any],
+    ) -&gt; None:
+        curator = _curator_module()
+        source = _curator_source_run(tmp_path)
+        proof = _empty_proof(tmp_path / "proof")
+        before = _tree_bytes(proof)
+    
+        def forged_validator(
+            command: Sequence[str],
+            *,
+            cwd: Path,
+        ) -&gt; subprocess.CompletedProcess[str]:
+            del cwd
+            return subprocess.CompletedProcess(
+                command,
+                0,
+                json.dumps(forged_payload),
+                "",
+            )
+    
+&gt;       with pytest.raises(ValueError, match="LIVE_CANDIDATE_VALIDATION_FAILED"):
+E       AssertionError: Regex pattern did not match.
+E        Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'
+E        Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'
+
+tests\ifc_repair\test_phase12_success_cases.py:2512: AssertionError</failure></testcase></testsuite></testsuites>

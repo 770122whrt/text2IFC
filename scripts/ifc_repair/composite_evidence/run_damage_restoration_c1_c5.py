@@ -61,7 +61,9 @@ from text2ifc_knowledge.property_runtime import (  # noqa: E402
     PROPERTY_QDRANT_PATH_ENV,
 )
 from text2ifc_ifc_repair.api import RepairAPI  # noqa: E402
-from text2ifc_ifc_repair.benchmark_evaluation import evaluate_production  # noqa: E402
+from text2ifc_ifc_repair.production_evaluation import (
+    evaluate_production,
+)
 from text2ifc_ifc_repair.evaluation import (  # noqa: E402
     EvaluationExecutionPolicy,
 )

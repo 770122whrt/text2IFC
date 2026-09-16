@@ -243,7 +243,7 @@ def parse_one(path):
 
 def main():
     base_dir = Path("E:/code for project/bimnet/dataset/ifc")
-    out_path = Path("E:/code for project/bimnet/dataset/processed/ifc_parsed_enhanced.json")
+    out_path = Path("E:/code for project/bimnet/dataset/processed/derived/ifc_parsed_enhanced.json")
 
     all_data = []
     for split in ['train', 'test']:

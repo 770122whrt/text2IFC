@@ -1,0 +1,186 @@
+{
+  "composition_valid": true,
+  "facts": [
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "building-1",
+      "origin": "base",
+      "path": "/entities/building-1",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "building-1",
+        "ifc_class": "IfcBuilding"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "project-1",
+      "origin": "base",
+      "path": "/entities/project-1",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "project-1",
+        "ifc_class": "IfcProject"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "site-1",
+      "origin": "base",
+      "path": "/entities/site-1",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "site-1",
+        "ifc_class": "IfcSite"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "space-1",
+      "origin": "base",
+      "path": "/entities/space-1",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "space-1",
+        "ifc_class": "IfcSpace"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "storey-1",
+      "origin": "base",
+      "path": "/entities/storey-1",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "storey-1",
+        "ifc_class": "IfcBuildingStorey"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "wall-east",
+      "origin": "base",
+      "path": "/entities/wall-east",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "wall-east",
+        "ifc_class": "IfcWall"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "wall-north",
+      "origin": "base",
+      "path": "/entities/wall-north",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "wall-north",
+        "ifc_class": "IfcWall"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "object_id": "wall-south",
+      "origin": "base",
+      "path": "/entities/wall-south",
+      "provenance": {
+        "source": "jsonfix-base-fixture"
+      },
+      "value": {
+        "id": "wall-south",
+        "ifc_class": "IfcWall"
+      }
+    },
+    {
+      "category": "entity",
+      "collection": "entities",
+      "layer_id": "user-add-west-wall",
+      "layer_kind": "user",
+      "layer_provenance": {
+        "prompt_version": "semantic-patch-v1",
+        "request_id": "missing-piece-repair",
+        "source": "user-natural-language"
+      },
+      "object_id": "wall-west",
+      "operation": "add_entity",
+      "origin": "patch",
+      "overwrote_existing": false,
+      "path": "/entities/wall-west",
+      "previous_value": null,
+      "value": {
+        "attributes": {
+          "Name": "wall-west",
+          "ObjectPlacement": {
+            "axis": [
+              0,
+              0,
+              1
+            ],
+            "origin": [
+              0,
+              2000,
+              0
+            ],
+            "ref_direction": [
+              0,
+              1,
+              0
+            ],
+            "relative_to": "storey-1"
+          },
+          "Representation": {
+            "depth": 3000,
+            "direction": [
+              0,
+              0,
+              1
+            ],
+            "kind": "extruded_profile",
+            "profile": {
+              "kind": "rectangle",
+              "x": 4000,
+              "y": 200
+            }
+          }
+        },
+        "id": "wall-west",
+        "ifc_class": "IfcWallStandardCase",
+        "property_sets": {},
+        "provenance": {
+          "layer_id": "user-add-west-wall",
+          "source": "user-patch"
+        }
+      }
+    }
+  ],
+  "formal_valid": true,
+  "schema_version": "text2ifc/jsonfix-provenance-v1",
+  "summary": {
+    "base_fact_count": 8,
+    "patch_fact_count": 1,
+    "total_fact_count": 9
+  },
+  "target_document_id": "jsonfix-missing-piece-base"
+}

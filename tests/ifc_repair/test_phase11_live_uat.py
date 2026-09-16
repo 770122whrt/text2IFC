@@ -3,7 +3,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / "scripts/ifc_repair/run_phase11_live_uat.py"
+SCRIPT = ROOT / "scripts/ifc_repair/uat/run_phase11_live_uat.py"
 
 
 def _module():

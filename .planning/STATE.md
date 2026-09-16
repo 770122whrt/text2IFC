@@ -14,7 +14,19 @@ progress:
 
 # Project State
 
-## 当前整合：清理后分支合入 main（2026-09-13）
+## 当前重构：接入 Zcode 有效实现（2026-09-13）
+
+用户要求的有效重构已接入：生产／基准评估分离（`2d1a18bb`）、独立 Proof 包（`d9a91212`）、25 个 runner 分类并保留旧入口。当前实现作为基线，未覆盖后续修复或冻结合同。评估 211 项通过；Proof 168 项通过、16 项原有失败已用原代码复现；分组新入口／公共链检查及本轮夹具修复已完成，另确认 2 项旧 Window 数据路径失败。完整分段结果与 18 项既有测试债务见[执行记录](../docs/reports/zcode-refactor-adoption-20260913/REPORT.md)。无新 Provider／Full Preflight／main 合并。
+
+## 当前整理：根 archive 已退役（2026-09-13）
+
+按用户批准方向，将 Zcode 原历史合同、恢复清单和 66 份重构代码差异／37 份文档收纳为约 1.85 MiB 轻量包，备份提交 `dbb94668` 已推送。根 archive 的 18 个文件／2,688,981,263 字节和三个空目录已退役；完整旧运行、真实失败、数据快照和镜像仍可从固定 Git/LFS 修订 `d1639232` 恢复，六个远端对象可用性检查通过。现有 Proof 不改写；历史 Prompt 回归通过，C1–C5 人读包核对通过，未调用 Provider 或 Full Preflight。旧镜像不再作为待整包合并任务；保留两项后续结构优化候选，详见[报告](../docs/reports/archive-retirement-20260913/REPORT.md)与[历史入口](../dataset/processed/experiments/zcode-history-20260913/README.md)。main 与其独立工作树未在本轮同步。
+
+## 当前整理：processed 与根目录（2026-09-13）
+
+当前分支已快进到上一轮 main 整合 b4eb7ccf。processed 派生产物集中到 derived，顶层 17→7 个目录；经用户批准删除根目录 composite 模拟输出等 15 个目标。Proof 字节与人工状态不变，50 项聚焦回归通过，无新 Provider／Full Preflight。见[整理报告](../docs/reports/processed-cleanup-20260913/REPORT.md)。
+
+## 最近整合：清理后分支合入 main（2026-09-13）
 
 本次整合基线为 main 5db5e82e 与 codex/workflow-dataset-links 241a5c24。保留 Zcode 已接入代码、C1–C5 Proof 和重构归档，并纳入最新光庭与旧运行目录退役记录。四处索引／导航冲突按条目并集合并，43 项聚焦离线测试通过；没有新 Provider、Full Preflight 或人工状态提升。详见[合并报告](../docs/reports/main-sync-20260912/REPORT.md)。
 

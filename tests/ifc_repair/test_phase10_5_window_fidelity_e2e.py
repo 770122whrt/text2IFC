@@ -25,7 +25,7 @@ MANIFEST = (
     / "dataset/manifests/ifc-repair-cases/"
     "phase10.5-window-fidelity-cases.json"
 )
-RUNNER = ROOT / "scripts/ifc_repair/run_phase10_5_window_fidelity_uat.py"
+RUNNER = ROOT / "scripts/ifc_repair/uat/run_phase10_5_window_fidelity_uat.py"
 
 
 def _sha256(path: Path) -> str:

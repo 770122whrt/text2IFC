@@ -1069,3 +1069,7 @@ __all__ = [
     "TEMPLATE_ID_0_10",
     "generate_repair_intent",
 ]
+
+
+# Public inspection seam shared with the independent Proof auditor.
+unsupported_operations = _unsupported_operations

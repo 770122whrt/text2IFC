@@ -11,7 +11,7 @@ from .validation import validate_document
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_SOURCE_ROOT = ROOT / "dataset" / "processed"
+DEFAULT_SOURCE_ROOT = ROOT / "dataset" / "processed" / "derived"
 DEFAULT_OUTPUT_ROOT = DEFAULT_SOURCE_ROOT / "bim-json-1.0"
 
 SOURCE_FAMILIES = (

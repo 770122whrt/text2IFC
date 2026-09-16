@@ -22,7 +22,7 @@ DEFAULT_GOLD_MANIFEST = (
 )
 DEFAULT_PAIRS_DIR = ROOT / "dataset" / "processed" / "text2json" / "pairs"
 DEFAULT_OUTPUT = (
-    ROOT / "dataset" / "processed" / "phase6" / "training-manifest.json"
+    ROOT / "dataset" / "processed" / "derived" / "phase6" / "training-manifest.json"
 )
 SCHEMA_VERSION = "text2ifc/phase6-training-manifest-v1"
 SPLITS = ("train", "validation", "test")

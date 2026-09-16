@@ -9,7 +9,7 @@ import ifcopenshell.util.unit
 
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPT = ROOT / "scripts/ifc_repair/run_phase11_offline.py"
+SCRIPT = ROOT / "scripts/ifc_repair/offline/run_phase11_offline.py"
 
 
 def _module():

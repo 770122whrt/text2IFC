@@ -1,0 +1,9 @@
+# Retain the historical checkout bytes without rewriting canonical Git blobs.
+** -text
+# These legacy artifacts used CRLF locally and LF in Git before relocation.
+descriptions/*.txt text eol=crlf
+full_dump/*.txt text eol=crlf
+phase4/*.json text eol=crlf
+phase6/*.json text eol=crlf
+roundtrip_json/*.json text eol=crlf
+ifc_parsed_*.json text eol=crlf

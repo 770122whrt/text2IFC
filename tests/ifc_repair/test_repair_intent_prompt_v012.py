@@ -10,7 +10,7 @@ PROMPT_ID = "ifc-repair-intent.v0.12"
 
 def test_zcode_v012_historical_precision_contract_is_preserved() -> None:
     from pathlib import Path
-    rendered = (Path(__file__).resolve().parents[2] / "archive/zcode-local-20260905/published-contracts/ifc-repair-intent-v0.12.md").read_text(encoding="utf-8")
+    rendered = (Path(__file__).resolve().parents[2] / "dataset/processed/experiments/zcode-history-20260913/published-contracts/ifc-repair-intent-v0.12.md").read_text(encoding="utf-8")
 
     for exact in (
         "Geometry constraint tolerance preserves stated precision",

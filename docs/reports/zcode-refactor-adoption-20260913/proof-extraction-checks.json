@@ -1,0 +1,87 @@
+{
+  "baseline": "2d1a18bb",
+  "function_body_parity": {
+    "validate_success_cases": {
+      "matching_function_class_bodies": 103,
+      "ignored_changes": [
+        "relocated imports and import fallback",
+        "public unsupported_operations alias"
+      ]
+    },
+    "audit_door_repair_triplet": {
+      "matching_function_class_bodies": 33,
+      "ignored_changes": [
+        "relocated imports and import fallback",
+        "public unsupported_operations alias"
+      ]
+    }
+  },
+  "live_audit_symbols_exact_ast": 39,
+  "initial_authority_tests": {
+    "passed": 51,
+    "failed": 15,
+    "failures": [
+      {
+        "nodeid": "tests/ifc_repair/test_repair_milestone_r1_proof.py::test_r1_stage15_authority_replay_accepts_pure_window_occurrence",
+        "message": "FileNotFoundError: [Errno 2] No such file or directory: 'E:\\\\code for project\\\\bimnet\\\\dataset\\\\processed\\\\proof\\\\ifc-repair-success-cases\\\\structural\\\\batch\\\\phase12-d7n-beam-column-atomic\\\\damaged.ifc'"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_repair_milestone_r1_proof.py::test_r1_structural_add_predicate_reuses_frozen_beam_column_proof[phase12-vvo-beam-material-present-predicate0]",
+        "message": "FileNotFoundError: Path does not exist: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\single\\phase12-vvo-beam-material-present\\damaged.ifc'."
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_repair_milestone_r1_proof.py::test_r1_structural_add_predicate_reuses_frozen_beam_column_proof[phase12-vvo-column-material-absent-predicate1]",
+        "message": "FileNotFoundError: Path does not exist: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\single\\phase12-vvo-column-material-absent\\damaged.ifc'."
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_repair_milestone_r1_proof.py::test_r1_structural_add_predicate_fails_closed_on_tampered_geometry",
+        "message": "FileNotFoundError: Path does not exist: 'E:\\code for project\\bimnet\\dataset\\processed\\proof\\ifc-repair-success-cases\\structural\\single\\phase12-vvo-beam-material-present\\damaged.ifc'."
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_withdrawn_live_structural_proof_cannot_regain_restoration_acceptance",
+        "message": "AssertionError: assert ['phase12-liv...ING_MISMATCH'] == ['phase12-liv...UCTABLE:beam']\n  \n  At index 0 diff: 'phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH' != 'phase12-live-deepseek-complete: STRUCTURAL_MUTATION_TARGET_NOT_RECONSTRUCTABLE:beam'\n  Use -v to get more diff"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_live_proof_cannot_bypass_underlying_damage_authority[schema_downgrade-l0.structural.live:source_manifest_schema]",
+        "message": "AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']\nassert False\n +  where False = any(<generator object test_live_proof_cannot_bypass_underlying_damage_authority.<locals>.<genexpr> at 0x00000278A6662740>)"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_live_proof_cannot_bypass_underlying_damage_authority[missing_base-l0.structural.live:base_damage_manifest_missing]",
+        "message": "AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']\nassert False\n +  where False = any(<generator object test_live_proof_cannot_bypass_underlying_damage_authority.<locals>.<genexpr> at 0x00000278FDB1D220>)"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_live_proof_cannot_bypass_underlying_damage_authority[base_binding-l0.structural.live:base_damage_binding]",
+        "message": "AssertionError: ['phase12-live-deepseek-complete: l0.structural.live:transcript:LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH']\nassert False\n +  where False = any(<generator object test_live_proof_cannot_bypass_underlying_damage_authority.<locals>.<genexpr> at 0x00000278A6273850>)"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_runs_validator_in_a_separate_process_before_install",
+        "message": "AssertionError: Regex pattern did not match.\n Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'\n Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_installs_only_two_strict_success_cases_after_validation",
+        "message": "ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_resolves_the_latest_timestamped_runner_directory",
+        "message": "ValueError: LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-case-ids]",
+        "message": "AssertionError: Regex pattern did not match.\n Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'\n Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[wrong-count]",
+        "message": "AssertionError: Regex pattern did not match.\n Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'\n Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[not-recomputed]",
+        "message": "AssertionError: Regex pattern did not match.\n Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'\n Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'"
+      },
+      {
+        "nodeid": "tests/ifc_repair/test_phase12_success_cases.py::test_public_curate_rejects_forged_passed_validator_summary_without_install[legacy]",
+        "message": "AssertionError: Regex pattern did not match.\n Regex: 'LIVE_CANDIDATE_VALIDATION_FAILED'\n Input: 'LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH'"
+      }
+    ]
+  },
+  "identical_original_and_extracted_audit_fixture_error": "LIVE_ATTEMPT_PROFILE_ROUTING_MISMATCH"
+}

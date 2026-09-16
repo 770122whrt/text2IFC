@@ -1,28 +1,19 @@
-# Processed dataset 与 Proof
+# Processed：成品、实验、数据与运行基线
 
-| 目录 | 当前用途 | 处理原则 |
+优先从 [Proof](proof/README.md) 查看请求、IFC 和人工状态；从 [experiments](experiments/README.md) 查看实验、失败归因与 token 账本。
+
+| 目录 | 用途 | 当前处理原则 |
 |---|---|---|
-| [proof/](proof/README.md) | generation / repair 自包含案例与冻结证据 | 从 workflow → Phase → collection 阅读；状态写在索引中 |
-| [experiments/](experiments/README.md) | 已结束的实验、失败归因、原始响应、账本和一次性脚本 | 通过归档索引查旧路径；不自动提升人工或机器状态 |
-| ifc-repair-runs/ | 当前 Plan07 测试和运行器所需的来源基线 | 已结束的 Phase12／R1 运行见 experiments 中的 Phase 历史 |
-| ifc-repair/ | 仍有消费者的 Repair 案例、离线源及权限隔离材料 | 已结束的 Phase9–12 开发记录按路径映射归档 |
-| agent-demo/ | 当前 few-shot、回归夹具、旧验证器输入和运行输出位置 | 已结束的无依赖历史运行归档至 experiments |
-| bim-json-1.0/、bim-json-2.0/、full_dump/、roundtrip_ifc/、roundtrip_json/ | 提取、版本合同及回转派生产物 | 按实际消费者判断，不按版本名删除 |
-| descriptions/、text2json/、phase4/、phase6/ | 历史数据构建和训练／评估产物 | 保留 split、来源和实验边界 |
-| review/ | 数据审查产物 | 不自动提升为正式训练数据 |
-| ifc-presentation-validation/ | 新展示验证的工作区 | 已结束的光庭、A/B、三层及语义外观等工作区归档至 Proof／experiments；实际退役见整理记录 |
-| jsonfix/、ifc_parsed_data.json、ifc_parsed_enhanced.json | 既有修复／解析材料 | 未确认废弃前保留 |
+| [proof/](proof/README.md) | Generation／Repair 成品及完整冻结证据 | 保持 workflow → Phase → collection；人工与机器状态分别记录 |
+| [experiments/](experiments/README.md) | 已结束实验、诊断及原始运行记录 | 既有档案不反复搬迁；通过原路径映射查找 |
+| [derived/](derived/README.md) | 提取／描述、BIM JSON 转换、回转结果、Phase 4／6 派生清单 | 统一派生产物位置；原文件内容及历史来源字段保留 |
+| [text2json/](text2json/README.md) | 当前文本训练／评估数据、Gold、配对与 sidecar | 仍有直接消费者；不改变 split、授权和公私边界 |
+| agent-demo/ | Generation few-shot、公共离线夹具及运行工作区 | 当前代码仍使用；新展示工作区统一放 [presentation/](agent-demo/presentation/README.md) |
+| [ifc-repair/](ifc-repair/README.md) | Repair 案例、离线输入和权限隔离材料 | 活动消费者与权限不明项保留；不按名称删除 |
+| ifc-repair-runs/ | Plan07 当前测试／运行器需要的源基线 | 保留当前依赖；历史运行见 experiments |
 
-重点入口：[Plan 07 已通过矩阵](proof/repair/phase12/plan07-v2/REPORT.md)、[R1](proof/repair/phase12.1/r1/REPORT.md)、[generation](proof/generation/README.md)。
+2026-09-13 已将原 8 个数据目录及两份解析 JSON 归入 `derived/`，旧 `jsonfix/` 完整收纳到 experiments，原展示目录归入 agent-demo；空 review 退役。顶层由 17 个目录与 2 份散落数据文件缩为 7 个用途目录。
 
-pytest 临时目录只有确认不再使用、未跟踪且可重建后才能清理。依赖缓存、下载数据与 genuine attempts 不按 tmp / failed / staging 名称判定垃圾。
+[本轮整理报告](../../docs/reports/processed-cleanup-20260913/REPORT.md) · [旧路径至新路径](../manifests/processed-layout-20260913.json) · [此前 Phase 运行退役](../../docs/reports/development-cleanup-20260912/REPORT.md)
 
-[Proof 展示规范](../../docs/validation/ifc-repair-proof-format.md)
-
-新增 [材质与外观修复案例](proof/repair/phase12/presentation-cases/REPORT.md)：3 个运行 PASS，人工待审。来源进程的已结束工作目录按 [路径映射](experiments/development-retirement-20260912.json) 退役，状态不变。
-
-2026-09-12：[光庭两版成品](proof/generation/phase6.6/courtyard-library-20260912/README.md)已集中收纳，最新第二版人工已验收。[实验入口](experiments/README.md)提供失败归因；原运行目录及一次性调试脚本的处理见 [整理记录](../../docs/reports/courtyard-proof-closeout-20260912/REPORT.md)。通用回归留在tests，生产代码不依赖归档运行器。
-
-其他已结束案例与开发临时目录的追加清理见 [执行报告](../../docs/reports/development-cleanup-20260912/REPORT.md)。
-
-更早的 [Phase 6、9–12 历史](experiments/phase-history-20260912/README.md) 已压缩收纳，包括真实失败和原始响应。目录是否已删除以执行报告为准；旧路径通过归档 manifest 查找，历史验收状态不变。
+历史 manifest／报告中的路径是当时记录，以迁移映射解释；没有重新生成已验收 IFC、原始响应或历史数据。新运行必须使用新目录及当前准入，不能从归档中直接延续真实调用。

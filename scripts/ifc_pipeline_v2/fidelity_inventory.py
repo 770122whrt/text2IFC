@@ -16,7 +16,7 @@ from text2ifc_fidelity import build_fidelity_inventory  # noqa: E402
 
 DEFAULT_MANIFEST = ROOT / "dataset" / "manifests" / "bimnet-ifc2x3.jsonl"
 DEFAULT_SPLITS = ROOT / "dataset" / "splits" / "bimnet-scene-splits.json"
-DEFAULT_OUTPUT = ROOT / "dataset" / "processed" / "phase4" / "fidelity-inventory.json"
+DEFAULT_OUTPUT = ROOT / "dataset" / "processed" / "derived" / "phase4" / "fidelity-inventory.json"
 
 
 def main() -> int:

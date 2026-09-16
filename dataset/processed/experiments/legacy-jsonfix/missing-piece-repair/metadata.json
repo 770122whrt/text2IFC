@@ -1,0 +1,96 @@
+{
+  "case_id": "missing-piece-repair",
+  "expected_facts": {
+    "added_entity_ids": [
+      "wall-west"
+    ],
+    "patch_operation_count": 1,
+    "unchanged_entity_ids": [
+      "project-1",
+      "site-1",
+      "building-1",
+      "storey-1",
+      "space-1",
+      "wall-south",
+      "wall-north",
+      "wall-east"
+    ]
+  },
+  "quality": {
+    "case_id": "missing-piece-repair",
+    "tolerance": 0.05,
+    "units": "METRE",
+    "walls": {
+      "wall-east": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            5.9,
+            6.1
+          ],
+          "y": [
+            0.0,
+            4.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        }
+      },
+      "wall-north": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            6.0
+          ],
+          "y": [
+            3.9,
+            4.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        }
+      },
+      "wall-south": {
+        "axis": "x",
+        "bbox": {
+          "x": [
+            0.0,
+            6.0
+          ],
+          "y": [
+            -0.1,
+            0.1
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        }
+      },
+      "wall-west": {
+        "axis": "y",
+        "bbox": {
+          "x": [
+            -0.1,
+            0.1
+          ],
+          "y": [
+            0.0,
+            4.0
+          ],
+          "z": [
+            0.0,
+            3.0
+          ]
+        }
+      }
+    }
+  },
+  "schema_version": "text2ifc/jsonfix-repair-case-v1",
+  "target_ifc_schema": "IFC2X3"
+}

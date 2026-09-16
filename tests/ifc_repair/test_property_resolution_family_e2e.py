@@ -61,8 +61,8 @@ def test_repair_api_rejects_alias_bearing_property_resolver(tmp_path: Path) -> N
 
 def test_active_phase12_entrypoints_do_not_reference_legacy_alias_factory() -> None:
     active_paths = (
-        PROJECT_ROOT / "scripts/ifc_repair/run_phase12_live_uat.py",
-        PROJECT_ROOT / "scripts/ifc_repair/run_phase12_public_structural_repair.py",
+        PROJECT_ROOT / "scripts/ifc_repair/uat/run_phase12_live_uat.py",
+        PROJECT_ROOT / "scripts/ifc_repair/offline/run_phase12_public_structural_repair.py",
         PROJECT_ROOT / "scripts/ifc_repair/validate_success_cases.py",
     )
 
