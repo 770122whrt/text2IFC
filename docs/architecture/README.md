@@ -20,6 +20,8 @@
 
 ## 专题设计与决策
 
+- [IFC2Text：从建筑模型到可重建的设计说明](bim2text-bidirectional-bridge-research.md)：楼层—房间—构件的解析与描述、程序化往返比较，以及空间推导与描述策略的迭代学习；复用现有 text2IFC，第一阶段开发中，真实往返尚未完成；操作、变更和验证见[实施记录](../reports/ifc2text-phase1-implementation-2026-09-16.md)。
+
 - [两层光庭阅读馆设计](courtyard-library-design.md)：露天光庭与二层回廊已确认；按用户委托确定布局与材料，覆盖适用的已有能力，区分栏杆现有表达与扩展范围。
 
 - [Repair 与 Generation 的 Type、材质、属性和外观计划](semantic-appearance-plan.md)

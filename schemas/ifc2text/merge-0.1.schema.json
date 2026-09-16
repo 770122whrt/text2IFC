@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc2text-merge/0.1",
+  "title": "IFC2Text Merge 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "section_order", "transition_text", "limitations", "blocked_sections"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc2text-merge/0.1"},
+    "section_order": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "transition_text": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["before_section_id", "text"],
+        "properties": {
+          "before_section_id": {"type": "string"},
+          "text": {"type": "string"}
+        }
+      }
+    },
+    "limitations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "blocked_sections": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

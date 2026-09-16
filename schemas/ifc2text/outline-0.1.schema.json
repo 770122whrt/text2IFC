@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc2text-outline/0.1",
+  "title": "IFC2Text Outline 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "structure", "sections", "unresolved_fact_refs"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc2text-outline/0.1"},
+    "structure": {"const": "total-part-total"},
+    "sections": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["section_id", "kind", "title", "storey", "allowed_fact_refs", "required_fact_refs", "primary_owned_fact_refs", "required_limitations"],
+        "properties": {
+          "section_id": {"type": "string", "minLength": 1},
+          "kind": {
+            "enum": [
+              "opening_overview",
+              "storey_overview",
+              "spaces",
+              "walls",
+              "fillings",
+              "cross_storey",
+              "limitations",
+              "closing_summary"
+            ]
+          },
+          "title": {"type": "string", "minLength": 1},
+          "storey": {"type": ["string", "null"]},
+          "allowed_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "required_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "primary_owned_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+          "required_limitations": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+        }
+      }
+    },
+    "unresolved_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}

@@ -2734,6 +2734,71 @@
         "unselected_profile",
         "unregistered_operation"
       ]
+    },
+    {
+      "template_id": "ifc2text-outline.v0.1",
+      "role": "ifc2text_outline",
+      "mode": "plan_sections",
+      "path": "prompts/agent/ifc2text/ifc2text-outline-v0.1.md",
+      "sha256": "sha256:04cb4c27d23b2785d11d1c8f4475a9ecbcfaeb920496067eba85107a31105160",
+      "required_inputs": [
+        "BUILDING_FACTS",
+        "FACT_INDEX",
+        "EXTRACTION_ISSUES",
+        "OUTLINE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "invented_building_fact"
+      ]
+    },
+    {
+      "template_id": "ifc2text-section-writer.v0.1",
+      "role": "ifc2text_section_writer",
+      "mode": "write_bounded_section",
+      "path": "prompts/agent/ifc2text/ifc2text-section-writer-v0.1.md",
+      "sha256": "sha256:31a8bdd7e96e934c21c014b3f20a663bba540e91755dbd12d089368f31667964",
+      "required_inputs": [
+        "SECTION_PLAN",
+        "SECTION_FACTS",
+        "WRITING_CONTEXT",
+        "SECTION_LIMITATIONS",
+        "SECTION_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "fact_outside_allowed_fact_refs"
+      ]
+    },
+    {
+      "template_id": "ifc2text-merge.v0.1",
+      "role": "ifc2text_merge",
+      "mode": "order_without_body_rewrite",
+      "path": "prompts/agent/ifc2text/ifc2text-merge-v0.1.md",
+      "sha256": "sha256:790d7c441c806644bd1a31448b4ea7448406e7b3eb41ed6d308b58fc1b8af721",
+      "required_inputs": [
+        "OUTLINE",
+        "SECTION_RESULTS",
+        "GLOBAL_FACTS_AND_LIMITATIONS",
+        "MERGE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "rewritten_section_body",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "invented_building_fact"
+      ]
     }
   ]
 }

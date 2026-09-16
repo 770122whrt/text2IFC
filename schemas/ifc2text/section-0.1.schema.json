@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc2text-section/0.1",
+  "title": "IFC2Text Section 0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "section_id", "text", "used_fact_refs", "omitted_required_fact_refs", "unresolved_fact_refs"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc2text-section/0.1"},
+    "section_id": {"type": "string", "minLength": 1},
+    "text": {"type": "string"},
+    "used_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "omitted_required_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+    "unresolved_fact_refs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  }
+}
