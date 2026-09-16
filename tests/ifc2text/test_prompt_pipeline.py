@@ -142,7 +142,7 @@ def test_fact_index_excludes_source_identity_and_merge_cannot_rewrite_section_bo
     rendered = json.dumps(index, ensure_ascii=False)
     assert "secret-guid" not in rendered
     assert "another-secret" not in rendered
-    assert any(record["fact_ref"] == "W001" for record in index["records"])
+    assert any(record["fact_ref"] == "S01:W001" for record in index["records"])
 
     outline = {
         "sections": [

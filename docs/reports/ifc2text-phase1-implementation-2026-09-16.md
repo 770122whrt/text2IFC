@@ -389,3 +389,25 @@ IFC2Text 版本号独立于 Generation `design-brief.v2.x`、`bim-json-generator
 Merge 合同最终以实际 Schema 为准：结尾总结是独立 section，Merge 不另造 `closing_summary` 正文；上文早期字段说明是历史设计过程。
 
 已获得本轮 LLM 调用授权；执行前仍完成适用离线链路、记录模型/版本/预算上限并先提交代码。授权不等于已执行。Dataset、其他任务文档、临时目录、凭据和旧实验不纳入本任务提交。
+
+## 11. 第二实现点：版本化 LLM 写作运行器
+
+在首个基线提交之后，新增 `src/text2ifc_ifc2text/llm_pipeline.py`，把已经登记的三个 Prompt 真正接成可执行链路：
+
+```text
+prompt-safe fact index
+→ Outline Provider call
+→ deterministic outline contract validation
+→ bounded Section Provider calls
+→ deterministic section contract validation
+→ Merge Provider call
+→ deterministic merge validation
+→ assemble_sectioned_description
+→ design-description-llm.md
+```
+
+每次调用保留 renderer input、rendered prompt、raw response、parsed response、validation、metrics、provider evidence 和 prompt trace。Prompt-safe fact index 不包含 source path 或 source GlobalId；楼层内构件 fact ref 改为带楼层命名空间的形式，例如 `S01:W001`，避免不同楼层的 `G01` 等局部标签发生冲突。
+
+运行器同时增加确定性 fail-closed：Outline 不得引用未知 fact；required / primary refs 必须属于 allowed refs；每个主要建筑事实必须被 section 覆盖或明确 unresolved；Section 不得静默遗漏 required fact；Merge 必须对所有计划 section 做 ordered/blocked 完整记账，且不能把有 required omission 的 section 放入正文。
+
+新增 `tests/ifc2text/test_llm_pipeline.py`。当前离线写作链测试 14 项通过，覆盖完整 text 产出、非法 JSON、未知 fact ref、required fact 静默遗漏、Merge 丢 section，以及 source identity 不进入 prompt。另运行现有 Prompt registry 与 `run_ready_session_to_ifc` 成功公共路径 12 项通过，确认现有 Generation fake seam 未被本次实现破坏。两组均为 zero-network scoped validation，尚不是 Stage Admission；下一步先提交并推送这版代码，再基于该固定 commit 生成正式 admission。

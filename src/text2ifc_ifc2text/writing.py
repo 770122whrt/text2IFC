@@ -48,7 +48,7 @@ def build_fact_index(facts: dict[str, Any]) -> dict[str, Any]:
                     for key, value in item.items()
                     if key not in {"source_global_id", "host_global_id", "opening_global_id", "filling_global_id"}
                 }
-                record["fact_ref"] = str(item["label"])
+                record["fact_ref"] = f"{storey_ref}:{item['label']}"
                 record["kind"] = kind
                 record["storey"] = storey_ref
                 records.append(record)
