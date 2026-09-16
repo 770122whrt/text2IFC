@@ -28,6 +28,11 @@ Production/private L1/L2 与 occurrence fidelity，且没有 synthetic fallback�
   - 验证分为 scoped validation、阶段首次进入/失效后的 Stage Preflight，以及需要用户明确批准的 Full / repository-wide preflight。
   - 真实 LLM 调用前必须已有当前 stage 的有效 Admission；缺失或失效时 fail-closed，不能自动用 Full Preflight 兜底。
 
+## IFC2Text
+
+- [IFC2Text Validation](ifc2text/README.md)
+  - Phase 1 版本化写作 stage、Truth Boundary、Provider seam 与公共 Generation bridge 的离线 Stage Admission；真实 Provider 与真实往返结果单独记录。
+
 ## IFC2X3 Local ChangeSet
 
 - [主题索引与运行入口](ifc2x3-changeset/README.md)
