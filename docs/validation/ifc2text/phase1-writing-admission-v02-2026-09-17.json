@@ -1,0 +1,123 @@
+{
+  "schema_version": "text2ifc/ifc2text-stage-admission/0.1",
+  "stage": "ifc2text_phase1_writing_and_public_generation_bridge",
+  "admission_revision": "v0.2",
+  "status": "admitted_offline",
+  "created_date": "2026-09-17",
+  "branch": "codex/bim2text-research",
+  "code_commit": "c7f29a7080229a2c9d9a31e3a3fe11ece6588aa9",
+  "remote_ref": "origin/codex/bim2text-research",
+  "remote_commit_verified": "c7f29a7080229a2c9d9a31e3a3fe11ece6588aa9",
+  "supersedes_for_current_execution": "phase1-writing-admission-2026-09-17.json",
+  "reason_for_readmission": [
+    "first real hxp writing attempt exposed one 34-wall section and finish_reason=length",
+    "ifc2text-outline.v0.2 added bounded primary-fact section planning without modifying v0.1",
+    "deterministic MAX_PRIMARY_FACTS_PER_SECTION=12 added",
+    "OpenAICompatError evidence is now persisted by the IFC2Text stage runner"
+  ],
+  "environment": {
+    "python": "3.12.4",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "ifcopenshell": "0.8.5",
+    "shapely": "2.1.2"
+  },
+  "active_prompt_versions": {
+    "outline": "ifc2text-outline.v0.2",
+    "section": "ifc2text-section-writer.v0.1",
+    "merge": "ifc2text-merge.v0.1"
+  },
+  "writing_bounds": {
+    "max_sections": 24,
+    "max_primary_owned_fact_refs_per_section": 12
+  },
+  "scope": [
+    "deterministic IFC2Text facts and prompt-safe fact projection",
+    "bounded ifc2text-outline.v0.2 planning",
+    "ifc2text-section-writer.v0.1",
+    "ifc2text-merge.v0.1",
+    "outline/section/merge JSON schema validation and deterministic semantic guards",
+    "24-section and 12-primary-fact deterministic writing guards",
+    "OpenAICompatError failure evidence persistence",
+    "deterministic section assembly without merge-stage body rewrite",
+    "truth boundary excluding source IFC path and source GlobalIds from writing prompts",
+    "OpenAI-compatible Provider adapter seams used by IFC2Text writing",
+    "exact generated text entering run_design_brief_clarification_loop and run_ready_session_to_ifc",
+    "offline public Generation bridge through compile, reopen and final acceptance with frozen Provider fixtures"
+  ],
+  "commands": [
+    {
+      "kind": "stage_preflight_scoped_pytest",
+      "command": "./.venv/Scripts/python.exe -m pytest tests/ifc2text tests/agent/test_prompt_registry.py tests/agent/test_interactive_cli_generation.py::test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts tests/agent/test_phase6_2_openai_compat.py::test_openai_compatible_live_provider_returns_live_provider_result tests/agent/test_phase6_2_openai_compat.py::test_parse_chat_completion_blocks_length_finish_reason tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_rejects_prompt_over_input_budget_before_call tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_wraps_connection_failure_without_secrets tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_retries_transient_connection_then_succeeds -q --basetemp=.pytest-tmp-ifc2text-admission-c7f29a70 -p no:cacheprovider",
+      "exit_code": 0,
+      "result": "35 passed in 60.89s",
+      "passed": 35,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "kind": "compileall",
+      "command": "./.venv/Scripts/python.exe -m compileall -q src/text2ifc_ifc2text tests/ifc2text",
+      "exit_code": 0
+    },
+    {
+      "kind": "remote_commit_verification",
+      "command": "git ls-remote --heads origin refs/heads/codex/bim2text-research",
+      "exit_code": 0,
+      "result": "remote branch matches code_commit"
+    }
+  ],
+  "new_failure_guards_since_previous_admission": [
+    "outline with more than 12 primary owned facts in one section fails before section Provider calls",
+    "OpenAI-compatible truncation/transport error is written to IFC2Text failure.json with redacted evidence"
+  ],
+  "previous_live_failure": {
+    "run": "dataset/processed/experiments/ifc2text-phase1-20260917/hxp-live-writing-v01",
+    "prompt_version": "ifc2text-outline.v0.1",
+    "status": "failed_preserved",
+    "failure_stage": "section:s01-walls",
+    "failure_class": "truncated",
+    "finish_reason": "length",
+    "primary_fact_count_in_failed_section": 34,
+    "attempt_count": 5,
+    "tokens_charged_total": 53132,
+    "role": "revealed development/regression case; not blind improvement evidence"
+  },
+  "public_bridge_evidence": {
+    "test": "tests/ifc2text/test_offline_public_bridge.py",
+    "terminal_status": "compiled",
+    "network_transport_attempted": false
+  },
+  "truth_boundary": {
+    "writing_prompt_receives_source_ifc": false,
+    "writing_prompt_receives_source_path": false,
+    "writing_prompt_receives_source_global_ids": false,
+    "reconstruction_input_is_design_description_only": true
+  },
+  "network_transport_attempted": false,
+  "full_preflight_run": false,
+  "worktree": {
+    "task_code_at_code_commit": "committed_and_pushed",
+    "unrelated_preexisting_dirty_changes_preserved": true,
+    "unrelated_changes_used_as_admission_evidence": false
+  },
+  "invalidated_by": [
+    "change to any active IFC2Text Prompt bytes or registry identity",
+    "change to schemas/ifc2text contracts",
+    "change to writing section-count or primary-fact bounds",
+    "change to src/text2ifc_ifc2text/llm_pipeline.py writing-stage behavior",
+    "change to prompt-safe fact truth boundary",
+    "change to deterministic merge assembly contract",
+    "change to OpenAI-compatible Provider transport contract used by this stage",
+    "change to reconstruct_description_with_public_text2ifc public bridge behavior",
+    "change to current Design Brief or run_ready_session_to_ifc contract relevant to this path",
+    "change to Generation budget, compile/reopen or final publication contract relevant to this path"
+  ],
+  "allowed_claim": "offline Stage Admission v0.2 for bounded IFC2Text Phase 1 writing and the public Generation bridge",
+  "not_proven": [
+    "successful second real Provider attempt",
+    "real source IFC to reconstructed IFC roundtrip success",
+    "system capability improvement",
+    "room-inference semantic correctness",
+    "general reconstruction fidelity"
+  ]
+}
