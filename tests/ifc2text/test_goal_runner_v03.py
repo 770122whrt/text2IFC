@@ -31,3 +31,22 @@ def test_prepare_public_command_counts_all_described_classes(tmp_path, monkeypat
     assert manifest['direct_ifc_counts']['coverings'] == 1
     assert manifest['source_unchanged'] is True
     assert source.read_bytes() == before
+
+
+def test_offline_guard_allows_stdlib_socketpair_but_blocks_client_connections():
+    import socket
+    import pytest
+    guard = load_script('validate_goal').OfflineRecorder()
+    with guard.network_guard():
+        left, right = socket.socketpair()
+        try:
+            left.send(b'x')
+            assert right.recv(1) == b'x'
+        finally:
+            left.close()
+            right.close()
+        assert guard.network_attempts == 0
+        with socket.socket() as client:
+            with pytest.raises(RuntimeError, match='NETWORK_FORBIDDEN'):
+                client.connect(('127.0.0.1', 12345))
+        assert guard.network_attempts == 1

@@ -39,6 +39,35 @@ class OfflineRecorder:
         self.network_attempts += 1
         raise RuntimeError('NETWORK_FORBIDDEN_DURING_OFFLINE_ADMISSION')
 
+    @contextlib.contextmanager
+    def network_guard(self):
+        # CPython's Windows socketpair uses a loopback connection for an asyncio
+        # wakeup pair. Allow only that standard-library construction, not clients.
+        from contextvars import ContextVar
+        import pytest
+        inside_pair = ContextVar('ifc2text_local_socketpair', default=False)
+        original_connect = socket.socket.connect
+        original_pair = socket.socketpair
+
+        def connect(sock, address):
+            if inside_pair.get() and isinstance(address, tuple) and address[0] in ('127.0.0.1', '::1'):
+                return original_connect(sock, address)
+            return self.deny(address)
+
+        def pair(*args, **kwargs):
+            token = inside_pair.set(True)
+            try:
+                return original_pair(*args, **kwargs)
+            finally:
+                inside_pair.reset(token)
+
+        with pytest.MonkeyPatch.context() as patch:
+            patch.setattr(socket.socket, 'connect', connect)
+            patch.setattr(socket.socket, 'connect_ex', self.deny)
+            patch.setattr(socket, 'create_connection', self.deny)
+            patch.setattr(socket, 'socketpair', pair)
+            yield
+
     def pytest_runtest_logreport(self, report):
         if report.when == 'call':
             self.counts[report.outcome] += 1
@@ -61,18 +90,22 @@ def main():
     commit = git('rev-parse', 'HEAD')
     if git('status', '--porcelain', '--untracked-files=all', '--', *SCOPE):
         raise RuntimeError('COMMIT_EXECUTION_SCOPE_BEFORE_ADMISSION')
-    root = ROOT / cfg['output'] / 'validation'
-    root.mkdir(parents=True, exist_ok=False)
-    _write_json(root.parent / 'config.json', cfg)
+    base = ROOT / cfg['output'] / 'validation'
+    base.mkdir(parents=True, exist_ok=True)
+    if (base / 'admission.json').exists():
+        previous = load(base / 'admission.json')
+        archived = base / ('admission-' + previous['code_commit'][:12] + '.json')
+        if not archived.exists():
+            _write_json(archived, previous)
+    root = base / ('check-' + commit[:12])
+    root.mkdir(exist_ok=False)
+    _write_json(base.parent / 'config.json', cfg)
     temp = root / 'pytest-temp'
     command = [*TARGETS, '-q', '--basetemp=' + str(temp), '-p', 'no:cacheprovider']
     observer = OfflineRecorder()
     stream = io.StringIO()
     start = datetime.now(timezone.utc).isoformat()
-    with pytest.MonkeyPatch.context() as patch:
-        patch.setattr(socket.socket, 'connect', observer.deny)
-        patch.setattr(socket.socket, 'connect_ex', observer.deny)
-        patch.setattr(socket, 'create_connection', observer.deny)
+    with observer.network_guard():
         with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
             exit_code = int(pytest.main(command, plugins=[observer]))
     log = stream.getvalue()
@@ -92,7 +125,7 @@ def main():
         'ifcopenshell': ifcopenshell.version, 'shapely': shapely.__version__,
         'command': ['python', '-m', 'pytest', *command], 'exit_code': exit_code,
         'tests': observer.counts, 'setup_errors': observer.setup_errors,
-        'nodeids': observer.nodeids, 'log_path': 'pytest.log',
+        'nodeids': observer.nodeids, 'log_path': (root.relative_to(base) / 'pytest.log').as_posix(),
         'log_sha256': hashlib.sha256(log.encode('utf-8')).hexdigest(),
         'compileall': compiled, 'execution_scope_clean': clean,
         'network_transport_attempted': bool(observer.network_attempts),
@@ -106,6 +139,7 @@ def main():
                         'real-world reconstruction may ask for clarification or reject unsupported facts'],
     }
     _write_json(root / 'admission.json', record)
+    _write_json(base / 'admission.json', record)
     print(json.dumps({k: record[k] for k in ['status', 'code_commit', 'tests', 'network_transport_attempted', 'compileall']}, indent=2))
     print(log[-1800:])
     return 0 if valid else 1
