@@ -436,3 +436,37 @@ prompt-safe fact index
 按照已运行 Prompt 不原地修改的规则，保留 `ifc2text-outline.v0.1`，新增 `ifc2text-outline.v0.2`。v0.2 要求每个 section 的 `primary_owned_fact_refs` 最多 12 个，高基数墙、开口、门窗或空间必须分块；确定性 validator 同时执行 `MAX_PRIMARY_FACTS_PER_SECTION = 12`，不能仅信 Prompt 自律。`_run_stage` 也扩展为捕获 `OpenAICompatError` 并保存脱敏 evidence 到 `failure.json`。
 
 对应离线测试新增“13 个 primary facts 阻断”和“OpenAI-compatible failure evidence 落盘”，并将默认 Outline 切换到 v0.2。IFC2Text 全套与 Prompt registry 聚焦回归为 29 passed，`compileall` 通过。因为 Prompt 和 stage 行为发生变化，2026-09-17 早先针对 `a333f68b` 的 Admission 按其 invalidation contract 失效；v0.2 在提交后必须重新执行 Stage Admission，再允许第二次真实尝试。
+
+## 14. 现场进度复核、第二次真实失败与正文审查（2026-09-17）
+
+本次汇报前重新读取工作区、提交历史、远端分支以及两次实验产物。核验时本地最新提交为 `47930e96`（v0.2 准入记录），远端 `refs/heads/codex/bim2text-research` 为 `47930e96e1cb610c8bb675a3f67824722f4ab5dd`；功能代码基线为 `c7f29a7080229a2c9d9a31e3a3fe11ece6588aa9`。其他 Dataset 与文档改动仍留在原工作树，没有纳入 IFC2Text 提交。
+
+### 14.1 当前已发生的验证与实验
+
+`docs/validation/ifc2text/phase1-writing-admission-v02-2026-09-17.json` 已记录针对 `c7f29a70` 的 35 passed、0 failed、0 skipped 和 compileall 通过。本次汇报复核的是这份既有记录，没有把它表述为本轮重新执行的测试，也不据此宣称所有建筑信息都已验证。
+
+第二次真实运行目录为 `dataset/processed/experiments/ifc2text-phase1-20260917/hxp-live-writing-v02/`。其 `outline/failure.json` 明确记录 `failure_class=truncated`、`finish_reason=length`、`parse_eligible=false`。这次停在 Outline，未产生通过验证的完整提纲，没有进入 Section、Merge 或 text2IFC 重建。失败响应已保存，不能作为已接受提纲使用。配置请求名与响应实际 model 字段也应分别留档；该响应 model 字段为 `deepseek-flash`。
+
+两次写作预算账本分别记账 5 次 / 53132 tokens 与 1 次 / 26099 tokens，合计 6 次 / 79231 tokens。这是账本 token 统计，不是货币费用，也不等同于经过独立核对的底层 HTTP 重试数。本轮汇报与文档更新没有新增 LLM 调用。
+
+v0.1 的截断发生在 34 墙的长正文，v0.2 的截断发生在拆分后的提纲。可确认的是两次输出未完整结束；“只限制每段构件数就能解决截断”尚未成立。下一轮需要分别核对 Outline 的重复引用开销、请求输出上限及响应 usage，而不是继续不加区分地重试。
+
+### 14.2 现有文本的可用程度
+
+固定模板说明已存在于 `dataset/processed/experiments/ifc2text-phase1-20260916/` 下的各样本目录。它们是确定性基线，不是 LLM 写作成功证据。
+
+v0.1 已完成三个真实 LLM 段落，保存在 `hxp-live-writing-v01/sections/01-overview/`、`02-s01-overview/` 和 `03-s01-spaces/`。尚无完整 `design-description-llm.md`。本次阅读 `03-s01-spaces/parsed-response.json` 后发现：
+
+- 正文把当前根据包围盒中点计算的 `centroid_mm` 称为“形心”。本阶段没有证明它是实体或空间的真实形心，应改为“包围盒中心”。
+- 正文将未传入当前事实表示的边界、用途、面积等说成“源模型未提供”或“全部可确定信息”。本次抽取结果的缺项不能证明完整源 IFC 不含这些信息，应改为“本次抽取未确认”。
+- `omitted_required_fact_refs=[]` 只能证明模型自报没有遗漏，不能独立证明上述自然语言结论正确；包围盒也不能替代房间真实轮廓或据其区间交叠直接判房间冲突。
+
+这些段落仅供阅读与诊断，暂不作为已核验的重建输入。原始响应保持不变；后续修正文案通过新 Prompt 版本及新运行记录体现。
+
+### 14.3 未完成项与下一批执行范围
+
+当前未完成：完整真实 LLM 说明、该说明驱动的真实 Generation、重建 IFC 的逐构件 Compare、可用的四阶段误差归因，以及第二栋独立建筑上的验证。Compare 仍是需要补负例与未评估项记账的诊断原型；当前提取还不足以保证复杂房间轮廓、楼梯细节和所有共享/跨层关系可重建。
+
+下一批建议仍只处理 `hxp.ifc`：先离线修复正文证据口径和提纲/分段输出控制，冻结并提交代码、Prompt 与运行配置；完成变更范围所需的验证后，执行一轮新的真实说明，再在内容核对通过时将同一份文本交给现有 Generation。新提纲/正文行为使用新版本，不改写 v0.1/v0.2；本次不启动跨建筑学习、批量重跑或 Full Preflight。
+
+新增付费批次建议单独冻结累计上限：写作最多 26 次、重建最多 12 次、两阶段合计最多 1000000 tokens，均包含失败消耗，不按换运行目录重置；重试必须记账。再次截断、发现事实错误或超额时停止付费并返回离线诊断，不自动增加预算。该额度为本次提出的下一批授权范围，尚未执行。
