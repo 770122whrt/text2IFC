@@ -1,0 +1,88 @@
+{
+  "schema_version": "text2ifc/ifc2text-goal-budget/0.3",
+  "limits": {
+    "writing": 26,
+    "reconstruction": 12,
+    "tokens": 1000000
+  },
+  "historical": {
+    "writing": 6,
+    "tokens": 79231
+  },
+  "halted": true,
+  "halt_reason": "RECONSTRUCTION_FAILED",
+  "attempts": [
+    {
+      "attempt": 1,
+      "stage": "writing",
+      "status": "completed",
+      "charged_tokens": 2873,
+      "reserved_tokens": 15388,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "6d63dbb1-a42b-40f9-aaa5-65424d602cbc",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 5.187
+    },
+    {
+      "attempt": 2,
+      "stage": "writing",
+      "status": "completed",
+      "charged_tokens": 5959,
+      "reserved_tokens": 14802,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "994feb26-89c2-4d19-9316-07625d7d20d5",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 15.093
+    },
+    {
+      "attempt": 3,
+      "stage": "writing",
+      "status": "completed",
+      "charged_tokens": 3255,
+      "reserved_tokens": 15601,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "0bed75a9-97fa-4a43-bfb2-05e0ebe87c10",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 4.281
+    },
+    {
+      "attempt": 4,
+      "stage": "writing",
+      "status": "completed",
+      "charged_tokens": 3273,
+      "reserved_tokens": 16051,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "f8a8c147-09f8-47a0-b23a-f4b45bbd9b00",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 3.593
+    },
+    {
+      "attempt": 5,
+      "stage": "writing",
+      "status": "completed",
+      "charged_tokens": 3694,
+      "reserved_tokens": 15719,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "16076a8e-249c-4ae0-9599-fc5376b84699",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 6.391
+    },
+    {
+      "attempt": 6,
+      "stage": "reconstruction",
+      "status": "failed",
+      "charged_tokens": 68603,
+      "reserved_tokens": 148204,
+      "failure": "UNUSABLE_RESPONSE_length",
+      "usage_known": true,
+      "response_id": "4f19adc2-e457-4a8f-bd30-626ca21c3723",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 145.86
+    }
+  ]
+}
