@@ -60,7 +60,7 @@ def write_compact(*, output, provider, budget=None, template_id=TEMPLATE):
     load = lambda p: json.loads(p.read_text(encoding='utf-8'))
     facts = load(output/'source-facts.json'); context = narrative_context(facts)
     _write_json(output/'writing/attempt.json', {'template':template_id, 'stage':'compact_narration'})
-    schema = narration_schema(context) if template_id == 'ifc2text-compact-narrator.v0.5' else _load_schema('compact-narration-0.4.schema.json')
+    schema = narration_schema(context) if template_id in {'ifc2text-compact-narrator.v0.5', 'ifc2text-compact-narrator.v0.6'} else _load_schema('compact-narration-0.4.schema.json')
     try:
         result = _run_stage(provider=provider, output_dir=output/'writing/narration', stage='compact_narration',
             session_id=output.name+':narration', template_id=template_id,

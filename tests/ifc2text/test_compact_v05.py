@@ -29,6 +29,19 @@ def test_dynamic_schema_pins_ids_not_names_without_translating_them():
         assert list(Draft202012Validator(schema).iter_errors(bad))
 
 
+@pytest.mark.parametrize('explicit,derived,expected', [(0,0,'neither'), (1,0,'explicit_only'), (0,2,'candidates_only'), (1,2,'explicit_and_candidates')])
+def test_space_evidence_states_do_not_infer_candidates_from_warnings(explicit, derived, expected):
+    from text2ifc_ifc2text.compact import narrative_context
+    facts = {'storeys':[{'label':'S09','name':'任意楼层','spaces':[{}]*explicit,'derived_spaces':[{}]*derived}],
+             'issues':[{'code':'SPACE_INFERENCE_INSUFFICIENT_WALLS'}], 'unassigned':{}}
+    ctx = narrative_context(facts)
+    assert ctx['storeys'][0]['space_evidence_state'] == expected
+    assert ctx['storeys'][0]['derived_region_count'] == derived
+    assert 'limitations' not in ctx
+    assert ctx['extraction_issues_present'] is True
+    assert ctx['storeys'][0]['space_observation']
+
+
 def test_prompt_names_and_version_do_not_include_revealed_scene():
     text = render_prompt(template_id='ifc2text-compact-narrator.v0.5',
         inputs={'FACT_SUMMARY': context(), 'OUTPUT_SCHEMA': narration_schema(context())})['text']

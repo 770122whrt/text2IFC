@@ -105,14 +105,24 @@ def table(headers, rows):
 
 def narrative_context(facts):
     catalog,_=material_catalog(facts)
-    return {'storeys':[{'id':s['label'],'name':s.get('name'),
-          'counts':{c:len(s.get(c,[])) for c in CATEGORIES},
-          'derived_region_count':len(s.get('derived_spaces',[])),
-          'boundary_relation_confirmed':any(r.get('boundary_walls') for r in s.get('spaces',[]))}
-          for s in facts['storeys']],
-          'material_descriptions':list(catalog),
-          'limitations':dict(Counter(i['code'] for i in facts.get('issues',[]))),
-          'not_described_classes':facts.get('unrepresented_classes',{})}
+    storeys=[]
+    for s in facts['storeys']:
+        explicit=len(s.get('spaces',[])); derived=len(s.get('derived_spaces',[]))
+        if explicit and derived:
+            state='explicit_and_candidates'; statement='本层同时有源显式空间和几何围合候选，两者必须区分。'
+        elif explicit:
+            state='explicit_only'; statement='本层有源显式空间记录，没有几何围合候选记录。'
+        elif derived:
+            state='candidates_only'; statement='本层只有几何围合候选，没有源显式空间记录；候选不是已核实房间。'
+        else:
+            state='neither'; statement='本次没有显式空间记录，也未形成几何围合候选；直接描述构件。'
+        storeys.append({'id':s['label'],'name':s.get('name'),
+            'counts':{c:len(s.get(c,[])) for c in CATEGORIES},
+            'derived_region_count':derived,'space_evidence_state':state,'space_observation':statement,
+            'boundary_relation_confirmed':any(r.get('boundary_walls') for r in s.get('spaces',[]))})
+    return {'storeys':storeys,'material_descriptions':list(catalog),
+            'extraction_issues_present':bool(facts.get('issues')),
+            'not_described_classes':facts.get('unrepresented_classes',{})}
 
 
 def validate_narration(output, context):
