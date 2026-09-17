@@ -34,8 +34,11 @@ def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--config',default='scripts/ifc2text/compact-campaign-v0.6.json')
     parser.add_argument('--case',default='hxp'); parser.add_argument('--answer-file',required=True)
+    parser.add_argument('--extended',action='store_true')
     args=parser.parse_args(); cfg=load(ROOT/args.config); record=admission(cfg)
-    out=ROOT/cfg['output']/args.case; attempt=out/'reconstruction-64k'
+    out=ROOT/cfg['output']/args.case
+    attempt=out/('reconstruction-128k' if args.extended else 'reconstruction-64k')
+    output_cap=cfg['extended_brief_output_tokens'] if args.extended else cfg['brief_output_tokens']
     prior=load(attempt/'brief-result.json')
     if prior['status']!='needs_clarification': raise GoalStopped('PENDING_CLARIFICATION_REQUIRED')
     text=verify_text(out); session_info=load(attempt/'session.json')
@@ -47,7 +50,7 @@ def main():
     _write_json(marker,{'code_commit':record['code_commit'],'payload':answer_payload,
                        'not_human_verification':True,'prior_brief_result':prior})
     budget=budget_for(cfg)
-    conf,client,_=runtime(cfg,budget,'reconstruction',cfg['brief_output_tokens'])
+    conf,client,_=runtime(cfg,budget,'reconstruction',output_cap)
     from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker,run_design_brief_clarification_loop
     from text2ifc_agent.session_store import SessionStore
     try:
@@ -61,7 +64,7 @@ def main():
                 invoke_design_brief=invoker,user_answers=[answer])
             report={'status':result.status,'session_id':session.session_id,'session_hash':session.session_hash,
                     'same_text_entered_session':True,'restatement_origin':answer_payload['origin'],
-                    'output_cap':cfg['brief_output_tokens'],'budget':budget.snapshot()}
+                    'output_cap':output_cap,'budget':budget.snapshot()}
         _write_json(attempt/'brief-result-after-restatement.json',report)
         _write_json(attempt/'brief-result.json',report)
         print(json.dumps({'status':report['status'],'calls':report['budget']['calls'],
