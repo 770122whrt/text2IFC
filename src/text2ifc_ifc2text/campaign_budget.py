@@ -32,3 +32,21 @@ class CampaignBudget(GoalBudget):
         result['calls']['reconstruction']+=self.historical_reconstruction
         result['historical_reconstruction_calls']=self.historical_reconstruction
         return result
+
+    def resume_after_review(self, *, expected_reason, code_commit, note):
+        """Explicit continuation, preserving every failed attempt and frozen limit."""
+        if not expected_reason or not code_commit or not note:
+            raise GoalStopped('REVIEWED_CONTINUATION_EVIDENCE_REQUIRED')
+        with self._lock():
+            data = self._read()
+            if not data['halted'] or data['halt_reason'] != expected_reason:
+                raise GoalStopped('HALT_REASON_MISMATCH')
+            if any(a['status'] == 'reserved' for a in data['attempts']):
+                raise GoalStopped('UNSETTLED_ATTEMPT_BLOCKS_CONTINUATION')
+            from datetime import datetime, timezone
+            data.setdefault('continuations', []).append({
+                'at': datetime.now(timezone.utc).isoformat(), 'previous_halt': data['halt_reason'],
+                'code_commit': code_commit, 'review_note': note,
+                'attempts_preserved': len(data['attempts'])})
+            data.update(halted=False, halt_reason=None)
+            self._write(data)

@@ -67,7 +67,7 @@ def write(cfg,case):
     cap=conf.max_completion_tokens
     _write_json(out/'runtime-writing.json',{'requested_model':conf.model,'provider':conf.provider_label,
        'code_commit':record['code_commit'],'output_cap':cap,'sdk_retries':0,'provider_retries':0})
-    return write_compact(output=out,provider=provider,budget=budget)
+    return write_compact(output=out,provider=provider,budget=budget,template_id=cfg['writing_template'])
 
 
 def verify_text(out):
@@ -171,7 +171,9 @@ def compare(cfg,case,extended=False):
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('command',choices=['prepare','write','brief','generate','compare','status'])
+    parser.add_argument('command',choices=['prepare','write','brief','generate','compare','status','resume-reviewed'])
+    parser.add_argument('--expected-halt')
+    parser.add_argument('--review-note')
     parser.add_argument('--case',default='hxp'); parser.add_argument('--extended',action='store_true')
     parser.add_argument('--config',default='scripts/ifc2text/compact-campaign-v0.4.json')
     args=parser.parse_args(); cfg=load(ROOT/args.config)
@@ -180,6 +182,11 @@ def main():
     try:
         if args.command=='prepare': result=prepare(cfg)
         elif args.command=='status': result=budget_for(cfg).snapshot()
+        elif args.command=='resume-reviewed':
+            record=admission(cfg)
+            b=budget_for(cfg)
+            b.resume_after_review(expected_reason=args.expected_halt,code_commit=record['code_commit'],note=args.review_note)
+            result={'status':'resumed_after_offline_review','budget':b.snapshot()}
         elif args.command=='write': result=write(cfg,case)
         else: result={'brief':brief,'generate':generate,'compare':compare}[args.command](cfg,case,args.extended)
         print(json.dumps(result,ensure_ascii=False,indent=2)); return 0

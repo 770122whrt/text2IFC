@@ -1,0 +1,30 @@
+{
+  "schema_version": "text2ifc/compact-campaign/0.4",
+  "output": "dataset/processed/experiments/ifc2text-phase1-20260917/compact-campaign-v05",
+  "budget_root": "dataset/processed/experiments/ifc2text-phase1-20260917/compact-campaign-v04/budget",
+  "predecessor_ledger": "dataset/processed/experiments/ifc2text-phase1-20260917/hxp-goal-cumulative-budget/goal-budget.json",
+  "max_total_tokens": 2000000,
+  "max_writing_calls": 26,
+  "max_reconstruction_calls": 12,
+  "cases": [
+    {"id": "hxp", "source": "dataset/external/bimnet/hxp.ifc", "role": "explicit spaces; revealed development case"},
+    {"id": "i5n", "source": "dataset/external/bimnet/i5n.ifc", "role": "multiple levels and decomposed stair"},
+    {"id": "1px", "source": "dataset/external/bimnet/1px.ifc", "role": "no IfcSpace; geometric candidate regions"}
+  ],
+  "writing_template": "ifc2text-compact-narrator.v0.5",
+  "writing_output_tokens": 8192,
+  "brief_output_tokens": 65536,
+  "extended_brief_output_tokens": 131072,
+  "generation_output_tokens": 131072,
+  "provider_input_tokens": 131072,
+  "provider_timeout_seconds": 560,
+  "sdk_retries": 0,
+  "provider_retries": 0,
+  "design_brief_schema": "text2ifc/design-brief/2.7",
+  "generation_strategy": "legacy_full",
+  "position_tolerance_mm": 20,
+  "dimension_tolerance_mm": 20,
+  "coordinate_unit": "mm",
+  "coordinate_decimals": 1,
+  "full_preflight": false
+}
