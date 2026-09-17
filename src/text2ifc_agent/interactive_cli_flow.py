@@ -502,13 +502,16 @@ def run_ready_session_to_ifc(
     progress: Callable[[str, dict[str, Any]], None] | None = None,
     generation_strategy: str = "legacy_full",
     budget_limits: Any = None,
+    generation_feedback: Mapping[str, Any] | None = None,
+    generator_call_index: int = 1,
 ) -> SessionIfcResult:
     """Run the public chain, returning a non-publishing terminal budget result."""
     from .generation_budget import GenerationBudgetExceeded
     try:
         return _run_ready_session_to_ifc(store=store, session=session,
             provider_factory=provider_factory, trace_level=trace_level, progress=progress,
-            generation_strategy=generation_strategy, budget_limits=budget_limits)
+            generation_strategy=generation_strategy, budget_limits=budget_limits,
+            generation_feedback=generation_feedback, generator_call_index=generator_call_index)
     except GenerationBudgetExceeded as error:
         stored = store.get_session(session)
         _write_json(stored.run_dir/'generation-budget-decision.json', {
@@ -547,8 +550,20 @@ def _run_ready_session_to_ifc(
     progress: Callable[[str, dict[str, Any]], None] | None = None,
     generation_strategy: str = "legacy_full",
     budget_limits: Any = None,
+    generation_feedback: Mapping[str, Any] | None = None,
+    generator_call_index: int = 1,
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
+    if generation_feedback is not None and not isinstance(generation_feedback, Mapping):
+        raise ValueError("generation_feedback must be a mapping")
+    if type(generator_call_index) is not int or generator_call_index < 1:
+        raise ValueError("generator_call_index must be a positive integer")
+    generator_options = {}
+    if generation_feedback is not None or generator_call_index != 1:
+        if generation_strategy != "legacy_full":
+            raise ValueError("Explicit initial generation feedback requires legacy_full")
+        generator_options = {"generation_feedback": generation_feedback,
+                             "generator_call_index": generator_call_index}
 
     stored_session = store.get_session(session)
     if stored_session.status != "ready":
@@ -616,6 +631,7 @@ def _run_ready_session_to_ifc(
                 case_id=stored_session.session_hash,
                 session_prefix="phase6.2",
                 trace_level=trace_level,
+                **generator_options,
             )
     except ProviderOutputError as exc:
         error_payload = _record_provider_failure(
