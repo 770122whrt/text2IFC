@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "text2ifc/ifc2text-layout/0.3",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "groups"],
+  "properties": {
+    "schema_version": {"const": "text2ifc/ifc2text-layout/0.3"},
+    "groups": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["block_id", "paragraphs"],
+        "properties": {
+          "block_id": {"type": "string", "pattern": "^B[0-9]+$"},
+          "paragraphs": {
+            "type": "array", "minItems": 1,
+            "items": {"type": "array", "minItems": 1, "uniqueItems": true,
+              "items": {"type": "string", "pattern": "^F[0-9]+$"}}
+          }
+        }
+      }
+    }
+  }
+}
