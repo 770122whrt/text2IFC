@@ -1,0 +1,33 @@
+{
+  "schema_version": "text2ifc/ifc2text-phase1-closeout/0.1",
+  "status": "baseline_complete_with_diagnostic_roundtrip",
+  "texts": {
+    "hxp": 8255,
+    "i5n": 6929,
+    "1px": 12687
+  },
+  "real_roundtrip": {
+    "case": "hxp",
+    "candidate_role": "diagnostic_not_accepted",
+    "compare": {
+      "matched": 66,
+      "missing": 0,
+      "extra": 0,
+      "geometric_deviations": 12,
+      "material_content_differences": 5,
+      "relation_differences": 3
+    }
+  },
+  "budget": {
+    "limit_tokens": 2000000,
+    "used_tokens": 1052352,
+    "remaining_tokens": 947648,
+    "writing_calls": 19,
+    "reconstruction_calls": 7
+  },
+  "claims_not_made": [
+    "whole-building lossless reversibility",
+    "accepted Generation output",
+    "full IFC class coverage"
+  ]
+}

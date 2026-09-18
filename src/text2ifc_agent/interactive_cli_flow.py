@@ -541,6 +541,19 @@ def run_ready_session_to_ifc(
             ifc_path=None, report_path=None)
 
 
+def _feedback_resume_state(run_dir: Path) -> tuple[int, int | None]:
+    """Continue bounded feedback after preserved earlier attempts without reusing an index."""
+    payload = _read_optional_json(Path(run_dir) / "feedback-rounds.json") or {}
+    rounds = payload.get("rounds", []) if isinstance(payload, Mapping) else []
+    valid = [record for record in rounds if isinstance(record, Mapping) and isinstance(record.get("round_index"), int)]
+    if not valid:
+        return 0, None
+    last = max(valid, key=lambda record: int(record["round_index"]))
+    issues = last.get("issues", [])
+    previous_issue_count = len(issues) if isinstance(issues, list) else None
+    return int(last["round_index"]) + 1, previous_issue_count
+
+
 def _run_ready_session_to_ifc(
     *,
     store: SessionStore,
@@ -952,8 +965,8 @@ def _run_ready_session_to_ifc(
             _record_stage_payloads(store, stored_session.session_id, "audit", audit)
             _emit_progress(progress, "audit", {"status": audit.get("status"), "response_id": audit.get("response_id")})
     regeneration_attempted = False
-    previous_issue_count: int | None = None
-    for feedback_round_index in range(DEFAULT_MAX_FEEDBACK_ROUNDS):
+    feedback_round_start, previous_issue_count = _feedback_resume_state(stored_session.run_dir)
+    for feedback_round_index in range(feedback_round_start, DEFAULT_MAX_FEEDBACK_ROUNDS):
         if (
             candidate_gates is not None
             and candidate_gates.get("valid") is True

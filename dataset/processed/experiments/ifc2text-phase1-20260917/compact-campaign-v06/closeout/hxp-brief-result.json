@@ -1,0 +1,172 @@
+{
+  "budget": {
+    "attempts": [
+      {
+        "attempt": 1,
+        "charged_tokens": 1463,
+        "elapsed_seconds": 6.156,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 12239,
+        "response_id": "b3e3265f-3f26-4881-b636-ba5f4bc8f8cc",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 2,
+        "charged_tokens": 2223,
+        "elapsed_seconds": 9.641,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 12122,
+        "response_id": "23761186-2d86-49f1-a101-1bb4dd3a9be4",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 3,
+        "charged_tokens": 1680,
+        "elapsed_seconds": 5.719,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 13120,
+        "response_id": "a22127cf-355a-4970-be78-fa9097e1c3b0",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 4,
+        "charged_tokens": 1637,
+        "elapsed_seconds": 4.859,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 13003,
+        "response_id": "f48407f8-ba30-4cc7-9212-49d92099d747",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 5,
+        "charged_tokens": 1630,
+        "elapsed_seconds": 4.813,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 13097,
+        "response_id": "c855e9dd-90c8-4994-9ed2-6d4f3a85fdae",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 6,
+        "charged_tokens": 1778,
+        "elapsed_seconds": 6.031,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 13596,
+        "response_id": "322c451c-21f8-4d3a-8189-8369b2bee0de",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 7,
+        "charged_tokens": 5173,
+        "elapsed_seconds": 18.375,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 13438,
+        "response_id": "84fa2853-410c-4d72-905d-3bc70b4683ed",
+        "stage": "writing",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 8,
+        "charged_tokens": 86720,
+        "elapsed_seconds": 208.391,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 165088,
+        "response_id": "13826e53-edd5-48f7-bbad-ddc8854ef051",
+        "stage": "reconstruction",
+        "status": "completed",
+        "usage_known": true
+      },
+      {
+        "attempt": 9,
+        "charged_tokens": 96323,
+        "elapsed_seconds": 236.078,
+        "failure": "UNUSABLE_RESPONSE_length",
+        "model": "deepseek-flash",
+        "reserved_tokens": 166311,
+        "response_id": "570b1aee-a7c3-4e00-a826-0be7c556d475",
+        "stage": "reconstruction",
+        "status": "failed",
+        "usage_known": true
+      },
+      {
+        "attempt": 10,
+        "charged_tokens": 95385,
+        "elapsed_seconds": 248.547,
+        "failure": null,
+        "model": "deepseek-flash",
+        "reserved_tokens": 230624,
+        "response_id": "c4383b1d-710d-4cae-8357-3b29a6cdeb25",
+        "stage": "reconstruction",
+        "status": "completed",
+        "usage_known": true
+      }
+    ],
+    "calls": {
+      "reconstruction": 4,
+      "writing": 18
+    },
+    "continuations": [
+      {
+        "at": "2026-09-17T10:42:30.159940+00:00",
+        "attempts_preserved": 2,
+        "code_commit": "76575b5543fa6b412c0c1a620d3ecf63f368e9dc",
+        "previous_halt": "COMPACT_WRITING_FAILED",
+        "review_note": "117 offline checks passed; floor ID versus name contract corrected in v0.5; continue latest authorized three-building and Compare goal without resetting usage"
+      },
+      {
+        "at": "2026-09-17T10:52:30.294337+00:00",
+        "attempts_preserved": 5,
+        "code_commit": "d4161a968f20fd1ec768f8b560e7ee3676928a32",
+        "previous_halt": "PROSE_REVIEW_FAILED",
+        "review_note": "Frozen v0.5 prose failures preserved; v0.6 supplies explicit four-state space observations; 121 offline tests passed; no source or numerical table changes; continue authorized 2M campaign"
+      },
+      {
+        "at": "2026-09-17T11:18:36.749186+00:00",
+        "attempts_preserved": 9,
+        "code_commit": "a7c89f8b165e7c7a2220914f0ef2246ecb2d038a",
+        "previous_halt": "BRIEF_FAILED",
+        "review_note": "64K continuation ended with length; failure and usage retained. User already authorized 128K when needed. Only output configuration changes; same source text; 24 scoped checks reuse 121-stage baseline."
+      }
+    ],
+    "halt_reason": null,
+    "halted": false,
+    "historical": {
+      "tokens": 166888,
+      "writing": 11
+    },
+    "historical_reconstruction_calls": 1,
+    "limits": {
+      "reconstruction": 12,
+      "tokens": 2000000,
+      "writing": 26
+    },
+    "schema_version": "text2ifc/ifc2text-goal-budget/0.3",
+    "tokens_used_or_reserved": 460900
+  },
+  "output_cap": 131072,
+  "same_text_entered_session": true,
+  "session_hash": "de4932f1dad7a868",
+  "session_id": "phase6.2-66f17a1d94dd4c249d8453e93299c66a",
+  "status": "ready"
+}

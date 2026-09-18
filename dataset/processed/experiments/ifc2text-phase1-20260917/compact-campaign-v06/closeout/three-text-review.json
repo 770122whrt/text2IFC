@@ -1,0 +1,83 @@
+{
+  "hxp": {
+    "schema_version": "text2ifc/compact-agent-review/0.6",
+    "decision": "allow_diagnostic_reconstruction",
+    "reviewer": "agent",
+    "quantitative_check": "content-check.json",
+    "prose_review": "Explicit-space state is described correctly: S01 has source IfcSpace records and no geometric candidate regions; S02/S03 have neither. No room function or connectivity is invented.",
+    "source_unchanged": true,
+    "characters": 8255,
+    "han_characters": 1293,
+    "max_coordinate_rounding_error_mm": 0.0500000000001819,
+    "counts": {
+      "coverings": 1,
+      "doors": 7,
+      "openings": 15,
+      "slabs": 1,
+      "spaces": 5,
+      "walls": 34,
+      "windows": 3
+    },
+    "unassessed": [],
+    "limitations": [
+      "Review covers supported extracted classes and narration consistency, not full IFC semantic completeness.",
+      "Unrepresented IFC classes remain outside the reconstruction guarantee."
+    ]
+  },
+  "i5n": {
+    "schema_version": "text2ifc/compact-agent-review/0.6",
+    "decision": "allow_diagnostic_reconstruction",
+    "reviewer": "agent",
+    "quantitative_check": "content-check.json",
+    "prose_review": "Space-state wording is consistent with observations: S02 has one explicit space, S01/S03 do not; no geometric candidate regions are invented. Stair presence is mentioned without asserting exact connectivity.",
+    "source_unchanged": true,
+    "characters": 6929,
+    "han_characters": 1254,
+    "max_coordinate_rounding_error_mm": 0.04900000000009186,
+    "counts": {
+      "coverings": 2,
+      "doors": 6,
+      "openings": 15,
+      "slabs": 2,
+      "spaces": 1,
+      "stairs": 1,
+      "walls": 22,
+      "windows": 8
+    },
+    "unassessed": [
+      {
+        "field": "independent_direct_mesh",
+        "label": "T001",
+        "reason": "RuntimeError"
+      }
+    ],
+    "limitations": [
+      "Review covers supported extracted classes and narration consistency, not full IFC semantic completeness.",
+      "Unrepresented IFC classes remain outside the reconstruction guarantee."
+    ]
+  },
+  "1px": {
+    "schema_version": "text2ifc/compact-agent-review/0.6",
+    "decision": "allow_diagnostic_reconstruction",
+    "reviewer": "agent",
+    "quantitative_check": "content-check.json",
+    "prose_review": "S01 is explicitly described as geometric candidate regions without source IfcSpace; S02 has neither. Candidate regions are not called verified rooms or assigned functions.",
+    "source_unchanged": true,
+    "characters": 12687,
+    "han_characters": 1325,
+    "max_coordinate_rounding_error_mm": 0.04500000000007276,
+    "counts": {
+      "coverings": 1,
+      "doors": 16,
+      "openings": 42,
+      "slabs": 1,
+      "walls": 45,
+      "windows": 26
+    },
+    "unassessed": [],
+    "limitations": [
+      "Review covers supported extracted classes and narration consistency, not full IFC semantic completeness.",
+      "Unrepresented IFC classes remain outside the reconstruction guarantee."
+    ]
+  }
+}

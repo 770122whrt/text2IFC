@@ -470,3 +470,17 @@ v0.1 已完成三个真实 LLM 段落，保存在 `hxp-live-writing-v01/sections
 下一批建议仍只处理 `hxp.ifc`：先离线修复正文证据口径和提纲/分段输出控制，冻结并提交代码、Prompt 与运行配置；完成变更范围所需的验证后，执行一轮新的真实说明，再在内容核对通过时将同一份文本交给现有 Generation。新提纲/正文行为使用新版本，不改写 v0.1/v0.2；本次不启动跨建筑学习、批量重跑或 Full Preflight。
 
 新增付费批次建议单独冻结累计上限：写作最多 26 次、重建最多 12 次、两阶段合计最多 1000000 tokens，均包含失败消耗，不按换运行目录重置；重试必须记账。再次截断、发现事实错误或超额时停止付费并返回离线诊断，不自动增加预算。该额度为本次提出的下一批授权范围，尚未执行。
+
+## 15. Phase 1 v0.6 收尾（2026-09-18）
+
+后续授权将累计预算放宽到 200 万 tokens，并允许 Design Brief input 128k、output 64k，必要时单次扩展至 128k。在不覆盖旧 Prompt 和旧失败证据的前提下，描述端收敛到 `ifc2text-compact-narrator.v0.6`：Agent 只写建筑总体与逐标高短导读，程序将空间/候选区域、墙体、洞口、门窗、楼板/覆盖层、材料及限制以紧凑表格合入。文本坐标改为 mm、一位小数；底层观测保持原精度。
+
+三份代表模型已完成真实 IFC→Text：hxp 8255 字符、i5n 6929 字符、1px 12687 字符。三份均通过确定性计数、源文件不变、坐标显示精度与 Agent 文案核对；i5n 的楼梯直接 mesh 复核失败保持未评估，1px 的几何围合只称候选区域。详细记录在 `compact-campaign-v06/three-text-review.json`。
+
+hxp 继续完成真实 Design Brief、Generator 和编译，候选 IFC 位于 `compact-campaign-v06/hxp/reconstruction-128k/runs/de4932f1dad7a868/output.ifc`。候选能够重开，但最终 Generation 未放行：Geometry Expectation 无法从 Brief 为 5 个空间和 3 条楼层记录构造完整期望，Audit 因此保持 blocking。候选明确标记为 diagnostic，不进入成功 Proof。
+
+原 `roundtrip_compare` 在这一真实案例暴露两个 evaluator 问题：按楼层先过滤会把实际存在但 containment 改变的三扇窗误报为 missing/extra；材料比较把 layer-set usage 的方向/偏移/名称空白等引用元数据与材料实质混成一个布尔差异。新增 `diagnostic_review.py` 作为不替换历史报告的诊断评估器，以全局一对一几何匹配、映射宿主辅助洞口匹配、材料实质/元数据分离和显式 unassessed 记账修正这两类问题。冻结回归 8 项通过。
+
+修正后的真实 hxp Compare 对支持范围内 66/66 个对象完成一对一匹配，missing=0、extra=0；仍有 12 个几何超差、5 个材料内容差异、3 个关系差异和 34 条未评估字段。三条关系差异均为 N001–N003 的 containment 从源 S02 变为重建 S01；五个材料内容差异为 D003–D007 的材料列表未恢复。几何超差主要集中在部分门窗实体包围盒和 W011/W013/W015 等墙体，不能用名义尺寸相同掩盖。该结果完成第一阶段要求的至少一次真实 Compare，但结论是“可执行且能定位损失”，不是“重建一致”。
+
+收尾时还修复了一个公共 Generation 恢复问题：真实重试已经保留 feedback round 0/1 时，入口再次从 round 0 起算会触发 `feedback round 0 already exists`。恢复逻辑现在从已保存的最大 round index + 1 继续，并继承上一轮 issue 数作为下一轮比较基线；新建会话仍从 0 开始。对应单元/公共链与诊断比较的针对性组合 11 项通过，compact/Compare/feedback 相关另 25 项通过，修改文件 compileall 通过。尝试整文件回归时 Windows 仍会锁住 pytest 临时 `sessions.sqlite`，导致 pytest 在清理 basetemp 阶段报 `WinError 32`；该环境错误与测试断言失败分开记录，不将其写成通过。
