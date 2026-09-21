@@ -1,0 +1,208 @@
+{
+  "schema_version": "bim-json/2.3",
+  "ifc_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "entities": [
+    {
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "attributes": {
+        "Name": "Project"
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "Level 1",
+        "Elevation": 0.0,
+        "ObjectPlacement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "wall-1",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "Wall",
+        "ObjectPlacement": {
+          "origin": [
+            3577.48690910947,
+            3997.64112601658,
+            -1140.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            0.7335619092660169,
+            0.6796226344626819,
+            0.0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                877.485714696586,
+                -60.0
+              ],
+              [
+                988.66203820161,
+                60.0
+              ],
+              [
+                240.40399799117,
+                60.0
+              ],
+              [
+                0.229240578381311,
+                60.0
+              ],
+              [
+                0.0,
+                60.0
+              ],
+              [
+                4.58023193440963,
+                -60.0
+              ],
+              [
+                114.660329081937,
+                -60.0
+              ],
+              [
+                877.485714696586,
+                -60.0
+              ]
+            ]
+          },
+          "position": {
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "ref_direction": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "depth": 2160.0
+        }
+      },
+      "property_sets": {
+        "Pset_WallCommon": {
+          "IsExternal": true
+        }
+      },
+      "provenance": {
+        "source": "test"
+      }
+    }
+  ],
+  "relationships": [],
+  "provenance": {
+    "source": "test"
+  }
+}
