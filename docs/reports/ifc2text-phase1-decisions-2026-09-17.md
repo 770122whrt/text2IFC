@@ -1,6 +1,6 @@
 # IFC2Text 第一阶段：决策与防复发记录
 
-当前执行为 v0.6 收尾；前文 v0.3/v0.4/v0.5 的坐标精度、单样本范围、暂停与失败状态均作为历史记录保留。
+当前基线仍为 v0.6；2026-09-21 已补充独立归因与两次真实 Brief 探针，结论和下一步见[重新归因与指南](ifc2text-attribution-and-next-steps-2026-09-21.md)。前文阶段状态作为历史记录保留，不能以旧归因替代本次逐阶段证据。
 
 日期：2026-09-17。设计权威仍为 [原方案](../architecture/bim2text-bidirectional-bridge-research.md)，历史运行见 [实施记录](ifc2text-phase1-implementation-2026-09-16.md)。本页只记录本轮思路、证据与结果。
 
