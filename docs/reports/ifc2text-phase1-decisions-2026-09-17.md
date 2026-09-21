@@ -1,6 +1,6 @@
 # IFC2Text 第一阶段：决策与防复发记录
 
-旧整栋基线v0.6保持不变。最新进展见[异常墙与源数据两项修改](ifc2text-wall-and-source-fixes-2026-09-21.md)：新增闭合轮廓描述v0.8和独立归属统一副本，不改text2IFC；真实单墙输出已选择polygon，但漏闭合点被拒，v0.8尚待真实复验，重建侧12次调用已用满。此前[独立归因与指南](ifc2text-attribution-and-next-steps-2026-09-21.md)及本页历史记录保留，不把源整理、离线修正当成LLM提升。
+旧整栋基线v0.6保持不变。最新见[显式闭合单墙真实复验](ifc2text-closed-wall-retry-result-2026-09-21.md)：已在授权12→14次后完成两次真实调用，v0.8说明经原Brief/Generator生成合法闭合polygon，未经人工补点编译为IFC2X3；源/重建轮廓差约0.0547 mm，通过预先固定的0.1 mm单墙诊断。正向系统与原20 mm比较口径不变，不代表整栋通过。累计账本转到本次closed-wall-retry-v08目录，1400238/2000000 tokens、重建14/14次。此前[异常墙与源数据两项修改](ifc2text-wall-and-source-fixes-2026-09-21.md)及[独立归因](ifc2text-attribution-and-next-steps-2026-09-21.md)保留历史原义。
 
 日期：2026-09-17。设计权威仍为 [原方案](../architecture/bim2text-bidirectional-bridge-research.md)，历史运行见 [实施记录](ifc2text-phase1-implementation-2026-09-16.md)。本页只记录本轮思路、证据与结果。
 

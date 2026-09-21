@@ -1,0 +1,165 @@
+{
+  "appearance": {
+    "profile": "neutral-architectural"
+  },
+  "case_id": "single-wall-detail-v07",
+  "door_counts_by_storey": {},
+  "doors": [],
+  "entity_id_contract": {
+    "doors": [],
+    "floor_openings": [],
+    "roof": [],
+    "slabs": [],
+    "spaces": [],
+    "stair_flights": [],
+    "stairs": [],
+    "walls": [
+      {
+        "brief_id": "W013",
+        "entity_id": "wall-S01-w013",
+        "storey": "S01"
+      }
+    ],
+    "windows": []
+  },
+  "generation_package_manifest": {
+    "issues": [],
+    "packages": [
+      {
+        "allowed_reference_ids": [],
+        "kind": "skeleton",
+        "owned_component_ids": [
+          "project-main",
+          "site-main",
+          "building-main",
+          "S01"
+        ],
+        "owned_relationship_ids": [
+          "aggregate-project-site",
+          "aggregate-site-building",
+          "aggregate-building-storeys"
+        ],
+        "package_id": "package-skeleton",
+        "storey_id": null
+      },
+      {
+        "allowed_reference_ids": [
+          "S01"
+        ],
+        "kind": "storey_local",
+        "owned_component_classes": {},
+        "owned_component_ids": [
+          "W013"
+        ],
+        "owned_relationship_ids": [],
+        "package_id": "package-S01",
+        "storey_id": "S01"
+      }
+    ],
+    "schema_version": "text2ifc/generation-package-manifest/1.0",
+    "status": "ready",
+    "storey_count": 1
+  },
+  "generation_schema_version": "bim-json/2.3",
+  "products": [],
+  "required_relationships": {
+    "containment": {
+      "doors": 0,
+      "products": 0,
+      "spaces": 0,
+      "storeys": 1,
+      "walls": 1,
+      "windows": 0
+    },
+    "opening_fill": {
+      "doors": 0,
+      "windows": 0
+    }
+  },
+  "roof": null,
+  "schema_version": "text2ifc/expected-facts/1.0",
+  "semantic_authority_declared": true,
+  "sidecar_role": "orchestration_expectations_not_bim_json_schema",
+  "slabs": [],
+  "source": {
+    "design_brief_schema_version": "text2ifc/design-brief/2.7",
+    "language": "zh-CN",
+    "status": "ready"
+  },
+  "source_paths": {
+    "/known_facts/storeys/0/elevation_mm": [
+      "turn-user-001"
+    ],
+    "/known_facts/storeys/0/walls/exterior/0/height_mm": [
+      "turn-user-001"
+    ],
+    "/known_facts/storeys/0/walls/exterior/0/polygon": [
+      "turn-user-001"
+    ]
+  },
+  "space_counts_by_storey": {},
+  "spaces": [],
+  "stairs": [],
+  "storey_count": 1,
+  "storeys": [
+    {
+      "elevation_mm": -1140.0,
+      "id": "S01",
+      "name": "S01",
+      "source_key": "S01"
+    }
+  ],
+  "total_counts": {
+    "IfcBuildingStorey": 1,
+    "IfcDoor": 0,
+    "IfcSpace": 0,
+    "IfcWall": 1,
+    "IfcWindow": 0
+  },
+  "unresolved_expectations": [],
+  "walls": [
+    {
+      "base_z_mm": -1140.0,
+      "extrusion_direction": [
+        0,
+        0,
+        1
+      ],
+      "height_mm": 2160.0,
+      "id": "W013",
+      "openings": [],
+      "polygon": [
+        [
+          5227.0,
+          3469.3
+        ],
+        [
+          5014.2,
+          3466.4
+        ],
+        [
+          4620.8,
+          3113.1
+        ],
+        [
+          4538.8,
+          3039.5
+        ],
+        [
+          4638.0,
+          2940.4
+        ],
+        [
+          5227.0,
+          3469.3
+        ]
+      ],
+      "profile": "polygon",
+      "source_key": "S01.walls.exterior[1]",
+      "storey": "S01",
+      "thickness_mm": null
+    }
+  ],
+  "window_counts_by_storey": {},
+  "windows": []
+}

@@ -1,0 +1,46 @@
+{
+  "schema_version": "text2ifc/ifc2text-goal-budget/0.3",
+  "limits": {
+    "writing": 26,
+    "reconstruction": 14,
+    "tokens": 2000000
+  },
+  "historical": {
+    "writing": 21,
+    "tokens": 1342637
+  },
+  "halted": false,
+  "halt_reason": null,
+  "attempts": [
+    {
+      "attempt": 1,
+      "stage": "reconstruction",
+      "status": "completed",
+      "charged_tokens": 27286,
+      "reserved_tokens": 143496,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "4047d46b-8bcd-43fa-b3fc-4c802ff1d5f1",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 28.953
+    },
+    {
+      "attempt": 2,
+      "stage": "reconstruction",
+      "status": "completed",
+      "charged_tokens": 30315,
+      "reserved_tokens": 159543,
+      "failure": null,
+      "usage_known": true,
+      "response_id": "2e2f22fb-97cc-4fe1-b45f-141e9202224a",
+      "model": "deepseek-flash",
+      "elapsed_seconds": 10.594
+    }
+  ],
+  "tokens_used_or_reserved": 1400238,
+  "calls": {
+    "writing": 21,
+    "reconstruction": 14
+  },
+  "historical_reconstruction_calls": 12
+}

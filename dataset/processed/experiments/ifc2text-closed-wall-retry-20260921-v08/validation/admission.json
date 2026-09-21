@@ -1,0 +1,119 @@
+{
+  "status": "admitted",
+  "code_commit": "01a52c06ff8db1dc41f73076db1cf5462f93d8a6",
+  "ancestor": "E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-wall-recovery-20260921-v07\\validation\\admission.json",
+  "forward_chain_unchanged": true,
+  "scope": [
+    "src/text2ifc_ifc2text",
+    "src/text2ifc_agent",
+    "src/text2ifc_compiler",
+    "src/text2ifc_contract",
+    "prompts/agent",
+    "schemas",
+    "scripts/ifc2text",
+    "tests/ifc2text/test_wall_retry_v08.py"
+  ],
+  "command": [
+    "-o",
+    "addopts=",
+    "tests/ifc2text/test_wall_retry_v08.py",
+    "tests/ifc2text/test_wall_closure_v08.py",
+    "tests/ifc2text/test_recover_wall_v07.py",
+    "tests/ifc2text/test_goal_budget_v03.py",
+    "-q",
+    "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-closed-wall-retry-20260921-v08\\validation\\tmp-d513ae4553",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "exit_code": 0,
+  "counts": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0
+  },
+  "setup_errors": 0,
+  "network_attempts": 0,
+  "compileall": true,
+  "elapsed_seconds": 10.379830598831177,
+  "nodeids": [
+    {
+      "nodeid": "tests/ifc2text/test_wall_retry_v08.py::test_two_calls_only_with_inherited_tokens_and_calls",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_retry_v08.py::test_no_token_reset_or_unsettled_predecessor",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_retry_v08.py::test_failure_halts_reopened_retry",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_retry_v08.py::test_closed_contour_and_invalid_rejected",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_retry_v08.py::test_local_diagnostic_threshold_not_global_gate",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_closure_v08.py::test_explicit_closure_appears_once_at_end_without_changing_points[points0]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_closure_v08.py::test_explicit_closure_appears_once_at_end_without_changing_points[points1]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_closure_v08.py::test_explicit_closure_appears_once_at_end_without_changing_points[points2]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_closure_v08.py::test_v08_single_wall_no_implicit_closure_or_source_identity",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_wall_closure_v08.py::test_rounding_cannot_silently_destroy_profile",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_public_brief_and_generator_compile_without_source_side_channel",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_micro_text_contains_only_public_detail_and_no_source_ids",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_material_uncertainty_cannot_be_invented_in_narrative",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_v07_narration_prompt_is_registered_without_overwriting_v06",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_budget_is_cumulative_across_stages_and_reopens",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_token_ceiling_and_interrupted_reservation_cannot_be_reset",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_truncation_stops_all_future_transport_and_saves_usage",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_transport_failure_preserves_reservation_and_halts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_budget_batch_precheck_does_not_drop_batches",
+      "outcome": "passed"
+    }
+  ],
+  "live_scope": "two calls only: existing public Brief and existing Generator stage; single-wall diagnostic; no Audit",
+  "full_preflight": false,
+  "network_transport_attempted": false
+}
