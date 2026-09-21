@@ -1,0 +1,119 @@
+{
+  "status": "admitted",
+  "code_commit": "0bd8723f0614818673dcc94f64a778be57b72f23",
+  "scope": [
+    "src/text2ifc_ifc2text",
+    "src/text2ifc_agent",
+    "src/text2ifc_compiler",
+    "src/text2ifc_contract",
+    "prompts/agent",
+    "schemas",
+    "scripts/ifc2text/recover_wall_v07.py",
+    "scripts/ifc2text/validate_wall_recovery_v07.py",
+    "tests/ifc2text/test_wall_details_v07.py",
+    "tests/ifc2text/test_source_containment_v07.py",
+    "tests/ifc2text/test_recover_wall_v07.py"
+  ],
+  "ancestor_admission": "ifc2text-attribution-20260921-v01/validation/admission.json",
+  "forward_system_unchanged": true,
+  "command": [
+    "-o",
+    "addopts=",
+    "tests/ifc2text/test_recover_wall_v07.py",
+    "tests/agent/test_prompt_registry.py",
+    "tests/ifc2text/test_compact_public_v04.py",
+    "-q",
+    "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-wall-recovery-20260921-v07\\validation\\tmp-93cd3a6586",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "exit_code": 0,
+  "counts": {
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0
+  },
+  "setup_errors": 0,
+  "network_attempts": 0,
+  "compileall": true,
+  "elapsed_seconds": 30.847272634506226,
+  "full_preflight": false,
+  "scope_clean": true,
+  "mode": "offline fake/frozen responses; not live capability evidence",
+  "live_scope": "v0.7 narration retry following rejected v0.6; unchanged public Brief and Generator stages for single-wall diagnostic; no Audit or full-building acceptance",
+  "network_transport_attempted": false,
+  "nodeids": [
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_public_brief_and_generator_compile_without_source_side_channel",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_micro_text_contains_only_public_detail_and_no_source_ids",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_material_uncertainty_cannot_be_invented_in_narrative",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_recover_wall_v07.py::test_v07_narration_prompt_is_registered_without_overwriting_v06",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_registry_hash_is_invariant_to_windows_line_endings",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_prompt_trace_requires_template_identity",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_registry_loads_and_renders_versioned_generator_prompt",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_design_brief_v1_registry_hash_remains_historical",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_design_brief_v2_registry_hash_remains_live_attempt_history",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_registry_renders_evidence_grounded_design_brief_v2_prompt",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_design_brief_v2_1_strengthens_live_bare_json_contract",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_generator_v1_registry_hash_remains_historical",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_generator_v2_renders_both_exact_canonical_contracts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_generator_context_includes_standard_two_storey_few_shot",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_compact_public_v04.py::test_compact_description_public_bridge_and_compare",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_compact_public_v04.py::test_budget_amendment_keeps_all_prior_calls_and_tokens",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_compact_public_v04.py::test_invalid_short_prose_is_preserved_and_not_published",
+      "outcome": "passed"
+    }
+  ]
+}

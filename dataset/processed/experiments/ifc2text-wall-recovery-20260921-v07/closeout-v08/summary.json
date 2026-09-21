@@ -1,0 +1,203 @@
+{
+  "schema_version": "text2ifc/wall-recovery-closeout/0.8",
+  "wall_description": "implemented_with_explicit_closed_world_outline",
+  "source_normalization": {
+    "schema_version": "text2ifc/source-normalization/0.7",
+    "policy": "host_storey_for_selected_fillings",
+    "source": "E:\\code for project\\bimnet\\dataset\\external\\bimnet\\hxp.ifc",
+    "destination": "E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-wall-recovery-20260921-v07\\hxp-host-normalized.ifc",
+    "role": "policy_normalized_working_copy_not_proof_of_source_defect",
+    "moved_count": 3,
+    "changes": [
+      {
+        "global_id": "1N$DqFwUP2Cfj_f4x$_L4e",
+        "from": {
+          "global_id": "0NecgMSWfCx99iBiCL91V$",
+          "name": "标高 3",
+          "class": "IfcBuildingStorey"
+        },
+        "to": {
+          "global_id": "0NecgMSWfCx99iBiCL933E",
+          "name": "地板标高",
+          "class": "IfcBuildingStorey"
+        },
+        "host": {
+          "global_id": "0ts1NuGzn4BQ$mq81bsDkC",
+          "name": "基本墙:墙240:7073",
+          "class": "IfcWallStandardCase"
+        }
+      },
+      {
+        "global_id": "1N$DqFwUP2Cfj_f4x$_LS$",
+        "from": {
+          "global_id": "0NecgMSWfCx99iBiCL91V$",
+          "name": "标高 3",
+          "class": "IfcBuildingStorey"
+        },
+        "to": {
+          "global_id": "0NecgMSWfCx99iBiCL933E",
+          "name": "地板标高",
+          "class": "IfcBuildingStorey"
+        },
+        "host": {
+          "global_id": "2R3hYUonf5OxYPUpi0xGyt",
+          "name": "基本墙:墙170:5110",
+          "class": "IfcWallStandardCase"
+        }
+      },
+      {
+        "global_id": "1N$DqFwUP2Cfj_f4x$_LQr",
+        "from": {
+          "global_id": "0NecgMSWfCx99iBiCL91V$",
+          "name": "标高 3",
+          "class": "IfcBuildingStorey"
+        },
+        "to": {
+          "global_id": "0NecgMSWfCx99iBiCL933E",
+          "name": "地板标高",
+          "class": "IfcBuildingStorey"
+        },
+        "host": {
+          "global_id": "07QwGbnh91nQk2EDUwKBEu",
+          "name": "基本墙:墙140:14848",
+          "class": "IfcWallStandardCase"
+        }
+      }
+    ],
+    "geometry_and_noncontainment_entities_unchanged": true,
+    "source_unchanged": true,
+    "reference_storeys_preserved": true,
+    "original_roundtrip_evidence_replaced": false
+  },
+  "text": {
+    "path": "hxp-description.md",
+    "characters": 10024,
+    "prompt": "ifc2text-compact-narrator.v0.7",
+    "renderer": "wall-detail/0.8",
+    "reused_narration": "host-normalized/writing-v07/parsed-response.json",
+    "note": "No new LLM writing call for v0.8; only explicit closure and common wording assembly changed."
+  },
+  "wall_detail_checks": [
+    {
+      "label": "W001",
+      "closed": true,
+      "vertex_count_with_closure": 8,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.04685595745012222,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W003",
+      "closed": true,
+      "vertex_count_with_closure": 6,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.047573199046007,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W005",
+      "closed": true,
+      "vertex_count_with_closure": 7,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.04774638885853477,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W007",
+      "closed": true,
+      "vertex_count_with_closure": 6,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.04751392110683965,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W008",
+      "closed": true,
+      "vertex_count_with_closure": 7,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.04933354922991384,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W011",
+      "closed": true,
+      "vertex_count_with_closure": 6,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.037004678878488864,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W013",
+      "closed": true,
+      "vertex_count_with_closure": 6,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.0546971477855955,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W014",
+      "closed": true,
+      "vertex_count_with_closure": 7,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.053222300287267876,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W015",
+      "closed": true,
+      "vertex_count_with_closure": 8,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.05515459611952721,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W022",
+      "closed": true,
+      "vertex_count_with_closure": 5,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.055206099339341855,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    },
+    {
+      "label": "W032",
+      "closed": true,
+      "vertex_count_with_closure": 6,
+      "source_mesh_vs_text_outline_hausdorff_mm": 0.05231585793646537,
+      "z_bottom_delta_mm": 2.2737367544323206e-13,
+      "height_delta_mm": 0.0
+    }
+  ],
+  "forward_system_modified": false,
+  "live_brief_status": "ready",
+  "live_generator_status": "invalid_OPEN_POLYGON_PROFILE",
+  "live_polygon_choice": "polygon with correct displayed vertices but omitted final closure point",
+  "v08_live_retry_done": false,
+  "offline_counterfactual": {
+    "evidence_kind": "offline_counterfactual_on_copy_of_live_invalid_json",
+    "only_edit": "append first point to polygon points; no source geometry added",
+    "new_live_success": false,
+    "compile_success": true,
+    "opening_subtraction": false,
+    "source_vs_counterfactual_max_bbox_coordinate_delta_mm": 0.047601533354281855,
+    "source_vs_counterfactual_outline_hausdorff_mm": 0.0546971477855955,
+    "source_vs_counterfactual_symmetric_difference_mm2": 36.402703561990876
+  },
+  "limitations": [
+    "Single-wall diagnostic excluded openings, materials and full-building acceptance.",
+    "Host-storey normalization is an explicit modeling policy, not proof the archived source violates IFC.",
+    "No raw LLM response was edited or promoted to accepted output."
+  ],
+  "budget": {
+    "used_or_reserved": 1342637,
+    "limit": 2000000,
+    "calls": {
+      "writing": 21,
+      "reconstruction": 12
+    },
+    "call_limits": {
+      "writing": 26,
+      "reconstruction": 12
+    }
+  },
+  "raw_provider_and_source_preserved": true
+}
