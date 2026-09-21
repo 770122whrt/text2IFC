@@ -124,6 +124,26 @@ def write():
         client.client.close();dump(OUT/'budget-after-writing.json',b.snapshot())
 
 
+def write_reviewed():
+    from text2ifc_ifc2text.narration_v07 import write_notes, TEMPLATE
+    require_admission();cfg=load(ROOT/'scripts/ifc2text/compact-campaign-v0.6.json');b=budget_for(cfg)
+    conf,client,provider=runtime(cfg,b,'writing',8192)
+    folder=OUT/'host-normalized'; stage=folder/'writing-v07'
+    if stage.exists():raise ValueError('NARRATION_V07_ATTEMPT_EXISTS')
+    stage.mkdir(parents=True)
+    try:
+        facts=load(folder/'source-facts.json')
+        notes=write_notes(facts,stage,provider)
+        text=detailed_description(facts,notes)
+        (folder/'design-description-v07-reviewed.md').write_text(text,encoding='utf-8',newline='\n')
+        dump(folder/'reviewed-writing-result.json',{'prompt':TEMPLATE,'characters':len(text),'previous_attempt':'first-pass-review.json',
+            'role':'agent_organized_description_pending_final_review','numeric_facts_unchanged':True})
+        print(json.dumps({'characters':len(text),'budget':b.snapshot()['calls']},ensure_ascii=True))
+    except Exception as exc:
+        b.halt('NARRATION_V07_FAILED');dump(stage/'terminal.json',{'error_type':type(exc).__name__});raise
+    finally:client.client.close();dump(OUT/'budget-after-writing-v07.json',b.snapshot())
+
+
 def brief():
     require_admission();cfg=load(ROOT/'scripts/ifc2text/compact-campaign-v0.6.json');b=budget_for(cfg)
     b.check_capacity('reconstruction')
@@ -155,7 +175,7 @@ def generate():
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('command',choices=['prepare','write','brief','generate']);a=p.parse_args()
-    {'prepare':prepare,'write':write,'brief':brief,'generate':generate}[a.command]()
+    p=argparse.ArgumentParser();p.add_argument('command',choices=['prepare','write','write-reviewed','brief','generate']);a=p.parse_args()
+    {'prepare':prepare,'write':write,'write-reviewed':write_reviewed,'brief':brief,'generate':generate}[a.command]()
 
 if __name__=='__main__':main()

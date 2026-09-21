@@ -29,11 +29,25 @@ def main():
     out=OUT/'validation'; out.mkdir(parents=True,exist_ok=True)
     ancestor=load(ROOT/'dataset/processed/experiments/ifc2text-attribution-20260921-v01/validation/admission.json')
     assert ancestor['status']=='admitted'
-    assert not git('diff',ancestor['code_commit'],'--','src/text2ifc_agent','src/text2ifc_compiler','src/text2ifc_contract','prompts/agent','schemas'), 'FORWARD_SYSTEM_CHANGED_REQUIRES_APPROVAL'
+    assert not git('diff',ancestor['code_commit'],'--','src/text2ifc_agent','src/text2ifc_compiler','src/text2ifc_contract','schemas'), 'FORWARD_SYSTEM_CHANGED_REQUIRES_APPROVAL'
+    old_registry=json.loads(git('show',ancestor['code_commit']+':prompts/agent/registry.json'))
+    new_registry=load(ROOT/'prompts/agent/registry.json')
+    old={r['template_id']:r for r in old_registry['templates']}; new={r['template_id']:r for r in new_registry['templates']}
+    assert all(new.get(k)==v for k,v in old.items()), 'RELEASED_PROMPT_METADATA_CHANGED'
+    assert set(new)-set(old)<={'ifc2text-compact-narrator.v0.7'}
+    assert not git('diff',ancestor['code_commit'],'--','prompts/agent',':(exclude)prompts/agent/registry.json',
+                   ':(exclude)prompts/agent/ifc2text/ifc2text-compact-narrator-v0.7.md'), 'FORWARD_PROMPT_CHANGED'
+    if '--narration-only' in sys.argv:
+        previous=load(out/'admission.json'); assert previous['status']=='admitted'
+        dump(out/('admission-core-'+previous['code_commit'][:8]+'.json'),previous)
+        if (out/'pytest.log').exists():
+            (out/('pytest-core-'+previous['code_commit'][:8]+'.log')).write_bytes((out/'pytest.log').read_bytes())
+        selected_targets=['tests/ifc2text/test_recover_wall_v07.py','tests/agent/test_prompt_registry.py','tests/ifc2text/test_compact_public_v04.py']
+    else:selected_targets=TARGETS
     clean=not git('status','--porcelain','--untracked-files=all','--',*SCOPE)
     if not clean:raise RuntimeError('COMMIT_SCOPE_BEFORE_LIVE_ADMISSION')
     suffix=uuid.uuid4().hex[:10]; log=io.StringIO(); recorder=OfflineRecorder()
-    command=['-o','addopts=',*TARGETS,'-q','--basetemp='+str(out/('tmp-'+suffix)),'-p','no:cacheprovider']
+    command=['-o','addopts=',*selected_targets,'-q','--basetemp='+str(out/('tmp-'+suffix)),'-p','no:cacheprovider']
     started=time.time()
     with contextlib.redirect_stdout(log),contextlib.redirect_stderr(log),recorder.network_guard():
         exit_code=pytest.main(command,plugins=[recorder])

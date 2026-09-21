@@ -52,3 +52,22 @@ def test_micro_text_contains_only_public_detail_and_no_source_ids():
     assert 'PRIVATE_SOURCE_ID' not in text
     assert '(100.0,0.0)' in text and '竖直拉伸 2000.0' in text
     assert '不扣任何洞' in text
+
+
+def test_material_uncertainty_cannot_be_invented_in_narrative():
+    from text2ifc_ifc2text.narration_v07 import validate_notes
+    context={'storeys':[{'id':'level-A'}]}
+    bad={'overview':'按楼层列出空间和构件。','storey_notes':[{'storey':'level-A','text':'本层有覆盖层，材料关联亦未确认。'}]}
+    with pytest.raises(ValueError,match='MATERIAL_ASSERTIONS'):
+        validate_notes(bad,context)
+    good={'overview':'按楼层列出空间和构件，材料随后列示。','storey_notes':[{'storey':'level-A','text':'本层没有空间记录，仅有覆盖层。'}]}
+    validate_notes(good,context)
+
+
+def test_v07_narration_prompt_is_registered_without_overwriting_v06():
+    from text2ifc_agent.prompt_registry import render_prompt,load_prompt_registry
+    r=load_prompt_registry()
+    assert 'ifc2text-compact-narrator.v0.6' in r and 'ifc2text-compact-narrator.v0.7' in r
+    text=render_prompt(template_id='ifc2text-compact-narrator.v0.7',inputs={'FACT_SUMMARY':{},'OUTPUT_SCHEMA':{}})['text']
+    assert 'global materials list cannot justify' in text
+    assert all(x not in text for x in ('hxp','W013','S03'))

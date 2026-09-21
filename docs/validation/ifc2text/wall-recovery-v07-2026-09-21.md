@@ -22,3 +22,7 @@
 https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcsharedbldgelements/lexical/ifcwindow.htm
 
 本轮产物：dataset/processed/experiments/ifc2text-wall-recovery-20260921-v07/。结果以实际报告为准，不预填成功。
+
+## 首次导读复核后的同范围修正
+
+52项离线验证通过后，首次v0.6导读把已有M11材料的覆盖层所在楼层说成“材料关联亦未确认”。已保存原响应和拒绝记录，暂停付费并回到离线。全局材料摘要不足以支持每层材料判断，因此新增IFC2Text专属 narrator.v0.7：楼层导读只说空间和构件，材料事实继续由各层既有确定性明细承担。追加对应失败用例及旧Prompt不变检查。Brief/Generator/Compiler及其Prompt仍不变。重新提交与针对性验证后，仅再用1次写作（仍在26次总上限内）替代拒绝稿；重建侧仍最多2次。原数字明细、轮廓数据和源文件均不改。
