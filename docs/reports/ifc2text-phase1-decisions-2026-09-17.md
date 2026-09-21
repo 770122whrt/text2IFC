@@ -1,6 +1,6 @@
 # IFC2Text 第一阶段：决策与防复发记录
 
-旧整栋基线v0.6保持不变。最新见[显式闭合单墙真实复验](ifc2text-closed-wall-retry-result-2026-09-21.md)：已在授权12→14次后完成两次真实调用，v0.8说明经原Brief/Generator生成合法闭合polygon，未经人工补点编译为IFC2X3；源/重建轮廓差约0.0547 mm，通过预先固定的0.1 mm单墙诊断。正向系统与原20 mm比较口径不变，不代表整栋通过。累计账本转到本次closed-wall-retry-v08目录，1400238/2000000 tokens、重建14/14次。此前[异常墙与源数据两项修改](ifc2text-wall-and-source-fixes-2026-09-21.md)及[独立归因](ifc2text-attribution-and-next-steps-2026-09-21.md)保留历史原义。
+最新见[墙体0.1 mm与整栋上下文检查](ifc2text-wall-tolerance-and-system-context-2026-09-21.md)：墙的后续比较按0.1 mm，旧20 mm仅保留历史复现。将上一轮真实W013多边形放回旧整栋图的离线试验，在保留墙放置、材料、窗和洞口后，被现有材料层厚与basic_filling矩形宿主合同阻断；没有生成新的集成IFC，未修改text2IFC正向系统，相关修改需要单独批准。此前[显式闭合单墙真实复验](ifc2text-closed-wall-retry-result-2026-09-21.md)仍然通过，不等于带窗/带材料的整栋已经支持。预算未增加：权威入口closed-wall-retry-v08，1400238/2000000 tokens、重建14/14次。旧整栋基线、源数据整理与离线反事实均保留原始角色。
 
 日期：2026-09-17。设计权威仍为 [原方案](../architecture/bim2text-bidirectional-bridge-research.md)，历史运行见 [实施记录](ifc2text-phase1-implementation-2026-09-16.md)。本页只记录本轮思路、证据与结果。
 
