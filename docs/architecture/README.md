@@ -36,12 +36,14 @@
 
 ## 阶段总结
 
-- [Phase 2.5 BIM JSON 2.0 IFC Semantic Graph](phase-2-5-summary.md)
-- [Phase 3 Text-to-JSON Dataset and Baseline](phase-3-summary.md)
-- [Phase 4 High-fidelity IFC Round Trip](phase-4-summary.md)
-- [Phase 4 Wave 0 Generated IFC Gate](phase-4-wave-0-generated-ifc-gate.md)
-- [Phase 5 Multi-turn Clarification Agent](phase-5-summary.md)
-- [Phase 6 Acceptance and Trace Report](phase-6-acceptance-and-trace-report.md)
+早期 Phase 2.5–6 的六份总结已收至 [history](history/README.md)，当前设计仍在本层。
+
+- [Phase 2.5 BIM JSON 2.0 IFC Semantic Graph](history/phase-2-5-summary.md)
+- [Phase 3 Text-to-JSON Dataset and Baseline](history/phase-3-summary.md)
+- [Phase 4 High-fidelity IFC Round Trip](history/phase-4-summary.md)
+- [Phase 4 Wave 0 Generated IFC Gate](history/phase-4-wave-0-generated-ifc-gate.md)
+- [Phase 5 Multi-turn Clarification Agent](history/phase-5-summary.md)
+- [Phase 6 Acceptance and Trace Report](history/phase-6-acceptance-and-trace-report.md)
 
 阶段规格、计划和验证记录的权威位置仍是
 [`../../.planning/phases/`](../../.planning/phases/)。

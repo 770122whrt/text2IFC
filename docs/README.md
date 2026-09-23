@@ -27,7 +27,7 @@
 | 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
 | 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
-| 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md) |
+| 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) |
 | 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md) |
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
@@ -56,7 +56,7 @@
   - 一次真实 Audit 配对已完成并记录实际 token；[C与实验归档](../dataset/processed/experiments/README.md)已整理，后续优化按独立计划小步推进。
 - [首次接管 text2IFC 项目](how-to/agent-takeover.md)
   - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
-- [Phase 12 Plan 07 技术 handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md)
+- [Phase 12 Plan 07 技术 handover](handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)
   - 面向后续接手者说明项目分层、Repair Pipeline、关键代码、证据入口、已知风险和接续顺序。
 - [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md)
   - 直接查看 9 份 repaired IFC、1 个正确无输出 guard，以及各案例的人读报告。
@@ -65,8 +65,8 @@
     和后续 Roadmap。
 - [IFC2X3 Local ChangeSet 评估设计](validation/ifc2x3-changeset/design.md)
   - 既有 IFC 局部修改、紧凑 LLM Context、可扩展 Operation Registry。
-- [IFC2X3 Local ChangeSet 实施 Prompt](validation/ifc2x3-changeset/implementation-prompt.md)
-  - 实施顺序、离线测试和真实 Provider UAT。
+- [早期 Repair 实施与复用依据](validation/ifc2x3-changeset/design.md#18-早期实施边界与复用依据2026-09-23-整合)
+  - 已并入设计正文，保留当时的实施边界和测试依据。
 - [text2IFC Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md)
   - 两种生成策略、多 Agent、BIM JSON、Gate、IFC 编译、ChangeSet 和报告链路。
 

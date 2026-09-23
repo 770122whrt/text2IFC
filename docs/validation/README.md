@@ -37,10 +37,8 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
   - 既有 IFC 作为模型权威；紧凑 LLM Context；增量 ChangeSet Applicator。
   - 首个 Window operation，以及墙洞、门、梁、柱等后续扩展接口。
   - BIM Whale `LargeBuilding.ifc` 样例、曲墙边界和双轨验收。
-- [实施 Prompt](ifc2x3-changeset/implementation-prompt.md)
-  - 实施顺序、交付物、自动测试和真实 Provider UAT。
-- [实现复用地图](ifc2x3-changeset/reuse-map.md)
-  - 记录已复用组件、新增职责和已确认的公共测试 seam。
+- [早期实施与复用依据](ifc2x3-changeset/design.md#18-早期实施边界与复用依据2026-09-23-整合)
+  - 原实施 Prompt 和复用说明已整合于设计 §18；保留首个 Window 阶段的测试边界。
 - [实施发现记录](ifc2x3-changeset/implementation-findings.md)
   - 保存实现证据、待审设计冲突及其最终处理决定。
 - [Phase 10 Window L2 验证报告](ifc2x3-changeset/phase10-validation-report.md)
@@ -50,8 +48,8 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 
 ## 相关验证资料
 
-- [Generated IFC Gate](../architecture/phase-4-wave-0-generated-ifc-gate.md)
-- [Phase 6 Acceptance and Trace Report](../architecture/phase-6-acceptance-and-trace-report.md)
+- [Generated IFC Gate](../architecture/history/phase-4-wave-0-generated-ifc-gate.md)
+- [Phase 6 Acceptance and Trace Report](../architecture/history/phase-6-acceptance-and-trace-report.md)
 - [Phase 1 Validation](../../.planning/phases/01-bim-json-1-0-contract-and-validator/01-VALIDATION.md)
 - [Phase 2 Verification](../../.planning/phases/02-minimum-bim-json-to-ifc2x3-compiler/02-VERIFICATION.md)
 

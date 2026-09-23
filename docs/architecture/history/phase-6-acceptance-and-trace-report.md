@@ -499,7 +499,7 @@ Phase 6 的详细规划仍保留在 GSD 结构中。本报告是阅读入口。
 | `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-PLAN-OUTLINE.md` | Wave 顺序和计划索引 |
 | `.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment/06-00-PLAN.md` 到 `06-06-PLAN.md` | 具体执行计划 |
 | `docs/architecture/phase-6-multiagent-design.md` | 多 Agent 架构说明 |
-| `docs/architecture/phase-6-acceptance-and-trace-report.md` | 当前这份单入口报告 |
+| `docs/architecture/history/phase-6-acceptance-and-trace-report.md` | 当前这份单入口报告 |
 
 ## 已知限制与待确认项
 

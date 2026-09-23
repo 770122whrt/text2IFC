@@ -1,8 +1,8 @@
 # Phase 12 Plan 07 收尾与 IFC Repair 技术 Handover
 
-> 历史交接资料：本文记录 2026-09-03 的阶段事实。当前向老师汇报请读[Repair 技术主文档（2026-09-23）](../architecture/ifc-repair-pipeline-status-and-roadmap.md)，其中已补充后续 Type、材料与外观范围。下文旧状态与证据不据本次整理改写。
+> 历史交接资料：本文记录 2026-09-03 的阶段事实。当前向老师汇报请读[Repair 技术主文档（2026-09-23）](../../architecture/ifc-repair-pipeline-status-and-roadmap.md)，其中已补充后续 Type、材料与外观范围。下文旧状态与证据不据本次整理改写。
 
-> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
+> 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
 
 
 日期：2026-09-03
@@ -13,7 +13,7 @@
 
 ## 1. 当前结论和阅读顺序
 
-Plan 07 修正后的证据已按人读优先结构放入 [Plan 07 人工 Proof 入口](../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/PLAN07-REPORT.md)。该冻结历史 review manifest 当时仍是 pending_human_review；它没有被写入成功案例集合的主 accepted manifest，也不包含 R1。
+Plan 07 修正后的证据已按人读优先结构放入 [Plan 07 人工 Proof 入口](../../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/PLAN07-REPORT.md)。该冻结历史 review manifest 当时仍是 pending_human_review；它没有被写入成功案例集合的主 accepted manifest，也不包含 R1。
 
 建议按以下顺序接手：
 
@@ -40,7 +40,7 @@ Plan 07 修正后的证据已按人读优先结构放入 [Plan 07 人工 Proof �
 | 原始运行 | dataset/processed/ifc-repair-runs/ | Provider attempts、clarification、index、staging、terminal evidence |
 | Proof | dataset/processed/proof/ | 人工检查视图和不可变机器权威 |
 
-更完整的历史与架构说明见 [IFC Repair Pipeline 与 Roadmap](../architecture/ifc-repair-pipeline-status-and-roadmap.md)。
+更完整的历史与架构说明见 [IFC Repair Pipeline 与 Roadmap](../../architecture/ifc-repair-pipeline-status-and-roadmap.md)。
 
 ## 3. Repair Pipeline
 
@@ -127,14 +127,14 @@ run_artifacts.publish_terminal_artifacts 只有在 successful_artifact_publishab
 
 人工入口：
 
-- [Plan 07 总矩阵](../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/PLAN07-REPORT.md)
-- [Plan 07 review manifest](../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/plan07-manifest.json)
+- [Plan 07 总矩阵](../../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/PLAN07-REPORT.md)
+- [Plan 07 review manifest](../../../dataset/processed/proof/repair/phase11/reference-cases/evidence/frozen/plan07-manifest.json)
 
 代表性案例：
 
-- [Live Beam + Column complete](../../dataset/processed/proof/repair/phase12/plan07-v2/live-complete/REPORT.md)
-- [Offline Beam restoration](../../dataset/processed/proof/repair/phase12/plan07-v2/beam-loadbearing/REPORT.md)
-- [Unsupported program guard](../../dataset/processed/proof/repair/phase12/plan07-v2/program-guard/REPORT.md)
+- [Live Beam + Column complete](../../../dataset/processed/proof/repair/phase12/plan07-v2/live-complete/REPORT.md)
+- [Offline Beam restoration](../../../dataset/processed/proof/repair/phase12/plan07-v2/beam-loadbearing/REPORT.md)
+- [Unsupported program guard](../../../dataset/processed/proof/repair/phase12/plan07-v2/program-guard/REPORT.md)
 
 成功案根目录直接放 01-original.ifc、02-damaged.ifc、03-repaired.ifc、REPORT.md 和 FILES.json。Guard 只有 02-damaged.ifc 与 NO-REPAIR.md，故意没有 repaired IFC。
 
@@ -155,7 +155,7 @@ run_artifacts.publish_terminal_artifacts 只有在 successful_artifact_publishab
 5. 线性误差容差为 0.01 mm，方向容差为 0.1°；数百毫米或数百米错位仍必然失败；
 6. 圆柱、映射表示或无法可靠反演 placement 的构件不勉强构造 repair fixture，应更换合法 IFC/目标。
 
-完整记录见 [Plan 07 Structural Restoration Erratum](../validation/ifc2x3-changeset/phase12-plan07-structural-restoration-erratum-2026-09-03.md)。
+完整记录见 [Plan 07 Structural Restoration Erratum](../../validation/ifc2x3-changeset/phase12-plan07-structural-restoration-erratum-2026-09-03.md)。
 
 ## 7. 仍需注意的问题
 
@@ -163,7 +163,7 @@ run_artifacts.publish_terminal_artifacts 只有在 successful_artifact_publishab
 
 Beam/Column 精确复用现有 Type 时，当前 L1/L2 能证明 Type relationship、几何、Storey 与属性，但不自动证明 Viewer 中的颜色/材质外观一致。Type 的 IfcRelDefinesByType、RepresentationMap、Material association 和 StyledItem 是不同层。A1 暴露了新构件可能显示默认灰色的问题。
 
-不要把视觉问题通过放宽 L1/L2、复制固定长度 geometry 或样例特判解决。后续应按 [Structural Type Visual Fidelity 计划](../validation/ifc2x3-changeset/phase12-structural-type-visual-fidelity-plan-2026-09-03.md) 增加 representation/style authority 和专门 visual fingerprint gate。
+不要把视觉问题通过放宽 L1/L2、复制固定长度 geometry 或样例特判解决。后续应按 [Structural Type Visual Fidelity 计划](../../validation/ifc2x3-changeset/phase12-structural-type-visual-fidelity-plan-2026-09-03.md) 增加 representation/style authority 和专门 visual fingerprint gate。
 
 ### 7.2 失败 run 与成功 Proof 分开
 

@@ -7,7 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 FILES_PATH = ROOT / "dataset/manifests/ifc-files.jsonl"
-OUTPUT_PATH = ROOT / "docs/reports/ifc2x3-dataset-size-index.md"
+OUTPUT_PATH = ROOT / "docs/reports/ifc-datasets/ifc2x3-dataset-size-index.md"
 MIB = 1024 * 1024
 
 BINS = (

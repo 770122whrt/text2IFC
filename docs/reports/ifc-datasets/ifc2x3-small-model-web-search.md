@@ -1,6 +1,6 @@
 # IFC2X3 Small Model Web Search
 
-> 历史发现记录：下列数字只描述当时的一次搜索，未在本次重新联网验证。原机器索引 `ifc2x3-small-github-candidates.jsonl` 当前缺失，因此不能用本报告证明文件身份、许可或 canonical 准入。当前候选与来源审计入口见 [候选池](../../dataset/manifests/candidates/README.md)。
+> 历史发现记录：下列数字只描述当时的一次搜索，未在本次重新联网验证。原机器索引 `ifc2x3-small-github-candidates.jsonl` 当前缺失，因此不能用本报告证明文件身份、许可或 canonical 准入。当前候选与来源审计入口见 [候选池](../../../dataset/manifests/candidates/README.md)。
 
 - Repositories scanned: **1**
 - IFC2X3 files under 10 MiB found: **3**

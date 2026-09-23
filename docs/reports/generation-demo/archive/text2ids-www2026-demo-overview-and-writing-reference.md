@@ -1,6 +1,6 @@
 # text2IDS / WWW 2026 Demo：Overview 与 text2IFC 仿写参考
 
-> **2026-09-21 阅读状态更新：**用户已上传四页 PDF，当前以 [SGSS 全文 Overview 与 Repair 后作边界](../repair-demo/sgss-fulltext-review-20260921.md)为准。本页“未获得全文”等内容仅保留当时访问状态，不再代表当前阅读进度。新稿区分作者架构主张、已展示平台、未来 Validate 功能与尚缺定量对照的效果主张。
+> **2026-09-21 阅读状态更新：**用户已上传四页 PDF，当前以 [SGSS 全文 Overview 与 Repair 后作边界](../../repair-demo/sgss-fulltext-review-20260921.md)为准。本页“未获得全文”等内容仅保留当时访问状态，不再代表当前阅读进度。新稿区分作者架构主张、已展示平台、未来 Validate 功能与尚缺定量对照的效果主张。
 
 > 更新：2026-09-18  
 > 目标：确认 text2IDS 的论文类型、建立可核实的 overview，并提炼适合 text2IFC WWW Demo Paper 的写作结构。  

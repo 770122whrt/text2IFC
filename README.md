@@ -11,6 +11,7 @@ text2IFC 是一个自然语言生成与修复 IFC 的研究项目：在受支持
 | 最新执行位置 | [STATE](.planning/STATE.md) 顶部；下方保留历史检查点 |
 | 产品边界和阶段安排 | [PROJECT](.planning/PROJECT.md)、[ROADMAP](.planning/ROADMAP.md) |
 | 所有重要文档 | [文档索引](docs/README.md) |
+| 本轮清理和目录迁移 | [2026-09-23 整理结果](docs/reports/repository-cleanup-20260923/REPORT.md) |
 | 已生成 IFC、用户输入和验收报告 | [Proof 入口](dataset/processed/proof/README.md) |
 
 开始修改前阅读 [AGENTS.md](AGENTS.md)，确认 Git root、分支和已有修改。指南与交接快照提供导航，具体行为仍以适用合同、实际代码和当前用户授权为准。
@@ -51,7 +52,7 @@ Python 要求见 [pyproject.toml](pyproject.toml)（当前为 ≥3.12），本�
 - [ifc-repair/](dataset/processed/ifc-repair/README.md)：Repair 案例和离线输入，另有待核实权限的保留项。
 - [ifc-repair-runs/](dataset/processed/ifc-repair-runs/)：现有 Plan07 测试和运行器依赖的源基线。
 
-旧路径从 [processed 说明](dataset/processed/README.md)与[迁移映射](dataset/manifests/processed-layout-20260913.json)查找。临时测试用 `tmp_path`，一次性诊断用 `.tmp/`；该目录也可能含活动 Git 工作树，不能整目录删除。
+旧路径从 [processed 说明](dataset/processed/README.md)与[迁移映射](dataset/manifests/processed-layout-20260913.json)查找。临时测试用 `tmp_path`，由 pytest 在系统临时目录管理；缓存放在 `.tmp/pytest/cache/`。需要在项目内保留调试产物时，先创建 `.tmp/pytest/`，再为每次运行指定独立的 `--basetemp=.tmp/pytest/<run-id>`。一次性诊断用 `.tmp/`；该目录也可能含活动 Git 工作树，不能整目录删除。
 
 根 `archive/` 已退役。[Zcode 历史恢复与重构参考](dataset/processed/experiments/zcode-history-20260913/README.md)保留轻量合同、清单和代码差异，完整原始运行／失败／数据快照通过固定 Git/LFS 修订恢复；不是尚待整包合并的生产代码。
 

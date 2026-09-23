@@ -10,7 +10,7 @@
 
 **历史编号说明。** N01技能修订；N02组合能力；N03修复迁移；N04空间约束；N05信息动作；N06澄清；N07表示搜索；N08知识组合。表内对这些问题的冲突分析仍有参考价值，不能把原建议措辞理解为当前排期。
 
-**旧扩展矩阵的整合说明（2026-09-23）。** [扩展调研索引](novelty-literature-addendum.md)中的 41 张全文阅读卡对应 40 篇不同论文：FK04 与 SK02 是 ExpeL 的不同版本／专题阅读，合并计数但分别保留原卡。DepthBenchCAD 仍是 P；AIDL 所读 v1 不代表正式 CGF 版已全文核对；未披露的精确测试分母继续留在卡片中，不反推补数。四组原始证据入口为[知识](literature-evidence/frontier-knowledge.md)、[技能](literature-evidence/frontier-skills.md)、[空间](literature-evidence/frontier-spatial.md)、[规格与关系](literature-evidence/frontier-reasoning.md)。本次只是收拢旧索引的计数与版本说明，没有新增文献、升级 F/P 或恢复旧 N01／N06 优先级。
+**旧扩展矩阵的整合说明（2026-09-23）。** [扩展调研索引](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/reports/generation-demo/novelty-literature-addendum.md)中的 41 张全文阅读卡对应 40 篇不同论文：FK04 与 SK02 是 ExpeL 的不同版本／专题阅读，合并计数但分别保留原卡。DepthBenchCAD 仍是 P；AIDL 所读 v1 不代表正式 CGF 版已全文核对；未披露的精确测试分母继续留在卡片中，不反推补数。四组原始证据入口为[知识](literature-evidence/frontier-knowledge.md)、[技能](literature-evidence/frontier-skills.md)、[空间](literature-evidence/frontier-spatial.md)、[规格与关系](literature-evidence/frontier-reasoning.md)。本次只是收拢旧索引的计数与版本说明，没有新增文献、升级 F/P 或恢复旧 N01／N06 优先级。
 
 
 

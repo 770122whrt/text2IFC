@@ -15,6 +15,8 @@
 全体文件的功能、现行／历史／证据身份及删除建议见[分类与归档目录](../document-catalog.md)。
 报告中的日期表示当时快照；当前执行许可仍查适用合同和计划。
 
+数据发现与筛选报告集中在 [ifc-datasets](ifc-datasets/README.md)；文档移动、测试归类和已批准删除见[本轮清理报告](repository-cleanup-20260923/REPORT.md)。
+
 ## 历史总结与专项复核
 
 - [2026-09-05 Zcode 整合与恢复核查](zcode-integration-20260905/REPORT.md)

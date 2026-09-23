@@ -1,6 +1,6 @@
 # text2IFC：Self-Verification 重合核查与方法方向扩展
 
-> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](research-plan.md)，文献统一见[简版](literature-review-short.md)和[完整版](literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
+> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](../research-plan.md)，文献统一见[简版](../literature-review-short.md)和[完整版](../literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
 
 日期：2026-09-15。当前讨论入口为 [简洁记录](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-shortlist.md)。本轮撤回“只在技能归因和空间澄清中选一条”的过早收敛；这两项保留为候选机制或演示设计。没有执行新实验，也没有选定或实现下列方法。
 
@@ -118,7 +118,7 @@ Self-Verification 已经覆盖“把请求变成检查，再用反馈改 IFC”�
 
 ### 拓宽方向：从代码生成转向空间结构决策和多步编辑推理
 
-日期：2026-09-15。仅研究文档；未修改产品、未运行 Provider、飞书简版由主文统一更新。以下是候选机制，不是已实现能力或已成立的创新声明。本轮聚焦正文证据 5 篇，编号 `B-SP01–B-SP05`；复用上一轮 [AIDL、CIT-CAD、WorldCoder 等正文卡](literature-evidence/frontier-spatial.md)。
+日期：2026-09-15。仅研究文档；未修改产品、未运行 Provider、飞书简版由主文统一更新。以下是候选机制，不是已实现能力或已成立的创新声明。本轮聚焦正文证据 5 篇，编号 `B-SP01–B-SP05`；复用上一轮 [AIDL、CIT-CAD、WorldCoder 等正文卡](../literature-evidence/frontier-spatial.md)。
 
 这轮建议把问题扩大到两个层面：**模型怎样选择可行的空间构成，以及怎样预见多个编辑动作相互影响。** 它们比上下文筛选更接近 AI 推理问题，但“图＋求解器”“搜索＋修复”本身都已有方法。实验必须隔离真正增加的决策机制。
 
@@ -231,10 +231,10 @@ Self-Verification 已经覆盖“把请求变成检查，再用反馈改 IFC”�
 
 | 已读入口 | 可复用基础 | 仍需研究/实现 |
 |---|---|---|
-| [compile_document](../../../src/text2ifc_compiler/compiler.py) | BIM JSON 验证、IFC 构建、编译结果可作真实执行反馈 | 没有由这个函数自动得到结构搜索器或动作效果模型 |
-| [brief_plan_constraints.py](../../../src/text2ifc_agent/brief_plan_constraints.py) | 对指定正交墙边界的解析检查，返回 outside/overlap/gap 等证据 | 它是受限几何检查，不是一般约束求解器；版本和数据形状需核对后再接入 |
-| [generation_packages.py](../../../src/text2ifc_agent/generation_packages.py) | 按楼层与跨层组件划分，显式宿主、开口、填充等引用 | 当前分包按已有事实进行，不自动合成新的构造分解或拓扑 |
-| [hosted_opening.py](../../../src/text2ifc_ifc_repair/operations/hosted_opening.py)、[changesets.py](../../../src/text2ifc_ifc_repair/changesets.py) | 操作前提、开口 footprint 冲突、确定性绑定等是效果抽取起点 | 不能据此认定已经支持任意多步移动/删除/重排，需限定并补动作集 |
+| [compile_document](../../../../src/text2ifc_compiler/compiler.py) | BIM JSON 验证、IFC 构建、编译结果可作真实执行反馈 | 没有由这个函数自动得到结构搜索器或动作效果模型 |
+| [brief_plan_constraints.py](../../../../src/text2ifc_agent/brief_plan_constraints.py) | 对指定正交墙边界的解析检查，返回 outside/overlap/gap 等证据 | 它是受限几何检查，不是一般约束求解器；版本和数据形状需核对后再接入 |
+| [generation_packages.py](../../../../src/text2ifc_agent/generation_packages.py) | 按楼层与跨层组件划分，显式宿主、开口、填充等引用 | 当前分包按已有事实进行，不自动合成新的构造分解或拓扑 |
+| [hosted_opening.py](../../../../src/text2ifc_ifc_repair/operations/hosted_opening.py)、[changesets.py](../../../../src/text2ifc_ifc_repair/changesets.py) | 操作前提、开口 footprint 冲突、确定性绑定等是效果抽取起点 | 不能据此认定已经支持任意多步移动/删除/重排，需限定并补动作集 |
 
 两个候选都能从现有模型和编译执行设施起步。它们需要新增研究模块，远多于改提示词；若目标是近期 demo，应先选择一个小问题，证明新决策优于强基线，再扩场景。
 

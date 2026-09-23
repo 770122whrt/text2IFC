@@ -98,7 +98,7 @@ This is non-blocking; the config check reports env var names only.
 - `scripts/agent/scan_agent_artifacts.py`
 - `tests/agent/`
 - `dataset/processed/agent-demo/simple-room/`
-- `docs/architecture/phase-5-summary.md`
+- `docs/architecture/history/phase-5-summary.md`
 
 ## Deviations
 

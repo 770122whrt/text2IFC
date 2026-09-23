@@ -273,7 +273,7 @@ experiments 和各 Proof 集合的 manifest 查找，不改写冻结报告中的
 | 发布 GitHub | [`publish-to-github.md`](publish-to-github.md) |
 
 Phase 12/12.1 或 Plan 07 的专项维护还可阅读
-[`Phase 12 Plan 07 技术 handover`](../handoffs/phase12-plan07-closeout-handover-2026-09-03.md)。
+[`Phase 12 Plan 07 技术 handover`](../handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)。
 它是专项接续材料，不是整个项目当前状态的替代品。
 
 ## 4. 必须分开的状态与证据

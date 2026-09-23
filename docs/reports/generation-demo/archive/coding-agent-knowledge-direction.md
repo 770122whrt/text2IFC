@@ -1,6 +1,6 @@
 # text2IFC：从 Coding Agent、领域知识到空间生成
 
-> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](research-plan.md)，文献统一见[简版](literature-review-short.md)和[完整版](literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
+> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](../research-plan.md)，文献统一见[简版](../literature-review-short.md)和[完整版](../literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
 
 > 本轮想法已结合逐篇正文核查，收紧为 [研究主线草案](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-proposal.md)；新发现的近邻和证据见 [论文矩阵](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/paper-matrix.md)。本页保留原始讨论、实现观察和成本账本，不能据此认定知识选择机制已经具备方法新颖性。
 
@@ -47,7 +47,7 @@ IFC 建模属于领域化的程序生成与结构化数据生成问题。它和 
 | 当前任务事实 | 用户要求的数量、尺寸、位置，已有 IFC 中的真实对象 | 需求与模型状态；未知事实需澄清或获得设计授权 |
 | 经验与示例 | 典型建模代码、JSON 例子、失败模式 | 按操作和任务选取，避免将例子中的值当作本次答案 |
 
-知识库可以回答窗与洞口的关系类型，不能回答用户没有指定的窗宽。官方知识、项目能力范围和具体设计事实不应混在一起。项目已有 [IFC2X3 知识来源约定](../../reference/ifc2x3-knowledge-sources.md) 对此作了区分。
+知识库可以回答窗与洞口的关系类型，不能回答用户没有指定的窗宽。官方知识、项目能力范围和具体设计事实不应混在一起。项目已有 [IFC2X3 知识来源约定](../../../reference/ifc2x3-knowledge-sources.md) 对此作了区分。
 
 对未来 coding 的意义是一个可检验的问题：**同一个模型的表现，有多少来自模型本身，有多少来自接口抽象和知识组织？** 仅在 IFC 上取得结果，仍不能据此声称改进了通用 Coding Agent。
 
@@ -59,7 +59,7 @@ JSON 不天然比代码省 token。Python 可以通过循环、函数和相对�
 
 ### 已有实现与直接观察
 
-[context_selection.py](../../../src/text2ifc_agent/context_selection.py) 已按关键词选择类别、能力信息和示例；选择门窗时会加入洞口及相关关系类别。这是现有基础，不应再包装为首次引入关系知识。
+[context_selection.py](../../../../src/text2ifc_agent/context_selection.py) 已按关键词选择类别、能力信息和示例；选择门窗时会加入洞口及相关关系类别。这是现有基础，不应再包装为首次引入关系知识。
 
 2026-09-15 的只读探查调用 `select_design_brief_context(user_request='Create a wall with one window.', conversation=[], schema_version='bim-json/2.3')`，用 `json.dumps(..., ensure_ascii=False, separators=(',', ':'))` 计算字符数，得到 context 共 17,676 字符。其中根 schema 7,477 字符，包含 `$defs`；若干定义又作为独立证据项出现。这是定位冗余的线索，**不是 token 测量，也不是可直接删除这些证据项的证明**；引用和校验依赖仍需保留。
 
@@ -67,12 +67,12 @@ JSON 不天然比代码省 token。Python 可以通过循环、函数和相对�
 
 | 阶段 | 输入 token | completion token | 总 token |
 | --- | ---: | ---: | ---: |
-| [Brief](../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/live-run/runs/ce8116ce095acdcf/design-brief/metrics.json) | 26,041 | 49,984 | 76,025 |
-| [Generator](../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/live-run/runs/ce8116ce095acdcf/generator/metrics.json) | 59,377 | 59,334 | 118,711 |
-| [Audit](../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/live-run/runs/ce8116ce095acdcf/audit/metrics.json) | 110,763 | 12,034 | 122,797 |
+| [Brief](../../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/live-run/runs/ce8116ce095acdcf/design-brief/metrics.json) | 26,041 | 49,984 | 76,025 |
+| [Generator](../../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/live-run/runs/ce8116ce095acdcf/generator/metrics.json) | 59,377 | 59,334 | 118,711 |
+| [Audit](../../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/evidence/v2/rerun-03/live-run/runs/ce8116ce095acdcf/audit/metrics.json) | 110,763 | 12,034 | 122,797 |
 | 合计 | 196,181 | 121,352 | 317,533 |
 
-这是一个成功 run 的三次调用，不含该案例此前失败尝试，不能代表平均成本。completion 中已经包含 reasoning，不能再次相加；输入含缓存命中，token 总量不等于实际计费金额。当前人类验收状态以 [案例 REPORT](../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/REPORT.md) 为准，不能用冻结的早期报告标题覆盖后续验收。
+这是一个成功 run 的三次调用，不含该案例此前失败尝试，不能代表平均成本。completion 中已经包含 reasoning，不能再次相加；输入含缓存命中，token 总量不等于实际计费金额。当前人类验收状态以 [案例 REPORT](../../../../dataset/processed/proof/generation/phase6.6/courtyard-library-20260912/open-court-v2/REPORT.md) 为准，不能用冻结的早期报告标题覆盖后续验收。
 
 它支持优先调查三处成本：Brief 的推理与输出；生成表示及上下文；Audit 重复读取的大量内容。仅压缩最终 JSON 可能漏掉主要成本来源，但本轮没有验证具体节省比例。
 
@@ -147,4 +147,4 @@ Demo 故事候选：**text2IFC 通过可执行的建模知识与按任务提供�
 
 如候选知识选择没有胜过普通检索，应保留负结果，转向接口与表示的解释；如主要瓶颈是联动修订，则回到 [此前的关系与修订方向讨论](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-direction-discussion.md)。当前建议先诊断接口与知识供给，不再预设修订范围策略优先。
 
-本轮工作为代码与已有记录只读核实、原始文献核实及方向文档整理。没有运行新的 LLM/Provider 实验、改动生成逻辑或变更既有证据。后续真实实验按 [Agent 能力评测协议](../../validation/agent-capability-evaluation.md) 执行。
+本轮工作为代码与已有记录只读核实、原始文献核实及方向文档整理。没有运行新的 LLM/Provider 实验、改动生成逻辑或变更既有证据。后续真实实验按 [Agent 能力评测协议](../../../validation/agent-capability-evaluation.md) 执行。

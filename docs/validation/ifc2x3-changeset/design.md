@@ -13,7 +13,7 @@
 防漂移规则：
 
 1. 每次改变 operation 语义、输入可见性、坐标合同、验收指标或样例，先更新本文档的决策日志。
-2. 同目录的 `implementation-prompt.md` 是实施指令，不得覆盖本文档的设计决定。
+2. 原实施指令的有效内容已并入本文 §6–18；历史指令不得覆盖本文档的设计决定。
 3. Window 专用字段只能出现在 Window operation 参数中，不能进入公共 ChangeSet envelope。
 4. 新构件类型必须通过 operation registry 接入，不得复制整套 Context、Audit、Applicator 和 Comparator。
 5. 小型 smoke case 与 BIMNet 适配必须分轨报告，不能用小样例成功替代 BIMNet 兼容性结论。
@@ -645,7 +645,7 @@ dataset/processed/ifc-repair/
 
 ## 18. 早期实施边界与复用依据（2026-09-23 整合）
 
-本节整合 [implementation-prompt.md](implementation-prompt.md) 与 [reuse-map.md](reuse-map.md)。它们描述的是 **2026-07-17／18 的首个 Window 闭环**，不覆盖当前 Repair 能力；当前方法、Type／材料和案例仍看[Repair 技术主文档](../../architecture/ifc-repair-pipeline-status-and-roadmap.md)。两份来源暂保留供删除审核。
+本节整合 [implementation-prompt.md](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/ifc2x3-changeset/implementation-prompt.md) 与 [reuse-map.md](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/ifc2x3-changeset/reuse-map.md)。它们描述的是 **2026-07-17／18 的首个 Window 闭环**，不覆盖当前 Repair 能力；当前方法、Type／材料和案例仍看[Repair 技术主文档](../../architecture/ifc-repair-pipeline-status-and-roadmap.md)。两份来源已于 2026-09-23 获批删除，上方链接保留固定历史原文。
 
 实施 Prompt 的公共输入隔离、ChangeSet／Audit／事务应用／比较、交付项和完成标准已分别落在本文 §6–16；其 §20 的离线与真实 UAT 状态、65,536 预算、6,381 输入 token 及不外推 128k 的限制已在本文 §17 保留。旧命令式实施指令不再作为下一步任务。独立发现 F001–F006 仍由 [implementation-findings.md](implementation-findings.md) 保存原始证据和决策，不在这里重写。
 

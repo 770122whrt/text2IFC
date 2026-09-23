@@ -15,7 +15,7 @@ import certifi
 ROOT = Path(__file__).resolve().parents[2]
 LOCAL_MANIFEST = ROOT / "dataset/manifests/ifc-files.jsonl"
 OUTPUT = ROOT / ".tmp/dataset-acquisition/ifc2x3-small-github-candidates.jsonl"
-REPORT = ROOT / "docs/reports/ifc2x3-small-model-web-search.md"
+REPORT = ROOT / "docs/reports/ifc-datasets/ifc2x3-small-model-web-search.md"
 MAX_BYTES = 10 * 1024 * 1024
 USER_AGENT = "text2ifc-dataset-discovery/1.0"
 SCHEMA_RE = re.compile(rb"FILE_SCHEMA\s*\(\s*\(\s*['\"]([^'\"]+)", re.I)

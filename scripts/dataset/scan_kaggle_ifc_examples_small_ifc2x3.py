@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[2]
 LOCAL_MANIFEST = ROOT / "dataset/manifests/ifc-files.jsonl"
 TMP_ROOT = ROOT / ".tmp/dataset-acquisition/kaggle-ifc-examples"
 OUTPUT = ROOT / ".tmp/dataset-acquisition/kaggle-ifc-examples-small-ifc2x3.jsonl"
-REPORT = ROOT / "docs/reports/kaggle-ifc-examples-small-ifc2x3.md"
+REPORT = ROOT / "docs/reports/ifc-datasets/kaggle-ifc-examples-small-ifc2x3.md"
 MAX_BYTES = 10 * 1024 * 1024
 MIB = 1024 * 1024
 BASE = "https://www.kaggle.com/api/v1/datasets"
@@ -216,6 +216,7 @@ def main() -> int:
     for row in sorted(unique, key=lambda r: (r["size_bytes"], r["path"])):
         m = row["metrics"]
         lines.append(f"| {row['size_mib']:.3f} | `{row['upstream_family']}` | {m['element_count']} | {m['storey_count']} | {m['key_class_diversity']} | `{row['path']}` |")
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(json.dumps({
         "scanned": len(records),

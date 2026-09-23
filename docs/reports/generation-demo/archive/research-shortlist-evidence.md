@@ -1,6 +1,6 @@
 # 简版选题的补查证据
 
-> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](research-plan.md)，文献统一见[简版](literature-review-short.md)和[完整版](literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
+> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](../research-plan.md)，文献统一见[简版](../literature-review-short.md)和[完整版](../literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
 
 > 后续更新：用户要求扩大选题范围。本文保留上一轮的 A/B/C 核查；当前问题池、Self-Verification 比较与 P1/P2/V1/L1 实验见 [方法方向扩展](broader-method-directions.md)。
 

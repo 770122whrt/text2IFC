@@ -829,7 +829,7 @@ B. 进一步收紧 reference policy 后单列 compositional generation contribut
 
 - 当前本地仓库实现与 tests；
 - [历史 paper-matrix](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/paper-matrix.md)；
-- `novelty-literature-addendum.md`；
+- [扩展矩阵历史原稿](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/reports/generation-demo/novelty-literature-addendum.md)；
 - `broader-method-directions.md`；
 - [历史 research-shortlist](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-shortlist.md) / `research-shortlist-evidence.md`；
 - `Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md`；

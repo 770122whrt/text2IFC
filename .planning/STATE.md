@@ -307,7 +307,7 @@ R1 evidence: fresh ordered genuine run r1-20260901T055419268779Z passed E1-E4,
              Calls before stop: Stage 1=12, Stage 1.5=11, Stage 2=10.
 R1 boundary: nine successful cases retain repaired IFC and recorded L0/L1/L2;
              R1 Proof 0.3, final IFCCompare and Phase closure were not run.
-Handoff: docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md
+Handoff: [2026-09-01 historical checkpoint](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md)
 Matrix: docs/validation/repair-milestone-r1/
         plan07-r1-genuine-execution-matrix-2026-09-01.md
 Next: Start the next conversation from the handoff. Diagnose H3 target
@@ -551,7 +551,7 @@ Plan: 7 of 7 complete; Plan 07 closed by accepted R1 Proof
 
 ## Next Action
 
-Use `docs/handoffs/repair-milestone-r1-closure-2026-09-03.md` and the linked
+Use `docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md` and the linked
 final Proof Matrix as the authoritative R1/Phase 12.1 continuation point.
 Preserve all genuine runs and curated Proof append-only. Do not start Phase 13
 without a separate explicit task.

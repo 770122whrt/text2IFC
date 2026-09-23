@@ -196,7 +196,7 @@ REPORT.md 为**验收版**：逐构件损伤清单（名称/GUID/楼层/坐标/�
 | Proof 包 | `dataset/processed/proof/repair-damage-restoration/` |
 | 冻结契约 | `docs/validation/repair-composite-milestone/damage-restoration*.json` |
 | 缺陷记录 | 同目录 `DEFECT-RECORD.md`（缺陷 1-7） |
-| 工作总结 | 同目录 `WORK-SUMMARY.md`（一至十节） |
+| 工作总结 | [原 WORK-SUMMARY 历史版本](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/repair-composite-milestone/WORK-SUMMARY.md)；有效叙述见本页整合补记 |
 | 证据矩阵 | 同目录 `composite-evidence-matrix.md` |
 | 严格审计 | `composite-evidence-audit/audit-*.json` |
 | 运行工件 | `dataset/processed/ifc-repair-runs/repair-damage-restoration*` |
@@ -204,7 +204,7 @@ REPORT.md 为**验收版**：逐构件损伤清单（名称/GUID/楼层/坐标/�
 
 ## 2026-09-23 整合补记：早期工作、会话总结与最终验收的关系
 
-本节整合 [WORK-SUMMARY.md](WORK-SUMMARY.md) 的阶段演进与独有失败背景。上文是 9 月 1 日会话快照，不能将其中“Plan 07 未收尾”、旧 Proof 路径或当时的 Type 边界读成今天的状态；后续正式 C1–C5 完成记录见 [9 月 4 日验收](damage-restoration-c1-c5-completed.md)，当前人读入口见[Repair Proof](../../../dataset/processed/proof/README.md)。本次不重写原运行和验收记录。
+本节整合 [WORK-SUMMARY.md](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/repair-composite-milestone/WORK-SUMMARY.md) 的阶段演进与独有失败背景。上文是 9 月 1 日会话快照，不能将其中“Plan 07 未收尾”、旧 Proof 路径或当时的 Type 边界读成今天的状态；后续正式 C1–C5 完成记录见 [9 月 4 日验收](damage-restoration-c1-c5-completed.md)，当前人读入口见[Repair Proof](../../../dataset/processed/proof/README.md)。本次不重写原运行和验收记录。
 
 | 阶段 | 保留的工作事实 | 合并后的阅读位置 |
 |---|---|---|
@@ -216,4 +216,4 @@ REPORT.md 为**验收版**：逐构件损伤清单（名称/GUID/楼层/坐标/�
 
 仍需保留的早期失败背景：大模型评估曾超过 180 秒时限，改为 900 秒时限但没有减少检查；harness 曾只处理 list 形投影而未处理 dict，属于运行包装器错误；窗损伤请求曾缺宿主标识；C5 首次运行因不存在的 profile 和多余字段被拒收。这些与后续楼层误差、属性遗漏属于不同失败，不因最后通过而删掉。请求措辞的内部调整只表示当时开发过程，不能当作盲测提升。
 
-[WORK-SUMMARY.md](WORK-SUMMARY.md)中的代码清单、逐轮调用和时延可从原稿追溯；现行入口不再重复维护一套相同阶段说明。后续合并删除仅退役叙述稿，保留本页、独立缺陷／证据报告、冻结文件、真实失败与正式 Proof。
+[WORK-SUMMARY.md](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/repair-composite-milestone/WORK-SUMMARY.md)中的代码清单、逐轮调用和时延可从原稿追溯；现行入口不再重复维护一套相同阶段说明。2026-09-23 已获批删除原叙述稿，保留本页、独立缺陷／证据报告、冻结文件、真实失败与正式 Proof。

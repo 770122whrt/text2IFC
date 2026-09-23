@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = ROOT / ".tmp/dataset-acquisition/ifc2x3-small-github-classified.jsonl"
 OUTPUT = ROOT / "dataset/manifests/acquisitions/ifc2x3-small-github-refined.jsonl"
-REPORT = ROOT / "docs/reports/ifc2x3-small-model-refined-shortlist.md"
+REPORT = ROOT / "docs/reports/ifc-datasets/ifc2x3-small-model-refined-shortlist.md"
 
 NEGATIVE_HINTS = re.compile(
     r"(?:^|/)(?:tests?|tickets?|issues?|bugs?)(?:/|$)|"
@@ -148,6 +148,7 @@ def main() -> int:
         "Candidates classified as single-component, fragment, metadata-only, invalid, obvious bug/ticket/encoding fixtures, or exact candidate duplicates remain discovery evidence only.",
         "",
     ]
+    REPORT.parent.mkdir(parents=True, exist_ok=True)
     REPORT.write_text("\n".join(lines), encoding="utf-8")
 
     print(json.dumps({
