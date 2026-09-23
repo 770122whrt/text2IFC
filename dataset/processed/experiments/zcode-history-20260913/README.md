@@ -46,4 +46,8 @@
 
 本次 [远端可用性检查](../../../../docs/reports/archive-retirement-20260913/remote-availability.json)确认六个对象均可下载，且各一次 1 字节范围读取返回 HTTP 206、总大小匹配。原六个本地 ZIP 已与提交中的 LFS SHA-256 匹配；2026-09-05 的[独立完整下载验证](../../../../docs/reports/zcode-integration-20260905/remote-recovery-verification.json)保留。**本次没有重新下载并全量哈希远端 2.50 GiB 数据。**
 
-实际退役状态、准确清单与验证见[本轮报告](../../../../docs/reports/archive-retirement-20260913/REPORT.md)。删除当前工作目录的副本不会缩小 Git/LFS 历史；不执行历史压缩或 LFS prune。
+9 月 13 日的工作目录退役状态见[当时报告](../../../../docs/reports/archive-retirement-20260913/REPORT.md)；该轮没有清理本地 LFS 存储。
+
+**2026-09-24 存储更新：六份旧大包的本地 LFS 副本已移除，按需从 GitHub 恢复。** 本次重新逐对象确认下载可用、1 字节范围读取及总大小，并在删除前核对本地完整 SHA-256。固定提交和远端对象仍保留，清单见[最新存储与恢复记录](../../../../docs/reports/repository-cleanup-20260923/lfs-cloud-storage-20260924.json)，操作见[按需恢复说明](../../../../docs/reports/repository-cleanup-20260923/REPORT.md#按需恢复)。不要为查阅单个旧文件重新下载整个分支或全部 LFS 历史。
+
+本次也重新核对远端 Zcode：最新提交 `d0e18fa0ca52b23c6a0504195cd1ca28015ebb0d` 是 9 月 12 日合并 `f49bbf425feca8292621b7551d4f5f9c9652fe4f` 的第二父提交，且为当前分支和远端 main 的祖先。后续采用的评估拆分、Proof 包提取也已包含在当前分支与远端 main 中。Zcode 已合并，保留分支引用只为定位历史，不需要保留大包本地副本。

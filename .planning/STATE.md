@@ -14,9 +14,11 @@ progress:
 
 # Project State
 
-## 当前整理：旧 main 工作树退役（2026-09-24）
+## 当前整理：旧工作树退役与 LFS 按需恢复（2026-09-24）
 
-按用户要求将项目控制在约 30 GiB，旧 `.tmp/main-integration-20260912` 已在恢复核查后退役，项目按含隐藏文件、排除目录链接重复计数的口径从 40.38 GiB 降至 30.06 GiB。main 分支及 Git/LFS 对象保留；独有运行文件和五份不同的旧 RVT 压缩保存在 `.tmp/retired-worktrees/main-integration-20260912/`，仅本地保留。根缓存、依赖、当前 Proof 和原有未提交工作不变。下方 9 月 13 日记录中的“main 工作树保留”属于当时状态；恢复入口和校验见[清理报告](../docs/reports/repository-cleanup-20260923/REPORT.md#2026-09-24旧-main-工作树退役与体积复测)。
+旧 `.tmp/main-integration-20260912` 已退役，项目先从 40.38 GiB 降至 30.06 GiB。用户随后明确：GitHub 可恢复的 LFS 副本不必留在本地。已核对并移除根 LFS 存储中的 518 个副本，释放 5.54 GiB，项目约 24.53 GiB；当前展开的数据和 Proof、模型缓存、依赖及 Git 提交对象保留。3,122 个未获远端确认的对象保留。恢复清单标注每个对象的固定提交、路径、OID 和大小，按需下载，见[清理报告](../docs/reports/repository-cleanup-20260923/REPORT.md#2026-09-24github-lfs-按需恢复已执行)。原四个测试目录归档与 Git 重打包方案未执行。
+
+旧 main 的独有运行文件和五份不同的旧 RVT 仍保存在 `.tmp/retired-worktrees/main-integration-20260912/local-artifacts.zip`，仅本地保留；其 463 个 LFS 恢复对象改为从 GitHub 获取，恢复说明及索引已同步。Zcode 的远端最新提交 `d0e18fa0` 已经由 `f49bbf42` 合入 main，当前分支及远端 main 均包含它；旧镜像不是待合并工作。下方 9 月 13 日的工作树与存储保留描述只表示当时状态。
 
 ## 当前重构：接入 Zcode 有效实现（2026-09-13）
 
