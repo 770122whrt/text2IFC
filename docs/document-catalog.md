@@ -2,7 +2,7 @@
 
 更新：2026-09-23。覆盖 `docs/` 下 212 份 Markdown 文件（不含本目录自身）。
 按功能和用途整理导航；逐文件分类依据路径、标题及各分区索引，不表示已逐句审计全部历史正文。
-本次事实核对集中于 Repair、材料／Type／外观、R1 和 presentation 案例。
+事实核对包括 Repair、材料／Type／外观、R1、presentation 案例，以及 Generation 旧综述覆盖与重复 Prompt 快照。
 `.planning/`、源数据、Prompt／Schema、accepted Proof 与运行产物保留原有权威位置，未纳入删除。
 
 ## 日常只从这些入口开始
@@ -69,9 +69,46 @@
 
 **这批明确保留的内容：**三份现行 Generation 主稿；三份现行 Repair 主稿；literature-evidence 原始阅读卡；独立 Claims 审核；包含真实成本账本的 coding-agent-knowledge-direction；仍承载详细近邻论证的 broader-method-directions／research-shortlist-evidence；用户上传的 8 月原稿、源模型、已接受 Proof 和真实失败记录。
 
-## 逐文件分类
+## Generation 文献：D10／D11 的替代已核对
 
-下表包括历史运行中附带的 Markdown，已标为运行证据，不把它们误当研究正文。
+2026-09-23 核对当前本地文件：[综述完整版](reports/generation-demo/literature-review-full.md)标注的文献更新日为 **2026-09-18**，实际表格 **134 条：118 条 F、16 条 P**。F/P 是原记录的阅读范围，不是本次重新全文审读或复现。适合讨论的入口是[综述简版](reports/generation-demo/literature-review-short.md)，研究问题与实验仍看[研究方案](reports/generation-demo/research-plan.md)。
+
+| 旧稿 | 新稿承接情况 | 清理判断 |
+|---|---|---|
+| D10：早期主题综述 | 直接先例、版本分母和结论边界进入完整版；讨论重点进入简版；独立需求、关系与保全的评价进入研究方案 §2／§5 | 建议删旧稿。旧投稿日期和早期 A／B／C 优先级不回灌；需要追溯时读历史原稿 |
+| D11：63 条矩阵 | A/B/C/D 共 63 个记录编号全部在完整版，底层证据卡与锚点存在；资源说明仍有 external 数据目录 | 建议删旧索引，不删原始证据卡。编号覆盖不等于逐句完全重复 |
+| D12：104 条飞书矩阵 | 99 条正文逐字一致，另 5 条只增加补充阅读链接，合计 104／104 保留 | 建议删本地旧副本；远端飞书页面不在删除范围 |
+
+新版的价值不只是数量增加：保留最多三个模块，每条并列贡献、实验范围、限制和对选题的影响。相比旧 104 条，还纳入 30 条记录／补查条目，涉及 TileGPT 的设计模式覆盖、SceneMotifCoder／PSDL／CADIR／TraceCAD／Graph-CAD 的空间表示与编辑、知识及澄清方法、规格与检查器评价，以及 ChopChop／SCOPE 的约束执行分工。它们服务于当前 D1／D2 的对照选择；不是本轮新增的互联网文献调查，也不代表所有创新问题已经解决。
+
+## 第三批待审核：重复 Prompt 快照 D15–D22
+
+**状态：尚未删除任何快照。** 原分类表将同一标题逐份列作“运行证据：保留”，没有解释重复关系，容易被误认为九份技术文档。现已将普通阅读入口合并为一项。
+
+这 **9 份是同一个 0.5 Prompt 在九个离线 fixture 基线案例中的渲染副本**，不是九个 Prompt 版本。`provider-metadata.json` 为 `fixture`／`fixture-model`，它们不是真实 Provider 成功。逐字比对确认九份相同；但九个案例的响应共有八种内容、诊断共有三种内容，不能据 Prompt 重复删掉整个案例或失败记录。
+
+**合并建议：**保留 [setsem-01 的共享 Prompt](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，用下表保存“原案例 → 同字节共享文件”的对应关系。批准后只删除下列八份重复 `.md`；每案的响应、诊断、输入、profile 和 metadata 原件暂不更动，也不改写旧证据内容。
+
+| 编号 | 待删原件（审核阅读） | 保留内容与理由 |
+|---|---|---|
+| D15 | [composite-evidence-setsem-02](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-02/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D16 | [composite-evidence-setsem-03](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-03/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D17 | [composite-evidence-setsem-drift-evidence-duplicate-ref](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-duplicate-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D18 | [composite-evidence-setsem-drift-evidence-extra-ref](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-extra-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D19 | [composite-evidence-setsem-drift-evidence-missing-ref](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-missing-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D20 | [composite-evidence-setsem-drift-scope-duplicate-target](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-duplicate-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D21 | [composite-evidence-setsem-drift-scope-extra-target](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-extra-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D22 | [composite-evidence-setsem-drift-scope-missing-target](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-missing-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+
+九份现有文件各 13,955 字节，删除八份可减少 111,640 字节（约 109 KiB）；清理价值主要是消除重复入口。工作目录原件 SHA-256 为 `e7af90237a94a02baf1babcb11b15d7803ca2bbaa6abca1b3c37be80b0222f6f`。Git 以 LF 保存同一文本，历史 blob 的 SHA-256 为 `f0b3a3ec879a671789fbf1b6f422b16c1dd3c2f235cec640ae9f8290e7bf54fa`，差异仅为 CRLF/LF；九份文本均与已推送的 `51cb5a71` 对应版本一致。审批通过后保留共享原件的现有字节，用此表追溯历史路径，不将其描述成新的实验结果。
+
+**另一个容易混淆的地方：**[prompts/agent](../prompts/agent/) 的 v0.1–v0.6 是六个内容不同、带注册哈希的执行模板。当前入口按合同选择 v0.2、v0.3、v0.5、v0.6，另有 v0.1 的旧路径；v0.4 已不在当前选择分支中，但仍是已注册历史版本。这类模板不能与上面的重复渲染副本混为一谈。退役 v0.4 需要同步处理版本注册与历史依赖，不能只删除 Markdown 文件；本次仅整理导航与待删清单。
+
+本次对 `docs/` 的完整字节重复检查还发现两份 C-teaching `semantic-report.md` 相同，分别属于清理后验收和合并后复验。它们代表不同检查时点，先保留各自结果归属；不因文本相同合并成一次验收。除这组与上述 Prompt 组，未发现其他 Markdown 的整文件字节重复；这不排除内容层面的重叠。
+
+## 文档分类（相同运行附件合并展示）
+
+下表包括历史运行中附带的 Markdown。九份完全相同的 Prompt 合并为一项阅读入口，原文件逐项路径见第三批待审核清单；分区数量仍按实际文件计数。
 本表是一份分类快照，新增文档仍先更新所属功能的主索引，不要求每次改字都重新生成清单。
 
 ### Repair（64 份）
@@ -250,15 +287,7 @@
 | [根 archive 准确退役清单](reports/archive-retirement-20260913/DELETE-LIST.md) | 日期快照／证据：保留 |
 | [archive 退役与 Zcode 重构参考收纳](reports/archive-retirement-20260913/REPORT.md) | 日期快照／证据：保留 |
 | [已完成案例与开发工作区清理](reports/development-cleanup-20260912/REPORT.md) | 日期快照／证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-02/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-03/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-duplicate-ref/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-extra-ref/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-missing-ref/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-duplicate-target/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-extra-target/attempt-001/rendered-prompt.md) | 运行证据：保留 |
-| [IFC Repair ChangeSet Draft Generator 0.5](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-missing-target/attempt-001/rendered-prompt.md) | 运行证据：保留 |
+| [离线基线共享 Prompt：0.5，九份相同副本](#第三批待审核重复-prompt-快照-d15d22) | 一份建议保留、八份待审核删除；各案例响应和诊断保留 |
 | [下一批清理清单（尚未批准／未删除）](reports/main-integration-20260912/NEXT-CLEANUP.md) | 日期快照／证据：保留 |
 | [text2IFC 清理与分支整合报告](reports/main-integration-20260912/REPORT.md) | 日期快照／证据：保留 |
 | [本地重复临时文件删除申请](reports/main-integration-20260912/SCRATCH-CLEANUP.md) | 日期快照／证据：保留 |
