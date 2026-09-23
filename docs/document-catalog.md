@@ -1,6 +1,6 @@
 # 文档分类、归档与保留目录
 
-更新：2026-09-23。覆盖 `docs/` 下 212 份 Markdown 文件（不含本目录自身）。
+更新：2026-09-23。覆盖 `docs/` 下 194 份 Markdown 文件（不含本目录自身）。
 按功能和用途整理导航；逐文件分类依据路径、标题及各分区索引，不表示已逐句审计全部历史正文。
 事实核对包括 Repair、材料／Type／外观、R1、presentation 案例，以及 Generation 旧综述覆盖与重复 Prompt 快照。
 `.planning/`、源数据、Prompt／Schema、accepted Proof 与运行产物保留原有权威位置，未纳入删除。
@@ -19,7 +19,7 @@
 ## 已完成的归档与纠偏
 
 - Repair 的旧草案先归档并推送 Git；用户批准后删除 D1–D4，相关评测要点并入现行 Claims。历史原文见下方固定提交链接。
-- 继续核查 Generation 早期研究稿，列出第二批 10 份待删除审核项；周报、旧 handoff 和独立证据另行判断，不再一律标为永久保留。
+- 经用户批准删除 Generation 早期研究稿 10 份，并合并九份相同 Prompt 快照为一份；周报、旧 handoff 和独立证据另行判断，不再一律标为永久保留。
 - 将全局和报告索引增加为按功能阅读，改正架构索引仍只写 Phase 7–10.1、验证索引仍写 R1 待执行等过时描述。
 - Repair 技术主文档补齐 Type／材料／外观，并将运行 PASS、人工待审、离线回归分别报告。没有重写任何冻结 Proof 或实验结果。
 
@@ -42,30 +42,30 @@
 
 本批只审查文档内容的去留，不表示代码、数据或整个项目已完成清理。本批已删除 4 份，上传的 8 月原稿与实验依据保留。
 
-## 第二批待审核：D5–D14，共 10 份
+## 第二批删除已完成：D5–D14，共 10 份
 
-**状态：仅提议，尚未删除。** 这 10 份不包含已删除的 D1–D4。核查对象是 Generation 研究中反复叠加的旧稿；删除它们可减少并行版本，并非停止 Generation 研究。Repair 的三份现行正文继续维护。
+**状态：2026-09-23 经用户明确批准，十份均已删除。** 这 10 份不包含已删除的 D1–D4。核查对象是 Generation 研究中反复叠加的旧稿；删除它们可减少并行版本，并非停止 Generation 研究。Repair 的三份现行正文继续维护。
 
-现行替代入口：[研究方案](reports/generation-demo/research-plan.md)、[综述简版](reports/generation-demo/literature-review-short.md)、[综述完整版](reports/generation-demo/literature-review-full.md)。下表链接均可直接阅读待删原文。
+现行替代入口：[研究方案](reports/generation-demo/research-plan.md)、[综述简版](reports/generation-demo/literature-review-short.md)、[综述完整版](reports/generation-demo/literature-review-full.md)。下表链接指向删除前的固定历史版本，可直接阅读原文。
 
-| 编号与待审核原文 | 建议删除的具体理由 | 承接内容／审核重点 |
+| 编号与历史原文 | 已删除的具体理由 | 承接内容／审核重点 |
 |---|---|---|
-| D5 [旧三项 Claims](reports/generation-demo/novelty-and-claims.md) | 仍围绕可核验流程、写入所有权、版本绑定组织三项贡献；这些已经调整为系统基础，不是当前独立方法主张 | 研究方案 §2 的 RQ0／E0 承接系统定位。旧中英文贡献段落不再沿用；独立 Claims 审核报告保留 |
-| D6 [A／B／C 选题讨论](reports/generation-demo/research-direction-discussion.md) | “B 优先”的关系感知修订路线已被后续研究方案取代，保留全文容易造成多个“下一步” | 研究方案 §2、§4、§5 承接受控编辑、相互作用与联合评价；旧 12 题探索建议和投稿日程不作为当前计划，历史措辞随原稿备份 |
-| D7 [知识供给研究主线草案](reports/generation-demo/research-proposal.md) | 以编译器分工／知识选择作为重点方法，优先级已被现行 RQ0、D1／D2 改写；另保留一套 RQ1–RQ4、B1–B5 会造成排期歧义 | 研究方案 E0.1／E0.3、§5 承接强 Coding Agent、同接口对照与完整成本。旧“按任务义务选择知识”的具体假设只留历史备份，不宣称全文已被逐字吸收 |
-| D8 [旧选题简洁记录](reports/generation-demo/research-shortlist.md) | 是 P1／P2／V1／L1 的中间摘要，既重复较长讨论，也不是当前 D1／D2 的入口 | 当前优先级看研究方案 §6；较详细的方向论证仍保留在 broader-method-directions，原始补查仍保留在 research-shortlist-evidence |
-| D9 [旧 Demo 综述短稿](reports/generation-demo/literature-review-demo.md) | 与现行综述简版重复；附带的英文 Related Work 仍服务于早期状态管理定位 | 简版的三模块比较及完整版的逐篇条目承接文献事实。旧英文段落属于过期写作草稿，备份后删除，不混入 Repair Method |
-| D10 [早期主题综述工作稿](reports/generation-demo/literature-review-working.md) | 已先后被论文矩阵及完整综述扩充、更正，末尾还指向旧 A／B／C 选题，继续维护会分裂比较口径 | 完整版 §1 的直接近邻、版本与实验边界，研究方案 §2／§5 的系统定位和独立评价承接；原始调查来源及独立审核保留 |
-| D11 [63 条旧论文矩阵](reports/generation-demo/paper-matrix.md) | 是较小范围的旧索引；A01–A14、B01–B12、C01–C16、D01–D21 共 63 个记录编号均已进入完整综述 | 63 个编号已逐项匹配；其证据卡文件与锚点均存在并保留。旧 F／P 读取快照与数据资源表不需重复维护；资源准入仍看 external 数据目录 |
-| D12 [104 条旧飞书矩阵备份](reports/generation-demo/feishu-literature-matrix.md) | 完整版已吸收整张矩阵；保留另一份独立正文只增加旧 N01–N08 定位和计数的维护负担 | 104 条正文全部对应：99 条逐字相同，另外 5 条仅新增“补充核查”链接。旧飞书页面的历史地址随备份保留；此次不删除或改写远端页面 |
-| D13 [N01–N08 方法候选](reports/generation-demo/novelty-directions.md) | 同时展开八条旧假设，优先级又被多次补查推翻；与当前集中写 Repair Demo 的目的不符，也不是 Generation 当前路线 | 现行研究方案只维护 RQ0、D1／D2；文献冲突依据仍在完整版与原始证据卡。八条旧假设的具体构造未全部迁移，建议有意退出工作目录、保存在历史备份 |
-| D14 [E01–E08 实验设计](reports/generation-demo/novelty-experiments.md) | 对应上一行的八条未执行假设，另有旧任务数量、人周与停止阈值，容易被误当作待执行实验清单 | 当前实验看研究方案 E0／E1／E2 和 §5；Repair 看自身 Claims。E01–E08 的专属消融和建议规模未全部迁移，随旧假设一起保留历史备份；没有删除已执行结果 |
+| D5 [旧三项 Claims](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/novelty-and-claims.md) | 仍围绕可核验流程、写入所有权、版本绑定组织三项贡献；这些已经调整为系统基础，不是当前独立方法主张 | 研究方案 §2 的 RQ0／E0 承接系统定位。旧中英文贡献段落不再沿用；独立 Claims 审核报告保留 |
+| D6 [A／B／C 选题讨论](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-direction-discussion.md) | “B 优先”的关系感知修订路线已被后续研究方案取代，保留全文容易造成多个“下一步” | 研究方案 §2、§4、§5 承接受控编辑、相互作用与联合评价；旧 12 题探索建议和投稿日程不作为当前计划，历史措辞随原稿备份 |
+| D7 [知识供给研究主线草案](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-proposal.md) | 以编译器分工／知识选择作为重点方法，优先级已被现行 RQ0、D1／D2 改写；另保留一套 RQ1–RQ4、B1–B5 会造成排期歧义 | 研究方案 E0.1／E0.3、§5 承接强 Coding Agent、同接口对照与完整成本。旧“按任务义务选择知识”的具体假设只留历史备份，不宣称全文已被逐字吸收 |
+| D8 [旧选题简洁记录](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/research-shortlist.md) | 是 P1／P2／V1／L1 的中间摘要，既重复较长讨论，也不是当前 D1／D2 的入口 | 当前优先级看研究方案 §6；较详细的方向论证仍保留在 broader-method-directions，原始补查仍保留在 research-shortlist-evidence |
+| D9 [旧 Demo 综述短稿](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/literature-review-demo.md) | 与现行综述简版重复；附带的英文 Related Work 仍服务于早期状态管理定位 | 简版的三模块比较及完整版的逐篇条目承接文献事实。旧英文段落属于过期写作草稿，备份后删除，不混入 Repair Method |
+| D10 [早期主题综述工作稿](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/literature-review-working.md) | 已先后被论文矩阵及完整综述扩充、更正，末尾还指向旧 A／B／C 选题，继续维护会分裂比较口径 | 完整版 §1 的直接近邻、版本与实验边界，研究方案 §2／§5 的系统定位和独立评价承接；原始调查来源及独立审核保留 |
+| D11 [63 条旧论文矩阵](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/paper-matrix.md) | 是较小范围的旧索引；A01–A14、B01–B12、C01–C16、D01–D21 共 63 个记录编号均已进入完整综述 | 63 个编号已逐项匹配；其证据卡文件与锚点均存在并保留。旧 F／P 读取快照与数据资源表不需重复维护；资源准入仍看 external 数据目录 |
+| D12 [104 条旧飞书矩阵备份](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/feishu-literature-matrix.md) | 完整版已吸收整张矩阵；保留另一份独立正文只增加旧 N01–N08 定位和计数的维护负担 | 104 条正文全部对应：99 条逐字相同，另外 5 条仅新增“补充核查”链接。旧飞书页面的历史地址随备份保留；此次不删除或改写远端页面 |
+| D13 [N01–N08 方法候选](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/novelty-directions.md) | 同时展开八条旧假设，优先级又被多次补查推翻；与当前集中写 Repair Demo 的目的不符，也不是 Generation 当前路线 | 现行研究方案只维护 RQ0、D1／D2；文献冲突依据仍在完整版与原始证据卡。八条旧假设的具体构造未全部迁移，建议有意退出工作目录、保存在历史备份 |
+| D14 [E01–E08 实验设计](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/novelty-experiments.md) | 对应上一行的八条未执行假设，另有旧任务数量、人周与停止阈值，容易被误当作待执行实验清单 | 当前实验看研究方案 E0／E1／E2 和 §5；Repair 看自身 Claims。E01–E08 的专属消融和建议规模未全部迁移，随旧假设一起保留历史备份；没有删除已执行结果 |
 
 **覆盖核查的含义：**D11 已核对记录编号及底层证据入口，不声称旧表每个摘要句都逐字进入新版。D12 已逐行比对正文，5 处差异均为新版新增的补充阅读链接。D13／D14 是建议退出当前维护的旧研究分支，不把“搁置”伪装成“内容完全重复”。
 
-**备份状态：**这 10 份目前都未被 Git 跟踪，尚不能说“已在 Git 中可恢复”。审核期间保留原文件。若批准删除，将先把指定原稿提交并推送形成固定历史版本，验证可恢复后明确告知开始删除，再删除原件并修复引用；不会仅凭未跟踪状态删除文件。
+**备份状态：**十份原稿先提交并推送至 `09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1`，再执行删除；原文均可从上表的固定版本恢复。
 
-**引用处理已定位：**除了十份候选之间互引，还涉及 Generation README、coding-agent-knowledge-direction、broader-method-directions、claims-and-novelty-synthesis、research-shortlist-evidence、novelty-literature-addendum 以及三份底层证据卡中的导航。批准后将现行入口改指研究方案／完整综述；确需引用旧论证的地方改用固定历史版本，不留下断链。
+**引用已修复：**现行阅读入口为三份主稿；留存研究稿和阅读卡对旧论证的引用改为固定 Git 历史链接。没有删除原始阅读卡或独立审核。
 
 **这批明确保留的内容：**三份现行 Generation 主稿；三份现行 Repair 主稿；literature-evidence 原始阅读卡；独立 Claims 审核；包含真实成本账本的 coding-agent-knowledge-direction；仍承载详细近邻论证的 broader-method-directions／research-shortlist-evidence；用户上传的 8 月原稿、源模型、已接受 Proof 和真实失败记录。
 
@@ -75,40 +75,55 @@
 
 | 旧稿 | 新稿承接情况 | 清理判断 |
 |---|---|---|
-| D10：早期主题综述 | 直接先例、版本分母和结论边界进入完整版；讨论重点进入简版；独立需求、关系与保全的评价进入研究方案 §2／§5 | 建议删旧稿。旧投稿日期和早期 A／B／C 优先级不回灌；需要追溯时读历史原稿 |
-| D11：63 条矩阵 | A/B/C/D 共 63 个记录编号全部在完整版，底层证据卡与锚点存在；资源说明仍有 external 数据目录 | 建议删旧索引，不删原始证据卡。编号覆盖不等于逐句完全重复 |
-| D12：104 条飞书矩阵 | 99 条正文逐字一致，另 5 条只增加补充阅读链接，合计 104／104 保留 | 建议删本地旧副本；远端飞书页面不在删除范围 |
+| D10：早期主题综述 | 直接先例、版本分母和结论边界进入完整版；讨论重点进入简版；独立需求、关系与保全的评价进入研究方案 §2／§5 | 已删除旧稿。旧投稿日期和早期 A／B／C 优先级不回灌；需要追溯时读历史原稿 |
+| D11：63 条矩阵 | A/B/C/D 共 63 个记录编号全部在完整版，底层证据卡与锚点存在；资源说明仍有 external 数据目录 | 已删除旧索引，不删原始证据卡。编号覆盖不等于逐句完全重复 |
+| D12：104 条飞书矩阵 | 99 条正文逐字一致，另 5 条只增加补充阅读链接，合计 104／104 保留 | 已删除本地旧副本；远端飞书页面不在删除范围 |
 
 新版的价值不只是数量增加：保留最多三个模块，每条并列贡献、实验范围、限制和对选题的影响。相比旧 104 条，还纳入 30 条记录／补查条目，涉及 TileGPT 的设计模式覆盖、SceneMotifCoder／PSDL／CADIR／TraceCAD／Graph-CAD 的空间表示与编辑、知识及澄清方法、规格与检查器评价，以及 ChopChop／SCOPE 的约束执行分工。它们服务于当前 D1／D2 的对照选择；不是本轮新增的互联网文献调查，也不代表所有创新问题已经解决。
 
-## 第三批待审核：重复 Prompt 快照 D15–D22
+## 第三批删除已完成：重复 Prompt 快照 D15–D22
 
-**状态：尚未删除任何快照。** 原分类表将同一标题逐份列作“运行证据：保留”，没有解释重复关系，容易被误认为九份技术文档。现已将普通阅读入口合并为一项。
+**状态：2026-09-23 经用户批准，八份重复快照均已删除，共享原件保留。** 原分类表将同一标题逐份列作“运行证据：保留”，没有解释重复关系，容易被误认为九份技术文档。现已将普通阅读入口合并为一项。
 
 这 **9 份是同一个 0.5 Prompt 在九个离线 fixture 基线案例中的渲染副本**，不是九个 Prompt 版本。`provider-metadata.json` 为 `fixture`／`fixture-model`，它们不是真实 Provider 成功。逐字比对确认九份相同；但九个案例的响应共有八种内容、诊断共有三种内容，不能据 Prompt 重复删掉整个案例或失败记录。
 
-**合并建议：**保留 [setsem-01 的共享 Prompt](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，用下表保存“原案例 → 同字节共享文件”的对应关系。批准后只删除下列八份重复 `.md`；每案的响应、诊断、输入、profile 和 metadata 原件暂不更动，也不改写旧证据内容。
+**已合并：**保留 [setsem-01 的共享 Prompt](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，用下表保存“原案例 → 同字节共享文件”的对应关系。已删除下列八份重复 `.md`；每案的响应、诊断、输入、profile 和 metadata 原件暂不更动，也不改写旧证据内容。
 
-| 编号 | 待删原件（审核阅读） | 保留内容与理由 |
+| 编号 | 历史原件（固定版本） | 保留内容与理由 |
 |---|---|---|
-| D15 | [composite-evidence-setsem-02](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-02/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D16 | [composite-evidence-setsem-03](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-03/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D17 | [composite-evidence-setsem-drift-evidence-duplicate-ref](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-duplicate-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D18 | [composite-evidence-setsem-drift-evidence-extra-ref](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-extra-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D19 | [composite-evidence-setsem-drift-evidence-missing-ref](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-missing-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D20 | [composite-evidence-setsem-drift-scope-duplicate-target](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-duplicate-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D21 | [composite-evidence-setsem-drift-scope-extra-target](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-extra-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
-| D22 | [composite-evidence-setsem-drift-scope-missing-target](reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-missing-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D15 | [composite-evidence-setsem-02](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-02/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D16 | [composite-evidence-setsem-03](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-03/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D17 | [composite-evidence-setsem-drift-evidence-duplicate-ref](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-duplicate-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D18 | [composite-evidence-setsem-drift-evidence-extra-ref](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-extra-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D19 | [composite-evidence-setsem-drift-evidence-missing-ref](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-evidence-missing-ref/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D20 | [composite-evidence-setsem-drift-scope-duplicate-target](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-duplicate-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D21 | [composite-evidence-setsem-drift-scope-extra-target](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-extra-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
+| D22 | [composite-evidence-setsem-drift-scope-missing-target](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/main-integration-20260912/baseline-runs/composite-evidence-setsem-drift-scope-missing-target/attempt-001/rendered-prompt.md) | 与 setsem-01 共享 Prompt 逐字相同；该案例独立响应和诊断保留 |
 
-九份现有文件各 13,955 字节，删除八份可减少 111,640 字节（约 109 KiB）；清理价值主要是消除重复入口。工作目录原件 SHA-256 为 `e7af90237a94a02baf1babcb11b15d7803ca2bbaa6abca1b3c37be80b0222f6f`。Git 以 LF 保存同一文本，历史 blob 的 SHA-256 为 `f0b3a3ec879a671789fbf1b6f422b16c1dd3c2f235cec640ae9f8290e7bf54fa`，差异仅为 CRLF/LF；九份文本均与已推送的 `51cb5a71` 对应版本一致。审批通过后保留共享原件的现有字节，用此表追溯历史路径，不将其描述成新的实验结果。
+删除前九份文件各 13,955 字节，删除八份已减少 111,640 字节（约 109 KiB）；清理价值主要是消除重复入口。工作目录原件 SHA-256 为 `e7af90237a94a02baf1babcb11b15d7803ca2bbaa6abca1b3c37be80b0222f6f`。Git 以 LF 保存同一文本，历史 blob 的 SHA-256 为 `f0b3a3ec879a671789fbf1b6f422b16c1dd3c2f235cec640ae9f8290e7bf54fa`，差异仅为 CRLF/LF；九份文本均与已推送的 `51cb5a71` 对应版本一致。已保留共享原件的现有字节，用此表追溯历史路径，不将其描述成新的实验结果。
 
 **另一个容易混淆的地方：**[prompts/agent](../prompts/agent/) 的 v0.1–v0.6 是六个内容不同、带注册哈希的执行模板。当前入口按合同选择 v0.2、v0.3、v0.5、v0.6，另有 v0.1 的旧路径；v0.4 已不在当前选择分支中，但仍是已注册历史版本。这类模板不能与上面的重复渲染副本混为一谈。退役 v0.4 需要同步处理版本注册与历史依赖，不能只删除 Markdown 文件；本次仅整理导航与待删清单。
 
 本次对 `docs/` 的完整字节重复检查还发现两份 C-teaching `semantic-report.md` 相同，分别属于清理后验收和合并后复验。它们代表不同检查时点，先保留各自结果归属；不因文本相同合并成一次验收。除这组与上述 Prompt 组，未发现其他 Markdown 的整文件字节重复；这不排除内容层面的重叠。
 
+## 第四批：内容已合并，来源文件 D23–D27 待删除审核
+
+2026-09-23 已将四组的独有内容补到拟保留文件，原文件仍在，可直接对照。**共 9 份叙述／索引文档收敛为 4 个入口，批准后可再删除 5 份。** 不将不同时点的失败、通过和后续能力合成同一次结果；不修改源 IFC、Prompt／Schema 或冻结 Proof。
+
+| 组别 | 待删来源原文 | 保留文件与已完成的合并 | 需要保留的区别 |
+|---|---|---|---|
+| M1：R1 交接，2→1 | D23 [9 月 1 日未完成检查点](handoffs/repair-milestone-r1-checkpoint-2026-09-01.md) | [9 月 3 日收尾交接](handoffs/repair-milestone-r1-closure-2026-09-03.md#2026-09-23-整合补记9-月-1-日检查点如何到达收尾)追加历史表：检查点、9 案通过／H3 停止／2 案未运行、33 次调用，以及后续独立 12 案／40 次调用 | 不合并调用分母，不把早期 H3 故障继续列为今天的待办；816 行 final-acceptance 是原始任务规格，不能因名称像总结而一并删掉 |
+| M2：早期 Repair 设计，3→1 | D24 [实施 Prompt](validation/ifc2x3-changeset/implementation-prompt.md)；D25 [复用说明](validation/ifc2x3-changeset/reuse-map.md) | [设计 §18](validation/ifc2x3-changeset/design.md#18-早期实施边界与复用依据2026-09-23-整合)收拢实施章节对照，并保留复用说明中的七个测试边界、复用／不复用选择及依赖快照 | 清楚标为 7 月首个 Window 阶段；不把门／梁／柱“尚未支持”等旧限制覆盖到当前系统。implementation-findings 的独立发现 F001–F006 原件保留 |
+| M3：Generation 扩展索引，2→1 | D26 [方法扩展矩阵](reports/generation-demo/novelty-literature-addendum.md) | [现行完整综述](reports/generation-demo/literature-review-full.md)已覆盖全部 41 个卡片编号，补齐 41 卡／40 篇、ExpeL 双版本合并计数、AIDL 正式版缺口和未知分母说明 | 四组原始阅读卡继续保留；DepthBenchCAD 仍为 P，不恢复 N01／N06 的旧优先级，不增加 134 条总数 |
+| M4：Composite 阶段总结，2→1 | D27 [WORK-SUMMARY](validation/repair-composite-milestone/WORK-SUMMARY.md) | [SESSION-SUMMARY 新增整合补记](validation/repair-composite-milestone/SESSION-SUMMARY.md#2026-09-23-整合补记早期工作会话总结与最终验收的关系)统一早期增量改造、vvo R1–R3、非 vvo C1–C5、严格审计和 9 月 4 日正式完成的阅读顺序 | 保留不同时点的错误和修正；旧“原位对齐”不能覆盖后来发现的楼层偏差。COMPOSITE-EVIDENCE-REPORT、DEFECT-RECORD、完成记录及机器证据均保留 |
+
+**删除执行条件：**目前只完成正文整合，D23–D27 尚未删除。待用户审核批准后，先告知准确范围，以本轮提交保留原文，再删除来源并将现行引用指向保留稿；引用旧任务或历史论证的地方保留固定版本入口。
+
+**继续检查时已识别的另一组：**Generation 的 broader-method-directions 与 research-shortlist-evidence 有明显的重点近邻重复，可继续拆入完整综述／研究方案。但它们还包含旧方向的专属假设、投入估计和当时的代码核查；本批先不声称整份已完成合并，避免只迁移论文名称却丢掉取舍依据。
+
 ## 文档分类（相同运行附件合并展示）
 
-下表包括历史运行中附带的 Markdown。九份完全相同的 Prompt 合并为一项阅读入口，原文件逐项路径见第三批待审核清单；分区数量仍按实际文件计数。
+下表包括历史运行中附带的 Markdown。九份完全相同的 Prompt 合并为一项阅读入口，原文件逐项历史路径见第三批删除记录；分区数量仍按实际文件计数。
 本表是一份分类快照，新增文档仍先更新所属功能的主索引，不要求每次改字都重新生成清单。
 
 ### Repair（64 份）
@@ -118,7 +133,7 @@
 | [用户指定的 8 月技术原稿](reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md) | 历史来源：原字节归档保留，现行内容在技术主文档维护 |
 | [text2IFC Repair：面向已有 IFC 的自然语言局部修复](architecture/ifc-repair-pipeline-status-and-roadmap.md) | 现行正文：维护 |
 | [Phase 12 Plan 07 收尾与 IFC Repair 技术 Handover](handoffs/phase12-plan07-closeout-handover-2026-09-03.md) | 历史／专项：归档保留 |
-| [Phase 12.1 / Repair Milestone R1 Checkpoint Handoff](handoffs/repair-milestone-r1-checkpoint-2026-09-01.md) | 历史／专项：归档保留 |
+| [Phase 12.1 / Repair Milestone R1 Checkpoint Handoff](handoffs/repair-milestone-r1-checkpoint-2026-09-01.md) | 内容已合并；来源待审核删除 D23 |
 | [Repair Milestone R1 / Phase 12.1 Closure Handoff — 2026-09-03](handoffs/repair-milestone-r1-closure-2026-09-03.md) | 历史／专项：归档保留 |
 | [Text2IFC Repair Milestone R1 — Final Acceptance Handoff](handoffs/repair-milestone-r1-final-acceptance.md) | 历史／专项：归档保留 |
 | [Phase 11 Live Closure Design](plans/2026-07-31-phase11-live-closure-design.md) | 历史／专项：归档保留 |
@@ -134,7 +149,7 @@
 | [LargeBuilding Window Repair：Pipeline 与 Ground Truth 对比](validation/ifc2x3-changeset/ground-truth-comparison.md) | 协议／来源／验证证据：保留 |
 | [IFC Presentation Development Boundary](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md) | 协议／来源／验证证据：保留 |
 | [IFC2X3 ChangeSet implementation findings](validation/ifc2x3-changeset/implementation-findings.md) | 协议／来源／验证证据：保留 |
-| [Codex Implementation Prompt：Extensible IFC2X3 Local ChangeSet Evaluation](validation/ifc2x3-changeset/implementation-prompt.md) | 协议／来源／验证证据：保留 |
+| [Codex Implementation Prompt：Extensible IFC2X3 Local ChangeSet Evaluation](validation/ifc2x3-changeset/implementation-prompt.md) | 内容已合并；来源待审核删除 D24 |
 | [从 damaged IFC 和文本到重新生成 IFC：单链路输入输出说明](validation/ifc2x3-changeset/phase10-single-pipeline-input-output.md) | 协议／来源／验证证据：保留 |
 | [Phase 10 Window L2 语义闭环验证报告](validation/ifc2x3-changeset/phase10-validation-report.md) | 协议／来源／验证证据：保留 |
 | [Phase 10.1 Window 有效属性完整复刻与 IfcDiff 报告](validation/ifc2x3-changeset/phase10.1-full-window-replication-and-ifcdiff-report.md) | 协议／来源／验证证据：保留 |
@@ -157,7 +172,7 @@
 | [IFC2X3 Local ChangeSet 验证索引](validation/ifc2x3-changeset/README.md) | 导航：保留 |
 | [Repair Mixed Validation Boundary — 2026-09-05](validation/ifc2x3-changeset/repair-mixed-validation-boundary-2026-09-05.md) | 协议／来源／验证证据：保留 |
 | [IFC2X3 Restoration Validation Boundary — 2026-09-04](validation/ifc2x3-changeset/restoration-validation-boundary-2026-09-04.md) | 协议／来源／验证证据：保留 |
-| [IFC2X3 repair implementation reuse map](validation/ifc2x3-changeset/reuse-map.md) | 协议／来源／验证证据：保留 |
+| [IFC2X3 repair implementation reuse map](validation/ifc2x3-changeset/reuse-map.md) | 内容已合并；来源待审核删除 D25 |
 | [IFC Target Retrieval and Context Design](validation/ifc2x3-changeset/target-retrieval-design.md) | 协议／来源／验证证据：保留 |
 | [Composite Bound Test Cases — Text2IFC Composite Repair Milestone](validation/repair-composite-milestone/composite-bound-testcases.md) | 协议／来源／验证证据：保留 |
 | [Composite Capability Feasibility — Text2IFC Composite Repair Milestone](validation/repair-composite-milestone/composite-capability-feasibility.md) | 协议／来源／验证证据：保留 |
@@ -168,7 +183,7 @@
 | [C1-C5 damage-restoration completion](validation/repair-composite-milestone/damage-restoration-c1-c5-completed.md) | 协议／来源／验证证据：保留 |
 | [DEFECT RECORD — Mixed-family composite defects (BOTH FIXED)](validation/repair-composite-milestone/DEFECT-RECORD.md) | 协议／来源／验证证据：保留 |
 | [损伤-恢复里程碑会话总结（Session Summary）](validation/repair-composite-milestone/SESSION-SUMMARY.md) | 协议／来源／验证证据：保留 |
-| [工作总结 — Composite Repair Milestone（复合修复里程碑证据包）](validation/repair-composite-milestone/WORK-SUMMARY.md) | 协议／来源／验证证据：保留 |
+| [工作总结 — Composite Repair Milestone（复合修复里程碑证据包）](validation/repair-composite-milestone/WORK-SUMMARY.md) | 内容已合并；来源待审核删除 D27 |
 | [Plan 07 and Repair Milestone R1 Genuine Execution Matrix](validation/repair-milestone-r1/plan07-r1-genuine-execution-matrix-2026-09-01.md) | 协议／来源／验证证据：保留 |
 | [Repair Milestone R1 最终验收冻结包](validation/repair-milestone-r1/README.md) | 导航：保留 |
 | [Repair Milestone R1 模型选择与多样性](validation/repair-milestone-r1/repair-acceptance-model-selection.md) | 协议／来源／验证证据：保留 |
@@ -180,7 +195,7 @@
 | [Repair Milestone R1 planned Proof Matrix](validation/repair-milestone-r1/repair-proof-matrix-plan.md) | 协议／来源／验证证据：保留 |
 | [Repair Milestone R1 Proof Readiness Re-audit](validation/repair-milestone-r1/repair-proof-readiness-reaudit.md) | 协议／来源／验证证据：保留 |
 
-### Generation（49 份）
+### Generation（39 份）
 
 | 文档 | 分类／处理 |
 |---|---|
@@ -200,7 +215,6 @@
 | [text2IFC：Self-Verification 重合核查与方法方向扩展](reports/generation-demo/broader-method-directions.md) | 历史研究：归档保留 |
 | [text2IFC Generation：Claims / Novelty 综合审核](reports/generation-demo/claims-and-novelty-synthesis-20260916.md) | 历史研究：归档保留 |
 | [text2IFC：从 Coding Agent、领域知识到空间生成](reports/generation-demo/coding-agent-knowledge-direction.md) | 历史研究：归档保留 |
-| [text2IFC 文献矩阵：分模块比较（2026-09-15）](reports/generation-demo/feishu-literature-matrix.md) | 待审核删除：D12，理由见第二批清单 |
 | [BIM 创作、布局与相关综述：原文证据卡](reports/generation-demo/literature-evidence/bim-authoring.md) | 协议／来源／验证证据：保留 |
 | [逐篇证据：建模抽象、Coding Agent、知识与权限](reports/generation-demo/literature-evidence/coding-knowledge-and-control.md) | 协议／来源／验证证据：保留 |
 | [方法候选调研：知识利用、主动查证与跨任务迁移](reports/generation-demo/literature-evidence/frontier-knowledge.md) | 协议／来源／验证证据：保留 |
@@ -209,21 +223,12 @@
 | [空间合成与能力扩展：正文证据与方法假设](reports/generation-demo/literature-evidence/frontier-spatial.md) | 协议／来源／验证证据：保留 |
 | [IFC 生成、编辑、知识使用与评价：全文证据卡](reports/generation-demo/literature-evidence/ifc-evaluation.md) | 协议／来源／验证证据：保留 |
 | [结构化生成、CAD 与模型驱动工程：逐篇正文证据](reports/generation-demo/literature-evidence/structured-generation.md) | 协议／来源／验证证据：保留 |
-| [text2IFC Generation 文献综述：论文正文短版](reports/generation-demo/literature-review-demo.md) | 待审核删除：D9，理由见第二批清单 |
 | [text2IFC 文献综述·完整版](reports/generation-demo/literature-review-full.md) | 现行正文：维护 |
 | [text2IFC 文献综述·简版](reports/generation-demo/literature-review-short.md) | 现行正文：维护 |
-| [text2IFC Generation：研究综述与选题依据](reports/generation-demo/literature-review-working.md) | 待审核删除：D10，理由见第二批清单 |
-| [text2IFC Generation：Novelty 与 Claim 基础版](reports/generation-demo/novelty-and-claims.md) | 待审核删除：D5，理由见第二批清单 |
-| [text2IFC：方法创新候选与方向选择](reports/generation-demo/novelty-directions.md) | 待审核删除：D13，理由见第二批清单 |
-| [text2IFC：Novelties ↔ Experiments 一一对应设计](reports/generation-demo/novelty-experiments.md) | 待审核删除：D14，理由见第二批清单 |
-| [方法创新扩展调研：论文矩阵与决策记录](reports/generation-demo/novelty-literature-addendum.md) | 历史研究：归档保留 |
-| [text2IFC 论文矩阵与证据索引](reports/generation-demo/paper-matrix.md) | 待审核删除：D11，理由见第二批清单 |
+| [方法创新扩展调研：论文矩阵与决策记录](reports/generation-demo/novelty-literature-addendum.md) | 内容已合并；来源待审核删除 D26 |
 | [text2IFC 研究与文献](reports/generation-demo/README.md) | 导航：保留 |
-| [text2IFC Generation：Demo 选题与下一步讨论](reports/generation-demo/research-direction-discussion.md) | 待审核删除：D6，理由见第二批清单 |
 | [text2IFC 研究方案：可接受解空间、知识效率与受控编辑](reports/generation-demo/research-plan.md) | 现行正文：维护 |
-| [text2IFC：研究主线与实验草案](reports/generation-demo/research-proposal.md) | 待审核删除：D7，理由见第二批清单 |
 | [简版选题的补查证据](reports/generation-demo/research-shortlist-evidence.md) | 历史研究：归档保留 |
-| [简洁记录](reports/generation-demo/research-shortlist.md) | 待审核删除：D8，理由见第二批清单 |
 | [text2IDS / WWW 2026 Demo：Overview 与 text2IFC 仿写参考](reports/generation-demo/text2ids-www2026-demo-overview-and-writing-reference.md) | 历史研究：归档保留 |
 | [Multi-storey Prompt and Input Hardening Implementation Plan](reports/legacy-plans/2026-07-11-multistorey-prompt-input-hardening.md) | 历史／专项：归档保留 |
 | [Phase 6.1 Final Acceptance Report](reports/main-integration-20260912/generation-recheck-01/A-revise/report.md) | 运行证据：保留 |
@@ -277,7 +282,7 @@
 | [IFC2X3 Small Source Search Follow-up](reports/ifc2x3-small-source-search-followup.md) | 日期快照／证据：保留 |
 | [Kaggle IFC Examples — Strict Small IFC2X3 Scan](reports/kaggle-ifc-examples-small-ifc2x3.md) | 日期快照／证据：保留 |
 
-### 工程维护与归档证据（25 份）
+### 工程维护与归档证据（17 份）
 
 | 文档 | 分类／处理 |
 |---|---|
@@ -287,7 +292,7 @@
 | [根 archive 准确退役清单](reports/archive-retirement-20260913/DELETE-LIST.md) | 日期快照／证据：保留 |
 | [archive 退役与 Zcode 重构参考收纳](reports/archive-retirement-20260913/REPORT.md) | 日期快照／证据：保留 |
 | [已完成案例与开发工作区清理](reports/development-cleanup-20260912/REPORT.md) | 日期快照／证据：保留 |
-| [离线基线共享 Prompt：0.5，九份相同副本](#第三批待审核重复-prompt-快照-d15d22) | 一份建议保留、八份待审核删除；各案例响应和诊断保留 |
+| [离线基线共享 Prompt：0.5，九份相同副本](#第三批删除已完成重复-prompt-快照-d15d22) | 一份保留、八份已批准删除；各案例响应和诊断保留 |
 | [下一批清理清单（尚未批准／未删除）](reports/main-integration-20260912/NEXT-CLEANUP.md) | 日期快照／证据：保留 |
 | [text2IFC 清理与分支整合报告](reports/main-integration-20260912/REPORT.md) | 日期快照／证据：保留 |
 | [本地重复临时文件删除申请](reports/main-integration-20260912/SCRATCH-CLEANUP.md) | 日期快照／证据：保留 |

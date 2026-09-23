@@ -1,24 +1,24 @@
-# text2IFC 文献矩阵：分模块比较（2026-09-15）
+# text2IFC 文献综述·完整版
 
-> **历史材料，2026-09-16已整合。** 当前方向与实验统一见[研究方案](research-plan.md)，文献统一见[简版](literature-review-short.md)和[完整版](literature-review-full.md)。下文保留调查时的结论与编号，不再作为当前优先级。
+更新：2026-09-18。本文件统一收录三模块逐篇矩阵及后续重点核查；[简版](literature-review-short.md)用于讨论，[研究方案](research-plan.md)决定当前RQ0、D1/D2及实验；IFC Repair 投稿专项另见 [Repair 专项矩阵](../repair-demo/repair-literature-matrix-20260921.md)。旧N01–N08、P1/P2/V1/L1仅表示调查当时的问题，不再是并行推荐路线。
 
-[飞书文档](https://xcnn3ovwdml4.feishu.cn/wiki/G0BiwCJ0YiYPMLkyjwfcphFtnAd)。本文件为三个模块正文的本地备份；指定版本的详细阅读位置见同目录 `literature-evidence/`。
+**证据口径。** F：已有记录列明所读版本的方法、实验及相关限制；不是本轮重新阅读了所有全文，也不表示复现。P：仅部分正文/项目/书目信息，缺口保持开放，不能用它证明对方没有某项能力。本轮在既有 TileGPT、ChopChop 与 SCOPE 核查基础上新增 Wu 等 2026 IFC alteration 近邻的出版商摘要/正文片段核查；其余整合2026-09-14至18的阅读记录。此综述围绕选题，不宣称系统检索穷尽。
 
-共 104 条去重研究记录：89 条 F，15 条 P。每条保留原始来源、阅读版本及实验边界。
+每条保留名称与来源、贡献、实验场景及边界、与text2IFC的冲突。共134条研究记录，其中118条F、16条P。原始104条矩阵整体保留；后续对同文的核查链接合并，不以重复卡片增加论文数量。记录包含论文、基准、综述和项目，因此条目数不等于独立论文或系统数。更新卡若补充旧行，以明确版本和更完整的核查为准；作者结果与本项目比较判断分开。
 
-整理日期：2026-09-15。范围覆盖 BIM/IFC、CAD 与空间生成、模型驱动工程、Coding Agent、知识利用、技能学习、规格推理与安全。本文按每篇文献的贡献、实验与局限、对 text2IFC 的先例压力逐项记录。
+**当前结论。** Self-Verification限制闭环首创说法；Wu 等 2026 的 component alteration 工作进一步限制“verification 后自动 BIM repair/alteration”的首创说法；TileGPT限制多解/约束组合说法；ChopChop与SCOPE限制约束输出和执行分工说法。Repair 方向若继续投稿，增量应具体落在目标/属性执行权威、原子 ChangeSet、fail-closed、reopen 验证与 non-target preservation 等可替换系统语义，而不是泛称“LLM 自动修 BIM”。D1/D2 两条研究方向仍均未证实方法创新。
 
-F 表示已阅读该记录指定版本的方法与实验正文；不表示论文结论已被本项目复现。P 表示只取得部分正文、项目材料或索引，关键方法或实验仍有缺口；P 不能用来断言对方没有某项能力。不同版本、预印本、项目页和正式论文不混作同一证据。
+**历史编号说明。** N01技能修订；N02组合能力；N03修复迁移；N04空间约束；N05信息动作；N06澄清；N07表示搜索；N08知识组合。表内对这些问题的冲突分析仍有参考价值，不能把原建议措辞理解为当前排期。
 
-“与我们的冲突点”是本项目的比较判断：哪些候选说法已被已有工作覆盖，哪些差异仍需实验。它不是对论文质量的简单评分，也不能从对方实验较小直接推出我们有方法创新。
+**旧扩展矩阵的整合说明（2026-09-23）。** [扩展调研索引](novelty-literature-addendum.md)中的 41 张全文阅读卡对应 40 篇不同论文：FK04 与 SK02 是 ExpeL 的不同版本／专题阅读，合并计数但分别保留原卡。DepthBenchCAD 仍是 P；AIDL 所读 v1 不代表正式 CGF 版已全文核对；未披露的精确测试分母继续留在卡片中，不反推补数。四组原始证据入口为[知识](literature-evidence/frontier-knowledge.md)、[技能](literature-evidence/frontier-skills.md)、[空间](literature-evidence/frontier-spatial.md)、[规格与关系](literature-evidence/frontier-reasoning.md)。本次只是收拢旧索引的计数与版本说明，没有新增文献、升级 F/P 或恢复旧 N01／N06 优先级。
 
-当前 text2IFC 的研究方向仍是假设：N01 在修补技能程序、收窄适用范围与拆分技能之间选择；N02 用新组合上的表现修订宏程序；N03 检验修复经验能否迁移到生成；N04 按冲突选择跨层空间调整；N05 按未解决的执行疑问选择查资料、实例、探测或询问；N06 用可执行空间对照澄清意图；N07 固定权重下搜索表示和参考系绑定；N08 从执行结果学习知识片段的协同与干扰。八项不是八个已成立创新。
 
-谱系与计数：ExpeL 的 FK04/SK02 合为一条，保留版本差异；MCP4IFC 与 IFC-Copilot 分列论文和后续项目，但不视为两项独立研究证据。各表也包含综述、平台和基准，条目数不等于独立论文或独立系统数。这是围绕当前选题的研究矩阵，不宣称穷尽全部文献。
 
-## 01. BIM / IFC：生成、编辑、表示与评价
+## 1. BIM / IFC：生成、编辑、表示与评价
 
-28 条（F 19 / P 9）。直接相关工作。先区分生成、编辑、查询、修复和评价，再看几何、关系及用户要求是否分别验证。MCP4IFC 与 IFC-Copilot 保留论文和后续项目谱系。
+直接领域先例已经覆盖自然语言建模、领域工具和自验证。当前系统重点比较受控修改与非目标保全；D1/D2仍需额外机制与实验。
+
+本模块30条研究记录。
 
 | Paper：名称、版本与原始来源 | 贡献与观点 | 实验场景与证据边界 | 与我们的冲突点 |
 |---|---|---|---|
@@ -38,9 +38,10 @@ F 表示已阅读该记录指定版本的方法与实验正文；不表示论文
 | **Bridging Building Information Modelling and Natural Language Processing: A Systematic Review on Current Applications and Limitations**<br>A14 · F；ISARC 2026，pp.1888–1895；系统综述，DOI 10.22260/ISARC2026/0241<br>[会议全文](https://www.iaarc.org/publications/fulltext/ISARC2026_1081.pdf) | 按 Fink 流程在六库检索 BIM/NLP 同义词，分类应用、任务和 NLP 技术，讨论严格模型结构与概率语言系统结合的困难；它是二级综述而非生成方法。 | 截止 2025-05，初始 430 条、纳入 92：78 研究、11 综述、3 案例。部分任务分类分母为 85，NLP 分类为 81；Modify 为 12/81，类别可多标。<br>边界：2026 出版不代表覆盖 2026 系统；筛选期与分类粒度限制结论，未提供统一生成基准或效果量元分析，不能从类别占比推出质量高低。 | 为 text2IFC 的语言到结构动机提供背景，但 N01–N08 仍须各自对照原方法。尤其“自然语言与结构模型之间有鸿沟”已是公共问题陈述，不能单独作创新。 |
 | **MCP4IFC: IFC-Based Building Design using Large Language Models**<br>D02 · F；arXiv 2511.05533v1（2025），预印本；完整题名由主任务补核<br>[v1 全文](https://arxiv.org/html/2511.05533v1)；[作者仓库](https://github.com/Show2Instruct/ifc-bonsai-mcp) | IFC 工具、结构化场景信息、文档向量检索与动态 Python/IfcOpenShell 执行组合，支持问答、编辑和生成；同团队后续发展为 IFC-Copilot，不能当互不相关谱系。 | Duplex 的 65 QA：GPT-5 mini 54/65、Sonnet 4.5 49/65，部分模糊答案乐观接受；另有 8 语义编辑、6 生成例，分母不能混合。<br>边界：direct-query 计数正文/表格 26/25 不一致；生成存在洞口、包含、材料或 Pset 缺失。约 40k token 工具定义和动态预选已讨论，预选在该版尚属方向。 | N02/N05/N08 不能把原生 IFC、知识检索、动态代码和 loop 整体称新。text2IFC 要证明新技能适用边界或信息选择机制；少量演示失败不能代表增强代码代理能力上限。 |
 | **IFC-Copilot**<br>D03 · P；后续项目页与新版仓库；未取得论文全文，不作为独立已读论文<br>[作者项目页](https://show2instruct.github.io/ifc-copilot/)；[新版仓库](https://github.com/Show2Instruct/bonsai-mcp) | 项目页介绍 52 个工具、代码执行及读取/创建/修改能力。旧 MCP4IFC 仓库直接链接此新版仓库，能够建立作者和实现演进关系，不能重复算两套独立方法。 | 页面报告 100 个自定义任务、最高 86%；这是项目自报，未核实论文实验模型、评测器、失败分母和成本，不纳入已读正文结果比较。<br>边界：Paper 链接在本轮返回 404，未取得替代全文；当前代码也不能自动等同页面实验快照。项目可用和结果可复现是不同证据。 | 必须纳入 text2IFC 最近系统，N01/N02 的动态技能及 N05/N08 的知识利用不能在全文缺失时宣称未被覆盖。候选的具体冲突应保持待核，不凭项目规模先下优劣结论。 |
+| **Automated building component alterations driven by LLM-formalized human strategies to achieve code compliance**<br>RPR01 · P；Automation in Construction 190,107148（2026）；本轮核查出版商摘要、Highlights 与公开正文片段<br>[出版商原始页](https://www.sciencedirect.com/science/article/pii/S0926580526003894)；[作者代码](https://github.com/Jaaaaabin/AutoComplianceWu) | 从 ACC/BCF issue 出发，用 LLM 将 designer-authored improvement strategies 形式化为可执行 building-component operations；结合 violation 的拓扑关联构件实例化 alteration，并对修改后的模型重新评价以搜索 feasible alterations / resolution clusters。作者明确把 LLM 定位为 semantic formalization layer，修改范围仍由 designer input 治理。 | 论文以 IBC spatial requirements case study 演示跨相互依赖 compliance issues 的 alteration；本轮未完整逐表复核全部实验分母、候选数和定量结果，因此保留 P，不用摘要重建性能结论。<br>边界：目标是合规方案探索而非通用自然语言 repair；已有 improvement strategy 是重要输入，不能直接等同自由用户请求；本轮也未确认其是否具备与 text2IFC 相同的原子多操作 rollback、reopen publish gate 或 non-target preservation 合同。 | **直接限制 Repair 首创说法。** “verification 后自动修改 BIM”“LLM 将人类策略转成 component-level alteration”“用 topology 扩展相关修改对象”均已有直接先例。text2IFC 若投稿 Repair，应把差异收紧到自然语言 request 的 target/property authority、atomic ChangeSet、fail-closed、reopened IFC verification 与 non-target preservation，并逐项证明，而不是泛称自动修复。 |
 | **BIM-Edit: Benchmarking Large Language Models for IFC-Based Building Information Modeling**<br>B01 · F；arXiv 2606.20146v3，2026-06-23，预印本<br>[v3 全文](https://arxiv.org/html/2606.20146v3)；[任务卡](https://huggingface.co/datasets/BIM-Edit/BIM-Edit-Tasks)；[IFC 资源目录](https://huggingface.co/datasets/BIM-Edit/BIM-Edit/tree/main) | 针对已有 IFC 编辑，以变化部分的几何距离、类别/属性语义和关系图 F1 联合评分。七个模型统一使用单一 IfcOpenShell Python 执行工具，最多 20 次调用，无检索或 schema 专用工具。 | 11 真实与 36 合成基础场景，共 47 场景、324 提示变体，创建/更新/删除各 108。最佳均分 49.48/100；三项均达 0.98 的最高比例仅 3.4%，均分不是成功率。<br>边界：同目标的直接/空间/拓扑提示非独立建筑；单一目标可能处罚合理替代，六类构件与评分权重有限。受限代码基线不能代表增强代理上限。 | 联合评价已存在，不能作为 text2IFC 新方法。N01–N04 应用其任务检查技能/修复的完整性；N07/N08 需与同预算强代码代理比较，不能靠限制基线证明优势。 |
 | **BIBIMBAP: A Benchmark for Instructional BIM-Based Automated Programming**<br>B02 · F；EC³ 2026，8 页，会议正文<br>[会议全文](https://ec-3.org/wp-content/uploads/2026/08/EC32026_271.pdf)；[作者仓库](https://github.com/nbharathik/bibimbap) | 以自然语言、小 IFC 和确定性 Python 检查评估 CRUD；读取任务另约束 JSON。直接、几何、拓扑、数值、概念五类各 20 题，适合拆分原子能力。 | 100 题的 CRUD 为 15/55/15/15；统一 25 次调用，六模型中前三个重复三次。Opus 4.6 的 50.22±0.22 是逐题适用检查通过比例的平均，不是完成率。<br>边界：更新未评非几何属性保留，删除重建可能判正确；任务短、缺多轮互动。与 BIM-Edit 作者重合不意味着共享实现或独立样本可以相加。 | N01–N03 的新技能或经验若只提高已检查项，仍可能破坏其他属性。text2IFC 可借原子切片，但必须新增保全检查；N04 不能把删除后重建算正确局部修订。 |
-| **A Self-Verification Framework Toward Reliable Text-to-BIM Generation**<br>B03 · F；EC³ 2026，2 页短文<br>[会议全文](https://ec-3.org/wp-content/uploads/2026/08/EC32026_444.pdf)；[作者原型仓库](https://github.com/Tsesterh/Text2BIM-Self-Verification) | 首轮将要求分成 IDS 与非 IDS；Modifier 用 MCP4IFC 工具和代码生成/修改，IfcTester 检查 IDS，Verifier 生成补充 Python 检查，再将结果反馈下一轮。 | GPT-5.2 在一个住宅案例运行五轮，部分构件与围护改善，但 IfcSpace 与 IfcBuildingStorey 关联始终未修好。没有系统间比较、总体成功率或独立消融。<br>边界：初始规范遗漏会进入后续验证；自动生成检查不保证覆盖全部需求。仓库是研究原型，本轮未运行，生成内部纠错不等于受损 IFC 修复基准。 | 直接覆盖 text2IFC 的需求分解、双类检查和生成自修复。N03 要证明修复知识迁移到未见生成任务，N04 要提出跨层依赖选择，而非增加验证代理或循环次数。 |
+| **A Self-Verification Framework Toward Reliable Text-to-BIM Generation**<br>B03 · F；EC³ 2026，2 页短文<br>[会议全文](https://ec-3.org/wp-content/uploads/2026/08/EC32026_444.pdf)；[作者原型仓库](https://github.com/Tsesterh/Text2BIM-Self-Verification) | 首轮将要求分成 IDS 与非 IDS；Modifier 用 MCP4IFC 工具和代码生成/修改，IfcTester 检查 IDS，Verifier 生成补充 Python 检查，再将结果反馈下一轮。 | GPT-5.2 在一个住宅案例运行五轮，部分构件与围护改善，但 IfcSpace 与 IfcBuildingStorey 关联始终未修好。没有系统间比较、总体成功率或独立消融。<br>边界：初始规范遗漏会进入后续验证；自动生成检查不保证覆盖全部需求。仓库是研究原型，本轮未运行，生成内部纠错不等于受损 IFC 修复基准。 | 直接覆盖 text2IFC 的需求分解、双类检查和生成自修复。N03 要证明修复知识迁移到未见生成任务，N04 要提出跨层依赖选择，而非增加验证代理或循环次数。  <br>补充核查见[本条更新](#update-22)。 |
 | **Reliable LLM-driven BIM automation through capability-based multi-dimensional evaluation**<br>B04 · P；Automation in Construction 187,106910（2026）；章节片段<br>[正式 DOI](https://doi.org/10.1016/j.autcon.2026.106910)；[出版商原始页](https://www.sciencedirect.com/science/article/pii/S0926580526001512)；[作者机构记录](https://digitalcommons.mtu.edu/michigantech-p2/2484/) | 可读片段确认面向 BIM 自动化的能力切片和多维评价，讨论错误、可靠性与人工修正；完整六维操作定义尚未取得。 | 片段提到 31 个任务，任务独立性、提示工具、人员介入、失败分母、基线和统计方法未核。摘要中的 API 错误占比及可靠性数字不进入已证实比较。<br>边界：只有方法/任务/结果/讨论的零散预览，不能说已完成评价复核。与 Error Taxonomy 同作者组，但 31 与后者摘要的 20 不应相加，复用关系未知。 | 多维可靠性并非 text2IFC 空白。N01–N08 要给各自可证伪的机制实验，而非重新命名能力分组；全文不足也不能用于断言其没有知识或失败归因方法。 |
 | **Error Taxonomy and Failure Analysis of Large Language Models for BIM Scripting**<br>B05 · P；Construction Research Congress 2026，pp.376–385；2026-08-27 在线，摘要/元数据<br>[ASCE 原始记录](https://ascelibrary.org/doi/10.1061/9780784486979.036)；[出版商 PDF 入口（全文未取得）](https://ascelibrary.org/doi/epdf/10.1061/9780784486979.036) | 摘要描述 GPT-4 为 Revit 编写 Python，由人参与迭代调试并提出十类错误。这是已有 BIM 脚本失败分析线索，分类定义和编码一致性尚未读到正文。 | 20 个任务是摘要所述规模；完整试验次数、人工改写劳动、预算、最终停止和失败事件分母均未知。人工引导后完成不能当自主代理 100% 成功。<br>边界：方法、结果表和讨论全文未取得，不能用同作者另一文补齐，也没有核实对应公开数据/代码。记录 P 是读取状态，非论文质量评价。 | N01/N03 可借问题定位，但分类本身不等于可迁移技能条件。text2IFC 不能声称首次系统分析 BIM 错误；应区分任务、失败尝试与人工修正，并验证反例是否改善新任务。 |
 | **Qwen-BIM: developing large language model for BIM-based design with domain-specific benchmark and dataset**<br>B06 · F；arXiv 2602.20812v1，2026-02-24；记录页有 Qwen-BIM 前缀，PDF 题名无此前缀<br>[版本记录](https://arxiv.org/abs/2602.20812v1)；[v1 全文](https://arxiv.org/pdf/2602.20812v1) | BIM 局部空间块转文本，22 类问题模板生成 QA，再筛推理答案，对 Qwen2.5-14B 做 LoRA；任务为问答、文本异常识别与修改建议，未验证 IFC 生成。 | 候选训练数据 3493 条，最佳配置用 1364 QRA；GLM-4-plus 裁判 G-Eval 0.689→0.834，约相对 21%。表 7 总称 150 块/3300 QA，分项相加却为 160/3520。<br>边界：训练轮次与数据配比共同变化，不能单归因推理监督；未证明项目隔离，数据需索取。语言分数不代表几何或修复执行成功。 | 领域微调及合成知识并非 text2IFC 首创。N01/N03 若坚持同模型外部经验，需要另测执行迁移而非复用 QA 分数；N05/N08 也须区分标准知识、实例事实和训练记忆。 |
@@ -50,10 +51,54 @@ F 表示已阅读该记录指定版本的方法与实验正文；不表示论文
 | **A Dual-Layer Semantic-Lossless IFC Encoding for LLM-Readable Building Model Interaction**<br>B10 · P；SSRN 6532559，2026-04-07 上传，41 页预印本；仅摘要/元数据<br>[SSRN 原始记录](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6532559) | 摘要提出分离 IFC 空间层级与几何参数，并按需重建文件，属于紧凑模型编码的直接近邻；尚未取得编码、解码方法正文。 | 字节压缩比、token 降幅、QA 准确率与 45 次生成都是未完成正文复核的摘要报告，本条不将它们作为已确认实验成绩。<br>边界：解码是否依赖 sidecar、模型实际可读的语义、建筑独立单位、输入匹配、检查覆盖与全部成本未知；这些是待核问题，不能冒充作者已经暴露的缺陷。 | 与 text2IFC 上下文效率高度相关。N07 的表示搜索须区别于可逆压缩，N08 须证明执行知识组合价值而非仅降低长度；在全文缺口解决前，不能宣称编码/重建无人做过。 |
 | **Natural Language Information Retrieval from BIM Models: An LLM-Based Agentic Workflow Approach**<br>B11 · F；EC³ / CIB W78 2025；DOI 10.35490/EC3.2025.265；出版页题名后半为 An LLM-Based Multi-Agent System Approach<br>[作者全文](https://mediatum.ub.tum.de/doc/1781947/66amsnnaqbygipuftj8b88oqv.2025_HELLIN_EC3.pdf)；[会议出版页](https://ec-3.org/publication/ec32025_265/)；[IFC-Bench 仓库](https://github.com/sylvainHellin/ifc-bench) | 先用 CoT 选择模型和相关工具，再由 ReAct 调用 29 个预置 Python 查询/计算工具；缩短工具上下文是明确动机，不输出修改后的 IFC。 | 两项目、四专业模型上的 99 QA，直接/间接/不足信息为 44/29/26。七候选模型只报告最优 Claude-3.5-Sonnet：LLM 裁判 79/99；20 错误中工具错误/缺失占 45%。<br>边界：没有工具预选消融、单次运行且项目少；造工具代理当时仍属未来工作。当前 v2 数据卡规模不能赋给 v1 的结果。 | N05 的选择工具、N08 的减少工具上下文已有直接先例，需检验新的选择目标与完整成本。text2IFC 可引用查询知识机制，但不能将 QA 成绩作为生成/修复 baseline。 |
 | **BIM Information Extraction Through LLM-based Adaptive Exploration**<br>B12 · F；arXiv 2605.01698v1，2026-05-03；投稿 AIC 的预印本，非据此认定已录用<br>[v1 全文](https://arxiv.org/html/2605.01698v1)；[版本记录](https://arxiv.org/abs/2605.01698v1)；[Cobbie 仓库](https://github.com/sylvainHellin/cobbie) | CodeAct 探索实际 IFC；可加 AST 文档混合检索、重排，以及由开发轨迹创建/修正/评估的经验工具，最多 16 个。延续 IFC-Bench v1 作者线。 | 21 项目、37 IFC、1027 QA，题级拆为 513 开发/514 测试。GLM-4.7 文档增强 56.0%→56.6%，不显著；Air 为 25.7%→30.6%。评测排除崩溃与超时。<br>边界：仅 GLM 家族、单次运行，题级拆分不证未见建筑泛化；静态基线只执行一次。仓库描述仍为 200 题，未确认论文快照。 | N01/N02 的经验工具、N05 的主动探索和 N08 的知识收益均有强近邻。候选必须提出适用边界/反例或执行协同的具体机制；不能只新增知识库，成本还要包含失败和学习。 |
+| **Ishigaki-IDS, 2606.08545v1**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2606.08545v1) | 持续预训练、SFT与验证奖励生成IDS规格，使用gold facets。 | 166专家项；8B的108项通过audit，其中65项FacetF1<0.5；16H200训练。 | BIM验证奖励学习已有；格式通过不能替代需求正确。 [详细核查](#update-21) |
 
-## 02. CAD / 空间建模与模型驱动工程
+### 作者与工具谱系
 
-34 条（F 28 / P 6）。相邻领域先例：几何代码、空间规划、领域语言、模型切片、层级求解、模型演化、参考系与一致性。Text2MBL 在本组；不能把生成格式不同直接当作方法差异。
+
+BIM-Edit 的作者是 B01 所列八人。以下“重合”按姓名逐一核对；它证明作者关系，不证明样本、代码和实验互相独立，也不证明全部作品属于同一个实现。
+
+| 工作 | 与 BIM-Edit 重合作者 | 能核实的实现关系 | 应避免的说法 |
+|---|---|---|---|
+| BIBIMBAP | 七人：除 Ashwin Nedungadi 外的全部 B01 作者 | 独立命名的 [benchmark 仓库](https://github.com/nbharathik/bibimbap)，本轮未证同一数据/评分实现 | “两支独立团队同时证明”；或“必然同一基准换名” |
+| Self-Verification | 四人：Sesterhenn、Nithyanantham、Lüdtke、Bartelt | [README](https://github.com/Tsesterh/Text2BIM-Self-Verification) 明示依赖 MCP4IFC 对应旧仓库 | 仅写作者重合而漏掉工具依赖；把示例当独立大样本复制 |
+| MCP4IFC | 五人：Nithyanantham、Sesterhenn、Nedungadi、Bartelt、Lüdtke | [旧仓库](https://github.com/Show2Instruct/ifc-bonsai-mcp) 对应论文项目线；MCP4IFC 正文在主报告另卡审读 | 用作者重合推定 B01 的单 Python 工具就是其工具套件 |
+| IFC-Copilot | 同上五人 | [官方项目页](https://show2instruct.github.io/ifc-copilot/) 作者为 Nithyanantham、Sesterhenn、Nedungadi、Sergio Peral Garijo、Janis Zenkner、Bartelt、Lüdtke，与 MCP4IFC 名单一致；Paper 链接实际返回 404 | 把项目网页当已读新论文，或自动增加一个独立基线 |
+| Qwen-BIM | 无 | 作者为 Lin/Cai/Ni/Zhou/Pan；未发现此作者线的实现依赖证据 | 因同用 IFC/LLM 而称同一项目 |
+| Building Descriptor | 无 | Jang/Borrmann/Lee；与 B12 重合 Jang、Borrmann，与 B11 重合 Borrmann | 把描述生成直接并入 BIM-Edit 作者线 |
+| IFC-Bench v1 / Cobbie | 无 | B12 明确引 B11 为前作，共享 Hellin/Nousias/Borrmann，数据 v2 扩展 v1；B12 另有 Jang/Fuchs | 将两文或数据版本当互不相关的独立复制 |
+
+[旧 Show2Instruct 仓库](https://github.com/Show2Instruct/ifc-bonsai-mcp) README 指向后续 [bonsai-mcp](https://github.com/Show2Instruct/bonsai-mcp)。仓库迁移与代码生成方向变化是项目演进证据；后续 HEAD 不自动等于 MCP4IFC 的工具快照，更不等于 B01/B02 的受限基线。完整比较应分别登记“论文版本、实现快照、工具依赖、数据复用”，不能用作者数量或项目名称数量充当独立证据数量。
+
+### 重点补充核查
+
+<a id="update-21"></a>
+#### Ishigaki-IDS, 2606.08545v1
+
+**来源与读取：** [Ishigaki-IDS, 2606.08545v1](https://arxiv.org/html/2606.08545v1)，§4–6、表1–4
+
+**方法、实验与限制：** CPT+SFT+验证奖励，训练还用 gold facets；166 个专家评测项、单次输出。8B 有 108 项过 IDS audit，其中 65 项 FacetF1<0.5。论文训练用 16 H200；不是检索小改动的成本。
+
+**冲突点：** “BIM 中 verifier-aware 学习”已有；标准校验通过不等于用户要求正确。它生成 IDS，不生成或修复完整 IFC。
+
+<a id="update-22"></a>
+#### Self-Verification：直接重合与规格遗漏
+
+[A Self-Verification Framework Toward Reliable Text-to-BIM Generation](https://ec-3.org/wp-content/uploads/2026/08/EC32026_444.pdf)，Sesterhenn 等，EC³ 2026，2 页。重读全部正文与两幅图。Specifier 从请求产生 IDS 和非 IDS 要求，Modifier 创建/修改 IFC，Verifier 写并执行补充检查，结合 IfcTester 反馈继续修订；工具基于 MCP4IFC。非 IDS 明确涉及几何、拓扑、复杂关系，不能说它只查属性。
+
+实验是 GPT-5.2 的一个两层住宅案例、五轮修订；房间计数、屋顶和材质改善，空间与楼层关联仍未解决。论文没有提供可支持总体优势的系统对照或消融；作者明确承认初始规格可能漏需求。**证据弱不代表方法不存在。**
+
+[作者仓库](https://github.com/Tsesterh/Text2BIM-Self-Verification)另确认 spec.md、IDS、逐轮 IFC/报告与合并 patch plan 的实现组织，依赖 MCP4IFC；本轮只核 README，不宣称运行成功。
+
+### 阅读位置与来源记录
+
+逐篇原始卡片保留定位细节：[bim-authoring](literature-evidence/bim-authoring.md)；[ifc-evaluation](literature-evidence/ifc-evaluation.md)；[coding-knowledge-and-control](literature-evidence/coding-knowledge-and-control.md)。阅读卡是证据，不是额外研究路线。
+
+## 2. CAD / 空间建模：表示、约束与多种有效设计
+
+多解不是取消评价标准。表示、几何和拓扑会共同限制有效解集合；TileGPT使“质量—多样性＋LLM＋约束”的先例尤其明确。
+
+本模块40条研究记录。
 
 | Paper：名称、版本与原始来源 | 贡献与观点 | 实验场景与证据边界 | 与我们的冲突点 |
 |---|---|---|---|
@@ -91,10 +136,88 @@ F 表示已阅读该记录指定版本的方法与实验正文；不表示论文
 | **Geometry-Aware Test-Time Learning for Quantitative Spatial Reasoning**<br>FR06 · F；核查 arXiv v1，2026-09-05；完整题名另从同版本顶部补核，不提升正式发表核实等级<br>[arXiv v1 全文](https://arxiv.org/html/2609.06004v1) | 将距离、分量和尺度预测放入几何约束，生成数值伪标签并更新 LoRA；适配参数沿测试流累计，不逐例重置。以几何一致性提供不依赖逐题标准答案的适配信号。 | 两个开源 VLM，对比 Tent/COME/TLM，在 Q-Spatial、SPAR 距离与 SpatialRGPT 评估。Qwen3-VL-4B 的 Q-Spatial-ScanNet 平均准确率 40.00→46.47，相对误差容差为 25%；水平距离却 31.7→28.3。<br>边界：不是所有切片提升，实际运行分母和更多设置转引补充，本地卡不补猜。需要参数访问；自洽可能一起偏离真实尺度，测试流顺序及累计更新影响归因。 | 约束 N07：几何自洽驱动测试时改进已有。text2IFC 可先研究冻结权重下的参考系绑定/表示选择，并比较确定性规范化；若引入 LoRA，应单列适配成本与分布迁移，不能称整个模型不训练。 |
 | **LLMorph: Automated Metamorphic Testing of Large Language Models**<br>FR07 · F；arXiv v1，2026 工具稿；未合并其引用的 ICSME 2025 独立评测<br>[arXiv v1 全文](https://arxiv.org/html/2603.23611v1) | 实现 36 种变形关系，变换输入并检查两次输出间应保持的关系，也验证变换适用条件。无需为每一个变体准备 Gold，即可发现不一致行为，作为测试工具而非绝对正确性证明。 | 四个 NLP 数据集、三个模型，共 561,267 次执行；人工复核 937 个违例，不同任务/变形关系的误报率为 0%–70%。执行次数、原始问题数量及人工复核分母必须分别理解。<br>边界：违例不能判断哪一侧正确；LLM 改写可能破坏前提，语义相似也不是正确性。工具稿引用另一篇完整评测，不能重复计为两次独立实验。 | 约束 N01/N07 的反例探测与等价表示。text2IFC 可用单位换算、重命名及合法坐标变换，但须同步转换用户要求；N07 的新意须是绑定定位和候选选择，不能只是跑变形测试。 |
 | **Do Vision-Language Models Represent Space and How? Evaluating Spatial Frame of Reference under Ambiguities**<br>FR08 · F；阅读 arXiv v2；ICLR 2025 正式身份已核，正式大体积 PDF 未取得<br>[arXiv v2 全文](https://arxiv.org/html/2410.17385v2)；[ICLR 2025 正式记录](https://proceedings.iclr.cc/paper_files/paper/2025/hash/af2d9fb5bcee19ef2dfa70d843520c97-Abstract-Conference.html) | 每 10° 采样对象朝向，比较相机、观察者、对象及未指定参考系，系统测方向判断的准确性、无关变化鲁棒性、空间对称和相反关系一致性，揭示参考系歧义。 | 英文 COMFORT-BALL 720、COMFORT-CAR 57,600 测试条件，九个 VLM，另扩展 109 种语言。大量条件来自少数配置，不能当作同等数量的独立真实场景或建筑。<br>边界：重点是四方向关系，遮挡有限；接受区域为分析性近似，多语言依赖机器翻译。正式 PDF 未读取，数据与结论归属作者 v2，不能假称全部版本都已一致核实。 | N06/N07 不能首创视角/坐标系歧义。text2IFC 应检验层级局部坐标绑定定位，或选择何时向用户确认参照系；多数模型偏好和几何自洽都不能代替用户选择。 |
+| **B-SP01 — SceneMotifCoder：少样本抽取可复用空间程序已经成立**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2408.02211v2) | 从1–3例抽参数化空间程序，再检索资产与优化物理关系。 | 202描述/50物体类；数量、布局、物理性分测；31人偏好研究。 | 空间程序抽象与组合已有；三项指标不可当联合成功。 [详细核查](#update-23) |
+| **B-SP02 — PSDL：已有保持程序关系的无 LLM 参数搜索**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2510.16147v1) | 用相对坐标和共享参数表达场景，搜索数值与朝向改善布局。 | 70自建＋66 Holodeck，10人比较；无LLM修正仅指布局阶段。 | D1需超过数值搜索；执行异常仍可触发LLM重试。 [详细核查](#update-24) |
+| **B-SP03 — CADIR：构造图、局部子结构与稳定实体绑定已有近邻**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2608.00891v1) | 带来源与约束的构造图、依赖闭合子图、文本/图检索与稳定选择。 | 200生成、4k/4k检索；100模型跨后端、294编辑；不全是成本匹配。 | 局部结构检索和稳定实体绑定已有，不能作为独立首创。 [详细核查](#update-25) |
+| **B-SP04 — TraceCAD：有条件、带负例的 repair 技能也不是空白**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2608.03062v1) | 连接需求、步骤和失败，局部回溯并复用带条件技能。 | 200消融、1000比较；在线记忆更新与评测顺序须控制。 | D2须超过条件技能与局部搜索；恢复分数不等于概率。 [详细核查](#update-26) |
+| **B-SP05 — Graph-CAD：图分解、动作规划和能力边界课程都有直接先例**<br>补查 · F；[指定版本正文](https://proceedings.iclr.cc/paper_files/paper/2026/file/90e06fe49254204248cb12562528b952-Paper-Conference.pdf) | 几何分解图→动作→代码，三个模块LoRA并用能力边界课程。 | 12k来源；CADBench700，几何约束只测280/约500条；冻结模型另有两示例。 | 图分解、计划和课程均已有；须与冻结提示版本公平比较。 [详细核查](#update-27) |
+| **TileGPT — Generative Design through Quality-Diversity Data Synthesis and Language Models**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2405.09997v1) | QD数据训练语言模型生成粗布局，WFC完成约束细化。 | 两组各50k训练设计；243提示各100次；25×15网格，属性匹配只在有效结果计。 | 多样性＋LLM＋约束已有建筑先例；D1必须超越标准QD。 [详细核查](#update-32) |
 
-## 03. 通用 AI 方法：Coding Agent、知识利用、技能学习与验证
+### 重点补充核查
 
-42 条（F 42 / P 0）。通用方法与强基线。顺序为执行和修复、检索与记忆、技能学习、规格推理、授权安全；每篇的冲突点对应 text2IFC 的候选方法，而不只比较应用场景。
+<a id="update-23"></a>
+#### B-SP01 — SceneMotifCoder：少样本抽取可复用空间程序已经成立
+
+**来源。** Hou In Ivan Tam 等，3DV 2025；[arXiv 2408.02211v2 正文](https://arxiv.org/html/2408.02211v2)，2025-06-03 camera-ready 修订。读 §3–5 与附录相关说明。
+
+**方法。** 1–3 个实例先转成逐对象位置程序，再通过观察、改写和回放检查，抽成带数量、尺寸等参数的 meta-program。推理时选一个 motif 并补函数参数；检索网格后另做碰撞、接触、支撑优化。meta-program 验证包含复现实例数量和对象间相对方向，已超过简单存代码示例。
+
+**实验。** 202 条测试描述、50 类物体；人工分别检查数量、布局、物理合理性，报告 0.93 / 0.90 / 0.76，三者不是联合成功率。用户偏好实验另抽 20 个提示、60 个比较问题、31 名参与者。Table 2 有直接 DSL、无观察、直接示例替代 meta-program 的消融。
+
+**限制和对照意义。** 主要是简单 motif，依赖预先整理的物体库；与文本生成网格模型相比，任务表示和资产条件有差异。文中还展示多个 motif 填充场景，不能声称它完全没有组合。我们的接口合成或能力复用必须超越“抽程序、参数化、再组合”。
+
+<a id="update-24"></a>
+#### B-SP02 — PSDL：已有保持程序关系的无 LLM 参数搜索
+
+**来源。** Maxim Gumin 等，*Procedural Scene Programs for Open-Universe Scene Generation: LLM-Free Error Correction via Program Search*，[arXiv 2510.16147v1](https://arxiv.org/html/2510.16147v1)，2025-10-17；arXiv 元数据注明将发表于 SIGGRAPH Asia 2025。本卡依据预印本正文 §3–7、Tables 2–6。
+
+**方法。** 相对坐标、共享变量、循环构成 PSDL。搜索只改数值常量与四种朝向，目标包括越界/碰撞/支撑损失和相对初始布局的变化成本；共享参数同时带动多个对象。每个常量抽十个扰动，朝向枚举四个，迭代选择改善候选。运行异常仍重新请求 LLM，因此“无 LLM 修正”只指布局错误阶段。
+
+**实验。** 自建 70 个提示，加 Holodeck 的 66 个提示；人工比较使用自建 70 个，10 名参与者分两组。Table 6 平均剩余错误：PSDL 1.1、逐对象局部搜索 0.8、梯度下降 0.5；PSDL 的人类代理偏好更高。PSDL 修正平均 9.3 秒，LLM 自修 106.7 秒。它没有在所有指标上占优。
+
+**限制和对照意义。** 对象清单和大小由共同上游给定，方向限四个；搜索不改对象身份、关系结构或程序分支。相近代码与小几何变化只是语义保持的代理，论文明确未覆盖完整通行、视线等功能。它是“保持关系的局部搜索”的强基线，不能只用逐对象坐标优化作对照。
+
+<a id="update-25"></a>
+#### B-SP03 — CADIR：构造图、局部子结构与稳定实体绑定已有近邻
+
+**来源。** Yu Liu 等，*CADIR: A Cross-Backend Editable Intermediate Representation for Agentic CAD Generation*，[arXiv 2608.00891v1](https://arxiv.org/html/2608.00891v1)，2026-08-01。读方法全部小节、Algorithm 1、Experiments / Tables 1–5。
+
+**方法。** 115 个显式操作记录参数、依赖、约束、拓扑选择与产生的变化。实体选择使用来源范围、几何谓词、数量要求；跨后端用几何签名匹配并拒绝歧义，支持边分裂/合并。双塔对比训练对齐查询与构造图；子图取特征所需的上游依赖闭包，图检索模型只在整图上训练。
+
+**实验。** 生成 200 模型，DeepCAD / Fusion 360 各 100；同 Agent、GPT-5.4 和文档条件比较表示。文本无检索 / 整图 / 整图加子图的 IoU 为 0.2702 / 0.2837 / 0.3064。检索另有 4K 训练、4K 测试；生成时案例库为独立 100 例。跨后端是独立 100 模型、30,466 构造节点、294 个编辑任务，不能混为同一分母。
+
+**限制和对照意义。** 部分后端缺原生可编辑操作；跨后端几何不完全相同。生成成功率与独立用户要求满足不是同一件事，文中没有全流程成本匹配结果。构造图、可靠绑定、依赖子图复用均不能单独宣称新意；检索增益还包含新训练。
+
+<a id="update-26"></a>
+#### B-SP04 — TraceCAD：有条件、带负例的 repair 技能也不是空白
+
+**来源。** Fengxiao Fan 等，*TraceCAD: Trace-Guided Repair for Agentic CAD Generation*，[arXiv 2608.03062v1](https://arxiv.org/html/2608.03062v1)，2026-08-04。读 PDF pp.2–7 的完整 Method、System、Experiments、Discussion，以及 Algorithm 1。
+
+**方法。** 要求、执行步骤和失败证据持续绑定；疑似步骤加上游 1 跳作为编辑区，可扩到 2 跳，下游另行检查。每次最多 3 候选、2 个目标步骤。技能明确保存适用签名、原因、策略、补丁、验证证据和成功/失败复用统计；错误复用会降低排名。保全主要依赖视觉 shape-delta 反馈，不是几何等价证明。
+
+**实验。** 200 模型消融，1K 模型对比；Agent 基线共用后端模型，消融共用重试预算。在 200 例上，去局部搜索的 Recovery Score 0.4865，完整冷启动 0.9167；这是按后续调用数加权的恢复分数，不是任务成功概率。冷启动评测允许先前测试任务形成技能供后续任务使用；warm-up 另用 1K 个互斥训练模型。前者属于有顺序的在线评测，不能写成冻结记忆的独立测试。
+
+**限制和对照意义。** 功能步骤切分与视觉归因会错，冷启动结果受顺序/调度影响；成功导出与几何忠实分开。旧“条件化修复规则跨任务迁移”候选应降级。若继续做动作推理，应研究它未直接隔离验证的**多步效果交互与搜索顺序**，并直接复现同预算局部搜索作为基线。
+
+<a id="update-27"></a>
+#### B-SP05 — Graph-CAD：图分解、动作规划和能力边界课程都有直接先例
+
+**来源。** Shengjie Gong 等，*Learning Hierarchical and Geometry-Aware Graph Representations for Text-to-CAD*，ICLR 2026。[正式 PDF](https://proceedings.iclr.cc/paper_files/paper/2026/file/90e06fe49254204248cb12562528b952-Paper-Conference.pdf)。读 §3–4、Tables 1–3、Appendix C.4、D 的相关实验。
+
+**方法。** 三阶段是几何分解图→动作序列→bpy 代码。三个 Qwen3-8B 模块做 LoRA；SAPCL 生成易/中/难结构变体，在能力边界及稍难处补数据，再训练。也比较冻结通用模型的两示例三阶段推理，不能说全部改善只能靠训练。
+
+**实验。** BlendGeo 约 12K 数据，90/10 训练/验证；CADBench 700 例。但 GCS 只基于其中 **280 例、约 500 条人工几何约束**，利用部件名称匹配和数值几何检查，并非全部 700 例的联合成功率。Table 3 有去图、去动作计划、直接生成；Figure 6 的课程对照匹配每轮数据量。训练每轮约 30 小时数据合成＋双 A800 上三天微调，共四轮。
+
+**限制和对照意义。** GCS、图精度与 VLM 外观分数不同；复杂有机形状和精密装配仍失败，训练与评测部分共享 VLM 判别方式。不能把“分层图＋动作规划”或“按当前能力边界造题训练”重新命名为新方法。对冻结模型的研究，应与其三阶段提示版本比较。
+
+<a id="update-32"></a>
+#### TileGPT — Generative Design through Quality-Diversity Data Synthesis and Language Models
+
+**来源与读取：** GECCO 2024；本轮读取[arXiv 2405.09997v1](https://arxiv.org/html/2405.09997v1) §2–5，重点§3与§4.1–4.2；[Autodesk官方入口](https://www.research.autodesk.com/publications/generative-design-quality-diversity-data-synthesis-language-models/)核对出版身份。
+
+**方法与实验：** MAP-Elites生成带属性设计，微调DistilGPT2生成粗布局，WFC补全约束细节。两组训练数据各50,000设计，比较QD与随机WFC数据；25×15网格，243种属性提示各生成100次。有效性按WFC补全计，属性匹配在有效结果上分别计算。
+
+**边界与冲突：** 不是任意IFC与开放自然语言；交互修改没有独立评测。直接覆盖“多样性＋语言模型＋约束”，压缩粗表示也已有。D1须比较同表示的QD，并证明新的结构冲突/预算机制；不能仅因换成IFC称新颖。
+
+### 阅读位置与来源记录
+
+逐篇原始卡片保留定位细节：[structured-generation](literature-evidence/structured-generation.md)；[frontier-spatial](literature-evidence/frontier-spatial.md)；[frontier-reasoning](literature-evidence/frontier-reasoning.md)。阅读卡是证据，不是额外研究路线。
+
+## 3. 通用AI：知识利用、技能、规划与验证
+
+普通检索、上下文压缩、技能记忆、世界模型和规格检查都不能单独作为新方法。D2应研究操作交互的条件与迁移，D1应研究结构冲突与覆盖决策。
+
+本模块64条研究记录。
 
 | Paper：名称、版本与原始来源 | 贡献与观点 | 实验场景与证据边界 | 与我们的冲突点 |
 |---|---|---|---|
@@ -117,21 +240,21 @@ F 表示已阅读该记录指定版本的方法与实验正文；不表示论文
 | **Counterfactual Reasoning for Retrieval-Augmented Generation**<br>FK06 · F；ICLR 2026 正式全文<br>[ICLR 2026 正式全文](https://proceedings.iclr.cc/paper_files/paper/2026/file/1c078897dc08d46091d0d361d9955c6b-Paper-Conference.pdf) | 改写角色、时间、实体、类别和范围形成对照问题；检索、分层采样证据并生成候选答案，通过原查询与对照查询的相关性差异评分，不微调基础模型。 | 五套 QA、两个 Llama 模型，默认 3 对照问题、4 证据簇、3 草稿。稳定性在 500 个 HotpotQA 查询重复 5 次，延迟测 1,000 查询/4×A100。49.00→88.58 实为 +39.58 个百分点，非 +80.8 个百分点；使用 Smart EM。<br>边界：主表总分母未明确；Smart EM 含 containment/语义变体，不能混作严格 EM。引用结果与重跑混合；并行延迟接近不代表总 token 一样。 | 冲突 N05/N08 的反事实检索。text2IFC 应以执行探测区分可用规则及前提，并与同预算文本对照比较；使用反事实措辞本身不证明物理因果关系或新增能力。 |
 | **ToolChoiceConfusion: Causal Minimal Tool Filtering for Reliable LLM Agents**<br>FK07 · F；arXiv v1，2026-06-04 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2606.06284v1) | 把工具前置变量和产生变量组织成状态依赖图，以 BFS 找目标路径，每步只展示下一工具。causal 指操作依赖，状态表示为变量可用性的单调累积，不是完整环境因果模型。 | 102 个合成任务、100 工具、4 模型、6 策略，共 2,448 运行；固定 mock、最多六步。整条路径与逐步 CMTF 均约 0.99 成功，token 为 2,555/2,405；大幅节省主要相对全工具的 24,569。<br>边界：状态、目标及人工合同已给定，每题一条 gold chain，可能把其他合法路线判错。作者也讨论不确定状态的诊断/恢复工具扩展。 | 直接冲突 N05 与宽泛的必要知识/工具最小化。IFC 中仅把 BFS 图换成实体/API 依赖图不新；剩余问题须是合同不完整、非单调状态或异质未知来源下怎样选择查证，并超过此基线。 |
 | **Retrieval as Reasoning: Self-Evolving Agent-Native Retrieval via LLM-Wiki**<br>FK08 · F；arXiv v1，2026-05-25 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2605.25480v1) | 将文档编成带出处和双向链接的 Wiki，Agent 组合 search/read 与链接遍历，按证据充分性停止；Error Book 保存失败原因和规则，结合确定性与 LLM 修补更新知识。 | 三套多跳 QA 各 500 问题，另有 AuthTrace；统一 GLM-5.1 与 Qwen3-Embedding-8B，最多 15 工具调用，比较七基线及结构、遍历、错误本消融。MuSiQue F1 为 0.739，对照 LightRAG 为 0.659。<br>边界：查询延迟不包含所有建库、跨批修复成本；单文档 AuthTrace 低于 HippoRAG 2，重组可能丢失局部细节。单次 top-5 与多轮遍历并非天然同预算。 | 覆盖 N03 的错误经验与 N05/N08 的可组合知识遍历。text2IFC 加 Wiki、错误本或自修正循环不足；需展示执行条件的可靠迁移、选择机制增益与学习成本摊销。 |
-| **Design-Specification Tiling for ICL-based CAD Code Generation**<br>FK09 · F；arXiv v1，2026-03-13 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2603.12712v1) | 把设计说明拆成多长度 n-gram，以联合覆盖需求片段为代理目标，贪心选择互补上下文示例。近似保证针对覆盖目标，不针对真实知识充分性、执行正确率或所有组合关系。 | Text2CAD 描述和 GenCAD-Code 均源于 DeepCAD，筛后 151,940 三元组；三复杂度各抽 300、共 900 测试，其余为 ICL 库。三个固定模型，主表 5-shot，对比随机、BM25、编辑距离和多样性选择；hard VSR 均未超过各自最强对照。<br>边界：描述去重与难度抽样不是设计族隔离。API 错误改善明显，几何组合仍难；几何评分可相对 GT 在 96 种变换中择优，不能支持绝对尺寸/方向正确。 | N08 必须正面对照：为组合建模需求挑互补知识已有很近方法。text2IFC 需证明真实执行协同/干扰超出需求词覆盖，并保持同信息、同上下文预算；更多覆盖或 token 压缩不足。 |
+| **Design-Specification Tiling for ICL-based CAD Code Generation**<br>FK09 · F；arXiv v1，2026-03-13 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2603.12712v1) | 把设计说明拆成多长度 n-gram，以联合覆盖需求片段为代理目标，贪心选择互补上下文示例。近似保证针对覆盖目标，不针对真实知识充分性、执行正确率或所有组合关系。 | Text2CAD 描述和 GenCAD-Code 均源于 DeepCAD，筛后 151,940 三元组；三复杂度各抽 300、共 900 测试，其余为 ICL 库。三个固定模型，主表 5-shot，对比随机、BM25、编辑距离和多样性选择；hard VSR 均未超过各自最强对照。<br>边界：描述去重与难度抽样不是设计族隔离。API 错误改善明显，几何组合仍难；几何评分可相对 GT 在 96 种变换中择优，不能支持绝对尺寸/方向正确。 | N08 必须正面对照：为组合建模需求挑互补知识已有很近方法。text2IFC 需证明真实执行协同/干扰超出需求词覆盖，并保持同信息、同上下文预算；更多覆盖或 token 压缩不足。  <br>补充核查见[本条更新](#update-10)。 |
 | **Voyager: An Open-Ended Embodied Agent with Large Language Models**<br>SK01 · F；核查 arXiv v2<br>[arXiv v2 全文](https://arxiv.org/html/2305.16291v2) | 自动课程提出任务，冻结的 GPT-4 生成 JavaScript，结合执行反馈与自验证迭代；成功程序形成可执行技能库，以描述检索后复用。展示不更新基础模型权重也能积累外部行为能力。 | 探索预算 160 次提示迭代、3 次运行，钻石工具并非每次成功。迁移仅 4 个未见任务，每项 3 次、最多 50 提示迭代；去掉技能库后，3 个任务仍 3/3，钻石镐 2/3，库也主要改善部分求解效率。<br>边界：提示次数不等于所有 token 或技能获得成本；四任务迁移规模有限，基线的课程与环境适配差异影响归因。不能从开放探索展示推出广泛零样本泛化。 | 覆盖 N01/N02 的冻结模型、成功程序记忆和技能复用。text2IFC 应检验适用边界及未见组合，并同预算比较；仅形成更大 IFC 工具库或加 Agent loop 已有明确先例。 |
 | **LILO: Learning Interpretable Libraries by Compressing and Documenting Code**<br>SK03 · F；核查 arXiv v2<br>[arXiv v2 全文](https://arxiv.org/html/2310.19791v2) | LLM 与枚举搜索共同找程序，以 Stitch 描述长度目标压缩库，AutoDoc 为抽象命名和写说明；允许重新组织库，而非简单去重。冻结所得库后的无 LLM 求解也用于验证抽象本身的价值。 | 训练/测试为 REGEX 491/500、CLEVR 191/103、LOGO 200/111，三种子。每任务最多 4 提示×4 补全，并有 600/1,000/1,800 秒枚举及多轮学习预算；区分在线与离线求解。<br>边界：较大枚举和建库成本不等同廉价一次调用；主要是输入输出明确的 DSL，未直接验证 IFC 的状态副作用。结果应与库大小、文档和搜索预算共同理解。 | 直接约束 N02：程序抽象、语义重写、命名和未见任务收益已有。不能用机械 AST 去重充作唯一基线；text2IFC 要证明组合表现修订宏边界/参数化的额外作用，并对照 SK15 的关系算子学习。 |
-| **Empowering Large Language Model Agents through Action Learning**<br>SK04 · F；COLM 2024；核查 arXiv v2 与会议标注 PDF<br>[arXiv v2 全文](https://arxiv.org/html/2402.15809v2)；[论文 PDF](https://arxiv.org/pdf/2402.15809) | 学习 Python 动作及使用说明，依据训练执行失败更新动作代码或补充注释，从多个候选更新中选择。动作空间可以修订，因此比单纯保存成功轨迹的静态技能库更接近方法对照。 | 每类仅 3 个训练任务，涵盖 4 类规划任务和 6 类 ALFWorld，每类重复 3 次。表 7 消融只采样、不改函数、不改注释；多轮优化也观察到过拟合。现有卡未恢复完整测试实例的统一分母，不反推成功个数。<br>边界：少训练任务不等于少调用，候选采样、评估和多轮更新都有成本。局部失败修复可能过拟合，不能凭最新一例成功证明新任务上的技能提升。 | N01 的最强近邻之一：失败后修代码或改说明已经存在。剩余候选必须是有效比较修实现、收窄条件和拆库，而非再加一段反思提示；应与 LearnAct 加同预算测试的组合直接比较。 |
+| **Empowering Large Language Model Agents through Action Learning**<br>SK04 · F；COLM 2024；核查 arXiv v2 与会议标注 PDF<br>[arXiv v2 全文](https://arxiv.org/html/2402.15809v2)；[论文 PDF](https://arxiv.org/pdf/2402.15809) | 学习 Python 动作及使用说明，依据训练执行失败更新动作代码或补充注释，从多个候选更新中选择。动作空间可以修订，因此比单纯保存成功轨迹的静态技能库更接近方法对照。 | 每类仅 3 个训练任务，涵盖 4 类规划任务和 6 类 ALFWorld，每类重复 3 次。表 7 消融只采样、不改函数、不改注释；多轮优化也观察到过拟合。现有卡未恢复完整测试实例的统一分母，不反推成功个数。<br>边界：少训练任务不等于少调用，候选采样、评估和多轮更新都有成本。局部失败修复可能过拟合，不能凭最新一例成功证明新任务上的技能提升。 | N01 的最强近邻之一：失败后修代码或改说明已经存在。剩余候选必须是有效比较修实现、收窄条件和拆库，而非再加一段反思提示；应与 LearnAct 加同预算测试的组合直接比较。  <br>补充核查见[本条更新](#update-1)。 |
 | **SkillWeaver: Web Agents can Self-Improve by Discovering and Honing Skills**<br>SK05 · F；arXiv v1，2025 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2504.07079v1) | 从探索轨迹生成 Playwright API，自动产生参数测试并调试，文档记录网站前置状态，检索时排除前提不满足的工具。把技能发现、测试、改进及前提过滤连成可执行学习流程。 | 每网站预探索 160 轮、每轮最多 10 步；评测 812 个 WebArena 任务及 4 个真实网站上的 57 任务。表 1 中 GPT-4o WebArena 成功率 22.6%→29.8%；失败分析含 API/参数选择错误与基础 Agent 能力不足。<br>边界：不是完全未接触目标网站的迁移；一次宏可含多底层动作，步数减少不等于全成本节省。需计探索与测试开销，生成测试也可能遗漏要求。 | N01/N02 不能以“可执行技能＋测试＋前提过滤”自称新。text2IFC 需证明修订边界/新宏机制超过相同测试与调试能力，并检查跨场景负迁移，而非仅增加工具包装。 |
 | **PolySkill: Learning Generalizable Skills Through Polymorphic Abstraction**<br>SK06 · F；核查 arXiv v1；未合并后续版本结果<br>[arXiv v1 全文](https://arxiv.org/html/2510.15863v1) | 用抽象类表达领域无关目标，用具体子类实现不同网站行为；新技能通过重放原任务验证，跨网站可探索学习新实现。目标接口与具体实现分离使复用超出逐段代码检索。 | Mind2Web 训练 1,009，跨任务/网站/领域测试 252/177/912，另测 WebArena 812。静态库并非全面提升：Qwen 跨领域 37.5%→35.9%，在线版本 39.9%，说明适配方式显著影响结果。<br>边界：跨网站不是零适配；效率只统计成功轨迹且宏计一步。初始抽象、长尾目标和环境变化仍限制泛化，需要额外探索成本与失败分母。 | 直接冲突 N01 的多实现拆分及 N02 的抽象目标/角色复用。text2IFC 要证明用组合失败修订新宏程序比多态目标抽象更有效；仅按目标聚类、换宿主实现或增加类接口不够。 |
 | **Memento-Skills: Let Agents Design Agents**<br>SK07 · F；arXiv v1 PDF，2026 预印本；HTML 实验抽取不完整<br>[arXiv v1 PDF](https://arxiv.org/pdf/2603.18743v1) | 冻结基础 LLM，把失败归因到技能并修改其文件，也能新建或重组技能；检索路由器另用对比学习。外部技能可以演进，但基础模型冻结并不等于整个系统没有训练。 | GAIA 165 个任务分 100 训练/65 测试；HLE 子集为 788/342。GAIA 测试报告 66.0%，静态基线 52.3%；每题允许 3 次反思重试。作者还发现大量 GAIA 学得技能未在测试中触发。<br>边界：不能把训练成功率当测试表现，聚合比例也不宜自行换整数成功数。需要单列路由训练、合成测试、重试及技能获得成本；学得技能未必迁移。 | N01/N02 的自改技能及冻结基础模型已有近邻。text2IFC 若主张无需训练应明确作用范围；优势要来自条件/宏修订机制在未见任务的收益，而非额外路由训练或更多试错。 |
-| **Contract2Tool: Learning Preconditions and Effects for Reliable Tool-Augmented LLM Agents**<br>SK08 · F；arXiv v1，2026-06 预印本；未假定同行评审<br>[arXiv v1 全文](https://arxiv.org/html/2606.07904v1) | 从元数据、文档或状态轨迹推断工具前提、效果、风险与成本，归一成契约后用于因果过滤。把合同获取从人工标注扩展到证据学习，覆盖“何时可用、会改变什么”而非仅调用格式。 | 固定状态词汇，100 合成工具、102 多步任务，另有 283 黄金决策步。表 V 全工具/学习契约成功率 .775/.980，每任务平均 token 26,172/2,528；主要轨迹为受控模拟中的成功路径。<br>边界：主聚合排除调用兼容性差的一个模型；固定词汇和稀疏成功轨迹可能漏罕见效果。不是开放真实 API 或 IFC 全成本验证，也未证明未知状态下的普遍可靠性。 | 直接覆盖 N01/N05 的契约学习与选工具。text2IFC 仅添加关系前后条件不足；需比较成功契约与成本匹配主动反例，证明联合修程序/修范围/拆库的额外行为。 |
+| **Contract2Tool: Learning Preconditions and Effects for Reliable Tool-Augmented LLM Agents**<br>SK08 · F；arXiv v1，2026-06 预印本；未假定同行评审<br>[arXiv v1 全文](https://arxiv.org/html/2606.07904v1) | 从元数据、文档或状态轨迹推断工具前提、效果、风险与成本，归一成契约后用于因果过滤。把合同获取从人工标注扩展到证据学习，覆盖“何时可用、会改变什么”而非仅调用格式。 | 固定状态词汇，100 合成工具、102 多步任务，另有 283 黄金决策步。表 V 全工具/学习契约成功率 .775/.980，每任务平均 token 26,172/2,528；主要轨迹为受控模拟中的成功路径。<br>边界：主聚合排除调用兼容性差的一个模型；固定词汇和稀疏成功轨迹可能漏罕见效果。不是开放真实 API 或 IFC 全成本验证，也未证明未知状态下的普遍可靠性。 | 直接覆盖 N01/N05 的契约学习与选工具。text2IFC 仅添加关系前后条件不足；需比较成功契约与成本匹配主动反例，证明联合修程序/修范围/拆库的额外行为。  <br>补充核查见[本条更新](#update-2)。 |
 | **SLBench: Evaluating How LLM Agents Follow Logical Relations in Skills**<br>SK09 · F；arXiv v1，2026-07 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2607.09016v1) | 把前后条件、约束、回退、例外、覆盖等八类技能逻辑组织为仓库与产物检查任务，考察 Agent 是否遵守技能关系；另用调用前后检查表缓解违规。逻辑遵循与完成任务分别评价。 | 核心为人工审计 86 例，39 控制/47 违规触发，不能混同大规模构建语料。缓解实验只在选出的 11 个此前违规案例上从 11 降至 4；表中同时报告 unsafe 与 inconclusive。<br>边界：守卫评价把未违规的 inconclusive 合入 safe，不能当整体成功提升。附录约 1.017 亿 token 是流水线估计成本；关系义务不同于 IFC 空间语义，样例也不是违规普遍率估计。 | 约束 N01/N02 的技能合同及 N03 的生成禁忌规则：前后关系检查本身已有。text2IFC 必须同时测误拒绝、未知和完整任务成功，不能用少违规取代能力扩展，或宣称检查表提供全局保证。 |
 | **DreamCoder: Growing generalizable, interpretable knowledge with wake-sleep Bayesian program learning**<br>SK10 · F；本地卡核查 arXiv 原始 PDF；未固定该下载链接的修订号<br>[原始论文 PDF](https://arxiv.org/pdf/2006.08381) | 在 wake 阶段搜索程序，sleep 阶段从程序中学习可复用 DSL 抽象，并训练识别网络引导搜索；抽象考虑语义等价重写，形成可解释的组合知识。程序库增长与搜索能力相互促进。 | 列表实验包含 218 个任务，半训练半测试，并覆盖多个其他领域；递归程序展示使用较大 CPU 与时间预算。现有卡核查了搜索、抽象学习及实验，但没有保存所有领域的统一分母和精确配置，不能补猜。<br>边界：识别网络涉及训练，不能称为整个系统完全冻结；不同任务的搜索/学习成本需要核对。有限输入输出样本上的程序正确不代表具有任意 IFC 状态副作用的普遍保证。 | 直接约束 N02：程序压缩、抽象和组合泛化已经成熟，基线必须允许语义重写。text2IFC 需证明组合反馈修订宏程序的额外收益，而非重做宏提取；SK15 又已覆盖关系效果与角色算子。 |
 | **Epistemic Exploration for Generalizable Planning and Learning in Non-Stationary Settings**<br>SK11 · F；ICAPS 2024 正式全文<br>[ICAPS 2024 出版商 PDF](https://ojs.aaai.org/index.php/ICAPS/article/download/31489/33649/35546) | 考虑谓词在前提/效果中的正、负、缺省候选，构造能够区分候选行动模型的规划问题，再执行探测更新模型；环境变化时只重新学习相关部分。把信息获取与关系规划结合，减少盲目探索。 | 使用四个规划域、每任务 100,000 步与 10 个种子等条件，比较模型学习和规划/强化学习策略。现有卡已读方法、实验及结论，但没有记录可直接迁用的 IFC 任务分母或同 token 结果。<br>边界：学习对象是行动模型，不是同时编写和修订新宏程序；理论及效率依赖规定的可观察状态、模型和环境条件。不能把领域模拟器的学习结果直接转成开放工具或真实建筑保证。 | 对 N01/N05 是强先例：主动选择区分性探测已有。剩余问题应是程序与适用条件同时可能错误时如何选择修订，或不同信息来源如何统一决策；仅把探测换成 IFC 沙箱不构成创新。 |
 | **LLM Agents Making Agent Tools**<br>SK12 · F；ACL 2025 正式全文<br>[ACL 2025 正式全文](https://aclanthology.org/2025.acl-long.1266.pdf) | 给定论文代码库与工具要求，自动建立可重现执行环境，再实现、测试和调试 Python 工具；不只写简单函数，还处理依赖安装与可执行环境，供下游 Agent 重用。 | TM-Bench 为 15 工具任务、42 测试调用、124 单元测试。完整工具通过 12/15，OpenHands 3/15；平均每工具生成成本分别 $0.94/$0.15，动作 21.8/7.5，不能把更高通过率当相同预算收益。<br>边界：输入示例未覆盖特殊情况会影响工具泛化；测试通过只覆盖这些调用。环境设置能力与额外搜索也解释差异，复杂仓库任务不能等同冻结工具池下的抽象学习。 | 覆盖 N02 及能力缺口合成的宽泛故事：需要时自动造工具已有可运行系统。text2IFC 应在相同原语、同预算下证明新宏的迁移与摊销价值；仅增加 API 或安装新库属于能力扩展工程。 |
 | **CREATOR: Tool Creation for Disentangling Abstract and Concrete Reasoning of Large Language Models**<br>SK13 · F；Findings of EMNLP 2023 正式全文<br>[EMNLP Findings 2023 全文](https://aclanthology.org/2023.findings-emnlp.462.pdf) | 先创建可复用函数，再为具体实例决定调用，交给解释器执行并根据错误反馈修正；将抽象工具构造与具体问题求解分开，避免所有推理挤在一个程序生成阶段。 | 评测 MATH、TabMWP 与 2K Creation Challenge，前两者只选数字答案，约占原问题 80%，不是完整测试集。比较程序求解、带修正的程序求解、工具使用及不分离阶段的消融，现有卡不提供全子集精确计数。<br>边界：示例与纠错预算影响结果，数字答案筛选限制外推；执行成功不能推出任意输入下正确。不能将不同提示、重试配置合成一次无额外计算的提升。 | 约束 N02 和“先合成缺口再组合”的故事。先写小工具、再决定怎么用已经存在；text2IFC 需证明组合表现能改进宏边界或条件，而非仅把 creation/decision/execution/repair 四阶段换名称。 |
 | **AdaPlanner: Adaptive Planning from Feedback with Language Models**<br>SK14 · F；NeurIPS 2023 正式全文<br>[NeurIPS 2023 正式全文](https://papers.nips.cc/paper_files/paper/2023/file/b5c8c1c117618267944b2617add0a766-Paper-Conference.pdf) | 以 Python 计划和子目标断言执行任务，区分符合预期与偏离预期的反馈；必要时修改整个计划并从中间恢复，同时保存成功计划作为后续少样本示例。连接计划修订与经验发现。 | ALFWorld 134 个环境；MiniWoB++ 53 类任务使用 38 个人工示例加 21 个发现示例，部分对照结果引自原论文。正文包含代码接口、闭环修订与技能发现消融，现有卡没有逐项转存成功率。<br>边界：复杂任务仍依赖专家示范；环境、模型版本和示例数不同的结果不能混作同模型收益。成功计划复用不等于已学会适用边界，重试与发现示例也有成本。 | 覆盖 N01/N03 的循环、失败恢复和经验库，也约束普通子目标验证叙述。text2IFC 的方法贡献不能是“多轮 Agent”；应定位可替换的修订选择机制并测未见任务迁移。 |
-| **Embodied Active Learning of Relational State Abstractions for Bilevel Planning**<br>SK15 · F；CoLLAs 2023，PMLR 232:358–375；18 页会议版<br>[PMLR 出版记录](https://proceedings.mlr.press/v232/li23a.html)；[CoLLAs 2023 正式全文](https://proceedings.mlr.press/v232/li23a/li23a.pdf) | 按同一控制器且效果在对象替换下等价来分组轨迹，以前态交集学习条件，用变量角色替换对象，再学习参数采样器；神经集合熵驱动提问与前瞻探索，每轮更新谓词、算子及采样器。 | 三个模拟域、六基线；每域 50 示范、1,000 探索转换、50 留出任务、10 种子。Blocks 从 3–4 块迁移至 5–6 块；与 Ask All 成功接近而查询更少，规划限 10 秒，通常每次运行 3–36 小时。<br>边界：给定谓词名、类型、控制器和已知模拟器；脚本专家提供标签。查询效率不等于总训练/模拟成本，也未生成新的宏程序。 | 直接下调 N02：关系效果分组、角色抽象、前提学习及组合不能称新。N01 泛称联合学技能/条件也不足；只剩自生成程序的修补、范围收窄、拆库竞争选择，以及新宏本身的组合反馈修订有待验证。 |
+| **Embodied Active Learning of Relational State Abstractions for Bilevel Planning**<br>SK15 · F；CoLLAs 2023，PMLR 232:358–375；18 页会议版<br>[PMLR 出版记录](https://proceedings.mlr.press/v232/li23a.html)；[CoLLAs 2023 正式全文](https://proceedings.mlr.press/v232/li23a/li23a.pdf) | 按同一控制器且效果在对象替换下等价来分组轨迹，以前态交集学习条件，用变量角色替换对象，再学习参数采样器；神经集合熵驱动提问与前瞻探索，每轮更新谓词、算子及采样器。 | 三个模拟域、六基线；每域 50 示范、1,000 探索转换、50 留出任务、10 种子。Blocks 从 3–4 块迁移至 5–6 块；与 Ask All 成功接近而查询更少，规划限 10 秒，通常每次运行 3–36 小时。<br>边界：给定谓词名、类型、控制器和已知模拟器；脚本专家提供标签。查询效率不等于总训练/模拟成本，也未生成新的宏程序。 | 直接下调 N02：关系效果分组、角色抽象、前提学习及组合不能称新。N01 泛称联合学技能/条件也不足；只剩自生成程序的修补、范围收窄、拆库竞争选择，以及新宏本身的组合反馈修订有待验证。  <br>补充核查见[本条更新](#update-3)。 |
 | **Automated Repair of Ambiguous Natural Language Requirements**<br>FR01 · F；arXiv v1，2025 预印本<br>[arXiv v1 全文](https://arxiv.org/html/2505.07270v1) | 采样 20 个程序，用生成测试区分执行行为，再利用公开示例选解释，对比相合与不合的程序来修订自然语言需求，最多三轮。把可执行行为差异用于需求消歧，而非只做语言改写。 | HumanEval+ 164、MBPP+ 378，三个模型、三次重复。DeepSeek-V3 的 HumanEval+ Pass@1 为 87.80→91.99；比较移除隐藏答案辅助的 ClarifyGPT-auto 等，需连同多程序采样和修订成本理解。<br>边界：有限程序和测试只近似解释空间；公开示例不足时，多数解释也可能错。v1 部分形式定义与算法方向表述不一致，不能照抄公式或把一致性当真实意图。 | 直接约束 N06：多采样、发现分歧、补问已存在。text2IFC 要证明按空间后果或修改成本选择可执行对照能减少返工，并与相同图形界面的普通 Agent 比较；两张图本身可能只是交互设计。 |
 | **From Errors to Proofs: Minimal-Core-Guided Repair for Neuro-Symbolic Constraint Solving**<br>FR02 · F；arXiv v1；注明 IJCAI-ECAI 2026 LogiSymb workshop poster，非主会<br>[arXiv v1 全文](https://arxiv.org/html/2608.14771v1) | LLM 输出固定结构并由 clingo 求解，用删除过滤找到冲突约束子集，按错误类型反馈修复，最多三轮。将笼统求解失败转成较小冲突证据，支持对不可行性的识别。 | 77 个模板题、七领域，其中 14 不可行；主模型 CoT 98.7%、通用修复 88.3%、冲突核修复 89.6%，不是所有情况下更优。弱模型在不可行题编造解从 11/14 降到 1/14。<br>边界：minimal 是子集极小，不保证数量最少。两修复组的错误类型反馈也不同，需析因分离；每系统 token 未报告。漏编码的真实要求即使形式可满足也不会被求解器发现。 | N03/N04 不能首创冲突核或定向修复。text2IFC 必须研究冲突规则的适用条件、跨任务迁移或接口选择，独立核对用户要求，防止删掉需求后得到形式成功。 |
 | **Large Language Models Can Solve Real-World Planning Rigorously with Formal Verification Tools**<br>FR03 · F；NAACL 2025 正式全文；未声称逐页审计全部附录<br>[NAACL 2025 正式记录](https://aclanthology.org/2025.naacl-long.176/)；[NAACL 2025 正式全文](https://aclanthology.org/2025.naacl-long.176.pdf) | 将用户查询转成步骤与 Z3 代码，结合外部 API 与求解器；不可满足时利用冲突核提出约束调整并接受用户反馈，把规划、验证及协商连接为系统流程。 | TravelPlanner 180 验证、1,000 测试题，最佳测试成功率 93.9%。另外 39 和 12 个不可行情景，以模拟用户偏好评估协商，并在四个新规划领域各测 25 题；不同设置不能合成单个统一分母。<br>边界：包含人工示例，不同模型主表不等于同模型增益。协商增加轮数同时增加成本；形式正确约束于实际编码内容，不能自动保证语言转译完整。模拟用户不是实际用户研究。 | 直接覆盖 N04/N06 的求解矛盾与用户协商。text2IFC 需要研究几何/关系跨模块依赖或对照问题选择，并测真实意图；接入 SMT 模块或展示冲突解释不足以构成新方法。 |
@@ -140,5 +263,225 @@ F 表示已阅读该记录指定版本的方法与实验正文；不表示论文
 | **Progent: Securing AI Agents with Privilege Control**<br>D15 · F；arXiv 2504.11703v3（2026）；早期版本题名不同<br>[v3 全文](https://arxiv.org/html/2504.11703v3) | 以确定性策略检查工具和参数权限，用 SMT 判断策略是否扩大，区分收窄、扩权与不变量；目的是阻断不被授权的代理操作。 | AgentDojo/ASB 分别评价正常任务效用和注入攻击成功率；主体即使总接受扩权，报告 ASR 39.9%→1.0%、70.3%→3.9%。这些是安全攻击指标。<br>边界：结果依赖策略边界和批准行为，文本输出攻击不在主要范围；有操作权限不代表执行结果满足领域要求，不能转成 IFC 正确率或压缩收益。 | N01/N04 若只是加参数权限或受控扩大操作范围，已有形式方法先例。text2IFC 可将其作为执行基础，但候选创新仍需证明技能适用性/依赖选择对建模成功的作用。 |
 | **MiniScope: A Least Privilege Framework for Authorizing Tool Calling Agents**<br>D16 · F；arXiv 2512.11147v1（2025）；完整题名由主任务补核<br>[v1 全文](https://arxiv.org/html/2512.11147v1) | 从服务权限与 API 方法建立层级，以 ILP 为执行计划选择所需权限，经会话 token 和调用检查落实；优化的是权限暴露而非生成上下文。 | 10 个真实应用的合成请求，对照 LLM 权限推断，测过权和延迟；确认负担使用模拟用户/请求，不是真实参与者实验，运行开销不含用户确认时间。<br>边界：最小性相对于给定计划、映射和代价定义，资源级参数约束主要作为后续方向；不能将优化可解直接视为未知任务也具备充分权限。 | N05/N08 的“足够且尽量少”目标有概念先例。text2IFC 必须证明执行假设或知识相互作用带来的新增机制，不能只把 ILP 的权限集合换成知识片段/token 预算。 |
 | **Do Coding Agents Understand Least-Privilege Authorization?**<br>D17 · F；arXiv 2605.14859v2（2026）<br>[v2 全文](https://arxiv.org/html/2605.14859v2) | 评测读/写/执行权限推断，提出先保障任务充分性、再审核收窄的两阶段策略；将足够执行与减少暴露分开检验。 | 120 终端任务含 80 常规、40 敏感，以安全轨迹和 strace 标注；固定执行 Agent 比较权限生成模型，同时测匹配、执行成功、安全暴露，增加推理不总有效。<br>边界：参考权限只是一个安全工作流代理，不是唯一最小权限；是否足够还依赖执行 Agent，静态匹配不能替代任务执行。 | N05/N08 的先找足够知识再压缩有相邻思想，N01 限制技能范围也须兼顾可完成性。text2IFC 的方法增量应建立在具体执行假设、反例和关系上，不能只改“权限”为“上下文”。 |
+| **Co-Evolving LLM Decision and Skill Bank Agents for Long-Horizon Tasks（COS-PLAY）**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2604.20987v1) | 联合演化决策Agent与带前提/效果的技能库，允许细化、合并、拆分和退役。 | 6游戏，每游戏60教师轨迹；评测回合与多玩家单位分开，训练5个LoRA。 | 技能修订类型不是D2新意；要比较交互效果如何迁移。 [详细核查](#update-4) |
+| **Bayesian-Agent: Posterior-Guided Skill Evolution for LLM Agent Harnesses**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2606.08348v1) | 用条件化失败后验选择patch、split、compress、retire等技能修订。 | 三个任务域样本分母20/20/40；部分任务改善、部分退化，无重复误差条。 | 直接覆盖技能修订选择；IFC封装不足以形成新方法。 [详细核查](#update-5) |
+| **PURPLE：Optimizing User Profiles via Contextual Bandits for Retrieval-Augmented LLM Personalization**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2601.12078v1) | 冻结LLM，学习集合感知上下文重排，建模条目非加性效用。 | 九种个性化任务，候选20选5、每例32组合；各任务绝对分母未齐。 | 知识协同与集合监督已有；执行任务须再证条件化迁移。 [详细核查](#update-6) |
+| **DearICL：Data Efficient Sample Selection for In-Context Learning**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2609.06670v1) | 学习查询与示例子集的收益代理，主动试验边界组合。 | GSM8K1319、AquaRAT254；WMT19分母含糊；主模型3B、5-shot。 | 组合交互、主动试样与新题选择已有，不能只更换IFC奖励。 [详细核查](#update-7) |
+| **CAMAB：Context Attribution with Multi-Armed Bandit Optimization**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2506.19977v1) | 以Thompson Sampling选上下文掩码，通过token似然归因。 | SST2/HotpotQA各500、两模型，20/40/60查询预算；本版加性假设。 | 干预式知识归因已有；解释旧回答不等于得到正确答案。 [详细核查](#update-8) |
+| **EvoR：Evolving Retrieval for Code Generation**<br>补查 · F；[指定版本正文](https://aclanthology.org/2024.findings-emnlp.143.pdf) | 执行结果共同更新检索查询与代码/错误知识库。 | 四集142/45/107/113，共407；两生成模型，最多30轮，有知识组合消融。 | 执行驱动检索与知识组合已有，需计全部迭代成本。 [详细核查](#update-9) |
+| **ClarifyGPT: A Framework for Enhancing LLM-Based Code Generation via Requirements Clarification**<br>补查 · F；[指定版本正文](https://linshi-website.github.io/paper/ClarifyGPT.pdf) | 采样多个程序，用生成测试的执行聚类发现分歧并提问。 | 正式版五基准与10人反馈实验；不能与早期四基准混计。 | 多解分歧驱动澄清已有；编程错误也可能造成分歧。 [详细核查](#update-11) |
+| **Active Task Disambiguation with LLMs**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2502.04485v1) | 按候选程序执行划分估计问题的信息增益并考虑成本。 | HumanEval48、APPS47；正文统一48存在不一致；最多4轮提问。 | 信息增益选问题已有，尚不能据此假设用户无误回答。 [详细核查](#update-12) |
+| **Clarify Before You Draw: Proactive Agents for Robust Text-to-CAD Generation**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2602.03045v1) | ProCAD分别训练澄清器和代码器，澄清规格后生成CAD。 | 2469测试含1000清晰、1065缺维度、404冲突；模型模拟回答。 | CAD澄清不是空白；多候选预览需隔离呈现与策略收益。 [详细核查](#update-13) |
+| **LLM-based Test-driven Interactive Code Generation: User Study and Empirical Evaluation**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2404.10100v1) | TiCoder利用可区分测试向用户提问，筛选/排序生成程序。 | 15人3题研究，另有MBPP427/HumanEval164；时间差未显著。 | 交互式执行反馈已有；评价须容许误答与不确定。 [详细核查](#update-14) |
+| **Act or Clarify? Modeling Sensitivity to Uncertainty and Cost in Communication**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2602.02843v1) | 以预期损失和信息价值解释何时澄清。 | 行为实验125人；另一实验120招募、排除2人；并非CAD算法。 | 按返工代价决定提问不是新理论。 [详细核查](#update-15) |
+| **VeriAct / Spec-Harness, 2604.00280v1**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2604.00280v1) | 用正确输入输出、输出变异与非法输入检查JML规格并反馈修订。 | 120与筛后662个Java方法；GEPA另有100/50/512划分；有限MVR阈值。 | 验证规格和变异测检查强度已有；开放设计无单一参考行为。 [详细核查](#update-16) |
+| **Prompt Coverage Adequacy, 2607.02057v1**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2607.02057v1) | 用attention干预后的概率变化估计测试对请求条款的覆盖并补测试。 | 164 HumanEval+、112 LCB子集；增强实验88/68错误实现；需内部模型访问。 | 需求覆盖已有方法，但代理覆盖不是正确性证明。 [详细核查](#update-17) |
+| **Specification Self-Correction, 2507.18742v1**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2507.18742v1) | 通过生成与论证发现rubric缺陷，再修规格并重生成。 | 写作每模型48；coding正文5与表中8不一致；主要格式/关键词诱因。 | 规格自修订已有，不能借修订悄悄放宽用户要求。 [详细核查](#update-18) |
+| **Code-A1, 2603.15611v1**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2603.15611v1) | 代码与测试模型对抗训练，用参考正确代码校正测试，记录失败测试。 | 9688训练题，1.5B/3B/7B；代码与测试基准，测试侧含10%子集。 | 生成器/检查器共同学习已有；参考代码依赖不能隐去。 [详细核查](#update-19) |
+| **CURE, 2506.03136v2**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2506.03136v2) | 联合训练代码和测试，以区分正确/错误程序奖励测试。 | CodeContests4500训练/200留出，LCB511、CodeForces500；16×16采样、8A100。 | 执行监督不等于无外部真值；改成IFC奖励不自动构成方法。 [详细核查](#update-20) |
+| **L1 — CWM: An Open-Weights LLM for Research on Code Generation with World Models**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2510.02387v1) | 训练预测代码执行状态与Agent环境响应。 | 32B训练含120M函数/3M轨迹；8B追踪消融提升执行预测未提升SWE；16候选另计。 | 状态预测不保证任务改善，D2必须测规划收益和所有成本。 [详细核查](#update-28) |
+| **L2 — Absolute Zero: Reinforced Self-play Reasoning with Zero Data**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2505.03335v1) | 模型同时出题和解题，执行器验证，多任务强化学习。 | 7B主实验，另3B/14B/8B；3代码/6数学基准；组合课程有负结果。 | 可验证自博弈与非退化检查已有；零题库不等于无先验。 [详细核查](#update-29) |
+| **L3 — SWE-smith: Scaling Data for Software Engineering Agents**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2504.21798v1) | 在可测试仓库合成破坏、执行筛选并采集修复训练轨迹。 | 128仓库约50k任务，20k尝试得5016成功轨迹；Verified500、Lite300。 | 破坏—修复训练已有；更难不保证更有训练收益。 [详细核查](#update-30) |
+| **L4 — Hybrid-Gym: Training Coding Agents to Generalize Across Tasks**<br>补查 · F；[指定版本正文](https://arxiv.org/html/2602.16819v1) | 通过定位、依赖探索、函数生成等辅助任务训练跨任务能力。 | 4470轨迹/762仓库，7B/32B；部分机制只测Easy50，另两主测试分母未齐。 | 混合任务不是新意；表示、工具与轨迹形式必须控制。 [详细核查](#update-31) |
+| **ChopChop — A Programmable Framework for Semantically Constraining the Output of Language Models**<br>补查 · F；[指定版本正文](https://doi.org/10.1145/3776708) | 在可能程序空间上做语义剪枝，约束token前缀的可完成性。 | v1：10等价任务、74个TypeScript子集任务、三模型五温度；400token/150秒。 | 语义约束生成已有；类型任务编译成功不等于功能正确。 [详细核查](#update-33) |
+| **SCOPE — Programming over Thinking: Efficient and Robust Multi-Constraint Planning**<br>补查 · F；[指定版本正文](https://aclanthology.org/2026.acl-long.2028.pdf) | 查询特定结构参数与可复用生成/过滤/交付函数分离。 | 五模型，旅行/行程/会议规划；部分Trip半集、部分方法另有全量结果。 | 执行器分工与减少重复代码已有；仍依赖正确形式化。 [详细核查](#update-34) |
 
-**实验设计的共同约束：** 使用这些记录设计实验时，应固定基础模型、工具与编译器、可用信息和总预算，保留失败分母，并按建筑/模板/机制隔离开发和测试。需要分别评价用户要求、几何、关系、保持性和全部尝试成本。本文没有新增能力实验，也没有将工程机制、单例成功或其他论文的不足升级为我们的已验证创新。
+### 重点补充核查
+
+<a id="update-1"></a>
+#### Empowering Large Language Model Agents through Action Learning（LearnAct）
+
+**[Empowering Large Language Model Agents through Action Learning（LearnAct）](https://arxiv.org/html/2402.15809v2)**：§4、算法1已改 Python 动作和说明，从4个更新候选中选择。§5、表7覆盖4类规划及6类 ALFWorld，每类3训练任务、3次重复；有代码／注释消融及过拟合。完整测试分母尚缺。“多种修订再测试选择”已有。
+
+<a id="update-2"></a>
+#### Contract2Tool: Learning Preconditions and Effects for Reliable Tool-Augmented LLM Agents
+
+**[Contract2Tool: Learning Preconditions and Effects for Reliable Tool-Augmented LLM Agents](https://arxiv.org/html/2606.07904v1)**：§III–IX从文档、轨迹学前提和效果，再过滤工具。100合成工具、102任务，表V成功率 .775→.980；固定谓词、主要成功路径，聚合排除一个兼容性差的模型。它覆盖合同学习，未联合改执行程序。
+
+<a id="update-3"></a>
+#### Embodied Active Learning of Relational State Abstractions for Bilevel Planning
+
+**[Embodied Active Learning of Relational State Abstractions for Bilevel Planning](https://proceedings.mlr.press/v232/li23a/li23a.pdf)**：§3–5以集合熵主动探索；按控制器和对象替换后的效果分组，联合更新谓词、算子、参数采样器。3域，各50示范、1000转换、50留出任务、10种子；单次3–36小时。控制器已给定，但“主动学条件与技能结构”已有。
+
+<a id="update-4"></a>
+#### Co-Evolving LLM Decision and Skill Bank Agents for Long-Horizon Tasks（COS-PLAY）
+
+**[Co-Evolving LLM Decision and Skill Bank Agents for Long-Horizon Tasks（COS-PLAY）](https://arxiv.org/html/2604.20987v1)**：§4.2已有带前提／效果契约的技能，以及 refine、merge、split、retire。§5、表1用6游戏、每游戏60教师轨迹；单人16、多人游戏每玩家10评测回合。技能主要是提示协议，系统训练5个 LoRA；没有独立证明三类修改如何选择。
+
+<a id="update-5"></a>
+#### Bayesian-Agent: Posterior-Guided Skill Evolution for LLM Agent Harnesses
+
+**[Bayesian-Agent: Posterior-Guided Skill Evolution for LLM Agent Harnesses](https://arxiv.org/html/2606.08348v1)**：§3.4、表1在冻结 LLM 下，用条件化失败证据选择 patch／split／compress／retire／explore，修订提示技能文本。§4.2的 GA→BA-Full（flash）：SOP 16/20→19/20，Lifelong 18/20→17/20，RealFin 18/40→21/40；无重复试验误差条。采用固定阈值，未比较竞争修订的反事实效果；增量成本只计补救，§4.4另给累计值。**它直接覆盖原 N01 的选择框架。**
+
+<a id="update-6"></a>
+#### PURPLE：Optimizing User Profiles via Contextual Bandits for Retrieval-Augmented LLM Personalization
+
+**来源与读取：** [PURPLE：Optimizing User Profiles via Contextual Bandits for Retrieval-Augmented LLM Personalization](https://arxiv.org/html/2601.12078v1)，2026 v1，§3–5、Limitations、附录 D
+
+冻结 LLM，训练集合感知重排器；Transformer 建模条目依赖，Plackett–Luce 采样，每例 32 个组合，以参考回答似然作奖励。九种个性化任务，候选 20 选 5，三种生成模型；多数设置三次，GPT-5-nano 排序基线单次，各任务绝对分母未明列。**非加性、非单调效用及集合监督已直接覆盖**；但各任务分别训练，未测跨任务/域迁移，并非执行正确性实验。
+
+<a id="update-7"></a>
+#### DearICL：Data Efficient Sample Selection for In-Context Learning
+
+**来源与读取：** [DearICL：Data Efficient Sample Selection for In-Context Learning](https://arxiv.org/html/2609.06670v1)，2026-09 v1，§3–5、§8、附录 B/E
+
+学非线性“查询＋示例子集→收益”代理；gap-index 主动试边界组合，测试时直接排序。GSM8K 1319、AquaRAT 254；WMT19 分母含糊。主模型 Llama3.2-3B、5-shot；GSM8K 75.66% 对动态 CASE 70.00%。**学组合交互、选择新题上下文、减少试样成本均已有**。奖励是参考答案 BERTScore；理论界有代理偏差等条件，仅覆盖已访问候选池，不是全部子集保证。
+
+<a id="update-8"></a>
+#### CAMAB：Context Attribution with Multi-Armed Bandit Optimization
+
+**来源与读取：** [CAMAB：Context Attribution with Multi-Armed Bandit Optimization](https://arxiv.org/html/2506.19977v1)，2025 v1，§3–4、Limitations
+
+Thompson Sampling 选择上下文掩码，以原回答的归一化 token 似然归因。SST2/HotpotQA 各抽 500、两模型，比较 SHAP、ContextCite、leave-one-out 及 20/40/60 查询预算。**按干预收益选择下一次试验也已有**。此版假设加性；解释原回答不等于使回答正确，不能与后续正式版混写。
+
+<a id="update-9"></a>
+#### EvoR：Evolving Retrieval for Code Generation
+
+**来源与读取：** [EvoR：Evolving Retrieval for Code Generation](https://aclanthology.org/2024.findings-emnlp.143.pdf)，EMNLP Findings 2024，§2–4、表 1–4、§7
+
+执行结果同时更新检索查询、代码/错误知识库，不训练重排器。四集分别 142/45/107/113 题，共 407；模拟 SciPy/TensorFlow 更新及 Ring/Pony，两生成模型。表 4 已有执行反馈、代码、文档的单独/两两/三者组合消融。**执行驱动知识组合不是空白**；无异常仅作为语法正确信号，最多 30 轮，存在延迟成本。
+
+<a id="update-10"></a>
+#### DST：Design-Specification Tiling for ICL-based CAD Code Generation
+
+**来源与读取：** [DST：Design-Specification Tiling for ICL-based CAD Code Generation](https://arxiv.org/html/2603.12712v1)，2026 v1，§2–4、附录 B/E/F
+
+多粒度文本覆盖＋submodular 贪心选示例；900 测试、三模型、主表 5-shot。hard 有效率未超过各模型最强对照。它不学执行交互，但已覆盖“互补建模知识选择”；其近似保证针对文本覆盖，不能移作真实执行保证。
+
+<a id="update-11"></a>
+#### ClarifyGPT: A Framework for Enhancing LLM-Based Code Generation via Requirements Clarification
+
+**来源与读取：** [ClarifyGPT: A Framework for Enhancing LLM-Based Code Generation via Requirements Clarification](https://linshi-website.github.io/paper/ClarifyGPT.pdf)，FSE 2024，§3–5、Tables 3–4
+
+多程序采样、生成/变异测试、执行结果聚类，再用不同簇的程序生成问题。10 人反馈实验；正式版自动评价覆盖五个基准，与早期四基准版本不能混用。直接覆盖“执行差异发现歧义”；模型自身错误也可能产生分歧。
+
+<a id="update-12"></a>
+#### Active Task Disambiguation with LLMs
+
+**来源与读取：** [Active Task Disambiguation with LLMs](https://arxiv.org/html/2502.04485v1)，ICLR 2025 作者 v1，§2–5、Appendix E/F
+
+从候选解估计问题的信息增益，并扣提问成本。代码实验从 5 个问题选一个，最多 4 轮，按候选程序执行结果分割解空间；HumanEval 表为 48 题、APPS 表为 47 题，正文有统一写 48 的不一致。查询选择本身需更多 LLM 调用，作者将它视为相对用户反馈便宜。用户错误与“不知道”没有纳入主要模型。直接覆盖“执行候选＋信息增益”。
+
+<a id="update-13"></a>
+#### Clarify Before You Draw: Proactive Agents for Robust Text-to-CAD Generation
+
+**来源与读取：** [Clarify Before You Draw: Proactive Agents for Robust Text-to-CAD Generation](https://arxiv.org/html/2602.03045v1)，2026 预印本，§3、5.2、6.3、Table 4/7
+
+ProCAD 对澄清器和代码器分别 SFT，先收集一批问题，下一轮接受修订规格；§3 已写几何质量和沟通成本目标，实际训练为轨迹 SFT。Table 7 的 2,469 测试包含 1,000 清晰、1,065 缺维度、404 冲突提示，不能全称歧义测试。用 GPT-5-mini 模拟回答并以另一模型检查迁移；同代码器对照可分离部分澄清收益。固定两轮与正确回答假设限制真实交互结论。
+
+<a id="update-14"></a>
+#### LLM-based Test-driven Interactive Code Generation: User Study and Empirical Evaluation
+
+**来源与读取：** [LLM-based Test-driven Interactive Code Generation: User Study and Empirical Evaluation](https://arxiv.org/html/2404.10100v1)，2024 作者 v1，§IV–VII、Table III
+
+TiCoder 按测试的区分能力提问并剪枝/排序代码；15 人、3 题的用户实验另于 MBPP 427 / HumanEval 164 自动实验。通过/失败式反馈下判断正确性较好，但时间差未显著；不同反馈形式出现不同误答。已覆盖用户认知负担、测试驱动意图与可执行反馈，不能声称此前只测代码正确率。
+
+<a id="update-15"></a>
+#### Act or Clarify? Modeling Sensitivity to Uncertainty and Cost in Communication
+
+**来源与读取：** [Act or Clarify? Modeling Sensitivity to Uncertainty and Cost in Communication](https://arxiv.org/html/2602.02843v1)，2026 作者 v1，Experiments、Computational Model、Discussion
+
+以 expected regret / 信息价值解释澄清。第一实验 125 人；第二实验招 120 人、排除 2 人，研究不确定程度与错误代价。是语言/行为实验，非 CAD 执行算法；但“预计返工损失高才问”的抽象思想已被覆盖，不能当新理论。
+
+<a id="update-16"></a>
+#### VeriAct / Spec-Harness, 2604.00280v1
+
+**来源与读取：** [VeriAct / Spec-Harness, 2604.00280v1](https://arxiv.org/html/2604.00280v1)，§3–7
+
+**方法、实验与限制：** 用已知正确输入输出、变异输出及显式非法输入检查 JML 前后条件，反馈给 CodeAct 式 Agent。120 与筛后 662 个 Java 方法；GEPA 实验另有 100/50/512 划分。MVR 用有限样本与阈值定义，并非完整性证明。检索显示新版本标题为 Spec-Harness，本卡严格使用 v1 标题与结果。
+
+**冲突点：** “验证器也要验证”“用变异测规格强弱”“规格修订闭环”均已有。其输入是假定正确程序的行为，不直接解决开放设计中多个合法结果与自然语言遗漏。
+
+<a id="update-17"></a>
+#### Prompt Coverage Adequacy, 2607.02057v1
+
+**来源与读取：** [Prompt Coverage Adequacy, 2607.02057v1](https://arxiv.org/html/2607.02057v1)，§IV–VII、算法1、表III
+
+**方法、实验与限制：** 用 attention spotlighting 后的概率变化估计测试覆盖哪些请求句子，再补测试。164 个 HumanEval+、论文使用的 112 个 LCB v6 子集；测试增强分别用 88/68 个错误实现。需模型内部访问；覆盖是代理指标，正确性仍借助参考实现，未覆盖性能测试。
+
+**冲突点：** “从原始请求独立测需求覆盖”不是全新问题；增加 coverage 数字不等于方法创新。
+
+<a id="update-18"></a>
+#### Specification Self-Correction, 2507.18742v1
+
+**来源与读取：** [Specification Self-Correction, 2507.18742v1](https://arxiv.org/html/2507.18742v1)，§2–3、表1–2
+
+**方法、实验与限制：** 先生成、解释如何符合错误 rubric，再修订 rubric 并重生成。写作每模型 48 任务；coding 正文称 5 项、表2称每模型 8 项，分母不一致。主要注入关键词/格式诱因，不能外推空间语义漏检。
+
+**冲突点：** “发现规格有问题就改规格”已有；须区分恢复原始要求与悄悄放宽要求。
+
+<a id="update-19"></a>
+#### Code-A1, 2603.15611v1
+
+**来源与读取：** [Code-A1, 2603.15611v1](https://arxiv.org/html/2603.15611v1)，§3–4、附录F
+
+**方法、实验与限制：** 两模型对抗训练代码与测试，测试可看候选，参考正确代码负责校正测试答案。9,688 道训练题、1.5B/3B/7B；评 HumanEval+、MBPP+、BigCodeBench 与测试基准的 10% 子集。维护失败测试记忆，有相应消融。依赖参考代码，两个模型的分离不应被转述为排除一切共谋的证明。
+
+**冲突点：** “生成器与检查器对抗共同进步”“动态测试课程”“失败记忆”均已有。开放 IFC 没有逐请求参考程序时，测试有效性不能照搬。
+
+<a id="update-20"></a>
+#### CURE, 2506.03136v2
+
+**来源与读取：** [CURE, 2506.03136v2](https://arxiv.org/html/2506.03136v2)，§3–4、表1
+
+**方法、实验与限制：** 联合提升代码与测试生成，以已知正确/错误程序的区分能力给测试奖励。CodeContests 4.5k 训练、200 留出，另评 LCB 511、CodeForces 500 等；16 代码×16 测试采样，使用 8 A100 训练。并非完全无外部真值。
+
+**冲突点：** 换 IFC 奖励、从执行结果训练小模型本身不新；要证明新的可迁移监督或决策机制。
+
+<a id="update-28"></a>
+#### L1 — CWM: An Open-Weights LLM for Research on Code Generation with World Models
+
+[原始全文，2510.02387v1，2025-09-30](https://arxiv.org/html/2510.02387v1)。本轮读 §2、§7.1–7.2、§8.3。
+
+学习对象是代码执行后的状态和工具环境响应。32B 模型的中期训练含 120M 函数追踪、3M Agent 轨迹；后者保留成功和失败，并训练预测动作及环境响应。§7.1 的受控实验使用 8B、总计 7T token：加入执行追踪后 CruxEval-O 从 44.6 到 73.9，但 SWE-bench Verified 从 18.6% 到 18.4%；再加入 ForagerAgent 才到 22.1%。最终 32B 在全部 500 题上单次尝试平均 53.9%，65.8% 是 16 个候选及额外测试选择的结果。
+
+**冲突与启发：**“学执行语义而非代码文本”已被明确提出。更会预测执行，不保证更会完成任务；必须证明所学关系效果实际改善规划或生成。论文未证明小规模 IFC 数据足以重现效果，其大规模训练不能当作本项目已有前提。
+
+<a id="update-29"></a>
+#### L2 — Absolute Zero: Reinforced Self-play Reasoning with Zero Data
+
+[原始全文，2505.03335v1，2025-05-06](https://arxiv.org/html/2505.03335v1)。本轮读 §3–4、Appendix C、D.1–D.3。
+
+同一模型同时出题和解题，Python 执行器构造并验证程序、输入、输出三类推理任务；出题奖励偏向部分可解的问题，用多任务 REINFORCE 更新权重。主实验是 Qwen 7B，另有 3B、14B、Llama 8B；评估 3 个代码、6 个数学基准，v1 主表未逐项列出题数，不能把 9 个基准当 9 道题。7B-Coder 综合均分提高 10.2 点。消融中不训练 proposer 只降 1.4 点。
+
+**最相关负结果：**Appendix D.2 已尝试组合旧函数形成课程，未见显著收益，常退化为 `f(g(x)) = g(x)`；论文还提出用执行检查排除捷径。因此“组合课程 + 非退化检查”也不是可直接占据的空白。其零数据指无新增人工题库，仍依赖预训练模型和人工设计的任务/奖励。
+
+<a id="update-30"></a>
+#### L3 — SWE-smith: Scaling Data for Software Engineering Agents
+
+[原始全文，2504.21798v1，2025-04-30](https://arxiv.org/html/2504.21798v1)。本轮读 §2–4、§6。
+
+先建立可测试代码环境，再通过模型改写、AST 修改、组合错误、回退 PR 产生训练题；执行确认确实破坏既有测试。128 仓库约 50K 任务，从 20K 次专家尝试得到 5,016 条成功轨迹训练学生。32B 在 SWE-bench Verified 的 500 题上单次成功率 40.2%；另测 Lite 300 题。
+
+**冲突与负证据：**自动破坏—修复、组合错误、执行筛选、成功轨迹训练都已做过。§4 固定每组 500 条训练轨迹，四档难度在 Verified 上为 12.4/10.8/13.6/12.2%，没有“更难即更有效”的趋势。将测试内容放入问题还改变了学生行为。迁移取决于数据分布和监督形式，不只取决于修复题难度。
+
+<a id="update-31"></a>
+#### L4 — Hybrid-Gym: Training Coding Agents to Generalize Across Tasks
+
+[原始全文，2602.16819v1，2026-02-18](https://arxiv.org/html/2602.16819v1)；[作者代码及 ICML 2026 标注](https://github.com/Hybrid-Gym/Hybrid-Gym)。本轮读 §2–4、Appendix A.3。
+
+通过函数定位、问题定位、依赖搜索、函数生成等辅助任务，训练与目标任务共用的探索、推理、文件修改能力。4,470 条轨迹、762 仓库；训练 7B/32B，在问题修复、测试生成、库生成上测迁移。32B 的 SWE-bench Verified 从 7.0% 到 32.4%，另两类分别提高 7.85/5.11 点。Table 5 有每种辅助任务 500 条、修复 491 条的对照；§4 部分机制消融仅在筛选的 Easy 50 上完成，不能当完整基准结论。本文未清楚列齐另两个主测试分母，此处不补猜。
+
+**冲突与启发：**跨任务数据混合不是新意；输出接口、真实探索和轨迹结构本身会产生大影响。作者 7B 训练使用 8 张 A6000、32B 使用 2 张 H100，不能假设微调完全没有资源代价。对 text2IFC 必须控制输入表示和动作接口，否则所谓迁移可能只是学会格式。
+
+<a id="update-33"></a>
+#### ChopChop — A Programmable Framework for Semantically Constraining the Output of Language Models
+
+**来源与读取：** POPL 2026，DOI [10.1145/3776708](https://doi.org/10.1145/3776708)；机制和实验数字据[arXiv 2509.00360v1](https://arxiv.org/html/2509.00360v1) §2–6、§8，不将v1与定稿差异默认为一致。
+
+**方法与实验：** 语法映射程序空间，语义pruner检查部分token前缀能否补成满足条件的AST。比较无约束、语法约束和语义约束；10个等价改写任务及809个MultiPL-E TypeScript任务中可表达的74个；三个6.7B–13B模型、五种温度，400-token/150秒限制。
+
+**边界与冲突：** 类型任务以编译通过计，并非功能正确；有限类型/语言子集限制适用范围。约束化输出不新，JSON格式约束也不等于此语义机制；token级访问与检查开销须单独评估，不能直接承诺可接所有闭源API。
+
+<a id="update-34"></a>
+#### SCOPE — Programming over Thinking: Efficient and Robust Multi-Constraint Planning
+
+**来源与读取：** ACL 2026；[正式PDF](https://aclanthology.org/2026.acl-long.2028.pdf) §3–5、Table 1及§4脚注；未逐项重算附录全部实验。
+
+**方法与实验：** 示例驱动生成结构化组合/约束接口和可复用Combination、Filter、Deliver函数；推理时填参数，不再为每题生成求解代码。五种闭源模型，TravelPlanner和Natural Plan的Trip/Meeting任务；对照CoT、ToT、ToS、CPMPy等，提供同类示例。部分Trip比较只抽半集，Direct/CoT/SCOPE另有全量表，不能混分母。
+
+**边界与冲突：** 依赖形式化覆盖和域内可复用函数，尚非开放IFC多方案编辑。编译器分工、结构化输入和减少重复代码已是先例；“已由执行器承担的内容不再给LLM”不能单独作为AI新方法。
+
+### 阅读位置与来源记录
+
+逐篇原始卡片保留定位细节：[coding-knowledge-and-control](literature-evidence/coding-knowledge-and-control.md)；[frontier-knowledge](literature-evidence/frontier-knowledge.md)；[frontier-skills](literature-evidence/frontier-skills.md)。阅读卡是证据，不是额外研究路线。

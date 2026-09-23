@@ -201,3 +201,19 @@ REPORT.md 为**验收版**：逐构件损伤清单（名称/GUID/楼层/坐标/�
 | 严格审计 | `composite-evidence-audit/audit-*.json` |
 | 运行工件 | `dataset/processed/ifc-repair-runs/repair-damage-restoration*` |
 | 失败族测试 | `tests/ifc_repair/`（5 个新家族文件） |
+
+## 2026-09-23 整合补记：早期工作、会话总结与最终验收的关系
+
+本节整合 [WORK-SUMMARY.md](WORK-SUMMARY.md) 的阶段演进与独有失败背景。上文是 9 月 1 日会话快照，不能将其中“Plan 07 未收尾”、旧 Proof 路径或当时的 Type 边界读成今天的状态；后续正式 C1–C5 完成记录见 [9 月 4 日验收](damage-restoration-c1-c5-completed.md)，当前人读入口见[Repair Proof](../../../dataset/processed/proof/README.md)。本次不重写原运行和验收记录。
+
+| 阶段 | 保留的工作事实 | 合并后的阅读位置 |
+|---|---|---|
+| 早期 Composite 增量改造 | 混合 manifest 绑定与门属性授权缺陷被定位；增量增加构件不能直接充当删除后恢复的证据 | 原始 [COMPOSITE-EVIDENCE-REPORT](COMPOSITE-EVIDENCE-REPORT.md)、[DEFECT-RECORD](DEFECT-RECORD.md)保留机制、失败与当时结果；本页 §1.1 解释任务语义调整 |
+| 追加 Debug | 修复 Proof 谓词绑定、scope／evidence 集合语义及已发布操作契约的可达性；修复后的同案例重试与未见场景评测不同 | 本页 §1.4 的机制表、失败族，以及原始缺陷记录；早期门禁数量不与后续回归重复相加 |
+| vvo 的 R1–R3 | 梁／柱损伤逐步增加，离线与真实运行分开保存 | 本页 §1.2；这里的 R1–R3 是案例编号，不是独立的 Repair Milestone R1 验收集合 |
+| 非 vvo 的 C1–C5 | sixty5／str、1px、d7n 的 2→8 构件损伤与梁／门／窗恢复 | 本页 §1.3–§2 保留 v1→v4 和严格审计结果；旧工作总结中早期“原位对齐”的结论不能覆盖后来发现的楼层／世界坐标错误 |
+| 后续正式完成 | 9 月 4 日记录将 batch 01 的 C1–C2 与 batch 02 的 C3–C5 收为正式集合，包含 exact Type reuse 的后续检查 | 单独保留完成记录及其冻结 Proof；不把它追写成 9 月 1 日 v4 当时已经验证的能力 |
+
+仍需保留的早期失败背景：大模型评估曾超过 180 秒时限，改为 900 秒时限但没有减少检查；harness 曾只处理 list 形投影而未处理 dict，属于运行包装器错误；窗损伤请求曾缺宿主标识；C5 首次运行因不存在的 profile 和多余字段被拒收。这些与后续楼层误差、属性遗漏属于不同失败，不因最后通过而删掉。请求措辞的内部调整只表示当时开发过程，不能当作盲测提升。
+
+[WORK-SUMMARY.md](WORK-SUMMARY.md)中的代码清单、逐轮调用和时延可从原稿追溯；现行入口不再重复维护一套相同阶段说明。后续合并删除仅退役叙述稿，保留本页、独立缺陷／证据报告、冻结文件、真实失败与正式 Proof。

@@ -53,3 +53,9 @@
 全量探索过程中发现旧路径、历史默认版本断言和本地 Torch DLL 访问异常。路径与上述合同夹具已聚焦修正；Torch 在独立进程加载正常（torch-isolated-probe.txt），全量进程内的加载顺序问题尚未完成复验。隔离工作树通过本地 junction 引用已有 BGE 权重，没有下载或修改权重。**本次是经聚焦验证的分支整合，不是全仓测试全通过或系统能力提升结论。**
 
 暂存检查中的空白告警主要来自冻结历史 Prompt、Proof 和失败测试 XML；为保留证据未重写这些字节。提交不包含 dataset/external 子模块指针变更。
+
+## 2026-09-23：重复 Prompt 快照去重
+
+用户批准后，九个离线 fixture 基线案例的相同 `rendered-prompt.md` 保留[setsem-01 共享原件](baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，其余八份删除。九份工作目录字节原本完全相同；各案例的原始响应、诊断、renderer-input、profile 与 metadata 仍分别保留。读取其他八案的 Prompt 时使用共享原件；旧路径、哈希和历史恢复版本见[去重记录](../../document-catalog.md#第三批删除已完成重复-prompt-快照-d15d22)。
+
+上文“9 目录／54 文件”是 9 月 12 日归档时的数量；本次仅删除八份相同 Markdown 后为 46 文件。该批为 fixture 基线，不是真实 Provider 运行；没有合并失败次数或改写任何诊断。
