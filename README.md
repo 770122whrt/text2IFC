@@ -11,7 +11,7 @@ text2IFC 是一个自然语言生成与修复 IFC 的研究项目：在受支持
 | 最新执行位置 | [STATE](.planning/STATE.md) 顶部；下方保留历史检查点 |
 | 产品边界和阶段安排 | [PROJECT](.planning/PROJECT.md)、[ROADMAP](.planning/ROADMAP.md) |
 | 所有重要文档 | [文档索引](docs/README.md) |
-| 本轮清理和目录迁移 | [2026-09-23 整理结果](docs/reports/repository-cleanup-20260923/REPORT.md) |
+| 清理、目录迁移和旧工作树退役 | [9 月整理结果与恢复入口](docs/reports/repository-cleanup-20260923/REPORT.md) |
 | 已生成 IFC、用户输入和验收报告 | [Proof 入口](dataset/processed/proof/README.md) |
 
 开始修改前阅读 [AGENTS.md](AGENTS.md)，确认 Git root、分支和已有修改。指南与交接快照提供导航，具体行为仍以适用合同、实际代码和当前用户授权为准。

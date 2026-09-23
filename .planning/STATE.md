@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前整理：旧 main 工作树退役（2026-09-24）
+
+按用户要求将项目控制在约 30 GiB，旧 `.tmp/main-integration-20260912` 已在恢复核查后退役，项目按含隐藏文件、排除目录链接重复计数的口径从 40.38 GiB 降至 30.06 GiB。main 分支及 Git/LFS 对象保留；独有运行文件和五份不同的旧 RVT 压缩保存在 `.tmp/retired-worktrees/main-integration-20260912/`，仅本地保留。根缓存、依赖、当前 Proof 和原有未提交工作不变。下方 9 月 13 日记录中的“main 工作树保留”属于当时状态；恢复入口和校验见[清理报告](../docs/reports/repository-cleanup-20260923/REPORT.md#2026-09-24旧-main-工作树退役与体积复测)。
+
 ## 当前重构：接入 Zcode 有效实现（2026-09-13）
 
 用户要求的有效重构已接入：生产／基准评估分离（`2d1a18bb`）、独立 Proof 包（`d9a91212`）、25 个 runner 分类并保留旧入口。当前实现作为基线，未覆盖后续修复或冻结合同。评估 211 项通过；Proof 168 项通过、16 项原有失败已用原代码复现；分组新入口／公共链检查及本轮夹具修复已完成，另确认 2 项旧 Window 数据路径失败。完整分段结果与 18 项既有测试债务见[执行记录](../docs/reports/zcode-refactor-adoption-20260913/REPORT.md)。无新 Provider／Full Preflight／main 合并。
