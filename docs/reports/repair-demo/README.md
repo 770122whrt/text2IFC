@@ -30,7 +30,7 @@
 
 ### 历史材料：保留引用，不再并行维护
 
-[旧 Claim 攻击快照](archive/claim-novelty-audit-20260921.md)、[v0.3 研究与实验草案](archive/research-question-claims-experiments-20260921-v0.3.md)、[v0.3 三方比较协议草案](archive/damage-repair-compare-protocol-20260921-v0.3.md)已移入 archive，仅解释此前讨论。现行决定进入第三份主文档。
+旧 Claim 审查、v0.3 研究草案及三方比较草案已按用户批准删除；有效内容维护在 [Claims 与实验设计](claims-and-experiments.md)，历史原文与删除理由见[清理记录](../../document-catalog.md#第一批删除已完成d1d4)。
 
 [SGSS 全文阅读快照](sgss-fulltext-review-20260921.md)保留前作阅读证据；新原文核查统一在 literature 更新，不作为第四份现行综述。Generation 的计划与历史材料保持其原有职责。
 
@@ -41,3 +41,5 @@
 9 月 23 日 v0.7 进一步恢复原稿的图解结构：三个 Part、七幅流程图，以及 Type／材料、梁柱补全两个贯穿案例；同步 Claims 中的闭环边界，未新增文献或实验结论。
 
 9 月 23 日 v0.8：技术主文档定位为展示版 Demo Method，正文按问题、闭环、三个 Part、两个案例及论文验证组织；去除代码入口、内部对象清单和交接记录。后续沿用此写作定位。
+
+9 月 23 日清理：用户批准后删除 D1–D4 四份旧文件，原文已在提交 d6a9d4c4 中推送保存；修复引用，未删除上传原稿或实验依据。

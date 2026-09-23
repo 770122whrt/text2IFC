@@ -1,6 +1,6 @@
 # 文档分类、归档与保留目录
 
-更新：2026-09-23。覆盖 `docs/` 下 216 份 Markdown 文件（不含本目录自身）。
+更新：2026-09-23。覆盖 `docs/` 下 212 份 Markdown 文件（不含本目录自身）。
 按功能和用途整理导航；逐文件分类依据路径、标题及各分区索引，不表示已逐句审计全部历史正文。
 本次事实核对集中于 Repair、材料／Type／外观、R1 和 presentation 案例。
 `.planning/`、源数据、Prompt／Schema、accepted Proof 与运行产物保留原有权威位置，未纳入删除。
@@ -18,36 +18,63 @@
 
 ## 已完成的归档与纠偏
 
-- 将 Repair 的旧 Claim 审查、v0.3 实验草案、v0.3 三方比较协议移入 [repair-demo/archive](reports/repair-demo/archive/README.md)，修复内部和外部 Markdown 引用。保留三份内容，只调整相对链接。
-- Generation 早期研究稿、周报和旧 handoff 作为逻辑归档保留原路径；当前索引只突出主稿，避免大范围移动破坏历史引用。
+- Repair 的旧草案先归档并推送 Git；用户批准后删除 D1–D4，相关评测要点并入现行 Claims。历史原文见下方固定提交链接。
+- 继续核查 Generation 早期研究稿，列出第二批 10 份待删除审核项；周报、旧 handoff 和独立证据另行判断，不再一律标为永久保留。
 - 将全局和报告索引增加为按功能阅读，改正架构索引仍只写 Phase 7–10.1、验证索引仍写 R1 待执行等过时描述。
 - Repair 技术主文档补齐 Type／材料／外观，并将运行 PASS、人工待审、离线回归分别报告。没有重写任何冻结 Proof 或实验结果。
 
-## 建议删除的第一批文件：待阅读批准
+## 第一批删除已完成：D1–D4
 
-项目确有可以精简的旧文档。以下 **4 份建议从工作目录删除**：它们的现行职责已由三份主文档承接，继续并列保存容易误用旧结论。旧版原文先进入本次 Git 提交并推送，再按批准路径删除；历史通过 Git 恢复，不再需要让所有旧稿永久占据目录。
+2026-09-23 用户明确批准后，以下 **4 份已从工作目录删除**。内容先保存在已推送提交 `d6a9d4c4`，下表阅读入口指向该提交中的历史原文；现行内容由三份主文档承接。
 
-| 编号与阅读入口 | 删除理由 | 当前替代与保留内容 | 批准后处理 |
+| 编号与阅读入口 | 删除理由 | 当前替代与保留内容 | 已执行处理 |
 |---|---|---|---|
-| D1 [旧研究与实验草案](reports/repair-demo/archive/research-question-claims-experiments-20260921-v0.3.md) | 研究问题、主张和方法已合并；48 任务／288 次运行已搁置，容易被误读成当前计划 | Method 及 Claims；公平对照、分组隔离与成本解释已收拢至 Claims §9.1 | 删除该文件，旧规模与全文留 Git 历史 |
-| D2 [旧三方比较协议](reports/repair-demo/archive/damage-repair-compare-protocol-20260921-v0.3.md) | 与 Claims 重复维护评测原则；独立文件不再承担执行协议职责 | G–D–R、对象匹配、容差、完整失败分母和比较器正负控制已收拢至 Claims §9.1 | 删除该文件，现行设计只维护 Claims |
-| D3 [旧 Claim 攻击快照](reports/repair-demo/archive/claim-novelty-audit-20260921.md) | 近邻判断已纳入当前文献与 Claims；旧代码行号和部分当时状态会随实现漂移 | 文献矩阵保留来源与阅读范围，Claims 保留近邻差异及候选贡献；详细旧论证可查 Git | 删除该文件，当前入口不再绕经旧审查 |
-| D4 [9 月 18 日旧 Repair 矩阵](reports/generation-demo/ifc-repair-literature-matrix-20260918.md) | 放在 Generation 分区，Repair 已有专属矩阵；旧保全勾选与安全／授权定位已被后续修正 | 9 月 21 日 Repair 文献矩阵及 Claims 为现行依据；旧条目与原文链接保留在 Git 历史 | 删除该文件，旧入口改指 Repair 矩阵 |
+| D1 [旧研究与实验草案](https://github.com/770122whrt/text2IFC/blob/d6a9d4c43e91d6e1d9e2e93c8801a006497ca969/docs/reports/repair-demo/archive/research-question-claims-experiments-20260921-v0.3.md) | 研究问题、主张和方法已合并；48 任务／288 次运行已搁置，容易被误读成当前计划 | Method 及 Claims；公平对照、分组隔离与成本解释已收拢至 Claims §9.1 | 已删除，旧规模与全文留 Git 历史 |
+| D2 [旧三方比较协议](https://github.com/770122whrt/text2IFC/blob/d6a9d4c43e91d6e1d9e2e93c8801a006497ca969/docs/reports/repair-demo/archive/damage-repair-compare-protocol-20260921-v0.3.md) | 与 Claims 重复维护评测原则；独立文件不再承担执行协议职责 | G–D–R、对象匹配、容差、完整失败分母和比较器正负控制已收拢至 Claims §9.1 | 已删除，现行设计只维护 Claims |
+| D3 [旧 Claim 攻击快照](https://github.com/770122whrt/text2IFC/blob/d6a9d4c43e91d6e1d9e2e93c8801a006497ca969/docs/reports/repair-demo/archive/claim-novelty-audit-20260921.md) | 近邻判断已纳入当前文献与 Claims；旧代码行号和部分当时状态会随实现漂移 | 文献矩阵保留来源与阅读范围，Claims 保留近邻差异及候选贡献；详细旧论证可查 Git | 已删除，当前入口不再绕经旧审查 |
+| D4 [9 月 18 日旧 Repair 矩阵](https://github.com/770122whrt/text2IFC/blob/d6a9d4c43e91d6e1d9e2e93c8801a006497ca969/docs/reports/generation-demo/ifc-repair-literature-matrix-20260918.md) | 放在 Generation 分区，Repair 已有专属矩阵；旧保全勾选与安全／授权定位已被后续修正 | 9 月 21 日 Repair 文献矩阵及 Claims 为现行依据；旧条目与原文链接保留在 Git 历史 | 已删除，旧入口改指 Repair 矩阵 |
 
 **阅读重点：**D1 看旧实验规模与对照，D2 看对象匹配及评分，D3 看近邻论证，D4 看旧结论；可直接与 [Claims §9.1](reports/repair-demo/claims-and-experiments.md#91-从旧稿保留的评测设计要点)、[当前矩阵](reports/repair-demo/repair-literature-matrix-20260921.md)比对。
 
-**引用已核查：**删除时同步修正本目录、Repair 导航、archive 导航及 Generation 完整综述中的旧引用；四份候选相互间的引用随删除消失。引用不是无限期保留旧正文的理由。
+**引用已核查：**已同步修正本目录、Repair 导航、archive 导航及 Generation 完整综述中的旧引用；四份候选相互间的引用随删除消失。引用不是无限期保留旧正文的理由。
 
 **明确保留：**用户上传的 8 月原稿作为指定来源；SGSS 全文阅读快照作为原文阅读证据；已接受 Proof、真实运行与失败记录作为实验依据。本轮不删除这些内容，也不把未跟踪状态本身作为删除理由。
 
-本批只审查文档内容的去留，不表示代码、数据或整个项目已完成清理。当前删除数仍为 0；待用户阅读并批准 D1–D4 的具体路径后执行。
+本批只审查文档内容的去留，不表示代码、数据或整个项目已完成清理。本批已删除 4 份，上传的 8 月原稿与实验依据保留。
+
+## 第二批待审核：D5–D14，共 10 份
+
+**状态：仅提议，尚未删除。** 这 10 份不包含已删除的 D1–D4。核查对象是 Generation 研究中反复叠加的旧稿；删除它们可减少并行版本，并非停止 Generation 研究。Repair 的三份现行正文继续维护。
+
+现行替代入口：[研究方案](reports/generation-demo/research-plan.md)、[综述简版](reports/generation-demo/literature-review-short.md)、[综述完整版](reports/generation-demo/literature-review-full.md)。下表链接均可直接阅读待删原文。
+
+| 编号与待审核原文 | 建议删除的具体理由 | 承接内容／审核重点 |
+|---|---|---|
+| D5 [旧三项 Claims](reports/generation-demo/novelty-and-claims.md) | 仍围绕可核验流程、写入所有权、版本绑定组织三项贡献；这些已经调整为系统基础，不是当前独立方法主张 | 研究方案 §2 的 RQ0／E0 承接系统定位。旧中英文贡献段落不再沿用；独立 Claims 审核报告保留 |
+| D6 [A／B／C 选题讨论](reports/generation-demo/research-direction-discussion.md) | “B 优先”的关系感知修订路线已被后续研究方案取代，保留全文容易造成多个“下一步” | 研究方案 §2、§4、§5 承接受控编辑、相互作用与联合评价；旧 12 题探索建议和投稿日程不作为当前计划，历史措辞随原稿备份 |
+| D7 [知识供给研究主线草案](reports/generation-demo/research-proposal.md) | 以编译器分工／知识选择作为重点方法，优先级已被现行 RQ0、D1／D2 改写；另保留一套 RQ1–RQ4、B1–B5 会造成排期歧义 | 研究方案 E0.1／E0.3、§5 承接强 Coding Agent、同接口对照与完整成本。旧“按任务义务选择知识”的具体假设只留历史备份，不宣称全文已被逐字吸收 |
+| D8 [旧选题简洁记录](reports/generation-demo/research-shortlist.md) | 是 P1／P2／V1／L1 的中间摘要，既重复较长讨论，也不是当前 D1／D2 的入口 | 当前优先级看研究方案 §6；较详细的方向论证仍保留在 broader-method-directions，原始补查仍保留在 research-shortlist-evidence |
+| D9 [旧 Demo 综述短稿](reports/generation-demo/literature-review-demo.md) | 与现行综述简版重复；附带的英文 Related Work 仍服务于早期状态管理定位 | 简版的三模块比较及完整版的逐篇条目承接文献事实。旧英文段落属于过期写作草稿，备份后删除，不混入 Repair Method |
+| D10 [早期主题综述工作稿](reports/generation-demo/literature-review-working.md) | 已先后被论文矩阵及完整综述扩充、更正，末尾还指向旧 A／B／C 选题，继续维护会分裂比较口径 | 完整版 §1 的直接近邻、版本与实验边界，研究方案 §2／§5 的系统定位和独立评价承接；原始调查来源及独立审核保留 |
+| D11 [63 条旧论文矩阵](reports/generation-demo/paper-matrix.md) | 是较小范围的旧索引；A01–A14、B01–B12、C01–C16、D01–D21 共 63 个记录编号均已进入完整综述 | 63 个编号已逐项匹配；其证据卡文件与锚点均存在并保留。旧 F／P 读取快照与数据资源表不需重复维护；资源准入仍看 external 数据目录 |
+| D12 [104 条旧飞书矩阵备份](reports/generation-demo/feishu-literature-matrix.md) | 完整版已吸收整张矩阵；保留另一份独立正文只增加旧 N01–N08 定位和计数的维护负担 | 104 条正文全部对应：99 条逐字相同，另外 5 条仅新增“补充核查”链接。旧飞书页面的历史地址随备份保留；此次不删除或改写远端页面 |
+| D13 [N01–N08 方法候选](reports/generation-demo/novelty-directions.md) | 同时展开八条旧假设，优先级又被多次补查推翻；与当前集中写 Repair Demo 的目的不符，也不是 Generation 当前路线 | 现行研究方案只维护 RQ0、D1／D2；文献冲突依据仍在完整版与原始证据卡。八条旧假设的具体构造未全部迁移，建议有意退出工作目录、保存在历史备份 |
+| D14 [E01–E08 实验设计](reports/generation-demo/novelty-experiments.md) | 对应上一行的八条未执行假设，另有旧任务数量、人周与停止阈值，容易被误当作待执行实验清单 | 当前实验看研究方案 E0／E1／E2 和 §5；Repair 看自身 Claims。E01–E08 的专属消融和建议规模未全部迁移，随旧假设一起保留历史备份；没有删除已执行结果 |
+
+**覆盖核查的含义：**D11 已核对记录编号及底层证据入口，不声称旧表每个摘要句都逐字进入新版。D12 已逐行比对正文，5 处差异均为新版新增的补充阅读链接。D13／D14 是建议退出当前维护的旧研究分支，不把“搁置”伪装成“内容完全重复”。
+
+**备份状态：**这 10 份目前都未被 Git 跟踪，尚不能说“已在 Git 中可恢复”。审核期间保留原文件。若批准删除，将先把指定原稿提交并推送形成固定历史版本，验证可恢复后明确告知开始删除，再删除原件并修复引用；不会仅凭未跟踪状态删除文件。
+
+**引用处理已定位：**除了十份候选之间互引，还涉及 Generation README、coding-agent-knowledge-direction、broader-method-directions、claims-and-novelty-synthesis、research-shortlist-evidence、novelty-literature-addendum 以及三份底层证据卡中的导航。批准后将现行入口改指研究方案／完整综述；确需引用旧论证的地方改用固定历史版本，不留下断链。
+
+**这批明确保留的内容：**三份现行 Generation 主稿；三份现行 Repair 主稿；literature-evidence 原始阅读卡；独立 Claims 审核；包含真实成本账本的 coding-agent-knowledge-direction；仍承载详细近邻论证的 broader-method-directions／research-shortlist-evidence；用户上传的 8 月原稿、源模型、已接受 Proof 和真实失败记录。
 
 ## 逐文件分类
 
 下表包括历史运行中附带的 Markdown，已标为运行证据，不把它们误当研究正文。
 本表是一份分类快照，新增文档仍先更新所属功能的主索引，不要求每次改字都重新生成清单。
 
-### Repair（68 份）
+### Repair（64 份）
 
 | 文档 | 分类／处理 |
 |---|---|
@@ -59,12 +86,8 @@
 | [Text2IFC Repair Milestone R1 — Final Acceptance Handoff](handoffs/repair-milestone-r1-final-acceptance.md) | 历史／专项：归档保留 |
 | [Phase 11 Live Closure Design](plans/2026-07-31-phase11-live-closure-design.md) | 历史／专项：归档保留 |
 | [LLM Generation / IFC Repair 下一阶段执行计划（Discussion Draft）](plans/2026-09-03-llm-generation-repair-next-step-discussion.md) | 历史／专项：归档保留 |
-| [IFC Repair 文献矩阵：WWW Demo Paper 专项](reports/generation-demo/ifc-repair-literature-matrix-20260918.md) | 历史研究：归档保留 |
 | [LLM Generation / IFC Repair / Demo Paper 后续方向记录](reports/llm-generation-repair-demo-next-direction-2026-09-03.md) | 日期快照／证据：保留 |
-| [IFC-SemRepair：Claim 与 Novelty 攻击审查](reports/repair-demo/archive/claim-novelty-audit-20260921.md) | 历史／专项：归档保留 |
-| [IFC-SemRepair：原始—损坏—修复三方比较协议](reports/repair-demo/archive/damage-repair-compare-protocol-20260921-v0.3.md) | 历史／专项：归档保留 |
 | [Repair 历史讨论归档](reports/repair-demo/archive/README.md) | 导航：保留 |
-| [IFC-SemRepair：研究问题、动机、Claim 与实验建议](reports/repair-demo/archive/research-question-claims-experiments-20260921-v0.3.md) | 历史／专项：归档保留 |
 | [IFC-SemRepair：Claim、创新边界与实验登记](reports/repair-demo/claims-and-experiments.md) | 现行正文：维护 |
 | [IFC-SemRepair：三份主文档导航](reports/repair-demo/README.md) | 导航：保留 |
 | [IFC-SemRepair Literature：文献矩阵与重点近邻](reports/repair-demo/repair-literature-matrix-20260921.md) | 现行正文：维护 |
@@ -140,7 +163,7 @@
 | [text2IFC：Self-Verification 重合核查与方法方向扩展](reports/generation-demo/broader-method-directions.md) | 历史研究：归档保留 |
 | [text2IFC Generation：Claims / Novelty 综合审核](reports/generation-demo/claims-and-novelty-synthesis-20260916.md) | 历史研究：归档保留 |
 | [text2IFC：从 Coding Agent、领域知识到空间生成](reports/generation-demo/coding-agent-knowledge-direction.md) | 历史研究：归档保留 |
-| [text2IFC 文献矩阵：分模块比较（2026-09-15）](reports/generation-demo/feishu-literature-matrix.md) | 历史研究：归档保留 |
+| [text2IFC 文献矩阵：分模块比较（2026-09-15）](reports/generation-demo/feishu-literature-matrix.md) | 待审核删除：D12，理由见第二批清单 |
 | [BIM 创作、布局与相关综述：原文证据卡](reports/generation-demo/literature-evidence/bim-authoring.md) | 协议／来源／验证证据：保留 |
 | [逐篇证据：建模抽象、Coding Agent、知识与权限](reports/generation-demo/literature-evidence/coding-knowledge-and-control.md) | 协议／来源／验证证据：保留 |
 | [方法候选调研：知识利用、主动查证与跨任务迁移](reports/generation-demo/literature-evidence/frontier-knowledge.md) | 协议／来源／验证证据：保留 |
@@ -149,21 +172,21 @@
 | [空间合成与能力扩展：正文证据与方法假设](reports/generation-demo/literature-evidence/frontier-spatial.md) | 协议／来源／验证证据：保留 |
 | [IFC 生成、编辑、知识使用与评价：全文证据卡](reports/generation-demo/literature-evidence/ifc-evaluation.md) | 协议／来源／验证证据：保留 |
 | [结构化生成、CAD 与模型驱动工程：逐篇正文证据](reports/generation-demo/literature-evidence/structured-generation.md) | 协议／来源／验证证据：保留 |
-| [text2IFC Generation 文献综述：论文正文短版](reports/generation-demo/literature-review-demo.md) | 历史研究：归档保留 |
+| [text2IFC Generation 文献综述：论文正文短版](reports/generation-demo/literature-review-demo.md) | 待审核删除：D9，理由见第二批清单 |
 | [text2IFC 文献综述·完整版](reports/generation-demo/literature-review-full.md) | 现行正文：维护 |
 | [text2IFC 文献综述·简版](reports/generation-demo/literature-review-short.md) | 现行正文：维护 |
-| [text2IFC Generation：研究综述与选题依据](reports/generation-demo/literature-review-working.md) | 历史研究：归档保留 |
-| [text2IFC Generation：Novelty 与 Claim 基础版](reports/generation-demo/novelty-and-claims.md) | 历史研究：归档保留 |
-| [text2IFC：方法创新候选与方向选择](reports/generation-demo/novelty-directions.md) | 历史研究：归档保留 |
-| [text2IFC：Novelties ↔ Experiments 一一对应设计](reports/generation-demo/novelty-experiments.md) | 历史研究：归档保留 |
+| [text2IFC Generation：研究综述与选题依据](reports/generation-demo/literature-review-working.md) | 待审核删除：D10，理由见第二批清单 |
+| [text2IFC Generation：Novelty 与 Claim 基础版](reports/generation-demo/novelty-and-claims.md) | 待审核删除：D5，理由见第二批清单 |
+| [text2IFC：方法创新候选与方向选择](reports/generation-demo/novelty-directions.md) | 待审核删除：D13，理由见第二批清单 |
+| [text2IFC：Novelties ↔ Experiments 一一对应设计](reports/generation-demo/novelty-experiments.md) | 待审核删除：D14，理由见第二批清单 |
 | [方法创新扩展调研：论文矩阵与决策记录](reports/generation-demo/novelty-literature-addendum.md) | 历史研究：归档保留 |
-| [text2IFC 论文矩阵与证据索引](reports/generation-demo/paper-matrix.md) | 历史研究：归档保留 |
+| [text2IFC 论文矩阵与证据索引](reports/generation-demo/paper-matrix.md) | 待审核删除：D11，理由见第二批清单 |
 | [text2IFC 研究与文献](reports/generation-demo/README.md) | 导航：保留 |
-| [text2IFC Generation：Demo 选题与下一步讨论](reports/generation-demo/research-direction-discussion.md) | 历史研究：归档保留 |
+| [text2IFC Generation：Demo 选题与下一步讨论](reports/generation-demo/research-direction-discussion.md) | 待审核删除：D6，理由见第二批清单 |
 | [text2IFC 研究方案：可接受解空间、知识效率与受控编辑](reports/generation-demo/research-plan.md) | 现行正文：维护 |
-| [text2IFC：研究主线与实验草案](reports/generation-demo/research-proposal.md) | 历史研究：归档保留 |
+| [text2IFC：研究主线与实验草案](reports/generation-demo/research-proposal.md) | 待审核删除：D7，理由见第二批清单 |
 | [简版选题的补查证据](reports/generation-demo/research-shortlist-evidence.md) | 历史研究：归档保留 |
-| [简洁记录](reports/generation-demo/research-shortlist.md) | 历史研究：归档保留 |
+| [简洁记录](reports/generation-demo/research-shortlist.md) | 待审核删除：D8，理由见第二批清单 |
 | [text2IDS / WWW 2026 Demo：Overview 与 text2IFC 仿写参考](reports/generation-demo/text2ids-www2026-demo-overview-and-writing-reference.md) | 历史研究：归档保留 |
 | [Multi-storey Prompt and Input Hardening Implementation Plan](reports/legacy-plans/2026-07-11-multistorey-prompt-input-hardening.md) | 历史／专项：归档保留 |
 | [Phase 6.1 Final Acceptance Report](reports/main-integration-20260912/generation-recheck-01/A-revise/report.md) | 运行证据：保留 |
