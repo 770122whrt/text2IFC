@@ -1,5 +1,7 @@
 # Phase 12 Plan 07 收尾与 IFC Repair 技术 Handover
 
+> 历史交接资料：本文记录 2026-09-03 的阶段事实。当前向老师汇报请读[Repair 技术主文档（2026-09-23）](../architecture/ifc-repair-pipeline-status-and-roadmap.md)，其中已补充后续 Type、材料与外观范围。下文旧状态与证据不据本次整理改写。
+
 > 2026-09-07 导航更新：证据已集中到 [工作流 Proof](../../dataset/processed/proof/README.md)，旧路径见集合 manifest 的 legacy_bundles。Plan07 已获用户人工审查通过；下文日期、原运行结论与冻结记录仍表示历史事实。
 
 

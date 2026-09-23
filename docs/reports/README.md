@@ -4,7 +4,18 @@
 在这里；请分别查看 [`../architecture/`](../architecture/README.md) 和
 [`../validation/`](../validation/README.md)。
 
-## 项目总结
+## 按功能查找当前研究材料
+
+| 功能 | 主入口 | 补充 |
+|---|---|---|
+| Repair 论文与老师汇报 | [技术路线、文献、Claim 三份主文档](repair-demo/README.md) | [历史讨论归档](repair-demo/archive/README.md) |
+| Generation 论文与文献 | [研究方案、简版和完整版综述](generation-demo/README.md) | 历史稿与阅读证据在该索引末尾 |
+| IFC2Text 与往返重建 | [9 月 22 日分步修复](ifc2text-stepwise-fixes-2026-09-22.md) | [证据与失败复核](ifc2text-evidence-audit-2026-09-22.md)、[验证合同](../validation/ifc2text/README.md) |
+
+全体文件的功能、现行／历史／证据身份及删除建议见[分类与归档目录](../document-catalog.md)。
+报告中的日期表示当时快照；当前执行许可仍查适用合同和计划。
+
+## 历史总结与专项复核
 
 - [2026-09-05 Zcode 整合与恢复核查](zcode-integration-20260905/REPORT.md)
 - [项目研究思路与 Pipeline 总结](project-research-summary.md)

@@ -3,13 +3,27 @@
 本页是 `docs/` 的稳定入口。具体文档按职责分区，避免把设计、实施 Prompt、
 验证方案和历史报告混放在根目录。
 
+## 按功能阅读（2026-09-23）
+
+给老师汇报 Repair，先读下表第一行的技术主文档。旧交接和已完成计划是历史资料，
+不按文件日期把它们当成新执行指令。完整文件分类、归档与删除建议见
+[文档分类与归档目录](document-catalog.md)。
+
+| 功能 | 当前正文入口 | 证据与补充 |
+|---|---|---|
+| **已有 IFC 修复（本次汇报）** | [Repair Demo Method：问题、方法和案例](architecture/ifc-repair-pipeline-status-and-roadmap.md) | [三份主文档](reports/repair-demo/README.md)、[Repair Proof](../dataset/processed/proof/repair/) |
+| 从文字生成新 IFC | [Generation 研究与文献](reports/generation-demo/README.md)、[生成工作流](architecture/current-workflow-and-data-flow.md) | [语义与外观范围](architecture/semantic-appearance-plan.md)、[Generation Proof](../dataset/processed/proof/generation/) |
+| IFC2Text 与往返重建 | [研究与实现入口](architecture/bim2text-bidirectional-bridge-research.md) | [9 月 22 日进展与限制](reports/ifc2text-stepwise-fixes-2026-09-22.md)、[验证入口](validation/ifc2text/README.md) |
+
+数据来源、通用验证、开发接管分别使用下方相应分区；不混入 Repair 论文正文。
+
 ## 从这里开始
 
 | 目的 | 入口 |
 |---|---|
 | 首次由 Agent 或开发者接管项目 | [首次接管 text2IFC 项目](how-to/agent-takeover.md) |
 | 接续最近的分支整合、目录清理和文档收尾 | [仓库交接快照（2026-09-13）](handoffs/repository-handoff-2026-09-13.md)，接手时重新核实 Git |
-| 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，以及后续 Phase 安排 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
+| 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，及其修复方法 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
 | 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
 | 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
@@ -32,7 +46,7 @@
 - [归档的 CLI 终端记录](reports/terminal-session-history.md)
 - [专项技术 handoffs](handoffs/) 与 [网页交叉讨论 context-handoff](context-handoff/CONTEXT-HANDOFF-RULES.md) 按各自职责保留。
 
-## 当前重点
+## 专题入口与历史接续
 
 - [Type、材质、属性和外观的接续计划](architecture/semantic-appearance-plan.md)
   - A/B/C 与光庭第二版已人工验收，实验另行收纳；项目内 Type 按需组织，基础门窗和部件配色使用适用的新版本；不补写缺省材料/性能属性，Repair 保留原几何，不实现跨 IFC 参照。
