@@ -166,7 +166,7 @@ def make_openai_design_brief_invoker(
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
-            schema_version="bim-json/2.3" if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
+            schema_version="bim-json/2.5" if design_brief_schema_version == "text2ifc/design-brief/2.8" else "bim-json/2.3" if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
         )
         from .design_brief import design_brief_template_id
         schema = load_design_brief_schema(design_brief_schema_version)
@@ -504,6 +504,7 @@ def run_ready_session_to_ifc(
     budget_limits: Any = None,
     generation_feedback: Mapping[str, Any] | None = None,
     generator_call_index: int = 1,
+    bim_json_schema_version: str | None = None,
 ) -> SessionIfcResult:
     """Run the public chain, returning a non-publishing terminal budget result."""
     from .generation_budget import GenerationBudgetExceeded
@@ -511,7 +512,8 @@ def run_ready_session_to_ifc(
         return _run_ready_session_to_ifc(store=store, session=session,
             provider_factory=provider_factory, trace_level=trace_level, progress=progress,
             generation_strategy=generation_strategy, budget_limits=budget_limits,
-            generation_feedback=generation_feedback, generator_call_index=generator_call_index)
+            generation_feedback=generation_feedback, generator_call_index=generator_call_index,
+            bim_json_schema_version=bim_json_schema_version)
     except GenerationBudgetExceeded as error:
         stored = store.get_session(session)
         _write_json(stored.run_dir/'generation-budget-decision.json', {
@@ -565,8 +567,13 @@ def _run_ready_session_to_ifc(
     budget_limits: Any = None,
     generation_feedback: Mapping[str, Any] | None = None,
     generator_call_index: int = 1,
+    bim_json_schema_version: str | None = None,
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
+    if bim_json_schema_version not in {None, 'bim-json/2.4', 'bim-json/2.5'}:
+        raise ValueError("Explicit bim_json_schema_version currently supports bim-json/2.4 or bim-json/2.5")
+    if bim_json_schema_version in {'bim-json/2.4', 'bim-json/2.5'} and generation_strategy != 'legacy_full':
+        raise ValueError("bim-json/2.4 and bim-json/2.5 currently require legacy_full")
     if generation_feedback is not None and not isinstance(generation_feedback, Mapping):
         raise ValueError("generation_feedback must be a mapping")
     if type(generator_call_index) is not int or generator_call_index < 1:
@@ -599,6 +606,20 @@ def _run_ready_session_to_ifc(
     ):
         raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
+    from .generation_contract import selected_generation_version
+    selection_path = stored_session.run_dir / 'generation-contract.json'
+    if bim_json_schema_version is not None:
+        if not selection_path.is_file() and (stored_session.run_dir / 'generator/metrics.json').is_file():
+            raise ValueError("Start a new session to change an existing generation contract")
+        _write_json(selection_path, {
+            'schema_version': 'text2ifc/generation-contract-selection/1.0',
+            'bim_json_schema_version': bim_json_schema_version,
+            'generation_strategy': generation_strategy})
+    selected_version = selected_generation_version(design_brief, stored_session.run_dir)
+    if selected_version in {'bim-json/2.4', 'bim-json/2.5'} and generation_strategy != 'legacy_full':
+        raise ValueError("bim-json/2.4 and bim-json/2.5 currently require legacy_full")
+    _record_existing_artifact(store, stored_session, kind='generation_contract',
+                              name='generation-contract.json')
     expected_facts_path = write_expected_facts(
         case_dir=stored_session.run_dir,
         case_id=stored_session.session_hash,
@@ -609,6 +630,9 @@ def _run_ready_session_to_ifc(
         if isinstance(expected_facts_path, Mapping)
         else _read_required_json(Path(expected_facts_path))
     )
+    if selected_version in {'bim-json/2.4', 'bim-json/2.5'}:
+        expected_facts['generation_schema_version'] = selected_version
+        _write_json(stored_session.run_dir / 'expected-facts.json', expected_facts)
     if generation_strategy not in {"legacy_full", "staged"}:
         raise ValueError("generation_strategy must be 'legacy_full' or 'staged'")
     _write_json(

@@ -105,3 +105,22 @@ def build_semantic_capability_profile_v23() -> dict[str, Any]:
     profile['structural_geometry'] = 'Explicit world_axis_aligned_box in mm for columns and beams; reopened family, storey and bounds checks, no structural certification.'
     profile['profile_hash'] = _profile_hash(profile)
     return profile
+
+
+def build_semantic_capability_profile_v24() -> dict[str, Any]:
+    profile = build_semantic_capability_profile_v23()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.4/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.4/schema.json'
+    profile['polygon_wall_hosts'] = 'Convex constant-thickness positive-Z wall extrusions with parallel local-X sides; bevelled ends and local-Z representation rotations supported. Actual wall intersection required; opening cutters may cross ends, fillings must fit their opening and intersect the wall.'
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile
+
+
+def build_semantic_capability_profile_v25() -> dict[str, Any]:
+    profile = build_semantic_capability_profile_v24()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.5/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.5/schema.json'
+    profile['material_policy'] = 'explicit_only; single material, supported complete layers, or nonempty material_list with exact names; no inferred layer thickness or part assignment; reopened verification required'
+    profile['basic_railing']['scope'] = 'straight horizontal or signed slope; IfcRailing occurrence; single material or material_list without part assignment, and whole appearance'
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile

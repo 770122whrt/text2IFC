@@ -3,6 +3,7 @@ import importlib.util
 import subprocess
 import sys
 from pathlib import Path
+import pytest
 
 from text2ifc_agent.context_selection import select_design_brief_context
 from text2ifc_agent.live_pipeline import (
@@ -1364,6 +1365,22 @@ def test_final_acceptance_stage_writes_geometry_checked_ifc_and_root_report(
     report = (output_dir / "report.md").read_text(encoding="utf-8")
     assert "output.ifc" in report
     assert "complete-room/report.md" in report
+
+
+@pytest.mark.parametrize("audit_valid", [False, None])
+def test_final_acceptance_rejects_unvalidated_audit_even_when_json_is_strict(tmp_path, audit_valid):
+    case_dir = _write_finalizable_case_dir(tmp_path / "case")
+    metrics_path = case_dir / "audit" / "metrics.json"
+    metrics = json.loads(metrics_path.read_text(encoding="utf-8"))
+    if audit_valid is None:
+        metrics.pop("valid")
+    else:
+        metrics["valid"] = audit_valid
+    metrics_path.write_text(json.dumps(metrics), encoding="utf-8")
+    output = tmp_path / "final"
+    with pytest.raises(ValueError, match="validated Audit"):
+        run_final_acceptance_stage(case_dir=case_dir, output_dir=output, case_id="invalid-audit")
+    assert not (output / "output.ifc").exists()
 
 
 def test_finalize_cli_writes_canonical_ifc_and_report(tmp_path: Path, capsys):

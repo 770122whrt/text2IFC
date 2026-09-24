@@ -55,5 +55,5 @@ def select_changeset_context(*, candidate, scope, field_recovery=False, package=
     elif not field_recovery and (scope.get('relationship_ids') or read_only):
         names.append('changeset-coupled-dependency.json')
     return {'schema_version':'text2ifc/changeset-context-selection/1.0',
-        'few_shot_names':names, 'authoring_contract':build_authoring_contract(classes, version='1.3' if candidate.get('schema_version') == 'bim-json/2.3' else '1.2' if candidate.get('schema_version') == 'bim-json/2.2' else '1.1'),
+        'few_shot_names':names, 'authoring_contract':build_authoring_contract(classes, version='1.5' if candidate.get('schema_version') == 'bim-json/2.5' else '1.4' if candidate.get('schema_version') == 'bim-json/2.4' else '1.3' if candidate.get('schema_version') == 'bim-json/2.3' else '1.2' if candidate.get('schema_version') == 'bim-json/2.2' else '1.1'),
         'read_only_components':read_only}

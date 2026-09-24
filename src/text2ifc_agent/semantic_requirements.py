@@ -14,7 +14,7 @@ from typing import Any, Mapping
 
 
 SEMANTIC_FIELDS = {'material', 'materials', 'property_sets', 'type_id', 'appearance', 'part_appearance', 'template'}
-SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}
+SEMANTIC_BRIEF_VERSIONS = {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}
 SEMANTIC_KINDS = {'material', 'property', 'type', 'appearance', 'template'}
 
 
@@ -33,12 +33,15 @@ def element_appearance_schema():
     return schema
 
 
-@lru_cache(maxsize=1)
-def _material_validator():
+@lru_cache(maxsize=2)
+def _material_validator(material_lists=False):
     """Use the compiler's material grammar, including its referenced definitions."""
     from jsonschema import Draft202012Validator
     from text2ifc_contract.schema import load_schema_v21
     schema = load_schema_v21()
+    if material_lists:
+        from text2ifc_contract.schema import load_schema_v25
+        schema = load_schema_v25()
     return Draft202012Validator({'$ref': '#/$defs/materialAssignment', '$defs': schema['$defs']})
 
 
@@ -71,7 +74,9 @@ def _project_appearance(selection, source_path):
 
 
 def generation_schema_version(brief: Mapping[str, Any]) -> str:
-    if brief.get('schema_version') in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
+    if brief.get('schema_version') == 'text2ifc/design-brief/2.8':
+        return 'bim-json/2.5'
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:
         return 'bim-json/2.3'
     if brief.get('schema_version') == 'text2ifc/design-brief/2.5':
         return 'bim-json/2.2'
@@ -110,7 +115,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
 
     walk(known, '/known_facts')
     for path, record in records:
-        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'} and not path.startswith('/known_facts/semantic_requirements/'):
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and not path.startswith('/known_facts/semantic_requirements/'):
             issues.append({'code': 'SEMANTIC_AUTHORITY_NON_CANONICAL', 'path': path,
                            'message': '结构化语义要求必须完整放入 semantic_requirements，不能散落后被遗漏。'})
         entity_id = record.get('entity_id') or record.get('id')
@@ -128,7 +133,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
             if material is None:
                 assignments = record.get('materials')
                 material = assignments[0] if isinstance(assignments, list) and len(assignments) == 1 else None
-            if not isinstance(material, Mapping) or not _material_validator().is_valid(material):
+            if not isinstance(material, Mapping) or not _material_validator(brief.get('schema_version') == 'text2ifc/design-brief/2.8').is_valid(material):
                 issues.append({'code': 'SEMANTIC_MATERIAL_INCOMPLETE', 'path': path,
                                'message': '材料需符合实际材料合同：single_material 必须含非空 name；分层需完整层名和正厚度。空对象、未知字段和不完整构造不能成为冻结要求；请按用户原文校正，不得猜测。'})
             else:
@@ -161,7 +166,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
     from .brief_semantic_roles import filter_roles
     expectations, role_issues = filter_roles(brief, expectations)
     issues.extend(role_issues)
-    if brief.get('schema_version') == 'text2ifc/design-brief/2.7':
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:
         from .brief_semantic_roles import role_index
         from text2ifc_contract.property_validation import validate_property_sets
         from text2ifc_knowledge.registry import load_ifc2x3_registry
@@ -184,7 +189,7 @@ def project_semantic_requirements(brief: Mapping[str, Any]) -> dict[str, Any]:
         expectations = executable
     from .part_appearance import validate_part_requests
     issues.extend(validate_part_requests(brief, expectations))
-    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:
+    if brief.get('schema_version') in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:
         review = known.get('semantic_review', {}) if isinstance(known, Mapping) else {}
         for kind in sorted(SEMANTIC_KINDS):
             entry = review.get(kind, {}) if isinstance(review, Mapping) else {}
@@ -234,7 +239,7 @@ def request_semantics_for_case(root: Path) -> dict[str, Any]:
             # weaken a saved expectation during resume or final acceptance.
             projected['expectations'] = [*frozen['semantic_expectations'], *projected['expectations']]
         projected['issues'].extend(frozen.get('semantic_projection_issues', []))
-        if frozen.get('generation_schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
+        if frozen.get('generation_schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5'}:
             projected['minimum_schema_version'] = frozen['generation_schema_version']
         if 'appearance' in frozen:
             add_appearance(frozen['appearance'], 'expected-facts.json#/appearance')
@@ -290,6 +295,23 @@ def bind_semantic_targets(candidate, request):
 def bind_geometry_targets(candidate, expected_facts, geometry):
     """Bind geometric expectations through the same frozen identity pairs."""
     projected = copy.deepcopy(geometry)
+    from .storey_identity import resolve_storey_identities
+    storey_aliases, storey_matches, storey_issues = resolve_storey_identities(candidate, expected_facts)
+    storey_targets = {brief: actual for actual, brief in storey_aliases.items()}
+    referenced_storeys = set()
+    for collection in ('spaces', 'walls', 'doors', 'windows', 'slabs', 'roof', 'stairs', 'floor_openings', 'products'):
+        for value in projected.get(collection, {}).values():
+            if isinstance(value, dict) and isinstance(value.get('storey_id'), str):
+                requested = value['storey_id']
+                referenced_storeys.add(requested)
+                value['storey_id'] = storey_targets.get(requested, requested)
+    relevant_issues = [issue for issue in storey_issues if issue['expected_storey'] in referenced_storeys]
+    if relevant_issues:
+        projected['complete'] = False
+        projected.setdefault('unresolved', []).extend(
+            {'path': issue['path'], 'reason': issue['code']} for issue in relevant_issues)
+    if referenced_storeys:
+        projected['storey_id_bindings'] = [row for row in storey_matches if row['brief_id'] in referenced_storeys]
     aliases = {}
     for collection in ('spaces', 'walls', 'doors', 'windows'):
         values = projected.get(collection, {})
@@ -334,7 +356,7 @@ def request_contract_issues(candidate, request):
 
 def unauthorized_candidate_semantics(candidate, expectations):
     """Defaults cannot manufacture facts or grant whole-product style overrides."""
-    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}:
+    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5'}:
         return []
     allowed_properties = {(e['entity_id'], e.get('pset'), e.get('property'))
                           for e in expectations if e['kind'] == 'property'}

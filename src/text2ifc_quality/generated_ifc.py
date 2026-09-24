@@ -28,6 +28,10 @@ def check_generated_ifc(
     model = ifcopenshell.open(str(Path(ifc_path)))
     products_by_id = _products_by_bim_json_id(model)
     tolerance = float(expectation.get("tolerance", 0.01))
+    if expectation.get("schema_version") == "text2ifc/design-geometry-expectation/1.2":
+        # Existing helpers use inclusive <=. V1.2 admits only errors strictly
+        # below the limit; 1e-12 m absorbs floating-point boundary noise only.
+        tolerance = max(0.0, tolerance - 1e-12)
     selected_result: GeneratedIfcCheckResult | None = None
     for convention, walls in _wall_expectation_sets(expectation):
         result = _check_wall_set(
@@ -130,7 +134,7 @@ def _check_roof_stairs_and_openings(
         path_prefix="roof",
         issues=issues,
     )
-    if expectation.get("schema_version") == "text2ifc/design-geometry-expectation/1.1":
+    if expectation.get("schema_version") in {"text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2"}:
         from .floor_openings import check_floor_openings
         metrics["floor_openings"] = check_floor_openings(
             model=model, expected=expectation.get("floor_openings"),

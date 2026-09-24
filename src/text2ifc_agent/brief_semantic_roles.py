@@ -65,6 +65,9 @@ def role_issue(row,identities,*,railing_enabled=False):
         material_kind=value.get('kind');scope=row.get('scope','effective')
         if material_kind=='single_material':
             if cls not in SINGLE_OCCURRENCES | TYPE_OCCURRENCE.keys():code='SEMANTIC_MATERIAL_SCOPE_MISMATCH'
+        elif material_kind=='material_list':
+            if cls == 'IfcWallStandardCase' or cls not in SINGLE_OCCURRENCES | TYPE_OCCURRENCE.keys():
+                code='SEMANTIC_MATERIAL_SCOPE_MISMATCH'
         elif material_kind=='material_layer_set':
             # An inherited layer set is a Type value, not a direct instance usage.
             if cls not in LAYER_TYPES and not (scope=='inherited' and cls in LAYER_OCCURRENCES):
@@ -78,12 +81,12 @@ def role_issue(row,identities,*,railing_enabled=False):
     return None
 
 def filter_roles(brief,expectations):
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:return expectations,[]
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:return expectations,[]
     identities,issues=role_index(brief);valid=[]
     bindings={}
     for row in expectations:
-        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'})
-        if brief.get('schema_version') == 'text2ifc/design-brief/2.7' and row['kind'] == 'appearance' and identities.get(row['entity_id'], {}).get('ifc_class') == 'IfcStair':
+        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'})
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and row['kind'] == 'appearance' and identities.get(row['entity_id'], {}).get('ifc_class') == 'IfcStair':
             from .cross_storey_identity import stair_flight_ids
             flights = stair_flight_ids(identities[row['entity_id']]['record'], row['entity_id'])
             issue = {'code': 'SEMANTIC_APPEARANCE_TARGET_ROLE', 'path': row['source_path'],
@@ -110,7 +113,7 @@ def filter_roles(brief,expectations):
 
 def removable_semantic_paths(brief):
     """Explicit products/types may lose semantic leaves only, never identity data."""
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7'}:return []
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:return []
     from .semantic_requirements import SEMANTIC_FIELDS
     identities,issues=role_index(brief)
     if issues:return []
@@ -147,13 +150,15 @@ def recoverable_value_loss(before,after):
         if isinstance(value,str) and value.strip():return ('single',value)
         if not isinstance(value,Mapping):return None
         if value.get('kind')=='single_material' and value.get('name'):return ('single',value['name'])
+        if value.get('kind')=='material_list' and isinstance(value.get('materials'),list) and value['materials'] and all(isinstance(x,Mapping) and isinstance(x.get('name'),str) and x['name'].strip() for x in value['materials']):
+            return ('list',[x['name'] for x in value['materials']])
         layers=value.get('layers')
         if value.get('kind') in {'material_layer_set','material_layer_set_usage'} and isinstance(layers,list) and layers and all(isinstance(x,Mapping) and x.get('name') and isinstance(x.get('thickness'),(int,float)) and x['thickness']>0 for x in layers):
             return ('layers',[(x['name'],x['thickness']) for x in layers])
         return None
     for record in records:
         identity=record.get('entity_id',record.get('id'))
-        if before.get('schema_version') == 'text2ifc/design-brief/2.7' and 'appearance' in record and identities.get(identity, {}).get('ifc_class') == 'IfcStair':
+        if before.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and 'appearance' in record and identities.get(identity, {}).get('ifc_class') == 'IfcStair':
             from .cross_storey_identity import stair_flight_ids
             flights = stair_flight_ids(identities[identity]['record'], identity)
             if any(not any(r['entity_id'] == flight and r['kind'] == 'appearance' and r['value'] == record['appearance'] and r['scope'] == record.get('scope', 'effective') for r in values) for flight in flights):

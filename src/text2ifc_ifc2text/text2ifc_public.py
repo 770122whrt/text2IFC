@@ -20,6 +20,7 @@ def reconstruct_description_with_public_text2ifc(
     trace_level: str | None = "debug",
     generation_strategy: str = "legacy_full",
     budget_limits: Any = None,
+    bim_json_schema_version: str | None = None,
 ) -> dict[str, Any]:
     """Feed only the design description through the supported text2IFC session APIs.
 
@@ -54,6 +55,7 @@ def reconstruct_description_with_public_text2ifc(
         trace_level=trace_level,
         generation_strategy=generation_strategy,
         budget_limits=budget_limits,
+        **({"bim_json_schema_version": bim_json_schema_version} if bim_json_schema_version is not None else {}),
     )
     return {
         "status": result.status,

@@ -7,7 +7,7 @@ def normalize_layout_outlines(brief):
     """Only exact XY rectangles; never approximate a polygon by its bounds."""
     fixed = copy.deepcopy(brief)
     changes = []
-    if not isinstance(fixed, dict) or fixed.get('schema_version') != 'text2ifc/design-brief/2.7':
+    if not isinstance(fixed, dict) or fixed.get('schema_version') not in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:
         return fixed, changes
     known = fixed.get('known_facts')
     constraints = known.get('plan_constraints') if isinstance(known, dict) else None

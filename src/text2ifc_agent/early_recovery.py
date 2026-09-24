@@ -22,7 +22,7 @@ def build_field_recovery_group(candidate, feedback):
     No value substitution, conflicting targets or geometry edits are authorized.
     """
     blocked = {'eligible': False, 'scope': None, 'issues': []}
-    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'} or not feedback:
+    if candidate.get('schema_version') not in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5'} or not feedback:
         return blocked
     try:
         build_candidate_index(candidate)
