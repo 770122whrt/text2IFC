@@ -72,5 +72,13 @@ def load_schema_v23() -> dict[str, Any]:
     return _load_schema_path(SCHEMA_V2_PATH.parent.parent / "2.3" / "schema.json")
 
 
+def load_schema_v24() -> dict[str, Any]:
+    return _load_schema_path(SCHEMA_V2_PATH.parent.parent / "2.4" / "schema.json")
+
+
+def load_schema_v25() -> dict[str, Any]:
+    return _load_schema_path(SCHEMA_V2_PATH.parent.parent / "2.5" / "schema.json")
+
+
 def load_draft_schema() -> dict[str, Any]:
     return _load_schema_path(DRAFT_SCHEMA_PATH)

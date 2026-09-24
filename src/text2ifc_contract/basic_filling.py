@@ -111,31 +111,39 @@ def validate_basic_filling_document(document: Mapping[str, Any]) -> list[Validat
             continue
         opening_rep = records[opening_id].get("attributes", {}).get("Representation", {})
         host_rep = host.get("attributes", {}).get("Representation", {})
-        supported = all(r.get("kind") == "extruded_profile" and r.get("profile", {}).get("kind") == "rectangle" and r.get("direction") == [0, 0, 1] and "position" not in r for r in (opening_rep, host_rep))
-        if not supported:
-            fail("Basic filling currently requires vertical rectangular host and opening extrusions.")
-            continue
-        try:
-            opening_world = np.array(world_transform_for(document, opening_id))
-            fill_world = np.array(world_transform_for(document, record["id"]))
-            host_world = np.array(world_transform_for(document, host_id))
-            local = np.linalg.inv(opening_world) @ fill_world
-            opening_in_host = np.linalg.inv(host_world) @ opening_world
-            if not np.allclose(local[:3, :3], np.eye(3), atol=1e-9) or not np.allclose(opening_in_host[:3, :3], np.eye(3), atol=1e-9):
-                fail("Filling, opening and wall axes must align in the bounded template contract.")
-            ox, _, oz = opening_in_host[:3, 3]
-            if abs(ox) + opening_rep["profile"]["x"] / 2 > host_rep["profile"]["x"] / 2 + 1e-6 or oz < -1e-6 or oz + opening_rep["depth"] > host_rep["depth"] + 1e-6:
-                fail("The unchanged opening must lie within the wall width and height.")
-            x, y, z = local[:3, 3]
-            if abs(x) + rep["width"] / 2 > opening_rep["profile"]["x"] / 2 + 1e-6 or z < -1e-6 or z + rep["height"] > opening_rep["depth"] + 1e-6:
-                fail("Filling width, height or placement exceeds the unchanged opening.")
-            if abs(y) + rep["depth"] / 2 > opening_rep["profile"]["y"] / 2 + 1e-6:
-                fail("Input filling depth exceeds the unchanged opening depth.")
-            fy = (np.linalg.inv(host_world) @ fill_world)[1, 3]
-            if abs(fy) + rep["depth"] / 2 > host_rep["profile"]["y"] / 2 + 1e-6:
-                fail("Input filling depth or placement exceeds the wall thickness.")
-        except (KeyError, TypeError, ValueError, np.linalg.LinAlgError):
-            fail("Filling/opening/host placement is unresolved.")
+        if document.get("schema_version") in {"bim-json/2.4", "bim-json/2.5"}:
+            from .polygon_wall import filling_fit_messages
+            try:
+                for message in filling_fit_messages(document, host_id, opening_id, record["id"]):
+                    fail(message)
+            except (KeyError, TypeError, ValueError, IndexError, np.linalg.LinAlgError) as exc:
+                fail(f"Filling/opening/host geometry is unsupported or unresolved: {exc}")
+        else:
+            supported = all(r.get("kind") == "extruded_profile" and r.get("profile", {}).get("kind") == "rectangle" and r.get("direction") == [0, 0, 1] and "position" not in r for r in (opening_rep, host_rep))
+            if not supported:
+                fail("Basic filling currently requires vertical rectangular host and opening extrusions.")
+                continue
+            try:
+                opening_world = np.array(world_transform_for(document, opening_id))
+                fill_world = np.array(world_transform_for(document, record["id"]))
+                host_world = np.array(world_transform_for(document, host_id))
+                local = np.linalg.inv(opening_world) @ fill_world
+                opening_in_host = np.linalg.inv(host_world) @ opening_world
+                if not np.allclose(local[:3, :3], np.eye(3), atol=1e-9) or not np.allclose(opening_in_host[:3, :3], np.eye(3), atol=1e-9):
+                    fail("Filling, opening and wall axes must align in the bounded template contract.")
+                ox, _, oz = opening_in_host[:3, 3]
+                if abs(ox) + opening_rep["profile"]["x"] / 2 > host_rep["profile"]["x"] / 2 + 1e-6 or oz < -1e-6 or oz + opening_rep["depth"] > host_rep["depth"] + 1e-6:
+                    fail("The unchanged opening must lie within the wall width and height.")
+                x, y, z = local[:3, 3]
+                if abs(x) + rep["width"] / 2 > opening_rep["profile"]["x"] / 2 + 1e-6 or z < -1e-6 or z + rep["height"] > opening_rep["depth"] + 1e-6:
+                    fail("Filling width, height or placement exceeds the unchanged opening.")
+                if abs(y) + rep["depth"] / 2 > opening_rep["profile"]["y"] / 2 + 1e-6:
+                    fail("Input filling depth exceeds the unchanged opening depth.")
+                fy = (np.linalg.inv(host_world) @ fill_world)[1, 3]
+                if abs(fy) + rep["depth"] / 2 > host_rep["profile"]["y"] / 2 + 1e-6:
+                    fail("Input filling depth or placement exceeds the wall thickness.")
+            except (KeyError, TypeError, ValueError, np.linalg.LinAlgError):
+                fail("Filling/opening/host placement is unresolved.")
         if record["ifc_class"] == "IfcDoor":
             required = "SINGLE_SWING_LEFT" if rep["template_id"] == "door-left" else "SINGLE_SWING_RIGHT"
             for relation in relationships:

@@ -10,6 +10,13 @@ def apply_material_assignment(model, entity, assignment):
     if kind == "single_material":
         assign_material(model, products=[entity], type="IfcMaterial", material=add_material(model, name=assignment["name"]))
         return
+    if kind == "material_list":
+        # Preserve the source sequence and multiplicity. These are not layers,
+        # and same-named entries are not merged into a shared material identity.
+        material = model.create_entity("IfcMaterialList", Materials=[
+            add_material(model, name=item["name"]) for item in assignment["materials"]])
+        assign_material(model, products=[entity], type="IfcMaterialList", material=material)
+        return
     layers = add_material_set(model, name=assignment["layer_set_name"], set_type="IfcMaterialLayerSet")
     for data in assignment["layers"]:
         layer = add_layer(model, layer_set=layers, material=add_material(model, name=data["name"]))

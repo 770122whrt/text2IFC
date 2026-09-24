@@ -23,6 +23,11 @@ def validate_materials(document):
         assignments = record.get("materials", [])
         if not assignments and record["ifc_class"] in LAYER_OCCURRENCES:
             inherited = records.get(type_ids.get(record["id"]), {}).get("materials", [])
+            if (document.get("schema_version") == "bim-json/2.5"
+                    and record["ifc_class"] == "IfcWallStandardCase" and inherited
+                    and inherited[0]["kind"] == "material_list"):
+                issues.append(ValidationIssue("UNSUPPORTED_MATERIAL_ASSIGNMENT",
+                    f"/entities/{index}/materials", "IfcWallStandardCase cannot inherit a non-layered material list."))
             if inherited and inherited[0]["kind"] == "material_layer_set":
                 assignments = [{**inherited[0], "kind": "material_layer_set_usage", "direction": LAYER_OCCURRENCES[record["ifc_class"]]}]
         path = f"/entities/{index}/materials"
@@ -32,6 +37,9 @@ def validate_materials(document):
             cls = record["ifc_class"]
             kind = assignment["kind"]
             supported = (kind == "single_material" and cls in SINGLE_OCCURRENCES | TYPE_OCCURRENCE.keys()) or (kind == "material_layer_set" and cls in LAYER_TYPES) or (kind == "material_layer_set_usage" and cls in LAYER_OCCURRENCES)
+            supported = supported or (document.get("schema_version") == "bim-json/2.5"
+                and kind == "material_list"
+                and cls in (SINGLE_OCCURRENCES | TYPE_OCCURRENCE.keys()) - {"IfcWallStandardCase"})
             if not supported:
                 issues.append(ValidationIssue("UNSUPPORTED_MATERIAL_ASSIGNMENT", path, f"{kind} is not supported on {cls}."))
                 continue
@@ -46,10 +54,19 @@ def validate_materials(document):
             if expected_axis == "AXIS2":
                 profile = rep.get("profile", {})
                 thickness = profile.get("y") if profile.get("kind") == "rectangle" else None
+                if document.get("schema_version") in {"bim-json/2.4", "bim-json/2.5"}:
+                    from .polygon_wall import wall_section
+                    try:
+                        _, low, high, _, _ = wall_section(rep)
+                        thickness = high - low
+                    except (KeyError, TypeError, ValueError, IndexError) as exc:
+                        issues.append(ValidationIssue("UNSUPPORTED_LAYER_GEOMETRY", path, str(exc)))
+                        continue
             else:
                 thickness = rep.get("depth")
             total = sum(layer["thickness"] for layer in assignment["layers"])
-            if thickness is None or not math.isclose(total, thickness, abs_tol=1e-6, rel_tol=0):
+            tolerance = 0.1 if document.get("schema_version") in {"bim-json/2.4", "bim-json/2.5"} else 1e-6
+            if thickness is None or not math.isclose(total, thickness, abs_tol=tolerance, rel_tol=0):
                 issues.append(ValidationIssue("MATERIAL_LAYER_THICKNESS_MISMATCH", path, "Layer thickness sum must equal the declared wall thickness or slab extrusion depth."))
             if assignment["direction"] != expected_axis:
                 issues.append(ValidationIssue("MATERIAL_LAYER_DIRECTION_MISMATCH", path, f"{cls} requires {expected_axis}."))

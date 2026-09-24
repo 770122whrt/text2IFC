@@ -295,10 +295,15 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
     entities: dict[str, Any] = {}
     for record in document["entities"]:
         attributes = record["attributes"]
+        # IFC2X3 IfcProject.WR31 requires Name, while BIM JSON permits omission.
+        # Use the existing technical identifier; do not invent a project title.
+        name = attributes.get("Name")
+        if record["ifc_class"] == "IfcProject" and "Name" not in attributes:
+            name = record["id"]
         entity = create_entity(
             ifc_file,
             ifc_class=record["ifc_class"],
-            name=attributes.get("Name"),
+            name=name,
         )
         assign_identity(
             ifc_file,
