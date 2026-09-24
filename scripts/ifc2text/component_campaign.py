@@ -25,6 +25,10 @@ SCOPE=['src/text2ifc_agent','src/text2ifc_ifc2text','src/text2ifc_contract',
        'prompts/agent','schemas','scripts/ifc2text','scripts/agent/run_phase6_2_cli.py',
        'tests/ifc2text','tests/agent','tests/compiler','tests/ifc_quality','pyproject.toml']
 TARGETS=[
+    'tests/ifc2text/test_component_budget.py',
+    'tests/ifc2text/test_hosted_source.py',
+    'tests/ifc2text/test_component_hosted_public_chain.py',
+    'tests/agent/test_component_public_identity.py',
     'tests/ifc2text/test_component_campaign.py',
     'tests/ifc2text/test_component_public_chain_v10.py',
     'tests/ifc2text/test_component_description_v10.py',
@@ -57,6 +61,15 @@ TARGETS=[
     'tests/agent/test_audit_failure_terminal.py',
     'tests/ifc_quality/test_generated_ifc_gate.py',
 ]
+
+
+def budget_for(cfg):
+    allocation=cfg.get('budget_allocation')
+    if allocation is None:return budget()
+    path=ROOT/allocation['path']
+    if digest(path)!=allocation['sha256']:raise GoalStopped('BUDGET_ALLOCATION_CHANGED')
+    from scripts.ifc2text.component_budget import open_allocation
+    return open_allocation(path)
 
 
 def frozen_text(case):
@@ -132,7 +145,7 @@ def live(cfg,case,stage):
     out.mkdir(parents=True,exist_ok=True)
     marker=out/(stage+'-started.json')
     if marker.exists():raise GoalStopped('ATTEMPT_ALREADY_STARTED')
-    b=budget();b.check_capacity('reconstruction')
+    b=budget_for(cfg);b.check_capacity('reconstruction')
     cap=cfg['brief_output_tokens'] if stage=='brief' else cfg['generation_output_tokens']
     conf,client,provider=runtime(cfg,b,'reconstruction',cap)
     save(marker,{'at':now(),'stage':stage,'code_commit':record['code_commit'],'budget_before':b.snapshot()})
@@ -191,7 +204,7 @@ def main():
     parser.add_argument('--config',required=True);parser.add_argument('--case')
     args=parser.parse_args();cfg=load(ROOT/args.config)
     if args.command=='validate':return validate(cfg)
-    if args.command=='status':print(json.dumps(budget().snapshot(),indent=2));return 0
+    if args.command=='status':print(json.dumps(budget_for(cfg).snapshot(),indent=2));return 0
     case=next(c for c in cfg['cases'] if c['id']==args.case)
     if args.command=='compare':compare(cfg,case)
     else:live(cfg,case,args.command)

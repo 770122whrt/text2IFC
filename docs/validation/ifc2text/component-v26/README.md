@@ -1,8 +1,12 @@
 # 参数化门窗：首阶段开发与验证
 
-日期：2026-09-24。执行依据：[唯一计划 v1.0](../../../architecture/text2ifc-component-plan-v1.0.md)。
+日期：2026-09-25。执行依据：[唯一计划 v1.0](../../../architecture/text2ifc-component-plan-v1.0.md)。
 
-已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**单门／单窗的公开离线链路通过；hxp 百叶窗已完成真实 LLM loop，单门正在调试，整栋 hxp 尚未生成。** 下方保留分阶段证据。
+已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**hxp 与 TallBuilding 各一门一窗均已完成真实 LLM loop；整栋 hxp 尚未生成。** 下方保留分阶段证据。
+
+**最新比较要求：直接使用 IfcOpenShell 官方工具，不自行实现比较算法。** 下方 Compare 1.2 的数值是历史自写测量结果，不能改称官方库结论。已使用本地未修改的 IfcDiff 0.8.5 重查四个单构件，均未报告几何变化；记录位于 `component-v26-ifcdiff-check-20260925-01/official-ifcdiff-results.json`。每对输入仅有一个该类构件，为适配工具的 GlobalId 要求，只在内存中对齐候选编号，源与候选文件字节均未改变。未调用 LLM。
+
+IfcDiff 的几何变化报告不能直接证明最大表面误差 ≤1 mm。所装版本采用形状摘要比较，几何摘要路径的 epsilon 为固定值，且禁用开口扣除；没有完整材料／颜色比较选项。不能仅设置 IFC Precision 就宣称满足 1 mm 的所有检查。现成工具未覆盖项如何处理，须明确后再恢复新验收。参见 [IfcDiff 官方说明](https://docs.ifcopenshell.org/ifcdiff.html)；实际实现核对的是本地 0.8.5 源码。
 
 ## 已完成的内容
 
@@ -109,3 +113,21 @@ hxp 单窗在说明格式 1.1 下得到 ready Brief、formal 候选、accepted A
 定位重放仅给原门记录补上公开 `label`，其余几何参数不变，校验从失败转为通过；这是评价端离线诊断，不送入生成链。通用修正采用新 Brief 提示 2.30／2.31：要求每个公开部件目录编号对应唯一父构件；沿用原编号，或明确保留 label。校验分别报告编号丢失、编号歧义与部件缺失；前两项不进入无法改变对象身份的语义修复。无前后缀推断、场景特判或几何替代。相关测试先出现 5 个预期失败，再通过包含旧合同／编译检查的 70 项定向回归；真实重试仍须新配置 1.3 的阶段内复验。
 
 i5n_1 作为混合支持案例已获确认：先测暂停不生成，再排除 D002 并生成带拒绝说明的部分模型，保留墙、开口与其他支持对象。D002 含 22 项 BRep；源模型 42 面墙和 24 个开口均通过当前原生参数提取。此处仅是输入适用性与人工决定，尚未完成该整楼重建。决定保存在 `component-v26-i5n-scope-20260925-01/human-decision.private.json`。
+
+公开编号修正已提交推送 `6ed0e67a`。阶段内复验为 153 passed、0 failed、0 skipped，129.90 秒，无网络；未变动的编译器／Provider／比较器证据继承前一轮 404 项阶段检查，不累加测试数。第三次单门 Brief 保留 D001 和全部五个部件，生成 formal 候选、accepted Audit 并输出 IFC。Compare 1.2：源与候选均为 5 个实体，拓扑相同，最大双向表面采样距离 **1.728×10⁻¹⁰ mm**，匹配 1、缺失 0、多余 0、几何／材料／关系差异 0。hxp 的独立单门和单窗均已得到真实往返结果；这不包含宿主安装与整栋。
+
+- [实际重建单门 IFC](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-04/hxp-door/runs/0207af2c723d324c/output.ifc)
+- [单门独立比较](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-04/hxp-door/compare-v1.2.json)
+
+TallBuilding 的独立单窗与单门也均一次经过真实 Brief→Generator→Audit→IFC 并通过 Compare 1.2，最大双向表面采样距离分别约 1.044×10⁻¹⁰ mm、5.093×10⁻¹¹ mm。四个选定单构件现均通过已测几何、关系、材料与标高检查。它们是已揭示诊断案例，不是盲测统计或通用建筑能力证明。
+
+- [TallBuilding 单窗](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-04/tall-window/runs/d458c396db836911/output.ifc)、[比较](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-04/tall-window/compare-v1.2.json)
+- [TallBuilding 单门](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-04/tall-door/runs/d84a78710b6772af/output.ifc)、[比较](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-04/tall-door/compare-v1.2.json)
+
+## S4 安装场景准备
+
+新增原生宿主场景提取：保留一扇门／窗、整面宿主墙及其所有开口，其他产品仅从副本移除。对源与副本检查完整门窗 Body、墙体切洞后网格、各开口网格及关系，避免删除另一开口而改变墙体。门、窗以及无宿主拒绝测试 3 passed。hxp 两份实际输入均保留各自的一墙、一开口、一门窗，原生几何检查通过；文件位于 `component-v26-hosted-inputs-20260925-01/`。
+
+两个离线公开链测试均通过真实 IFC2Text、Brief 入口、编译、终态发布与独立比较，模型响应为明确注入的离线夹具。没有原生墙 Axis 的夹具保留墙长／厚／高未评估状态，同时断言墙体切洞前后实测几何、门窗完整 Body 和安装关系通过；未修改比较器来清除这一限制。
+
+剩余开发的调用次数重新分配见 `component-v26-budget-20260925-01/allocation.json`：沿用累计 token 上限 **3,696,347**，完整继承已耗 **2,338,826** 和 34 次重建调用，再配置 24 个调用位置。没有新增 token 授权或清空旧账；旧账变化、未结算或失败暂停均阻止后续调用。预算与传输定向检查 13 passed。宿主真实调用使用 `component-campaign-hosted-v1.0.json`，须先完成新阶段离线准入。
