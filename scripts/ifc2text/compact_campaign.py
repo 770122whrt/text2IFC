@@ -12,9 +12,9 @@ from scripts.ifc2text.run_goal import git, SCOPE
 from text2ifc_ifc2text.llm_pipeline import _write_json
 from text2ifc_ifc2text.goal_budget import BudgetClient, GoalStopped
 from text2ifc_ifc2text.campaign_budget import CampaignBudget
-from text2ifc_ifc2text.compact_pipeline import prepare_compact, write_compact
+from text2ifc_ifc2text.compact_pipeline import prepare_compact, write_compact, render_prepared_description
 from text2ifc_ifc2text.compact import compact_description, validate_narration, narrative_context
-from text2ifc_ifc2text.roundtrip_compare import compare_roundtrip
+from text2ifc_ifc2text.precision_compare_v11 import compare_roundtrip
 from text2ifc_text.splits import atomic_write_text
 
 
@@ -54,7 +54,9 @@ def prepare(cfg):
         out=ROOT/cfg['output']/case['id']
         if (out/'prepared.json').exists():
             reports.append(load(out/'prepared.json')); continue
-        reports.append(prepare_compact(ROOT/case['source'],out))
+        reports.append(prepare_compact(ROOT/case['source'],out,
+            description_version=cfg.get('description_version','0.8'),
+            containment_policy=cfg.get('containment_policy','host_storey_for_selected_fillings')))
     if len(set(c['source'] for c in cfg['cases']))!=len(cfg['cases']): raise GoalStopped('DISTINCT_SOURCE_REQUIRED')
     _write_json(ROOT/cfg['output']/'preparation-summary.json',reports)
     return reports
@@ -74,7 +76,7 @@ def verify_text(out):
     facts=load(out/'source-facts.json'); narrative=load(out/'writing/narration/parsed-response.json')
     validate_narration(narrative,narrative_context(facts))
     text=(out/'design-description.md').read_text(encoding='utf-8')
-    if compact_description(facts,narrative)!=text: raise GoalStopped('TEXT_MODIFIED')
+    if render_prepared_description(facts,narrative)!=text: raise GoalStopped('TEXT_MODIFIED')
     review=load(out/'content-review.json')
     if review.get('decision')!='allow_diagnostic_reconstruction': raise GoalStopped('AGENT_CONTENT_REVIEW_REQUIRED')
     return text
@@ -116,6 +118,14 @@ def brief(cfg,case,extended=False):
         raise
 
 
+def generation_schema_for_prepared(cfg, out):
+    """New descriptions use polygon-host support; archived versions keep their route."""
+    if cfg.get('bim_json_schema_version') is not None:
+        return cfg['bim_json_schema_version']
+    facts = load(Path(out)/'source-facts.json')
+    return 'bim-json/2.4' if facts.get('description_policy', {}).get('version') == '0.8' else None
+
+
 def generate(cfg,case,extended=False):
     record=admission(cfg); budget=budget_for(cfg)
     out=ROOT/cfg['output']/case['id']; verify_text(out)
@@ -132,6 +142,7 @@ def generate(cfg,case,extended=False):
         with SessionStore.open(attempt/'sessions.sqlite',artifact_root=attempt) as store:
             result=run_ready_session_to_ifc(store=store,session=load(attempt/'session.json')['id'],provider_factory=lambda:provider,
                 generation_strategy=cfg['generation_strategy'],trace_level='debug',
+                bim_json_schema_version=generation_schema_for_prepared(cfg,out),
                 budget_limits=BudgetLimits(max_calls=cfg['max_reconstruction_calls'],max_tokens=limit))
             report={'status':result.status,'session_hash':result.session_hash,
                    'ifc_path':str(result.ifc_path) if result.ifc_path else None,
@@ -149,12 +160,15 @@ def compare(cfg,case,extended=False):
     session=load(attempt/'session.json'); ifc=Path(session['run_dir'])/'output.ifc'
     if not ifc.is_file(): raise GoalStopped('NO_REAL_RECONSTRUCTED_IFC')
     source=ROOT/case['source']; before=source.read_bytes()
-    report=compare_roundtrip(source,ifc,position_mm=cfg['position_tolerance_mm'],dimension_mm=cfg['dimension_tolerance_mm'])
+    original=ROOT/case['original_source'] if case.get('original_source') else None
+    report=compare_roundtrip(source,ifc,original_source_path=original)
+    report['legacy_config_tolerances_not_applied']={key:cfg[key] for key in
+        ('position_tolerance_mm','dimension_tolerance_mm') if key in cfg}
     if source.read_bytes()!=before: raise GoalStopped('SOURCE_CHANGED')
     generation=load(attempt/'generation-result.json') if (attempt/'generation-result.json').exists() else {'status':'incomplete'}
     report['generation_publication_status']=generation['status']
     report['comparison_role']='diagnostic comparison; IFC existence does not mean generation acceptance'
-    _write_json(attempt/'compare.json',report)
+    _write_json(attempt/'compare-v1.1.json',report)
     lines=['# 重建差异报告',f"源模型：{case['id']}；生成状态：{generation['status']}",
            '比较源IFC与真实Provider输出编译的IFC；不使用相同GUID匹配。',
            '## 汇总',json.dumps(report.get('summary',report.get('status')),ensure_ascii=False),'## 按构件定位']
@@ -165,7 +179,11 @@ def compare(cfg,case,extended=False):
         for row in content.get('matched',[]):
             if row['outside_tolerance']: lines.append('- 偏差：'+json.dumps(row,ensure_ascii=False))
     lines+=['## 未评估与限制',json.dumps(report.get('unassessed',[]),ensure_ascii=False),'；'.join(report.get('limitations',[]))]
-    atomic_write_text(attempt/'COMPARE.md','\n\n'.join(lines)+'\n')
+    lines+=['## 比较策略',json.dumps(report.get('tolerances',{}),ensure_ascii=False),
+        json.dumps(report.get('containment_policy',{}),ensure_ascii=False),
+        '## 关系差异',json.dumps(report.get('relation_differences',[]),ensure_ascii=False),
+        '## 楼层标高',json.dumps(report.get('storeys',{}),ensure_ascii=False)]
+    atomic_write_text(attempt/'COMPARE-v1.1.md','\n\n'.join(lines)+'\n')
     return {'status':report['status'],'summary':report.get('summary'),'generation_status':generation['status']}
 
 

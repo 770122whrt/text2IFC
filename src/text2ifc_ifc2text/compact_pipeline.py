@@ -15,13 +15,47 @@ TEMPLATE = 'ifc2text-compact-narrator.v0.4'
 CLASSES = dict(zip(CATEGORIES, ['IfcWall','IfcOpeningElement','IfcDoor','IfcWindow','IfcSpace','IfcStair','IfcSlab','IfcCovering']))
 
 
-def prepare_compact(source, output):
+def render_prepared_description(facts, narration=None):
+    """Choose the recorded description contract; old prepared artifacts stay replayable."""
+    version = facts.get('description_policy', {}).get('version', '0.4')
+    if version == '0.9':
+        from .opening_details_v09 import opening_description
+        return opening_description(facts, narration)
+    if version == '0.8':
+        from .wall_details_v08 import explicit_description
+        return explicit_description(facts, narration)
+    if version == '0.4':
+        return compact_description(facts, narration)
+    raise ValueError('UNSUPPORTED_DESCRIPTION_VERSION')
+
+
+def prepare_compact(source, output, *, description_version='0.8', containment_policy='host_storey_for_selected_fillings'):
     source = Path(source); output = Path(output)
     if (output/'prepared.json').exists(): raise ValueError('PREPARED_ALREADY_EXISTS')
+    if description_version not in {'0.4', '0.8', '0.9'}: raise ValueError('UNSUPPORTED_DESCRIPTION_VERSION')
+    if containment_policy not in {'host_storey_for_selected_fillings', 'preserve_recorded'}:
+        raise ValueError('UNSUPPORTED_CONTAINMENT_POLICY')
     before = source.read_bytes()
-    facts = extract_description_facts(source)
-    text = compact_description(facts)
-    model = ifcopenshell.open(str(source))
+    effective_source = source
+    normalization = {'moved_count': 0, 'source_unchanged': True}
+    if containment_policy == 'host_storey_for_selected_fillings':
+        from .source_containment_v07 import inspect_containment, normalize_copy
+        audit = inspect_containment(source)
+        selected = [r['global_id'] for r in audit['fillings'] if r['eligible_for_explicit_host_policy']]
+        if selected:
+            effective_source = output/'source-host-normalized.ifc'
+            normalization = normalize_copy(source, effective_source, selected_global_ids=selected, policy=containment_policy)
+        _write_json(output/'source-containment-review.json', audit)
+    facts = extract_description_facts(effective_source)
+    if description_version in {'0.8', '0.9'}:
+        from .wall_details_v07 import enrich_wall_details
+        facts = enrich_wall_details(effective_source, facts)
+    if description_version == '0.9':
+        from .opening_details_v09 import enrich_opening_details
+        facts = enrich_opening_details(effective_source, facts)
+    facts['description_policy'] = {'version': description_version, 'containment': containment_policy}
+    text = render_prepared_description(facts)
+    model = ifcopenshell.open(str(effective_source))
     observed = {c: len(model.by_type(t)) for c,t in CLASSES.items()}
     counts = Counter(c for c,i in all_items(facts))
     if any(observed[c] != counts[c] for c in CATEGORIES): raise ValueError('ENTITY_COVERAGE_MISMATCH')
@@ -29,12 +63,16 @@ def prepare_compact(source, output):
     _write_json(output/'source-facts.json', facts)
     _write_json(output/'narrative-context.json', narrative_context(facts))
     atomic_write_text(output/'design-description-deterministic.md', text)
-    report = {'schema_version':'text2ifc/compact-prepared/0.4', 'status':'prepared',
+    report = {'schema_version':'text2ifc/compact-prepared/'+description_version, 'status':'prepared',
         'source_path':str(source), 'schema':model.schema, 'counts':observed,
+        'effective_source_path':str(effective_source), 'description_version':description_version,
+        'containment_policy':containment_policy, 'normalization':normalization,
         'derived_regions':sum(len(s.get('derived_spaces',[])) for s in facts['storeys']),
         'unrepresented_classes':facts.get('unrepresented_classes',{}),
         'characters':len(text), 'han_characters':len(re.findall(r'[\u4e00-\u9fff]',text)),
         'source_unchanged':True, 'coordinate_unit':'mm', 'coordinate_decimals':1}
+    if description_version == '0.9':
+        report['opening_profile_coordinate_decimals'] = 6
     _write_json(output/'prepared.json', report)
     return report
 
@@ -60,17 +98,21 @@ def write_compact(*, output, provider, budget=None, template_id=TEMPLATE):
     load = lambda p: json.loads(p.read_text(encoding='utf-8'))
     facts = load(output/'source-facts.json'); context = narrative_context(facts)
     _write_json(output/'writing/attempt.json', {'template':template_id, 'stage':'compact_narration'})
-    schema = narration_schema(context) if template_id in {'ifc2text-compact-narrator.v0.5', 'ifc2text-compact-narrator.v0.6'} else _load_schema('compact-narration-0.4.schema.json')
+    schema = narration_schema(context) if template_id in {'ifc2text-compact-narrator.v0.5', 'ifc2text-compact-narrator.v0.6', 'ifc2text-compact-narrator.v0.7'} else _load_schema('compact-narration-0.4.schema.json')
     try:
         result = _run_stage(provider=provider, output_dir=output/'writing/narration', stage='compact_narration',
             session_id=output.name+':narration', template_id=template_id,
             inputs={'FACT_SUMMARY':context,'OUTPUT_SCHEMA':schema}, schema=schema, state={'stage':'compact_narration'})
         validate_narration(result, context)
-        text = compact_description(facts, result)
+        if template_id == 'ifc2text-compact-narrator.v0.7':
+            from .narration_v07 import validate_notes
+            validate_notes(result, context)
+        text = render_prepared_description(facts, result)
         atomic_write_text(output/'design-description.md', text)
         atomic_write_text(output/'design-description.txt', text)
         report = {'schema_version':'text2ifc/compact-writing/0.4', 'status':'text_complete_pending_prose_review',
             'provider_calls':1, 'template':template_id, 'characters':len(text),
+            'description_version':facts.get('description_policy',{}).get('version','0.4'),
             'mode':'LLM_short_narrative_plus_deterministic_measurement_tables',
             'numeric_table_authority':'source-facts.json', 'checks':{'deterministic_tables_unchanged':True},
             'description_path':str(output/'design-description.md')}

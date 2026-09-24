@@ -12,10 +12,18 @@ from contextlib import contextmanager
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
+from text2ifc_agent.providers import ProviderRequestBlocked
 
 
 class GoalStopped(RuntimeError):
     pass
+
+
+class BudgetRequestBlocked(GoalStopped, ProviderRequestBlocked):
+    """Preserve GoalStopped for direct callers and identify a pretransport refusal."""
+
+    def __init__(self, reason_code):
+        ProviderRequestBlocked.__init__(self, reason_code, failure_class='client_budget_blocked')
 
 
 class GoalBudget:
@@ -151,7 +159,10 @@ class BudgetClient:
             raise GoalStopped('EXPLICIT_OUTPUT_LIMIT_REQUIRED')
         # A UTF-8 byte allowance is conservative for the input token reservation.
         reserve = len(json.dumps(request.get('messages',[]),ensure_ascii=False).encode('utf-8')) + cap
-        token = self.budget.reserve(self.stage, reserve)
+        try:
+            token = self.budget.reserve(self.stage, reserve)
+        except GoalStopped as error:
+            raise BudgetRequestBlocked(str(error)) from error
         started = time.monotonic()
         try:
             response = self.client.chat.completions.create(**request)

@@ -20,9 +20,12 @@ class Narrator:
         return ProviderOutput(json.dumps(output,ensure_ascii=False),{'evidence_class':'offline_fake'})
 
 
-def test_compact_description_public_bridge_and_compare(tmp_path):
+@pytest.mark.parametrize('generation_version',[None,'bim-json/2.4'])
+def test_compact_description_public_bridge_and_compare(tmp_path,generation_version):
     root=ROOT/'dataset/processed/agent-demo/phase6.1-mimo-live/complete-room'
     candidate=json.loads((root/'generator/candidate.json').read_text(encoding='utf-8'))
+    if generation_version is not None:
+        candidate['schema_version']=generation_version
     source=tmp_path/'original.ifc'; assert compile_document(candidate,source).success
     before=source.read_bytes(); output=tmp_path/'compact'
     prepare_compact(source,output)
@@ -38,7 +41,9 @@ def test_compact_description_public_bridge_and_compare(tmp_path):
       'evidence_paths':['design-brief/design-brief.json','generator/candidate.json']}])
     with SessionStore.open(tmp_path/'generation/sessions.sqlite',artifact_root=tmp_path/'generation') as store:
         reconstructed=reconstruct_description_with_public_text2ifc(text,store=store,
-             invoke_design_brief=fixture._design_brief_invoker(store),provider_factory=lambda:provider)
+             invoke_design_brief=fixture._design_brief_invoker(store,
+                 brief_schema_version='text2ifc/design-brief/2.1' if generation_version else None),provider_factory=lambda:provider,
+             bim_json_schema_version=generation_version)
         assert reconstructed['status']=='compiled'
         assert store.get_session(reconstructed['session_id']).original_input==text
         report=compare_roundtrip(source,reconstructed['ifc_path'])

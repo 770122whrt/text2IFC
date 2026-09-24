@@ -229,7 +229,7 @@ def _writing_responses(run_id: str) -> dict[str, dict]:
     return responses
 
 
-def _design_brief_invoker(store: SessionStore):
+def _design_brief_invoker(store: SessionStore, *, brief_schema_version=None):
     frozen = json.loads((PHASE6_1_COMPLETE / "design-brief" / "design-brief.json").read_text(encoding="utf-8"))
     registry = load_prompt_registry()
     template = registry["design-brief.v2.25"]
@@ -239,6 +239,9 @@ def _design_brief_invoker(store: SessionStore):
         request = transcript[0]["content"]
         selection = select_design_brief_context(user_request=request, conversation=transcript)
         brief = copy.deepcopy(frozen)
+        if brief_schema_version is not None:
+            brief["schema_version"] = brief_schema_version
+            brief["known_facts"]["semantic_requirements"] = []
         brief["original_request"] = request
         brief["fact_sources"][0]["source_turns"] = ["turn-user-001"]
         brief["provenance"]["source_turns"] = ["turn-user-001"]
