@@ -4,9 +4,11 @@
 
 已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**hxp 与 TallBuilding 各一门一窗均已完成真实 LLM loop；整栋 hxp 尚未生成。** 下方保留分阶段证据。
 
-**最新比较要求：直接使用 IfcOpenShell 官方工具，不自行实现比较算法。** 下方 Compare 1.2 的数值是历史自写测量结果，不能改称官方库结论。已使用本地未修改的 IfcDiff 0.8.5 重查四个单构件，均未报告几何变化；记录位于 `component-v26-ifcdiff-check-20260925-01/official-ifcdiff-results.json`。每对输入仅有一个该类构件，为适配工具的 GlobalId 要求，只在内存中对齐候选编号，源与候选文件字节均未改变。未调用 LLM。
+**最新比较要求：允许 IfcOpenShell 解析后进行容差比较，也允许补充自写算法。** Compare 1.2 继续使用：IFC 解析、单位与变换、布尔并集及网格来自 IfcOpenShell，双向采样距离、拓扑与体积判据由项目实现，不能改称全部是官方库算法。其边界测试覆盖 0.5 mm、1 mm、1.0001 mm、内部孔洞与叶片变化、等价实体拆分和不同单位。现有四个结果不改写、不换版本冒充重测。
 
-IfcDiff 的几何变化报告不能直接证明最大表面误差 ≤1 mm。所装版本采用形状摘要比较，几何摘要路径的 epsilon 为固定值，且禁用开口扣除；没有完整材料／颜色比较选项。不能仅设置 IFC Precision 就宣称满足 1 mm 的所有检查。现成工具未覆盖项如何处理，须明确后再恢复新验收。参见 [IfcDiff 官方说明](https://docs.ifcopenshell.org/ifcdiff.html)；实际实现核对的是本地 0.8.5 源码。
+已使用本地未修改的 IfcDiff 0.8.5 重查四个单构件，均未报告几何变化；记录位于 `component-v26-ifcdiff-check-20260925-01/official-ifcdiff-results.json`。每对输入仅有一个该类构件，为适配工具的 GlobalId 要求，只在内存中对齐候选编号，源与候选文件字节均未改变。未调用 LLM。
+
+IfcDiff 的几何变化报告不能直接证明最大表面误差 ≤1 mm。所装版本采用形状摘要比较，几何摘要路径的 epsilon 为固定值，且禁用开口扣除；没有完整材料／颜色比较选项。不能仅设置 IFC Precision 就宣称满足 1 mm 的所有检查。继续以实际几何测量为主、IfcDiff 为辅，采样与未评估项均如实注明；本次讨论已明确，无需再次等待比较方案确认。参见 [IfcDiff 官方说明](https://docs.ifcopenshell.org/ifcdiff.html)；实际实现核对的是本地 0.8.5 源码。
 
 ## 已完成的内容
 
