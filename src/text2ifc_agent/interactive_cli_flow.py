@@ -265,6 +265,8 @@ def make_openai_design_brief_invoker(
                 "OpenAI-compatible Design Brief violated strict JSON output contract",
                 evidence={"parse_status": parse_status, "diagnostics": diagnostics},
             )
+        from .brief_duplicate_normalization import normalize_with_trace
+        parsed = normalize_with_trace(parsed, call_dir)
         issues = validate_design_brief(
             parsed,
             evidence_catalog=selection["evidence"],

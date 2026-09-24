@@ -225,6 +225,11 @@ def run_design_brief_stage(
     outline_normalization = []
     if parse_status == "ok" and parsed is not None:
         _write_json(output / "parsed-output.json", parsed)
+        from .brief_duplicate_normalization import normalize_with_trace
+        normalized = normalize_with_trace(parsed, output)
+        if normalized != parsed:
+            parsed = normalized
+            _write_json(output / "parsed-output.json", parsed)
         from .brief_plan_normalization import normalize_layout_outlines
         parsed, outline_normalization = normalize_layout_outlines(parsed)
         if outline_normalization:

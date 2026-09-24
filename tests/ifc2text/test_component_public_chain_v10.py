@@ -33,7 +33,8 @@ def fake_brief_invoker(root,brief,requests,finish_reason='stop'):
 
 @pytest.mark.parametrize('cls',['IfcDoor','IfcWindow'])
 @pytest.mark.parametrize('version',['1.0','1.1'])
-def test_source_text_public_brief_generator_reopen_with_offline_models(tmp_path,cls,version):
+@pytest.mark.parametrize('duplicate_flat',[False,True])
+def test_source_text_public_brief_generator_reopen_with_offline_models(tmp_path,cls,version,duplicate_flat):
     candidate=document(cls)
     label='D001' if cls=='IfcDoor' else 'N001'
     candidate['entities'][-1]['id']=label
@@ -51,6 +52,8 @@ def test_source_text_public_brief_generator_reopen_with_offline_models(tmp_path,
     brief['known_facts']['storeys']=[{'id':storey['id'],'elevation_mm':0}]
     brief['known_facts'][collection]=[{'id':label,'ifc_class':cls,'storey':storey['id'],
                                       'width_mm':850,'height_mm':1100,'installation':'standalone'}]
+    if duplicate_flat:
+        brief['known_facts']['storeys'][0][collection]=copy.deepcopy(brief['known_facts'][collection])
     audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
         'deterministic_gate_status':'passed','findings':[],'evidence_paths':['generator/candidate.json']}
     generation=SequenceProvider([candidate,audit]);requests=[]
@@ -72,7 +75,11 @@ def test_source_text_public_brief_generator_reopen_with_offline_models(tmp_path,
             assert str(source) not in json.dumps(request)
         session=store.get_session(result['session_id'])
         saved=json.loads((session.run_dir/'design-brief.json').read_text(encoding='utf-8'))
-        assert saved==brief
+        expected=copy.deepcopy(brief)
+        if duplicate_flat:
+            expected['known_facts'].pop(collection)
+            assert (session.run_dir/'calls/01-design-brief/raw-parsed-output.json').is_file()
+        assert saved==expected
         # This file makes the transport substitution explicit alongside all traces.
         (root/'OFFLINE-FIXTURE.json').write_text(json.dumps({'evidence_class':'offline_injected_provider',
             'real_provider_calls':0,'not_a_capability_claim':True}),encoding='utf-8')

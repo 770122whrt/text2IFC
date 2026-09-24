@@ -38,6 +38,8 @@ TARGETS=[
     'tests/agent/test_component_requirements_v26.py',
     'tests/agent/test_component_generation_v26_route.py',
     'tests/agent/test_component_installation_v26.py',
+    'tests/agent/test_brief_duplicate_normalization.py',
+    'tests/ifc2text/test_component_description_v11.py',
     'tests/compiler/test_component_geometry_v26.py',
     'tests/compiler/test_polygon_wall_hosts_v24.py',
     'tests/compiler/test_material_list_v25.py',

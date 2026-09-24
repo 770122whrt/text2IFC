@@ -2,7 +2,7 @@
 
 日期：2026-09-24。执行依据：[唯一计划 v1.0](../../../architecture/text2ifc-component-plan-v1.0.md)。
 
-已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**随后已完成单门／单窗的公开文本→Brief→生成器→IFC 离线链路；尚未运行真实 LLM loop，尚未重建整栋 hxp。** 下方保留首阶段结果，并追加 S2 进展。
+已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**单门／单窗的公开离线链路通过；hxp 百叶窗已完成真实 LLM loop，单门正在调试，整栋 hxp 尚未生成。** 下方保留分阶段证据。
 
 ## 已完成的内容
 
@@ -38,7 +38,7 @@
 
 ## 不支持项与讨论
 
-hxp 的 4 扇木门包含直线与圆弧组合的复合截面，不能用已定的纯多边形或完整圆截面等价替代；另 1 扇门使用 BRep。TallBuilding 的另 1 扇门也使用 BRep。已提出是否将“直线＋圆弧截面”加入本轮的范围问题；收到扩展决定前继续按原范围明确拒绝。
+hxp 的 4 扇木门包含直线与圆弧组合的复合截面，不能用已定的纯多边形或完整圆截面等价替代；另 1 扇门使用 BRep。TallBuilding 的另 1 扇门也使用 BRep。2026-09-25 已明确选择：本轮不扩展圆弧截面；hxp 排除 D003–D007 后继续，保留墙体与开口，交付部分重建及拒绝清单。决定记录在 `dataset/processed/experiments/component-v26-hxp-scope-20260925-01/`。其他不支持项仍须逐项解释，由 human 选择排除后继续或暂停。
 
 这里的首阶段拒绝结果是解析 API 与实验清单的行为。后续 S2 已通过产品澄清、持久化回答和恢复的离线测试；该测试与上表原生几何诊断是两类证据。
 
@@ -89,3 +89,17 @@ Brief 2.9、Draft 1.6、作者合同 1.6 及配套新提示词已经贯通公开
 - 独立比较测试 10 passed；副本提取测试 2 passed；冻结输入与真实建筑上下文测试 3 passed。两座完整建筑的描述通过实际公共 Brief 入口和离线替身接入，记录时间、进程内存峰值及请求大小，遇到不支持项停止。仍没有新的真实 Provider 调用。
 
 本阶段正式准入由 `scripts/ifc2text/component_campaign.py validate --config scripts/ifc2text/component-campaign-v1.0.json` 执行。该命令仅运行代码内列出的阶段测试，涵盖公共完整链、澄清恢复、截断/格式错误、Provider seam、原子失败、源文件保护、实际几何、终态发布和真实规模上下文。它记录精确文件快照、命令和日志哈希；配置、代码或冻结输入变化会阻止后续真实调用。未通过时不得调用 Provider，也不自动运行仓库级 Full Preflight。
+
+## S3 真实单窗结果与单门调试
+
+第一次阶段准入为 379 passed、0 failed、0 skipped（513.86 秒，无网络）；说明格式 1.1 的后续定向复验为 21 passed。实际 Provider 请求为 `deepseek-v4-flash`，响应标识为 `deepseek-flash`；本轮向 `api.deepseek.com` 发送派生说明及后续 Brief/BIM JSON 已获明确授权，源 IFC 不发送。
+
+hxp 单窗在说明格式 1.1 下得到 ready Brief、formal 候选、accepted Audit 和 compiled IFC。源与输出均有 15 个实际实体；完整 Body 的双向表面采样最大距离约 **3.342×10⁻¹⁰ mm**，拓扑相同，已评估的几何、材料、关系、楼层标高均无差异。它仍是独立单窗，不是宿主场景或整栋保真结论。
+
+- [实际重建单窗 IFC](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-02/hxp-window/runs/bc6346f966e8480e/output.ifc)
+- [独立 Compare 1.2](../../../../dataset/processed/experiments/component-v26-single-loop-20260925-02/hxp-window/compare-v1.2.json)
+- 同目录 `brief-source-parameter-trace.private.json` 为评价端定位记录：Brief 与源部件参数只有数值输出舍入差，未发现非数值内容差异；该记录未送入 Generator。
+
+保留的真实失败和修正：首次单窗 Brief 把楼层名称“标高 3”与真实标高 40 mm 误判为冲突，停在澄清，未生成 IFC。说明 1.1 将名称加引号并单列 `楼层标高=`；原说明 1.0 和首轮响应保留。单门第一次 Brief 把同一完整门记录同时放在顶层和楼层内，严格校验拒绝它，仍未生成 IFC。新增规范化仅合并完整 JSON 内容相同、明确属于同一楼层的冗余门窗副本；冲突、缺字段、不同楼层和重复候选仍拒绝。原模型响应及逐项规范化记录保留，部件参数不改写。单门原失败响应离线重放后校验通过；这不是新的模型试验。
+
+规范化开发检查：36 passed；随后覆盖重复副本的门／窗完整公开链路为 13 passed，各轮有重叠，不合并为能力指标。此项改变了公共 Brief 入口，下一次真实调用前使用新配置 `component-campaign-v1.2.json` 重新建立阶段准入。
