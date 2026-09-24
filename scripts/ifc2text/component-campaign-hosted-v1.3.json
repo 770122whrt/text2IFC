@@ -1,0 +1,32 @@
+{
+  "schema_version": "text2ifc/component-campaign/1.0",
+  "output": "dataset/processed/experiments/component-v26-hosted-loop-20260925-04",
+  "description_version": "1.1",
+  "bim_json_schema_version": "bim-json/2.6",
+  "design_brief_schema": "text2ifc/design-brief/2.9",
+  "generation_strategy": "legacy_full",
+  "brief_output_tokens": 65536,
+  "generation_output_tokens": 65536,
+  "provider_input_tokens": 131072,
+  "provider_timeout_seconds": 560,
+  "max_calls_per_case": 5,
+  "max_tokens_per_case": 500000,
+  "budget_authority": "dataset/processed/experiments/ifc2text-geometry-debug-20260922/audit-and-roundtrip/authorization.json",
+  "cases": [
+    {
+      "id": "hxp-hosted-window",
+      "source": "dataset/processed/experiments/component-v26-hosted-inputs-20260925-01/hxp-hosted-window/input.ifc",
+      "source_sha256": "4bde4dc30db5f5ca700ba50190e51959201e41b50542aa8b5706e9ce7f704f0e",
+      "text": "dataset/processed/experiments/component-v26-hosted-inputs-20260925-01/hxp-hosted-window/description/design-description-deterministic.md",
+      "text_sha256": "41f75c8e8fafac7e89ae271f9dbb715ce7389529d3e3a76440124a8e301fe9b2",
+      "scope": "native filling with complete host wall and its openings; hosted installation test",
+      "role": "revealed development scene, first hosted text loop"
+    }
+  ],
+  "linear_tolerance_mm": 1.0,
+  "full_preflight": false,
+  "budget_allocation": {
+    "path": "dataset/processed/experiments/component-v26-budget-20260925-01/allocation.json",
+    "sha256": "a43b679200c897fcb2c962644a3fab5236bb900a556411f5090bf63a67f748c8"
+  }
+}

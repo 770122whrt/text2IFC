@@ -458,6 +458,10 @@ def _opening_fill_gate(
             if entity_id not in standalone and graph.explicit_host_wall_for_opening_element(entity_id)
         ]
         for entity_id in elements_with_fill:
+            expected_record = expected_by_candidate.get(entity_id)
+            component_expectations = [entry for entry in _records(expected_facts.get('semantic_expectations'))
+                if entry.get('kind') == 'component_geometry' and isinstance(expected_record, Mapping)
+                and entry.get('entity_id') == expected_record.get('id')]
             opening_id = graph.explicit_fill_opening_for(entity_id)
             host_wall = (
                 graph.explicit_host_wall_for_opening(opening_id)
@@ -470,7 +474,8 @@ def _opening_fill_gate(
                     element_id=entity_id,
                     opening_id=opening_id,
                     host_wall=host_wall,
-                    expected_record=expected_by_candidate.get(entity_id),
+                    expected_record=expected_record,
+                    component_geometry=component_expectations[0].get('value') if len(component_expectations) == 1 else None,
                 )
             )
         if len(elements_with_fill) < expected_count:
@@ -511,6 +516,7 @@ def _opening_fill_geometry_issues(
     opening_id: str | None,
     host_wall: str | None,
     expected_record: Mapping[str, Any] | None = None,
+    component_geometry: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     if not opening_id or not host_wall:
         return []
@@ -640,7 +646,12 @@ def _opening_fill_geometry_issues(
                 "expected_relative_to": opening_id,
             }
         )
-    if element_relative_to == opening_id and element_ref and element_ref != [1, 0, 0]:
+    expected_pose = expected_record.get('placement') if isinstance(expected_record, Mapping) else None
+    if isinstance(component_geometry, Mapping) and isinstance(expected_pose, Mapping):
+        from .component_world_placement import component_world_placement_issues
+        issues.extend(component_world_placement_issues(
+            {'entities': list(graph.entities.values())}, element_id, expected_pose, component_geometry))
+    elif element_relative_to == opening_id and element_ref and element_ref != [1, 0, 0]:
         issues.append(
             {
                 "code": "FILLING_RELATIVE_ROTATION_MISMATCH",

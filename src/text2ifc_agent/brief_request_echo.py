@@ -1,8 +1,8 @@
-"""Restore a redundant model echo only for repeated empty-line differences.
+"""Resolve a versioned saved-input reference or an empty-line-only echo drift.
 
 The conversation remains authoritative. No parameter, nonempty line, indentation,
-single line break, or paragraph boundary is normalized. Fenced inputs remain
-strict because blank lines may be part of literal content.
+single line break, or paragraph boundary is normalized. Literal echoes of fenced
+inputs remain strict; the explicit reference restores any saved input exactly.
 """
 import copy
 import hashlib

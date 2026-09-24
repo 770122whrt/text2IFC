@@ -39,8 +39,11 @@ def hosted_document(cls):
 
 
 @pytest.mark.parametrize('cls',['IfcDoor','IfcWindow'])
-def test_hosted_text_loop_preserves_cut_filling_geometry_and_world_placement(tmp_path,cls):
+@pytest.mark.parametrize('reverse_frame', [False, True])
+def test_hosted_text_loop_preserves_cut_filling_geometry_and_world_placement(tmp_path,cls,reverse_frame):
     candidate,label,storey=hosted_document(cls)
+    if reverse_frame:
+        candidate['entities'][-1]['attributes']['ObjectPlacement'].update(origin=[425,-100,0],ref_direction=[-1,0,0])
     source=tmp_path/'source.ifc';result=compile_document(candidate,source);assert result.success,result
     before=source.read_bytes()
     prepare_compact(source,tmp_path/'description',description_version='1.1',containment_policy='preserve_recorded')
@@ -51,7 +54,9 @@ def test_hosted_text_loop_preserves_cut_filling_geometry_and_world_placement(tmp
     facts['walls']=[{'id':'W001','ifc_class':'IfcWall','storey':storey,'height_mm':3000,'thickness_mm':200}]
     facts['openings']=[{'id':'O001','ifc_class':'IfcOpeningElement','storey':storey,'host_wall':'W001'}]
     facts['doors' if cls=='IfcDoor' else 'windows']=[{'id':label,'ifc_class':cls,'storey':storey,'width_mm':850,'height_mm':1100,
-        'installation':'hosted','host_wall':'W001','opening':'O001','placement':position((-425,100,500))}]
+        'installation':'hosted','host_wall':'W001','opening':'O001',
+        'placement':{**position((425,-100,500) if reverse_frame else (-425,100,500)),
+                     'ref_direction':[-1,0,0] if reverse_frame else [1,0,0]}}]
     facts['semantic_requirements'][0]['entity_id']=label
     audit={'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
            'deterministic_gate_status':'passed','findings':[],'evidence_paths':['generator/candidate.json']}

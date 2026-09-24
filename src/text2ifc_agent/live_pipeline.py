@@ -1291,6 +1291,7 @@ def run_audit_report_stage(
     )
     deterministic_gates = {
         "gate_summary_passed": gate_summary.get("overall_status") == "passed",
+        "gate_results": gate_summary.get("gates", []),
         "gate_summary_binding": not gate_summary_binding_issues,
         "gate_summary_binding_feedback": {
             "valid": not gate_summary_binding_issues,
