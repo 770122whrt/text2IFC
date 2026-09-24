@@ -82,3 +82,7 @@ def load_schema_v25() -> dict[str, Any]:
 
 def load_draft_schema() -> dict[str, Any]:
     return _load_schema_path(DRAFT_SCHEMA_PATH)
+
+
+def load_schema_v26() -> dict[str, Any]:
+    return _load_schema_path(SCHEMA_V2_PATH.parent.parent / "2.6" / "schema.json")

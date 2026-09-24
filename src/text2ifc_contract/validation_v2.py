@@ -208,6 +208,9 @@ def _semantic_issues(document: dict[str, Any], *, extended=False) -> list[Valida
 
 
 def validate_v2_document(document: Any) -> list[ValidationIssue]:
+    if isinstance(document, dict) and document.get("schema_version") == "bim-json/2.6":
+        from .validation_v26 import validate_v26_document
+        return validate_v26_document(document)
     if isinstance(document, dict) and document.get("schema_version") == "bim-json/2.5":
         from .validation_v25 import validate_v25_document
         return validate_v25_document(document)

@@ -362,7 +362,10 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
         entity = entities[record["id"]]
         representation = record["attributes"].get("Representation")
         if representation is not None:
-            if representation.get("kind") == "basic_railing":
+            if representation.get("kind") == "component_geometry":
+                from .component_geometry import add_component_geometry
+                add_component_geometry(ifc_file, entity, representation, body_context)
+            elif representation.get("kind") == "basic_railing":
                 from .basic_railing import add_basic_railing_geometry
                 add_basic_railing_geometry(ifc_file, entity, representation, body_context)
             elif representation.get("kind") == "basic_filling":

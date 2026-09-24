@@ -195,7 +195,7 @@ def verify_document_semantics(ifc_file_or_path, document) -> tuple[IfcValidation
         # Compiler-owned provenance is checked by its own geometry/presentation contracts.
         for name in ("Pset_text2IFCBasicFilling", "Pset_text2IFCAppearance"):
             actual_properties.pop(name, None)
-        if document.get('schema_version') in {'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5'} and rep.get('kind') == 'basic_railing':
+        if document.get('schema_version') in {'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} and rep.get('kind') == 'basic_railing':
             # The dedicated verifier checks this construction metadata and every
             # actual solid; it is not an authored performance property set.
             actual_properties.pop('Pset_text2IFCBasicRailing', None)

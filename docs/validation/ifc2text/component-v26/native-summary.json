@@ -1,0 +1,1324 @@
+{
+  "scope": "offline native component diagnostic, not IFC->text->IFC",
+  "counts": {
+    "passed": 30,
+    "unsupported": 6
+  },
+  "source_bytes_unchanged": true,
+  "selection": {
+    "scope": "native deterministic single-product diagnostic; zero Provider calls",
+    "sources": [
+      {
+        "path": "dataset\\external\\bimnet\\hxp.ifc",
+        "sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+        "ifc_schema": "IFC2X3",
+        "selection": [
+          "1N$DqFwUP2Cfj_f4x$_L4e",
+          "1N$DqFwUP2Cfj_f4x$_LS$",
+          "1N$DqFwUP2Cfj_f4x$_LQr",
+          "37teTCsZT7Qe4JdVA1Otbq",
+          "37teTCsZT7Qe4JdVA1Otue",
+          "1N$DqFwUP2Cfj_f4x$_QPI",
+          "3aFh60A8f2thPpFR0TM97Q",
+          "3aFh60A8f2thPpFR0TM99j",
+          "1wrfKpDNf4oA2LKpTOnY3Q",
+          "1wrfKpDNf4oA2LKpTOnZcG"
+        ]
+      },
+      {
+        "path": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+        "sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+        "ifc_schema": "IFC2X3",
+        "selection": [
+          "0ZBert7zf3GhThbO52NKQt",
+          "0ZBert7zf3GhThbO52NKOd",
+          "0ZBert7zf3GhThbO52NKVp",
+          "0ZBert7zf3GhThbO52NKVB",
+          "0ZBert7zf3GhThbO52NKUF",
+          "0ZBert7zf3GhThbO52NKT1",
+          "0ZBert7zf3GhThbO52NRlN",
+          "0ZBert7zf3GhThbO52NRlK",
+          "0ZBert7zf3GhThbO52NRlL",
+          "0ZBert7zf3GhThbO52NRlQ",
+          "0ZBert7zf3GhThbO52NRlR",
+          "0ZBert7zf3GhThbO52NRlO",
+          "0ZBert7zf3GhThbO52NRky",
+          "0ZBert7zf3GhThbO52NRWE",
+          "0ZBert7zf3GhThbO52NRc2",
+          "0ZBert7zf3GhThbO52NRaa",
+          "0ZBert7zf3GhThbO52NRwc",
+          "0ZBert7zf3GhThbO52NRuu",
+          "0ZBert7zf3GhThbO52NR$u",
+          "0ZBert7zf3GhThbO52NR_2",
+          "0ZBert7zf3GhThbO52NRz8",
+          "0ZBert7zf3GhThbO52NKFT",
+          "0ZBert7zf3GhThbO52NKCH",
+          "0ZBert7zf3GhThbO52NK5b",
+          "0ZBert7zf3GhThbO52NK4z",
+          "0ZBert7zf3GhThbO52NKRs"
+        ]
+      }
+    ],
+    "linear_tolerance_mm": 1.0,
+    "volume_relative_tolerance": 1e-06,
+    "area_relative_tolerance": 1e-06,
+    "not_evaluated": [
+      "public text chain",
+      "Brief",
+      "LLM",
+      "host installation",
+      "whole-building",
+      "materials",
+      "physical part materials"
+    ]
+  },
+  "cases": [
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "1N$DqFwUP2Cfj_f4x$_L4e",
+      "name": "单扇百叶窗:高1100宽850:28872",
+      "ifc_class": "IfcWindow",
+      "case": "31f8f5a05b-001",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 2.2737367544323206e-13,
+      "volume_relative_error": 6.513918744629548e-14,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 48840000.000144355,
+        "area_mm2": 3852800.0000071684,
+        "mesh_vertices": 128,
+        "mesh_triangles": 200
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 48840000.00014117,
+        "area_mm2": 3852800.0000071684,
+        "mesh_vertices": 128,
+        "mesh_triangles": 200
+      }
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "1N$DqFwUP2Cfj_f4x$_LS$",
+      "name": "单扇百叶窗:高1100宽850:30431",
+      "ifc_class": "IfcWindow",
+      "case": "31f8f5a05b-002",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.0419570787589327e-12,
+      "volume_relative_error": 1.6564181737781637e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 38368000.00014469,
+        "area_mm2": 3329200.00000716,
+        "mesh_vertices": 128,
+        "mesh_triangles": 200
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 38368000.000138335,
+        "area_mm2": 3329200.00000716,
+        "mesh_vertices": 128,
+        "mesh_triangles": 200
+      }
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "1N$DqFwUP2Cfj_f4x$_LQr",
+      "name": "单扇百叶窗:高1100宽600:30549",
+      "ifc_class": "IfcWindow",
+      "case": "31f8f5a05b-003",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.112693272687351e-13,
+      "volume_relative_error": 3.7951749381404617e-13,
+      "area_relative_error": 4.421323243375744e-16,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 21712680.639262732,
+        "area_mm2": 2106434.031962794,
+        "mesh_vertices": 128,
+        "mesh_triangles": 200
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 21712680.63925449,
+        "area_mm2": 2106434.0319627947,
+        "mesh_vertices": 128,
+        "mesh_triangles": 200
+      }
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "37teTCsZT7Qe4JdVA1Otbq",
+      "name": "平开门-玻璃-双扇:宽1600高2000:25214",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-004",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 0.0,
+      "volume_relative_error": 0.0,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 74389999.99998406,
+        "area_mm2": 8568399.999994164,
+        "mesh_vertices": 64,
+        "mesh_triangles": 116
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 74389999.99998406,
+        "area_mm2": 8568399.999994164,
+        "mesh_vertices": 64,
+        "mesh_triangles": 116
+      }
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "37teTCsZT7Qe4JdVA1Otue",
+      "name": "平开门-玻璃-双扇:宽1600高2000:25890",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-005",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 4.547473508864641e-13,
+      "volume_relative_error": 5.608717750071547e-15,
+      "area_relative_error": 4.3477082051076635e-16,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 74389999.99998431,
+        "area_mm2": 8568399.999994166,
+        "mesh_vertices": 64,
+        "mesh_triangles": 116
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 74389999.99998389,
+        "area_mm2": 8568399.999994162,
+        "mesh_vertices": 64,
+        "mesh_triangles": 116
+      }
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "1N$DqFwUP2Cfj_f4x$_QPI",
+      "name": "单扇木门:宽600高2050:34738",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-006",
+      "status": "unsupported",
+      "reasons": [
+        {
+          "source_item_id": 3239,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3315,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3372,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3413,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        }
+      ]
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "3aFh60A8f2thPpFR0TM97Q",
+      "name": "单扇木门:宽600高2050:35240",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-007",
+      "status": "unsupported",
+      "reasons": [
+        {
+          "source_item_id": 3638,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3714,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3771,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3812,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        }
+      ]
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "3aFh60A8f2thPpFR0TM99j",
+      "name": "单扇木门:宽700高2050:35359",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-008",
+      "status": "unsupported",
+      "reasons": [
+        {
+          "source_item_id": 4020,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 4096,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 4153,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 4194,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        }
+      ]
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "1wrfKpDNf4oA2LKpTOnY3Q",
+      "name": "单扇木门:宽600高2050:35806",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-009",
+      "status": "unsupported",
+      "reasons": [
+        {
+          "source_item_id": 3239,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3315,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3372,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 3413,
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "reason": "Unsupported profile curve IfcCompositeCurve; straight closed polylines are required.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        }
+      ]
+    },
+    {
+      "source": "dataset\\external\\bimnet\\hxp.ifc",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "global_id": "1wrfKpDNf4oA2LKpTOnZcG",
+      "name": "推拉门-单扇:宽300高2050:37524",
+      "ifc_class": "IfcDoor",
+      "case": "31f8f5a05b-010",
+      "status": "unsupported",
+      "reasons": [
+        {
+          "source_item_id": 9326,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9338,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9344,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9350,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9356,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9362,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9368,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 9380,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        }
+      ]
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKQt",
+      "name": "M_Fixed:0915 x 1830mm:359493",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-001",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189928729894997e-12,
+      "volume_relative_error": 5.310968127887609e-16,
+      "area_relative_error": 4.394752981586974e-16,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000004165,
+        "area_mm2": 6357508.0000003,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000004135,
+        "area_mm2": 6357508.000000303,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKOd",
+      "name": "M_Fixed:0915 x 1830mm:359637",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-002",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189894035458565e-12,
+      "volume_relative_error": 5.599088148828722e-13,
+      "area_relative_error": 1.0254423623702948e-15,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114669.999972,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00000342,
+        "area_mm2": 6357508.000000301,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKVp",
+      "name": "M_Fixed:0915 x 1830mm:359681",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-003",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.094947017729282e-13,
+      "volume_relative_error": 9.639407152116439e-14,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00000168,
+        "area_mm2": 6357508.000000299,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000007086,
+        "area_mm2": 6357508.000000299,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKVB",
+      "name": "M_Fixed:0915 x 1830mm:359737",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-004",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 3.552713678800501e-15,
+      "volume_relative_error": 0.0,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00000455,
+        "area_mm2": 6357508.000000301,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00000455,
+        "area_mm2": 6357508.000000301,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKUF",
+      "name": "M_Fixed:0915 x 1830mm:359805",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-005",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.094947017729282e-13,
+      "volume_relative_error": 1.0635213676094676e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00000555,
+        "area_mm2": 6357508.000000297,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00001152,
+        "area_mm2": 6357508.000000297,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKT1",
+      "name": "M_Fixed:0915 x 1830mm:359859",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-006",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189894035458565e-12,
+      "volume_relative_error": 3.7349383359350627e-13,
+      "area_relative_error": 8.789505963173957e-16,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00003269,
+        "area_mm2": 6357508.000000292,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000011735,
+        "area_mm2": 6357508.000000298,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRlN",
+      "name": "M_Fixed:0915 x 1830mm:360741",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-007",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 3.552713678800501e-15,
+      "volume_relative_error": 1.327742031971814e-16,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.0000079,
+        "area_mm2": 6357508.000000303,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000007905,
+        "area_mm2": 6357508.000000303,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRlK",
+      "name": "M_Fixed:0915 x 1830mm:360742",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-008",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.094947017729282e-13,
+      "volume_relative_error": 3.372464761208198e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000011384,
+        "area_mm2": 6357508.000000298,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00003031,
+        "area_mm2": 6357508.000000298,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRlL",
+      "name": "M_Fixed:0915 x 1830mm:360743",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-009",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.374856803373542e-13,
+      "volume_relative_error": 2.0633111176844925e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114669.99999992,
+        "area_mm2": 6357508.0000003,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000011496,
+        "area_mm2": 6357508.0000003,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRlQ",
+      "name": "M_Fixed:0915 x 1830mm:360744",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-010",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 2.2740142932498854e-13,
+      "volume_relative_error": 5.576516534281975e-15,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000004314,
+        "area_mm2": 6357508.000000301,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00000463,
+        "area_mm2": 6357508.000000301,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRlR",
+      "name": "M_Fixed:0915 x 1830mm:360745",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-011",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 4.547473508864641e-13,
+      "volume_relative_error": 3.3273215321207774e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00001782,
+        "area_mm2": 6357508.000000298,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114669.99999915,
+        "area_mm2": 6357508.000000298,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRlO",
+      "name": "M_Fixed:0915 x 1830mm:360746",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-012",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189894035458565e-12,
+      "volume_relative_error": 1.0165192996773442e-12,
+      "area_relative_error": 1.1719341284231944e-15,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000023164,
+        "area_mm2": 6357508.000000292,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114669.99996612,
+        "area_mm2": 6357508.0000003,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRky",
+      "name": "M_Fixed:0915 x 1830mm:360782",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-013",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 0.0,
+      "volume_relative_error": 0.0,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114669.99996184,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114669.99996184,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRWE",
+      "name": "M_Fixed:0915 x 1830mm:361212",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-014",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189894035458565e-12,
+      "volume_relative_error": 2.4480907585495833e-12,
+      "area_relative_error": 1.171934128423195e-15,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000008985,
+        "area_mm2": 6357508.000000289,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00014636,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRc2",
+      "name": "M_Fixed:0915 x 1830mm:361328",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-015",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.094947017729282e-13,
+      "volume_relative_error": 3.576937034131364e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000018924,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000039,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRaa",
+      "name": "M_Fixed:0915 x 1830mm:361430",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-016",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 3.552713678800501e-15,
+      "volume_relative_error": 5.310968127887599e-16,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00000427,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.0000043,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRwc",
+      "name": "M_Fixed:0915 x 1830mm:361556",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-017",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189928729894997e-12,
+      "volume_relative_error": 4.7002067931806725e-14,
+      "area_relative_error": 2.929835321057985e-16,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00000252,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114669.99999988,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRuu",
+      "name": "M_Fixed:0915 x 1830mm:361674",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-018",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189928729894997e-12,
+      "volume_relative_error": 1.7180981893714307e-13,
+      "area_relative_error": 2.929835321057985e-16,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.00001106,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.000001416,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NR$u",
+      "name": "M_Fixed:0915 x 1830mm:361738",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-019",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 3.552713678800501e-15,
+      "volume_relative_error": 7.966452191831418e-16,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114670.000004135,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00000418,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NR_2",
+      "name": "M_Fixed:0915 x 1830mm:361840",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-020",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.094947017729282e-13,
+      "volume_relative_error": 5.11180682309372e-13,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114669.99998335,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114670.00001203,
+        "area_mm2": 6357508.000000294,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NRz8",
+      "name": "M_Fixed:0915 x 1830mm:361914",
+      "ifc_class": "IfcWindow",
+      "case": "9f180a7148-021",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 1.8189894035458565e-12,
+      "volume_relative_error": 2.027462082825377e-12,
+      "area_relative_error": 1.171934128423195e-15,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 56114669.999885656,
+        "area_mm2": 6357508.000000289,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 56114669.999771886,
+        "area_mm2": 6357508.000000296,
+        "mesh_vertices": 56,
+        "mesh_triangles": 108
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKFT",
+      "name": "M_Door-Interior-Double-Full Glass-Wood:1500 x 2000mm:358703",
+      "ifc_class": "IfcDoor",
+      "case": "9f180a7148-022",
+      "status": "unsupported",
+      "reasons": [
+        {
+          "source_item_id": 10650,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10662,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10668,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10674,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10680,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10692,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10698,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10704,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10710,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10716,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10722,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10728,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10734,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10740,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10746,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10752,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10758,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10764,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10770,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10776,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10782,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10788,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10794,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10800,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10806,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10812,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10818,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10824,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10830,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10836,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10842,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10848,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10854,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10860,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10866,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10872,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10878,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10884,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        },
+        {
+          "source_item_id": 10896,
+          "ifc_class": "IfcFacetedBrep",
+          "reason": "IfcFacetedBrep is outside native straight-extrusion support.",
+          "impact": "The product has no complete supported reconstruction; no simplified replacement is emitted."
+        }
+      ]
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKCH",
+      "name": "M_Single-Flush:Outside door:358883",
+      "ifc_class": "IfcDoor",
+      "case": "9f180a7148-023",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 0.0,
+      "volume_relative_error": 0.0,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 119856110.00000109,
+        "area_mm2": 6379157.999999965,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 119856110.00000109,
+        "area_mm2": 6379157.999999965,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NK5b",
+      "name": "M_Single-Flush:Outside door:359319",
+      "ifc_class": "IfcDoor",
+      "case": "9f180a7148-024",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 0.0,
+      "volume_relative_error": 0.0,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 119856110.00000122,
+        "area_mm2": 6379157.999999959,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 119856110.00000122,
+        "area_mm2": 6379157.999999959,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NK4z",
+      "name": "M_Single-Flush:Inside Door:359375",
+      "ifc_class": "IfcDoor",
+      "case": "9f180a7148-025",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 2.2737367544323206e-13,
+      "volume_relative_error": 9.200081066745139e-15,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 119856110.00000043,
+        "area_mm2": 6379157.999999965,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 119856110.00000153,
+        "area_mm2": 6379157.999999965,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      }
+    },
+    {
+      "source": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "global_id": "0ZBert7zf3GhThbO52NKRs",
+      "name": "M_Single-Flush:Inside Door:359428",
+      "ifc_class": "IfcDoor",
+      "case": "9f180a7148-026",
+      "status": "passed",
+      "symmetric_vertex_distance_mm": 9.374856803373542e-13,
+      "volume_relative_error": 2.4367782284893102e-14,
+      "area_relative_error": 0.0,
+      "passed_native_diagnostic": true,
+      "limits": "Full-product tessellated vertices/area/volume, not exact surface Hausdorff or installation validation.",
+      "source_geometry": {
+        "volume_mm3": 119856109.9999976,
+        "area_mm2": 6379157.999999967,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      },
+      "rebuilt_geometry": {
+        "volume_mm3": 119856109.99999468,
+        "area_mm2": 6379157.999999967,
+        "mesh_vertices": 40,
+        "mesh_triangles": 68
+      }
+    }
+  ],
+  "evidence_directory": "dataset/processed/experiments/component-v26-native-20260924-02",
+  "metadata_recovery": {
+    "from": "summary.json",
+    "sha256": "eec91120d63ff11c8d0880453a7419b44eb5dc2798a63a3d7f490748fd69c686",
+    "change": "Recover source path overwritten by source mesh metrics in runner summary. No source, output IFC, per-case measurement or status changed."
+  },
+  "prior_failed_batch": "dataset/processed/experiments/component-v26-native-20260924-01",
+  "capacity_probe": [
+    {
+      "expanded_parts": 128,
+      "solids": 512,
+      "elapsed_seconds": 8.406886199984001,
+      "success": true,
+      "issues": []
+    },
+    {
+      "expanded_parts": 512,
+      "solids": 2048,
+      "elapsed_seconds": 25.8148807999969,
+      "success": true,
+      "issues": []
+    }
+  ]
+}

@@ -37,7 +37,7 @@ def compile_document(
     appearance_seed: str | None = None,
     semantic_expectations=None,
 ) -> CompilationResult:
-    if document.get("schema_version") in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5"}:
+    if document.get("schema_version") in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
         input_issues = tuple(validate_v2_document(document))
         builder = build_ifc_v2
     elif document.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5'}:
@@ -56,10 +56,19 @@ def compile_document(
         return CompilationResult(input_issues=input_issues)
 
     output = Path(output_path).resolve()
-    bootstrap = builder(document)
-    if document.get("schema_version") in {"bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5"}:
+    try:
+        bootstrap = builder(document)
+    except (ValueError, RuntimeError, TypeError, ArithmeticError) as exc:
+        return CompilationResult(ifc_issues=(IfcValidationIssue(
+            code="IFC_BUILD_ERROR", entity="", attribute="Representation",
+            message=f"{type(exc).__name__}: {exc}",
+        ),))
+    if document.get("schema_version") in {"bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
         from text2ifc_presentation.generation import apply_coordinated_appearance
         apply_coordinated_appearance(bootstrap.ifc_file, document, bootstrap.body_context)
+        if document.get("schema_version") == "bim-json/2.6":
+            from .component_geometry import apply_component_appearance
+            apply_component_appearance(bootstrap.ifc_file, document)
     if appearance_profile is not None:
         seed = appearance_seed
         if seed is None:
@@ -96,14 +105,17 @@ def compile_document(
 
         from .semantic_verification import verify_document_semantics, verify_semantic_expectations
         semantic_issues = ()
-        if document.get("schema_version") in {"bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5"}:
+        if document.get("schema_version") in {"bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
             semantic_issues += verify_document_semantics(temporary_path, document)
             import ifcopenshell
             from text2ifc_presentation.generation import verify_appearance
             semantic_issues += tuple(verify_appearance(ifcopenshell.open(str(temporary_path)), document))
             from .basic_filling import verify_basic_filling
             semantic_issues += tuple(verify_basic_filling(ifcopenshell.open(str(temporary_path)), document))
-            if document.get("schema_version") in {"bim-json/2.3", "bim-json/2.4", "bim-json/2.5"}:
+            if document.get("schema_version") == "bim-json/2.6":
+                from .component_geometry import verify_components
+                semantic_issues += verify_components(ifcopenshell.open(str(temporary_path)), document)
+            if document.get("schema_version") in {"bim-json/2.3", "bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
                 from .basic_railing import verify_basic_railing
                 semantic_issues += verify_basic_railing(ifcopenshell.open(str(temporary_path)), document)
         if semantic_expectations:

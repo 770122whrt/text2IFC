@@ -111,7 +111,7 @@ def validate_basic_filling_document(document: Mapping[str, Any]) -> list[Validat
             continue
         opening_rep = records[opening_id].get("attributes", {}).get("Representation", {})
         host_rep = host.get("attributes", {}).get("Representation", {})
-        if document.get("schema_version") in {"bim-json/2.4", "bim-json/2.5"}:
+        if document.get("schema_version") in {"bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
             from .polygon_wall import filling_fit_messages
             try:
                 for message in filling_fit_messages(document, host_id, opening_id, record["id"]):
