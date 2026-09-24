@@ -40,7 +40,7 @@ def compile_document(
     if document.get("schema_version") in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", "bim-json/2.3", "bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
         input_issues = tuple(validate_v2_document(document))
         builder = build_ifc_v2
-    elif document.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5'}:
+    elif document.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5', 'bim-json-draft/1.6'}:
         input_issues = (
             ValidationIssue(
                 "DRAFT_NOT_COMPILABLE",

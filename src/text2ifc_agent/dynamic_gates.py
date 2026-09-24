@@ -427,8 +427,6 @@ def _opening_fill_gate(
     issues: list[dict[str, Any]] = []
     for collection, expected_count in sorted(expected.items()):
         ifc_class = _CLASS_BY_COLLECTION[collection]
-        if expected_count <= 0:
-            continue
         expected_by_candidate: dict[str, Mapping[str, Any]] = {}
         for record in _records(expected_facts.get(collection)):
             match = _resolve_expected_entity(
@@ -440,15 +438,24 @@ def _opening_fill_gate(
             if match is not None:
                 expected_by_candidate[match["candidate_id"]] = record
         actual_elements = graph.ids_by_class(ifc_class)
+        standalone = {entity_id for entity_id, record in expected_by_candidate.items()
+                      if record.get('installation') == 'standalone'}
+        for entity_id in standalone:
+            if graph.explicit_fill_opening_for(entity_id):
+                issues.append({'code': 'STANDALONE_FILL_HAS_OPENING',
+                               'path': f'/{collection}/{entity_id}',
+                               'message': 'The explicitly standalone product must not gain an opening/host.'})
+        if expected_count <= 0:
+            continue
         elements_with_fill = [
             entity_id
             for entity_id in actual_elements
-            if graph.explicit_fill_opening_for(entity_id)
+            if entity_id not in standalone and graph.explicit_fill_opening_for(entity_id)
         ]
         elements_with_void = [
             entity_id
             for entity_id in actual_elements
-            if graph.explicit_host_wall_for_opening_element(entity_id)
+            if entity_id not in standalone and graph.explicit_host_wall_for_opening_element(entity_id)
         ]
         for entity_id in elements_with_fill:
             opening_id = graph.explicit_fill_opening_for(entity_id)

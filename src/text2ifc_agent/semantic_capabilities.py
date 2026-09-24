@@ -124,3 +124,17 @@ def build_semantic_capability_profile_v25() -> dict[str, Any]:
     profile['basic_railing']['scope'] = 'straight horizontal or signed slope; IfcRailing occurrence; single material or material_list without part assignment, and whole appearance'
     profile['profile_hash'] = _profile_hash(profile)
     return profile
+
+
+def build_semantic_capability_profile_v26() -> dict[str, Any]:
+    profile = build_semantic_capability_profile_v25()
+    profile['profile_id'] = 'text2ifc/semantic-capabilities/ifc2x3-bim-json-2.6/1.0'
+    profile['structural_truth'] = 'schemas/bim-json/2.6/schema.json'
+    profile['component_geometry'] = {
+        'products': ['IfcDoor', 'IfcWindow'], 'part_products': False,
+        'profiles': ['rectangle', 'circle', 'polygon_with_optional_holes'],
+        'construction': 'Straight extrusion; explicit part/solid placement; finite translated repetition.',
+        'display': 'Per-part RGB and transparency; no physical part-material assignment.',
+        'unsupported': 'BRep, arbitrary curves, scaled/mirrored mapping and incomplete parameters require clarification/Draft; never simplify.'}
+    profile['profile_hash'] = _profile_hash(profile)
+    return profile

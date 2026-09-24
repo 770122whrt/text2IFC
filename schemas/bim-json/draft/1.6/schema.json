@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2ifc.local/schemas/bim-json/draft/1.6/schema.json",
+  "title": "text2IFC BIM JSON Draft Envelope 1.5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "draft_version",
+    "target_schema_version",
+    "partial_document",
+    "missing_facts",
+    "losses",
+    "clarification_targets",
+    "provenance"
+  ],
+  "properties": {
+    "draft_version": {
+      "const": "bim-json-draft/1.6"
+    },
+    "target_schema_version": {
+      "const": "bim-json/2.6"
+    },
+    "partial_document": {
+      "type": "object",
+      "description": "A deliberately incomplete BIM JSON 2.5 document; omissions must be listed in missing_facts or losses."
+    },
+    "missing_facts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/missingFact"
+      }
+    },
+    "losses": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/loss"
+      }
+    },
+    "clarification_targets": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/clarification"
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "minProperties": 1
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "missingFact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entity_id",
+        "path",
+        "code",
+        "message"
+      ],
+      "properties": {
+        "entity_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "code": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "loss": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_ref",
+        "path",
+        "kind",
+        "message"
+      ],
+      "properties": {
+        "source_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "kind": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "message": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_item_class": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_capability": {
+          "enum": [
+            "extract-only",
+            "compiler-only",
+            "unsupported"
+          ]
+        },
+        "substitution": {
+          "enum": [
+            "none"
+          ]
+        }
+      }
+    },
+    "clarification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entity_id",
+        "path",
+        "question"
+      ],
+      "properties": {
+        "entity_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "question": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    }
+  }
+}

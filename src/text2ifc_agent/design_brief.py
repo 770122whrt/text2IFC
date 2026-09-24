@@ -18,6 +18,7 @@ from text2ifc_contract.validation import (
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DESIGN_BRIEF_SCHEMA_PATHS = {
+    "text2ifc/design-brief/2.9": PROJECT_ROOT / "schemas/agent/design-brief/2.9/schema.json",
     "text2ifc/design-brief/2.8": PROJECT_ROOT / "schemas/agent/design-brief/2.8/schema.json",
     "text2ifc/design-brief/2.7": PROJECT_ROOT / "schemas/agent/design-brief/2.7/schema.json",
     "text2ifc/design-brief/2.4": PROJECT_ROOT / 'schemas/agent/design-brief/2.4/schema.json',
@@ -78,27 +79,32 @@ def validate_design_brief(
         for error in validator.iter_errors(document)
         for issue in _normalize_error(error)
     ]
-    if schema_version in {"text2ifc/design-brief/2.0", "text2ifc/design-brief/2.1", "text2ifc/design-brief/2.2", "text2ifc/design-brief/2.3", "text2ifc/design-brief/2.4", "text2ifc/design-brief/2.5", 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and isinstance(document, dict):
+    if schema_version in {"text2ifc/design-brief/2.0", "text2ifc/design-brief/2.1", "text2ifc/design-brief/2.2", "text2ifc/design-brief/2.3", "text2ifc/design-brief/2.4", "text2ifc/design-brief/2.5", 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'} and isinstance(document, dict):
         issues.extend(_validate_v2_semantics(document, evidence_catalog or []))
-    if schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and not issues:
+    if schema_version in {'text2ifc/design-brief/2.1', 'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'} and not issues:
         from .semantic_requirements import project_semantic_requirements
         if document.get('status') == 'ready':
             issues.extend(ValidationIssue(**i) for i in project_semantic_requirements(document)['issues'])
-    if schema_version in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and conversation is not None and not issues:
+    if schema_version in {'text2ifc/design-brief/2.2', 'text2ifc/design-brief/2.3', 'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'} and conversation is not None and not issues:
         user_turns = {t.get('turn_id') for t in conversation if t.get('role') == 'user'}
         for kind, entry in document['known_facts']['semantic_review'].items():
             if not set(entry['source_turns']).issubset(user_turns):
                 issues.append(ValidationIssue('SEMANTIC_AUTHORITY_SOURCE_INVALID',
                     f'/known_facts/semantic_review/{kind}/source_turns',
                     '语义检查只能引用本次对话中真实存在的用户轮次。'))
-    if schema_version in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and not issues:
+    if schema_version in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'} and not issues:
         from .brief_plan_constraints import validate_plan_constraints
         issues.extend(validate_plan_constraints(document, conversation))
+    if schema_version == 'text2ifc/design-brief/2.9' and not issues:
+        from .component_requirements import public_component_coverage
+        issues.extend(ValidationIssue(**i) for i in public_component_coverage(document))
     return _sort_issues(issues)
 
 
 def design_brief_template_id(schema_version: str, *, design_review_enabled: bool) -> str:
     """Preserve released contracts while explicitly selecting the stronger one."""
+    if schema_version == 'text2ifc/design-brief/2.9':
+        return 'design-brief.v2.29' if design_review_enabled else 'design-brief.v2.28'
     if schema_version == 'text2ifc/design-brief/2.8':
         return 'design-brief.v2.27' if design_review_enabled else 'design-brief.v2.26'
     if schema_version == 'text2ifc/design-brief/2.7':

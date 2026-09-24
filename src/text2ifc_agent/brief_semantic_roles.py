@@ -81,12 +81,12 @@ def role_issue(row,identities,*,railing_enabled=False):
     return None
 
 def filter_roles(brief,expectations):
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:return expectations,[]
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'}:return expectations,[]
     identities,issues=role_index(brief);valid=[]
     bindings={}
     for row in expectations:
-        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'})
-        if brief.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and row['kind'] == 'appearance' and identities.get(row['entity_id'], {}).get('ifc_class') == 'IfcStair':
+        issue=role_issue(row,identities,railing_enabled=brief.get('schema_version')in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'})
+        if brief.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'} and row['kind'] == 'appearance' and identities.get(row['entity_id'], {}).get('ifc_class') == 'IfcStair':
             from .cross_storey_identity import stair_flight_ids
             flights = stair_flight_ids(identities[row['entity_id']]['record'], row['entity_id'])
             issue = {'code': 'SEMANTIC_APPEARANCE_TARGET_ROLE', 'path': row['source_path'],
@@ -113,7 +113,7 @@ def filter_roles(brief,expectations):
 
 def removable_semantic_paths(brief):
     """Explicit products/types may lose semantic leaves only, never identity data."""
-    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'}:return []
+    if brief.get('schema_version') not in {'text2ifc/design-brief/2.4', 'text2ifc/design-brief/2.5', 'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'}:return []
     from .semantic_requirements import SEMANTIC_FIELDS
     identities,issues=role_index(brief)
     if issues:return []
@@ -158,7 +158,7 @@ def recoverable_value_loss(before,after):
         return None
     for record in records:
         identity=record.get('entity_id',record.get('id'))
-        if before.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} and 'appearance' in record and identities.get(identity, {}).get('ifc_class') == 'IfcStair':
+        if before.get('schema_version') in {'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8', 'text2ifc/design-brief/2.9'} and 'appearance' in record and identities.get(identity, {}).get('ifc_class') == 'IfcStair':
             from .cross_storey_identity import stair_flight_ids
             flights = stair_flight_ids(identities[identity]['record'], identity)
             if any(not any(r['entity_id'] == flight and r['kind'] == 'appearance' and r['value'] == record['appearance'] and r['scope'] == record.get('scope', 'effective') for r in values) for flight in flights):

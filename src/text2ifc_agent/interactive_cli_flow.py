@@ -166,7 +166,7 @@ def make_openai_design_brief_invoker(
         selection = select_design_brief_context(
             user_request=original_request,
             conversation=transcript,
-            schema_version="bim-json/2.5" if design_brief_schema_version == "text2ifc/design-brief/2.8" else "bim-json/2.3" if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
+            schema_version="bim-json/2.6" if design_brief_schema_version == "text2ifc/design-brief/2.9" else "bim-json/2.5" if design_brief_schema_version == "text2ifc/design-brief/2.8" else "bim-json/2.3" if design_brief_schema_version in {'text2ifc/design-brief/2.6', 'text2ifc/design-brief/2.7', 'text2ifc/design-brief/2.8'} else "bim-json/2.2" if design_brief_schema_version == "text2ifc/design-brief/2.5" else "bim-json/2.1",
         )
         from .design_brief import design_brief_template_id
         schema = load_design_brief_schema(design_brief_schema_version)
@@ -570,10 +570,10 @@ def _run_ready_session_to_ifc(
     bim_json_schema_version: str | None = None,
 ) -> SessionIfcResult:
     """Generate BIM JSON, run deterministic gates, and compile a ready session."""
-    if bim_json_schema_version not in {None, 'bim-json/2.4', 'bim-json/2.5'}:
-        raise ValueError("Explicit bim_json_schema_version currently supports bim-json/2.4 or bim-json/2.5")
-    if bim_json_schema_version in {'bim-json/2.4', 'bim-json/2.5'} and generation_strategy != 'legacy_full':
-        raise ValueError("bim-json/2.4 and bim-json/2.5 currently require legacy_full")
+    if bim_json_schema_version not in {None, 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'}:
+        raise ValueError("Explicit bim_json_schema_version currently supports bim-json/2.4, bim-json/2.5 or bim-json/2.6")
+    if bim_json_schema_version in {'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} and generation_strategy != 'legacy_full':
+        raise ValueError("bim-json/2.4, bim-json/2.5 and bim-json/2.6 currently require legacy_full")
     if generation_feedback is not None and not isinstance(generation_feedback, Mapping):
         raise ValueError("generation_feedback must be a mapping")
     if type(generator_call_index) is not int or generator_call_index < 1:
@@ -601,8 +601,8 @@ def _run_ready_session_to_ifc(
     trace_path = design_dir / "trace-manifest.json"
     brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
     if review_context is None and (
-        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17'}
-        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17'}
+        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17', 'design-brief.v2.19', 'design-brief.v2.21', 'design-brief.v2.23', 'design-brief.v2.25', 'design-brief.v2.27', 'design-brief.v2.29'}
+        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17', 'design-brief.v2.19', 'design-brief.v2.21', 'design-brief.v2.23', 'design-brief.v2.25', 'design-brief.v2.27', 'design-brief.v2.29'}
     ):
         raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))
@@ -616,8 +616,8 @@ def _run_ready_session_to_ifc(
             'bim_json_schema_version': bim_json_schema_version,
             'generation_strategy': generation_strategy})
     selected_version = selected_generation_version(design_brief, stored_session.run_dir)
-    if selected_version in {'bim-json/2.4', 'bim-json/2.5'} and generation_strategy != 'legacy_full':
-        raise ValueError("bim-json/2.4 and bim-json/2.5 currently require legacy_full")
+    if selected_version in {'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} and generation_strategy != 'legacy_full':
+        raise ValueError("bim-json/2.4, bim-json/2.5 and bim-json/2.6 currently require legacy_full")
     _record_existing_artifact(store, stored_session, kind='generation_contract',
                               name='generation-contract.json')
     expected_facts_path = write_expected_facts(
@@ -630,7 +630,7 @@ def _run_ready_session_to_ifc(
         if isinstance(expected_facts_path, Mapping)
         else _read_required_json(Path(expected_facts_path))
     )
-    if selected_version in {'bim-json/2.4', 'bim-json/2.5'}:
+    if selected_version in {'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'}:
         expected_facts['generation_schema_version'] = selected_version
         _write_json(stored_session.run_dir / 'expected-facts.json', expected_facts)
     if generation_strategy not in {"legacy_full", "staged"}:

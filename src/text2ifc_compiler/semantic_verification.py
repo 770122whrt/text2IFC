@@ -127,6 +127,12 @@ def verify_semantic_expectations(ifc_file_or_path, expectations: Sequence[Mappin
                 wanted = expected.get('value', {})
                 if entity and scope != 'inherited' and part_request_matches(entity, wanted):
                     actual = wanted
+            elif kind == 'component_geometry':
+                from .component_expectations import component_request_problem
+                wanted = expected.get('value', {})
+                reason = 'Component geometry cannot be inherited from Type.' if scope == 'inherited' else component_request_problem(entity, wanted)
+                if reason is None:
+                    actual = wanted
             elif kind == 'template' and expected.get('value', {}).get('template_id') == 'metal-picket':
                 from .basic_railing import verify_basic_railing
                 wanted = expected.get('value', {})

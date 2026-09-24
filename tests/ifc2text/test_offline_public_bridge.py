@@ -232,7 +232,9 @@ def _writing_responses(run_id: str) -> dict[str, dict]:
 def _design_brief_invoker(store: SessionStore, *, brief_schema_version=None):
     frozen = json.loads((PHASE6_1_COMPLETE / "design-brief" / "design-brief.json").read_text(encoding="utf-8"))
     registry = load_prompt_registry()
-    template = registry["design-brief.v2.25"]
+    from text2ifc_agent.design_brief import design_brief_template_id
+    template = registry[design_brief_template_id(
+        brief_schema_version or frozen['schema_version'], design_review_enabled=False)]
 
     def invoke(transcript: list[dict], call_index: int) -> ClarificationCall:
         session = store.list_sessions()[-1]

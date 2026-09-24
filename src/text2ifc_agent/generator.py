@@ -142,7 +142,7 @@ def _classify_document(
         )
     if has_draft:
         draft_version = document.get("draft_version")
-        if draft_version not in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5'}:
+        if draft_version not in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5', 'bim-json-draft/1.6'}:
             return (
                 "unknown_contract",
                 [
@@ -154,7 +154,7 @@ def _classify_document(
                 ],
             )
         target_version = document.get("target_schema_version")
-        expected_version = 'bim-json/2.5' if draft_version == 'bim-json-draft/1.5' else 'bim-json/2.4' if draft_version == 'bim-json-draft/1.4' else 'bim-json/2.3' if draft_version == 'bim-json-draft/1.3' else 'bim-json/2.2' if draft_version == 'bim-json-draft/1.2' else 'bim-json/2.1' if draft_version == 'bim-json-draft/1.1' else 'bim-json/2.0'
+        expected_version = 'bim-json/2.6' if draft_version == 'bim-json-draft/1.6' else 'bim-json/2.5' if draft_version == 'bim-json-draft/1.5' else 'bim-json/2.4' if draft_version == 'bim-json-draft/1.4' else 'bim-json/2.3' if draft_version == 'bim-json-draft/1.3' else 'bim-json/2.2' if draft_version == 'bim-json-draft/1.2' else 'bim-json/2.1' if draft_version == 'bim-json-draft/1.1' else 'bim-json/2.0'
         if target_version != expected_version:
             return (
                 "unknown_contract",
@@ -169,7 +169,7 @@ def _classify_document(
         return "draft", []
     if has_formal:
         formal_version = document.get("schema_version")
-        if formal_version not in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5'}:
+        if formal_version not in {"bim-json/2.0", "bim-json/2.1", "bim-json/2.2", 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'}:
             return (
                 "unknown_contract",
                 [
