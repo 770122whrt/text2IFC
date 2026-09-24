@@ -68,6 +68,11 @@ def public_component_coverage(brief):
             continue
         targets={identity for identity,row in identities.items()
                  if label in (identity, row.get('record',{}).get('label'),row.get('record',{}).get('name'))}
+        if len(targets) != 1:
+            issues.append({'code':'PUBLIC_COMPONENT_IDENTITY_MISSING' if not targets else 'PUBLIC_COMPONENT_IDENTITY_AMBIGUOUS',
+                           'path':'/known_facts',
+                           'message':f'{label} 必须对应唯一门窗记录的 id、label 或 name；当前找到 {len(targets)} 个。保留公开编号，不根据前后缀猜测对应关系；这不表示部件参数缺失。'})
+            continue
         relevant=[r for r in requests if r.get('entity_id') in targets and r.get('component_geometry')]
         required=set(re.findall(r'^- ([^：\n]+)：角色=',body,flags=re.M))
         observed=set()

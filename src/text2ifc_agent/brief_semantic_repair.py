@@ -52,7 +52,8 @@ def semantic_repair_eligible(brief, issues):
     removable = removable_semantic_paths(brief)
     for issue in issues:
         row = asdict(issue) if hasattr(issue, '__dataclass_fields__') else issue
-        if row['code'] in {'SEMANTIC_ROLE_IDENTITY_AMBIGUOUS', 'SEMANTIC_TYPE_MULTIPLE', 'SEMANTIC_TYPE_FAMILY_MISMATCH', 'SEMANTIC_VALUE_CONFLICT'}:
+        if row['code'] in {'SEMANTIC_ROLE_IDENTITY_AMBIGUOUS', 'SEMANTIC_TYPE_MULTIPLE', 'SEMANTIC_TYPE_FAMILY_MISMATCH', 'SEMANTIC_VALUE_CONFLICT',
+                           'PUBLIC_COMPONENT_IDENTITY_MISSING', 'PUBLIC_COMPONENT_IDENTITY_AMBIGUOUS'}:
             return False
         path = row['path']
         if path in {'/known_facts', '/known_facts/semantic_requirements', '/known_facts/semantic_review'}:
