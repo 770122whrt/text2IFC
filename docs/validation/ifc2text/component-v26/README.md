@@ -133,3 +133,13 @@ TallBuilding 的独立单窗与单门也均一次经过真实 Brief→Generator�
 两个离线公开链测试均通过真实 IFC2Text、Brief 入口、编译、终态发布与独立比较，模型响应为明确注入的离线夹具。没有原生墙 Axis 的夹具保留墙长／厚／高未评估状态，同时断言墙体切洞前后实测几何、门窗完整 Body 和安装关系通过；未修改比较器来清除这一限制。
 
 剩余开发的调用次数重新分配见 `component-v26-budget-20260925-01/allocation.json`：沿用累计 token 上限 **3,696,347**，完整继承已耗 **2,338,826** 和 34 次重建调用，再配置 24 个调用位置。没有新增 token 授权或清空旧账；旧账变化、未结算或失败暂停均阻止后续调用。预算与传输定向检查 13 passed。宿主真实调用使用 `component-campaign-hosted-v1.0.json`，须先完成新阶段离线准入。
+
+### S4 首轮真实运行与回显诊断
+
+安装阶段准入已通过：**426 passed、0 failed、0 skipped**，464.10 秒，网络调用为零。证据在 `component-v26-hosted-loop-20260925-01/validation/`；这是阶段检查，不是仓库 Full Preflight。
+
+带宿主单门已通过真实 Brief→Generator→Audit→IFC：3 个对象匹配，无缺失、多余、几何超差或关系差异。门的完整 Body 仍为 5 个实体，采样表面最大差约 **3.392×10⁻⁷ mm**；墙体切洞前后实测偏差 **0.04450 mm**，在 1 mm 内。原始报告保留 `evaluated_scope_consistent=null`：源墙有 Axis，候选以网格主轴测尺寸，因此内在尺寸测法变化未评估。材料内容相同，层方向／偏移也相同，但层集合名称由源名称变为 `M01`，记一项元数据差异。见 [单门比较](../../../../dataset/processed/experiments/component-v26-hosted-loop-20260925-01/hxp-hosted-door/compare-v1.2.json) 和同目录 `wall-metadata-diagnosis.private.json`；不能据此声称整栋或全部字段相同。
+
+带宿主单窗首轮在 Brief 控制器终止，未生成 IFC。模型将原始请求从 5,844 字符回显为 5,843 字符，唯一差异是连续空行少一条；尺寸和文本没有变。原始调用、失败终态及计费 55,020 token 均保留在 `component-v26-hosted-loop-20260925-01/hxp-hosted-window/`。
+
+修正只作用于 Brief 2.9 的冗余原始请求回显：连续空行数量不同且全部其余字符、段落边界相同时，恢复会话保存的精确输入，独立记录原始值和 SHA；不改 known_facts，不增加模型调用。文字、数字、缩进、段落边界变化和 fenced literal 输入仍严格拒绝。新测试先 15 failed／1 passed，修改后连同重复记录、编号和失败证据检查共 59 passed。真实失败响应经公开 invoker／controller 离线重放达到 ready，仅 `original_request` 字段恢复，所有 known_facts 不变；重放不是新的真实成功证据。后续真实重试使用新配置 1.1，并先完成阶段内受影响路径复验。

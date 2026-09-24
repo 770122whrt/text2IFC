@@ -25,6 +25,7 @@ SCOPE=['src/text2ifc_agent','src/text2ifc_ifc2text','src/text2ifc_contract',
        'prompts/agent','schemas','scripts/ifc2text','scripts/agent/run_phase6_2_cli.py',
        'tests/ifc2text','tests/agent','tests/compiler','tests/ifc_quality','pyproject.toml']
 TARGETS=[
+    'tests/agent/test_brief_request_echo.py',
     'tests/ifc2text/test_component_budget.py',
     'tests/ifc2text/test_hosted_source.py',
     'tests/ifc2text/test_component_hosted_public_chain.py',
