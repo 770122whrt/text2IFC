@@ -32,14 +32,15 @@ def fake_brief_invoker(root,brief,requests,finish_reason='stop'):
 
 
 @pytest.mark.parametrize('cls',['IfcDoor','IfcWindow'])
-def test_source_text_public_brief_generator_reopen_with_offline_models(tmp_path,cls):
+@pytest.mark.parametrize('version',['1.0','1.1'])
+def test_source_text_public_brief_generator_reopen_with_offline_models(tmp_path,cls,version):
     candidate=document(cls)
     label='D001' if cls=='IfcDoor' else 'N001'
     candidate['entities'][-1]['id']=label
     source=tmp_path/'private-source.ifc'
     assert compile_document(candidate,source).success
     source_bytes=source.read_bytes()
-    prepare_compact(source,tmp_path/'description',description_version='1.0',containment_policy='preserve_recorded')
+    prepare_compact(source,tmp_path/'description',description_version=version,containment_policy='preserve_recorded')
     text=(tmp_path/'description/design-description-deterministic.md').read_text(encoding='utf-8')
     brief=component_brief()
     brief['known_facts']['semantic_requirements'][0]['entity_id']=label
