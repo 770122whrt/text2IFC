@@ -10,7 +10,7 @@
 |---|---|---|
 | Repair 论文与老师汇报 | [技术路线、文献、Claim 三份主文档](repair-demo/README.md) | [历史讨论归档](repair-demo/archive/README.md) |
 | Generation 论文与文献 | [研究方案、简版和完整版综述](generation-demo/README.md) | 历史稿与阅读证据在该索引末尾 |
-| IFC2Text 与往返重建 | [9 月 22 日分步修复](ifc2text-stepwise-fixes-2026-09-22.md) | [证据与失败复核](ifc2text-evidence-audit-2026-09-22.md)、[验证合同](../validation/ifc2text/README.md) |
+| IFC2Text 与往返重建 | [门窗部件扩展计划 v1.0（含调查与实例）](../architecture/text2ifc-component-plan-v1.0.md) | [证据与失败复核](ifc2text-evidence-audit-2026-09-22.md)、[验证合同](../validation/ifc2text/README.md) |
 
 全体文件的功能、现行／历史／证据身份及删除建议见[分类与归档目录](../document-catalog.md)。
 报告中的日期表示当时快照；当前执行许可仍查适用合同和计划。

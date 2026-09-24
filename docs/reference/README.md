@@ -9,6 +9,7 @@
 
 ## IFC2X3
 
+- [门窗部件扩展计划 v1.0](../architecture/text2ifc-component-plan-v1.0.md)：窗结构、Type／材料／外观说明和数据调查已合并入计划附录。
 - [IFC2X3 Generation Profile](ifc2x3-generation-profile.md)
 - [IFC2X3 Knowledge Sources and No-fabrication Policy](ifc2x3-knowledge-sources.md)
 - [BIMNet IFC 数据管线方法论](bimnet-ifc-data-pipeline-methodology.md)

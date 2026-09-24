@@ -13,7 +13,7 @@
 |---|---|---|
 | **已有 IFC 修复（本次汇报）** | [Repair Demo Method：问题、方法和案例](architecture/ifc-repair-pipeline-status-and-roadmap.md) | [三份主文档](reports/repair-demo/README.md)、[Repair Proof](../dataset/processed/proof/repair/) |
 | 从文字生成新 IFC | [Generation 研究与文献](reports/generation-demo/README.md)、[生成工作流](architecture/current-workflow-and-data-flow.md) | [语义与外观范围](architecture/semantic-appearance-plan.md)、[Generation Proof](../dataset/processed/proof/generation/) |
-| IFC2Text 与往返重建 | [研究与实现入口](architecture/bim2text-bidirectional-bridge-research.md) | [9 月 22 日进展与限制](reports/ifc2text-stepwise-fixes-2026-09-22.md)、[验证入口](validation/ifc2text/README.md) |
+| IFC2Text 与往返重建 | [研究与实现入口](architecture/bim2text-bidirectional-bridge-research.md) | [门窗部件扩展计划 v1.0](architecture/text2ifc-component-plan-v1.0.md)、[验证入口](validation/ifc2text/README.md) |
 
 数据来源、通用验证、开发接管分别使用下方相应分区；不混入 Repair 论文正文。
 
