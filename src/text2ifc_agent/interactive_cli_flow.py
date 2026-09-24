@@ -266,7 +266,8 @@ def make_openai_design_brief_invoker(
                 evidence={"parse_status": parse_status, "diagnostics": diagnostics},
             )
         from .brief_request_echo import normalize_request_echo_with_trace
-        parsed = normalize_request_echo_with_trace(parsed, original_request, call_dir)
+        parsed = normalize_request_echo_with_trace(parsed, original_request, call_dir,
+            template_id=rendered['metadata']['template_id'])
         from .brief_duplicate_normalization import normalize_with_trace
         parsed = normalize_with_trace(parsed, call_dir)
         issues = validate_design_brief(
@@ -605,8 +606,8 @@ def _run_ready_session_to_ifc(
     trace_path = design_dir / "trace-manifest.json"
     brief_trace = _read_required_json(trace_path) if trace_path.is_file() else {}
     if review_context is None and (
-        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17', 'design-brief.v2.19', 'design-brief.v2.21', 'design-brief.v2.23', 'design-brief.v2.25', 'design-brief.v2.27', 'design-brief.v2.29', 'design-brief.v2.31'}
-        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17', 'design-brief.v2.19', 'design-brief.v2.21', 'design-brief.v2.23', 'design-brief.v2.25', 'design-brief.v2.27', 'design-brief.v2.29', 'design-brief.v2.31'}
+        brief_metrics.get("prompt_template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17', 'design-brief.v2.19', 'design-brief.v2.21', 'design-brief.v2.23', 'design-brief.v2.25', 'design-brief.v2.27', 'design-brief.v2.29', 'design-brief.v2.31', 'design-brief.v2.33'}
+        or brief_trace.get("template_id") in {DESIGN_REVIEW_BRIEF_TEMPLATE_ID, 'design-brief.v2.6', 'design-brief.v2.8', 'design-brief.v2.11', 'design-brief.v2.13', 'design-brief.v2.15', 'design-brief.v2.17', 'design-brief.v2.19', 'design-brief.v2.21', 'design-brief.v2.23', 'design-brief.v2.25', 'design-brief.v2.27', 'design-brief.v2.29', 'design-brief.v2.31', 'design-brief.v2.33'}
     ):
         raise ValueError("DESIGN_REVIEW_CONTEXT_REQUIRED")
     design_brief = json.loads((design_dir / "design-brief.json").read_text(encoding="utf-8"))

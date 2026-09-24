@@ -53,8 +53,11 @@ def test_two_products_with_same_public_label_cannot_pool_parts():
 
 @pytest.mark.parametrize('review,new,old', [(False,'2.30','2.28'), (True,'2.31','2.29')])
 def test_new_brief_prompts_require_public_catalog_identity_and_keep_old_versions(review,new,old):
-    assert design_brief_template_id('text2ifc/design-brief/2.9', design_review_enabled=review) == 'design-brief.v'+new
     registry = load_prompt_registry()
+    latest_id = design_brief_template_id('text2ifc/design-brief/2.9', design_review_enabled=review)
+    latest = (PROJECT_ROOT/registry[latest_id]['path']).read_text(encoding='utf-8')
+    assert 'Public component catalog identity' in latest
+    assert 'label' in latest and 'semantic_requirements[].entity_id' in latest
     text = (PROJECT_ROOT/registry['design-brief.v'+new]['path']).read_text(encoding='utf-8')
     previous = (PROJECT_ROOT/registry['design-brief.v'+old]['path']).read_text(encoding='utf-8')
     assert text.startswith(previous)

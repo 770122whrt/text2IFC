@@ -226,7 +226,8 @@ def run_design_brief_stage(
     if parse_status == "ok" and parsed is not None:
         _write_json(output / "parsed-output.json", parsed)
         from .brief_request_echo import normalize_request_echo_with_trace
-        normalized = normalize_request_echo_with_trace(parsed, user_request, output)
+        normalized = normalize_request_echo_with_trace(parsed, user_request, output,
+            template_id=rendered['metadata']['template_id'])
         from .brief_duplicate_normalization import normalize_with_trace
         normalized = normalize_with_trace(normalized, output)
         if normalized != parsed:
