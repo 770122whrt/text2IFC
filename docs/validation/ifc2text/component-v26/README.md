@@ -81,3 +81,11 @@ Brief 2.9、Draft 1.6、作者合同 1.6 及配套新提示词已经贯通公开
 | TallBuilding | 87,451 字节 | 25／1 | 约 10.3 秒 |
 
 文件位于 `dataset/processed/experiments/component-v26-text-prepared-20260924-01/`。状态均为 `prepared_requires_component_review`；这是描述准备，不是重建成功。接下来先建立当前代码对应的真实模型阶段准入，再做单门、单窗真实 loop 和宿主场景，随后处理整栋实验及明确拒绝项。
+## S3 独立比较与真实输入准备（2026-09-25）
+
+- Compare 1.2 在原有 1.1 的匹配、材料、墙体测量之外，读取源文件与重建文件的完整门窗 Body，展开实际映射，比较世界坐标下实体并集、双向表面采样距离、连通分量、Euler 数与体积。几何容差固定 1 mm；未识别的 Body 项明确记为未评估，不能过滤后报告一致。该采样不是连续 Hausdorff 距离的严格证明。
+- 对之前全部 36 个原生门窗样例重新计分：30 个通过、6 个仍拒绝，分母未减少。证据位于 `dataset/processed/experiments/component-v26-body-compare-20260924-01/`；这是冻结原生候选的重新计分，不是文本往返。
+- 从 hxp 与 TallBuilding 各选择一门一窗，复制原 IFC 后仅在副本中移除其他产品，保留原生几何、材料、样式与 Type 关系。四份独立输入与原构件的完整实体比较均通过；源文件未修改。宿主安装从该单构件测试范围明确排除。输入位于 `dataset/processed/experiments/component-v26-single-inputs-20260924-01/`。
+- 独立比较测试 10 passed；副本提取测试 2 passed；冻结输入与真实建筑上下文测试 3 passed。两座完整建筑的描述通过实际公共 Brief 入口和离线替身接入，记录时间、进程内存峰值及请求大小，遇到不支持项停止。仍没有新的真实 Provider 调用。
+
+本阶段正式准入由 `scripts/ifc2text/component_campaign.py validate --config scripts/ifc2text/component-campaign-v1.0.json` 执行。该命令仅运行代码内列出的阶段测试，涵盖公共完整链、澄清恢复、截断/格式错误、Provider seam、原子失败、源文件保护、实际几何、终态发布和真实规模上下文。它记录精确文件快照、命令和日志哈希；配置、代码或冻结输入变化会阻止后续真实调用。未通过时不得调用 Provider，也不自动运行仓库级 Full Preflight。
