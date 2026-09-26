@@ -31,6 +31,34 @@ def test_successor_keeps_same_token_ceiling_and_all_consumption(tmp_path):
     assert old.path.read_bytes()==before
 
 
+def test_explicit_human_token_extension_preserves_previous_charges(tmp_path):
+    from scripts.ifc2text.component_budget import allocate, open_allocation
+    old=previous(tmp_path);before=old.path.read_bytes()
+    manifest=allocate(old,tmp_path/'extended',additional_call_slots=5,
+                      additional_tokens=1000000,authorization='Human approved an additional 1000000 tokens.')
+    new=open_allocation(manifest);snapshot=new.snapshot()
+    assert snapshot['limits']['tokens']==1001000
+    assert snapshot['tokens_used_or_reserved']==150
+    assert snapshot['calls']['reconstruction']==1
+    assert old.path.read_bytes()==before
+    record=json.loads(manifest.read_text(encoding='utf8'))
+    assert record['additional_tokens']==1000000 and record['authorization']
+    record['token_ceiling']+=1
+    manifest.write_text(json.dumps(record),encoding='utf8')
+    with pytest.raises(GoalStopped,match='INVALID_COMPONENT_BUDGET_ALLOCATION'):
+        open_allocation(manifest)
+
+
+@pytest.mark.parametrize('amount,authority',[(1,''),(-1,'yes'),(True,'yes'),(1.5,'yes')])
+def test_token_extension_requires_explicit_integer_authorization(tmp_path,amount,authority):
+    from scripts.ifc2text.component_budget import allocate
+    with pytest.raises(ValueError,match='TOKEN_EXTENSION'):
+        allocate(previous(tmp_path),tmp_path/'invalid',additional_call_slots=5,
+                 additional_tokens=amount,authorization=authority)
+    assert not (tmp_path/'invalid').exists()
+
+
+
 @pytest.mark.parametrize('halted',[False,True])
 def test_unsettled_or_halted_predecessor_cannot_be_reallocated(tmp_path,halted):
     from scripts.ifc2text.component_budget import allocate

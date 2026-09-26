@@ -41,6 +41,12 @@ def test_generator_receives_new_component_contract_and_preserves_parameters(tmp_
     assert provider.calls[0]['schema']['properties']['schema_version']['const']=='bim-json/2.6'
     prompt=(tmp_path/'generator/prompt-rendered.md').read_text(encoding='utf-8')
     assert 'BIM JSON 2.6' in prompt and 'component_geometry' in prompt
+    assert 'Layered wall coordinate construction' in prompt
+    assert 'p_local = inverse(W_wall) * p_world' in prompt
+    from text2ifc_agent.prompt_registry import load_prompt_registry
+    registry=load_prompt_registry()
+    assert registry['bim-json-generator.v2.10']['role']=='bim_json_generator'
+    assert registry['bim-json-generator.v2.9']['sha256']=='sha256:027dd14e7c7bfd8e0b9711d8631834e373ab61f8e049b81dcf7c5dd026c3016d'
     saved=json.loads((tmp_path/'generator/candidate.json').read_text(encoding='utf-8'))
     assert saved==candidate
 

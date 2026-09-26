@@ -1,4 +1,4 @@
-"""Administrative call-slot allocation under the unchanged human token ceiling."""
+"""Preserve usage across call allocation and explicit human token extensions."""
 import hashlib
 import json
 from pathlib import Path
@@ -9,9 +9,12 @@ from text2ifc_ifc2text.goal_budget import GoalBudget,GoalStopped
 def _digest(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def allocate(previous,root,*,additional_call_slots):
+def allocate(previous,root,*,additional_call_slots,additional_tokens=0,authorization=None):
     if type(additional_call_slots) is not int or additional_call_slots<=0:
         raise ValueError('POSITIVE_CALL_SLOTS_REQUIRED')
+    if (type(additional_tokens) is not int or additional_tokens<0
+            or (additional_tokens and (not isinstance(authorization,str) or not authorization.strip()))):
+        raise ValueError('TOKEN_EXTENSION_REQUIRES_EXPLICIT_AUTHORIZATION')
     snapshot=previous.snapshot()
     if snapshot['halted'] or any(a['status']=='reserved' for a in snapshot['attempts']):
         raise GoalStopped('PREDECESSOR_HALTED_OR_UNSETTLED')
@@ -21,6 +24,11 @@ def allocate(previous,root,*,additional_call_slots):
         'predecessor_snapshot':snapshot,'additional_call_slots':additional_call_slots,
         'token_ceiling':snapshot['limits']['tokens'],
         'reason':'Call slots for the authorized component development and remaining loops; no new token allowance. All previous usage and failures remain charged.'}
+    if additional_tokens:
+        record.update(schema_version='text2ifc/component-budget-allocation/1.1',
+            additional_tokens=additional_tokens,authorization=authorization,
+            token_ceiling=snapshot['limits']['tokens']+additional_tokens,
+            reason='Explicit human token extension; predecessor usage, failures and call counts remain charged.')
     manifest=path/'allocation.json'
     manifest.write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     return manifest
@@ -31,7 +39,12 @@ class ComponentBudget(GoalBudget):
         self.manifest=Path(manifest)
         self.authority=json.loads(self.manifest.read_text(encoding='utf-8'))
         a=self.authority;p=a['predecessor_snapshot']
-        if a['schema_version']!='text2ifc/component-budget-allocation/1.0' or a['token_ceiling']!=p['limits']['tokens']:
+        extra=a.get('additional_tokens',0)
+        if (a['schema_version'] not in {'text2ifc/component-budget-allocation/1.0','text2ifc/component-budget-allocation/1.1'}
+                or type(extra) is not int or extra<0
+                or (a['schema_version'].endswith('/1.0') and extra!=0)
+                or (a['schema_version'].endswith('/1.1') and (extra<=0 or not isinstance(a.get('authorization'),str) or not a['authorization'].strip()))
+                or a['token_ceiling']!=p['limits']['tokens']+extra):
             raise GoalStopped('INVALID_COMPONENT_BUDGET_ALLOCATION')
         if p['halted'] or any(x['status']=='reserved' for x in p['attempts']):
             raise GoalStopped('PREDECESSOR_HALTED_OR_UNSETTLED')
@@ -39,7 +52,7 @@ class ComponentBudget(GoalBudget):
         self.inherited_reconstruction=p['calls']['reconstruction']
         super().__init__(self.manifest.parent/'budget',writing_calls=p['limits']['writing'],
             reconstruction_calls=self.inherited_reconstruction+a['additional_call_slots'],
-            tokens=p['limits']['tokens'],historical_writing_calls=p['calls']['writing'],
+            tokens=a['token_ceiling'],historical_writing_calls=p['calls']['writing'],
             historical_tokens=p['tokens_used_or_reserved'])
 
     def _check_predecessor(self):

@@ -19,6 +19,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
     prepare = sub.add_parser('prepare'); prepare.add_argument('--source', required=True); prepare.add_argument('--output', required=True)
+    prepare.add_argument('--description-version', choices=['1.1', '1.2'], default='1.1')
     for command in ('show', 'decide', 'export'):
         p = sub.add_parser(command); p.add_argument('--database', required=True); p.add_argument('--session', required=True)
         if command == 'decide':
@@ -29,7 +30,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if args.command == 'prepare':
         root = Path(args.output); root.mkdir(parents=True, exist_ok=False)
-        prepare_compact(args.source, root/'description', description_version='1.1')
+        prepare_compact(args.source, root/'description', description_version=args.description_version)
         facts = json.loads((root/'description/source-facts.json').read_text(encoding='utf-8'))
         with SessionStore.open(root/'review.sqlite', artifact_root=root) as store:
             result = start_review(store=store, facts=facts)

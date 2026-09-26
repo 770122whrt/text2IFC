@@ -38,6 +38,26 @@ def test_frozen_public_input_rejects_changed_source_or_text(tmp_path):
     with pytest.raises(ValueError,match='SOURCE_CHANGED'):frozen_text(case)
 
 
+@pytest.mark.parametrize('version',['1.2','1.3'])
+def test_campaign_routes_explicit_compare_version_without_overwriting_old_report(tmp_path,monkeypatch,version):
+    from scripts.ifc2text import component_campaign as campaign
+    from text2ifc_ifc2text import precision_compare_v12,precision_compare_v13
+    out=tmp_path/'case';out.mkdir()
+    campaign.save(out/'generate-result.json',{'status':'compiled','ifc_path':'candidate.ifc'})
+    monkeypatch.setattr(campaign,'frozen_text',lambda case:'public text')
+    calls=[]
+    for name,module in [('1.2',precision_compare_v12),('1.3',precision_compare_v13)]:
+        def compare(a,b,name=name):
+            calls.append(name);return {'status':{'test_routing_only':True}}
+        monkeypatch.setattr(module,'compare_roundtrip',compare)
+    campaign.compare({'output':str(tmp_path),'comparison_version':version},{'id':'case','source':'source.ifc'})
+    assert calls==[version]
+    path=out/('compare-v'+version+'.json');before=path.read_bytes()
+    with pytest.raises(campaign.GoalStopped,match='ALREADY_EXISTS'):
+        campaign.compare({'output':str(tmp_path),'comparison_version':version},{'id':'case','source':'source.ifc'})
+    assert path.read_bytes()==before
+
+
 @pytest.mark.parametrize('source',[
     'dataset/external/bimnet/hxp.ifc',
     'dataset/external/bimnet/i5n_1.ifc',

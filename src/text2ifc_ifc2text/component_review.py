@@ -66,7 +66,7 @@ def _question(unsupported, blockers):
 
 def start_review(*, store, facts):
     """Freeze source facts and return a human-readable question; no model call."""
-    if facts.get('description_policy', {}).get('version') != '1.1':
+    if facts.get('description_policy', {}).get('version') not in {'1.1', '1.2'}:
         raise ValueError('COMPONENT_REVIEW_REQUIRES_DESCRIPTION_1_1')
     _verify_source(facts)
     unsupported, blockers = _inventory(facts)

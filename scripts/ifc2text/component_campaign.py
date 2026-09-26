@@ -204,9 +204,14 @@ def live(cfg,case,stage):
 
 def compare(cfg,case):
     from text2ifc_ifc2text.precision_compare_v12 import compare_roundtrip
+    version=cfg.get('comparison_version','1.2')
+    if version=='1.3':
+        from text2ifc_ifc2text.precision_compare_v13 import compare_roundtrip
+    elif version!='1.2':
+        raise GoalStopped('UNSUPPORTED_COMPARISON_VERSION')
     out=ROOT/cfg['output']/case['id'];result=load(out/'generate-result.json')
     if not result.get('ifc_path'):raise GoalStopped('NO_GENERATED_IFC')
-    path=out/'compare-v1.2.json'
+    path=out/('compare-v'+version+'.json')
     if path.exists():raise GoalStopped('COMPARISON_ALREADY_EXISTS')
     frozen_text(case)
     report=compare_roundtrip(ROOT/case['source'],result['ifc_path'])

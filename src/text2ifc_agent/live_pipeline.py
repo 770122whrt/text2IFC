@@ -629,7 +629,7 @@ def run_generator_stage(
     if new_semantics:
         renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.6' if target_version == 'bim-json/2.6' else '1.5' if target_version == 'bim-json/2.5' else '1.4' if target_version == 'bim-json/2.4' else '1.3' if target_version == 'bim-json/2.3' else '1.2' if target_version == 'bim-json/2.2' else '1.1')
     rendered = render_prompt(
-        template_id='bim-json-generator.v2.9' if target_version == 'bim-json/2.6' else 'bim-json-generator.v2.8' if target_version == 'bim-json/2.5' else 'bim-json-generator.v2.7' if target_version == 'bim-json/2.4' else 'bim-json-generator.v2.6' if target_version == 'bim-json/2.3' else 'bim-json-generator.v2.5' if target_version == 'bim-json/2.2' else 'bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
+        template_id='bim-json-generator.v2.10' if target_version == 'bim-json/2.6' else 'bim-json-generator.v2.8' if target_version == 'bim-json/2.5' else 'bim-json-generator.v2.7' if target_version == 'bim-json/2.4' else 'bim-json-generator.v2.6' if target_version == 'bim-json/2.3' else 'bim-json-generator.v2.5' if target_version == 'bim-json/2.2' else 'bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 

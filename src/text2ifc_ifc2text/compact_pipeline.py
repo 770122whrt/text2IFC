@@ -18,6 +18,9 @@ CLASSES = dict(zip(CATEGORIES, ['IfcWall','IfcOpeningElement','IfcDoor','IfcWind
 def render_prepared_description(facts, narration=None):
     """Choose the recorded description contract; old prepared artifacts stay replayable."""
     version = facts.get('description_policy', {}).get('version', '0.4')
+    if version == '1.2':
+        from .component_description_v12 import component_description
+        return component_description(facts, narration)
     if version == '1.1':
         from .component_description_v11 import component_description
         return component_description(facts, narration)
@@ -38,7 +41,7 @@ def render_prepared_description(facts, narration=None):
 def prepare_compact(source, output, *, description_version='0.8', containment_policy='host_storey_for_selected_fillings'):
     source = Path(source); output = Path(output)
     if (output/'prepared.json').exists(): raise ValueError('PREPARED_ALREADY_EXISTS')
-    if description_version not in {'0.4', '0.8', '0.9', '1.0', '1.1'}: raise ValueError('UNSUPPORTED_DESCRIPTION_VERSION')
+    if description_version not in {'0.4', '0.8', '0.9', '1.0', '1.1', '1.2'}: raise ValueError('UNSUPPORTED_DESCRIPTION_VERSION')
     if containment_policy not in {'host_storey_for_selected_fillings', 'preserve_recorded'}:
         raise ValueError('UNSUPPORTED_CONTAINMENT_POLICY')
     before = source.read_bytes()
@@ -53,13 +56,13 @@ def prepare_compact(source, output, *, description_version='0.8', containment_po
             normalization = normalize_copy(source, effective_source, selected_global_ids=selected, policy=containment_policy)
         _write_json(output/'source-containment-review.json', audit)
     facts = extract_description_facts(effective_source)
-    if description_version in {'0.8', '0.9', '1.0', '1.1'}:
+    if description_version in {'0.8', '0.9', '1.0', '1.1', '1.2'}:
         from .wall_details_v07 import enrich_wall_details
         facts = enrich_wall_details(effective_source, facts)
-    if description_version in {'0.9', '1.0', '1.1'}:
+    if description_version in {'0.9', '1.0', '1.1', '1.2'}:
         from .opening_details_v09 import enrich_opening_details
         facts = enrich_opening_details(effective_source, facts)
-    if description_version in {'1.0', '1.1'}:
+    if description_version in {'1.0', '1.1', '1.2'}:
         from .component_description_v10 import enrich_component_details
         facts = enrich_component_details(effective_source, facts)
     facts['description_policy'] = {'version': description_version, 'containment': containment_policy}
@@ -80,9 +83,11 @@ def prepare_compact(source, output, *, description_version='0.8', containment_po
         'unrepresented_classes':facts.get('unrepresented_classes',{}),
         'characters':len(text), 'han_characters':len(re.findall(r'[\u4e00-\u9fff]',text)),
         'source_unchanged':True, 'coordinate_unit':'mm', 'coordinate_decimals':1}
-    if description_version in {'0.9', '1.0', '1.1'}:
+    if description_version == '1.2':
+        report['wall_coordinate_decimals'] = 9
+    if description_version in {'0.9', '1.0', '1.1', '1.2'}:
         report['opening_profile_coordinate_decimals'] = 6
-    if description_version in {'1.0', '1.1'}:
+    if description_version in {'1.0', '1.1', '1.2'}:
         details = [i['component_detail'] for c, i in all_items(facts) if c in {'doors', 'windows'}]
         report['component_supported_count'] = sum(d['status'] == 'supported' for d in details)
         report['component_unsupported_count'] = sum(d['status'] == 'unsupported' for d in details)
