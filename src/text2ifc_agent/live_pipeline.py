@@ -1943,6 +1943,16 @@ def _repair_allowed_change_paths(
                 if relationship_path is not None:
                     paths.append(relationship_path)
             paths.extend(_geometry_issue_candidate_paths(issue_path, candidate))
+            if issue.get('code') == 'FILLING_PLACEMENT_CHAIN_MISMATCH' and candidate is not None:
+                element_id = issue.get('element_id')
+                matches = [(index, entity) for index, entity in enumerate(candidate.get('entities', []))
+                           if isinstance(entity, dict) and entity.get('id') == element_id]
+                if (len(matches) == 1 and matches[0][1].get('ifc_class') in {'IfcDoor','IfcWindow'}
+                        and issue_path == f'/entities/{element_id}/attributes/ObjectPlacement/relative_to'):
+                    # Reparenting changes the coordinate frame. Grant the pose
+                    # together, then recheck the requested world geometry; never
+                    # grant Representation, materials, relationships or siblings.
+                    paths.append(f'/entities/{matches[0][0]}/attributes/ObjectPlacement')
         for fact_path in issue.get("required_fact_paths", []):
             if isinstance(fact_path, str) and fact_path:
                 paths.append(fact_path)
