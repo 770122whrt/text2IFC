@@ -28,6 +28,8 @@ def check_generated_ifc(
     model = ifcopenshell.open(str(Path(ifc_path)))
     products_by_id = _products_by_bim_json_id(model)
     tolerance = float(expectation.get("tolerance", 0.01))
+    if expectation.get("schema_version") == "text2ifc/design-geometry-expectation/1.3":
+        tolerance += 1e-9  # inclusive millimetre boundary with metre-scale numeric noise
     if expectation.get("schema_version") == "text2ifc/design-geometry-expectation/1.2":
         # Existing helpers use inclusive <=. V1.2 admits only errors strictly
         # below the limit; 1e-12 m absorbs floating-point boundary noise only.
@@ -134,7 +136,7 @@ def _check_roof_stairs_and_openings(
         path_prefix="roof",
         issues=issues,
     )
-    if expectation.get("schema_version") in {"text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2"}:
+    if expectation.get("schema_version") in {"text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2", "text2ifc/design-geometry-expectation/1.3"}:
         from .floor_openings import check_floor_openings
         metrics["floor_openings"] = check_floor_openings(
             model=model, expected=expectation.get("floor_openings"),
@@ -639,6 +641,20 @@ def _check_wall_set(
             "axis": actual_axis,
             "bbox": actual_bbox,
         }
+        if 'world_outline_m' in expected_wall:
+            from .wall_outline import check_wall_outline
+            try:
+                outline_result = check_wall_outline(wall, expected_wall['world_outline_m'], tolerance)
+                metrics['walls'][wall_id]['outline'] = outline_result
+                if not outline_result['passed']:
+                    issues.append(_issue('WALL_OUTLINE_MISMATCH', f'/walls/{wall_id}/world_outline_m',
+                        'Actual uncut wall footprint differs from the explicit public world outline.',
+                        entity_ids=[wall_id], actual=outline_result,
+                        expected={'world_outline_m': expected_wall['world_outline_m']},
+                        source_fact_refs=expected_wall.get('source_fact_refs')))
+            except (ValueError, RuntimeError, TypeError, IndexError) as error:
+                issues.append(_issue('WALL_OUTLINE_UNASSESSED', f'/walls/{wall_id}/world_outline_m',
+                    str(error), entity_ids=[wall_id], source_fact_refs=expected_wall.get('source_fact_refs')))
 
         expected_axis = expected_wall.get("axis")
         if expected_axis and actual_axis != expected_axis:

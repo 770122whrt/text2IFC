@@ -1784,11 +1784,14 @@ def _semantic_geometry_expectation_from_case(
                 case_id=case_id,
                 design_brief=design_brief,
                 expected_facts=expected_facts,
+                schema_version=("text2ifc/design-geometry-expectation/1.3"
+                    if design_brief.get("schema_version") == "text2ifc/design-brief/2.9"
+                    else "text2ifc/design-geometry-expectation/1.2"),
             )
             known = design_brief.get("known_facts", {})
             legacy_space = known.get("space") if isinstance(known, dict) else None
             from math import isfinite
-            location_keys = {"bounds", "polygon", "z_mm", "bounds_mm", "origin", "position"}
+            location_keys = {"bounds", "polygon", "z_mm", "z_min_mm", "z_max_mm", "bounds_mm", "origin", "position"}
             legacy_dimension_only = (
                 isinstance(legacy_space, dict) and legacy_space.get("shape") == "rectangle"
                 and all(isinstance(legacy_space.get(k), (int, float))
