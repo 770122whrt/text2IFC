@@ -40,6 +40,7 @@ def test_frozen_public_input_rejects_changed_source_or_text(tmp_path):
 
 @pytest.mark.parametrize('source',[
     'dataset/external/bimnet/hxp.ifc',
+    'dataset/external/bimnet/i5n_1.ifc',
     'dataset/external/bim-whale-ifc-samples/TallBuilding/IFC/TallBuilding.ifc'])
 def test_real_building_context_reaches_public_brief_and_stops_at_unsupported(tmp_path,source):
     import time

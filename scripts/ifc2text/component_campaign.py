@@ -25,6 +25,7 @@ SCOPE=['src/text2ifc_agent','src/text2ifc_ifc2text','src/text2ifc_contract',
        'prompts/agent','schemas','scripts/ifc2text','scripts/agent/run_phase6_2_cli.py',
        'tests/ifc2text','tests/agent','tests/compiler','tests/ifc_quality','pyproject.toml']
 TARGETS=[
+    'tests/ifc2text/test_component_review.py',
     'tests/agent/test_component_world_placement.py',
     'tests/agent/test_audit_dynamic_gate_evidence.py',
     'tests/agent/test_brief_request_echo.py',
@@ -80,7 +81,17 @@ def frozen_text(case):
         raise ValueError('SOURCE_CHANGED')
     if digest(ROOT/case['text'])!=case['text_sha256']:
         raise ValueError('PUBLIC_TEXT_CHANGED')
-    return (ROOT/case['text']).read_text(encoding='utf-8')
+    text = (ROOT/case['text']).read_text(encoding='utf-8')
+    if case.get('component_review'):
+        from text2ifc_agent.session_store import SessionStore
+        from text2ifc_ifc2text.component_review import approved_description
+        ref = case['component_review']; database = ROOT/ref['database']
+        if not database.is_file():raise ValueError('COMPONENT_REVIEW_REQUIRED')
+        with SessionStore.open(database) as store:
+            packet = approved_description(store=store, session_id=ref['session_id'])
+        if packet['review_sha256'] != ref['review_sha256']:raise ValueError('STALE_REVIEW')
+        if packet['description'] != text:raise ValueError('REVIEW_DESCRIPTION_CHANGED')
+    return text
 
 
 def validate(cfg):
@@ -93,7 +104,7 @@ def validate(cfg):
     for case in cfg['cases']:frozen_text(case)
     before=fingerprint(scope=SCOPE);save(directory/'source-snapshot.json',before)
     save(out/'config.json',cfg)
-    args=[*TARGETS,'-q','-p','no:cacheprovider','--basetemp='+str(directory/'pytest-temp'),
+    args=[*TARGETS,'-q','--import-mode=importlib','-p','no:cacheprovider','--basetemp='+str(directory/'pytest-temp'),
           '--junitxml='+str(directory/'tests.xml')]
     observer=OfflineRecorder();start=now()
     with (directory/'pytest.log').open('w',encoding='utf-8') as stream:
@@ -105,7 +116,8 @@ def validate(cfg):
     diff=git('diff','--check','--',*SCOPE)
     valid=code==0 and observer.counts['passed']>0 and not observer.counts['failed'] and not observer.counts['skipped'] \
         and not observer.setup_errors and not observer.network_attempts and compiled and not diff and before==fingerprint(scope=SCOPE)
-    record={'status':'admitted' if valid else 'blocked','stage':'component single-product and hosted text-loop 1.0 / Brief 2.9 / BIM 2.6 / Compare 1.2',
+    stage = 'reviewed partial-building text-loop' if any(c.get('component_review') for c in cfg['cases']) else 'component single-product and hosted text-loop'
+    record={'status':'admitted' if valid else 'blocked','stage':stage+' / Brief 2.9 / BIM 2.6 / Compare 1.2',
         'code_commit':git('rev-parse','HEAD'),'worktree_status':git('status','--porcelain','--untracked-files=all','--',*SCOPE),
         'snapshot_sha256':digest(directory/'source-snapshot.json'),'config_sha256':digest(out/'config.json'),
         'started_at':start,'finished_at':now(),'python':platform.python_version(),'platform':platform.platform(),
@@ -117,6 +129,7 @@ def validate(cfg):
         'tests':observer.counts,'setup_errors':observer.setup_errors,'nodeids':observer.nodeids,
         'network_transport_attempted':bool(observer.network_attempts),'full_preflight':False,'source_scope':SCOPE,
         'matrix':{'public_complete_door_and_window':'test_component_public_chain_v10.py',
+            'human_pause_exact_exclusion_restart_and_public_generation':'test_component_review.py',
             'clarification_unsupported_malformed_restart':'test_component_public_chain_v10.py',
             'real_building_context_time_memory':'test_component_campaign.py',
             'transport_failures_and_context_limits':'test_phase6_2_openai_compat.py',
