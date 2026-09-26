@@ -50,6 +50,7 @@ def run_changeset_stage(
     context_issues: list[dict[str, Any]] | None = None,
     trace_level: str | None = "debug",
     field_recovery: bool = False,
+    field_recovery_values: Mapping[str, Any] | None = None,
     generation_package: Mapping[str, Any] | None = None,
     semantic_correction: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -101,6 +102,9 @@ def run_changeset_stage(
     if candidate.get('schema_version') in {'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'}:
         template_id = 'bim-json-changeset.v1.13' if candidate.get('schema_version') == 'bim-json/2.6' else 'bim-json-changeset.v1.12' if candidate.get('schema_version') == 'bim-json/2.5' else 'bim-json-changeset.v1.11' if candidate.get('schema_version') == 'bim-json/2.4' else 'bim-json-changeset.v1.10'
         renderer_inputs.setdefault('SEMANTIC_CORRECTION', {})
+    if field_recovery and candidate.get('schema_version') == 'bim-json/2.6':
+        template_id = 'bim-json-changeset.v1.14'
+        renderer_inputs['FIELD_RECOVERY_VALUES'] = dict(field_recovery_values or {})
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])

@@ -136,6 +136,15 @@ def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp
     assert json.loads((source / 'parsed-output.json').read_text(encoding='utf-8')) == doc
     route = json.loads((tmp_path / 'repair/route.json').read_text(encoding='utf-8'))
     assert route['recovery_contract'] == 'text2ifc/early-field-recovery/1.1'
+    if version=='bim-json/2.6':
+        scoped=tmp_path/'repair/scoped'
+        trace=json.loads((scoped/'trace-manifest.json').read_text(encoding='utf-8'))
+        assert trace['template_id']=='bim-json-changeset.v1.14'
+        inputs=json.loads((scoped/'prompt-render-input.json').read_text(encoding='utf-8'))
+        assert inputs['FIELD_RECOVERY_VALUES']==g['required_field_values']
+        prompt=(scoped/'prompt-rendered.md').read_text(encoding='utf-8')
+        assert 'null 不是删除' in prompt
+        assert '不得添加 issue:' in prompt
     from text2ifc_compiler import compile_document
     import ifcopenshell
     compiled=compile_document(after,tmp_path/'repaired.ifc')
@@ -144,7 +153,8 @@ def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp
 
 
 @pytest.mark.parametrize('count', [1, 10])
-def test_continuation_uses_local_field_repair_and_keeps_raw_candidate(tmp_path,monkeypatch,count):
+@pytest.mark.parametrize('attempt', [1, 2])
+def test_continuation_uses_local_field_repair_and_keeps_raw_candidate(tmp_path,monkeypatch,count,attempt):
     from scripts.ifc2text import component_candidate_continuation as continuation
     from tests.agent.test_phase6_5_staged_generation import SequenceProvider
     doc,space=candidate();doc['schema_version']='bim-json/2.6'
@@ -167,8 +177,26 @@ def test_continuation_uses_local_field_repair_and_keeps_raw_candidate(tmp_path,m
         checked.append(json.loads((case/'generator/candidate.json').read_text(encoding='utf-8')))
         return {'valid':True},{'deterministic_gates_passed':True}
     monkeypatch.setattr(continuation,'refresh_gates',gates)
-    result=continuation.repair_fields_case(tmp_path,lambda:SequenceProvider([proposal(doc,g)]))
+    failed=tmp_path/'continuation-field-repair-result.json'
+    if attempt==2:failed.write_text('{"valid": false}',encoding='utf-8')
+    result=continuation.repair_fields_case(tmp_path,lambda:SequenceProvider([proposal(doc,g)]),attempt=attempt,max_attempts=1)
     assert result['valid'] and len(checked)==1
     assert before==(source/'parsed-output.json').read_bytes()
+    if attempt==2:assert failed.read_text(encoding='utf-8')=='{"valid": false}'
     with pytest.raises(FileExistsError):
-        continuation.repair_fields_case(tmp_path,lambda:pytest.fail('Repeated attempt'))
+        continuation.repair_fields_case(tmp_path,lambda:pytest.fail('Repeated attempt'),attempt=attempt)
+
+
+def test_one_attempt_limit_preserves_rejected_value_without_retry(tmp_path):
+    from text2ifc_agent.scoped_loop import run_scoped_changeset_round
+    from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+    doc,_=candidate();doc['schema_version']='bim-json/2.6';g=group(doc)
+    cs=proposal(doc,g)
+    cs['operations'][0]['changes']['/attributes']['InteriorOrExteriorSpace']='NOTDEFINED'
+    result=run_scoped_changeset_round(provider=SequenceProvider([cs]),output_dir=tmp_path,
+        case_id='bounded-field',round_number=1,user_request='An internal space',conversation=[],
+        design_brief={'known_facts':_expected_facts()},expected_facts=_expected_facts(),candidate=doc,
+        issues=[vars(i) for i in validate_v2_document(doc)],field_recovery=True,max_attempts=1)
+    assert not result['valid']
+    assert not (tmp_path/'attempt-02').exists()
+    assert not (tmp_path/'revisions').exists()

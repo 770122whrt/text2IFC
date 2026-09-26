@@ -3597,6 +3597,43 @@
         "unsupported_user_fact",
         "supervisor_semantic_patch"
       ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.14",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.14.md",
+      "sha256": "sha256:528434d14110a56fe6d40a3552ad4fab25b6fbccab28eb26367bcd36abb828c3",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "FIELD_RECOVERY_VALUES"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
     }
   ]
 }

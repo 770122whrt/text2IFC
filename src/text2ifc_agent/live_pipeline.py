@@ -904,9 +904,12 @@ def run_repair_stage(
     case_id: str,
     geometry_feedback: Sequence[Mapping[str, Any]] | None = None,
     prior_attempt_count: int = 0,
+    max_field_attempts: int = 3,
     trace_level: str | None = "debug",
 ) -> dict[str, Any]:
     """Route a generator result through bounded repair or no-repair evidence."""
+    if type(max_field_attempts) is not int or not 1 <= max_field_attempts <= 3:
+        raise ValueError('FIELD_ATTEMPT_LIMIT_MUST_BE_1_TO_3')
     output = Path(output_dir)
     source = Path(generator_source_dir)
     output.mkdir(parents=True, exist_ok=True)
@@ -998,12 +1001,13 @@ def run_repair_stage(
             case_id=case_id, round_number=1, user_request=user_request, conversation=conversation,
             design_brief=design_brief, expected_facts=expected, candidate=candidate,
             issues=validation_issues, trace_level=trace_level, field_recovery=True,
-            max_attempts=3-prior_attempt_count)
+            max_attempts=min(max_field_attempts, 3-prior_attempt_count))
         # Count actual traces, including unsuccessful retries, rather than the last stage only.
         provider_call_count = len(list((output/'scoped').rglob('metrics.json')))
         evidence_class = scoped.get('stage', {}).get('evidence_class', 'deterministic-no-call')
         valid = scoped['valid']
-        repair_template_id = 'bim-json-changeset.v1.8'
+        repair_template_id = ('bim-json-changeset.v1.14'
+            if candidate.get('schema_version') == 'bim-json/2.6' else 'bim-json-changeset.v1.8')
         repair_diagnostics = scoped.get('issues', [])
         if valid:
             repaired_document = scoped['candidate']

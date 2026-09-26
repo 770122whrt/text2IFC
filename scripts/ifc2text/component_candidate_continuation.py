@@ -206,7 +206,7 @@ def repair_case(case, provider_factory):
     return result
 
 
-def repair_fields_case(case, provider_factory):
+def repair_fields_case(case, provider_factory, *, attempt=1, max_attempts=3):
     """Resume invalid scalar fields without replacing the preserved raw output."""
     from text2ifc_agent.early_recovery import build_field_recovery_group
     from text2ifc_agent.generator import validate_generation_document
@@ -214,7 +214,14 @@ def repair_fields_case(case, provider_factory):
     from text2ifc_agent.interactive_cli_flow import _promote_repaired_candidate
     case = Path(case)
     verify_lineage(case)
-    start_once(case, 'continuation-field-repair')
+    if type(attempt) is not int or attempt < 1:
+        raise ValueError('POSITIVE_EXPLICIT_ATTEMPT_REQUIRED')
+    name = 'field-repair' if attempt == 1 else f'field-repair-{attempt:02d}'
+    if attempt > 1:
+        previous = 'field-repair' if attempt == 2 else f'field-repair-{attempt-1:02d}'
+        if load(case/f'continuation-{previous}-result.json').get('valid') is not False:
+            raise ValueError('PREVIOUS_FAILED_FIELD_ATTEMPT_REQUIRED')
+    start_once(case, 'continuation-'+name)
     source = case/'generator'
     raw_hash = digest(source/'parsed-output.json')
     candidate = load(source/'parsed-output.json')
@@ -224,13 +231,13 @@ def repair_fields_case(case, provider_factory):
     group = build_field_recovery_group(candidate, feedback)
     if not group['eligible']:
         raise ValueError('LOCAL_FIELD_RECOVERY_NOT_ELIGIBLE')
-    save(case/'continuation-field-repair-scope.json', group)
+    save(case/f'continuation-{name}-scope.json', group)
     result = run_repair_stage(provider_factory=provider_factory,
-        output_dir=case/'field-repair', generator_source_dir=source,
-        case_id='component-field-repair')
-    save(case/'continuation-field-repair-result.json', result)
-    if result.get('valid') and (case/'field-repair/repaired-candidate.json').is_file():
-        _promote_repaired_candidate(case, case/'field-repair/repaired-candidate.json')
+        output_dir=case/name, generator_source_dir=source,
+        case_id='component-field-repair', max_field_attempts=max_attempts)
+    save(case/f'continuation-{name}-result.json', result)
+    if result.get('valid') and (case/name/'repaired-candidate.json').is_file():
+        _promote_repaired_candidate(case, case/name/'repaired-candidate.json')
         _, gates = refresh_gates(case)
         save(case/'continuation-gates-result.json', gates)
     if digest(source/'parsed-output.json') != raw_hash:
@@ -268,15 +275,19 @@ def live(cfg, stage):
     budget.check_capacity('reconstruction')
     cap = cfg['audit_output_tokens'] if stage == 'audit' else cfg['generation_output_tokens']
     conf,client,provider = runtime(cfg,budget,'reconstruction',cap)
+    receipt = (f"field-repair-{cfg['continuation']['field_attempt']:02d}"
+               if stage == 'field-repair' and cfg['continuation'].get('field_attempt',1) > 1 else stage)
     try:
         result = (repair_case(case,lambda:provider) if stage == 'repair' else
-                  repair_fields_case(case,lambda:provider) if stage == 'field-repair' else
+                  repair_fields_case(case,lambda:provider,
+                    attempt=cfg['continuation'].get('field_attempt',1),
+                    max_attempts=cfg['continuation'].get('field_max_attempts',3)) if stage == 'field-repair' else
                   regenerate_case(case,provider) if stage == 'regenerate' else audit_case(case,provider))
-        save(case/(stage+'-continuation-budget.json'),budget.snapshot())
+        save(case/(receipt+'-continuation-budget.json'),budget.snapshot())
         admitted(cfg)
         print(json.dumps(result,ensure_ascii=False,indent=2))
     except Exception as error:
-        save(case/(stage+'-continuation-failure.json'),{'error_type':type(error).__name__,
+        save(case/(receipt+'-continuation-failure.json'),{'error_type':type(error).__name__,
             'at':now(),'budget':budget.snapshot()})
         raise
 
