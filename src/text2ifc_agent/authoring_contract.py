@@ -19,6 +19,20 @@ _MANAGED = {'GlobalId', 'OwnerHistory', 'HasPropertySets', 'RepresentationMaps'}
 
 def build_authoring_contract(classes: Iterable[str] | None = None, *, version: str = '1.1') -> dict:
     """Offer legal fields, not default facts or authorization to invent values."""
+    if version == '1.7':
+        result = build_authoring_contract(classes,version='1.6')
+        result['schema_version'] = 'text2ifc/generation-authoring-contract/1.7'
+        host = result['geometry_encoding']['polygon_wall_host']
+        host['geometry'] = ('BIM JSON 2.6: positive-local-Z extrusion of a simple closed polygon with parallel local-X wall faces. '
+            'Explicit straight-sided concave notches and beveled ends are supported. Preserve every vertex; do not fill notches. '
+            'Layer thickness remains the declared wall strip thickness; Representation.position may translate or rotate about Z.')
+        host['unsupported'] = 'Sloped, self-intersecting, repeated-vertex or variable-thickness layered walls require Draft.'
+        for source in ['src/text2ifc_contract/polygon_wall.py','src/text2ifc_contract/materials.py']:
+            result['source_hashes'][source] = hashlib.sha256((ROOT/source).read_bytes()).hexdigest()
+        result.pop('contract_hash')
+        encoded=json.dumps(result,sort_keys=True,ensure_ascii=False,separators=(',',':')).encode('utf-8')
+        result['contract_hash']='sha256:'+hashlib.sha256(encoded).hexdigest()
+        return result
     if version not in {'1.0', '1.1', '1.2', '1.3', '1.4', '1.5', '1.6'}:
         raise ValueError(f'Unsupported authoring contract version: {version}')
     registry = load_ifc2x3_registry()

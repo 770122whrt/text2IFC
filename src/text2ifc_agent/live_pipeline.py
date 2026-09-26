@@ -627,9 +627,9 @@ def run_generator_stage(
         "GENERATION_FEEDBACK": dict(generation_feedback or {}),
     }
     if new_semantics:
-        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.6' if target_version == 'bim-json/2.6' else '1.5' if target_version == 'bim-json/2.5' else '1.4' if target_version == 'bim-json/2.4' else '1.3' if target_version == 'bim-json/2.3' else '1.2' if target_version == 'bim-json/2.2' else '1.1')
+        renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.7' if target_version == 'bim-json/2.6' else '1.5' if target_version == 'bim-json/2.5' else '1.4' if target_version == 'bim-json/2.4' else '1.3' if target_version == 'bim-json/2.3' else '1.2' if target_version == 'bim-json/2.2' else '1.1')
     rendered = render_prompt(
-        template_id='bim-json-generator.v2.10' if target_version == 'bim-json/2.6' else 'bim-json-generator.v2.8' if target_version == 'bim-json/2.5' else 'bim-json-generator.v2.7' if target_version == 'bim-json/2.4' else 'bim-json-generator.v2.6' if target_version == 'bim-json/2.3' else 'bim-json-generator.v2.5' if target_version == 'bim-json/2.2' else 'bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
+        template_id='bim-json-generator.v2.11' if target_version == 'bim-json/2.6' else 'bim-json-generator.v2.8' if target_version == 'bim-json/2.5' else 'bim-json-generator.v2.7' if target_version == 'bim-json/2.4' else 'bim-json-generator.v2.6' if target_version == 'bim-json/2.3' else 'bim-json-generator.v2.5' if target_version == 'bim-json/2.2' else 'bim-json-generator.v2.4' if new_semantics else GENERATOR_TEMPLATE_ID,
         inputs=renderer_inputs,
     )
 
@@ -960,7 +960,23 @@ def run_repair_stage(
     fact_delta: dict[str, Any] | None = None
     repair_diagnostics: list[dict[str, Any]] = []
     repair_template_id = REPAIR_TEMPLATE_ID
-    if attachment_recovery['eligible']:
+    from .polygon_closure import recover_repair_polygons
+    closure_recovery = (recover_repair_polygons(candidate,candidate,
+        allowed_change_paths=[],evidence_by_path={})
+        if candidate and not geometry_issues and prior_attempt_count < 3 else {'eligible':False})
+    if closure_recovery['eligible']:
+        repaired_document = closure_recovery['candidate']
+        repaired_artifact_name = 'repaired-candidate.json'
+        _write_json(output/repaired_artifact_name,repaired_document)
+        _write_json(output/'polygon-closure-recovery.json',
+                    {k:v for k,v in closure_recovery.items() if k!='candidate'})
+        fact_delta = closure_recovery['fact_delta']
+        _write_json(output/'fact-delta.json',fact_delta)
+        valid = True
+        evidence_class = 'deterministic-derived-no-call'
+        route = {'route':'repair_attempted','recovery_contract':'text2ifc/polygon-closure-recovery/1.0',
+                 'repair_attempts':[{'attempt_number':1,'result_status':'improved','provider_call_count':0}]}
+    elif attachment_recovery['eligible']:
         repaired_document = attachment_recovery['candidate']
         repaired_artifact_name = 'repaired-candidate.json'
         _write_json(output/repaired_artifact_name, repaired_document)
@@ -1010,7 +1026,7 @@ def run_repair_stage(
         draft_path = PROJECT_ROOT / draft_schema_relative_path(target_version) if new_semantics else DRAFT_SCHEMA_PATH
         formal_schema = json.loads(formal_path.read_text(encoding="utf-8"))
         draft_schema = json.loads(draft_path.read_text(encoding="utf-8"))
-        repair_template_id = 'bim-json-generator-repair.v2.7' if target_version == 'bim-json/2.6' else 'bim-json-generator-repair.v2.6' if target_version == 'bim-json/2.5' else 'bim-json-generator-repair.v2.5' if target_version == 'bim-json/2.4' else 'bim-json-generator-repair.v2.4' if target_version == 'bim-json/2.3' else 'bim-json-generator-repair.v2.3' if target_version == 'bim-json/2.2' else 'bim-json-generator-repair.v2.2' if new_semantics else REPAIR_TEMPLATE_ID
+        repair_template_id = 'bim-json-generator-repair.v2.8' if target_version == 'bim-json/2.6' else 'bim-json-generator-repair.v2.6' if target_version == 'bim-json/2.5' else 'bim-json-generator-repair.v2.5' if target_version == 'bim-json/2.4' else 'bim-json-generator-repair.v2.4' if target_version == 'bim-json/2.3' else 'bim-json-generator-repair.v2.3' if target_version == 'bim-json/2.2' else 'bim-json-generator-repair.v2.2' if new_semantics else REPAIR_TEMPLATE_ID
         repair_issues = [*validation_issues, *geometry_issues]
         allowed_change_paths = _repair_allowed_change_paths(
             repair_issues,
@@ -1034,7 +1050,7 @@ def run_repair_stage(
             "EVIDENCE_BY_PATH": evidence_by_path,
         }
         if new_semantics:
-            renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.6' if target_version == 'bim-json/2.6' else '1.5' if target_version == 'bim-json/2.5' else '1.4' if target_version == 'bim-json/2.4' else '1.3' if target_version == 'bim-json/2.3' else '1.2' if target_version == 'bim-json/2.2' else '1.1')
+            renderer_inputs['IFC_AUTHORING_CONTRACT'] = build_authoring_contract(version='1.7' if target_version == 'bim-json/2.6' else '1.5' if target_version == 'bim-json/2.5' else '1.4' if target_version == 'bim-json/2.4' else '1.3' if target_version == 'bim-json/2.3' else '1.2' if target_version == 'bim-json/2.2' else '1.1')
         rendered = render_prompt(
             template_id=repair_template_id,
             inputs=renderer_inputs,
@@ -1060,6 +1076,15 @@ def run_repair_stage(
         parse_status, parsed, normalization_diagnostics = live_result.output.parse_json()
         if parse_status == "ok" and parsed is not None:
             _write_json(output / "parsed-output.json", parsed)
+            from .polygon_closure import recover_repair_polygons
+            closure = recover_repair_polygons(candidate, parsed,
+                allowed_change_paths=allowed_change_paths, evidence_by_path=evidence_by_path)
+            if closure['eligible']:
+                _write_json(output / 'polygon-closure-recovery.json',
+                            {k:v for k,v in closure.items() if k!='candidate'})
+                parsed = closure['candidate']
+                allowed_change_paths = closure['allowed_change_paths']
+                evidence_by_path = closure['evidence_by_path']
             contract = validate_generation_document(parsed)
         else:
             contract = {

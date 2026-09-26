@@ -57,7 +57,7 @@ def validate_materials(document):
                 if document.get("schema_version") in {"bim-json/2.4", "bim-json/2.5", "bim-json/2.6"}:
                     from .polygon_wall import wall_section
                     try:
-                        _, low, high, _, _ = wall_section(rep)
+                        _, low, high, _, _ = wall_section(rep,allow_concave=document.get('schema_version')=='bim-json/2.6')
                         thickness = high - low
                     except (KeyError, TypeError, ValueError, IndexError) as exc:
                         issues.append(ValidationIssue("UNSUPPORTED_LAYER_GEOMETRY", path, str(exc)))

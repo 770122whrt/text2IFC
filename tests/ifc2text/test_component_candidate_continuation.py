@@ -98,11 +98,60 @@ def test_existing_target_cannot_be_overwritten(tmp_path):
         prepare_case(source,target)
 
 
+@pytest.mark.parametrize('tamper',[False,True])
+def test_preserved_invalid_repair_can_only_continue_after_proven_closure(tmp_path,tamper):
+    from scripts.ifc2text.component_candidate_continuation import prepare_case,verify_lineage
+    from tests.agent.test_polygon_closure_recovery import open_document
+    from text2ifc_agent.generator import validate_generation_document
+    source=source_case(tmp_path)
+    original=open_document();response=copy.deepcopy(original);original.pop('provenance')
+    (source/'generator/candidate.json').unlink()
+    def write(name,value):
+        (source/name).write_text(json.dumps(value),encoding='utf-8')
+    write('generator/parsed-output.json',original)
+    diagnostics=validate_generation_document(original)['diagnostics']
+    write('generator/validation.json',{'valid':False,'issues':diagnostics})
+    if tamper:response['entities'][0]['attributes']['Name']='unexpected change'
+    write('repair/parsed-output.json',response)
+    write('repair/response.raw.json',{'id':'offline-frozen-response'})
+    write('repair/metrics.json',{'valid':False,'evidence_class':'fake','provider_call_count':1})
+    write('case-result.json',{'final_status':'blocked','output_type':'none'})
+    before={p.relative_to(source):p.read_bytes() for p in source.rglob('*') if p.is_file()}
+    target=tmp_path/'recovered'
+    if tamper:
+        with pytest.raises(ValueError,match='CLOSURE_RECOVERY_NOT_ELIGIBLE'):
+            prepare_case(source,target,recovery='polygon_closure')
+        assert not target.exists()
+    else:
+        prepare_case(source,target,recovery='polygon_closure')
+        assert validate_generation_document(json.loads((target/'generator/candidate.json').read_text(encoding='utf-8')))['status']=='formal'
+        assert (target/'polygon-closure-recovery.json').is_file()
+        verify_lineage(target)
+    assert before=={p.relative_to(source):p.read_bytes() for p in source.rglob('*') if p.is_file()}
+
+
 def test_stage_marker_is_single_attempt(tmp_path):
     from scripts.ifc2text.component_candidate_continuation import start_once
     start_once(tmp_path,'repair')
     with pytest.raises(FileExistsError):
         start_once(tmp_path,'repair')
+
+
+@pytest.mark.parametrize('cls',['IfcDoor','IfcWindow'])
+def test_regenerate_from_frozen_brief_keeps_previous_attempt_and_runs_gates(tmp_path,cls):
+    from scripts.ifc2text.component_candidate_continuation import prepare_regeneration_case,regenerate_case,verify_lineage
+    parent,correct=source_case(tmp_path,cls)
+    before={p.relative_to(parent):p.read_bytes() for p in parent.rglob('*') if p.is_file()}
+    case=tmp_path/'retry'
+    prepare_regeneration_case(parent,case)
+    provider=SequenceProvider([correct])
+    result=regenerate_case(case,provider)
+    assert result['valid']
+    assert len(provider.calls)==1
+    assert json.loads((case/'continuation-gates-result.json').read_text(encoding='utf-8'))['deterministic_gates_passed']
+    assert json.loads((case/'generator/prompt-render-input.json').read_text(encoding='utf-8'))['GENERATION_FEEDBACK']['expected_counts']
+    assert before=={p.relative_to(parent):p.read_bytes() for p in parent.rglob('*') if p.is_file()}
+    verify_lineage(case)
 
 
 @pytest.mark.parametrize('cls', ['IfcDoor','IfcWindow'])

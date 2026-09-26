@@ -1,8 +1,8 @@
 # 参数化门窗：首阶段开发与验证
 
-日期：2026-09-25。执行依据：[唯一计划 v1.0](../../../architecture/text2ifc-component-plan-v1.0.md)。
+更新：2026-09-26。执行依据：[唯一计划 v1.0](../../../architecture/text2ifc-component-plan-v1.0.md)。
 
-已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**hxp 与 TallBuilding 各一门一窗均已完成真实 LLM loop；整栋 hxp 尚未生成。** 下方保留分阶段证据。
+已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**四个独立门窗与两个宿主场景已通过真实 loop；hxp 已完成批准范围内的部分重建，61 个对象无已测几何超差，i5n_1 仍在运行。** hxp 排除的 5 扇门和 36 项材料元数据差异均保留，不宣称整栋完全一致。下方保留分阶段证据。
 
 **最新比较要求：允许 IfcOpenShell 解析后进行容差比较，也允许补充自写算法。** Compare 1.2 继续使用：IFC 解析、单位与变换、布尔并集及网格来自 IfcOpenShell，双向采样距离、拓扑与体积判据由项目实现，不能改称全部是官方库算法。其边界测试覆盖 0.5 mm、1 mm、1.0001 mm、内部孔洞与叶片变化、等价实体拆分和不同单位。现有四个结果不改写、不换版本冒充重测。
 
@@ -222,3 +222,45 @@ loop-04 的独立 Compare 1.3 匹配 61 个对象，缺少的 5 扇门正好是�
 尚需修复：5 个门窗的放置父级目前是楼层，而当前生成合同要求关联开口；它们的世界几何及 void/fill 关系已通过独立比较，保留当前父级检查并由后续生成修复保持世界几何地调整。需要在保留原证据和累计收费的前提下完成保存候选的修复／Audit 续跑；不能改写原任务冻结的 750,000 token 上限。当前累计 Provider 消耗 **4,112,487**，剩余 **583,860**；原失败、原预算阻断均保留，未获额外授权不会超额调用。
 
 空间／轮廓修复已提交并推送为 `16d8d6c1`。续跑前还修订了两处修复路由：已测得的 `WALL_OUTLINE_MISMATCH` 和 `FILLING_PLACEMENT_CHAIN_MISMATCH` 可以进入既有有界修复；`WALL_OUTLINE_UNASSESSED` 继续阻断。门窗放置错误以构件 ID 报告，修改范围则需要对应候选数组下标；现在只为唯一匹配的门／窗授权完整 `ObjectPlacement`，使父级变化时能同时重算原点和方向，不授权部件、材料、关系或其他对象。修复后的世界放置检查仍保留。7 项新测试覆盖路由、门和窗的重新放置、禁止更改部件，以及生产 `run_repair_stage` 的离线 Provider 路径；连同原世界放置、失败路由和 fact-delta 测试共 **43 passed、0 skipped、网络调用 0**。这只是修复通道的离线验证，尚未修复真实 hxp 候选。
+
+### S5 hxp 真实续跑与最终比较
+
+续跑代码提交为 `61547ecb`。180 项阶段内检查通过、无失败／跳过、无网络；其中门和窗均经过离线公共 Brief→Generator→修复→编译→Audit→最终重开。续跑验证源运行不变、公开输入封存、不能偷偷重置原任务预算、一次尝试标记，以及越界修复拒绝发布。继承先前阶段证据，不将重叠测试数相加。
+
+真实续跑保存在 `component-v26-building-continuation-20260926-02/hxp/`。一次真实修复修改 25 个叶值，只涉及 W008 和两门三窗的放置；W008 镜像缺口修正、五个放置父级重接开口后，10 项确定性 Gate 全部通过。真实修复消耗 178,412 token。原 loop-04 失败、原 750,000 token 任务预算、原候选和源 IFC 均保留。
+
+再次明确批准增加 1,000,000 token 后，总额度为 **5,696,347**；新账本 `component-v26-budget-20260926-02/allocation.json` 完整继承旧消耗 4,290,899。hxp Audit 实际消耗 **150,586 token**，结果为 `accepted`；最终编译、重开和几何验收通过。Audit 由 continuation-03 的新配置接续，continuation-02 的原修复配置未改写。
+
+最终交付文件重新独立比较，不复用 Audit 前文件的结果：
+
+| 项目 | hxp 最终结果 |
+|---|---:|
+| 源／重建／匹配对象 | 66／61／61 |
+| 缺失／多余 | 5／0 |
+| 超过 1 mm 的已测几何差异 | 0 |
+| 材料内容差异／材料元数据差异 | 0／36 |
+| 已测关系差异／楼层标高差异 | 0／0 |
+
+缺少的恰为批准排除的 D003–D007，保留墙和开口。34 面墙的内在尺寸因源 Axis 与候选网格测法不同仍列为未评估，但切洞前后实测几何已经比较；另 5 个保留开口对应被排除门，其 filling 不称为一致。材料元数据主要是层集合名称变成内部材料编号，材料名称、层厚等内容无差异。故原始比较报告仍保留 `reconstruction_consistent=false`，不将部分重建重标为完整一致。
+
+- [最终 hxp IFC](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/accepted/output.ifc)
+- [最终独立比较 1.3](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/compare-v1.3-accepted.json)
+- [真实 Audit 结果](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/continuation-audit-result.json)、[最终验收](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/continuation-acceptance-result.json)
+
+最终 IFC SHA-256 为 `11be7ed5d88394484abef5f1eb5c84a05bf1eb5320d78a042bc4943b78abfb31`。所有线性检查维持 1 mm；网格与采样比较的限制不变。上述是实际已揭示案例的成功，不是来源隔离盲测或模型泛化提升。
+
+已记录的线性指标中最大为 R005 房间轮廓约 **0.070146 mm**。紧凑证据索引见 [hxp-accepted-summary.json](hxp-accepted-summary.json)，本地逐项人读链见 [HUMAN-REPORT.md](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/HUMAN-REPORT.md)。完整原始运行继续保留在本地实验目录，未冒充已提交的远端 Proof 集合。
+
+### S5 i5n_1 的已保留失败与范围扩展
+
+loop-06 的 Brief 实际消耗 138,738 token 并 ready；Generator 消耗 189,365，自动修复消耗 176,873。三次响应均正常结束而非输出截断。Generator 实际只输出 42 面墙、10 个空间及项目结构，漏掉所有门、窗、开口、楼板；根 `provenance` 也缺失。真实修复只新增该元数据，没有补建筑对象，因此原运行停在 `draft_or_blocked`，没有 IFC，Audit 未运行。
+
+修复 provenance 后，两面墙 W012、W013 的截面还缺重复的首点；仅追加首点的离线检查继续发现实际凹口，旧墙体材料检查只接受凸截面。公开描述已经逐点写出两面墙，问题不是 IFC2Text 漏写或材料说明不清。已再次与 human 讨论，并明确批准补上这种凹口墙的通用支持。
+
+新增实现仅在 BIM JSON 2.6 路径支持简单直边凹多边形，保留原始挤出顶点与材料层，宿主交集由 Shapely 计算，不能用包围盒证明落在凹口内的开口相交。IfcOpenShell 真实编译、重开、材料、关系和实体体积检查已通过；旧 2.4／2.5 范围及材料厚度内部 0.1 mm 校验不放宽。新的作者合同 1.7、Generator 2.11、Repair 2.8 与旧版本并存。
+
+合法开口多边形另有确定性格式恢复：先验证模型未改动授权范围外的事实，再追加与首点完全相同的终点，完整合同必须重新通过。原响应与 `parsed-output.json` 不改写，派生候选及恢复说明另存；自交、重复顶点、缺坐标或其他材料错误不会通过这一恢复。生产修复通道可在不新增 Provider 调用的情况下处理仅缺闭合点的问题。
+
+阶段内迭代结果：闭合／既有修复与墙体回归 59 passed；凹口和原凸截面墙编译回归 24 passed；新合同、注册表、闭合恢复及生成路线 50 passed；带凹口或反向宿主的公开门／窗链 6 passed。各组重叠，不相加为能力指标。下一次真实运行仍须当前代码对应的准入记录。
+
+原 loop-06 没有被重新标为成功。continuation-04 的离线派生检查已验证：即使修复语法和凹口支持，缺对象仍被完整性、宿主关系及请求检查拒绝。下一步是 continuation-05 复用原 ready Brief、重新生成全部建筑对象；旧生成和修复响应全部保留。此时累计已耗 **4,946,461**、剩余 **749,886 token**。

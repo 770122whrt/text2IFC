@@ -29,11 +29,12 @@ def _cross(a, b):
     return float(a[0] * b[1] - a[1] * b[0])
 
 
-def wall_section(rep):
-    """Return convex section in product coordinates and its extrusion limits.
+def wall_section(rep, *, allow_concave=False):
+    """Return a section in product coordinates and its extrusion limits.
 
     Both long faces must lie at constant local Y. Bevels may truncate either
-    end; concave notches, self intersections and tapered long faces are refused.
+    end. The 2.6 caller may additionally allow explicit straight-sided notches;
+    self intersections and tapered long faces are always refused.
     """
     frame = representation_frame(rep)
     profile = rep.get('profile', {})
@@ -50,6 +51,11 @@ def wall_section(rep):
     points = np.array([(frame @ [p[0], p[1], 0, 1])[:2] for p in raw])
     if not np.all(np.isfinite(points)):
         raise ValueError('Wall section coordinates must be finite.')
+    if allow_concave:
+        from shapely.geometry import Polygon
+        section = Polygon(points)
+        if len({tuple(p) for p in points}) != len(points) or not section.is_valid or section.is_empty:
+            raise ValueError('Wall section must be a simple polygon without repeated vertices.')
     # Rounded collinear points can create an apparent notch whose extrapolated
     # edge is much farther away than the actual authored deviation. Collapse
     # only intermediate vertices within tolerance of their neighbour segment,
@@ -75,7 +81,7 @@ def wall_section(rep):
     for a, b in zip(points, np.roll(points, -1, axis=0)):
         edge = b - a
         length = float(np.linalg.norm(edge))
-        if length <= 1e-9 or any(_cross(edge, p - a) < -TOLERANCE_MM * length for p in points):
+        if length <= 1e-9 or (not allow_concave and any(_cross(edge, p - a) < -TOLERANCE_MM * length for p in points)):
             raise ValueError('Wall section must be convex without repeated vertices.')
     low, high = float(points[:, 1].min()), float(points[:, 1].max())
     sides = []
@@ -89,8 +95,11 @@ def wall_section(rep):
     return points, low, high, float(frame[2, 3]), float(frame[2, 3] + rep['depth'])
 
 
-def _intersection_area(points, x0, x1, y0, y1):
+def _intersection_area(points, x0, x1, y0, y1, *, allow_concave=False):
     """Clip the convex wall section by an aligned rectangle; tangency has area 0."""
+    if allow_concave:
+        from shapely.geometry import Polygon, box
+        return float(Polygon(points).intersection(box(x0,y0,x1,y1)).area)
     output = [np.array(p) for p in points]
     for axis, bound, sign in ((0, x0, 1), (0, x1, -1), (1, y0, 1), (1, y1, -1)):
         before, output = output, []
@@ -122,7 +131,8 @@ def filling_fit_messages(document, host_id, opening_id, filling_id):
     host_rep = records[host_id]['attributes']['Representation']
     opening_rep = records[opening_id]['attributes']['Representation']
     filling = records[filling_id]['attributes']['Representation']
-    polygon, _, _, wall_z0, wall_z1 = wall_section(host_rep)
+    allow_concave = document.get('schema_version') == 'bim-json/2.6'
+    polygon, _, _, wall_z0, wall_z1 = wall_section(host_rep,allow_concave=allow_concave)
     if opening_rep.get('profile', {}).get('kind') != 'rectangle':
         raise ValueError('The opening must remain a rectangular vertical extrusion.')
     host_world = np.array(world_transform_for(document, host_id))
@@ -138,7 +148,7 @@ def filling_fit_messages(document, host_id, opening_id, filling_id):
     # IFC openings are Boolean cutters. A valid source cutter may cross a
     # clipped wall end; requiring complete containment changes the source.
     # Genuine disjoint/tangent cutters still fail using positive intersection.
-    opening_area = _intersection_area(polygon, ox - hx, ox + hx, oy - hy, oy + hy)
+    opening_area = _intersection_area(polygon, ox - hx, ox + hx, oy - hy, oy + hy,allow_concave=allow_concave)
     opening_height = min(oz + opening_rep['depth'], wall_z1) - max(oz, wall_z0)
     if opening_area <= 1e-6 or opening_height <= 1e-6:
         messages.append('The unchanged opening must intersect the wall with positive volume; tangency is insufficient.')
@@ -153,7 +163,7 @@ def filling_fit_messages(document, host_id, opening_id, filling_id):
     parameters = resolve_basic_filling(filling, records[filling_id]['ifc_class'])['parameters']
     actual_depth = max(parameters['frame_depth'], parameters['panel_thickness'])
     fill_area = _intersection_area(polygon, x - filling['width'] / 2, x + filling['width'] / 2,
-                                   y - actual_depth / 2, y + actual_depth / 2)
+                                   y - actual_depth / 2, y + actual_depth / 2,allow_concave=allow_concave)
     fill_height = min(z + filling['height'], wall_z1) - max(z, wall_z0)
     if fill_area <= 1e-6 or fill_height <= 1e-6:
         messages.append('The filling envelope must overlap the wall with positive volume.')

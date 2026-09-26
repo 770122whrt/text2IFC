@@ -3536,6 +3536,67 @@
         "compiler_only_object",
         "unknown_contract_version"
       ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.11",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.11.md",
+      "sha256": "sha256:16ff7d2305e5aa804ba734c40f8ff0089eedf4fd4555fbc1443885293d2cbd2e",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.8",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.8.md",
+      "sha256": "sha256:288d0943546c9962d7fc8b7d428f22ba0d69fc7d998047b4f5ad4e0e953f3341",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
     }
   ]
 }

@@ -40,8 +40,12 @@ def hosted_document(cls):
 
 @pytest.mark.parametrize('cls',['IfcDoor','IfcWindow'])
 @pytest.mark.parametrize('reverse_frame', [False, True])
-def test_hosted_text_loop_preserves_cut_filling_geometry_and_world_placement(tmp_path,cls,reverse_frame):
+@pytest.mark.parametrize('notched', [False, True])
+def test_hosted_text_loop_preserves_cut_filling_geometry_and_world_placement(tmp_path,cls,reverse_frame,notched):
     candidate,label,storey=hosted_document(cls)
+    outline=[[-1480,-100],[1500,-100],[1500,100],[-1500,100],[-1500,0],[-1480,0],[-1480,-100]]
+    if notched:
+        next(e for e in candidate['entities'] if e['id']=='W001')['attributes']['Representation']['profile']={'kind':'polygon','points':outline}
     if reverse_frame:
         candidate['entities'][-1]['attributes']['ObjectPlacement'].update(origin=[425,-100,0],ref_direction=[-1,0,0])
     source=tmp_path/'source.ifc';result=compile_document(candidate,source);assert result.success,result
@@ -52,6 +56,7 @@ def test_hosted_text_loop_preserves_cut_filling_geometry_and_world_placement(tmp
     facts=brief['known_facts'];facts.pop('doors')
     facts['storeys']=[{'id':storey,'elevation_mm':0}]
     facts['walls']=[{'id':'W001','ifc_class':'IfcWall','storey':storey,'height_mm':3000,'thickness_mm':200}]
+    if notched:facts['walls'][0]['polygon']=copy.deepcopy(outline)
     facts['openings']=[{'id':'O001','ifc_class':'IfcOpeningElement','storey':storey,'host_wall':'W001'}]
     facts['doors' if cls=='IfcDoor' else 'windows']=[{'id':label,'ifc_class':cls,'storey':storey,'width_mm':850,'height_mm':1100,
         'installation':'hosted','host_wall':'W001','opening':'O001',
