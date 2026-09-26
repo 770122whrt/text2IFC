@@ -54,3 +54,53 @@ class ComponentBudget(GoalBudget):
 
 
 def open_allocation(manifest):return ComponentBudget(manifest)
+
+
+def resume_settled_truncation(budget, response_path, *, rationale):
+    """Explicit diagnostic recovery, never an automatic transport retry.
+
+    One settled truncation may be resumed in this ledger. Unknown usage, other
+    failures, unsettled calls and exhausted limits remain blocking. The receipt
+    freezes the prior state; all failed attempts and limits remain unchanged.
+    """
+    if not isinstance(rationale, str) or not rationale.strip():
+        raise GoalStopped('TRUNCATION_RECOVERY_REASON_REQUIRED')
+    response_path = Path(response_path)
+    response = json.loads(response_path.read_text(encoding='utf-8'))
+    with budget._lock():
+        before = budget.snapshot(); data = budget._read()
+        failures = [a for a in data['attempts'] if a['status'] == 'failed']
+        if (not data['halted'] or data['halt_reason'] != 'UNUSABLE_RESPONSE_length'
+                or len(failures) != 1 or failures[0] != data['attempts'][-1]
+                or any(a['status'] == 'reserved' for a in data['attempts'])
+                or not failures[0].get('usage_known')):
+            raise GoalStopped('TRUNCATION_RECOVERY_NOT_APPLICABLE')
+        attempt = failures[0]; usage = response.get('usage', {})
+        values = [usage.get('prompt_tokens'), usage.get('completion_tokens')]
+        if (attempt.get('failure') != 'UNUSABLE_RESPONSE_length'
+                or response.get('id') != attempt.get('response_id')
+                or len(response.get('choices', [])) != 1
+                or response['choices'][0].get('finish_reason') != 'length'
+                or any(type(v) is not int or v < 0 for v in values)
+                or sum(values) != attempt['charged_tokens']):
+            raise GoalStopped('TRUNCATION_RESPONSE_MISMATCH')
+        if (before['tokens_used_or_reserved'] >= before['limits']['tokens']
+                or before['calls'][attempt['stage']] >= before['limits'][attempt['stage']]):
+            raise GoalStopped('CUMULATIVE_GOAL_BUDGET_EXCEEDED')
+        record = {'schema_version': 'text2ifc/settled-truncation-recovery/1.0',
+            'action': 'resume_settled_truncation', 'before_snapshot': before,
+            'before_ledger_sha256': _digest(budget.path),
+            'response_path': str(response_path.resolve()), 'response_sha256': _digest(response_path),
+            'rationale': rationale, 'limits_and_attempts_unchanged': True}
+        receipt = budget.root / 'settled-truncation-recovery.json'
+        if receipt.exists():
+            # A crash after writing the receipt but before the ledger update may
+            # finish the same transition; a different prior state cannot reuse it.
+            if json.loads(receipt.read_text(encoding='utf-8')) != record:
+                raise GoalStopped('TRUNCATION_RECOVERY_RECEIPT_CONFLICT')
+        else:
+            with receipt.open('x', encoding='utf-8') as stream:
+                json.dump(record, stream, ensure_ascii=False, indent=2)
+        data.update(halted=False, halt_reason=None)
+        budget._write(data)
+    return receipt

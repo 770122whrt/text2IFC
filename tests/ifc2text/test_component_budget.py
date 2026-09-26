@@ -66,3 +66,64 @@ def test_campaign_requires_frozen_allocation_before_using_its_budget(tmp_path):
     assert budget_for(cfg).snapshot()['tokens_used_or_reserved']==150
     cfg['budget_allocation']['sha256']='wrong'
     with pytest.raises(GoalStopped,match='ALLOCATION_CHANGED'):budget_for(cfg)
+
+
+def truncated(tmp_path):
+    from scripts.ifc2text.component_budget import allocate,open_allocation
+    old=previous(tmp_path);b=open_allocation(allocate(old,tmp_path/'new',additional_call_slots=5))
+    n=b.reserve('reconstruction',200)
+    b.settle(n,usage={'prompt_tokens':40,'completion_tokens':100},failure='UNUSABLE_RESPONSE_length',response_id='response-1')
+    p=tmp_path/'response.json';p.write_text(json.dumps({'id':'response-1','choices':[{'finish_reason':'length'}],
+        'usage':{'prompt_tokens':40,'completion_tokens':100}}),encoding='utf-8')
+    return b,p
+
+
+def test_explicit_settled_truncation_recovery_retains_charge_failure_and_limits(tmp_path):
+    from scripts.ifc2text.component_budget import resume_settled_truncation
+    b,p=truncated(tmp_path);before=b.snapshot()
+    receipt=resume_settled_truncation(b,p,rationale='Increase the separately admitted output cap after diagnosis')
+    after=b.snapshot()
+    assert not after['halted'] and after['halt_reason'] is None
+    for key in ['limits','historical','attempts','calls','tokens_used_or_reserved']:assert after[key]==before[key]
+    r=json.loads(receipt.read_text(encoding='utf-8'));assert r['before_snapshot']==before
+    assert r['response_sha256'] and r['action']=='resume_settled_truncation'
+    with pytest.raises(GoalStopped,match='TRUNCATION_RECOVERY_NOT_APPLICABLE'):resume_settled_truncation(b,p,rationale='duplicate')
+    b.check_capacity('reconstruction',tokens=1)
+
+
+@pytest.mark.parametrize('fault',['wrong_response','wrong_usage','wrong_finish','other_halt','unknown_usage','prior_failure','no_reason'])
+def test_truncation_recovery_refuses_other_budget_failures(tmp_path,fault):
+    from scripts.ifc2text.component_budget import resume_settled_truncation
+    b,p=truncated(tmp_path);data=json.loads(p.read_text(encoding='utf-8'))
+    if fault=='wrong_response':data['id']='other'
+    elif fault=='wrong_usage':data['usage']['completion_tokens']=101
+    elif fault=='wrong_finish':data['choices'][0]['finish_reason']='stop'
+    elif fault=='other_halt':b.halt('USAGE_UNAVAILABLE')
+    elif fault in {'unknown_usage','prior_failure'}:
+        ledger=json.loads(b.path.read_text(encoding='utf-8'))
+        if fault=='unknown_usage':ledger['attempts'][-1]['usage_known']=False
+        else:ledger['attempts'].insert(0,{**ledger['attempts'][0],'attempt':0,'failure':'TIMEOUT'})
+        b.path.write_text(json.dumps(ledger),encoding='utf-8')
+    p.write_text(json.dumps(data),encoding='utf-8');before=b.path.read_bytes()
+    with pytest.raises(GoalStopped):resume_settled_truncation(b,p,rationale='' if fault=='no_reason' else 'Diagnosis complete')
+    assert b.path.read_bytes()==before
+
+
+def test_recovery_finishes_same_transition_after_receipt_write_crash(tmp_path,monkeypatch):
+    from scripts.ifc2text.component_budget import resume_settled_truncation
+    b,p=truncated(tmp_path);write=b._write
+    def crash(data):raise OSError('injected ledger write failure')
+    monkeypatch.setattr(b,'_write',crash)
+    with pytest.raises(OSError):resume_settled_truncation(b,p,rationale='Same diagnosed truncation')
+    assert b.snapshot()['halted']
+    monkeypatch.setattr(b,'_write',write)
+    resume_settled_truncation(b,p,rationale='Same diagnosed truncation')
+    assert not b.snapshot()['halted'] and b.snapshot()['attempts'][-1]['status']=='failed'
+
+
+def test_96k_output_cap_is_sent_as_deepseek_max_tokens():
+    from text2ifc_agent.openai_compat import load_openai_compatible_runtime_config,token_limit_request
+    config=load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER':'deepseek','API_KEY':'offline-only',
+        'OpenAI_BASE_URL':'https://api.deepseek.com','TEXT2IFC_DEEPSEEK_MODEL':'deepseek-v4-flash',
+        'TEXT2IFC_DEEPSEEK_MAX_TOKENS':'98304'})
+    assert token_limit_request(config)=={'max_tokens':98304}

@@ -170,3 +170,13 @@ TallBuilding 的独立单窗与单门也均一次经过真实 Brief→Generator�
 17 项定向测试通过，包含实际公开 Brief→Generator→编译→重开→独立几何比较的离线模型响应测试，以及暂停、重启、错误清单、输入变化和 CLI 导出；不是新的真实 Provider 成功。原始 13 项测试先失败，再通过；新增公开桥与 CLI 测试也先验证了缺失行为。
 
 实际输入已按既有人工决定核对，hxp 排除 D003–D007 后保留 61 项，i5n_1 排除 D002 后保留 100 项。两者均未发现额外的门窗审阅阻断项。i5n_1 完整解析的暂停路径实际返回 paused，零 Provider 调用、无 IFC 输出。原决定、暂停记录、审阅数据库、完整与已确认说明保存在 `component-v26-building-review-20260926-01/`。整栋生成尚未执行，须先通过 `component-campaign-buildings-v1.0.json` 的阶段准入。
+
+S6 的一项离线编译器检查已完成：从实际 accepted 宿主单窗的 BIM JSON 复制出候选，将 `part-001` 的局部 Z 上移 10 mm，编译后以 IfcOpenShell 逐项读取 ShapeAspect 实体顶点；目标部件位移正确，其余 14 个部件不变。其他构件 JSON 记录和关系保持原样；候选通过更新后的逐部件预期，原预期能检出该变化。证据在 `component-v26-local-edit-20260926-01/report.json`。此实验直接编辑中间表示，没有调用模型，不等于自然语言局部修改链已完成。
+
+S5 阶段准入已通过：提交 `b5911a5f`，**485 passed、0 failed、0 skipped**，951.94 秒，零网络调用；包含新的审阅 API／CLI／部分生成、hxp 与 i5n_1 实际规模文本、既有门窗／墙／材料／Provider／原子恢复路径。证据位于 `component-v26-building-loop-20260926-01/validation/`，固定源文件、公开文本、配置和代码快照。只有 pytest 的既有 `cache_dir` 配置警告；不是仓库 Full Preflight，也不是模型能力统计。
+
+S5 首次真实 hxp Brief 在 65,536 输出 token 上限处截断（`finish_reason=length`），未生成 IFC。实际输入 56,213 token，输出 65,536，其中推理 43,466；本次共计费 121,749，失败响应与账本保持。剩余总授权为 648,832 token。官方 [Chat Completions 文档](https://api-docs.deepseek.com/api/create-chat-completion/) 允许更高的单次输出；新实验配置 1.1 将 Brief／生成输出上限设为 98,304，总授权上限不变，模型、输入、提示和容差不变。
+
+截断使原账本按既有策略暂停。新增显式、单次的已结算截断恢复操作：必须核对原响应 ID、finish_reason、实际 usage 与原失败收费；未知 usage、其他失败、并发／未结算调用、预算耗尽均拒绝恢复。恢复收据先冻结原账本快照与哈希，再仅解除暂停，所有失败项、历史用量、调用数和限额不变；不通过新目录绕过暂停，不由传输层自动调用。8 项新增拒绝／恢复测试先失败，随后连同原预算、传输分类、写入中断恢复和 96K 请求参数检查共 18 passed。
+
+S6 另补了门、窗两个公开链局部修改测试：自然语言要求只上移一个重复部件 10 mm，离线注入的 Brief／Generator 响应经过真实校验、编译和终态放行；IfcOpenShell 逐部件读取确认目标变化，其余部件、宿主墙、开口和安装关系保持。2 passed（42.45 秒），只证明公开路径能传递并编译这类修改，不证明真实模型已经理解或完成编辑。
