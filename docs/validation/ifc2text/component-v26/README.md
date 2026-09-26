@@ -2,7 +2,18 @@
 
 更新：2026-09-26。执行依据：[唯一计划 v1.0](../../../architecture/text2ifc-component-plan-v1.0.md)。
 
-已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**四个独立门窗与两个宿主场景已通过真实 loop；hxp 已完成批准范围内的部分重建，61 个对象无已测几何超差，i5n_1 仍在运行。** hxp 排除的 5 扇门和 36 项材料元数据差异均保留，不宣称整栋完全一致。下方保留分阶段证据。
+已新增 BIM JSON 2.6 的部件几何和确定性编译路径。整体仍是一扇门／窗；框、叶片、门板、把手是其中的几何部件。源 IFC 的原生挤出解析也已接入。**本轮 Goal 的批准范围已完成：四个独立门窗、两个宿主场景，以及 hxp、i5n_1 两栋部分重建均完成真实 loop。** 两栋均经过真实 Audit、最终编译重开，以及对最终 IFC 的独立 Compare 1.3；没有把离线手工诊断作为交付。
+
+| 最终交付 | 源／匹配对象 | 批准排除 | 超过 1 mm 的已测几何差异 | 最大已测线性差 | 材料内容／元数据差异 | 已测关系差异 |
+|---|---:|---|---:|---:|---:|---:|
+| [hxp IFC](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/accepted/output.ifc) | 66／61 | D003–D007 | 0 | 0.087470 mm | 0／36 | 0 |
+| [i5n_1 IFC](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-08/i5n_1/accepted/output.ifc) | 101／100 | D002 | 0 | 0.083108 mm | 0／44 | 0 |
+
+最大值均为 R003 房间包围盒 X 尺寸差。材料元数据主要为层集合名称等组织信息；材料内容无差异。排除门对应的墙和开口保留。不同局部坐标下的开口宽／深参数差另行记录，不能冒充实测世界几何误差；开口完整 Body 已独立比较。有限网格／采样及未评估项的限制保留，原始报告仍为 `reconstruction_consistent=false`，不宣称全源模型完全一致。
+
+完整证据链入口：[hxp 人读报告](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/HUMAN-REPORT.md)、[i5n_1 人读报告](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-08/i5n_1/HUMAN-REPORT.md)；紧凑索引：[hxp](hxp-accepted-summary.json)、[i5n_1](i5n-accepted-summary.json)。原始运行和 IFC 保留在本地实验目录；提交推送的是代码、计划和紧凑索引，不宣称整个原始证据集已上传远端。
+
+本轮修复了凹口墙材料／宿主检查、2.6 字段恢复漏接和专用修复提示被覆盖的问题。独立比较器未随这次字段修复改变，1 mm 容差未放宽。最终累计 Provider 实耗 **6,224,946 token**，授权上限 **6,696,347**，剩余 **471,401**；未继续调用。下方保留分阶段失败、修复和验证记录。
 
 **最新比较要求：允许 IfcOpenShell 解析后进行容差比较，也允许补充自写算法。** Compare 1.2 继续使用：IFC 解析、单位与变换、布尔并集及网格来自 IfcOpenShell，双向采样距离、拓扑与体积判据由项目实现，不能改称全部是官方库算法。其边界测试覆盖 0.5 mm、1 mm、1.0001 mm、内部孔洞与叶片变化、等价实体拆分和不同单位。现有四个结果不改写、不换版本冒充重测。
 
@@ -249,7 +260,7 @@ loop-04 的独立 Compare 1.3 匹配 61 个对象，缺少的 5 扇门正好是�
 
 最终 IFC SHA-256 为 `11be7ed5d88394484abef5f1eb5c84a05bf1eb5320d78a042bc4943b78abfb31`。所有线性检查维持 1 mm；网格与采样比较的限制不变。上述是实际已揭示案例的成功，不是来源隔离盲测或模型泛化提升。
 
-已记录的线性指标中最大为 R005 房间轮廓约 **0.070146 mm**。紧凑证据索引见 [hxp-accepted-summary.json](hxp-accepted-summary.json)，本地逐项人读链见 [HUMAN-REPORT.md](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/HUMAN-REPORT.md)。完整原始运行继续保留在本地实验目录，未冒充已提交的远端 Proof 集合。
+R005 房间轮廓差约 **0.070146 mm**；最终补充包围盒尺寸后，全部已测线性指标最大为 R003 的 X 尺寸差 **0.087470 mm**。紧凑证据索引见 [hxp-accepted-summary.json](hxp-accepted-summary.json)，本地逐项人读链见 [HUMAN-REPORT.md](../../../../dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/HUMAN-REPORT.md)。完整原始运行继续保留在本地实验目录，未冒充已提交的远端 Proof 集合。
 
 ### S5 i5n_1 的已保留失败与范围扩展
 
@@ -284,3 +295,12 @@ continuation-05 的真实 Generator 已输出全部 100 个目标对象：42 墙
 提示修复提交 `83e8f004`，105 项作用域检查全通过、网络为零。continuation-07 的一次真实字段修复通过，消耗 **200,636 token**，确定性 Gate 全通过。对其实际 IFC 独立比较得到 100 匹配、仅缺 D002、几何超差 0、材料内容差异 0、材料元数据差异 44、关系差异 0。此时尚未 Audit；累计消耗 **5,984,787**，剩 **711,560**。
 
 Audit 的标准输入要求成功修复记录位于 `repair/`，原目录这里只存在预算阻断残留。续跑因此生成独立 continuation-08 子目录，把真实成功的 `field-repair-02` 复制到标准修复路径，并封存全部父文件哈希；不覆盖原失败目录。门、窗各一条离线修复→Audit→最终 IFC 全链已验证这种目录衔接及父文件不变。Audit 输出上限改为 32,768 token，其他内容不截断，仍受原累计额度约束；运行前补充该衔接的作用域准入。
+
+
+### S5 i5n_1 最终验收完成
+
+continuation-08 的 29 项作用域检查通过、无失败／跳过、网络为零。真实 Audit 一次 accepted，消耗 240,159 token；最终编译、IfcOpenShell 重开、几何和秘密扫描均通过。最终 IFC 重新独立比较仍为 100 匹配、仅缺 D002、额外 0、几何超差 0、材料内容差异 0、材料元数据差异 44、已测关系差异 0。所有线性判据保持 1 mm。
+
+最终全部已测线性指标最大为 R003 房间包围盒 X 尺寸差 0.083108 mm；轮廓指标最大为 R004 的 0.053652 mm。开口的局部截面宽／深参数可能因局部坐标方向互换而有较大数值差，这些在比较报告中明确标为不用于世界几何判定；完整 Body 的实际世界几何已通过。42 面墙的内在尺寸测法变化、1 个被排除门对应的 filling 未评估记录保留。
+
+最终 IFC 和逐项证据见本文顶部链接及 i5n-accepted-summary.json。成功字段修复只更换 10 个字段名，其他实体／关系按 ID 比对无变化（序列顺序重新排序）；52 份先前字段失败文件哈希核对未变，源 IFC、公开文本和 hxp 已验收证据也未变。没有将本轮开发案例当作来源隔离盲测，也未运行仓库级 Full Preflight。

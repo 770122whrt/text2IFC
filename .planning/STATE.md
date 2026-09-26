@@ -16,9 +16,11 @@ progress:
 
 ## 当前开发：参数化门窗与 IFC2Text 往返（2026-09-26）
 
-唯一计划为 [门窗部件 v1.0](../docs/architecture/text2ifc-component-plan-v1.0.md)，分支 `codex/bim2text-research`。代码已提交推送至 `61547ecb`；四个独立门窗和两个宿主场景完成真实 loop。hxp 保存候选的真实修复和 Audit 已通过，最终 IFC 经独立 Compare 1.3 匹配 61 项、几何超差 0、材料内容差异 0、已测关系差异 0；原源 66 项中的 5 扇门按人工决定排除，36 项材料元数据差异保留。这是部分重建，不是整栋一致。
+唯一计划为 [门窗部件 v1.0](../docs/architecture/text2ifc-component-plan-v1.0.md)，分支 `codex/bim2text-research`。本轮 Goal 的批准范围已完成，最新执行代码提交 `6a3ed6ee`：四个独立门窗、两个宿主场景，以及 hxp／i5n_1 两栋均完成真实 loop。两栋最终 Audit、编译、重开和独立 Compare 1.3 均已执行；分别匹配 61／100 个对象，几何超差、材料内容差异及已测关系差异均为 0，最大已测线性差约 0.087／0.083 mm。
 
-i5n_1 暂停分支已测；loop-06 的真实 Brief ready，但 Generator 只生成墙和房间，缺根 provenance；真实修复仅补该字段后暴露两面凹口墙，未发布 IFC。已明确批准补充凹口墙支持，相关编译及公开链检查通过，准备在 continuation-05 用原 Brief 和完整性反馈重新生成。最近一次追加 1,000,000 Provider token 已登记，累计上限 5,696,347；已耗 4,946,461，余 749,886，旧失败与原预算不改写。当前运行状态和产物见[部件验证入口](../docs/validation/ifc2text/component-v26/README.md)。Goal 仍在进行；下方 Repair 和仓库整理状态分别保留。
+按明确决定排除 hxp 的 D003–D007 和 i5n_1 的 D002，保留墙与开口；材料元数据差异 36／44 项及未评估项继续列明，交付是部分重建。i5n_1 的暂停／排除后继续两分支均已验证；直边凹口墙获批扩展，房间字段拼写和 2.6 修复提示路由缺陷均已修订。最终 i5n_1 在 continuation-08 中验收，原失败、三次字段修复失败与预算阻断均保留。S6 局部编辑为离线公开链证据，未声称真实自然语言编辑成功。
+
+累计 Provider 授权上限 **6,696,347**，实际消耗 **6,224,946**，余额 **471,401 token**；账本为 `component-v26-budget-20260926-04`，没有新增超额调用。交付与完整证据链见[部件验证入口](../docs/validation/ifc2text/component-v26/README.md)。代码、计划和紧凑索引提交推送；完整原始运行和 IFC 留在本地实验目录，不冒充远端 Proof 集。下方 Repair 和仓库整理状态分别保留。
 
 ## 当前整理：旧工作树退役与 LFS 按需恢复（2026-09-24）
 
