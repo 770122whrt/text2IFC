@@ -206,6 +206,39 @@ def repair_case(case, provider_factory):
     return result
 
 
+def repair_fields_case(case, provider_factory):
+    """Resume invalid scalar fields without replacing the preserved raw output."""
+    from text2ifc_agent.early_recovery import build_field_recovery_group
+    from text2ifc_agent.generator import validate_generation_document
+    from text2ifc_agent.live_pipeline import run_repair_stage
+    from text2ifc_agent.interactive_cli_flow import _promote_repaired_candidate
+    case = Path(case)
+    verify_lineage(case)
+    start_once(case, 'continuation-field-repair')
+    source = case/'generator'
+    raw_hash = digest(source/'parsed-output.json')
+    candidate = load(source/'parsed-output.json')
+    feedback = validate_generation_document(candidate)['diagnostics']
+    if feedback != load(source/'validation.json')['issues']:
+        raise ValueError('SAVED_VALIDATION_MISMATCH')
+    group = build_field_recovery_group(candidate, feedback)
+    if not group['eligible']:
+        raise ValueError('LOCAL_FIELD_RECOVERY_NOT_ELIGIBLE')
+    save(case/'continuation-field-repair-scope.json', group)
+    result = run_repair_stage(provider_factory=provider_factory,
+        output_dir=case/'field-repair', generator_source_dir=source,
+        case_id='component-field-repair')
+    save(case/'continuation-field-repair-result.json', result)
+    if result.get('valid') and (case/'field-repair/repaired-candidate.json').is_file():
+        _promote_repaired_candidate(case, case/'field-repair/repaired-candidate.json')
+        _, gates = refresh_gates(case)
+        save(case/'continuation-gates-result.json', gates)
+    if digest(source/'parsed-output.json') != raw_hash:
+        raise ValueError('RAW_GENERATOR_RESPONSE_CHANGED')
+    verify_lineage(case)
+    return result
+
+
 def audit_case(case, provider):
     from text2ifc_agent.live_pipeline import run_audit_report_stage, run_final_acceptance_stage
     case = Path(case)
@@ -237,6 +270,7 @@ def live(cfg, stage):
     conf,client,provider = runtime(cfg,budget,'reconstruction',cap)
     try:
         result = (repair_case(case,lambda:provider) if stage == 'repair' else
+                  repair_fields_case(case,lambda:provider) if stage == 'field-repair' else
                   regenerate_case(case,provider) if stage == 'regenerate' else audit_case(case,provider))
         save(case/(stage+'-continuation-budget.json'),budget.snapshot())
         admitted(cfg)
@@ -249,7 +283,7 @@ def live(cfg, stage):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('stage',choices=['repair','audit','regenerate'])
+    parser.add_argument('stage',choices=['repair','audit','regenerate','field-repair'])
     parser.add_argument('--config',required=True)
     args = parser.parse_args()
     live(load(args.config),args.stage)

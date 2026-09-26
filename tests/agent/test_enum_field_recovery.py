@@ -25,6 +25,7 @@ def candidate(cls='IfcSpace', field='InteriorOrExternalSpace', value='INTERNAL')
 
 def proposal(doc, g):
     cs = _changeset(doc, _expected_facts())
+    if doc['schema_version']=='bim-json/2.6':cs['schema_version']='text2ifc/bim-json-changeset/1.3'
     cs['source_issue_ids'] = g['scope']['source_issue_ids']
     cs['operations'] = []
     for entity_id, required in g['required_field_values'].items():
@@ -43,7 +44,8 @@ def proposal(doc, g):
     ('IfcSpace', 'SpaceExposure', 'EXTERNAL', 'InteriorOrExteriorSpace'),
     ('IfcWindowStyle', 'PanelOperation', 'SINGLE_PANEL', 'OperationType'),
 ])
-def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new):
+@pytest.mark.parametrize('version',['bim-json/2.1','bim-json/2.6'])
+def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, value, new,version):
     if cls == 'IfcSpace':
         doc, entity = candidate(cls, old, value)
     else:
@@ -51,6 +53,7 @@ def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, va
         doc['schema_version'] = 'bim-json/2.1'
         entity = {'id': 'style', 'ifc_class': cls, 'attributes': {old: value}, 'property_sets': {}, 'provenance': {'source': 'test'}}
         doc['entities'].append(entity)
+    doc['schema_version']=version
     before = copy.deepcopy(doc)
     g = group(doc)
     assert g['eligible']
@@ -63,8 +66,10 @@ def test_unique_closed_enum_offers_only_rename_and_preserves_source(cls, old, va
 
 
 @pytest.mark.parametrize('mode', ['ambiguous', 'existing', 'unknown', 'number', 'feedback', 'two_sources'])
-def test_unproven_enum_identity_or_conflicting_sources_fail_closed(mode):
+@pytest.mark.parametrize('version',['bim-json/2.1','bim-json/2.6'])
+def test_unproven_enum_identity_or_conflicting_sources_fail_closed(mode,version):
     doc, entity = candidate()
+    doc['schema_version']=version
     if mode == 'ambiguous':
         doc['entities'].append({'id': 'style', 'ifc_class': 'IfcDoorStyle', 'attributes': {'UnknownKind': 'NOTDEFINED'}, 'property_sets': {}, 'provenance': {'source': 'test'}})
     elif mode == 'existing':
@@ -83,8 +88,10 @@ def test_unproven_enum_identity_or_conflicting_sources_fail_closed(mode):
 
 
 @pytest.mark.parametrize('mode', ['value', 'unrelated', 'relationship'])
-def test_out_of_scope_or_changed_value_rolls_back(mode):
+@pytest.mark.parametrize('version',['bim-json/2.1','bim-json/2.6'])
+def test_out_of_scope_or_changed_value_rolls_back(mode,version):
     doc, _ = candidate()
+    doc['schema_version']=version
     before = copy.deepcopy(doc)
     g = group(doc)
     assert g['eligible']
@@ -103,10 +110,12 @@ def test_out_of_scope_or_changed_value_rolls_back(mode):
     assert doc == before
 
 
-def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp_path):
+@pytest.mark.parametrize('version',['bim-json/2.1','bim-json/2.6'])
+def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp_path,version):
     from text2ifc_agent.live_pipeline import run_repair_stage
     from tests.agent.test_phase6_5_staged_generation import SequenceProvider
     doc, _ = candidate()
+    doc['schema_version']=version
     g = group(doc)
     assert g['eligible']
     source = tmp_path / 'generator'
@@ -127,3 +136,39 @@ def test_public_formal_repair_uses_changeset_and_preserves_all_relationships(tmp
     assert json.loads((source / 'parsed-output.json').read_text(encoding='utf-8')) == doc
     route = json.loads((tmp_path / 'repair/route.json').read_text(encoding='utf-8'))
     assert route['recovery_contract'] == 'text2ifc/early-field-recovery/1.1'
+    from text2ifc_compiler import compile_document
+    import ifcopenshell
+    compiled=compile_document(after,tmp_path/'repaired.ifc')
+    assert compiled.success,(compiled.input_issues,compiled.ifc_issues)
+    assert ifcopenshell.open(str(compiled.output_path)).by_type('IfcSpace')
+
+
+@pytest.mark.parametrize('count', [1, 10])
+def test_continuation_uses_local_field_repair_and_keeps_raw_candidate(tmp_path,monkeypatch,count):
+    from scripts.ifc2text import component_candidate_continuation as continuation
+    from tests.agent.test_phase6_5_staged_generation import SequenceProvider
+    doc,space=candidate();doc['schema_version']='bim-json/2.6'
+    for number in range(1,count):
+        extra=copy.deepcopy(space);extra['id']=f'extra-space-{number}'
+        doc['entities'].append(extra)
+    g=group(doc)
+    assert g['eligible'] and len(g['required_field_values'])==count
+    source=tmp_path/'generator';source.mkdir()
+    (source/'input.txt').write_text('Create the requested internal space.',encoding='utf-8')
+    records={'conversation':[],'design-brief':{'schema_version':'text2ifc/design-brief/2.9','known_facts':_expected_facts()},
+      'parsed-output':doc,'validation':{'valid':False,'issues':[vars(i) for i in validate_v2_document(doc)]},
+      'metrics':{'contract_valid':False,'classification':'formal','evidence_class':'fake'}}
+    for name,data in records.items():(source/f'{name}.json').write_text(json.dumps(data),encoding='utf-8')
+    (tmp_path/'expected-facts.json').write_text(json.dumps(_expected_facts()),encoding='utf-8')
+    (tmp_path/'continuation-lineage.json').write_text(json.dumps({'parent':str(tmp_path),'parent_hashes':{},'sealed_child_inputs':{}}),encoding='utf-8')
+    before=(source/'parsed-output.json').read_bytes()
+    checked=[]
+    def gates(case):
+        checked.append(json.loads((case/'generator/candidate.json').read_text(encoding='utf-8')))
+        return {'valid':True},{'deterministic_gates_passed':True}
+    monkeypatch.setattr(continuation,'refresh_gates',gates)
+    result=continuation.repair_fields_case(tmp_path,lambda:SequenceProvider([proposal(doc,g)]))
+    assert result['valid'] and len(checked)==1
+    assert before==(source/'parsed-output.json').read_bytes()
+    with pytest.raises(FileExistsError):
+        continuation.repair_fields_case(tmp_path,lambda:pytest.fail('Repeated attempt'))

@@ -264,3 +264,15 @@ loop-06 的 Brief 实际消耗 138,738 token 并 ready；Generator 消耗 189,36
 阶段内迭代结果：闭合／既有修复与墙体回归 59 passed；凹口和原凸截面墙编译回归 24 passed；新合同、注册表、闭合恢复及生成路线 50 passed；带凹口或反向宿主的公开门／窗链 6 passed。各组重叠，不相加为能力指标。下一次真实运行仍须当前代码对应的准入记录。
 
 原 loop-06 没有被重新标为成功。continuation-04 的离线派生检查已验证：即使修复语法和凹口支持，缺对象仍被完整性、宿主关系及请求检查拒绝。下一步是 continuation-05 复用原 ready Brief、重新生成全部建筑对象；旧生成和修复响应全部保留。此时累计已耗 **4,946,461**、剩余 **749,886 token**。
+
+当前凹口扩展与续跑准入已完成：**212 passed、0 failed、0 skipped**，372.15 秒，网络调用为零。记录在 `component-v26-building-continuation-20260926-05/validation/`，对应提交 `6faddfd0`；父准入为 continuation-02 的 180 项阶段检查。源码快照、配置和公开输入哈希均核对通过，未运行 Full Preflight。当前 Generator 重试在该新目录中独立执行，旧 loop-06 与离线 continuation-04 均保留。
+
+### S5 i5n_1 完整候选与字段修复诊断
+
+continuation-05 的真实 Generator 已输出全部 100 个目标对象：42 墙、24 开口、12 窗、10 房间、10 门、1 楼板和 1 覆盖构件。此次实际消耗 226,294 token，正常结束。合同检查剩 10 个同类错误：房间字段写成 `InteriorOrExternalSpace`，IFC2X3 正式字段为 `InteriorOrExteriorSpace`，原值均为 `INTERNAL`。随后整份 JSON 修复在预算预留时被阻断，未发送新请求。
+
+根因分为两层：Generator 拼错字段；已有字段修复路径的版本列表遗漏 BIM JSON 2.6。现已接上 2.6，沿用从 IFC2X3 声明和封闭枚举推导唯一字段、再由 Provider 确认的 ChangeSet 流程。只允许更换字段名，不允许改变值、几何、材料或关系；没有唯一依据则拒绝。单字段和十字段续跑测试验证原始响应不改写、重复执行拒绝，另有旧版、歧义、冲突、越界回滚和编译重开回归。
+
+离线反事实保存在 `component-v26-i5n-field-counterfactual-20260926-01`：仅手工应用确定性推导出的 10 个字段名替换后，适用确定性 Gate 全通过；独立 Compare 1.3 匹配 100 项、缺失 D002、额外 0、几何超差 0、材料内容差异 0、关系差异 0，材料元数据差异 44。目录明确标为 `DIAGNOSTIC-ONLY`，不能作为真实修复或 accepted 输出。
+
+再次明确批准追加 1,000,000 token，累计额度为 **6,696,347**，继承实际消耗 **5,172,755**，可用 **1,523,592**。新账本为 `component-v26-budget-20260926-03`；continuation-06 配置将对现有 continuation-05 候选做局部修复和 Audit，原始失败与此前预算不改写。真实执行须先通过本次改动的作用域验证。
