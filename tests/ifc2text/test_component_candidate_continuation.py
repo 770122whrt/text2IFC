@@ -155,7 +155,8 @@ def test_regenerate_from_frozen_brief_keeps_previous_attempt_and_runs_gates(tmp_
 
 
 @pytest.mark.parametrize('cls', ['IfcDoor','IfcWindow'])
-def test_saved_candidate_repair_audit_and_final_ifc_with_fake_provider(tmp_path,cls):
+@pytest.mark.parametrize('separate_repair', [False, True])
+def test_saved_candidate_repair_audit_and_final_ifc_with_fake_provider(tmp_path,cls,separate_repair):
     import ifcopenshell
     from scripts.ifc2text.component_candidate_continuation import prepare_case, repair_case, audit_case
     parent,correct = source_case(tmp_path,cls)
@@ -166,6 +167,14 @@ def test_saved_candidate_repair_audit_and_final_ifc_with_fake_provider(tmp_path,
     repair = repair_case(case,lambda:provider)
     assert repair['valid'],repair
     assert len(provider.calls)==1
+    if separate_repair:
+        import shutil
+        from scripts.ifc2text.component_candidate_continuation import prepare_audit_case
+        shutil.copytree(case/'repair',case/'field-repair-02')
+        original=case
+        original_bytes={p.relative_to(case):p.read_bytes() for p in case.rglob('*') if p.is_file()}
+        case=tmp_path/'audit-child'
+        prepare_audit_case(original,case,repair_name='field-repair-02')
     audit = {'schema_version':'text2ifc/audit/2.0','recommendation':'accept','blocking':False,
              'deterministic_gate_status':'passed','findings':[],'evidence_paths':['generator/candidate.json']}
     result = audit_case(case,SequenceProvider([audit]))
@@ -177,6 +186,8 @@ def test_saved_candidate_repair_audit_and_final_ifc_with_fake_provider(tmp_path,
     assert len(filling.FillsVoids)==1
     assert len(filling.Representation.HasShapeAspects)==15
     assert before=={p.relative_to(parent):p.read_bytes() for p in parent.rglob('*') if p.is_file()}
+    if separate_repair:
+        assert original_bytes=={p.relative_to(original):p.read_bytes() for p in original.rglob('*') if p.is_file()}
 
 
 def test_failed_preservation_cannot_promote_or_reach_audit(tmp_path):

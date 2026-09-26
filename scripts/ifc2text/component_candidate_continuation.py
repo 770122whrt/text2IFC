@@ -246,6 +246,45 @@ def repair_fields_case(case, provider_factory, *, attempt=1, max_attempts=3):
     return result
 
 
+def prepare_audit_case(source, target, *, repair_name):
+    """Materialize canonical Audit inputs while preserving separate failed repairs."""
+    from text2ifc_agent.generator import validate_generation_document
+    source, target = Path(source).resolve(), Path(target).resolve()
+    verify_lineage(source)
+    repair = (source/repair_name).resolve()
+    if repair.parent != source or target == source or target.is_relative_to(source):
+        raise ValueError('AUDIT_CHILD_PATH_INVALID')
+    candidate = load(source/'generator/candidate.json')
+    if (validate_generation_document(candidate)['status'] != 'formal'
+            or candidate != load(repair/'repaired-candidate.json')
+            or load(repair/'metrics.json').get('valid') is not True
+            or load(repair/'route.json').get('route') != 'repair_attempted'):
+        raise ValueError('SUCCESSFUL_MATCHING_REPAIR_REQUIRED')
+    copies = {n:n for n in ['design-brief.json','expected-facts.json','generation-contract.json']}
+    for n in ['candidate.json','candidate-origin.json','semantic-capabilities.json','generation-strategy.json']:
+        if (source/n).is_file():copies[n]=n
+    for directory, destination in [(source/'design-brief','design-brief'),(source/'generator','generator'),(repair,'repair')]:
+        for p in directory.rglob('*'):
+            if p.is_file() and p.suffix in {'.json','.md','.txt'} and '.private.' not in p.name:
+                copies[(Path(destination)/p.relative_to(directory)).as_posix()] = p.relative_to(source).as_posix()
+    hashes = {p.relative_to(source).as_posix():digest(p) for p in source.rglob('*') if p.is_file()}
+    target.mkdir(parents=True,exist_ok=False)
+    for destination, original in copies.items():
+        p = target/destination;p.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copyfile(source/original,p)
+    lineage = {'schema_version':'text2ifc/component-candidate-continuation/1.0',
+        'parent':str(source),'parent_hashes':hashes,
+        'sealed_child_inputs':{d:hashes[s] for d,s in copies.items()
+            if d not in {'candidate.json','generator/candidate.json','generator/validation.json','generator/metrics.json'}},
+        'parent_generator_evidence_class':load(source/'generator/metrics.json').get('evidence_class'),
+        'selected_repair_source':repair_name,'copy_map':copies,
+        'budget_policy':'Audit only under the same cumulative allocation; no generator or repair call.',
+        'created_at':now()}
+    save(target/'continuation-lineage.json',lineage)
+    verify_lineage(target)
+    return lineage
+
+
 def audit_case(case, provider):
     from text2ifc_agent.live_pipeline import run_audit_report_stage, run_final_acceptance_stage
     case = Path(case)
