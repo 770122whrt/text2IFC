@@ -198,4 +198,3 @@ def test_cli_show_pause_and_export_use_the_saved_review(sample,tmp_path,capsys):
     assert '部分重建' in (tmp_path/'public/design-description.md').read_text(encoding='utf-8')
     assert json.loads((tmp_path/'public/refusals.json').read_text(encoding='utf-8'))[0]['label']=='D099'
     with pytest.raises(FileExistsError):main(['export',*common,'--output',str(tmp_path/'public')])
-
