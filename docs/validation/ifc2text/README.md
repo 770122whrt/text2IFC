@@ -4,6 +4,7 @@
 
 当前入口：
 
+- **2026-09-22 修复后的离线验证：** [分步修复与整栋集成报告](../../reports/ifc2text-stepwise-fixes-2026-09-22.md)。引入新空间期望、BIM JSON 2.4 和 Compare 1.0；下列历史准入不能作为这些修改后的新实时调用许可。
 - **最新受控基线 v0.3：** [阶段验证机器记录](../../../dataset/processed/experiments/ifc2text-phase1-20260917/hxp-goal-v03-01/validation/admission.json)（代码 `c9443963`，106 passed）；[简短决策与结果](../../reports/ifc2text-phase1-decisions-2026-09-17.md)。完整说明已生成，真实重建在 Design Brief 截断，累计调用账本暂停，不代表已准许再次付费重试。
 - **历史 v0.2：** [Phase 1 写作与公共桥 Stage Admission v0.2（2026-09-17）](phase1-writing-admission-v02-2026-09-17.md) · [机器记录](phase1-writing-admission-v02-2026-09-17.json)
 - **历史准入：** [Phase 1 初版 Admission（a333f68b）](phase1-writing-admission-2026-09-17.md) · [机器记录](phase1-writing-admission-2026-09-17.json)。该版本在第一次真实写作揭示高基数 section 后按 invalidation contract 停止用于当前执行。
