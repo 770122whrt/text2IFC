@@ -13,7 +13,7 @@
 |---|---|---|
 | **已有 IFC 修复（本次汇报）** | [Repair Demo Method：问题、方法和案例](architecture/ifc-repair-pipeline-status-and-roadmap.md) | [三份主文档](reports/repair-demo/README.md)、[Repair Proof](../dataset/processed/proof/repair/) |
 | 从文字生成新 IFC | [Generation 研究与文献](reports/generation-demo/README.md)、[生成工作流](architecture/current-workflow-and-data-flow.md) | [语义与外观范围](architecture/semantic-appearance-plan.md)、[Generation Proof](../dataset/processed/proof/generation/) |
-| IFC2Text 与往返重建 | [研究与实现入口](architecture/bim2text-bidirectional-bridge-research.md) | [门窗部件扩展计划 v1.0](architecture/text2ifc-component-plan-v1.0.md)、[验证入口](validation/ifc2text/README.md) |
+| IFC2Text 与往返重建 | [当前入口：结果、维护与研究](validation/ifc2text/README.md) | [门窗部件扩展计划 v1.0](architecture/text2ifc-component-plan-v1.0.md)、[结果与证据](validation/ifc2text/component-v26/README.md) |
 
 数据来源、通用验证、开发接管分别使用下方相应分区；不混入 Repair 论文正文。
 
@@ -32,6 +32,8 @@
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
 | 查看研究总结和周报 | [Reports Index](reports/README.md) |
+| 讨论 Generation 研究及历史综合文献 | [研究方案与两版文献综述](reports/generation-demo/README.md) |
+| 阅读 Repair 的三份持续维护主文档 | [Literature／技术路线与 L0-L1-L2／Claim 与实验登记](reports/repair-demo/README.md) |
 | 查看最新执行位置和阶段安排 | [STATE 顶部](../.planning/STATE.md)、[ROADMAP](../.planning/ROADMAP.md)、[PROJECT](../.planning/PROJECT.md) |
 
 ## 仓库整理入口

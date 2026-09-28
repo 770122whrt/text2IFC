@@ -26,8 +26,8 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 
 ## IFC2Text
 
-- [IFC2Text Validation](ifc2text/README.md)
-  - Phase 1 版本化写作 stage、Truth Boundary、Provider seam 与公共 Generation bridge 的离线 Stage Admission；真实 Provider 与真实往返结果单独记录。
+- [IFC2Text 当前入口](ifc2text/README.md)
+  - 参数化门窗和两栋往返结果、错误定位与回归、研究方案及历史失败索引；旧 Phase 1 准入保留用于历史回放。
 
 ## IFC2X3 Local ChangeSet
 

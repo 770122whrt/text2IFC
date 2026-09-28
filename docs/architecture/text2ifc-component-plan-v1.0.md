@@ -1,10 +1,8 @@
 # text2IFC 参数化门窗部件扩展计划 v1.0
 
-日期：2026-09-26。状态：**本轮 Goal 批准范围已完成。S0／S1／S2 接通；hxp 与 TallBuilding 各一门一窗完成真实文本往返，S4 门、窗宿主场景通过。S5 两栋均完成真实修复、Audit、最终编译和独立比较：hxp 61 项、i5n_1 100 项匹配，已测几何超差为零，最大已测线性差分别约 0.087 mm／0.083 mm。批准排除的 5／1 扇门和 36／44 项材料元数据差异保留，交付为部分重建。S6 部件局部修改通过离线公开链，尚未做真实模型自然语言编辑实验。**
+日期：2026-09-28 整理。状态：本轮批准的开发范围已完成；本文件保留范围、合同和验收约定。实际结果、未覆盖项及预算只在[结果与证据](../validation/ifc2text/component-v26/README.md)维护。S6 局部修改只有离线公开链证据。
 
-首阶段有 226 项定向回归及两个真实来源的原生几何诊断；后续结果见[结果与证据范围](../validation/ifc2text/component-v26/README.md)。比较采用 IfcOpenShell 解析真实几何，再按 1 mm 进行距离判定，单构件另有 IfcDiff 交叉检查。hxp 已明确批准排除 D003–D007 后继续，最终部分重建保留墙体和开口，并附拒绝清单。第二座建筑 i5n_1 同时包含支持内容和不支持的 D002；已批准先验证暂停不生成，再排除 D002 生成部分模型。两者均不能称为全源模型完全一致。
-
-本文合并原部件计划、窗结构问答和 IFC 表示调查，是本次扩展的唯一计划。合并前内容保存在 Git 提交 `e8a926b0`，不再保留独立旧稿；原始调查 JSON 保留为证据附件。文档版本与产品 schema 版本分开管理。
+本文合并原部件计划、窗结构问答和 IFC 表示调查，是本次扩展的唯一计划。稳定的 IFC 结构解释与源表示调查现拆到[门窗参考](../reference/ifc-window-components.md)，不另设实施计划。合并前内容保存在 Git 提交 `e8a926b0`，不再保留独立旧稿；原始调查 JSON 保留为证据附件。文档版本与产品 schema 版本分开管理。
 
 ## 1. 具体要做什么
 
@@ -75,9 +73,9 @@ flowchart TB
 
 父门窗不额外生成一套完整几何，避免重复叠加。“主体”若指门板，应作为部件。角色不充当唯一 ID，两个部件均可为把手。STEP 行号如 `#2380` 只定位源文件，不作为稳定编号。
 
-首版稳定引用到部件层，不承诺几何项 ID 在 IFC 中逐一恢复；部件内部按真实几何集合验证。错误跨门窗引用、循环、重复 ID、孤立几何项、重复所有权都要报错。重复先限数量、起点与等距平移向量，编译前确定性展开；修改 slat-07 不得改变全部叶片。规模上限在合同冻结前通过离线试验确定，不能按单例随意设置。
+首版稳定引用到部件层，不承诺几何项 ID 在 IFC 中逐一恢复；部件内部按真实几何集合验证。错误跨门窗引用、循环、重复 ID、孤立几何项、重复所有权都要报错。重复先限数量、起点与等距平移向量，编译前确定性展开；修改 slat-07 不得改变全部叶片。资源上限已用离线规模探针验证；以后扩容需重新验证，不能按单例随意放大。
 
-拟议结构（尚非已发布 schema）：
+层级示意（不是可直接提交的 JSON；正式字段以 [BIM JSON 2.6](../../schemas/bim-json/2.6/README.md) 为准）：
 
 ```text
 N001 : IfcWindow
@@ -101,7 +99,7 @@ N001 : IfcWindow
 
 ### 4.3 几何、身份和显示
 
-输出一个门窗及其 ProductDefinitionShape，Body/SweptSolid 包含多个挤出实体。拟用真实 IfcShapeAspect 将部件关联到 Body items：Name 存部件 ID，Description 存版本化角色说明。旧模板原约定不变，新 reader 显式区分。重开按产品→ShapeAspect→实际几何核查，不能只检查自写属性 JSON。
+输出一个门窗及其 ProductDefinitionShape，Body/SweptSolid 包含多个挤出实体。使用真实 IfcShapeAspect 将部件关联到 Body items：Name 存部件 ID，Description 存版本化角色说明。旧模板原约定不变，新 reader 显式区分。重开按产品→ShapeAspect→实际几何核查，不能只检查自写属性 JSON。
 
 ShapeAspect 没有独立放置字段。编译时把部件和几何项变换合入实体 Position；重开验证等价位置，不承诺恢复原参数变换树。可编辑参数层级由保存的 BIM JSON 维护。
 
@@ -130,11 +128,11 @@ ShapeAspect 没有独立放置字段。编译时把部件和几何项变换合�
 | Agent 路由 | `authoring_contract.py`、`generation_contract.py`、Generator／Audit／CLI | 版本、能力说明和恢复；首版用 legacy_full，不默认支持 staged／旧 changeset |
 | 编译 | `geometry.py`、`basic_filling.py`、bootstrap／compiler | 多实体、圆和内孔、ShapeAspect、重开与原子输出 |
 | 安装／显示 | `placement.py`、`polygon_wall.py`、presentation／part_readback | 坐标、外伸检查，按部件 ID 写入和读取显示 |
-| 比较 | `precision_compare_v11.py` 及独立测量 | 新版增加内部形状、孔和部件，新旧候选统一重评分 |
+| 比较 | `precision_compare_v13.py` 及独立测量 | 新版增加内部形状、孔和部件，新旧候选统一重评分 |
 
-候选版本为 **BIM JSON 2.6、Brief 2.9、Draft 1.6、authoring contract 1.6**；实施前再次确认占用。新增而不改写旧合同，同步 schema hash、registry、prompt/profile、消费者白名单和测试。调查脚本能打开 IFC4 不等于产品全链支持 IFC4，不顺带扩大输入版本。
+已接入 **BIM JSON 2.6、Brief 2.9、Draft 1.6**；authoring contract 从 1.6 扩展至 1.7，加入凹口墙说明。新增而不改写旧合同，同步 schema hash、registry、prompt/profile、消费者白名单和测试。调查脚本能打开 IFC4 不等于产品全链支持 IFC4，不顺带扩大输入版本。
 
-两项静态发现须先复现：`presentation/generation.py` 的部件外观写入和检查只识别 2.2／2.3，而合同已接受 2.4／2.5；`compiler.py` 的 builder／异常处理位置可能使几何异常未进入预期终端路径。分别建立跨版本红灯和失败原子性测试后修复，不当作已解决问题。
+实施中已修复 2.4／2.5 部件配色漏接与几何异常终端处理；回归入口见[故障定位与回归](../validation/ifc2text/maintenance.md)。
 
 ## 7. 实施顺序与验收
 
@@ -166,84 +164,11 @@ IfcDiff 0.8.5 用作附加检查：四个单构件均未报告几何变化，但
 
 合并前文档基线为 `e8a926b0`，计划合并提交为 `c612e8e8`。旧稿可用 `git show e8a926b0:<原路径>` 查看，不保留多个活动计划。开发开始前已备份相关未提交文件；依赖的 2.4／2.5 schema、墙体和材料修复单独保存为代码基线 `4ff01db5`。
 
-实施前建立**可复现代码基线**：当前有历史未提交改动，不能只记 HEAD。识别依赖后按明确文件／改动块整理，必要时建立隔离分支并保留原工作区。按合同、编译、解析、Agent、比较等单元提交和推送 `codex/` 分支，不自动合入 main。
+后续开发继续建立可复现代码基线：存在未提交改动时，不能只记 HEAD。识别依赖后按明确文件／改动块整理，必要时建立隔离分支并保留原工作区。按合同、编译、解析、Agent、比较等单元提交和推送 `codex/` 分支，不自动合入 main。
 
 每次运行固定 Brief、BIM JSON、Draft、作者合同、prompt/profile、编译器和比较器版本。新路径显式选择、旧路径可重放；新部件请求送旧版本应明确不支持，不能降级成模板。恢复不得半新半旧，不可逆存储迁移另行讨论。
 
 S1–S3 回退演练：新组合运行并保存→旧组合重放旧案例→验证旧行为→确认旧版不误接受新部件输入。必要时切换旧组合或回退本功能提交，不 reset 脏工作区，不删源文件、旧输出和失败证据。回退保证旧能力可用，不会让旧版获得部件能力。
 
-## 附录 A：IFC 结构与 N001 示例
 
-系统模板是本项目的建模规则；IFC Type 是类型对象；Representation 是形状；Material 是物理材料；SurfaceStyle 是显示外观。IFC2X3 的 IfcWindowStyle 是窗类型，不是颜色 Style。它们通过不同引用连接，不是一个单一上下级目录。
-
-BRep 用面、边界及连接关系围出实体。长方体也可表示为简单 BRep，更一般的 BRep 可包含曲面，不等于密集三角网格。工程师通常用截面、尺寸、挤出、扫掠、切孔和阵列，软件计算边界；导出后不一定保留完整参数历史。首版借鉴参数化构造，不逐面生成。
-
-源为 `dataset/external/bimnet/hxp.ifc`，IFC2X3；SHA-256：`31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942`。N001 是 #2618，GlobalId=`1N$DqFwUP2Cfj_f4x$_L4e`，Name=`单扇百叶窗:高1100宽850:28872`，ObjectType=`单扇百叶窗:高1100宽850`，Tag=`28872`，OwnerHistory=#41，Description 为空。
-
-```text
-#2618 IfcWindow
-  ObjectPlacement -> #10379
-  Representation -> #2611 ProductDefinitionShape
-    -> #2609 Body / MappedRepresentation
-    -> #2607 IfcMappedItem (source=#2591, target=#2293)
-    -> #2591 IfcRepresentationMap (origin=#2590)
-    -> #2588 Body / SweptSolid
-    -> #2380、#2390 ... #2510：14 个叶片挤出体
-       #2536：带孔窗框挤出体
-  Type：经 #10114 IfcRelDefinesByType -> #2593 IfcWindowStyle
-  Material：经 #10052 IfcRelAssociatesMaterial -> #2597
-  Installation：经 #10375 IfcRelFillsElement -> #10369 开口 -> #842 墙
-```
-
-类型 #2593 的 RepresentationMaps 包含 #2591，但仅有关联 Type 不够，实例必须通过 MappedItem 实际引用它。映射、比例和实例放置均影响结果；修改 OverallWidth 不会自动重画叶片。本例 #2590／#2293 为单位变换、比例 1。
-
-类型名为“高1100宽850”，ConstructionType／OperationType=NOTDEFINED，ParameterTakesPrecedence=False，Sizeable=False，#2592 LiningProperties 几何参数为空。实例 IsExternal=True，Reference=“高1100宽850”，Manufacturer 为空；未填写不等于已知没有。
-
-以下是拟议公开描述，尚非已实现输入格式：
-
-> **N001 窗**：名义宽 850、高 1100。局部 X 沿宽、Y 沿深、Z 向上。局部原点的世界坐标为 (6196,3439.305336082839,−285)；X 指向世界 (0,−1,0)，Y 指向 (1,0,0)，Z 指向 (0,0,1)。填充源 #10369 开口，宿主为 #842“基本墙:墙240:7073”。
->
-> **N001/frame**：在局部 XZ 平面定义外矩形 X=0…850、Z=0…1100，内孔 X=40…810、Z=40…1060；沿 +Y 挤出 240，Y=0…240，框边宽 40。
->
-> **N001/slat-01…14**：每片以居中 60×20 矩形截面沿 +X 挤出 770；起始截面中心为 (40,120,zₖ)，zₖ=90+k×920/13，k=0…13。60 边单位方向为 (0,−1/√2,+1/√2)，20 边方向为 (0,−1/√2,−1/√2)。由此确定倾向、尺寸、间距与首片位置，不能只写“倾斜 45 度”。
-
-排列规则与源解析值最大残差约 `1.38×10⁻¹¹ mm`，仅证明源规律，不是新编译器验证。
-
-材料 #2597 为“金属漆_冷灰”，#10052 同时关联实例、类型及其他对象，不能推断底层合金、涂层厚度或逐项材料。十五项的 StyledItem 指向 #2539 SurfaceStyle／#2538 Rendering：RGB≈(0.24706,0.27843,0.30196)，Transparency=0，SpecularColour=0.5，SpecularExponent=64，ReflectanceMethod=NOTDEFINED。高光仅记录为源事实，首版只承诺颜色／透明度，不能宣称完整外观等价。
-
-源窗在 #132“标高 3”（40 mm），宿主墙在 #126“地板标高”（−1140 mm），存在归层不一致。既有实验在副本中随宿主归层；不得修改源或把归一化结果称为原始关系。
-
-现有 basic_filling/1.0 有 window-single、window-double-vertical、door-left、door-right 四种模板。它们内部能创建多个实体，但不等于支持任意部件输入。“单玻璃窗 850×1100、框宽 40”不能代替十四片百叶描述。
-
-## 附录 B：数据调查与证据
-
-2026-09-24 定向抽查八份文件，七份可读取，一份 IFC2X2 未评估；八份源 hash 前后相同。只做结构读取，未运行生成、完整 schema 校验或保真测试。按 Body 展开映射，以实例计几何项；这些数量不是唯一共享定义数或语义部件数。
-
-| 文件（相对 dataset/external） | 应用／IFC | 窗 | 门 |
-|---|---|---|---|
-| `bimnet/hxp.ifc` | Revit 2020／2X3 | 3 窗，45 挤出体 | 7 门，50 挤出体＋8 BRep |
-| `xbim-essentials-examples/House.ifc` | Renga 2.2／2X3 | 23 个映射面模型 | 19 个映射面模型 |
-| `bim-whale-ifc-samples/TallBuilding/IFC/TallBuilding.ifc` | Revit 2021／2X3 | 21 窗，84 挤出体 | 5 门，39 BRep＋12 挤出体 |
-| `gni-bim-dataset/2025_BIMfundamentals/model_0.ifc` | Revit 2024／4 | 73 窗，410 面集 | 25 门，194 面集 |
-| `scan-vs-bim-quality/20260916/Test model 1.1.ifc` | SketchUp 2015／2X3 | 5 窗，各一 BRep | 3 门，各一 BRep |
-| `ifc-bench/projects/fantasy_hotel_1/arc.ifc` | Revit 2024／4 | 73 窗，410 面集 | 25 门，194 面集 |
-| `gni-bim-dataset/normalized-ifc4/model_80.ifc` | Revit 2026／4 | 121 窗，786 面集 | 10 门，101 面集 |
-| `duraark/SGD_Munkerud/SGD_Munkerud_Arch-1.ifc` | 2X2_FINAL | 未评估 | 当前库不支持，未转换 |
-
-原始证据：[结构统计](../reports/ifc-representation-survey-2026-09-24/source-structure-survey.json)、[实体展开与同源检查](../reports/ifc-representation-survey-2026-09-24/supplementary-inspection.json)。首次在 IFC2X2 文件读取退出的情况保留，未通过改版本字符串绕过。
-
-House 窗 #9143 的一个面模型含 58 个面；TallBuilding 门 #10949 有 39 个 BRep、1,102 个面；GNI 窗 #6843 有五个面集、四十个面；SketchUp 窗 #3677 有一个 BRep、十四个面且无 Type。面数、几何项数和部件数不能混用。
-
-GNI model_0 与 fantasy_hotel 的 98 个门窗 GlobalId 集合相同，文件字节及完整 Body 引用文本不同，尚未证明几何相等；评估时按同源组处理。本次可读门窗实例上未发现 ShapeAspect，不能据此推断 IFC4 类型映射也没有；Renga 门窗使用 MappedItem，但关联 Type 未携带 maps。各关系必须分别读取。
-
-墙板也有多种表示：hxp 为挤出，House 墙含 SweptSolid／Clipping／CSG，TallBuilding 墙为 Clipping，GNI 有 SweptSolid 和 Tessellation。数据证明应区分语义组织与底层表示，不证明当前系统已支持这些形式。
-
-已有 hxp 诊断匹配 66 个构件、无缺失或多余，修复后候选仍有 14 个几何超差，Audit 接受不代表保留源细节。仅替换三个开口的离线诊断降为 10 个门窗差异，不是新 LLM 自动成功。D007 的八个 BRep 仅五个已证明可转正棱柱，其余三项仍须返回不支持。首版不能承诺整栋 hxp 完整保真。
-
-## 附录 C：标准与工程依据
-
-- [IFC2X3 IfcWindow](https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcsharedbldgelements/lexical/ifcwindow.htm)、[IfcWindowStyle](https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcsharedbldgelements/lexical/ifcwindowstyle.htm)：实例、类型、参数与形状。
-- [IFC2X3 IfcShapeRepresentation](https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcrepresentationresource/lexical/ifcshaperepresentation.htm)、[IfcShapeAspect](https://standards.buildingsmart.org/IFC/RELEASE/IFC2x3/TC1/HTML/ifcrepresentationresource/lexical/ifcshapeaspect.htm)：表示约束与部件分组。
-- [IfcOpenShell ShapeAspect API](https://docs.ifcopenshell.org/autoapi/ifcopenshell/api/geometry/add_shape_aspect/index.html)、[几何创建](https://docs.ifcopenshell.org/ifcopenshell-python/geometry_creation.html)：实现基础，不等于项目能力已完成。
-- [Autodesk 构造工具](https://help.autodesk.com/cloudhelp/2023/ENU/Revit-Customize/files/GUID-478961FB-DD57-445E-831F-5B83E02F0B78.htm)、[族增量测试](https://help.autodesk.com/cloudhelp/2022/ENU/Revit-Customize/files/GUID-772026BB-2A3E-4193-A339-75E019AA8DCC.htm)、[IFC 导出选项](https://help.autodesk.com/cloudhelp/2025/ENU/Revit-DocumentPresent/files/GUID-E029E3AD-1639-4446-A935-C9796BC34C95.htm)：参数建模与导出是不同层次。
-- [IfcFacetedBrep](https://standards.buildingsmart.org/IFC/RELEASE/IFC4_3/HTML/lexical/IfcFacetedBrep.htm)、[IfcAdvancedBrep](https://standards.buildingsmart.org/IFC/RELEASE/IFC4_3/HTML/lexical/IfcAdvancedBrep.htm)、[Khronos 网格说明](https://github.com/KhronosGroup/glTF-Tutorials/blob/main/gltfTutorial/gltfTutorial_009_Meshes.md)：BRep 与网格的区别；实际输出仍以 IFC2X3 合同为准。
+IFC 实体引用、窗框／叶片示例、Type 与 RepresentationMap 的关系、材料与显示的区别，以及源数据表示调查统一见[门窗参考](../reference/ifc-window-components.md)。

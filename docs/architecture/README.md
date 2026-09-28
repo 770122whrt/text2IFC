@@ -21,7 +21,7 @@
 ## 专题设计与决策
 
 - [IFC2Text：从建筑模型到可重建的设计说明](bim2text-bidirectional-bridge-research.md)：分层描述、往返比较与研究方向。
-- [text2IFC 参数化门窗部件扩展计划 v1.0](text2ifc-component-plan-v1.0.md)：唯一计划，含窗结构实例、数据调查、人工交互、版本回退及门窗分阶段验收；尚未实施。
+- [text2IFC 参数化门窗部件扩展计划 v1.0](text2ifc-component-plan-v1.0.md)：唯一计划，保留合同、人工交互、版本回退及验收范围；已完成范围见[当前结果](../validation/ifc2text/component-v26/README.md)，结构实例见[门窗参考](../reference/ifc-window-components.md)。
 
 - [两层光庭阅读馆设计](courtyard-library-design.md)：露天光庭与二层回廊已确认；按用户委托确定布局与材料，覆盖适用的已有能力，区分栏杆现有表达与扩展范围。
 

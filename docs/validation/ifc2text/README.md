@@ -1,12 +1,17 @@
-# IFC2Text Validation
+# IFC2Text 与文本往返重建
 
-本目录保存 IFC2Text 从确定性建筑事实到版本化设计说明、再接入现有 text2IFC Generation 公共路径的阶段准入与后续评测材料。
+更新：2026-09-28。本页是当前入口。新接手先看结果，再按问题进入合同或诊断；历史报告不充当当前能力说明。
 
-当前入口：
+| 要了解什么 | 唯一维护位置 |
+|---|---|
+| 已经做成什么、实际误差与限制 | [运行结果与证据](component-v26/README.md) |
+| 如何定位错误、哪些回归不能遗漏 | [故障定位与回归](maintenance.md) |
+| 门窗部件如何表达、编译和处理不支持项 | [计划 v1.0](../../architecture/text2ifc-component-plan-v1.0.md) |
+| IFC 的几何、Type、材料、外观是什么关系 | [门窗参考与源表示调查](../../reference/ifc-window-components.md) |
+| 研究问题、空间推导和自进化怎么做 | [研究方案](../../architecture/bim2text-bidirectional-bridge-research.md) |
+| 每篇论文做了什么、可复用什么 | [文献分析](../../reports/ifc2text-literature.md) |
+| 过去失败、旧准入与原始版本 | [历史索引](history.md) |
 
-- **2026-09-22 修复后的离线验证：** [分步修复与整栋集成报告](../../reports/ifc2text-stepwise-fixes-2026-09-22.md)。引入新空间期望、BIM JSON 2.4 和 Compare 1.0；下列历史准入不能作为这些修改后的新实时调用许可。
-- **最新受控基线 v0.3：** [阶段验证机器记录](../../../dataset/processed/experiments/ifc2text-phase1-20260917/hxp-goal-v03-01/validation/admission.json)（代码 `c9443963`，106 passed）；[简短决策与结果](../../reports/ifc2text-phase1-decisions-2026-09-17.md)。完整说明已生成，真实重建在 Design Brief 截断，累计调用账本暂停，不代表已准许再次付费重试。
-- **历史 v0.2：** [Phase 1 写作与公共桥 Stage Admission v0.2（2026-09-17）](phase1-writing-admission-v02-2026-09-17.md) · [机器记录](phase1-writing-admission-v02-2026-09-17.json)
-- **历史准入：** [Phase 1 初版 Admission（a333f68b）](phase1-writing-admission-2026-09-17.md) · [机器记录](phase1-writing-admission-2026-09-17.json)。该版本在第一次真实写作揭示高基数 section 后按 invalidation contract 停止用于当前执行。
+当前流程是 **IFC → 建筑事实 → 分层设计说明 → Brief → BIM JSON → IFC → 独立比较**。支持范围内的参数化门窗已接入，遇到不能表达的必要几何先返回对象、原因和影响；只有明确授权后才排除并生成部分模型。hxp 与 i5n_1 已完成这样的往返验证。自进化、跨建筑策略学习、部件物理材料归属仍未完成。
 
-当前 Admission 只证明对应固定代码版本在 zero-network 条件下通过写作 stage、Provider seam 和公共 Generation bridge 的适用离线门禁。它不是 IFC2Text 能力提升证据，也不等于真实 Provider 往返已经成功。
+整理约定：这里维护导航，结果页维护数字，计划维护范围，研究页维护假设。新增失败先补维护页的原因及回归链接，再在历史索引登记证据；不再新增重复的“最新状态／下一步”长报告。已经接受的 JSON 和原始实验不覆盖。文档链接可引用固定 Git 版本，原始运行是否上传须明确说明。
