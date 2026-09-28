@@ -120,15 +120,17 @@ def test_duplicate_reopened_identities_fail_closed(tmp_path,duplicate):
 
 
 @pytest.mark.parametrize('explicit',[False,True])
-def test_geometry_projection_versions_source_identity_and_singular_provenance(explicit):
+@pytest.mark.parametrize('version',['1.1','1.2'])
+def test_geometry_projection_versions_source_identity_and_singular_provenance(explicit,version):
     opening={'bounds':{'x':[600,1400],'y':[1000,2000]}}
     if explicit: opening['id']='chosen-cut'
     brief={'known_facts':{'floor_slabs':[{'id':'deck-a','storey':'level-a','top_elevation_mm':3200,
                  'thickness_mm':200,'bounds':{'x':[0,4000],'y':[0,4000]},'opening':opening}]}}
     facts={'storeys':[{'id':'level-a','elevation_mm':3200}],'slabs':deepcopy(brief['known_facts']['floor_slabs'])}
     original=deepcopy(facts)
-    result=build_design_geometry_expectation(case_id='fixture',design_brief=brief,expected_facts=facts)
-    assert result['schema_version']=='text2ifc/design-geometry-expectation/1.1'
+    result=build_design_geometry_expectation(case_id='fixture',design_brief=brief,expected_facts=facts,
+        schema_version=f'text2ifc/design-geometry-expectation/{version}')
+    assert result['schema_version']==f'text2ifc/design-geometry-expectation/{version}'
     record=next(iter(result['floor_openings'].values()))
     assert record['identity_source']==('explicit' if explicit else 'derived')
     assert record['source_fact_refs']==['/known_facts/floor_slabs/0/opening']
@@ -154,3 +156,19 @@ def test_explicit_identity_matches_correct_host_and_geometry(tmp_path):
     result=check_generated_ifc(_compile(tmp_path),_expect('actual-cut',source='explicit'))
     assert result.success,result.issues
     assert result.metrics['floor_openings']['actual-cut']['binding_basis']=='explicit_identity'
+
+
+@pytest.mark.parametrize('host',['deck-a','deck-b'])
+def test_v12_retains_floor_opening_host_check(tmp_path,host):
+    expectation=_expect('actual-cut',source='explicit')
+    expectation['schema_version']='text2ifc/design-geometry-expectation/1.2'
+    result=check_generated_ifc(_compile(tmp_path,(('actual-cut',host,1000),)),expectation)
+    assert result.success == (host=='deck-a')
+
+
+@pytest.mark.parametrize('delta,valid',[(.0996,True),(.1,False),(.1004,False)])
+def test_v12_space_gate_uses_strict_point_one_mm(tmp_path,delta,valid):
+    path=_compile(tmp_path)
+    expectation={'schema_version':'text2ifc/design-geometry-expectation/1.2','walls':{},'tolerance':.0001,
+        'spaces':{'deck-a':{'bbox':{'x':[delta/1000,4+delta/1000],'y':[0,4],'z':[3,3.2]}}}}
+    assert check_generated_ifc(path,expectation).success == valid

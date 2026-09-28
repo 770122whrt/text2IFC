@@ -1,0 +1,106 @@
+{
+  "original_provider_result": {
+    "evidence_kind": "live_closed_wall_diagnostic_not_whole_building_acceptance",
+    "generator_result": {
+      "case_id": "single-wall-detail-v07",
+      "stage": "generate",
+      "status": "formal",
+      "classification": "formal",
+      "valid": true,
+      "contract_valid": true,
+      "strict_output_contract_valid": true,
+      "response_id": "2e2f22fb-97cc-4fe1-b45f-141e9202224a",
+      "evidence_class": "live",
+      "output_dir": "dataset/processed/experiments/ifc2text-closed-wall-retry-20260921-v08/live-generator/generator"
+    },
+    "audit_invoked": false,
+    "accepted_publication": false,
+    "compile_success": true,
+    "wall_count": 1,
+    "ifc_schema": "IFC2X3",
+    "ifc_path": "E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-closed-wall-retry-20260921-v08\\live-generator\\single-wall-generated-diagnostic.ifc",
+    "profiles": [
+      "IfcArbitraryClosedProfileDef"
+    ]
+  },
+  "budget": {
+    "calls": {
+      "writing": 21,
+      "reconstruction": 14
+    },
+    "limit_tokens": 2000000,
+    "used_or_reserved": 1400238,
+    "new_tokens": 57601,
+    "remaining_tokens": 599762
+  },
+  "forward_system_modified": false,
+  "raw_provider_edited": false,
+  "full_audit_done": false,
+  "opening_material_space_scope_tested": false,
+  "source_role": "original archived hxp, unvoided W013 wall only",
+  "raw_polygon_explicitly_closed": true,
+  "raw_profile_points": [
+    [
+      5227.0,
+      3469.3
+    ],
+    [
+      5014.2,
+      3466.4
+    ],
+    [
+      4620.8,
+      3113.1
+    ],
+    [
+      4538.8,
+      3039.5
+    ],
+    [
+      4638.0,
+      2940.4
+    ],
+    [
+      5227.0,
+      3469.3
+    ]
+  ],
+  "source_vs_text": {
+    "hausdorff_densified_mm": 0.0546971477855955,
+    "symmetric_difference_mm2": 36.40270356210058,
+    "diagnostic_0_1mm_pass": true,
+    "legacy_20mm_planar_pass": true,
+    "metric_note": "discrete symmetric Hausdorff with segment densification; not arbitrary-surface proof"
+  },
+  "source_vs_generated_ifc": {
+    "hausdorff_densified_mm": 0.0546971477855955,
+    "symmetric_difference_mm2": 36.402703561990876,
+    "diagnostic_0_1mm_pass": true,
+    "legacy_20mm_planar_pass": true,
+    "metric_note": "discrete symmetric Hausdorff with segment densification; not arbitrary-surface proof"
+  },
+  "text_vs_generated_ifc": {
+    "hausdorff_densified_mm": 4.547473508864641e-13,
+    "symmetric_difference_mm2": 1.5647856344003226e-10,
+    "diagnostic_0_1mm_pass": true,
+    "legacy_20mm_planar_pass": true,
+    "metric_note": "discrete symmetric Hausdorff with segment densification; not arbitrary-surface proof"
+  },
+  "max_bbox_coordinate_delta_mm": 0.047601533354281855,
+  "z_range_error_mm": 2.2737367544323206e-13,
+  "generated_z_range_mm": [
+    -1140.0000000000002,
+    1020.0
+  ],
+  "source_area_mm2": 100135.01242383313,
+  "generated_area_mm2": 100143.03999999973,
+  "ifc_schema": "IFC2X3",
+  "reconstructed_profile_types": [
+    "IfcArbitraryClosedProfileDef"
+  ],
+  "wall_count": 1,
+  "opening_count": 0,
+  "micro_geometry_pass": true,
+  "whole_building_accepted": false,
+  "source_and_candidate_unchanged": true
+}

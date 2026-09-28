@@ -238,7 +238,7 @@ input.txt
 | `06-AI-SPEC.md` | Agent、prompt、audit、failure routing 合同 |
 | `06-VALIDATION.md` | 验证策略 |
 | `06-00-PLAN.md` 到 `06-06-PLAN.md` | 具体执行计划 |
-| `docs/architecture/phase-6-acceptance-and-trace-report.md` | 架构文档区的同主题长报告 |
+| `docs/architecture/history/phase-6-acceptance-and-trace-report.md` | 架构文档区的同主题长报告 |
 
 ## 8. Report Boundary
 

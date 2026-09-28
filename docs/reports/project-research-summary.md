@@ -215,7 +215,7 @@ Phase 4 的目标是检查生成 IFC 的正确性，而不仅仅检查 IFC 是�
 - 对材料、类型、拓扑、复杂几何损失进行记录。
 - 生成与评估相关的报告和指标。
 
-根据 `docs/architecture/phase-4-summary.md` 和规划文档记录，Phase 4 中曾统计：
+根据 `docs/architecture/history/phase-4-summary.md` 和规划文档记录，Phase 4 中曾统计：
 
 - entities：4444 / 5308 represented。
 - relationships：15046 / 16926 represented。

@@ -1,0 +1,200 @@
+{
+  "appearance": {
+    "profile": "neutral-architectural"
+  },
+  "entities": [
+    {
+      "attributes": {
+        "Name": "Single Wall Geometry Diagnostic"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "frozen-brief",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "frozen-brief",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "frozen-brief",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": -1140.0,
+        "Name": "S01",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            -1140.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "S01",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "frozen-brief",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W013",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                5227.0,
+                3469.3
+              ],
+              [
+                5014.2,
+                3466.4
+              ],
+              [
+                4620.8,
+                3113.1
+              ],
+              [
+                4538.8,
+                3039.5
+              ],
+              [
+                4638.0,
+                2940.4
+              ],
+              [
+                5227.0,
+                3469.3
+              ]
+            ]
+          }
+        }
+      },
+      "id": "wall-S01-w013",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "source": "frozen-brief",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "source": "frozen-brief",
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "relationships": [],
+  "schema_version": "bim-json/2.3",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "evidence_kind": "live",
+  "controller_status": "draft_required",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-attribution-20260921-v01\\live-explicit_containment\\runs\\90acfea68f5ec48c",
+  "generator_invoked": false,
+  "ifc_publication": false,
+  "same_original_text": true,
+  "brief": {
+    "status": "draft_required",
+    "storeys": [
+      {
+        "id": "S01",
+        "elevation_mm": -1140.0,
+        "net_height_mm": 2160.0,
+        "windows": [],
+        "spaces": [
+          {
+            "id": "R001",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R002",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R003",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R004",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R005",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          }
+        ]
+      },
+      {
+        "id": "S02",
+        "elevation_mm": 40.0,
+        "net_height_mm": null,
+        "windows": [
+          {
+            "height_mm": 1100.0,
+            "host_opening": "O007",
+            "host_storey": "S01",
+            "host_wall": "W007",
+            "id": "N001",
+            "recorded_storey": "S02",
+            "solid_bounds_mm": {
+              "x": [
+                6196.0,
+                6436.0
+              ],
+              "y": [
+                2589.3,
+                3439.3
+              ],
+              "z": [
+                -285.0,
+                815.0
+              ]
+            },
+            "width_mm": 850.0
+          },
+          {
+            "height_mm": 1100.0,
+            "host_opening": "O006",
+            "host_storey": "S01",
+            "host_wall": "W005",
+            "id": "N002",
+            "recorded_storey": "S02",
+            "solid_bounds_mm": {
+              "x": [
+                5316.2,
+                6168.5
+              ],
+              "y": [
+                3470.6,
+                3652.3
+              ],
+              "z": [
+                -285.0,
+                815.0
+              ]
+            },
+            "width_mm": 850.0
+          },
+          {
+            "height_mm": 1100.0,
+            "host_opening": "O010",
+            "host_storey": "S01",
+            "host_wall": "W013",
+            "id": "N003",
+            "recorded_storey": "S02",
+            "solid_bounds_mm": {
+              "x": [
+                4650.9,
+                5164.2
+              ],
+              "y": [
+                3065.7,
+                3541.1
+              ],
+              "z": [
+                -310.0,
+                790.0
+              ]
+            },
+            "width_mm": 600.0
+          }
+        ],
+        "spaces": []
+      },
+      {
+        "id": "S03",
+        "elevation_mm": 1020.0,
+        "net_height_mm": null,
+        "windows": [],
+        "spaces": []
+      }
+    ],
+    "ambiguities": [
+      {
+        "blocking": false,
+        "evidence_refs": [
+          "capability:IFC2X3:IfcWall",
+          "schema:bim-json-v2:entity"
+        ],
+        "id": "amb-s01-wall-exterior-interior-grouping",
+        "message": "源说明未给出 W001–W034 的外墙/内墙分类，也未确认其空间归属；本稿按与显式楼板轮廓 L001 外边界共面者归入 exterior，其余归入 interior。",
+        "options": [
+          "按与显式楼板轮廓 L001 外边界共面分组（本稿采用）",
+          "不做分类，视为未确认并等待进一步提取结果"
+        ],
+        "path": "/known_facts/storeys/0/walls",
+        "reason": "输出结构要求 walls 分为 exterior 与 interior 两组，而源记录未提供该分类；分组不改变任何墙的显式轴线端点、厚度与高度，仅决定其所在数组。",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    ],
+    "questions": []
+  }
+}

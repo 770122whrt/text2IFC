@@ -71,8 +71,7 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 | [phase9-stage1-contract-repair-report.md](phase9-stage1-contract-repair-report.md) | Stage 1 partial intent、系统指纹封装、缺参 feedback 与双路径 DeepSeek UAT | 2026-07-20 两组 Stage 1 合同通过；整体因既有 L2 evidence conflict 未发布 |
 | [phase9-validation-report.md](phase9-validation-report.md) | 单一 IFC + 文本 RepairAPI、薄 CLI、离线/LargeBuilding 与真实 DeepSeek UAT | 2026-07-20 确定性验收通过；Stage 1 修复后 live 双路径已进入 Stage 2 |
 | [design.md](design.md) | 设计权威、坐标语义、能力边界、验收标准与决策日志 | 离线闭环与一次 DeepSeek live UAT 均已通过 |
-| [implementation-prompt.md](implementation-prompt.md) | 按设计实施的顺序、交付物和测试清单 | 与设计同步 |
-| [reuse-map.md](reuse-map.md) | 现有模块复用与新增模块理由 | 已完成首轮 |
+| [早期实施与复用依据](design.md#18-早期实施边界与复用依据2026-09-23-整合) | 原实施 Prompt 与复用说明已并入设计 §18 | 来源已批准删除，原文留固定 Git 历史 |
 | [implementation-findings.md](implementation-findings.md) | 实施证据、冲突、处理结果和外部阻塞 | 持续追加 |
 | [ground-truth-comparison.md](ground-truth-comparison.md) | 完整 Pipeline、Agent 输入输出、编译产物与 original-vs-repaired 直比 | L1 通过；L2/L3 未通过或未定义 |
 | [target-retrieval-design.md](target-retrieval-design.md) | GUID/Name/方位/空间/几何混合索引、TargetQuery 与候选证据合同 | v1.1 Phase 7 已实现并验证 |

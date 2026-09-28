@@ -32,6 +32,8 @@ def material_value(material):
         return None
     if material.is_a("IfcMaterial"):
         return {"kind": "single_material", "name": material.Name}
+    if material.is_a("IfcMaterialList"):
+        return {"kind": "material_list", "materials": [{"name": item.Name} for item in material.Materials]}
     usage = material.is_a("IfcMaterialLayerSetUsage")
     layer_set = material.ForLayerSet if usage else material
     if not layer_set.is_a("IfcMaterialLayerSet"):
@@ -95,6 +97,9 @@ def verify_semantic_expectations(ifc_file_or_path, expectations: Sequence[Mappin
             if kind == "type":
                 actual = _identity(types[0]) if len(types) == 1 else None
             elif kind == "material":
+                if entity and len([r for r in getattr(entity, "HasAssociations", ())
+                                   if r.is_a("IfcRelAssociatesMaterial")]) > 1:
+                    reason = "More than one material association on the object."
                 actual = material_value(element.get_material(entity, should_inherit=scope == "effective")) if entity else None
                 if entity and entity.is_a("IfcWallStandardCase") and expected.get("value", {}).get("kind") == "single_material" and actual and actual.get("kind") == "material_layer_set_usage" and len(actual["layers"]) == 1:
                     actual = {"kind": "single_material", "name": actual["layers"][0]["name"]}
@@ -121,6 +126,12 @@ def verify_semantic_expectations(ifc_file_or_path, expectations: Sequence[Mappin
                 from text2ifc_presentation.part_readback import part_request_matches
                 wanted = expected.get('value', {})
                 if entity and scope != 'inherited' and part_request_matches(entity, wanted):
+                    actual = wanted
+            elif kind == 'component_geometry':
+                from .component_expectations import component_request_problem
+                wanted = expected.get('value', {})
+                reason = 'Component geometry cannot be inherited from Type.' if scope == 'inherited' else component_request_problem(entity, wanted)
+                if reason is None:
                     actual = wanted
             elif kind == 'template' and expected.get('value', {}).get('template_id') == 'metal-picket':
                 from .basic_railing import verify_basic_railing
@@ -190,7 +201,7 @@ def verify_document_semantics(ifc_file_or_path, document) -> tuple[IfcValidation
         # Compiler-owned provenance is checked by its own geometry/presentation contracts.
         for name in ("Pset_text2IFCBasicFilling", "Pset_text2IFCAppearance"):
             actual_properties.pop(name, None)
-        if document.get('schema_version') == 'bim-json/2.3' and rep.get('kind') == 'basic_railing':
+        if document.get('schema_version') in {'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} and rep.get('kind') == 'basic_railing':
             # The dedicated verifier checks this construction metadata and every
             # actual solid; it is not an authored performance property set.
             actual_properties.pop('Pset_text2IFCBasicRailing', None)

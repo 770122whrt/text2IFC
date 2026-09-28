@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from math import hypot
+from math import hypot, isfinite
 import re
 from typing import Any, Mapping
 
@@ -18,11 +18,13 @@ def build_design_geometry_expectation(
     case_id: str,
     design_brief: Mapping[str, Any],
     expected_facts: Mapping[str, Any],
-    schema_version: str = "text2ifc/design-geometry-expectation/1.1",
+    schema_version: str = "text2ifc/design-geometry-expectation/1.2",
 ) -> dict[str, Any]:
     """Derive checkable geometry only from confirmed Design Brief facts."""
-    if schema_version not in {"text2ifc/design-geometry-expectation/1.0", "text2ifc/design-geometry-expectation/1.1"}:
+    if schema_version not in {"text2ifc/design-geometry-expectation/1.0", "text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2", "text2ifc/design-geometry-expectation/1.3"}:
         raise ValueError(f"Unsupported design geometry expectation: {schema_version}")
+    world_intervals = schema_version == "text2ifc/design-geometry-expectation/1.3"
+    explicit_space_geometry = world_intervals or schema_version == "text2ifc/design-geometry-expectation/1.2"
     known = design_brief.get("known_facts")
     known_facts = known if isinstance(known, Mapping) else {}
     building = known_facts.get("building")
@@ -83,12 +85,21 @@ def build_design_geometry_expectation(
         if height is None and isinstance(design_storey, Mapping):
             height = _number(design_storey.get("net_height_mm"))
         path = design_space_paths.get(space_id or "", f"/known_facts/spaces/{space_index}")
+        basis = None
+        if explicit_space_geometry:
+            try:
+                interval_space = _space_world_interval_v13(space) if world_intervals else space
+                bounds, elevation, height, basis = _space_geometry_v12(interval_space, bounds, elevation, height)
+            except ValueError:
+                unresolved.append(_unresolved_geometry(path=path, reason="space_geometry_invalid_or_conflicting"))
+                continue
         if (
             space_id is None
             or storey_id is None
             or bounds is None
             or elevation is None
             or height is None
+            or (explicit_space_geometry and height <= 0)
         ):
             unresolved.append(
                 _unresolved_geometry(path=path, reason="space_geometry_missing")
@@ -101,6 +112,14 @@ def build_design_geometry_expectation(
             "storey_id": storey_id,
             "source_fact_refs": [path],
         }
+        if explicit_space_geometry:
+            spaces[space_id]["bbox"] = {
+                "x": [bounds[0] / 1000, bounds[1] / 1000],
+                "y": [bounds[2] / 1000, bounds[3] / 1000],
+                "z": [elevation / 1000, (elevation + height) / 1000],
+            }
+        if basis is not None:
+            spaces[space_id]["geometry_basis"] = basis
         space_sources[space_id] = (bounds, path)
 
     explicit_slabs = _records(expected_facts.get("slabs"))
@@ -245,6 +264,22 @@ def build_design_geometry_expectation(
         if height is None and isinstance(design_storey, Mapping):
             height = _number(design_storey.get("net_height_mm"))
         path = design_wall_paths.get(wall_id or "", f"/known_facts/walls/{wall_index}")
+        outline = None
+        if world_intervals:
+            from .wall_outline import public_wall_outline
+            try:
+                outline = public_wall_outline(wall)
+                if outline is not None:
+                    x0, y0, x1, y1 = outline.bounds
+                    bounds = (x0, x1, y0, y1)
+                if 'z_min_mm' in wall:
+                    value = wall['z_min_mm']
+                    if isinstance(value, bool) or not isinstance(value, (int,float)) or not isfinite(value):
+                        raise ValueError('Invalid wall base elevation')
+                    elevation = value
+            except ValueError:
+                unresolved.append(_unresolved_geometry(path=path, reason='wall_outline_invalid_or_conflicting'))
+                continue
         if wall_id is None or storey_id is None or elevation is None or height is None:
             unresolved.append(
                 _unresolved_geometry(path=path, reason="explicit_wall_geometry_missing")
@@ -300,6 +335,13 @@ def build_design_geometry_expectation(
             "bbox_issue_path": f"/walls/{wall_id}",
             "source_fact_refs": [path],
         }
+        if outline is not None:
+            # A full footprint establishes orientation. Dominant bbox axis is
+            # unstable around 45 degrees and adds no information here.
+            walls[wall_id].pop('axis', None)
+            walls[wall_id]['world_outline_m'] = [[x/1000, y/1000] for x,y in outline.exterior.coords]
+            walls[wall_id]['bbox'] = {'x':[bounds[0]/1000,bounds[1]/1000],
+                'y':[bounds[2]/1000,bounds[3]/1000], 'z':[elevation/1000,(elevation+height)/1000]}
 
     for storey_index, storey in enumerate(raw_storeys):
         storey_id = _string(storey.get("id"))
@@ -313,7 +355,8 @@ def build_design_geometry_expectation(
             continue
         elevation = _number(storey.get("elevation_mm"))
         height = _number(storey.get("net_height_mm"))
-        if elevation is None or height is None or height <= 0:
+        needs_height = any(_string(w.get("id")) not in explicit_wall_ids for w in _interior_walls(storey))
+        if elevation is None or ((not explicit_space_geometry or needs_height) and (height is None or height <= 0)):
             unresolved.append(
                 _unresolved_geometry(
                     path=f"/known_facts/storeys/{storey_index}",
@@ -399,7 +442,7 @@ def build_design_geometry_expectation(
         "case_id": case_id,
         "source": "design_brief_expected_facts",
         "units": "METRE",
-        "tolerance": 0.05,
+        "tolerance": 0.001 if world_intervals else 0.0001 if explicit_space_geometry else 0.05,
         "complete": not unresolved,
         "spaces": spaces,
         "walls": walls,
@@ -410,6 +453,88 @@ def build_design_geometry_expectation(
         "products": products,
         "unresolved": unresolved,
     }
+
+
+def _space_world_interval_v13(space):
+    """Project a complete pair of explicit world-Z endpoints without inference.
+
+    Keep the public record untouched. All supplied interval forms must agree;
+    neither storey elevation nor storey height can fill an incomplete pair.
+    """
+    if not {'z_min_mm', 'z_max_mm'}.intersection(space):
+        return space
+    endpoints = [space.get('z_min_mm'), space.get('z_max_mm')]
+    if not all(isinstance(v, (int, float)) and not isinstance(v, bool) and isfinite(v) for v in endpoints):
+        raise ValueError('World-Z endpoints must both be finite numbers')
+    if endpoints[0] >= endpoints[1]:
+        raise ValueError('World-Z endpoints must increase')
+    if 'z_mm' in space:
+        interval = space['z_mm']
+        if (not isinstance(interval, list) or len(interval) != 2
+                or not all(isinstance(v, (int, float)) and not isinstance(v, bool) and isfinite(v) for v in interval)
+                or any(abs(a-b) > 1e-6 for a, b in zip(interval, endpoints))):
+            raise ValueError('World-Z interval and endpoints conflict')
+    return {**space, 'z_mm': endpoints}
+
+
+def _space_geometry_v12(space, bounds, elevation, height):
+    """Read explicit public space geometry without inventing a storey net height.
+
+    z_mm is the measured world interval. It may start above/below its container's
+    datum. A polygon provides a bounding expectation, not topology equivalence.
+    Contradictory explicit representations are errors, never fallback aliases.
+    """
+    finite = lambda v: isinstance(v, (int, float)) and not isinstance(v, bool) and isfinite(v)
+    if "bounds" in space:
+        if bounds is None or not all(finite(v) for v in bounds):
+            raise ValueError("invalid bounds")
+        raw = space["bounds"]
+        if isinstance(raw, Mapping):
+            forms = []
+            for keys in (("x", "y"), ("x_min", "x_max", "y_min", "y_max")):
+                if any(key in raw for key in keys):
+                    values = [raw.get(key) for key in keys]
+                    if len(keys) == 2:
+                        if not all(isinstance(v, list) and len(v) == 2 for v in values):
+                            raise ValueError("invalid bounds ranges")
+                        values = [v for pair in values for v in pair]
+                    if not all(finite(v) for v in values):
+                        raise ValueError("invalid bounds numbers")
+                    forms.append(values)
+            if not forms or any(any(abs(a-b) > 1e-6 for a,b in zip(form, bounds)) for form in forms):
+                raise ValueError("conflicting bounds aliases")
+    basis = None
+    if "polygon" in space:
+        from shapely.geometry import Polygon
+        points = space["polygon"]
+        if not isinstance(points, list) or len(points) < 3 or not all(
+            isinstance(p, list) and len(p) == 2 and all(finite(v) for v in p) for p in points
+        ):
+            raise ValueError("invalid polygon points")
+        shape = Polygon(points)
+        if not shape.is_valid or shape.is_empty or shape.area <= 0:
+            raise ValueError("invalid polygon")
+        x0, y0, x1, y1 = shape.bounds
+        polygon_bounds = (x0, x1, y0, y1)
+        if bounds is not None and any(abs(a-b) > 1e-6 for a,b in zip(bounds, polygon_bounds)):
+            raise ValueError("polygon/bounds conflict")
+        bounds = polygon_bounds
+        basis = "polygon_bounds"
+    if "height_mm" in space and (not finite(space["height_mm"]) or space["height_mm"] <= 0):
+        raise ValueError("invalid height")
+    if "z_mm" in space:
+        z = space["z_mm"]
+        if not isinstance(z, list) or len(z) != 2 or not all(finite(v) for v in z) or z[0] >= z[1]:
+            raise ValueError("invalid z interval")
+        if "height_mm" in space and abs(space["height_mm"] - (z[1]-z[0])) > 1e-6:
+            raise ValueError("z/height conflict")
+        elevation, height = float(z[0]), float(z[1]-z[0])
+        basis = "polygon_bounds_and_world_z" if basis else "bounds_and_world_z"
+    if elevation is not None and not finite(elevation):
+        raise ValueError("invalid elevation")
+    if height is not None and (not finite(height) or height <= 0):
+        raise ValueError("invalid effective height")
+    return bounds, elevation, height, basis
 
 
 def _linear_product_bbox(value: Any) -> dict[str, list[float]] | None:
@@ -1065,12 +1190,12 @@ def _add_opening_expectations(*, slab, slab_id, top, thickness, path, schema_ver
         singular = isinstance(slab.get("opening"), Mapping)
         source_path = (f"{path}/opening" if singular and opening_index == 0
                        else f"{path}/openings/{opening_index - int(singular)}")
-        if opening_bounds is None and schema_version == "text2ifc/design-geometry-expectation/1.1":
+        if opening_bounds is None and schema_version in {"text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2", "text2ifc/design-geometry-expectation/1.3"}:
             unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_bounds_missing"))
         if opening_bounds is not None:
             from .cross_storey_identity import floor_opening_id
             opening_id = floor_opening_id(opening, slab_id, opening_index)
-            if opening_id in floor_openings and schema_version == "text2ifc/design-geometry-expectation/1.1":
+            if opening_id in floor_openings and schema_version in {"text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2", "text2ifc/design-geometry-expectation/1.3"}:
                 unresolved.append(_unresolved_geometry(path=source_path, reason="floor_opening_identity_duplicate"))
                 continue
             floor_openings[opening_id] = {
@@ -1086,7 +1211,7 @@ def _add_opening_expectations(*, slab, slab_id, top, thickness, path, schema_ver
                 "bbox_issue_code": "FLOOR_OPENING_BBOX_MISMATCH",
                 "source_fact_refs": [f"{path}/openings/{opening_index}"],
             }
-            if schema_version == "text2ifc/design-geometry-expectation/1.1":
+            if schema_version in {"text2ifc/design-geometry-expectation/1.1", "text2ifc/design-geometry-expectation/1.2", "text2ifc/design-geometry-expectation/1.3"}:
                 floor_openings[opening_id].update(
                     identity_source="explicit" if _string(opening.get("id")) else "derived",
                     source_fact_refs=[source_path],

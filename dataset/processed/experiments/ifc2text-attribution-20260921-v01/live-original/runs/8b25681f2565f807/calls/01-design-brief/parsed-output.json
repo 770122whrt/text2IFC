@@ -1,0 +1,2525 @@
+{
+  "ambiguities": [
+    {
+      "blocking": false,
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSpace"
+      ],
+      "id": "amb-room-verification",
+      "message": "R001–R005 是否可推定为已核实房间？",
+      "options": [
+        "按已核实房间生成 IfcSpace，几何采用已给轮廓",
+        "仅保留空间记录，不生成房间实体"
+      ],
+      "path": "/known_facts/storeys/0/spaces",
+      "reason": "源记录称有显式空间记录但未形成几何围合候选，并明确“可否据此推定为已核实房间仍待进一步确认”；本次按已给轮廓保留空间记录。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall",
+        "capability:IFC2X3:IfcSlab"
+      ],
+      "id": "amb-wall-exterior-interior-split",
+      "message": "源记录未给出墙体的室内外分组，本次按楼板 L001 轮廓推导 exterior/interior。",
+      "options": [
+        "按楼板 L001 轮廓推导室内外分组（本次采用）",
+        "由用户逐段指定室内外分组"
+      ],
+      "path": "/known_facts/storeys/0/walls",
+      "reason": "当前 Design Brief 要求每层墙体归入 walls.exterior 与 walls.interior 两组，而源记录只给出墙体轴、厚度与高度；本次以“外墙外皮与楼板轮廓边重合”推导分组。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow",
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "amb-window-storey-placement",
+      "message": "N001–N003 在源记录中列于 S02 标高，但其宿主墙 W005、W007、W013 属于 S01。",
+      "options": [
+        "按宿主墙所在楼层归入 S01（本次采用）",
+        "保留在 S02 并记录跨楼层宿主关系"
+      ],
+      "path": "/known_facts/storeys/0/windows",
+      "reason": "源记录提示门窗宿主可能位于其他楼层；本次按宿主墙所属楼层把三个窗放入 S01，S02 仅保留标高记录。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcBuildingStorey",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/storeys",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSpace",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/storeys/0/spaces",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/storeys/0/walls",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/storeys/0/doors",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/storeys/0/windows",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcOpeningElement",
+        "capability:IFC2X3:IfcRelVoidsElement",
+        "capability:IFC2X3:IfcRelFillsElement"
+      ],
+      "path": "/known_facts/storeys/0/openings",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSlab",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/floor_slabs",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcCovering",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/storeys/2/coverings",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/semantic_requirements",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:root"
+      ],
+      "path": "/known_facts/appearance",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "known_facts": {
+    "appearance": {
+      "profile": "neutral-architectural"
+    },
+    "floor_slabs": [
+      {
+        "category": "FLOOR",
+        "id": "L001",
+        "polygon": [
+          [
+            1026.5,
+            -1020.0
+          ],
+          [
+            1026.5,
+            -620.0
+          ],
+          [
+            541.0,
+            -620.0
+          ],
+          [
+            541.0,
+            5354.0
+          ],
+          [
+            1584.4,
+            5354.0
+          ],
+          [
+            1584.4,
+            5692.1
+          ],
+          [
+            1827.0,
+            5692.1
+          ],
+          [
+            1827.0,
+            5817.1
+          ],
+          [
+            3352.0,
+            5817.1
+          ],
+          [
+            3352.0,
+            5696.0
+          ],
+          [
+            6436.0,
+            5696.0
+          ],
+          [
+            6436.0,
+            -430.7
+          ],
+          [
+            6044.4,
+            -430.7
+          ],
+          [
+            6044.4,
+            -1030.0
+          ],
+          [
+            3809.4,
+            -1030.0
+          ],
+          [
+            3809.4,
+            -500.0
+          ],
+          [
+            3259.4,
+            -500.0
+          ],
+          [
+            3259.4,
+            -1020.0
+          ],
+          [
+            1026.5,
+            -1020.0
+          ]
+        ],
+        "storey": "storey-s01",
+        "thickness_mm": 300.0,
+        "top_elevation_mm": -1140.0
+      }
+    ],
+    "plan_constraints": [],
+    "semantic_requirements": [
+      {
+        "entity_id": "W001",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W002",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W006",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W007",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W008",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W016",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W017",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W018",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W019",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W020",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W021",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W022",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W023",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W024",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W025",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W026",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W027",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W028",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W029",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W030",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W031",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W032",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M01",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W003",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M02",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 90.0
+            }
+          ],
+          "offset_from_reference_line": 45.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W012",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M02",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 90.0
+            }
+          ],
+          "offset_from_reference_line": 45.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W004",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M03",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 210.0
+            }
+          ],
+          "offset_from_reference_line": 105.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W005",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M04",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 170.0
+            }
+          ],
+          "offset_from_reference_line": 85.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W009",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M04",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 170.0
+            }
+          ],
+          "offset_from_reference_line": 85.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W010",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M04",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 170.0
+            }
+          ],
+          "offset_from_reference_line": 85.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W011",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M05",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 110.0
+            }
+          ],
+          "offset_from_reference_line": 55.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W014",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M05",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 110.0
+            }
+          ],
+          "offset_from_reference_line": 55.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W013",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M06",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 140.0
+            }
+          ],
+          "offset_from_reference_line": 70.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W015",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M07",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 120.0
+            }
+          ],
+          "offset_from_reference_line": 60.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W033",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M08",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 200.0
+            }
+          ],
+          "offset_from_reference_line": 100.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "W034",
+        "material": {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M08",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 200.0
+            }
+          ],
+          "offset_from_reference_line": 100.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "N001",
+        "material": {
+          "kind": "single_material",
+          "name": "金属漆_冷灰"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "N002",
+        "material": {
+          "kind": "single_material",
+          "name": "金属漆_冷灰"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "N003",
+        "material": {
+          "kind": "single_material",
+          "name": "金属漆_冷灰"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "L001",
+        "material": {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M11",
+          "layers": [
+            {
+              "name": "<Unnamed>",
+              "thickness": 300.0
+            }
+          ],
+          "offset_from_reference_line": 0.0
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "C001",
+        "material": {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "M11",
+          "layers": [
+            {
+              "name": "<Unnamed>",
+              "thickness": 300.0
+            }
+          ],
+          "offset_from_reference_line": 0.0
+        },
+        "scope": "direct",
+        "source": "user"
+      }
+    ],
+    "semantic_review": {
+      "appearance": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "not_specified"
+      },
+      "material": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "specified"
+      },
+      "property": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "not_specified"
+      },
+      "template": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "not_specified"
+      },
+      "type": {
+        "source_turns": [
+          "turn-user-001"
+        ],
+        "status": "not_specified"
+      }
+    },
+    "storeys": [
+      {
+        "doors": [
+          {
+            "bounds": {
+              "x": [
+                4094.4,
+                5694.4
+              ],
+              "y": [
+                -960.0,
+                -860.0
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              860.0
+            ],
+            "height_mm": 2000.0,
+            "host_opening": "O015",
+            "host_wall": "W027",
+            "id": "D001",
+            "width_mm": 1600.0
+          },
+          {
+            "bounds": {
+              "x": [
+                1387.9,
+                2987.9
+              ],
+              "y": [
+                -950.0,
+                -850.0
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              860.0
+            ],
+            "height_mm": 2000.0,
+            "host_opening": "O014",
+            "host_wall": "W023",
+            "id": "D002",
+            "width_mm": 1600.0
+          },
+          {
+            "bounds": {
+              "x": [
+                4119.7,
+                4579.3
+              ],
+              "y": [
+                3076.8,
+                3536.4
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              910.0
+            ],
+            "height_mm": 2050.0,
+            "host_opening": "O011",
+            "host_wall": "W014",
+            "id": "D003",
+            "width_mm": 600.0
+          },
+          {
+            "bounds": {
+              "x": [
+                3465.6,
+                4017.2
+              ],
+              "y": [
+                3101.6,
+                3653.1
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              910.0
+            ],
+            "height_mm": 2050.0,
+            "host_opening": "O012",
+            "host_wall": "W020",
+            "id": "D004",
+            "width_mm": 600.0
+          },
+          {
+            "bounds": {
+              "x": [
+                821.0,
+                1521.0
+              ],
+              "y": [
+                5149.0,
+                5329.0
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              910.0
+            ],
+            "height_mm": 2050.0,
+            "host_opening": "O008",
+            "host_wall": "W008",
+            "id": "D005",
+            "width_mm": 700.0
+          },
+          {
+            "bounds": {
+              "x": [
+                2229.6,
+                2689.2
+              ],
+              "y": [
+                4171.4,
+                4631.0
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              910.0
+            ],
+            "height_mm": 2050.0,
+            "host_opening": "O009",
+            "host_wall": "W011",
+            "id": "D006",
+            "width_mm": 600.0
+          },
+          {
+            "bounds": {
+              "x": [
+                3210.1,
+                3699.7
+              ],
+              "y": [
+                4048.7,
+                4538.3
+              ]
+            },
+            "elevation_range_mm": [
+              -1140.0,
+              981.2
+            ],
+            "height_mm": 2050.0,
+            "host_opening": "O013",
+            "host_wall": "W022",
+            "id": "D007",
+            "width_mm": 300.0
+          }
+        ],
+        "elevation_mm": -1140.0,
+        "id": "storey-s01",
+        "name": "S01",
+        "net_height_mm": 2160.0,
+        "openings": [
+          {
+            "bottom_offset_mm": 830.0,
+            "depth_mm": 500.2,
+            "filling": null,
+            "height_mm": 1100.0,
+            "host_wall": "W005",
+            "id": "O001",
+            "normal_offset_mm": 261.6,
+            "offset_along_host_mm": 1281.0,
+            "width_mm": 544.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 300.0,
+            "filling": null,
+            "height_mm": 2050.0,
+            "host_wall": "W012",
+            "id": "O002",
+            "normal_offset_mm": -340.0,
+            "offset_along_host_mm": 1342.2,
+            "width_mm": 240.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 605.0,
+            "filling": null,
+            "height_mm": 2050.0,
+            "host_wall": "W013",
+            "id": "O003",
+            "normal_offset_mm": 395.2,
+            "offset_along_host_mm": 37.6,
+            "width_mm": 142.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 3048.0,
+            "filling": null,
+            "height_mm": 2050.0,
+            "host_wall": "W014",
+            "id": "O004",
+            "normal_offset_mm": 54.8,
+            "offset_along_host_mm": 1659.1,
+            "width_mm": 300.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 308.9,
+            "filling": null,
+            "height_mm": 2050.0,
+            "host_wall": "W015",
+            "id": "O005",
+            "normal_offset_mm": 300.4,
+            "offset_along_host_mm": 111.1,
+            "width_mm": 251.3
+          },
+          {
+            "bottom_offset_mm": 855.0,
+            "depth_mm": 170.0,
+            "filling": "N002",
+            "height_mm": 1100.0,
+            "host_wall": "W005",
+            "id": "O006",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 455.8,
+            "width_mm": 850.0
+          },
+          {
+            "bottom_offset_mm": 855.0,
+            "depth_mm": 240.0,
+            "filling": "N001",
+            "height_mm": 1100.0,
+            "host_wall": "W007",
+            "id": "O007",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 3205.0,
+            "width_mm": 850.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 240.0,
+            "filling": "D005",
+            "height_mm": 2050.0,
+            "host_wall": "W008",
+            "id": "O008",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 390.0,
+            "width_mm": 700.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 110.0,
+            "filling": "D006",
+            "height_mm": 2050.0,
+            "host_wall": "W011",
+            "id": "O009",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 1070.2,
+            "width_mm": 600.0
+          },
+          {
+            "bottom_offset_mm": 830.0,
+            "depth_mm": 140.0,
+            "filling": "N003",
+            "height_mm": 1100.0,
+            "host_wall": "W013",
+            "id": "O010",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 450.6,
+            "width_mm": 600.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 110.0,
+            "filling": "D003",
+            "height_mm": 2050.0,
+            "host_wall": "W014",
+            "id": "O011",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 328.7,
+            "width_mm": 600.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 240.0,
+            "filling": "D004",
+            "height_mm": 2050.0,
+            "host_wall": "W020",
+            "id": "O012",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 405.2,
+            "width_mm": 600.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 240.0,
+            "filling": "D007",
+            "height_mm": 2050.0,
+            "host_wall": "W022",
+            "id": "O013",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 295.0,
+            "width_mm": 300.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 240.0,
+            "filling": "D002",
+            "height_mm": 2000.0,
+            "host_wall": "W023",
+            "id": "O014",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 1161.4,
+            "width_mm": 1600.0
+          },
+          {
+            "bottom_offset_mm": 0.0,
+            "depth_mm": 240.0,
+            "filling": "D001",
+            "height_mm": 2000.0,
+            "host_wall": "W027",
+            "id": "O015",
+            "normal_offset_mm": 0.0,
+            "offset_along_host_mm": 845.0,
+            "width_mm": 1600.0
+          }
+        ],
+        "source_label": "地板标高",
+        "spaces": [
+          {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ],
+            "id": "R001",
+            "name": "R001",
+            "polygon": [
+              [
+                1824.4,
+                5360.6
+              ],
+              [
+                1824.4,
+                5492.1
+              ],
+              [
+                1927.0,
+                5492.1
+              ],
+              [
+                1927.0,
+                5647.1
+              ],
+              [
+                3267.0,
+                5647.1
+              ],
+              [
+                3267.0,
+                5486.0
+              ],
+              [
+                4262.0,
+                5486.0
+              ],
+              [
+                4262.0,
+                4713.6
+              ],
+              [
+                3713.1,
+                4205.0
+              ],
+              [
+                3267.5,
+                4650.6
+              ],
+              [
+                2777.6,
+                4160.7
+              ],
+              [
+                1824.4,
+                5114.0
+              ],
+              [
+                1824.4,
+                5360.6
+              ]
+            ]
+          },
+          {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ],
+            "id": "R002",
+            "name": "R002",
+            "polygon": [
+              [
+                3702.4,
+                4031.6
+              ],
+              [
+                3708.2,
+                4037.0
+              ],
+              [
+                4352.0,
+                4633.4
+              ],
+              [
+                4352.0,
+                5456.0
+              ],
+              [
+                6197.0,
+                5456.0
+              ],
+              [
+                6197.0,
+                3652.7
+              ],
+              [
+                5206.4,
+                3639.1
+              ],
+              [
+                4620.8,
+                3113.1
+              ],
+              [
+                4049.0,
+                3684.9
+              ],
+              [
+                3702.4,
+                4031.6
+              ]
+            ]
+          },
+          {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ],
+            "id": "R003",
+            "name": "R003",
+            "polygon": [
+              [
+                2802.3,
+                4058.2
+              ],
+              [
+                3161.4,
+                4417.3
+              ],
+              [
+                3580.8,
+                3997.9
+              ],
+              [
+                3580.7,
+                3997.7
+              ],
+              [
+                3886.4,
+                3692.0
+              ],
+              [
+                3285.2,
+                3090.8
+              ],
+              [
+                3192.0,
+                2997.7
+              ],
+              [
+                2802.3,
+                4058.2
+              ]
+            ]
+          },
+          {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ],
+            "id": "R004",
+            "name": "R004",
+            "polygon": [
+              [
+                3152.5,
+                2131.9
+              ],
+              [
+                2909.1,
+                2375.3
+              ],
+              [
+                3370.0,
+                2836.3
+              ],
+              [
+                3613.4,
+                2592.8
+              ],
+              [
+                3152.5,
+                2131.9
+              ]
+            ]
+          },
+          {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ],
+            "id": "R005",
+            "name": "R005",
+            "polygon": [
+              [
+                1266.5,
+                -780.0
+              ],
+              [
+                1266.5,
+                -380.0
+              ],
+              [
+                781.0,
+                -380.0
+              ],
+              [
+                781.0,
+                5119.0
+              ],
+              [
+                1663.8,
+                5119.0
+              ],
+              [
+                2699.8,
+                4083.0
+              ],
+              [
+                2233.6,
+                3616.7
+              ],
+              [
+                3022.3,
+                2828.0
+              ],
+              [
+                2569.7,
+                2375.3
+              ],
+              [
+                3152.5,
+                1792.5
+              ],
+              [
+                3952.8,
+                2592.8
+              ],
+              [
+                3539.7,
+                3006.0
+              ],
+              [
+                4056.1,
+                3522.3
+              ],
+              [
+                4638.0,
+                2940.4
+              ],
+              [
+                5227.0,
+                3469.3
+              ],
+              [
+                6196.0,
+                3482.6
+              ],
+              [
+                6196.0,
+                -190.7
+              ],
+              [
+                5804.4,
+                -190.7
+              ],
+              [
+                5804.4,
+                -790.0
+              ],
+              [
+                4049.4,
+                -790.0
+              ],
+              [
+                4049.4,
+                -260.0
+              ],
+              [
+                3019.4,
+                -260.0
+              ],
+              [
+                3019.4,
+                -780.0
+              ],
+              [
+                1266.5,
+                -780.0
+              ]
+            ]
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                6317.0,
+                5696.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W001",
+              "start_mm": [
+                6317.0,
+                3482.7
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                4262.0,
+                5576.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W002",
+              "start_mm": [
+                6197.0,
+                5576.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3352.0,
+                5591.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W004",
+              "start_mm": [
+                4262.0,
+                5591.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 210.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                661.0,
+                -620.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W006",
+              "start_mm": [
+                661.0,
+                5359.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                6316.0,
+                3485.9
+              ],
+              "height_mm": 2160.0,
+              "id": "W007",
+              "start_mm": [
+                6316.0,
+                -190.7
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                1819.4,
+                5239.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W008",
+              "start_mm": [
+                781.0,
+                5239.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3267.0,
+                5817.1
+              ],
+              "height_mm": 2160.0,
+              "id": "W009",
+              "start_mm": [
+                3267.0,
+                5486.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 170.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                2027.0,
+                5732.1
+              ],
+              "height_mm": 2160.0,
+              "id": "W010",
+              "start_mm": [
+                3182.0,
+                5732.1
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 170.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3019.4,
+                -900.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W023",
+              "start_mm": [
+                1026.5,
+                -900.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3139.4,
+                -260.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W024",
+              "start_mm": [
+                3139.4,
+                -1020.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3809.4,
+                -380.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W025",
+              "start_mm": [
+                3259.4,
+                -380.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3929.4,
+                -1030.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W026",
+              "start_mm": [
+                3929.4,
+                -260.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                6044.4,
+                -910.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W027",
+              "start_mm": [
+                4049.4,
+                -910.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                5924.4,
+                -190.7
+              ],
+              "height_mm": 2160.0,
+              "id": "W028",
+              "start_mm": [
+                5924.4,
+                -790.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                6044.4,
+                -310.7
+              ],
+              "height_mm": 2160.0,
+              "id": "W029",
+              "start_mm": [
+                6436.0,
+                -310.7
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                1146.5,
+                -380.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W030",
+              "start_mm": [
+                1146.5,
+                -780.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                781.0,
+                -500.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W031",
+              "start_mm": [
+                1026.5,
+                -500.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                1704.4,
+                5492.1
+              ],
+              "height_mm": 2160.0,
+              "id": "W032",
+              "start_mm": [
+                1704.4,
+                5114.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                1927.0,
+                5492.1
+              ],
+              "height_mm": 2160.0,
+              "id": "W033",
+              "start_mm": [
+                1927.0,
+                5817.1
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 200.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                1584.4,
+                5592.1
+              ],
+              "height_mm": 2160.0,
+              "id": "W034",
+              "start_mm": [
+                1827.0,
+                5592.1
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 200.0
+            }
+          ],
+          "interior": [
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                4307.0,
+                4550.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W003",
+              "start_mm": [
+                4307.0,
+                5456.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 90.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "bounds": {
+                "x": [
+                  5014.2,
+                  6197.0
+                ],
+                "y": [
+                  3466.4,
+                  3652.7
+                ]
+              },
+              "elevation_range_mm": [
+                -1140.0,
+                1020.0
+              ],
+              "end_mm": [
+                5013.0,
+                3551.4
+              ],
+              "height_mm": 2160.0,
+              "id": "W005",
+              "start_mm": [
+                6198.2,
+                3567.7
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 170.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "bounds": {
+                "x": [
+                  1663.8,
+                  2777.6
+                ],
+                "y": [
+                  4083.0,
+                  5119.0
+                ]
+              },
+              "elevation_range_mm": [
+                -1140.0,
+                1020.0
+              ],
+              "end_mm": [
+                2738.7,
+                4121.9
+              ],
+              "height_mm": 2160.0,
+              "id": "W011",
+              "start_mm": [
+                1702.7,
+                5157.9
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 110.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3299.3,
+                4618.8
+              ],
+              "height_mm": 2160.0,
+              "id": "W012",
+              "start_mm": [
+                2265.4,
+                3584.9
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 90.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "bounds": {
+                "x": [
+                  4538.8,
+                  5227.0
+                ],
+                "y": [
+                  2940.4,
+                  3469.3
+                ]
+              },
+              "elevation_range_mm": [
+                -1140.0,
+                1020.0
+              ],
+              "end_mm": [
+                5180.2,
+                3521.4
+              ],
+              "height_mm": 2160.0,
+              "id": "W013",
+              "start_mm": [
+                4585.6,
+                2987.4
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 140.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "bounds": {
+                "x": [
+                  3621.6,
+                  4620.8
+                ],
+                "y": [
+                  3039.5,
+                  4031.6
+                ]
+              },
+              "elevation_range_mm": [
+                -1140.0,
+                1020.0
+              ],
+              "end_mm": [
+                3660.5,
+                3995.6
+              ],
+              "height_mm": 2160.0,
+              "id": "W014",
+              "start_mm": [
+                4581.9,
+                3074.2
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 110.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "bounds": {
+                "x": [
+                  3536.7,
+                  4262.0
+                ],
+                "y": [
+                  3956.7,
+                  4713.6
+                ]
+              },
+              "elevation_range_mm": [
+                -1140.0,
+                1020.0
+              ],
+              "end_mm": [
+                4302.7,
+                4669.6
+              ],
+              "height_mm": 2160.0,
+              "id": "W015",
+              "start_mm": [
+                3577.5,
+                3997.6
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 120.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3237.4,
+                1877.4
+              ],
+              "height_mm": 2160.0,
+              "id": "W016",
+              "start_mm": [
+                2654.5,
+                2460.2
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3698.3,
+                2508.0
+              ],
+              "height_mm": 2160.0,
+              "id": "W017",
+              "start_mm": [
+                3237.4,
+                2047.1
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3285.2,
+                3090.8
+              ],
+              "height_mm": 2160.0,
+              "id": "W018",
+              "start_mm": [
+                3868.0,
+                2508.0
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3285.2,
+                2921.1
+              ],
+              "height_mm": 2160.0,
+              "id": "W019",
+              "start_mm": [
+                2824.2,
+                2460.2
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3971.2,
+                3607.2
+              ],
+              "height_mm": 2160.0,
+              "id": "W020",
+              "start_mm": [
+                3454.9,
+                3090.8
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "end_mm": [
+                3107.2,
+                2912.8
+              ],
+              "height_mm": 2160.0,
+              "id": "W021",
+              "start_mm": [
+                2382.1,
+                3637.9
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            },
+            {
+              "base_elevation_mm": -1140.0,
+              "bounds": {
+                "x": [
+                  3161.4,
+                  3713.1
+                ],
+                "y": [
+                  4041.8,
+                  4587.0
+                ]
+              },
+              "elevation_range_mm": [
+                -1140.0,
+                1020.0
+              ],
+              "end_mm": [
+                3628.2,
+                4120.2
+              ],
+              "height_mm": 2160.0,
+              "id": "W022",
+              "start_mm": [
+                3246.3,
+                4502.1
+              ],
+              "storey": "storey-s01",
+              "thickness_mm": 240.0
+            }
+          ]
+        },
+        "windows": [
+          {
+            "bounds": {
+              "x": [
+                6196.0,
+                6436.0
+              ],
+              "y": [
+                2589.3,
+                3439.3
+              ]
+            },
+            "elevation_range_mm": [
+              -285.0,
+              815.0
+            ],
+            "height_mm": 1100.0,
+            "host_opening": "O007",
+            "host_wall": "W007",
+            "id": "N001",
+            "width_mm": 850.0
+          },
+          {
+            "bounds": {
+              "x": [
+                5316.2,
+                6168.5
+              ],
+              "y": [
+                3470.6,
+                3652.3
+              ]
+            },
+            "elevation_range_mm": [
+              -285.0,
+              815.0
+            ],
+            "height_mm": 1100.0,
+            "host_opening": "O006",
+            "host_wall": "W005",
+            "id": "N002",
+            "width_mm": 850.0
+          },
+          {
+            "bounds": {
+              "x": [
+                4650.9,
+                5164.2
+              ],
+              "y": [
+                3065.7,
+                3541.1
+              ]
+            },
+            "elevation_range_mm": [
+              -310.0,
+              790.0
+            ],
+            "height_mm": 1100.0,
+            "host_opening": "O010",
+            "host_wall": "W013",
+            "id": "N003",
+            "width_mm": 600.0
+          }
+        ]
+      },
+      {
+        "doors": [],
+        "elevation_mm": 40.0,
+        "id": "storey-s02",
+        "name": "S02",
+        "openings": [],
+        "source_label": "标高 3",
+        "spaces": [],
+        "walls": {
+          "exterior": [],
+          "interior": []
+        },
+        "windows": []
+      },
+      {
+        "coverings": [
+          {
+            "bottom_elevation_mm": 1020.0,
+            "category": "CEILING",
+            "id": "C001",
+            "polygon": [
+              [
+                1026.5,
+                -1020.0
+              ],
+              [
+                1026.5,
+                -620.0
+              ],
+              [
+                544.4,
+                -620.0
+              ],
+              [
+                544.4,
+                5367.1
+              ],
+              [
+                1584.4,
+                5367.1
+              ],
+              [
+                1584.4,
+                5692.1
+              ],
+              [
+                1827.0,
+                5692.1
+              ],
+              [
+                1827.0,
+                5817.1
+              ],
+              [
+                3352.0,
+                5817.1
+              ],
+              [
+                3352.0,
+                5696.0
+              ],
+              [
+                6436.0,
+                5696.0
+              ],
+              [
+                6436.0,
+                -430.7
+              ],
+              [
+                6044.4,
+                -430.7
+              ],
+              [
+                6044.4,
+                -1030.0
+              ],
+              [
+                3809.4,
+                -1030.0
+              ],
+              [
+                3809.4,
+                -500.0
+              ],
+              [
+                3259.4,
+                -500.0
+              ],
+              [
+                3259.4,
+                -1020.0
+              ],
+              [
+                1026.5,
+                -1020.0
+              ]
+            ],
+            "thickness_mm": 300.0
+          }
+        ],
+        "doors": [],
+        "elevation_mm": 1020.0,
+        "id": "storey-s03",
+        "name": "S03",
+        "openings": [],
+        "source_label": "天花板标高",
+        "spaces": [],
+        "walls": {
+          "exterior": [],
+          "interior": []
+        },
+        "windows": []
+      }
+    ]
+  },
+  "language": "zh-CN",
+  "missing_facts": [
+    {
+      "blocking": false,
+      "code": "SPACE_BOUNDARY_WALLS_UNCONFIRMED",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSpace"
+      ],
+      "id": "mf-space-boundary-walls",
+      "message": "R001–R005 的边界墙与空间归属未确认。",
+      "path": "/known_facts/storeys/0/spaces",
+      "reason": "源记录逐间标注“边界墙未确认”，并给出提取记录 SPACE_INFERENCE_INSUFFICIENT_WALLS×2；这些归属事实不参与本次已给轮廓与坐标的表达，故保留为未确认项而不补造。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "code": "WALL_ROOM_ATTRIBUTION_UNCONFIRMED",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWall"
+      ],
+      "id": "mf-wall-room-attribution",
+      "message": "全部墙体的“关联房间”未确认。",
+      "path": "/known_facts/storeys/0/walls",
+      "reason": "源记录墙体表的关联房间列均为“未确认”，未给出可核验的房间–墙体对应；本次按已给轴线、厚度与高度保留墙体。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "code": "DOOR_MATERIAL_UNCONFIRMED",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor",
+        "schema:bim-json-v2:entity"
+      ],
+      "id": "mf-door-material-d001-d002",
+      "message": "D001、D002 的材料关联未确认。",
+      "path": "/known_facts/semantic_requirements",
+      "reason": "源材料段将 D001、D002 与 R001–R005 一同列为“材料关联未确认”，没有可用的材料名称或层序，本次不补造材料要求。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "code": "SPACE_MATERIAL_UNCONFIRMED",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSpace"
+      ],
+      "id": "mf-space-material-r001-r005",
+      "message": "R001–R005 的材料关联未确认。",
+      "path": "/known_facts/semantic_requirements",
+      "reason": "源材料段把 R001–R005 列为材料关联未确认；未提供材料定义，本次仅保留空间几何，不生成材料要求。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "code": "OPENING_FILLING_UNCONFIRMED",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcOpeningElement"
+      ],
+      "id": "mf-opening-filling",
+      "message": "O001–O005 无已确认填充，且存在偏移或深度异常，是否作为常规通行口未确认。",
+      "path": "/known_facts/storeys/0/openings",
+      "reason": "源记录明确这些开口“无已确认填充”，并说明偏移或深度异常者不假定为常规通行口；本次按切割体保留其宿主、尺寸与定位参数。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": false,
+      "code": "STOREY_SPACE_INFO_UNCONFIRMED",
+      "evidence_refs": [
+        "capability:IFC2X3:IfcBuildingStorey"
+      ],
+      "id": "mf-storey-s02-s03-space",
+      "message": "S02、S03 的空间信息未确认。",
+      "path": "/known_facts/storeys/1",
+      "reason": "源记录说明这两层既无显式空间记录也未形成几何围合候选，因此仅保留其标高记录与已给构件，不补造房间。",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "original_request": "# 建筑设计说明\n\n## 总体与读图约定\n\n本说明用于重建所述建筑。坐标与尺寸统一为毫米（mm），坐标保留一位小数；XY为源模型坐标轴，不假定地理北向。三维点写作(X,Y,Z)，轮廓为XY顶点顺序并自动闭合。楼层是源模型的标高记录，不等于使用楼层数量。\n\n以下表格均属于设计说明，不是另附模型。每个编号只创建一次。房间先描述，构件后定位，材料在各层末尾关联。未确认的用途、空间归属、材料和细节不补造。\n\n本文导读按源标高组织，供阅读时定位信息。每层内容依次为空间记录、构件位置与材料线索：先说明本层是否存在显式空间或几何围合候选，再列出墙体、门、洞口、窗、楼板等构件的分布提示，最后给出与构件相关的直接材料或层序描述。文字仅帮助理解编排顺序，坐标、轮廓、构件与材料明细仍由程序保留。本次摘要标记存在提取限制，涉及空间与构件的归属问题需以程序数据为准。\n\n## 楼层 S01｜地板标高；标高 -1140.0\n\n本层有源显式空间记录，未形成几何围合候选；可否据此推定为已核实房间仍待进一步确认。构件以墙体数量最多，另有门、洞口与楼板记录。空间与构件的边界归属尚未确认。\n\n### 房间\n\n**R001｜房间**：(1824.4,5360.6)→(1824.4,5492.1)→(1927.0,5492.1)→(1927.0,5647.1)→(3267.0,5647.1)→(3267.0,5486.0)→(4262.0,5486.0)→(4262.0,4713.6)→(3713.1,4205.0)→(3267.5,4650.6)→(2777.6,4160.7)→(1824.4,5114.0)；Z=-1140.0~1298.4；边界墙未确认。\n\n**R002｜房间**：(3702.4,4031.6)→(3708.2,4037.0)→(4352.0,4633.4)→(4352.0,5456.0)→(6197.0,5456.0)→(6197.0,3652.7)→(5206.4,3639.1)→(4620.8,3113.1)→(4049.0,3684.9)；Z=-1140.0~1298.4；边界墙未确认。\n\n**R003｜房间**：(2802.3,4058.2)→(3161.4,4417.3)→(3580.8,3997.9)→(3580.7,3997.7)→(3886.4,3692.0)→(3285.2,3090.8)→(3192.0,2997.7)；Z=-1140.0~1298.4；边界墙未确认。\n\n**R004｜房间**：(3152.5,2131.9)→(2909.1,2375.3)→(3370.0,2836.3)→(3613.4,2592.8)；Z=-1140.0~1298.4；边界墙未确认。\n\n**R005｜房间**：(1266.5,-780.0)→(1266.5,-380.0)→(781.0,-380.0)→(781.0,5119.0)→(1663.8,5119.0)→(2699.8,4083.0)→(2233.6,3616.7)→(3022.3,2828.0)→(2569.7,2375.3)→(3152.5,1792.5)→(3952.8,2592.8)→(3539.7,3006.0)→(4056.1,3522.3)→(4638.0,2940.4)→(5227.0,3469.3)→(6196.0,3482.6)→(6196.0,-190.7)→(5804.4,-190.7)→(5804.4,-790.0)→(4049.4,-790.0)→(4049.4,-260.0)→(3019.4,-260.0)→(3019.4,-780.0)；Z=-1140.0~1298.4；边界墙未确认。\n\n### 构件位置\n\n墙体：A、B为三维参考轴端点，t为厚度，h为高度；“—”表示实体包围盒与该轴居中直墙的范围相符，仅省去重复范围，不保证精细形状相同。其他范围按X/Y/Z列示。共享墙仅建一次。\n\n|墙体|A→B|t×h|特殊包围盒XYZ|关联房间|\n|---|---|---|---|---|\n|W001|(6317.0,3482.7,-1140.0)→(6317.0,5696.0,-1140.0)|240.0×2160.0|—|未确认|\n|W002|(6197.0,5576.0,-1140.0)→(4262.0,5576.0,-1140.0)|240.0×2160.0|—|未确认|\n|W003|(4307.0,5456.0,-1140.0)→(4307.0,4550.0,-1140.0)|90.0×2160.0|—|未确认|\n|W004|(4262.0,5591.0,-1140.0)→(3352.0,5591.0,-1140.0)|210.0×2160.0|—|未确认|\n|W005|(6198.2,3567.7,-1140.0)→(5013.0,3551.4,-1140.0)|170.0×2160.0|5014.2~6197.0/3466.4~3652.7/-1140.0~1020.0|未确认|\n|W006|(661.0,5359.0,-1140.0)→(661.0,-620.0,-1140.0)|240.0×2160.0|—|未确认|\n|W007|(6316.0,-190.7,-1140.0)→(6316.0,3485.9,-1140.0)|240.0×2160.0|—|未确认|\n|W008|(781.0,5239.0,-1140.0)→(1819.4,5239.0,-1140.0)|240.0×2160.0|—|未确认|\n|W009|(3267.0,5486.0,-1140.0)→(3267.0,5817.1,-1140.0)|170.0×2160.0|—|未确认|\n|W010|(3182.0,5732.1,-1140.0)→(2027.0,5732.1,-1140.0)|170.0×2160.0|—|未确认|\n|W011|(1702.7,5157.9,-1140.0)→(2738.7,4121.9,-1140.0)|110.0×2160.0|1663.8~2777.6/4083.0~5119.0/-1140.0~1020.0|未确认|\n|W012|(2265.4,3584.9,-1140.0)→(3299.3,4618.8,-1140.0)|90.0×2160.0|—|未确认|\n|W013|(4585.6,2987.4,-1140.0)→(5180.2,3521.4,-1140.0)|140.0×2160.0|4538.8~5227.0/2940.4~3469.3/-1140.0~1020.0|未确认|\n|W014|(4581.9,3074.2,-1140.0)→(3660.5,3995.6,-1140.0)|110.0×2160.0|3621.6~4620.8/3039.5~4031.6/-1140.0~1020.0|未确认|\n|W015|(3577.5,3997.6,-1140.0)→(4302.7,4669.6,-1140.0)|120.0×2160.0|3536.7~4262.0/3956.7~4713.6/-1140.0~1020.0|未确认|\n|W016|(2654.5,2460.2,-1140.0)→(3237.4,1877.4,-1140.0)|240.0×2160.0|—|未确认|\n|W017|(3237.4,2047.1,-1140.0)→(3698.3,2508.0,-1140.0)|240.0×2160.0|—|未确认|\n|W018|(3868.0,2508.0,-1140.0)→(3285.2,3090.8,-1140.0)|240.0×2160.0|—|未确认|\n|W019|(2824.2,2460.2,-1140.0)→(3285.2,2921.1,-1140.0)|240.0×2160.0|—|未确认|\n|W020|(3454.9,3090.8,-1140.0)→(3971.2,3607.2,-1140.0)|240.0×2160.0|—|未确认|\n|W021|(2382.1,3637.9,-1140.0)→(3107.2,2912.8,-1140.0)|240.0×2160.0|—|未确认|\n|W022|(3246.3,4502.1,-1140.0)→(3628.2,4120.2,-1140.0)|240.0×2160.0|3161.4~3713.1/4041.8~4587.0/-1140.0~1020.0|未确认|\n|W023|(1026.5,-900.0,-1140.0)→(3019.4,-900.0,-1140.0)|240.0×2160.0|—|未确认|\n|W024|(3139.4,-1020.0,-1140.0)→(3139.4,-260.0,-1140.0)|240.0×2160.0|—|未确认|\n|W025|(3259.4,-380.0,-1140.0)→(3809.4,-380.0,-1140.0)|240.0×2160.0|—|未确认|\n|W026|(3929.4,-260.0,-1140.0)→(3929.4,-1030.0,-1140.0)|240.0×2160.0|—|未确认|\n|W027|(4049.4,-910.0,-1140.0)→(6044.4,-910.0,-1140.0)|240.0×2160.0|—|未确认|\n|W028|(5924.4,-790.0,-1140.0)→(5924.4,-190.7,-1140.0)|240.0×2160.0|—|未确认|\n|W029|(6436.0,-310.7,-1140.0)→(6044.4,-310.7,-1140.0)|240.0×2160.0|—|未确认|\n|W030|(1146.5,-780.0,-1140.0)→(1146.5,-380.0,-1140.0)|240.0×2160.0|—|未确认|\n|W031|(1026.5,-500.0,-1140.0)→(781.0,-500.0,-1140.0)|240.0×2160.0|—|未确认|\n|W032|(1704.4,5114.0,-1140.0)→(1704.4,5492.1,-1140.0)|240.0×2160.0|—|未确认|\n|W033|(1927.0,5817.1,-1140.0)→(1927.0,5492.1,-1140.0)|200.0×2160.0|—|未确认|\n|W034|(1827.0,5592.1,-1140.0)→(1584.4,5592.1,-1140.0)|200.0×2160.0|—|未确认|\n\n开口：s为沿宿主参考轴自起点的中心距离，b为开口底部相对墙底高度，n为法向偏移；w/h/d为在宿主局部坐标中的几何尺寸。开口是切割体，不一定是门窗洞；偏移或深度异常者不假定为常规通行口。填充门窗另列，不重复造洞。\n\n|开口|宿主墙|w×h×d|s,b,n|填充|\n|---|---|---|---|---|\n|O001|W005|544.0×1100.0×500.2|1281.0,830.0,261.6|无已确认填充|\n|O002|W012|240.0×2050.0×300.0|1342.2,0.0,-340.0|无已确认填充|\n|O003|W013|142.0×2050.0×605.0|37.6,0.0,395.2|无已确认填充|\n|O004|W014|300.0×2050.0×3048.0|1659.1,0.0,54.8|无已确认填充|\n|O005|W015|251.3×2050.0×308.9|111.1,0.0,300.4|无已确认填充|\n|O006|W005|850.0×1100.0×170.0|455.8,855.0,0.0|N002|\n|O007|W007|850.0×1100.0×240.0|3205.0,855.0,0.0|N001|\n|O008|W008|700.0×2050.0×240.0|390.0,0.0,0.0|D005|\n|O009|W011|600.0×2050.0×110.0|1070.2,0.0,0.0|D006|\n|O010|W013|600.0×1100.0×140.0|450.6,830.0,0.0|N003|\n|O011|W014|600.0×2050.0×110.0|328.7,0.0,0.0|D003|\n|O012|W020|600.0×2050.0×240.0|405.2,0.0,0.0|D004|\n|O013|W022|300.0×2050.0×240.0|295.0,0.0,0.0|D007|\n|O014|W023|1600.0×2000.0×240.0|1161.4,0.0,0.0|D002|\n|O015|W027|1600.0×2000.0×240.0|845.0,0.0,0.0|D001|\n\n门：名义尺寸与实体几何范围分别保留；造型未详述时不能把包围盒当作完整门窗形状。宿主可能位于其他楼层。\n\n|门|宿主墙/开口|名义宽×高|实体包围盒X/Y/Z|\n|---|---|---|---|\n|D001|W027/O015|1600.0×2000.0|4094.4~5694.4/-960.0~-860.0/-1140.0~860.0|\n|D002|W023/O014|1600.0×2000.0|1387.9~2987.9/-950.0~-850.0/-1140.0~860.0|\n|D003|W014/O011|600.0×2050.0|4119.7~4579.3/3076.8~3536.4/-1140.0~910.0|\n|D004|W020/O012|600.0×2050.0|3465.6~4017.2/3101.6~3653.1/-1140.0~910.0|\n|D005|W008/O008|700.0×2050.0|821.0~1521.0/5149.0~5329.0/-1140.0~910.0|\n|D006|W011/O009|600.0×2050.0|2229.6~2689.2/4171.4~4631.0/-1140.0~910.0|\n|D007|W022/O013|300.0×2050.0|3210.1~3699.7/4048.7~4538.3/-1140.0~981.2|\n\n**楼板 L001**：(1026.5,-1020.0)→(1026.5,-620.0)→(541.0,-620.0)→(541.0,5354.0)→(1584.4,5354.0)→(1584.4,5692.1)→(1827.0,5692.1)→(1827.0,5817.1)→(3352.0,5817.1)→(3352.0,5696.0)→(6436.0,5696.0)→(6436.0,-430.7)→(6044.4,-430.7)→(6044.4,-1030.0)→(3809.4,-1030.0)→(3809.4,-500.0)→(3259.4,-500.0)→(3259.4,-1020.0)；Z=-1440.0~-1140.0；分类 FLOOR。\n\n### 材料\n\nW001,W002,W006,W007,W008,W016,W017,W018,W019,W020,W021,W022,W023,W024,W025,W026,W027,W028,W029,W030,W031,W032：M01；W003,W012：M02；W004：M03；W005,W009,W010：M04；W011,W014：M05；W013：M06；W015：M07；W033,W034：M08；D001,D002,R001,R002,R003,R004,R005：材料关联未确认；D003,D004,D005,D006：M09；D007：M10；L001：M11。\n\n## 楼层 S02｜标高 3；标高 40.0\n\n本层既无显式空间记录，也未形成几何围合候选，因此仅描述构件。记录中可见窗构件，未见其他主要类别；本次未确认空间信息。边界墙关系未确认。\n\n### 房间\n\n房间信息未确认，直接按下表布置构件。\n\n### 构件位置\n\n窗：名义尺寸与实体几何范围分别保留；造型未详述时不能把包围盒当作完整门窗形状。宿主可能位于其他楼层。\n\n|窗|宿主墙/开口|名义宽×高|实体包围盒X/Y/Z|\n|---|---|---|---|\n|N001|W007/O007|850.0×1100.0|6196.0~6436.0/2589.3~3439.3/-285.0~815.0|\n|N002|W005/O006|850.0×1100.0|5316.2~6168.5/3470.6~3652.3/-285.0~815.0|\n|N003|W013/O010|600.0×1100.0|4650.9~5164.2/3065.7~3541.1/-310.0~790.0|\n\n### 材料\n\nN001,N002,N003：M12。\n\n## 楼层 S03｜天花板标高；标高 1020.0\n\n本层既无显式空间记录，也未形成几何围合候选，仅能描述构件。现有记录含覆盖层一项，未见其他主要构件类别；空间信息本次未确认。\n\n### 房间\n\n房间信息未确认，直接按下表布置构件。\n\n### 构件位置\n\n**覆盖层 C001**：(1026.5,-1020.0)→(1026.5,-620.0)→(544.4,-620.0)→(544.4,5367.1)→(1584.4,5367.1)→(1584.4,5692.1)→(1827.0,5692.1)→(1827.0,5817.1)→(3352.0,5817.1)→(3352.0,5696.0)→(6436.0,5696.0)→(6436.0,-430.7)→(6044.4,-430.7)→(6044.4,-1030.0)→(3809.4,-1030.0)→(3809.4,-500.0)→(3259.4,-500.0)→(3259.4,-1020.0)；Z=1020.0~1320.0；分类 CEILING。\n\n### 材料\n\nC001：M11。\n\n## 材料索引\n\n层厚同为毫米；列表不代表分层，层序不额外推断内外侧或性能。\n\n|编号|源关联|\n|---|---|\n|M01|直接层序：默认墙:240.0；AXIS2,NEGATIVE,偏移120.0|\n|M02|直接层序：默认墙:90.0；AXIS2,NEGATIVE,偏移45.0|\n|M03|直接层序：默认墙:210.0；AXIS2,NEGATIVE,偏移105.0|\n|M04|直接层序：默认墙:170.0；AXIS2,NEGATIVE,偏移85.0|\n|M05|直接层序：默认墙:110.0；AXIS2,NEGATIVE,偏移55.0|\n|M06|直接层序：默认墙:140.0；AXIS2,NEGATIVE,偏移70.0|\n|M07|直接层序：默认墙:120.0；AXIS2,NEGATIVE,偏移60.0|\n|M08|直接层序：默认墙:200.0；AXIS2,NEGATIVE,偏移100.0|\n|M09|直接材料列表（非分层）：金属漆_冷灰、木材|\n|M10|直接材料列表（非分层）：抛光不锈钢、玻璃、白油漆|\n|M11|直接层序： <Unnamed>:300.0；AXIS3,POSITIVE,偏移0.0|\n|M12|直接：金属漆_冷灰|\n\n## 未确认项\n\n包围盒不是形心或完整造型，投影不证明通行；空间边界缺项表示本次未提取，不代表源模型一定没有。表格保留范围内的事实，精细实体、用途、实际通行关系不在本次保证范围。\n\n提取记录：SPACE_INFERENCE_INSUFFICIENT_WALLS×2。\n",
+  "provenance": {
+    "few_shot_ids": [],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:root",
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:attributes",
+      "schema:bim-json-v2:representation",
+      "capability:IFC2X3:IfcBuildingStorey",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcCovering",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement"
+    ],
+    "source_turns": [
+      "turn-user-001"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.7",
+  "status": "draft_required",
+  "unsupported_requests": [
+    {
+      "blocking": true,
+      "evidence_refs": [
+        "schema:bim-json-v2:entity"
+      ],
+      "id": "ur-material-list-d003-d006",
+      "message": "D003–D006 的单位材料 M09 是“直接材料列表（非分层）：金属漆_冷灰、木材”，当前材料编码只支持单一材料或带层厚的层集。",
+      "path": "/known_facts/semantic_requirements",
+      "reason": "BIM JSON 2.3 与 IFC2X3 的材料契约只提供 single_material、material_layer_set、material_layer_set_usage 三种赋值；同一构件上的两个非分层材料没有层厚可依，无法保真生成，也不能删除或改写其中任一材料。",
+      "requested_value": {
+        "kind": "material_list_non_layered",
+        "materials": [
+          "金属漆_冷灰",
+          "木材"
+        ],
+        "source_material_id": "M09",
+        "targets": [
+          "D003",
+          "D004",
+          "D005",
+          "D006"
+        ]
+      },
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "blocking": true,
+      "evidence_refs": [
+        "schema:bim-json-v2:entity"
+      ],
+      "id": "ur-material-list-d007",
+      "message": "D007 的单位材料 M10 是“直接材料列表（非分层）：抛光不锈钢、玻璃、白油漆”，当前材料编码只支持单一材料或带层厚的层集。",
+      "path": "/known_facts/semantic_requirements",
+      "reason": "同一构件上的三个非分层材料在 BIM JSON 2.3 材料契约中无对应赋值形式，且没有层厚可依；按保真要求记录该不可生成语义，而不是改写成单材料或凭空分层。",
+      "requested_value": {
+        "kind": "material_list_non_layered",
+        "materials": [
+          "抛光不锈钢",
+          "玻璃",
+          "白油漆"
+        ],
+        "source_material_id": "M10",
+        "targets": [
+          "D007"
+        ]
+      },
+      "source_turns": [
+        "turn-user-001"
+      ]
+    }
+  ],
+  "user_corrections": []
+}

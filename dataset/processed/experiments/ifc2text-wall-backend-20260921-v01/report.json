@@ -1,0 +1,52 @@
+{
+  "evidence_kind": "offline_source_geometry_to_existing_compiler_probe",
+  "production_changes": false,
+  "provider_calls": 0,
+  "text_pipeline_tested": false,
+  "source_unchanged": true,
+  "cases": {
+    "W011": {
+      "compile_success": true,
+      "ifc_schema": "IFC2X3",
+      "source_profile": "IfcArbitraryClosedProfileDef",
+      "reconstructed_profile": "IfcArbitraryClosedProfileDef",
+      "profile_vertex_count": 6,
+      "opening_subtraction": false,
+      "max_bbox_coordinate_delta_mm": 0.0,
+      "footprint_hausdorff_mm": 0.0,
+      "footprint_symmetric_difference_mm2": 0.0,
+      "within_probe_precision": true
+    },
+    "W013": {
+      "compile_success": true,
+      "ifc_schema": "IFC2X3",
+      "source_profile": "IfcArbitraryClosedProfileDef",
+      "reconstructed_profile": "IfcArbitraryClosedProfileDef",
+      "profile_vertex_count": 6,
+      "opening_subtraction": false,
+      "max_bbox_coordinate_delta_mm": 0.0,
+      "footprint_hausdorff_mm": 0.0,
+      "footprint_symmetric_difference_mm2": 0.0,
+      "within_probe_precision": true
+    },
+    "W015": {
+      "compile_success": true,
+      "ifc_schema": "IFC2X3",
+      "source_profile": "IfcArbitraryClosedProfileDef",
+      "reconstructed_profile": "IfcArbitraryClosedProfileDef",
+      "profile_vertex_count": 8,
+      "opening_subtraction": false,
+      "max_bbox_coordinate_delta_mm": 0.0,
+      "footprint_hausdorff_mm": 0.0,
+      "footprint_symmetric_difference_mm2": 0.0,
+      "within_probe_precision": true
+    }
+  },
+  "all_cases_passed": true,
+  "limitations": [
+    "Known source profiles supplied directly; not LLM-generated JSON.",
+    "Wall solids only, with opening subtractions disabled on both sides.",
+    "No proof of whole-building acceptance, text completeness, or arbitrary curved/variable-height walls.",
+    "0.01 mm is a diagnostic numeric check; original roundtrip tolerances remain unchanged."
+  ]
+}

@@ -11,6 +11,7 @@ from .providers import (
     LiveProviderResult,
     ProviderOutput,
     ProviderOutputError,
+    ProviderRequestBlocked,
     redact_provider_payload,
     validate_provider_output,
 )
@@ -268,6 +269,15 @@ class OpenAICompatibleLiveProvider:
             try:
                 response = self.client.chat.completions.create(**request)
                 break
+            except ProviderRequestBlocked as exc:
+                raise ProviderOutputError(
+                    f'Local request guard blocked {session_id}: {exc.reason_code}',
+                    details={'provider': self.config.provider_label,
+                        'failure_class': exc.failure_class, 'reason_code': exc.reason_code,
+                        'transport_attempts': transport_attempts - 1,
+                        'transport_attempted': transport_attempts > 1,
+                        'session_id': session_id, 'request': redact_provider_payload(request)},
+                ) from exc
             except Exception as exc:
                 exception_chain = _exception_type_chain(exc)
                 retryable = _retryable_connection_error(exception_chain)

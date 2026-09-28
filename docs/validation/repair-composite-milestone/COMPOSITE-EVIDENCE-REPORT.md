@@ -16,7 +16,7 @@ proved the all-or-nothing guard against the real Provider (terminal
 failures (clarifications ×3, provider output failure ×1). The proof pack is
 organized per the repository convention (`01-original/02-input/03-repaired`
 + `input/agent/changeset/validation`) — see the pack `README.md` and
-`WORK-SUMMARY.md`. Live results detail: `composite-evidence-matrix.md`.
+[WORK-SUMMARY historical source](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/repair-composite-milestone/WORK-SUMMARY.md). Live results detail: `composite-evidence-matrix.md`.
 
 ---
 

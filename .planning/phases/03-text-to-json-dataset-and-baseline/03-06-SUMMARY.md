@@ -15,7 +15,7 @@ Complete and verified on 2026-06-14.
 - Added `scripts/text2json/run_e2e_demo.py`.
 - Added deterministic E2E artifacts under
   `dataset/processed/text2json/e2e-demo/`.
-- Added `docs/architecture/phase-3-summary.md`.
+- Added `docs/architecture/history/phase-3-summary.md`.
 - Added `docs/architecture/text2json-rag-finetune-decision.md`.
 
 ## Demo

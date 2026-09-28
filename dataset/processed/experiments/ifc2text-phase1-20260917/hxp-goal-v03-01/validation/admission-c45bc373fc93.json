@@ -1,0 +1,485 @@
+{
+  "branch": "codex/bim2text-research",
+  "code_commit": "c45bc373fc93cd2430ed26f97170283f5ce4ba48",
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "--basetemp=.pytest-tmp",
+    "--import-mode=importlib",
+    "tests/ifc2text",
+    "tests/agent/test_prompt_registry.py",
+    "tests/agent/test_interactive_cli_generation.py::test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts",
+    "tests/agent/test_phase6_2_openai_compat.py",
+    "tests/agent/test_public_brief_failure_evidence.py",
+    "-q",
+    "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-phase1-20260917\\hxp-goal-v03-01\\validation\\pytest-temp",
+    "-p",
+    "no:cacheprovider"
+  ],
+  "compileall": true,
+  "evidence_kind": "synthetic_and_frozen_provider_regression_not_model_capability",
+  "execution_scope_clean": true,
+  "exit_code": 1,
+  "finished_at": "2026-09-17T07:24:02.929395+00:00",
+  "full_preflight": false,
+  "ifcopenshell": "0.8.5",
+  "limitations": [
+    "offline semantic model responses are frozen fixtures",
+    "fine mesh equality and room semantics are not certified",
+    "real-world reconstruction may ask for clarification or reject unsupported facts"
+  ],
+  "live_reconstruction_mode": "single attempt; questions or unsupported facts stop; no automatic answers",
+  "log_path": "pytest.log",
+  "log_sha256": "862a95ff9f03528c790f7d3c5aa84675d160d41ee14995d6592a61def252fc8c",
+  "network_transport_attempted": true,
+  "nodeids": [
+    {
+      "nodeid": "tests/ifc2text/test_baseline.py::test_extracts_reconstructable_facts_and_description_without_source_guids",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_baseline.py::test_no_space_inference_closes_normal_wall_corner_gaps_without_semantic_use",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_baseline.py::test_roundtrip_prepare_writes_only_text_as_reconstruction_input",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_baseline.py::test_compare_ignores_guids_but_detects_missing_moved_and_resized_components",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_baseline.py::test_public_text2ifc_bridge_passes_description_only",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_budget_is_cumulative_across_stages_and_reopens",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_token_ceiling_and_interrupted_reservation_cannot_be_reset",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_truncation_stops_all_future_transport_and_saves_usage",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_transport_failure_preserves_reservation_and_halts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_budget_v03.py::test_budget_batch_precheck_does_not_drop_batches",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_goal_runner_v03.py::test_prepare_public_command_counts_all_described_classes",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchical_pipeline_v03.py::test_actual_ifc_to_fake_model_grouping_to_complete_text_and_no_overwrite",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchical_pipeline_v03.py::test_invalid_model_layout_stops_before_next_call_and_no_final_text",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchical_pipeline_v03.py::test_compare_different_guids_and_missing_moved_resized_real_ifc",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchical_pipeline_v03.py::test_unknown_dimensions_are_not_zero_error",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchical_pipeline_v03.py::test_direct_and_inherited_materials_do_not_infer_from_names",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchical_pipeline_v03.py::test_generated_text_reaches_unchanged_public_generation_and_compare",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_coordinate_is_metres_two_decimals_without_changing_facts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_shared_wall_complete_once_after_rooms_with_materials_last",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_large_floor_has_no_cardinality_cutoff_and_batching_drops_nothing",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_layout_cannot_drop_change_or_invent_facts[missing]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_layout_cannot_drop_change_or_invent_facts[duplicate]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_layout_cannot_drop_change_or_invent_facts[unknown]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_layout_cannot_drop_change_or_invent_facts[extra_field]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_layout_cannot_drop_change_or_invent_facts[empty]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_layout_cannot_drop_change_or_invent_facts[reorder_blocks]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_unknown_room_membership_and_unassigned_entities_stay_visible",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_multiple_floors_with_many_rooms_preserve_hierarchy_and_every_room",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_coordinate_rounding_removes_only_consecutive_duplicate_vertices",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_full_precision_thin_material_is_not_rounded_away",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_hierarchy_v03.py::test_real_ifc_is_read_only_and_space_outline_is_not_bbox",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_full_fake_pipeline_writes_final_text_and_prompt_safe_trace",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_outline_section_limit_blocks_runaway_section_calls",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_outline_primary_fact_limit_blocks_oversized_component_batch",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_openai_compat_failure_is_persisted_with_redacted_evidence",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_outline_unknown_fact_ref_fails_closed_before_section_calls",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_malformed_outline_is_preserved_and_fails_closed",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_section_required_fact_self_report_cannot_silently_drop_required_ref",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_llm_pipeline.py::test_merge_cannot_silently_drop_completed_section",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_offline_public_bridge.py::test_fake_ifc2text_text_enters_real_public_generation_path_and_compiles",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_prompt_pipeline.py::test_ifc2text_prompt_versions_are_registered_and_renderable",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_prompt_pipeline.py::test_ifc2text_output_schemas_accept_minimal_valid_contracts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_prompt_pipeline.py::test_fact_index_excludes_source_identity_and_merge_cannot_rewrite_section_body",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/ifc2text/test_prompt_pipeline.py::test_merge_blocks_section_with_omitted_required_fact",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_registry_hash_is_invariant_to_windows_line_endings",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_prompt_trace_requires_template_identity",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_registry_loads_and_renders_versioned_generator_prompt",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_design_brief_v1_registry_hash_remains_historical",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_design_brief_v2_registry_hash_remains_live_attempt_history",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_registry_renders_evidence_grounded_design_brief_v2_prompt",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_design_brief_v2_1_strengthens_live_bare_json_contract",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_generator_v1_registry_hash_remains_historical",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_generator_v2_renders_both_exact_canonical_contracts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_generator_context_includes_standard_two_storey_few_shot",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_prompt_registry.py::test_repair_v2_prompt_contains_immutable_evidence_and_delta_contract",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_interactive_cli_generation.py::test_ready_phase6_2_session_generates_ifc_report_and_db_artifacts",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_real_openai_clients_disable_hidden_sdk_retries",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_openai_compatible_config_accepts_api_key_without_leaking_values",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_config_accepts_flash_model_without_leaking_values",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_openai_compatible_config_reports_missing_names_only",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com-https://api.xiaomimimo.com/v1]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com/-https://api.xiaomimimo.com/v1]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com/v1-https://api.xiaomimimo.com/v1]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_normalize_openai_base_url_targets_v1[https://api.xiaomimimo.com/v1/-https://api.xiaomimimo.com/v1]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_parse_chat_completion_evidence_preserves_required_metadata",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_parse_chat_completion_blocks_length_finish_reason",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_compatibility_report_shape_records_decision_and_evidence_classes",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_compatibility_report_blocks_when_openai_sdk_smoke_fails",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_runtime_config_keeps_secrets_out_of_public_repr",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_runtime_config_keeps_base_url_without_v1_suffix",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_runtime_config_defaults_to_64k_input_and_output_budgets",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_runtime_config_accepts_explicit_output_budget",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_runtime_config_accepts_explicit_input_budget",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_runtime_config_accepts_explicit_provider_timeout",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_runtime_config_defaults_to_large_design_brief_token_budget",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_runtime_config_accepts_explicit_max_completion_tokens",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_openai_sdk_chat_smoke_uses_injected_client_and_preserves_evidence",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_openai_compatible_live_provider_returns_live_provider_result",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_records_enabled_thinking_request_and_evidence",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_rejects_prompt_over_input_budget_before_call",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_wraps_connection_failure_without_secrets",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_deepseek_live_provider_retries_transient_connection_then_succeeds",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_phase6_2_compatibility_check_combines_live_probe_results",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_agents_sdk_smoke_closes_async_openai_client",
+      "outcome": "failed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_phase6_2_check_openai_compat_cli_writes_report",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_phase6_2_check_openai_compat_cli_missing_config_is_safe",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_phase6_2_openai_compat.py::test_phase6_2_env_file_overrides_stale_process_provider_env",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[True-truncated]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[True-no_choices]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[True-forbidden]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[True-connection]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[False-truncated]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[False-no_choices]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[False-forbidden]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_exception_evidence_survives_public_brief_stage[False-connection]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_existing_attempt_is_immutable_before_transport[input.txt]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_existing_attempt_is_immutable_before_transport[response.raw.json]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_existing_attempt_is_immutable_before_transport[request.redacted.json]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_existing_attempt_is_immutable_before_transport[provider-error.json]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_existing_attempt_is_immutable_before_transport[design-brief.json]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_existing_attempt_is_immutable_before_transport[.design-brief-attempt]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_invalid_returned_content_keeps_existing_rejection[empty]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_invalid_returned_content_keeps_existing_rejection[malformed]",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_budget_rejection_remains_nontransport_failure",
+      "outcome": "passed"
+    },
+    {
+      "nodeid": "tests/agent/test_public_brief_failure_evidence.py::test_case_runner_persists_failed_initial_brief_and_does_not_generate",
+      "outcome": "passed"
+    }
+  ],
+  "not_applicable": [
+    "repair source mutation transactions",
+    "private damaged/pristine benchmark"
+  ],
+  "platform": "Windows-11-10.0.26200-SP0",
+  "public_path": "IFC extraction -> hierarchical writing -> text-only public Generation -> IFC -> diagnostic Compare",
+  "python": "3.12.4",
+  "schema_version": "text2ifc/ifc2text-goal-admission/0.3",
+  "scope_paths": [
+    "src/text2ifc_ifc2text",
+    "tests/ifc2text",
+    "scripts/ifc2text",
+    "prompts/agent",
+    "schemas/ifc2text",
+    "src/text2ifc_agent",
+    "src/text2ifc_compiler",
+    "src/text2ifc_extractor"
+  ],
+  "setup_errors": 0,
+  "shapely": "2.1.2",
+  "started_at": "2026-09-17T07:22:17.656372+00:00",
+  "status": "blocked",
+  "tests": {
+    "failed": 1,
+    "passed": 104,
+    "skipped": 0
+  }
+}

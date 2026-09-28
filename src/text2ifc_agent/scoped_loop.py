@@ -169,6 +169,7 @@ def run_scoped_changeset_round(
             context_issues=[*resolved["context"], *application_feedback],
             trace_level=trace_level,
             field_recovery=field_recovery,
+            field_recovery_values=recovery['required_field_values'] if recovery else None,
             semantic_correction=correction,
         )
         retry_key = (stage.get('classification'), hash_json_value(stage.get('diagnostics', [])),

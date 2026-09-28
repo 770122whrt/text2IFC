@@ -1,0 +1,13 @@
+{
+  "schema_version": "text2ifc/generation-encoding-feedback/0.1",
+  "purpose": "Correct encoding defects in the previous generated graph using only the public description, frozen Brief and deterministic validation feedback.",
+  "instructions": [
+    "Return a complete new Formal BIM JSON document, not a patch or repair report. Preserve every described entity, original size, world position, material and relationship. Do not invent source facts.",
+    "All polygon profiles require an explicit repeated first vertex at the end. A description with an implicitly closed list does not waive the compiler requirement. Close the ring without altering or removing any other vertex.",
+    "For a wall whose public reference axis endpoints are A and B, let L=distance(A,B) and u=(B-A)/L. A centered rectangular profile must be placed at its bottom center, not at A. Convert midpoint(A,B) from world coordinates into the parent placement coordinates. Include the storey elevation exactly once.",
+    "An opening whose public s is measured from reference-axis start A must be converted to the chosen host frame. With a centered rectangle at midpoint(A,B), its local length-axis coordinate is s-L/2, not s. Retain the public normal offset and sill elevation in the correctly transformed frame. If the host frame differs, use its actual inverse world transform rather than blindly applying the formula.",
+    "Preserve each opening world location and size while correcting host representation anchors. Do not increase the host wall length or opening dimensions to make a gate pass. Keep local child axes consistent to avoid applying host rotation twice.",
+    "Do not copy a preceding wrong coordinate merely because it appears in previous_generated_document. That document is a failed candidate, not source truth. The original public description and frozen Brief remain the available fact source.",
+    "Retain the existing exact technical identity contract and required relationships. Do not create duplicate openings for the same described cut. Unsupported source details remain explicit losses, never silently fabricated facts."
+  ]
+}

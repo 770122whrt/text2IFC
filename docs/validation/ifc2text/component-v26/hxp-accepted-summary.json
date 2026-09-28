@@ -1,0 +1,399 @@
+{
+  "case": "hxp",
+  "classification": "accepted_partial_reconstruction",
+  "code_commit": "61547ecb5954a2714ca7f0f239c925f9b2bb9476",
+  "comparison_status_preserved": {
+    "evaluated_scope_consistent": false,
+    "files_readable": true,
+    "geometry_processable": true,
+    "reconstruction_consistent": false
+  },
+  "evidence": {
+    "accepted_ifc": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/accepted/output.ifc",
+      "sha256": "11be7ed5d88394484abef5f1eb5c84a05bf1eb5320d78a042bc4943b78abfb31"
+    },
+    "brief": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/design-brief.json",
+      "sha256": "761e0882795886b7485c922fb408e3a0c420ac0628bc285d2cddf723eb449e3a"
+    },
+    "candidate_before_latest_repair": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/continuation-base-candidate.json",
+      "sha256": "cb96bd48589c678ee7cd5cb2fc69b2eab73090eeda0891031087911553937dd7"
+    },
+    "final_candidate": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/generator/candidate.json",
+      "sha256": "dc37996bb103109a8584916006eab901d65d32caac6cf4fd746bcbcec0561446"
+    },
+    "independent_compare": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/compare-v1.3-accepted.json",
+      "sha256": "b296608b155d3bca99904ae2d1831fa92132f2340d970c730e6404de70f6710f"
+    },
+    "lineage": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/continuation-lineage.json",
+      "sha256": "3c3c23352e603cca716fd2b68054d8d749ec7b50de8fbfd755caa0dc4b86a526"
+    },
+    "live_audit_response": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/audit/response.raw.json",
+      "sha256": "68bbd8c89486648dded2cccdfb18e2b99ca2aaaa0170390a925edb2f66b3d776"
+    },
+    "live_repair_response": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/repair/response.raw.json",
+      "sha256": "59751c247ee9a40c835e37cf28ac3057e376a22df7a12e6748cec98ea13997c5"
+    },
+    "original_generator_response": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/generator/response.raw.json",
+      "sha256": "ff6766bc7e41ce610e2d4f822e1b42e122697d866e7c66d5e1fd8bb512cd9638"
+    },
+    "public_description": {
+      "path": "dataset/processed/experiments/component-v26-building-review-20260926-02/hxp/approved/design-description.md",
+      "sha256": "77e90b0918b59d89938e6684a6356d06a4616d48786c9676314d0dd655c441b0"
+    },
+    "repair_change_check": {
+      "path": "dataset/processed/experiments/component-v26-building-continuation-20260926-02/hxp/repair/fact-delta.json",
+      "sha256": "4c3b9dc8c4ed572dad8e17a5f4d5136f35743a8a77305fc1cf7db8d6c7b822a3"
+    },
+    "source_ifc": {
+      "path": "dataset/external/bimnet/hxp.ifc",
+      "sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942"
+    }
+  },
+  "evidence_class": "live",
+  "excluded_labels": [
+    "D003",
+    "D004",
+    "D005",
+    "D006",
+    "D007"
+  ],
+  "limits": [
+    "Human-approved missing D003-D007, retaining walls and openings",
+    "36 material layer-set naming/metadata differences",
+    "Surface sampling is not a continuous Hausdorff certificate",
+    "No claim of complete appearance or per-part physical material equivalence",
+    "Revealed diagnostic case, not an unseen capability evaluation"
+  ],
+  "schema_version": "text2ifc/component-case-summary/1.0",
+  "source_unchanged": true,
+  "summary": {
+    "extra": 0,
+    "extra_storeys": 0,
+    "geometric_deviations": 0,
+    "matched": 61,
+    "material_content_differences": 0,
+    "material_metadata_differences": 36,
+    "missing": 5,
+    "missing_storeys": 0,
+    "relation_differences": 0,
+    "storey_elevation_deviations": 0
+  },
+  "unassessed": [
+    {
+      "candidate": "W001",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W001"
+    },
+    {
+      "candidate": "W002",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W002"
+    },
+    {
+      "candidate": "W003",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W003"
+    },
+    {
+      "candidate": "W004",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W004"
+    },
+    {
+      "candidate": "W005",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W005"
+    },
+    {
+      "candidate": "W006",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W006"
+    },
+    {
+      "candidate": "W007",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W007"
+    },
+    {
+      "candidate": "W008",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W008"
+    },
+    {
+      "candidate": "W009",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W009"
+    },
+    {
+      "candidate": "W010",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W010"
+    },
+    {
+      "candidate": "W011",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W011"
+    },
+    {
+      "candidate": "W012",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W012"
+    },
+    {
+      "candidate": "W013",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W013"
+    },
+    {
+      "candidate": "W014",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W014"
+    },
+    {
+      "candidate": "W015",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W015"
+    },
+    {
+      "candidate": "W016",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W016"
+    },
+    {
+      "candidate": "W017",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W017"
+    },
+    {
+      "candidate": "W018",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W018"
+    },
+    {
+      "candidate": "W019",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W019"
+    },
+    {
+      "candidate": "W020",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W020"
+    },
+    {
+      "candidate": "W021",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W021"
+    },
+    {
+      "candidate": "W022",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W022"
+    },
+    {
+      "candidate": "W023",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W023"
+    },
+    {
+      "candidate": "W024",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W024"
+    },
+    {
+      "candidate": "W025",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W025"
+    },
+    {
+      "candidate": "W026",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W026"
+    },
+    {
+      "candidate": "W027",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W027"
+    },
+    {
+      "candidate": "W028",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W028"
+    },
+    {
+      "candidate": "W029",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W029"
+    },
+    {
+      "candidate": "W030",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W030"
+    },
+    {
+      "candidate": "W031",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W031"
+    },
+    {
+      "candidate": "W032",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W032"
+    },
+    {
+      "candidate": "W033",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W033"
+    },
+    {
+      "candidate": "W034",
+      "category": "walls",
+      "fields": [
+        "wall_intrinsic_dimensions_measurement_method_changed"
+      ],
+      "source": "W034"
+    },
+    {
+      "category": "openings",
+      "fields": [
+        "filling"
+      ],
+      "source": "O008"
+    },
+    {
+      "category": "openings",
+      "fields": [
+        "filling"
+      ],
+      "source": "O009"
+    },
+    {
+      "category": "openings",
+      "fields": [
+        "filling"
+      ],
+      "source": "O011"
+    },
+    {
+      "category": "openings",
+      "fields": [
+        "filling"
+      ],
+      "source": "O012"
+    },
+    {
+      "category": "openings",
+      "fields": [
+        "filling"
+      ],
+      "source": "O013"
+    }
+  ]
+}

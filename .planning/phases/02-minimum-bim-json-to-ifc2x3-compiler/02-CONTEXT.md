@@ -99,7 +99,7 @@ georeferencing, language parsing, and agent behavior remain outside this phase.
 - `schemas/ifc/IFC2X3_TC1.exp` - official IFC2X3 TC1 EXPRESS schema.
 - `scripts/ifc_pipeline/roundtrip.py` - prototype to replace, including fallback
   behavior that must not cross the canonical compiler boundary.
-- `tests/test_json_to_ifc.py` - three existing prototype checks to migrate or
+- `tests/compiler/test_json_to_ifc.py` - three existing prototype checks to migrate or
   supersede.
 - `.planning/phases/01-bim-json-1-0-contract-and-validator/01-VERIFICATION.md`
   - verified Phase 1 boundary and available regression evidence.

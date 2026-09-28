@@ -30,6 +30,15 @@ LOW_LEVEL_FORBIDDEN_TERMS = (
 )
 
 
+class ProviderRequestBlocked(RuntimeError):
+    """A local client guard refused this request before entering SDK transport."""
+
+    def __init__(self, reason_code: str, *, failure_class: str = 'client_request_blocked'):
+        super().__init__(reason_code)
+        self.reason_code = reason_code
+        self.failure_class = failure_class
+
+
 class ProviderOutputError(ValueError):
     """Raised when provider output violates the Agent boundary."""
 

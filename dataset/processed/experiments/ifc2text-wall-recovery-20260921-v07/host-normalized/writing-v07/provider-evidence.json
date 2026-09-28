@@ -1,0 +1,101 @@
+{
+  "events": [
+    {
+      "data": {
+        "choices": [
+          {
+            "finish_reason": "stop",
+            "index": 0,
+            "logprobs": null,
+            "message": {
+              "annotations": null,
+              "audio": null,
+              "content": "{\"overview\":\"本指南按顺序读取：先看建筑总体说明，再逐层查阅楼层记录，随后是空间信息与构件布置，最后是确定性材料部分。尺寸、墙体轮廓与材料归属均由程序插入，非本指南撰写。提取过程存在若干问题，请以程序输出为准。\",\"storey_notes\":[{\"storey\":\"S01\",\"text\":\"本层有源显式空间记录，未形成几何围合候选；记录含墙34、门7、窗3、洞口15、楼板1、空间5。边界关联未确认。\"},{\"storey\":\"S02\",\"text\":\"本层既无显式空间记录，也无几何围合候选；无墙、门、窗、洞口、楼板、空间等记录，仅直接描述构件。\"},{\"storey\":\"S03\",\"text\":\"本层既无显式空间记录，也无几何围合候选；仅记录1个覆盖层，其余墙、门、窗、楼板、空间均无。\"}]}",
+              "function_call": null,
+              "reasoning_content": "",
+              "refusal": null,
+              "role": "assistant",
+              "tool_calls": null
+            }
+          }
+        ],
+        "created": 1789991618,
+        "id": "ab2450b7-26ea-48e2-905d-69cf6495b042",
+        "model": "deepseek-flash",
+        "moderation": null,
+        "object": "chat.completion",
+        "service_tier": null,
+        "stop_reason": "stop",
+        "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+        "usage": {
+          "completion_tokens": 215,
+          "completion_tokens_details": "[REDACTED]",
+          "prompt_cache_hit_tokens": "[REDACTED]",
+          "prompt_cache_miss_tokens": "[REDACTED]",
+          "prompt_tokens": 1322,
+          "prompt_tokens_details": "[REDACTED]",
+          "total_tokens": 1537
+        }
+      },
+      "event": "chat.completion",
+      "sequence": 0
+    }
+  ],
+  "evidence_class": "live",
+  "http_status": 200,
+  "request": {
+    "extra_body": {
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "max_tokens": 8192,
+    "messages": [
+      {
+        "content": "Write a short Chinese architectural reading guide using only FACT_SUMMARY.\nThe document is assembled in this order: building overview, floor records, spaces,\ncomponent placement, then a deterministic materials section. Exact dimensions,\nwall outlines and material assignments are inserted by the program, not by you.\n\nFACT_SUMMARY:\n{\"extraction_issues_present\": true, \"material_descriptions\": [\"直接层序：默认墙:240.0；AXIS2,NEGATIVE,偏移120.0\", \"直接层序：默认墙:90.0；AXIS2,NEGATIVE,偏移45.0\", \"直接层序：默认墙:210.0；AXIS2,NEGATIVE,偏移105.0\", \"直接层序：默认墙:170.0；AXIS2,NEGATIVE,偏移85.0\", \"直接层序：默认墙:110.0；AXIS2,NEGATIVE,偏移55.0\", \"直接层序：默认墙:140.0；AXIS2,NEGATIVE,偏移70.0\", \"直接层序：默认墙:120.0；AXIS2,NEGATIVE,偏移60.0\", \"直接层序：默认墙:200.0；AXIS2,NEGATIVE,偏移100.0\", \"直接材料列表（非分层）：金属漆_冷灰、木材\", \"直接材料列表（非分层）：抛光不锈钢、玻璃、白油漆\", \"直接：金属漆_冷灰\", \"直接层序： <Unnamed>:300.0；AXIS3,POSITIVE,偏移0.0\"], \"not_described_classes\": {}, \"storeys\": [{\"boundary_relation_confirmed\": false, \"counts\": {\"coverings\": 0, \"doors\": 7, \"openings\": 15, \"slabs\": 1, \"spaces\": 5, \"stairs\": 0, \"walls\": 34, \"windows\": 3}, \"derived_region_count\": 0, \"id\": \"S01\", \"name\": \"地板标高\", \"space_evidence_state\": \"explicit_only\", \"space_observation\": \"本层有源显式空间记录，没有几何围合候选记录。\"}, {\"boundary_relation_confirmed\": false, \"counts\": {\"coverings\": 0, \"doors\": 0, \"openings\": 0, \"slabs\": 0, \"spaces\": 0, \"stairs\": 0, \"walls\": 0, \"windows\": 0}, \"derived_region_count\": 0, \"id\": \"S02\", \"name\": \"标高 3\", \"space_evidence_state\": \"neither\", \"space_observation\": \"本次没有显式空间记录，也未形成几何围合候选；直接描述构件。\"}, {\"boundary_relation_confirmed\": false, \"counts\": {\"coverings\": 1, \"doors\": 0, \"openings\": 0, \"slabs\": 0, \"spaces\": 0, \"stairs\": 0, \"walls\": 0, \"windows\": 0}, \"derived_region_count\": 0, \"id\": \"S03\", \"name\": \"天花板标高\", \"space_evidence_state\": \"neither\", \"space_observation\": \"本次没有显式空间记录，也未形成几何围合候选；直接描述构件。\"}]}\n\nOUTPUT_SCHEMA:\n{\"$schema\": \"https://json-schema.org/draft/2020-12/schema\", \"additionalProperties\": false, \"properties\": {\"overview\": {\"maxLength\": 350, \"minLength\": 1, \"type\": \"string\"}, \"storey_notes\": {\"items\": false, \"maxItems\": 3, \"minItems\": 3, \"prefixItems\": [{\"additionalProperties\": false, \"properties\": {\"storey\": {\"const\": \"S01\"}, \"text\": {\"maxLength\": 200, \"type\": \"string\"}}, \"required\": [\"storey\", \"text\"], \"type\": \"object\"}, {\"additionalProperties\": false, \"properties\": {\"storey\": {\"const\": \"S02\"}, \"text\": {\"maxLength\": 200, \"type\": \"string\"}}, \"required\": [\"storey\", \"text\"], \"type\": \"object\"}, {\"additionalProperties\": false, \"properties\": {\"storey\": {\"const\": \"S03\"}, \"text\": {\"maxLength\": 200, \"type\": \"string\"}}, \"required\": [\"storey\", \"text\"], \"type\": \"object\"}], \"type\": \"array\"}}, \"required\": [\"overview\", \"storey_notes\"], \"type\": \"object\"}\n\nReturn only JSON matching OUTPUT_SCHEMA. Keep overview under 140 Chinese characters\nand each storey note under 70 Chinese characters. Copy storey IDs and their order\nexactly, never substituting their display names.\n\nFor each floor, use its explicit space_observation and space_evidence_state:\n- explicit_only: source space records exist; no derived candidates are recorded.\n- candidates_only: geometric candidates exist, not verified functional rooms.\n- neither: neither exists; describe recorded components, without inventing rooms.\n- explicit_and_candidates: distinguish the two sources.\nUnconfirmed boundary associations do not erase an explicit space record.\n\nStorey notes describe ONLY space state and component categories present in counts.\nDo NOT discuss materials, material uncertainty, material names, finishes or layers\nin storey_notes. A dedicated deterministic section already supplies that information;\na global materials list cannot justify a statement about any particular floor.\nThe overview may state that materials follow component placement, but may not make\nclaims about the material content of the building.\n\nDo not infer occupancy, north, number of usable floors, load-bearing function,\nwalkability or room-to-wall connections. Do not reinterpret recording conventions\nas structural defects. Do not mention algorithms, JSON, models or evaluation.\nNo GUIDs, file paths, invented measurements, or claims of complete correctness.\n",
+        "role": "user"
+      }
+    ],
+    "model": "deepseek-v4-flash",
+    "response_format": {
+      "type": "json_object"
+    },
+    "temperature": 0
+  },
+  "response": {
+    "choices": [
+      {
+        "finish_reason": "stop",
+        "index": 0,
+        "logprobs": null,
+        "message": {
+          "annotations": null,
+          "audio": null,
+          "content": "{\"overview\":\"本指南按顺序读取：先看建筑总体说明，再逐层查阅楼层记录，随后是空间信息与构件布置，最后是确定性材料部分。尺寸、墙体轮廓与材料归属均由程序插入，非本指南撰写。提取过程存在若干问题，请以程序输出为准。\",\"storey_notes\":[{\"storey\":\"S01\",\"text\":\"本层有源显式空间记录，未形成几何围合候选；记录含墙34、门7、窗3、洞口15、楼板1、空间5。边界关联未确认。\"},{\"storey\":\"S02\",\"text\":\"本层既无显式空间记录，也无几何围合候选；无墙、门、窗、洞口、楼板、空间等记录，仅直接描述构件。\"},{\"storey\":\"S03\",\"text\":\"本层既无显式空间记录，也无几何围合候选；仅记录1个覆盖层，其余墙、门、窗、楼板、空间均无。\"}]}",
+          "function_call": null,
+          "reasoning_content": "",
+          "refusal": null,
+          "role": "assistant",
+          "tool_calls": null
+        }
+      }
+    ],
+    "created": 1789991618,
+    "id": "ab2450b7-26ea-48e2-905d-69cf6495b042",
+    "model": "deepseek-flash",
+    "moderation": null,
+    "object": "chat.completion",
+    "service_tier": null,
+    "stop_reason": "stop",
+    "system_fingerprint": "aeb56401ca74e127821c4f9126dcb669",
+    "usage": {
+      "completion_tokens": 215,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 1322,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 1537
+    }
+  }
+}

@@ -1,0 +1,185 @@
+{
+  "evidence_kind": "live",
+  "controller_status": "draft_required",
+  "run_dir": "E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-attribution-20260921-v01\\live-original\\runs\\8b25681f2565f807",
+  "generator_invoked": false,
+  "ifc_publication": false,
+  "same_original_text": true,
+  "brief": {
+    "status": "draft_required",
+    "storeys": [
+      {
+        "id": "storey-s01",
+        "elevation_mm": -1140.0,
+        "net_height_mm": 2160.0,
+        "windows": [
+          {
+            "bounds": {
+              "x": [
+                6196.0,
+                6436.0
+              ],
+              "y": [
+                2589.3,
+                3439.3
+              ]
+            },
+            "elevation_range_mm": [
+              -285.0,
+              815.0
+            ],
+            "height_mm": 1100.0,
+            "host_opening": "O007",
+            "host_wall": "W007",
+            "id": "N001",
+            "width_mm": 850.0
+          },
+          {
+            "bounds": {
+              "x": [
+                5316.2,
+                6168.5
+              ],
+              "y": [
+                3470.6,
+                3652.3
+              ]
+            },
+            "elevation_range_mm": [
+              -285.0,
+              815.0
+            ],
+            "height_mm": 1100.0,
+            "host_opening": "O006",
+            "host_wall": "W005",
+            "id": "N002",
+            "width_mm": 850.0
+          },
+          {
+            "bounds": {
+              "x": [
+                4650.9,
+                5164.2
+              ],
+              "y": [
+                3065.7,
+                3541.1
+              ]
+            },
+            "elevation_range_mm": [
+              -310.0,
+              790.0
+            ],
+            "height_mm": 1100.0,
+            "host_opening": "O010",
+            "host_wall": "W013",
+            "id": "N003",
+            "width_mm": 600.0
+          }
+        ],
+        "spaces": [
+          {
+            "id": "R001",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R002",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R003",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R004",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          },
+          {
+            "id": "R005",
+            "has_polygon": true,
+            "z_mm": null,
+            "height_mm": null
+          }
+        ]
+      },
+      {
+        "id": "storey-s02",
+        "elevation_mm": 40.0,
+        "net_height_mm": null,
+        "windows": [],
+        "spaces": []
+      },
+      {
+        "id": "storey-s03",
+        "elevation_mm": 1020.0,
+        "net_height_mm": null,
+        "windows": [],
+        "spaces": []
+      }
+    ],
+    "ambiguities": [
+      {
+        "blocking": false,
+        "evidence_refs": [
+          "capability:IFC2X3:IfcSpace"
+        ],
+        "id": "amb-room-verification",
+        "message": "R001–R005 是否可推定为已核实房间？",
+        "options": [
+          "按已核实房间生成 IfcSpace，几何采用已给轮廓",
+          "仅保留空间记录，不生成房间实体"
+        ],
+        "path": "/known_facts/storeys/0/spaces",
+        "reason": "源记录称有显式空间记录但未形成几何围合候选，并明确“可否据此推定为已核实房间仍待进一步确认”；本次按已给轮廓保留空间记录。",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      },
+      {
+        "blocking": false,
+        "evidence_refs": [
+          "capability:IFC2X3:IfcWall",
+          "capability:IFC2X3:IfcSlab"
+        ],
+        "id": "amb-wall-exterior-interior-split",
+        "message": "源记录未给出墙体的室内外分组，本次按楼板 L001 轮廓推导 exterior/interior。",
+        "options": [
+          "按楼板 L001 轮廓推导室内外分组（本次采用）",
+          "由用户逐段指定室内外分组"
+        ],
+        "path": "/known_facts/storeys/0/walls",
+        "reason": "当前 Design Brief 要求每层墙体归入 walls.exterior 与 walls.interior 两组，而源记录只给出墙体轴、厚度与高度；本次以“外墙外皮与楼板轮廓边重合”推导分组。",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      },
+      {
+        "blocking": false,
+        "evidence_refs": [
+          "capability:IFC2X3:IfcWindow",
+          "capability:IFC2X3:IfcWall"
+        ],
+        "id": "amb-window-storey-placement",
+        "message": "N001–N003 在源记录中列于 S02 标高，但其宿主墙 W005、W007、W013 属于 S01。",
+        "options": [
+          "按宿主墙所在楼层归入 S01（本次采用）",
+          "保留在 S02 并记录跨楼层宿主关系"
+        ],
+        "path": "/known_facts/storeys/0/windows",
+        "reason": "源记录提示门窗宿主可能位于其他楼层；本次按宿主墙所属楼层把三个窗放入 S01，S02 仅保留标高记录。",
+        "source_turns": [
+          "turn-user-001"
+        ]
+      }
+    ],
+    "questions": []
+  }
+}

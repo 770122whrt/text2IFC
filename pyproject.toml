@@ -19,4 +19,5 @@ knowledge-live = [
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", ".deps/python312"]
-addopts = "--basetemp=.pytest-tmp --import-mode=importlib"
+addopts = "--import-mode=importlib"
+cache_dir = ".tmp/pytest/cache"

@@ -31,6 +31,8 @@ REPAIRABLE_ISSUE_CODES = {
     "UNKNOWN_STANDARD_PROPERTY",
     "WALL_BBOX_MISMATCH",
     "WALL_ORIENTATION_MISMATCH",
+    "WALL_OUTLINE_MISMATCH",
+    "FILLING_PLACEMENT_CHAIN_MISMATCH",
 }
 
 
@@ -148,7 +150,7 @@ def _value_paths(value: Any, base: str = "") -> set[str]:
 
 
 def _is_draft(candidate: Mapping[str, Any]) -> bool:
-    return candidate.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3'}
+    return candidate.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5'}
 
 
 def assess_repair_eligibility(

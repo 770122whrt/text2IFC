@@ -1,400 +1,183 @@
-# IFC2X3 修复链路与后续路线
+# text2IFC Repair：面向已有 IFC 的局部语义修复方法
 
-> 状态快照：2026-07-23
-> 输入：已有或 damaged IFC2X3 + 用户自然语言要求
-> 输出：通过 L1/L2 验证并允许发布的新 IFC
+> Demo Method｜v0.8｜2026-09-23
+> 面向论文讨论与老师汇报。本文说明当前方法、示例及证据范围。
 
-## 1. 一句话说明
+## 1. 我们希望解决什么问题
 
-系统不是让大模型直接改写 IFC，而是让 LLM 理解用户要修改什么并输出受约束的
-RepairIntent 和 ChangeSet Draft，再由确定性代码解析目标、绑定真实 IFC 实体、
-调用 IfcOpenShell 写回，并在重新打开 IFC、通过 L1/L2 后才发布结果。
+已有建筑模型的维护，往往只需要修改一部分内容：补回缺失的梁柱，为构件关联正确的材料或 Type，或者修正一个属性。我们的目标是让用户用自然语言提出这些要求，系统在已有 IFC 上完成对应修改，并给出可以核对的结果。
 
-整个链路有三种执行者：
+难点不只在于理解一句话。“使用同类型梁”需要明确参照哪个类型；“改成混凝土”需要建立材料关系，不能只改变颜色；“补回梁和柱”需要同时满足位置、尺寸、楼层及非目标保持要求。因此，修复需要连接语言、模型中的具体对象以及修改后的实际状态。
 
-- `[LLM]`：理解自然语言，提取操作、目标描述、参数和属性意图。
-- `[CODE]`：验证 IFC、建立索引、解析目标、绑定 ChangeSet、写回、验证和发布。
-- `[HUMAN]`：补充缺失信息，确认歧义目标、Type 和属性候选，进行必要的人工 UAT。
+我们采用局部修复思路：先把要求转成有模型依据的修复目标，再组织有限范围的修改，最后检查保存后的 IFC 是否满足这些目标。已有模型提供构件、类型、空间和关系依据；语言模型负责理解要求和选择语义；确定性处理负责落实修改与核对结果。
 
-确定性代码拥有最终放行权。LLM 返回了合法 JSON，不等于 IFC 修复成功。
+当前研究聚焦 IFC2X3，覆盖受支持的实例属性修改、门窗与洞口补全、矩形梁柱补全，以及这些操作中的 Type 复用、材料和外观处理。本文以“Type＋材料”和“梁＋柱补全”两类案例展示方法。
 
-## 2. 总体流程
+## 2. 总体思路：围绕修复目标形成闭环
 
-下面是当前已经实现并通过 LargeBuilding 验收的生产链路。图中只画当前可运行的
-Phase 7—10.1；尚未完成的能力统一放在 Roadmap。
+我们将方法组织为三个 Part：**A 确定修复目标，B 完成局部修改，C 核验实际结果**。三个部分始终围绕同一组问题展开：修改哪个对象，建立什么事实，以及哪些原有内容应当保持。
+
+**图 1｜Repair 总体闭环。**
 
 ```mermaid
-flowchart TD
-    U["[HUMAN] 输入已有或 damaged IFC2X3<br/>以及自然语言修复要求"]
-    API["[CODE · Phase 9] RepairAPI / CLI<br/>创建 Run、保存请求和源 IFC 指纹"]
-    VALID["[CODE] 打开并验证 IFC2X3"]
-    INDEX["[CODE · Phase 7 / 09.1] 建立本地索引<br/>Occurrence、Type、楼层、空间、关系和属性"]
-    S1["[LLM · Stage 1] 生成 RepairIntent<br/>操作、TargetQuery、参数、Type 和属性意图"]
-    READY{"[CODE] 合同有效且信息完整？"}
-    Q["[CODE] 生成有界 Clarification"]
-    H["[HUMAN] 补充参数或确认候选"]
-    RES["[CODE · Phase 7 / 09.1 / 10.1] 解析并授权<br/>Target、Prototype/Type 和精确属性"]
-    UNIQUE{"[CODE] 唯一且无冲突？"}
-    SEM["[CODE · Phase 10 / 10.1] Production Evidence<br/>+ Semantic Manifest"]
-    S2["[LLM · Stage 2] 生成 ChangeSet Draft"]
-    BIND["[CODE · Phase 9 / 10] Binder + Audit<br/>生成 Bound ChangeSet"]
-    APPLY["[CODE] IfcOpenShell 原子写回<br/>全部 Operation 属于一个事务"]
-    REOPEN["[CODE] 从磁盘重新打开候选 IFC"]
-    EVAL["[CODE · Phase 8 / 10 / 10.1] Evaluation 0.2<br/>L1 几何关系 + L2 BIM 语义"]
-    PASS{"[CODE] 是否允许发布？"}
-    OK["[CODE] successful/repaired.ifc"]
-    FAIL["[CODE] 不发布成功 IFC<br/>保留错误和必要诊断证据"]
-
-    U --> API --> VALID
-    VALID -->|"有效 IFC2X3"| INDEX --> S1 --> READY
-    VALID -->|"无效或 Schema 不支持"| FAIL
-    READY -->|"缺少事实"| Q --> H --> S1
-    READY -->|"完整"| RES --> UNIQUE
-    UNIQUE -->|"歧义或冲突"| Q
-    UNIQUE -->|"已唯一授权"| SEM --> S2 --> BIND
-    BIND -->|"Audit 通过"| APPLY --> REOPEN --> EVAL --> PASS
-    BIND -->|"Audit 失败"| FAIL
-    PASS -->|"L1/L2 通过"| OK
-    PASS -->|"失败或不可评估"| FAIL
+flowchart TB
+    I["已有 IFC + 自然语言要求"] --> A["Part A：确定修复目标"]
+    A --> B["Part B：完成局部修改"]
+    B --> C["Part C：核验实际结果"]
+    C --> R["返回修复结果或未完成原因"]
+    A -->|"信息不足或有歧义"| Q["提出澄清问题"]
+    Q -->|"用户补充，继续当前任务"| A
+    R -.->|"用户明确提出下一轮修改"| I
+    classDef method fill:#e8f0fc,stroke:#376da8,color:#172d46;
+    classDef feedback fill:#fff3d6,stroke:#b18431,color:#513a0a;
+    class A,B,C method;
+    class Q feedback;
 ```
 
-主线可以概括为：
+这个闭环将修复结果反馈给用户：要求明确时继续执行，信息不足时先澄清，完成后说明哪些要求已经满足。用户可以基于结果提出下一轮修改。阶段内部也允许有限次数的输出纠正；当前尚不包含最终模型检查失败后自主反复重修的通用循环。
 
-```text
-IFC + 文本
-  → 理解和澄清
-  → IFC 目标与语义解析
-  → 统一 Bound ChangeSet
-  → IfcOpenShell 原子写回
-  → 重新打开并执行 L1/L2
-  → 通过才发布
+## 3. Method：三个 Part 如何协同
+
+### 3.1 Part A：确定修复目标
+
+输入是一份已有 IFC 和用户要求，输出是一组明确的目标事实：目标构件、需要改变的内容、依据及修改范围。
+
+**先把语言中的对象定位到模型。** 我们结合构件类别、名称、楼层、空间位置、几何条件和类型关系，判断用户指向哪个现存对象，或希望在哪个位置补回对象。例如，“补回这一层缺失的梁，并沿用旁边的梁型”同时涉及楼层、轴线位置和类型参照。若存在多个合理选择，就向用户询问具体差异。
+
+**再把要求对应到准确的语义。** 对于属性修改，用户给出标准字段时直接核对；只有自然语言表达时，先检索适用候选，再由语言模型在候选范围内选择，最后检查属性适用性、值类型、单位和作用范围。相似度用于找到候选，不能单独决定写入哪个字段。
+
+**图 2｜从自然语言到有依据的修复目标。**
+
+```mermaid
+flowchart TB
+    U["用户要求"] --> L["理解修改内容"]
+    M["当前 IFC：构件、空间、类型和关系"] --> T["定位对象与模型参照"]
+    L --> T
+    T --> S["确定属性、Type、材料及几何要求"]
+    K["标准知识：适用字段、值类型和单位"] --> S
+    S --> V{"对象、含义与作用范围明确？"}
+    V -->|"是"| F["目标事实 + 依据 + 保持范围"]
+    V -->|"否"| Q["围绕具体差异澄清"]
+    Q -->|"用户补充"| L
 ```
 
-## 3. 哪些地方调用 LLM 接口
+**Type、材料和外观分别处理。** Type 表达构件共享的类型定义，材料表达物理材料关联，外观表达颜色等显示信息。复用某个 Type 不等于可以改动所有共享该类型的实例；颜色相同也不意味着材料相同。系统会检查类型选择与显式要求是否兼容，将需要用户决定的冲突提前暴露。
 
-当前 Repair Pipeline 有两个正式 Provider 阶段。自动测试可以替换为 fake/file
-provider，但 fake 运行不能证明真实模型质量。
+例如，“沿用现有梁型、使用 C30 混凝土、显示为红色”会形成三个分别可核对的目标：关联指定类型、关联指定材料、设置指定颜色。后面的执行与验证继续使用这些目标，而不是重新解释一次原始要求。
 
-### 3.1 Stage 1：RepairIntent
+### 3.2 Part B：把目标组织为局部修改
 
-**执行者：** `[LLM]`
+输入是 Part A 确定的目标事实，输出是修改后的候选模型。这里的核心表示是语义变更集（Semantic ChangeSet）：将“改哪个对象、改什么、依据是什么、哪些内容不改”放在一起描述。
 
-**发送给模型：**
+**先确定期望状态，再组织修改。** 比如补回一根梁，期望状态不仅包括梁存在，还包括它的位置、截面、类型和材料要求。变更集围绕这些事实组织修改，并检查它们是否仍对应当前模型、是否超出用户要求。语言模型提出修改草案后，由确定性检查确认其目标和范围，再交给受支持的建模操作执行。
 
-- 用户修复要求；
-- 当前 Operation 合同；
-- RepairIntent Schema；
-- Target、尺寸、Type 和属性意图表达规则；
-- 不得编造缺失事实的约束。
-
-**要求模型返回：**
-
-- Operation 类型；
-- TargetQuery，例如 GUID、Name、楼层、方位或空间描述；
-- Width、Height、位置等参数；
-- 可选 Type/Prototype 意图；
-- 可选精确属性意图；
-- 缺失参数。
-
-Stage 1 不负责最终选择 IFC 实体。用户没有提供的尺寸、位置或 GUID 必须进入
-Clarification，不能为了满足 Schema 而编造。
-
-### 3.2 Stage 2：ChangeSet Draft
-
-**执行者：** `[LLM]`
-
-**发送给模型：**
-
-- 用户要求；
-- 已解析的 Operation；
-- 有界 Target/Type 证据；
-- Semantic Manifest；
-- ChangeSet Draft Schema。
-
-**要求模型返回：**
-
-- 紧凑的 ChangeSet Draft；
-- Operation 参数；
-- 与 Manifest 对应的语义 assignment。
-
-Stage 2 不生成 STEP，也不直接拥有执行权限。Draft 必须经过 Binder 和 Audit 才能
-成为 Bound ChangeSet。
-
-### 3.3 与旧 Text2IFC Generation 的区别
-
-旧链路从文本生成 BIM JSON，再编译整栋 IFC，并包含 Design Brief、Generator 和
-Audit Agent。当前 Repair Pipeline 读取已有 IFC，围绕局部 ChangeSet 工作，最终
-验证由确定性 Evaluation 0.2 完成。
-
-两条链路共享一个原则：LLM 提供候选，代码决定能否放行。
-
-## 4. 哪些地方由代码解析和执行
-
-### 4.1 输入、Run 和 IFC 索引
-
-**执行者：** `[CODE + IfcOpenShell]`
-**对应阶段：** Phase 7、Phase 9、Phase 09.1
-
-`RepairAPI` 是统一行为入口，CLI 只是参数和交互封装。一次 Run 保存源 IFC
-fingerprint、用户请求、状态转换、Clarification、Provider trace 和最终证据。
-
-源 IFC 必须能被 IfcOpenShell 打开且 Schema 为 IFC2X3。随后代码建立
-`targets.sqlite`，提取：
-
-- occurrence 和 Type；
-- GlobalId、Name、Tag 和 Type 名称；
-- storey、space 和 containment；
-- host、opening、fill 等关系；
-- 方位、位置和几何摘要；
-- Pset、Qto、material 和 classification。
-
-TargetQuery 可以组合 GUID、Name、方位、楼层、空间和几何条件。Name 可以作为
-工程师可读证据，但不能在存在多个候选时被静默当成唯一事实。
-
-### 4.2 Clarification、Target 和 Type
-
-**执行者：** `[CODE + HUMAN]`
-**对应阶段：** Phase 7、Phase 09.1
-
-以下情况会暂停同一个 Run：
-
-- 缺少 Width、Height 或位置；
-- Target Wall 不唯一；
-- Prototype/Type 有多个候选；
-- 属性需要确认。
-
-用户回答绑定 `clarification_id` 和 `state_version`，过期回答不能应用。
-
-Occurrence 和 Type 分开记录。当前只允许：
-
-- 解析用户明确指定或确认的 Type；
-- 将相似 Type 作为候选，而不是自动授权；
-- 用户未指定 Type 时创建独立系统模板 Type；
-- 绑定和读取共享 Type，但不修改共享 Type。
-
-这可以防止修复一个 Window 时影响所有共享同一 Type 的 Window。
-
-### 4.3 精确属性
-
-**执行者：** `[CODE + HUMAN]`
-**对应阶段：** Phase 10.1
-
-当前属性入口是精确标量：
-
-```text
-Pset.Property + value + IFC value type + unit（适用时）
-scope = target occurrence
-```
-
-标准属性从本地 IFC2X3 Registry 精确查询，并检查 applicable class、template、
-value type 和 unit。未知属性会成为 custom candidate，要求用户确认后进入同一
-写回和 L2 链路。
-
-当前不进行中文别名、拼写纠正或向量检索；这些属于 Phase 10.2。
-
-### 4.4 Production Evidence 与 Semantic Manifest
-
-**执行者：** `[CODE]`
-**对应阶段：** Phase 10、Phase 10.1
-
-Production Evidence 只使用：
-
-- 当前 IFC 中仍然存在的事实；
-- 用户文本和确认；
-- 已授权 Type；
-- Operation Registry 的确定性 policy。
-
-Semantic Manifest 声明本次 Operation 必须写入并由 L2 检查的事实，例如 host、
-Opening、Window Type、storey、用户指定 Pset，以及适用的 material、
-classification 和 quantity。
-
-Manifest 同时约束写入和验证，避免编译器与 L2 使用两套成功定义。
-
-### 4.5 Binder、Audit 和原子写回
-
-**执行者：** `[CODE + IfcOpenShell]`
-**对应阶段：** Phase 9、Phase 10
-
-Binder 将 Provider Draft 绑定到源 IFC fingerprint、真实目标 GUID、已授权 Type
-和 Manifest。Audit 再检查 Schema、引用、Scope、指纹和 Operation policy。
-
-整个 Run 只有一个统一 ChangeSet。多个修改会成为多个 Operation，但仍属于一个
-事务；任一 Operation 失败时整批回滚。
-
-Audit 通过后，IfcOpenShell Applicator 才在 staging 区域生成候选 IFC。源 IFC
-不原地修改。
-
-### 4.6 重新打开、L1/L2 与发布
-
-**执行者：** `[CODE + IfcOpenShell]`
-**对应阶段：** Phase 8、Phase 10、Phase 10.1
-
-代码从磁盘重新打开候选 IFC 后再验证。
-
-L1 检查：
-
-- Window 尺寸、位置和 host Wall；
-- Opening 与 void/fill 关系；
-- storey 和修改范围；
-- non-target preservation；
-- IFC 是否可重新打开。
-
-L2 检查：
-
-- Type/Prototype；
-- occurrence 与 Type 属性来源；
-- 用户指定 Pset 的 value、type 和 unit；
-- Manifest 要求的 material、classification 和 quantity。
-
-Material 不是无条件要求。只有当前 IFC、授权 Type 或用户要求中存在相应事实时，
-Manifest 和 L2 才要求保留或创建。
-
-Evaluation 0.2 是唯一发布权威：
-
-- 通过：发布 `successful/repaired.ifc`；
-- 未通过但存在候选：只保留 diagnostic candidate；
-- Provider、Audit 或 Application 提前失败：不伪造 repaired IFC。
-
-## 5. 放行逻辑
-
-正式 repaired IFC 只有同时满足以下条件才可发布：
-
-```text
-IFC input valid
-AND RepairIntent valid and complete
-AND Target / Type / Property uniquely resolved or confirmed
-AND Production Evidence and Semantic Manifest available
-AND Provider Draft valid
-AND Bound ChangeSet Audit passed
-AND unified transaction applied completely
-AND candidate IFC reopened successfully
-AND L1 geometry_relationship_success
-AND L2 semantic_fidelity_success
-AND successful_artifact_publishable = true
-```
-
-L3 authoring exactness 当前不作为 v1.1 发布条件。新 GlobalId、不同 STEP ID、Name、
-Tag、OwnerHistory 或序列化顺序可以造成文件大小差异，但不自动表示 L1/L2 失败。
-
-Ground Truth 只用于 benchmark：
-
-```text
-original IFC
-  → 人为删除目标 Window / Opening
-damaged IFC
-  → 生产 Repair Pipeline
-repaired IFC
-  → Private Ground Truth Comparator
-```
-
-original IFC、private mutation manifest 和被删除实体 GUID 不得进入 Provider、
-Target Resolution 或 Production L2，避免提前读取答案。
-
-## 6. 一个成功 Repair Run 留下什么
-
-一次完整运行通常留下：
-
-- 用户输入、source IFC fingerprint 和 Run transitions；
-- `index/targets.sqlite`；
-- Stage 1 Prompt、Provider trace 和 RepairIntent；
-- Clarification 与用户回答；
-- Target、Type 和 Property resolution；
-- Production Evidence 和 Semantic Manifest；
-- Stage 2 Prompt、Provider trace 和 Draft；
-- Bound ChangeSet；
-- application report 和 staging candidate；
-- reopened L1/L2 Evaluation；
-- terminal evidence 和 artifact hash manifest；
-- `successful/repaired.ifc` 或 diagnostic candidate。
-
-面向人工汇报的 proof package 可以只复制用户输入、damaged IFC、repaired IFC、
-benchmark original 和简明报告，并通过 provenance 指回完整 Run。
-
-## 7. 失败时回到哪里
-
-| 失败类型 | 负责判断 | 下一步 |
-|---|---|---|
-| IFC 无效或 Schema 不支持 | IfcOpenShell / CODE | `invalid_input`，不调用 Provider |
-| 缺少尺寸或位置 | LLM 识别、CODE 验证 | 询问用户并重新执行 Stage 1 |
-| Target 不唯一 | Resolution Flow | 展示有界候选，等待用户选择 |
-| Type 不唯一 | Type Resolution | 展示人类可读 Type，等待确认 |
-| 标准属性不存在 | Property Resolution | 转 custom confirmation 或取消 |
-| Provider 或 JSON 合同失败 | Provider Stage | `provider_failed`，不伪造后续成功 |
-| Draft 越权、指纹或引用错误 | Binder / Audit | `audit_failed`，不写 IFC |
-| 某个 Operation 应用失败 | Applicator | 整个统一事务回滚 |
-| IFC 重开、L1 或 L2 失败 | Evaluation | 只保留诊断证据，不发布 |
-| 用户取消 | HUMAN / RunStore | `cancelled` |
-
-## 8. 已完成能力与 Roadmap
-
-### 8.1 已完成阶段
-
-| Phase | 状态 | 完成内容 |
-|---:|---|---|
-| 7 | Complete | IFC Index、TargetQuery、GUID/Name/方位/空间/几何定位 |
-| 8 | Complete | L1/L2 Evaluation 0.2、Gold 隔离、fail-closed 发布 |
-| 9 | Complete | RepairAPI、CLI、RunStore、双 Agent、Clarification、统一 ChangeSet |
-| 09.1 | Complete | occurrence/Type 分离、Prototype 解析和 Type evidence 修正 |
-| 10 | Complete | Window Manifest、Bound ChangeSet、原子写回和 reopened L2 |
-| 10.1 | Complete | 精确标量属性、自定义确认、Type 复用和模板 fallback |
-
-当前生产 Registry 只注册 `add_window_with_opening_to_wall`，但该 Operation 已覆盖
-Target Wall、Window/Opening 几何、void/fill、storey、Type、Pset、条件 material/
-classification/quantity、L1/L2 和 fail-closed 发布。
-
-LargeBuilding 已完成 damaged IFC、离线闭环、真实 DeepSeek Stage 1/2、repaired
-IFC、L1/L2、属性对比和 IfcDiff 辅助检查。真实 Provider 失败会如实记录，不用
-fake 输出替代。
-
-### 8.2 后续路线
+**图 3｜从目标事实到局部修改。**
 
 ```mermaid
 flowchart LR
-    classDef done fill:#E8F6EC,stroke:#2E7D32,color:#17421A
-    classDef current fill:#E8F2FF,stroke:#2670B8,color:#123C65
-    classDef planned fill:#F6F6F6,stroke:#777,color:#333
-    classDef proposed fill:#FFF4D8,stroke:#C58A16,color:#553A08,stroke-dasharray:5 3
-
-    P7["Phase 7<br/>IFC Index 与 Target"]:::done
-    P8["Phase 8<br/>L1/L2 Evaluation"]:::done
-    P9["Phase 9<br/>Repair Orchestrator"]:::done
-    P91["Phase 09.1<br/>Type Evidence"]:::done
-    P10["Phase 10<br/>Window L2"]:::done
-    P101["Phase 10.1<br/>精确属性写入"]:::done
-    P102["Phase 10.2<br/>属性知识检索"]:::current
-    BATCH["批量 Window 专项<br/>拟议 Phase 10.3"]:::proposed
-    P11["Phase 11<br/>Opening 与 Door"]:::planned
-    P12["Phase 12<br/>Beam 与 Column"]:::planned
-    P13["Phase 13<br/>大型 IFC 与 128k"]:::planned
-
-    P7 --> P8 --> P9 --> P91 --> P10 --> P101 --> P102
-    P102 --> BATCH
-    P102 --> P11 --> P12 --> P13
-    BATCH -. "批量事务经验" .-> P11
+    F["目标事实与保持范围"] --> P["组织局部语义变更集"]
+    P --> V["核对对象、内容与范围"]
+    V --> A["在模型副本上执行整组修改"]
+    A --> R["保存候选 IFC，交给 Part C"]
+    V -->|"无法继续"| X["保留原模型，说明未完成原因"]
+    A -->|"执行失败"| X
 ```
 
-后续阶段各自解决不同问题：
+**把一个请求作为一个整体。** 若要求同时补梁和柱，就需要两项都完成，不能把只补好梁的模型作为整个请求的成功结果。修改在副本上进行，原始 IFC 保留；整组执行成功后，仍要经过结果核验才能交付。
 
-- **Phase 10.2**：用 buildingSMART IFC2X3 PSD、项目属性、alias/keyword/vector
-  检索，把“U 值”等表达解析成精确候选；确认后继续使用 10.1 写回与 L2。
-- **批量 Window 专项**：同时 damage 和修复 2、5、10 个 Window，验证统一
-  ChangeSet、整体回滚、逐对象 L1/L2 和全局 preservation。
-- **Phase 11**：独立的 Opening 和 Door + Opening Operation。
-- **Phase 12**：Beam 和 Column，证明公共 Pipeline 不依赖 Window。
-- **Phase 13**：大型 IFC 索引、上下文、Provider 稳定性和 128k 实验。
+**保留修改与依据的对应关系。** 每项修改都能追溯到用户要求或当前模型中的授权参照。这样，结果说明可以回答“为什么采用这个类型”“为什么修改这个构件”“具体建立了哪些关系”，并与后续实际检查对应。这里的失败回滚指不提交未完成的整组修改，不包含成功后任意选择一项编辑进行撤销。
 
-Phase 10.2 是当前下一步，但它建立在 Phase 7—10.1 已完成的 Target、Type、
-ChangeSet、写回和验证基础上。它不会替换已有链路。
+### 3.3 Part C：用实际产物核验修复目标
 
-## 9. 详细证据入口
+输入是保存后的候选 IFC 和目标事实，输出是可交付模型及逐项结果，或者明确的未完成原因。我们重新打开文件，读取实际几何、关系和属性，再与目标要求比较。
 
-- [单次完整 Repair Pipeline 输入输出](../validation/ifc2x3-changeset/phase10-single-pipeline-input-output.md)
-- [Phase 7 Target Retrieval 验证](../validation/ifc2x3-changeset/phase7-validation-report.md)
-- [Phase 8 L1/L2 验证](../validation/ifc2x3-changeset/phase8-validation-report.md)
-- [Phase 9 Repair Orchestrator 验证](../validation/ifc2x3-changeset/phase9-validation-report.md)
-- [Phase 09.1 Type Evidence 验证](../validation/ifc2x3-changeset/phase9.1-validation-report.md)
-- [Phase 10 Window L2 验证](../validation/ifc2x3-changeset/phase10-validation-report.md)
-- [Phase 10.1 属性写入验证](../validation/ifc2x3-changeset/phase10.1-validation-report.md)
-- [LargeBuilding Window 属性对比](../validation/ifc2x3-changeset/phase10.1-largebuilding-window-property-comparison.md)
-- [Window 有效属性复刻与 IfcDiff](../validation/ifc2x3-changeset/phase10.1-full-window-replication-and-ifcdiff-report.md)
-- [正式 Roadmap](../../.planning/ROADMAP.md)
+**图 4｜期望状态与实际状态的核对。**
+
+```mermaid
+flowchart TB
+    E["修复目标与保持要求"] --> V["逐项比较要求与实际状态"]
+    I["保存后的 IFC"] --> R["重开并读取几何、关系和语义"]
+    R --> V
+    V --> D{"所有适用要求满足？"}
+    D -->|"是"| O["交付修复 IFC + 结果说明"]
+    D -->|"否"| F["说明未满足项，不交付为成功结果"]
+```
+
+检查围绕三个问题组织：
+
+| 检查重点 | 要回答的问题 | 示例 |
+|---|---|---|
+| 几何与关系 | 构件是否在正确位置，具有正确尺寸和关联？ | 梁的轴线、柱的高度、门与洞口的填充关系 |
+| 请求相关语义 | 要求是否落实到正确对象上？ | 指定 Type、材料、属性和值，以及单实例或共享类型的作用范围 |
+| 非目标保持 | 原本正确的内容是否受到额外影响？ | 其他构件、共享类型定义及原有关系保持不变 |
+
+文件可重新打开、修改对象与请求一致等基础检查贯穿整个过程。只有本次任务的适用要求均成立，才返回成功产物。看到一个形状，或者看到颜色变化，只能说明其中一部分，不能代替对几何、材料和类型关系的分别核验。
+
+这三个 Part 的联系在于同一组目标事实贯穿始终：Part A 解释要求，Part B 落实修改，Part C 从产物确认修改是否成立。由此，修复结果能够对应到具体要求，而不只是一句“已完成”。
+
+## 4. 两个 Demo 案例
+
+### 4.1 案例一：Type 复用与材料修复
+
+**任务。** 在缺失一根梁的模型中补回该梁，复用指定的现存梁型，关联已有的 C_钢筋砼C30 材料，并设置红色外观。这个案例以补梁为载体，重点展示类型、材料和外观如何共同落实。
+
+| 修复前的问题与要求 | 方法如何处理 | 修复后核对什么 |
+|---|---|---|
+| 缺失梁，需要沿用指定 Type | Part A 在当前模型中确定类型参照；Part B 为新梁建立类型关系 | 新梁是否关联指定 Type |
+| 要求使用 C30 材料 | 单独确定材料身份并建立关联 | IFC 中是否存在正确材料关系 |
+| 要求显示为红色 | 将颜色作为独立外观要求落实 | 表面颜色是否为请求的 RGB（0.92、0.12、0.18） |
+| 其他模型内容应当保持 | 限定修改范围，并在 Part C 比较 | 几何及非目标构件是否符合保持要求 |
+
+**案例说明。** 若梁变红了，但没有关联指定材料，任务仍未完成。该区分在已有运行中确实出现过：早期只改颜色而遗漏材料的尝试被保留为失败；后续成功运行分别完成了类型、材料和外观要求。
+
+**当前结果。** 已有真实语言模型参与的运行，机器检查通过，人工视觉审查待完成。这个案例说明了受支持补梁任务中的语义协调与核验，不代表任意现有构件换材或复杂材料层修复都已经验证。[案例与产物](../../dataset/processed/proof/repair/phase12/presentation-cases/case-02-explicit-color/REPORT.md)
+
+### 4.2 案例二：同时补回 Beam 与 Column
+
+**任务。** 同一模型缺失一根梁和一根柱，需要按指定中心轴和几何参数恢复两者，并保持其他模型内容。这个案例重点展示多构件补全如何作为一次完整修改执行。
+
+| 修复前的问题与要求 | 方法如何处理 | 修复后核对什么 |
+|---|---|---|
+| 梁缺失 | 依据已确定的轴线、截面和位置补回水平矩形梁 | 位置、长度、截面及适用关系 |
+| 柱缺失 | 依据已确定的位置、截面和高度补回竖直矩形柱 | 位置、高度、截面及适用关系 |
+| 梁和柱必须同时完成 | 两项修改组成同一个变更集，在副本中执行 | 两个构件均完成，不能仅以其中一个作为整组成功 |
+| 原有模型保持 | 核对目标之外的变化 | 是否出现未要求的修改 |
+
+**当前结果。** 梁柱双操作案例已通过确定性执行、结构恢复和非目标保持检查，并已获人工接受。它采用预先绑定的输入，没有真实语言模型调用，因此主要展示 Part B 与 Part C 的执行和核验，不能作为 Part A 语言理解效果的证据。[案例与产物](../../dataset/processed/proof/repair/phase12/plan07-v2/beam-column-atomic/REPORT.md)
+
+另有语言模型参与的混合案例，在同一请求中补回 2 窗、2 门、1 梁和 1 柱，机器检查通过、人工审查待完成。它补充展示三个 Part 的连接，但其任务范围比单独梁柱更大，结果应分别报告。[混合案例与产物](../../dataset/processed/proof/repair/phase12/presentation-cases/case-03-mixed-material-color/REPORT.md)
+
+## 5. 当前 Demo 展示了什么
+
+目前可以展示的是：自然语言要求如何与当前模型建立联系，类型／材料等语义如何转成局部修改，以及结果如何通过真实 IFC 核验。两个案例分别突出语义关系和几何补全，服务于同一条方法主线。
+
+历史验收中，12 个冻结案例均满足各自验收要求，其中 11 个生成修复产物，1 个正确阻断且无输出。这是有限案例集的结果，不是新盲测上的普遍修复成功率。材料／Type 和混合示例还有各自的配置及审查状态，不与历史案例拼成统一成功率。[历史验收记录](../validation/repair-milestone-r1/repair-proof-matrix-2026-09-03.md)
+
+当前边界也较明确：梁柱限于受支持的矩形几何，Type 复用以当前模型中可用的依据为主，材料与外观只在受支持操作中处理。系统尚未覆盖任意几何修复、任意共享类型编辑或自主发现整栋建筑的全部问题。
+
+## 6. 从 Demo Method 到论文验证
+
+Demo 说明方法怎样工作，论文还需要回答它是否有效，以及收益来自哪一部分。我们准备围绕三个问题组织验证：语义解析能否减少对象、字段和作用范围错误；局部修改能否同时完成目标并保持非目标；这些收益对应多少调用、时间和验证成本。
+
+生产检查主要判断“产物是否符合已解析的目标”。如果最初理解有误，执行与检查可能共同沿用错误目标。因此，恢复实验还需要独立于系统解释的任务参考。我们采用原始模型 G、损坏模型 D 和修复结果 R 的三方关系：G–D 确定损坏，D–R 核对修改与保持，G–R 评价恢复。
+
+**图 5｜修复后的独立评价。**
+
+```mermaid
+flowchart LR
+    G["原始参考 G"] --> GD["G–D：损坏了什么"]
+    D["损坏模型 D"] --> GD
+    D --> DR["D–R：改了什么，保留了什么"]
+    R["修复结果 R"] --> DR
+    G --> GR["G–R：目标是否恢复"]
+    R --> GR
+    GD --> E["独立评价结论"]
+    DR --> E
+    GR --> E
+```
+
+原始参考和损坏记录在实验前确定，只在修复后用于评价，不进入模型的修复输入或重试反馈。公开信息不足时，正确行为可能是澄清；没有生成产物的任务也应按事先规则计入结果。这样才能区分实际恢复、合理阻断和未完成。
+
+局部变更可以减少交给语言模型的无关信息，但系统仍需保存完整 IFC 并执行检查。因此，整体速度、token 和内存优势需要对照实验，不能仅凭变更范围小就得出结论。现有案例支持方法演示，尚不足以建立普遍优越性或独立创新结论。
+
+文献依据继续维护在 [Repair 文献矩阵](../reports/repair-demo/repair-literature-matrix-20260921.md)，候选贡献与实验设计继续维护在 [Claims 与实验设计](../reports/repair-demo/claims-and-experiments.md)。本文作为三份主文档中的展示版 Method，保持原路径更新；沿用[上传原稿](../reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)的路线图、分 Part 和贯穿案例风格，内容按当前方法与证据整理。

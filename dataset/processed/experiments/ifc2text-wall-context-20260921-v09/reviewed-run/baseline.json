@@ -1,0 +1,4208 @@
+{
+  "appearance": {
+    "profile": "neutral-architectural"
+  },
+  "entities": [
+    {
+      "attributes": {
+        "Name": "建筑设计说明"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": -1140.0,
+        "Name": "S01",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            -1140.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-S01",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 40.0,
+        "Name": "S02",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            40.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-S02",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": 1020.0,
+        "Name": "S03",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            1020.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-S03",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "R001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2438.4,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                1824.4,
+                5360.6
+              ],
+              [
+                1824.4,
+                5492.1
+              ],
+              [
+                1927.0,
+                5492.1
+              ],
+              [
+                1927.0,
+                5647.1
+              ],
+              [
+                3267.0,
+                5647.1
+              ],
+              [
+                3267.0,
+                5486.0
+              ],
+              [
+                4262.0,
+                5486.0
+              ],
+              [
+                4262.0,
+                4713.6
+              ],
+              [
+                3713.1,
+                4205.0
+              ],
+              [
+                3267.5,
+                4650.6
+              ],
+              [
+                2777.6,
+                4160.7
+              ],
+              [
+                1824.4,
+                5114.0
+              ],
+              [
+                1824.4,
+                5360.6
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-S01-r001",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "R002",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2438.4,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                3702.4,
+                4031.6
+              ],
+              [
+                3708.2,
+                4037.0
+              ],
+              [
+                4352.0,
+                4633.4
+              ],
+              [
+                4352.0,
+                5456.0
+              ],
+              [
+                6197.0,
+                5456.0
+              ],
+              [
+                6197.0,
+                3652.7
+              ],
+              [
+                5206.4,
+                3639.1
+              ],
+              [
+                4620.8,
+                3113.1
+              ],
+              [
+                4049.0,
+                3684.9
+              ],
+              [
+                3702.4,
+                4031.6
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-S01-r002",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "R003",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2438.4,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                2802.3,
+                4058.2
+              ],
+              [
+                3161.4,
+                4417.3
+              ],
+              [
+                3580.8,
+                3997.9
+              ],
+              [
+                3580.7,
+                3997.7
+              ],
+              [
+                3886.4,
+                3692.0
+              ],
+              [
+                3285.2,
+                3090.8
+              ],
+              [
+                3192.0,
+                2997.7
+              ],
+              [
+                2802.3,
+                4058.2
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-S01-r003",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "R004",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2438.4,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                3152.5,
+                2131.9
+              ],
+              [
+                2909.1,
+                2375.3
+              ],
+              [
+                3370.0,
+                2836.3
+              ],
+              [
+                3613.4,
+                2592.8
+              ],
+              [
+                3152.5,
+                2131.9
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-S01-r004",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "InteriorOrExteriorSpace": "INTERNAL",
+        "Name": "R005",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2438.4,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                1266.5,
+                -780.0
+              ],
+              [
+                1266.5,
+                -380.0
+              ],
+              [
+                781.0,
+                -380.0
+              ],
+              [
+                781.0,
+                5119.0
+              ],
+              [
+                1663.8,
+                5119.0
+              ],
+              [
+                2699.8,
+                4083.0
+              ],
+              [
+                2233.6,
+                3616.7
+              ],
+              [
+                3022.3,
+                2828.0
+              ],
+              [
+                2569.7,
+                2375.3
+              ],
+              [
+                3152.5,
+                1792.5
+              ],
+              [
+                3952.8,
+                2592.8
+              ],
+              [
+                3539.7,
+                3006.0
+              ],
+              [
+                4056.1,
+                3522.3
+              ],
+              [
+                4638.0,
+                2940.4
+              ],
+              [
+                5227.0,
+                3469.3
+              ],
+              [
+                6196.0,
+                3482.6
+              ],
+              [
+                6196.0,
+                -190.7
+              ],
+              [
+                5804.4,
+                -190.7
+              ],
+              [
+                5804.4,
+                -790.0
+              ],
+              [
+                4049.4,
+                -790.0
+              ],
+              [
+                4049.4,
+                -260.0
+              ],
+              [
+                3019.4,
+                -260.0
+              ],
+              [
+                3019.4,
+                -780.0
+              ],
+              [
+                1266.5,
+                -780.0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "space-storey-S01-r005",
+      "ifc_class": "IfcSpace",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            6317.0,
+            4589.4,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 2213.3,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w001",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W002",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            5229.5,
+            5576.0,
+            0.0
+          ],
+          "ref_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1935.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w002",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W003",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            4307.0,
+            5003.0,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 906.0,
+            "y": 90.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w003",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 90.0
+            }
+          ],
+          "offset_from_reference_line": 45.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W004",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3807.0,
+            5591.0,
+            0.0
+          ],
+          "ref_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 910.0,
+            "y": 210.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w004",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 210.0
+            }
+          ],
+          "offset_from_reference_line": 105.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W005",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            5605.6,
+            3559.6,
+            0.0
+          ],
+          "ref_direction": [
+            -0.9999,
+            -0.0138,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1185.3,
+            "y": 170.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w005",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 170.0
+            }
+          ],
+          "offset_from_reference_line": 85.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W006",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            661.0,
+            2369.5,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 5979.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w006",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W007",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            6316.0,
+            1647.6,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 3676.6,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w007",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W008",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1300.2,
+            5239.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1038.4,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w008",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W009",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3267.0,
+            5651.6,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 331.1,
+            "y": 170.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w009",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 170.0
+            }
+          ],
+          "offset_from_reference_line": 85.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W010",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            2604.5,
+            5732.1,
+            0.0
+          ],
+          "ref_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1155.0,
+            "y": 170.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w010",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 170.0
+            }
+          ],
+          "offset_from_reference_line": 85.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W011",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            2220.7,
+            4639.9,
+            0.0
+          ],
+          "ref_direction": [
+            0.7071,
+            -0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1465.1,
+            "y": 110.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w011",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 110.0
+            }
+          ],
+          "offset_from_reference_line": 55.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W012",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            2782.4,
+            4101.9,
+            0.0
+          ],
+          "ref_direction": [
+            0.7071,
+            0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1462.2,
+            "y": 90.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w012",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 90.0
+            }
+          ],
+          "offset_from_reference_line": 45.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W013",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            4882.9,
+            3254.4,
+            0.0
+          ],
+          "ref_direction": [
+            0.744,
+            0.6682,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 799.2,
+            "y": 140.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w013",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 140.0
+            }
+          ],
+          "offset_from_reference_line": 70.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W014",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            4121.2,
+            3534.9,
+            0.0
+          ],
+          "ref_direction": [
+            -0.7071,
+            0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1303.1,
+            "y": 110.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w014",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 110.0
+            }
+          ],
+          "offset_from_reference_line": 55.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W015",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3940.1,
+            4333.6,
+            0.0
+          ],
+          "ref_direction": [
+            0.7335,
+            0.6797,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 988.7,
+            "y": 120.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w015",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 120.0
+            }
+          ],
+          "offset_from_reference_line": 60.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W016",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            2946.0,
+            2168.8,
+            0.0
+          ],
+          "ref_direction": [
+            0.7071,
+            -0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 824.3,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w016",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W017",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3467.9,
+            2277.6,
+            0.0
+          ],
+          "ref_direction": [
+            0.7071,
+            0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 651.8,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w017",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W018",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3576.6,
+            2799.4,
+            0.0
+          ],
+          "ref_direction": [
+            -0.7071,
+            0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 824.2,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w018",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W019",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3054.7,
+            2690.7,
+            0.0
+          ],
+          "ref_direction": [
+            0.7072,
+            0.707,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 651.9,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w019",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W020",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3713.1,
+            3349.0,
+            0.0
+          ],
+          "ref_direction": [
+            0.707,
+            0.7072,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 730.2,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w020",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W021",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            2744.7,
+            3275.4,
+            0.0
+          ],
+          "ref_direction": [
+            0.7071,
+            -0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1025.4,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w021",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W022",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3437.3,
+            4311.2,
+            0.0
+          ],
+          "ref_direction": [
+            0.7071,
+            -0.7071,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 540.1,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w022",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W023",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            2023.0,
+            -900.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1992.9,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w023",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W024",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3139.4,
+            -640.0,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 760.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w024",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W025",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3534.4,
+            -380.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 550.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w025",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W026",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            3929.4,
+            -645.0,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 770.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w026",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W027",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            5046.9,
+            -910.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1995.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w027",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W028",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            5924.4,
+            -490.4,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 599.3,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w028",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W029",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            6240.2,
+            -310.7,
+            0.0
+          ],
+          "ref_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 391.6,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w029",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W030",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1146.5,
+            -580.0,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 400.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w030",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W031",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            903.8,
+            -500.0,
+            0.0
+          ],
+          "ref_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 245.5,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w031",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W032",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1704.4,
+            5303.1,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 378.1,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w032",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 240.0
+            }
+          ],
+          "offset_from_reference_line": 120.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W033",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1927.0,
+            5654.6,
+            0.0
+          ],
+          "ref_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 325.0,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w033",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 200.0
+            }
+          ],
+          "offset_from_reference_line": 100.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W034",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1705.7,
+            5592.1,
+            0.0
+          ],
+          "ref_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 242.6,
+            "y": 200.0
+          }
+        }
+      },
+      "id": "wall-storey-S01-w034",
+      "ifc_class": "IfcWall",
+      "materials": [
+        {
+          "direction": "AXIS2",
+          "direction_sense": "NEGATIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "默认墙",
+          "layers": [
+            {
+              "name": "默认墙",
+              "thickness": 200.0
+            }
+          ],
+          "offset_from_reference_line": 100.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            688.4,
+            261.6,
+            830.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w005"
+        },
+        "Representation": {
+          "depth": 1100.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 544.0,
+            "y": 500.2
+          }
+        }
+      },
+      "id": "opening-storey-S01-o001",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O002",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            611.1,
+            -340.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w012"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 240.0,
+            "y": 300.0
+          }
+        }
+      },
+      "id": "opening-storey-S01-o002",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O003",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            -362.0,
+            395.2,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w013"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 142.0,
+            "y": 605.0
+          }
+        }
+      },
+      "id": "opening-storey-S01-o003",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O004",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1007.5,
+            54.8,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w014"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 300.0,
+            "y": 3048.0
+          }
+        }
+      },
+      "id": "opening-storey-S01-o004",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O005",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            -383.3,
+            300.4,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w015"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 251.3,
+            "y": 308.9
+          }
+        }
+      },
+      "id": "opening-storey-S01-o005",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O006",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            -136.9,
+            0.0,
+            855.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w005"
+        },
+        "Representation": {
+          "depth": 1100.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 850.0,
+            "y": 170.0
+          }
+        }
+      },
+      "id": "opening-window-storey-S01-n002",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O007",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            1366.7,
+            0.0,
+            855.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w007"
+        },
+        "Representation": {
+          "depth": 1100.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 850.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "opening-window-storey-S01-n001",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O008",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            -129.2,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w008"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 700.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d005",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O009",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            337.7,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w011"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 600.0,
+            "y": 110.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d006",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O010",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            51.0,
+            0.0,
+            830.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w013"
+        },
+        "Representation": {
+          "depth": 1100.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 600.0,
+            "y": 140.0
+          }
+        }
+      },
+      "id": "opening-window-storey-S01-n003",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O011",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            -322.9,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w014"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 600.0,
+            "y": 110.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d003",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O012",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            40.1,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w020"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 600.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d004",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O013",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            25.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w022"
+        },
+        "Representation": {
+          "depth": 2050.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 300.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d007",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O014",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            165.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w023"
+        },
+        "Representation": {
+          "depth": 2000.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1600.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d002",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "O015",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            -152.5,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "wall-storey-S01-w027"
+        },
+        "Representation": {
+          "depth": 2000.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "rectangle",
+            "x": 1600.0,
+            "y": 240.0
+          }
+        }
+      },
+      "id": "opening-door-storey-S01-d001",
+      "ifc_class": "IfcOpeningElement",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d001"
+        },
+        "OverallHeight": 2000.0,
+        "OverallWidth": 1600.0,
+        "Representation": {
+          "depth": 240.0,
+          "height": 2000.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1600.0
+        }
+      },
+      "id": "door-storey-S01-d001",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D002",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d002"
+        },
+        "OverallHeight": 2000.0,
+        "OverallWidth": 1600.0,
+        "Representation": {
+          "depth": 240.0,
+          "height": 2000.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 1600.0
+        }
+      },
+      "id": "door-storey-S01-d002",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D003",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d003"
+        },
+        "OverallHeight": 2050.0,
+        "OverallWidth": 600.0,
+        "Representation": {
+          "depth": 110.0,
+          "height": 2050.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 600.0
+        }
+      },
+      "id": "door-storey-S01-d003",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D004",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d004"
+        },
+        "OverallHeight": 2050.0,
+        "OverallWidth": 600.0,
+        "Representation": {
+          "depth": 240.0,
+          "height": 2050.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 600.0
+        }
+      },
+      "id": "door-storey-S01-d004",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D005",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d005"
+        },
+        "OverallHeight": 2050.0,
+        "OverallWidth": 700.0,
+        "Representation": {
+          "depth": 240.0,
+          "height": 2050.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 700.0
+        }
+      },
+      "id": "door-storey-S01-d005",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D006",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d006"
+        },
+        "OverallHeight": 2050.0,
+        "OverallWidth": 600.0,
+        "Representation": {
+          "depth": 110.0,
+          "height": 2050.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 600.0
+        }
+      },
+      "id": "door-storey-S01-d006",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "D007",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-door-storey-S01-d007"
+        },
+        "OverallHeight": 2050.0,
+        "OverallWidth": 300.0,
+        "Representation": {
+          "depth": 240.0,
+          "height": 2050.0,
+          "kind": "basic_filling",
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 300.0
+        }
+      },
+      "id": "door-storey-S01-d007",
+      "ifc_class": "IfcDoor",
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "N001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-window-storey-S01-n001"
+        },
+        "OverallHeight": 1100.0,
+        "OverallWidth": 850.0,
+        "Representation": {
+          "depth": 240.0,
+          "height": 1100.0,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 850.0
+        }
+      },
+      "id": "window-storey-S01-n001",
+      "ifc_class": "IfcWindow",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "金属漆_冷灰"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "N002",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-window-storey-S01-n002"
+        },
+        "OverallHeight": 1100.0,
+        "OverallWidth": 850.0,
+        "Representation": {
+          "depth": 170.0,
+          "height": 1100.0,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 850.0
+        }
+      },
+      "id": "window-storey-S01-n002",
+      "ifc_class": "IfcWindow",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "金属漆_冷灰"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "N003",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "opening-window-storey-S01-n003"
+        },
+        "OverallHeight": 1100.0,
+        "OverallWidth": 600.0,
+        "Representation": {
+          "depth": 140.0,
+          "height": 1100.0,
+          "kind": "basic_filling",
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0",
+          "width": 600.0
+        }
+      },
+      "id": "window-storey-S01-n003",
+      "ifc_class": "IfcWindow",
+      "materials": [
+        {
+          "kind": "single_material",
+          "name": "金属漆_冷灰"
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "L001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            -300.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "PredefinedType": "FLOOR",
+        "Representation": {
+          "depth": 300.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                1026.5,
+                -1020.0
+              ],
+              [
+                1026.5,
+                -620.0
+              ],
+              [
+                541.0,
+                -620.0
+              ],
+              [
+                541.0,
+                5354.0
+              ],
+              [
+                1584.4,
+                5354.0
+              ],
+              [
+                1584.4,
+                5692.1
+              ],
+              [
+                1827.0,
+                5692.1
+              ],
+              [
+                1827.0,
+                5817.1
+              ],
+              [
+                3352.0,
+                5817.1
+              ],
+              [
+                3352.0,
+                5696.0
+              ],
+              [
+                6436.0,
+                5696.0
+              ],
+              [
+                6436.0,
+                -430.7
+              ],
+              [
+                6044.4,
+                -430.7
+              ],
+              [
+                6044.4,
+                -1030.0
+              ],
+              [
+                3809.4,
+                -1030.0
+              ],
+              [
+                3809.4,
+                -500.0
+              ],
+              [
+                3259.4,
+                -500.0
+              ],
+              [
+                3259.4,
+                -1020.0
+              ],
+              [
+                1026.5,
+                -1020.0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "L001",
+      "ifc_class": "IfcSlab",
+      "materials": [
+        {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "<Unnamed>",
+          "layers": [
+            {
+              "name": "<Unnamed>",
+              "thickness": 300.0
+            }
+          ],
+          "offset_from_reference_line": 0.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "C001",
+        "ObjectPlacement": {
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "storey-S03"
+        },
+        "PredefinedType": "CEILING",
+        "Representation": {
+          "depth": 300.0,
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                1026.5,
+                -1020.0
+              ],
+              [
+                1026.5,
+                -620.0
+              ],
+              [
+                544.4,
+                -620.0
+              ],
+              [
+                544.4,
+                5367.1
+              ],
+              [
+                1584.4,
+                5367.1
+              ],
+              [
+                1584.4,
+                5692.1
+              ],
+              [
+                1827.0,
+                5692.1
+              ],
+              [
+                1827.0,
+                5817.1
+              ],
+              [
+                3352.0,
+                5817.1
+              ],
+              [
+                3352.0,
+                5696.0
+              ],
+              [
+                6436.0,
+                5696.0
+              ],
+              [
+                6436.0,
+                -430.7
+              ],
+              [
+                6044.4,
+                -430.7
+              ],
+              [
+                6044.4,
+                -1030.0
+              ],
+              [
+                3809.4,
+                -1030.0
+              ],
+              [
+                3809.4,
+                -500.0
+              ],
+              [
+                3259.4,
+                -500.0
+              ],
+              [
+                3259.4,
+                -1020.0
+              ],
+              [
+                1026.5,
+                -1020.0
+              ]
+            ]
+          }
+        }
+      },
+      "id": "C001",
+      "ifc_class": "IfcCovering",
+      "materials": [
+        {
+          "direction": "AXIS3",
+          "direction_sense": "POSITIVE",
+          "kind": "material_layer_set_usage",
+          "layer_set_name": "<Unnamed>",
+          "layers": [
+            {
+              "name": "<Unnamed>",
+              "thickness": 300.0
+            }
+          ],
+          "offset_from_reference_line": 0.0
+        }
+      ],
+      "property_sets": {},
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "notes": "wall reference axes placed at bottom centers; openings converted to host frames (local X = s - L/2); polygon rings closed; windows kept on storey-S01 per host wall with source record storey-S02.",
+    "source": "text2ifc/design-brief/2.7",
+    "turn_id": "turn-user-001"
+  },
+  "relationships": [
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-storey-S01-o001",
+        "RelatingBuildingElement": "wall-storey-S01-w005"
+      },
+      "id": "void-opening-storey-S01-o001",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-storey-S01-o002",
+        "RelatingBuildingElement": "wall-storey-S01-w012"
+      },
+      "id": "void-opening-storey-S01-o002",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-storey-S01-o003",
+        "RelatingBuildingElement": "wall-storey-S01-w013"
+      },
+      "id": "void-opening-storey-S01-o003",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-storey-S01-o004",
+        "RelatingBuildingElement": "wall-storey-S01-w014"
+      },
+      "id": "void-opening-storey-S01-o004",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-storey-S01-o005",
+        "RelatingBuildingElement": "wall-storey-S01-w015"
+      },
+      "id": "void-opening-storey-S01-o005",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-window-storey-S01-n001",
+        "RelatingBuildingElement": "wall-storey-S01-w007"
+      },
+      "id": "void-opening-window-storey-S01-n001",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-window-storey-S01-n002",
+        "RelatingBuildingElement": "wall-storey-S01-w005"
+      },
+      "id": "void-opening-window-storey-S01-n002",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-window-storey-S01-n003",
+        "RelatingBuildingElement": "wall-storey-S01-w013"
+      },
+      "id": "void-opening-window-storey-S01-n003",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d001",
+        "RelatingBuildingElement": "wall-storey-S01-w027"
+      },
+      "id": "void-opening-door-storey-S01-d001",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d002",
+        "RelatingBuildingElement": "wall-storey-S01-w023"
+      },
+      "id": "void-opening-door-storey-S01-d002",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d003",
+        "RelatingBuildingElement": "wall-storey-S01-w014"
+      },
+      "id": "void-opening-door-storey-S01-d003",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d004",
+        "RelatingBuildingElement": "wall-storey-S01-w020"
+      },
+      "id": "void-opening-door-storey-S01-d004",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d005",
+        "RelatingBuildingElement": "wall-storey-S01-w008"
+      },
+      "id": "void-opening-door-storey-S01-d005",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d006",
+        "RelatingBuildingElement": "wall-storey-S01-w011"
+      },
+      "id": "void-opening-door-storey-S01-d006",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedOpeningElement": "opening-door-storey-S01-d007",
+        "RelatingBuildingElement": "wall-storey-S01-w022"
+      },
+      "id": "void-opening-door-storey-S01-d007",
+      "ifc_class": "IfcRelVoidsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-S01-n001",
+        "RelatingOpeningElement": "opening-window-storey-S01-n001"
+      },
+      "id": "fill-window-storey-S01-n001",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-S01-n002",
+        "RelatingOpeningElement": "opening-window-storey-S01-n002"
+      },
+      "id": "fill-window-storey-S01-n002",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "window-storey-S01-n003",
+        "RelatingOpeningElement": "opening-window-storey-S01-n003"
+      },
+      "id": "fill-window-storey-S01-n003",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d001",
+        "RelatingOpeningElement": "opening-door-storey-S01-d001"
+      },
+      "id": "fill-door-storey-S01-d001",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d002",
+        "RelatingOpeningElement": "opening-door-storey-S01-d002"
+      },
+      "id": "fill-door-storey-S01-d002",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d003",
+        "RelatingOpeningElement": "opening-door-storey-S01-d003"
+      },
+      "id": "fill-door-storey-S01-d003",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d004",
+        "RelatingOpeningElement": "opening-door-storey-S01-d004"
+      },
+      "id": "fill-door-storey-S01-d004",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d005",
+        "RelatingOpeningElement": "opening-door-storey-S01-d005"
+      },
+      "id": "fill-door-storey-S01-d005",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d006",
+        "RelatingOpeningElement": "opening-door-storey-S01-d006"
+      },
+      "id": "fill-door-storey-S01-d006",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "RelatedBuildingElement": "door-storey-S01-d007",
+        "RelatingOpeningElement": "opening-door-storey-S01-d007"
+      },
+      "id": "fill-door-storey-S01-d007",
+      "ifc_class": "IfcRelFillsElement",
+      "provenance": {
+        "source": "turn-user-001"
+      }
+    }
+  ],
+  "schema_version": "bim-json/2.3",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}

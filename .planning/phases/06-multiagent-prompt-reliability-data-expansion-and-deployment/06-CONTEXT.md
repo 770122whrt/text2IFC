@@ -111,7 +111,7 @@ split safety.
 
 ### Prior-phase evidence
 
-- `docs/architecture/phase-4-summary.md` - generated IFC gate, fidelity
+- `docs/architecture/history/phase-4-summary.md` - generated IFC gate, fidelity
   accounting, and Phase 6 supported-scope boundary.
 - `.planning/phases/04-high-fidelity-ifc-round-trip/04-SPEC.md` - generated
   IFC correctness and high-fidelity boundaries.

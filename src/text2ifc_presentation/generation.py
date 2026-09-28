@@ -49,7 +49,7 @@ def apply_coordinated_appearance(model, document, context):
         type_record = records.get(_identity(type_object), {}) if type_object else {}
         explicit = record.get('appearance') or type_record.get('appearance')
         source = 'user' if record.get('appearance') else 'type' if explicit else 'theme'
-        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3'} else {}
+        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} else {}
         if overrides:
             source = 'user-parts'
         material = util.get_material(product)
@@ -100,9 +100,12 @@ def verify_appearance(model, document):
             continue
         identity = _identity(product)
         record = records.get(identity, {})
+        if document.get('schema_version') == 'bim-json/2.6' and record.get('attributes',{}).get('Representation',{}).get('kind') == 'component_geometry':
+            # Dedicated component verification checks every stable part and solid.
+            continue
         type_object = util.get_type(product)
         explicit = record.get('appearance') or (records.get(_identity(type_object), {}).get('appearance') if type_object else None)
-        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3'} else {}
+        overrides = record.get('part_appearance', {}) if document.get('schema_version') in {'bim-json/2.2', 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} else {}
         roles = {}
         for aspect in getattr(product.Representation, 'HasShapeAspects', ()):
             role = {'Framing':'frame','Lining':'frame','Glazing':'glazing','Panel':'panel'}.get(aspect.Name)

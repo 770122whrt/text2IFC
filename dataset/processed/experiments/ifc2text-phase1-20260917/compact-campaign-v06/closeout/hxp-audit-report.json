@@ -1,0 +1,73 @@
+{
+  "blocking": true,
+  "deterministic_gate_status": "failed",
+  "evidence_paths": [
+    "design-brief/design-brief.json",
+    "generator/candidate.json",
+    "generator/validation.json",
+    "generator/metrics.json",
+    "gate-summary.json",
+    "geometry-feedback.json",
+    "semantic-geometry-expectation.json",
+    "ifc-verification.json",
+    "repair/route.json",
+    "repair/metrics.json"
+  ],
+  "findings": [
+    {
+      "blocking": true,
+      "code": "geometry_expectation_incomplete_gate",
+      "evidence_paths": [
+        "geometry-feedback.json",
+        "gate-summary.json",
+        "semantic-geometry-expectation.json",
+        "generator/candidate.json",
+        "generator/validation.json"
+      ],
+      "message": "Deterministic geometry gate failed and cannot be overridden by audit wording: geometry_success=false and gate_summary_passed=false while gate binding itself is valid. geometry_feedback lists 8 GEOMETRY_EXPECTATION_INCOMPLETE issues: space_geometry_missing for /known_facts/storeys/0/spaces/0 through /known_facts/storeys/0/spaces/4, and storey_elevation_or_net_height_missing for /known_facts/storeys/0, /known_facts/storeys/1, /known_facts/storeys/2. metrics.expectation_complete=false and unresolved_expectation_count=8, and metrics.spaces is an empty object, so space geometry was never compared even though the terminal candidate carries five IfcSpace entities (space-storey-S01-r001..r005) with closed polygon profiles extruded 2438.4 from storey-S01. Compile/reopen verification (ifc-verification.json: success=true, ifc_issues=[]) and generator schema validation passed, but the geometry gate is authoritative and remains failed, so the run stays blocking.",
+      "recommendation": "revise"
+    },
+    {
+      "blocking": true,
+      "code": "gate_dispute",
+      "component_ids": [
+        "space-storey-S01-r001",
+        "space-storey-S01-r002",
+        "space-storey-S01-r003",
+        "space-storey-S01-r004",
+        "space-storey-S01-r005",
+        "storey-S01",
+        "storey-S02",
+        "storey-S03"
+      ],
+      "evidence_paths": [
+        "geometry-feedback.json",
+        "semantic-geometry-expectation.json",
+        "design-brief/design-brief.json",
+        "generator/candidate.json",
+        "gate-summary.json"
+      ],
+      "message": "Interpretation of the geometry feedback: this is a blocked-pipeline / expectation-derivation problem, not a demonstrated candidate geometry defect. The only reasons reported are GEOMETRY_EXPECTATION_INCOMPLETE with code reason space_geometry_missing and storey_elevation_or_net_height_missing, i.e. 'Required geometry could not be derived from confirmed facts', not a geometric mismatch against a derived expectation. The same gate did compute wall and slab geometry (22 wall bboxes, L001 bbox x 0.541..6.436, y -1.03..5.8171, z -1.44..-1.14, and IfcSlab L001 is present in the candidate at storey-S01 with origin z=-300.0 and depth 300.0), while metrics.spaces remained empty. The Design Brief facts that would permit space/storey geometry confirmation are themselves absent or unconfirmed: storeys/0/spaces/0..4 all carry boundary_walls_confirmed=false and the brief records SPACE_INSUFFICIENT_WALLS extraction limits, so the expectation side has no confirmed basis to derive space geometry. Because the expectation source could not build the comparison, the geometry gate cannot certify the candidate; this dispute blocks human/developer review and is never acceptance. Recommend re-running the geometry expectation pass with spatial boundary confirmation or an explicit storey net-height fact before accepting.",
+      "recommendation": "revise"
+    },
+    {
+      "blocking": false,
+      "code": "window_storey_attribution_trace",
+      "component_ids": [
+        "window-storey-S01-n001",
+        "window-storey-S01-n002",
+        "window-storey-S01-n003",
+        "opening-window-storey-S01-n001",
+        "opening-window-storey-S01-n002",
+        "opening-window-storey-S01-n003"
+      ],
+      "evidence_paths": [
+        "design-brief/design-brief.json",
+        "generator/candidate.json"
+      ],
+      "message": "Non-blocking traceability note. Design Brief ambiguity amb-window-recorded-storey resolved to host-wall attribution (storey-S01) while preserving the source-recorded S02 attribution. The candidate does place the windows on their hosts: opening-window-storey-S01-n001 on wall-storey-S01-w007, opening-window-storey-S01-n002 on wall-storey-S01-w005, opening-window-storey-S01-n003 on wall-storey-S01-w013, with window-storey-S01-n001/n002/n003 nested at local origin 0,0,0 and sill offsets 855.0/855.0/830.0 matching the brief. The source-recorded S02 attribution survives only in the document provenance note, not as a per-window attribute, because window-storey-S01-n001..n003 carry no property_sets. Geometry matches the host-wall and opening frames (for example N001 bbox x 6196.0..6436.0 on wall W007 whose bbox x is 6.196..6.436), so no opening/filling orientation mismatch or sil height inconsistency is found here; recorded for traceability only."
+    }
+  ],
+  "recommendation": "revise",
+  "schema_version": "text2ifc/audit/2.0"
+}

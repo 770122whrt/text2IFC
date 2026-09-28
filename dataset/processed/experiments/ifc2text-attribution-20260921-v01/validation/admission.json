@@ -1,0 +1,52 @@
+{
+  "status": "admitted",
+  "code_commit": "8327408c2457c35148cb4556717401ece80c382b",
+  "ancestor_admission": "dataset\\processed\\experiments\\ifc2text-phase1-20260917\\compact-campaign-v06\\validation\\admission.json",
+  "ancestor_commit": "4363102b2a224a07b64310a01e9a2bdab526916c",
+  "brief_chain_unchanged": true,
+  "generation_function_delta": [
+    "_feedback_resume_state",
+    "_run_ready_session_to_ifc"
+  ],
+  "command": [
+    "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+    "-c",
+    "import sys,json,pytest\nfrom pathlib import Path\nfrom scripts.ifc2text.validate_goal import OfflineRecorder\ng=OfflineRecorder()\nwith g.network_guard():\n rc=pytest.main(sys.argv[1:],plugins=[g])\nPath('E:\\\\code for project\\\\bimnet\\\\dataset\\\\processed\\\\experiments\\\\ifc2text-attribution-20260921-v01\\\\validation\\\\network.json').write_text(json.dumps({\"network_attempts\":g.network_attempts}),encoding=\"utf-8\")\nraise SystemExit(rc if g.network_attempts==0 else 1)",
+    "-o",
+    "addopts=",
+    "tests/ifc2text/test_attribution_probe_v01.py",
+    "tests/ifc2text/test_goal_budget_v03.py",
+    "tests/ifc2text/test_transport_retry_public.py",
+    "tests/agent/test_public_brief_failure_evidence.py",
+    "tests/ifc2text/test_compact_public_v04.py",
+    "-q",
+    "--basetemp=E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-attribution-20260921-v01\\validation\\tmp-ee2d80d732ff",
+    "-p",
+    "no:cacheprovider",
+    "--junitxml=E:\\code for project\\bimnet\\dataset\\processed\\experiments\\ifc2text-attribution-20260921-v01\\validation\\tests.xml"
+  ],
+  "counts": {
+    "tests": 33,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "exit_code": 0,
+  "elapsed_s": 36.78573036193848,
+  "compileall": true,
+  "scope_clean": true,
+  "scope_paths": [
+    "src/text2ifc_agent",
+    "src/text2ifc_ifc2text",
+    "src/text2ifc_compiler",
+    "prompts/agent",
+    "schemas/agent/design-brief",
+    "scripts/ifc2text/attribution_probe_v01.py",
+    "scripts/ifc2text/attribute_roundtrip_v01.py",
+    "tests/ifc2text/test_attribution_probe_v01.py"
+  ],
+  "network_transport_attempted": false,
+  "public_path": "public Brief controller only; downstream generation disabled",
+  "full_preflight": false,
+  "evidence_kind": "offline replay and failure injection; not live model evidence"
+}

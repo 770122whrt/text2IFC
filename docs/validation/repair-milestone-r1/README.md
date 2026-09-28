@@ -24,7 +24,7 @@ Plan 07 原 validation 0.2 继续作为独立 Proof。最终代码四案的第�
 三个 repaired IFC 的 reopen/L0/L1/L2 或 unsupported guard，留待后续修复。
 
 详见[最终 Proof Matrix](repair-proof-matrix-2026-09-03.md)和
-[闭合 handoff](../../handoffs/repair-milestone-r1-closure-2026-09-03.md)。
+[闭合 handoff](../../handoffs/repair/repair-milestone-r1-closure-2026-09-03.md)。
 
 ## 冻结结论
 
@@ -56,9 +56,9 @@ curation 全部通过后，才能升级为已接受能力。
 - [R1 Proof profiles](repair-proof-profiles.json)
 - [R1 evaluator 预算补充说明](repair-evaluation-budget-addendum.md)
 - [Plan 07 / R1 genuine execution matrix](plan07-r1-genuine-execution-matrix-2026-09-01.md)
-- [2026-09-01 checkpoint handoff](../../handoffs/repair-milestone-r1-checkpoint-2026-09-01.md)
+- [2026-09-01 checkpoint handoff](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md)
 - [2026-09-03 final Proof Matrix](repair-proof-matrix-2026-09-03.md)
-- [2026-09-03 closure handoff](../../handoffs/repair-milestone-r1-closure-2026-09-03.md)
+- [2026-09-03 closure handoff](../../handoffs/repair/repair-milestone-r1-closure-2026-09-03.md)
 
 ## 冻结时后续执行顺序（历史计划，现已完成）
 

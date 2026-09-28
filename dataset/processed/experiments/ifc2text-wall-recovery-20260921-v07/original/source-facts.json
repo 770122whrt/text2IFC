@@ -1,0 +1,6006 @@
+{
+  "schema_version": "text2ifc/ifc2text-facts/0.2",
+  "source": {
+    "path": "E:\\code for project\\bimnet\\dataset\\external\\bimnet\\hxp.ifc",
+    "sha256": "sha256:31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+    "ifc_schema": "IFC2X3",
+    "size_bytes": 315414
+  },
+  "units": {
+    "length": "millimetre",
+    "area": "square_metre"
+  },
+  "coordinate_system": {
+    "frame": "ifc_world",
+    "axis_convention": "source IFC placement; no inferred north"
+  },
+  "building": {
+    "project_name": null,
+    "building_name": null,
+    "storey_count": 3
+  },
+  "storeys": [
+    {
+      "label": "S01",
+      "source_global_id": "0NecgMSWfCx99iBiCL933E",
+      "name": "地板标高",
+      "elevation_mm": -1140.0,
+      "walls": [
+        {
+          "label": "W001",
+          "source_global_id": "226kTvWe52dBaVNzWNVUTS",
+          "name": "基本墙:墙240:3866",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            6317.0,
+            3482.661,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            6317.0,
+            5696.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 2213.339,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              6197.0,
+              6437.0
+            ],
+            "y": [
+              3482.661,
+              5696.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            6317.0,
+            4589.331,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            6317.0,
+            4589.331,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                6437.0,
+                5696.0
+              ],
+              [
+                6197.0,
+                5696.0
+              ],
+              [
+                6197.0,
+                5456.0
+              ],
+              [
+                6197.0,
+                3652.677558070998
+              ],
+              [
+                6197.0,
+                3482.66149718926
+              ],
+              [
+                6436.0,
+                3485.946860384203
+              ],
+              [
+                6437.0,
+                3485.9606066737215
+              ],
+              [
+                6437.0,
+                5696.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 530805.3475364422
+          }
+        },
+        {
+          "label": "W002",
+          "source_global_id": "226kTvWe52dBaVNzWNVVWk",
+          "name": "基本墙:墙240:4200",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            6197.0,
+            5576.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            4261.954,
+            5576.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 1935.046,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              4261.954,
+              6197.0
+            ],
+            "y": [
+              5456.0,
+              5696.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            5229.477,
+            5576.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            5229.477,
+            5576.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                4261.954363403713,
+                5456.0
+              ],
+              [
+                6197.000000000002,
+                5456.0
+              ],
+              [
+                6197.000000000002,
+                5696.0
+              ],
+              [
+                4261.954363403713,
+                5696.0
+              ],
+              [
+                4261.954363403713,
+                5456.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 464410.9527831094
+          }
+        },
+        {
+          "label": "W003",
+          "source_global_id": "0oxd$6NH1DgPkgiwIwD4Nu",
+          "name": "基本墙:墙90:4410",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            4306.954,
+            5456.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            4306.954,
+            4549.987,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "length_mm": 906.013,
+          "thickness_mm": 90.0,
+          "height_mm": 2160.0,
+          "orientation": "south",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              4261.954,
+              4351.954
+            ],
+            "y": [
+              4549.987,
+              5456.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            4306.954,
+            5002.994,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            4306.954,
+            5002.994,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙90",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 90.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 45.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                4261.95436340372,
+                4549.98656458607
+              ],
+              [
+                4351.95436340372,
+                4633.368807214839
+              ],
+              [
+                4351.95436340372,
+                5456.0
+              ],
+              [
+                4261.95436340372,
+                5456.0
+              ],
+              [
+                4261.95436340372,
+                4713.571939568352
+              ],
+              [
+                4261.95436340372,
+                4549.98656458607
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 77789.00826895909
+          }
+        },
+        {
+          "label": "W004",
+          "source_global_id": "0oxd$6NH1DgPkgiwIwD4Q7",
+          "name": "基本墙:墙210:4677",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            4261.954,
+            5591.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3352.0,
+            5591.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 909.954,
+          "thickness_mm": 210.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3352.0,
+              4261.954
+            ],
+            "y": [
+              5486.0,
+              5696.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3806.977,
+            5591.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3806.977,
+            5591.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙210",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 210.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 105.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3352.0000000000023,
+                5486.0
+              ],
+              [
+                4261.954363403719,
+                5486.0
+              ],
+              [
+                4261.954363403719,
+                5696.0
+              ],
+              [
+                3352.0000000000023,
+                5696.0
+              ],
+              [
+                3352.0000000000023,
+                5486.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 191090.41631478054
+          }
+        },
+        {
+          "label": "W005",
+          "source_global_id": "2R3hYUonf5OxYPUpi0xGyt",
+          "name": "基本墙:墙170:5110",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O001",
+            "O006"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            6198.168,
+            3567.686,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            5013.002,
+            3551.394,
+            -1140.0
+          ],
+          "axis_direction": [
+            -0.999906,
+            -0.013745,
+            0.0
+          ],
+          "length_mm": 1185.278,
+          "thickness_mm": 170.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              5014.17,
+              6197.0
+            ],
+            "y": [
+              3466.402,
+              3652.678
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            5605.585,
+            3559.54,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            5605.585,
+            3559.54,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙170",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 170.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 85.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                5206.422384470981,
+                3639.060791377297
+              ],
+              [
+                5014.170347982809,
+                3466.4019783414547
+              ],
+              [
+                5226.952398466651,
+                3469.3269420117645
+              ],
+              [
+                6196.000000000001,
+                3482.647750899735
+              ],
+              [
+                6197.000000000006,
+                3482.6614971892536
+              ],
+              [
+                6197.000000000007,
+                3652.6775580709914
+              ],
+              [
+                5206.422384470981,
+                3639.060791377297
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 184757.07115997488
+          }
+        },
+        {
+          "label": "W006",
+          "source_global_id": "0ts1NuGzn4BQ$mq81bsDcG",
+          "name": "基本墙:墙240:6589",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            661.0,
+            5359.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            661.0,
+            -620.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "length_mm": 5979.0,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "south",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              541.0,
+              781.0
+            ],
+            "y": [
+              -620.0,
+              5359.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            661.0,
+            2369.5,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            661.0,
+            2369.5,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                781.0,
+                -620.0
+              ],
+              [
+                781.0,
+                5359.0
+              ],
+              [
+                541.0,
+                5359.0
+              ],
+              [
+                541.0,
+                -620.0
+              ],
+              [
+                781.0,
+                -620.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 1434960.0
+          }
+        },
+        {
+          "label": "W007",
+          "source_global_id": "0ts1NuGzn4BQ$mq81bsDkC",
+          "name": "基本墙:墙240:7073",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O007"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            6316.0,
+            -190.695,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            6316.0,
+            3485.947,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 3676.642,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              6196.0,
+              6436.0
+            ],
+            "y": [
+              -190.695,
+              3485.947
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            6316.0,
+            1647.626,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            6316.0,
+            1647.626,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                6436.0,
+                3485.9468603841988
+              ],
+              [
+                6197.0,
+                3482.661497189259
+              ],
+              [
+                6196.0,
+                3482.647750899739
+              ],
+              [
+                6196.0,
+                -190.694663917161
+              ],
+              [
+                6436.0,
+                -190.694663917161
+              ],
+              [
+                6436.0,
+                3485.9468603841988
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 881998.0726941914
+          }
+        },
+        {
+          "label": "W008",
+          "source_global_id": "0ts1NuGzn4BQ$mq81bsE3G",
+          "name": "基本墙:墙240:8445",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O008"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            781.0,
+            5239.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            1819.351,
+            5239.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 1038.351,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              781.0,
+              1819.351
+            ],
+            "y": [
+              5119.0,
+              5359.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            1300.176,
+            5239.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            1300.176,
+            5239.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                781.0,
+                5119.0
+              ],
+              [
+                1663.787174589726,
+                5119.0
+              ],
+              [
+                1819.35066645077,
+                5119.0
+              ],
+              [
+                1584.3506664507659,
+                5354.0
+              ],
+              [
+                1579.350666450767,
+                5359.0
+              ],
+              [
+                781.0,
+                5359.0
+              ],
+              [
+                781.0,
+                5119.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 220404.1599481843
+          }
+        },
+        {
+          "label": "W009",
+          "source_global_id": "07QwGbnh91nQk2EDUwKA64",
+          "name": "基本墙:墙170:10300",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3267.0,
+            5486.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3267.0,
+            5817.117,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 331.117,
+          "thickness_mm": 170.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3182.0,
+              3352.0
+            ],
+            "y": [
+              5486.0,
+              5817.117
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3267.0,
+            5651.559,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3267.0,
+            5651.559,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙170",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 170.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 85.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3182.0,
+                5817.1174112007475
+              ],
+              [
+                3182.0,
+                5486.000000000001
+              ],
+              [
+                3352.0,
+                5486.000000000001
+              ],
+              [
+                3352.0,
+                5817.1174112007475
+              ],
+              [
+                3182.0,
+                5817.1174112007475
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 56289.95990412692
+          }
+        },
+        {
+          "label": "W010",
+          "source_global_id": "07QwGbnh91nQk2EDUwKA0l",
+          "name": "基本墙:墙170:10647",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3182.0,
+            5732.117,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            2027.0,
+            5732.117,
+            -1140.0
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 1155.0,
+          "thickness_mm": 170.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              2027.0,
+              3182.0
+            ],
+            "y": [
+              5647.117,
+              5817.117
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            2604.5,
+            5732.117,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            2604.5,
+            5732.117,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙170",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 170.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 85.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                2027.0,
+                5647.11741120076
+              ],
+              [
+                3182.0,
+                5647.11741120076
+              ],
+              [
+                3182.0,
+                5817.11741120076
+              ],
+              [
+                2027.0,
+                5817.11741120076
+              ],
+              [
+                2027.0,
+                5647.11741120076
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 196350.0
+          }
+        },
+        {
+          "label": "W011",
+          "source_global_id": "07QwGbnh91nQk2EDUwKAQc",
+          "name": "基本墙:墙110:12062",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O009"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1702.678,
+            5157.891,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            2738.71,
+            4121.859,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            -0.707107,
+            0.0
+          ],
+          "length_mm": 1465.17,
+          "thickness_mm": 110.0,
+          "height_mm": 2160.0,
+          "orientation": "south_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              1663.787,
+              2777.601
+            ],
+            "y": [
+              4082.968,
+              5119.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            2220.694,
+            4600.984,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            2220.694,
+            4600.984,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙110",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 110.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 55.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                1663.7871745897298,
+                5119.0
+              ],
+              [
+                2699.8189555888985,
+                4082.9682190008266
+              ],
+              [
+                2777.600701519419,
+                4160.749964931347
+              ],
+              [
+                1824.3506664507704,
+                5114.0
+              ],
+              [
+                1819.35066645077,
+                5119.0
+              ],
+              [
+                1663.7871745897298,
+                5119.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 155118.72153124426
+          }
+        },
+        {
+          "label": "W012",
+          "source_global_id": "07QwGbnh91nQk2EDUwKB2$",
+          "name": "基本墙:墙90:14599",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O002"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            2265.38,
+            3584.89,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3299.295,
+            4618.805,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            0.707107,
+            0.0
+          ],
+          "length_mm": 1462.176,
+          "thickness_mm": 90.0,
+          "height_mm": 2160.0,
+          "orientation": "north_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              2233.561,
+              3331.115
+            ],
+            "y": [
+              3553.07,
+              4650.624
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            2782.338,
+            4101.847,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            2782.338,
+            4101.847,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙90",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 90.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 45.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3267.4751712070156,
+                4650.624434618943
+              ],
+              [
+                2233.5605466412653,
+                3616.709810053195
+              ],
+              [
+                2297.2001569480544,
+                3553.0701997464057
+              ],
+              [
+                3331.1147815138047,
+                4586.984824312154
+              ],
+              [
+                3267.4751712070156,
+                4650.624434618943
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 131595.84759570894
+          }
+        },
+        {
+          "label": "W013",
+          "source_global_id": "07QwGbnh91nQk2EDUwKBEu",
+          "name": "基本墙:墙140:14848",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O003",
+            "O010"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            4585.618,
+            2987.439,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            5180.18,
+            3521.407,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.744002,
+            0.668177,
+            0.0
+          ],
+          "length_mm": 799.141,
+          "thickness_mm": 140.0,
+          "height_mm": 2160.0,
+          "orientation": "north_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              4538.845,
+              5226.952
+            ],
+            "y": [
+              2940.382,
+              3469.327
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            4882.899,
+            3204.855,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            4882.899,
+            3204.855,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙140",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 140.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 70.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                5226.952398466645,
+                3469.32694201177
+              ],
+              [
+                5014.170347982804,
+                3466.4019783414606
+              ],
+              [
+                4620.803269811438,
+                3113.124613663847
+              ],
+              [
+                4538.845174697229,
+                3039.519216917016
+              ],
+              [
+                4637.9827204753,
+                2940.3816711389445
+              ],
+              [
+                5226.952398466645,
+                3469.32694201177
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 100135.01242383281
+          }
+        },
+        {
+          "label": "W014",
+          "source_global_id": "07QwGbnh91nQk2EDUwKBAc",
+          "name": "基本墙:墙110:15134",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O004",
+            "O011"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            4581.912,
+            3074.234,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3660.515,
+            3995.631,
+            -1140.0
+          ],
+          "axis_direction": [
+            -0.707107,
+            0.707107,
+            0.0
+          ],
+          "length_mm": 1303.053,
+          "thickness_mm": 110.0,
+          "height_mm": 2160.0,
+          "orientation": "north_west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3621.624,
+              4620.803
+            ],
+            "y": [
+              3039.519,
+              4031.553
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            4121.213,
+            3535.536,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            4121.213,
+            3535.536,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙110",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 110.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 55.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                4620.80326981144,
+                3113.1246136638497
+              ],
+              [
+                3702.3747170956476,
+                4031.5531663796464
+              ],
+              [
+                3621.6241508599214,
+                3956.7402407543323
+              ],
+              [
+                3886.3619690479386,
+                3692.0024225663137
+              ],
+              [
+                4056.0675965327096,
+                3522.296795081542
+              ],
+              [
+                4538.8451746972305,
+                3039.519216917019
+              ],
+              [
+                4620.80326981144,
+                3113.1246136638497
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 142780.02898092076
+          }
+        },
+        {
+          "label": "W015",
+          "source_global_id": "07QwGbnh91nQk2EDUwKB9s",
+          "name": "基本墙:墙120:15310",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O005"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3577.487,
+            3997.641,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            4302.732,
+            4669.558,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.733562,
+            0.679623,
+            0.0
+          ],
+          "length_mm": 988.662,
+          "thickness_mm": 120.0,
+          "height_mm": 2160.0,
+          "orientation": "north_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3536.71,
+              4261.954
+            ],
+            "y": [
+              3956.74,
+              4713.572
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3899.332,
+            4335.156,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3899.332,
+            4335.156,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙120",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 120.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 60.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                4261.9543634037145,
+                4549.986564586082
+              ],
+              [
+                4261.9543634037145,
+                4713.571939568364
+              ],
+              [
+                3713.060766803296,
+                4205.038839022662
+              ],
+              [
+                3536.877713198068,
+                4041.8106376583464
+              ],
+              [
+                3536.7095510417093,
+                4041.654840572541
+              ],
+              [
+                3621.624150859918,
+                3956.7402407543327
+              ],
+              [
+                3702.3747170956467,
+                4031.5531663796432
+              ],
+              [
+                4261.9543634037145,
+                4549.986564586082
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 111694.05125782732
+          }
+        },
+        {
+          "label": "W016",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDMPW",
+          "name": "基本墙:墙240:15891",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            2654.533,
+            2460.173,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3237.353,
+            1877.353,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            -0.707107,
+            0.0
+          ],
+          "length_mm": 824.232,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "south_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              2569.68,
+              3322.206
+            ],
+            "y": [
+              1792.5,
+              2545.026
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            2945.943,
+            2168.763,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            2945.943,
+            2168.763,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3322.2056274847732,
+                1962.2056274847655
+              ],
+              [
+                2739.3854007255864,
+                2545.025854243955
+              ],
+              [
+                2569.6797732408145,
+                2375.320226759184
+              ],
+              [
+                3152.5000000000014,
+                1792.4999999999945
+              ],
+              [
+                3322.2056274847732,
+                1962.2056274847655
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 197815.7445859696
+          }
+        },
+        {
+          "label": "W017",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDMTf",
+          "name": "基本墙:墙240:16154",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3237.353,
+            2047.058,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3698.291,
+            2507.997,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            0.707107,
+            0.0
+          ],
+          "length_mm": 651.865,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3152.5,
+              3783.144
+            ],
+            "y": [
+              1962.206,
+              2592.85
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3467.822,
+            2277.528,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3467.822,
+            2277.528,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3613.4383464277958,
+                2592.8496013973463
+              ],
+              [
+                3152.499999999995,
+                2131.9112549695456
+              ],
+              [
+                3322.205627484766,
+                1962.2056274847746
+              ],
+              [
+                3783.1439739125667,
+                2423.1439739125753
+              ],
+              [
+                3613.4383464277958,
+                2592.8496013973463
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 156447.66262464534
+          }
+        },
+        {
+          "label": "W018",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDHZE",
+          "name": "基本墙:墙240:16573",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3867.997,
+            2507.997,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3285.177,
+            3090.817,
+            -1140.0
+          ],
+          "axis_direction": [
+            -0.707107,
+            0.707107,
+            0.0
+          ],
+          "length_mm": 824.232,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north_west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3200.324,
+              3952.85
+            ],
+            "y": [
+              2423.144,
+              3175.67
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3576.587,
+            2799.407,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3576.587,
+            2799.407,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3200.3237471533866,
+                3005.9642006717645
+              ],
+              [
+                3783.1439739125735,
+                2423.143973912575
+              ],
+              [
+                3952.8496013973454,
+                2592.849601397346
+              ],
+              [
+                3370.0293746381585,
+                3175.6698281565355
+              ],
+              [
+                3200.3237471533866,
+                3005.9642006717645
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 197815.7445859696
+          }
+        },
+        {
+          "label": "W019",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDHfP",
+          "name": "基本墙:墙240:16938",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            2824.238,
+            2460.173,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3285.177,
+            2921.111,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            0.707107,
+            0.0
+          ],
+          "length_mm": 651.865,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              2739.385,
+              3370.029
+            ],
+            "y": [
+              2375.32,
+              3005.964
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3054.707,
+            2690.642,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3054.707,
+            2690.642,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3200.3237471533866,
+                3005.9642006717577
+              ],
+              [
+                2739.385400725585,
+                2545.025854243957
+              ],
+              [
+                2909.091028210356,
+                2375.320226759185
+              ],
+              [
+                3370.0293746381576,
+                2836.258573186986
+              ],
+              [
+                3200.3237471533866,
+                3005.9642006717577
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 156447.66262464592
+          }
+        },
+        {
+          "label": "W020",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDHg8",
+          "name": "基本墙:墙240:17147",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O012"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3454.882,
+            3090.817,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3971.215,
+            3607.15,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            0.707107,
+            0.0
+          ],
+          "length_mm": 730.205,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3370.029,
+              4056.068
+            ],
+            "y": [
+              3005.964,
+              3692.002
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3713.048,
+            3348.983,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3713.048,
+            3348.983,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3886.3619690479345,
+                3692.002422566316
+              ],
+              [
+                3370.029374638155,
+                3175.6698281565364
+              ],
+              [
+                3539.735002122926,
+                3005.9642006717645
+              ],
+              [
+                4056.0675965327055,
+                3522.296795081544
+              ],
+              [
+                3886.3619690479345,
+                3692.002422566316
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 175249.09385030327
+          }
+        },
+        {
+          "label": "W021",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDHmB",
+          "name": "基本墙:墙240:17528",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            2382.053,
+            3637.923,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3107.168,
+            2912.808,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            -0.707107,
+            0.0
+          ],
+          "length_mm": 1025.467,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "south_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              2297.2,
+              3192.021
+            ],
+            "y": [
+              2827.955,
+              3722.776
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            2744.61,
+            3275.365,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            2744.61,
+            3275.365,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3192.0205790728114,
+                2997.661032591186
+              ],
+              [
+                2466.905784432827,
+                3722.775827231174
+              ],
+              [
+                2297.2001569480553,
+                3553.070199746403
+              ],
+              [
+                3022.3149515880395,
+                2827.955405106415
+              ],
+              [
+                3192.0205790728114,
+                2997.661032591186
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 246112.12244573998
+          }
+        },
+        {
+          "label": "W022",
+          "source_global_id": "3AtClL2Dr2B8t7cghkDHtM",
+          "name": "基本墙:墙240:17829",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O013"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3246.262,
+            4502.132,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3628.208,
+            4120.186,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.707107,
+            -0.707107,
+            0.0
+          ],
+          "length_mm": 540.153,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "south_east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3161.409,
+              3713.061
+            ],
+            "y": [
+              4041.811,
+              4586.985
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3437.235,
+            4314.398,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3437.235,
+            4314.398,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                3161.409154029034,
+                4417.279196827384
+              ],
+              [
+                3536.8777131980723,
+                4041.810637658344
+              ],
+              [
+                3713.060766803301,
+                4205.038839022659
+              ],
+              [
+                3331.114781513806,
+                4586.984824312155
+              ],
+              [
+                3161.409154029034,
+                4417.279196827384
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 128537.51053342797
+          }
+        },
+        {
+          "label": "W023",
+          "source_global_id": "2e66MSsc18nO_zMzjW2DoI",
+          "name": "基本墙:墙240:18631",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O014"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1026.5,
+            -900.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3019.356,
+            -900.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 1992.855,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              1026.5,
+              3019.356
+            ],
+            "y": [
+              -1020.0,
+              -780.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            2022.928,
+            -900.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            2022.928,
+            -900.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3019.35550333917,
+                -780.0
+              ],
+              [
+                1026.5002672093801,
+                -780.0
+              ],
+              [
+                1026.5002672093801,
+                -1020.0
+              ],
+              [
+                3019.35550333917,
+                -1020.0
+              ],
+              [
+                3019.35550333917,
+                -780.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 478285.2566711495
+          }
+        },
+        {
+          "label": "W024",
+          "source_global_id": "2e66MSsc18nO_zMzjW2Dvj",
+          "name": "基本墙:墙240:19000",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3139.356,
+            -1020.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3139.356,
+            -260.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 760.0,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3019.356,
+              3259.356
+            ],
+            "y": [
+              -1020.0,
+              -260.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3139.356,
+            -640.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3139.356,
+            -640.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3019.35550333917,
+                -259.99999999999795
+              ],
+              [
+                3019.35550333917,
+                -1020.0
+              ],
+              [
+                3259.35550333917,
+                -1020.0
+              ],
+              [
+                3259.35550333917,
+                -259.99999999999795
+              ],
+              [
+                3019.35550333917,
+                -259.99999999999795
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 182400.0000000005
+          }
+        },
+        {
+          "label": "W025",
+          "source_global_id": "2e66MSsc18nO_zMzjW2DwF",
+          "name": "基本墙:墙240:19162",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3259.356,
+            -380.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3809.356,
+            -380.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 550.0,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3259.356,
+              3809.356
+            ],
+            "y": [
+              -500.0,
+              -260.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3534.356,
+            -380.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3534.356,
+            -380.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                3809.35550333917,
+                -260.0
+              ],
+              [
+                3259.35550333917,
+                -260.0
+              ],
+              [
+                3259.35550333917,
+                -500.0
+              ],
+              [
+                3809.35550333917,
+                -500.0
+              ],
+              [
+                3809.35550333917,
+                -260.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 132000.0
+          }
+        },
+        {
+          "label": "W026",
+          "source_global_id": "2e66MSsc18nO_zMzjW2DzA",
+          "name": "基本墙:墙240:19231",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            3929.356,
+            -260.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            3929.356,
+            -1030.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "length_mm": 770.0,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "south",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              3809.356,
+              4049.356
+            ],
+            "y": [
+              -1030.0,
+              -260.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            3929.356,
+            -645.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            3929.356,
+            -645.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                4049.35550333917,
+                -1030.0000000000005
+              ],
+              [
+                4049.35550333917,
+                -259.9999999999995
+              ],
+              [
+                3809.35550333917,
+                -259.9999999999995
+              ],
+              [
+                3809.35550333917,
+                -1030.0000000000005
+              ],
+              [
+                4049.35550333917,
+                -1030.0000000000005
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 184800.00000000023
+          }
+        },
+        {
+          "label": "W027",
+          "source_global_id": "2e66MSsc18nO_zMzjW2DWR",
+          "name": "基本墙:墙240:19534",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [
+            "O015"
+          ],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            4049.356,
+            -910.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            6044.356,
+            -910.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 1995.0,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "east",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              4049.356,
+              6044.356
+            ],
+            "y": [
+              -1030.0,
+              -790.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            5046.856,
+            -910.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            5046.856,
+            -910.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                6044.355503339171,
+                -790.0
+              ],
+              [
+                4049.3555033391713,
+                -790.0
+              ],
+              [
+                4049.3555033391713,
+                -1030.0
+              ],
+              [
+                6044.355503339171,
+                -1030.0
+              ],
+              [
+                6044.355503339171,
+                -790.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 478800.0
+          }
+        },
+        {
+          "label": "W028",
+          "source_global_id": "2e66MSsc18nO_zMzjW2Djr",
+          "name": "基本墙:墙240:20256",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            5924.356,
+            -790.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            5924.356,
+            -190.695,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 599.305,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              5804.356,
+              6044.356
+            ],
+            "y": [
+              -790.0,
+              -190.695
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            5924.356,
+            -490.347,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            5924.356,
+            -490.347,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                5804.35550333917,
+                -190.6946639171435
+              ],
+              [
+                5804.35550333917,
+                -790.0000000000005
+              ],
+              [
+                6044.35550333917,
+                -790.0000000000005
+              ],
+              [
+                6044.35550333917,
+                -190.6946639171435
+              ],
+              [
+                5804.35550333917,
+                -190.6946639171435
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 143833.28065988567
+          }
+        },
+        {
+          "label": "W029",
+          "source_global_id": "2e66MSsc18nO_zMzjW2CLD",
+          "name": "基本墙:墙240:20760",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            6436.0,
+            -310.695,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            6044.356,
+            -310.695,
+            -1140.0
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 391.644,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              6044.356,
+              6436.0
+            ],
+            "y": [
+              -430.695,
+              -190.695
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            6240.178,
+            -310.695,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            6240.178,
+            -310.695,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                6044.35550333918,
+                -430.69466391716094
+              ],
+              [
+                6436.0,
+                -430.69466391716094
+              ],
+              [
+                6436.0,
+                -190.69466391716094
+              ],
+              [
+                6044.35550333918,
+                -190.69466391716094
+              ],
+              [
+                6044.35550333918,
+                -430.69466391716094
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 93994.67919859671
+          }
+        },
+        {
+          "label": "W030",
+          "source_global_id": "2e66MSsc18nO_zMzjW2CNy",
+          "name": "基本墙:墙240:20905",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1146.5,
+            -780.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            1146.5,
+            -380.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 400.0,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              1026.5,
+              1266.5
+            ],
+            "y": [
+              -780.0,
+              -380.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            1146.5,
+            -580.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            1146.5,
+            -580.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                1026.50026720938,
+                -380.0
+              ],
+              [
+                1026.50026720938,
+                -780.0
+              ],
+              [
+                1266.50026720938,
+                -780.0
+              ],
+              [
+                1266.50026720938,
+                -380.0
+              ],
+              [
+                1026.50026720938,
+                -380.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 96000.0
+          }
+        },
+        {
+          "label": "W031",
+          "source_global_id": "2e66MSsc18nO_zMzjW2CPY",
+          "name": "基本墙:墙240:21047",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1026.5,
+            -500.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            781.0,
+            -500.0,
+            -1140.0
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 245.5,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              781.0,
+              1026.5
+            ],
+            "y": [
+              -620.0,
+              -380.0
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            903.75,
+            -500.0,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            903.75,
+            -500.0,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                780.99999999999,
+                -620.0
+              ],
+              [
+                1026.50026720938,
+                -620.0
+              ],
+              [
+                1026.50026720938,
+                -380.0
+              ],
+              [
+                780.99999999999,
+                -380.0
+              ],
+              [
+                780.99999999999,
+                -620.0
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 58920.06413025358
+          }
+        },
+        {
+          "label": "W032",
+          "source_global_id": "1WopW4b_n6APakic72GytO",
+          "name": "基本墙:墙240:40409",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1704.351,
+            5114.0,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            1704.351,
+            5492.117,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "length_mm": 378.117,
+          "thickness_mm": 240.0,
+          "height_mm": 2160.0,
+          "orientation": "north",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              1584.351,
+              1824.351
+            ],
+            "y": [
+              5114.0,
+              5492.117
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            1704.351,
+            5303.059,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            1704.351,
+            5303.059,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙240",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 240.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 120.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcArbitraryClosedProfileDef",
+            "requires_explicit_outline": true,
+            "bottom_outline_xy_mm": [
+              [
+                1824.35066645077,
+                5492.117411200763
+              ],
+              [
+                1584.35066645077,
+                5492.117411200762
+              ],
+              [
+                1584.35066645077,
+                5354.0
+              ],
+              [
+                1819.35066645077,
+                5119.0
+              ],
+              [
+                1824.35066645077,
+                5114.0
+              ],
+              [
+                1824.35066645077,
+                5492.117411200763
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 61948.178688183
+          }
+        },
+        {
+          "label": "W033",
+          "source_global_id": "1WopW4b_n6APakic72G$3L",
+          "name": "基本墙:墙200:41172",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1927.0,
+            5817.117,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            1927.0,
+            5492.117,
+            -1140.0
+          ],
+          "axis_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "length_mm": 325.0,
+          "thickness_mm": 200.0,
+          "height_mm": 2160.0,
+          "orientation": "south",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              1827.0,
+              2027.0
+            ],
+            "y": [
+              5492.117,
+              5817.117
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            1927.0,
+            5654.617,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            1927.0,
+            5654.617,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙200",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 200.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 100.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                2027.0,
+                5492.117411200759
+              ],
+              [
+                2027.0,
+                5817.117411200761
+              ],
+              [
+                1827.0,
+                5817.117411200761
+              ],
+              [
+                1827.0,
+                5492.117411200759
+              ],
+              [
+                2027.0,
+                5492.117411200759
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 65000.000000000364
+          }
+        },
+        {
+          "label": "W034",
+          "source_global_id": "1WopW4b_n6APakic72G$EB",
+          "name": "基本墙:墙200:41866",
+          "ifc_class": "IfcWallStandardCase",
+          "storey": "S01",
+          "spaces": [],
+          "openings": [],
+          "measurement_status": "measured",
+          "axis_start_mm": [
+            1827.0,
+            5592.117,
+            -1140.0
+          ],
+          "axis_end_mm": [
+            1584.351,
+            5592.117,
+            -1140.0
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "length_mm": 242.649,
+          "thickness_mm": 200.0,
+          "height_mm": 2160.0,
+          "orientation": "west",
+          "measurement_method": "explicit_ifc_axis_plus_geometry",
+          "bounds_mm": {
+            "x": [
+              1584.351,
+              1827.0
+            ],
+            "y": [
+              5492.117,
+              5692.117
+            ],
+            "z": [
+              -1140.0,
+              1020.0
+            ]
+          },
+          "centroid_mm": [
+            1705.676,
+            5592.117,
+            -60.0
+          ],
+          "bbox_center_mm": [
+            1705.676,
+            5592.117,
+            -60.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "基本墙:墙200",
+              "layers": [
+                {
+                  "name": "默认墙",
+                  "thickness_mm": 200.0
+                }
+              ],
+              "direction": "AXIS2",
+              "direction_sense": "NEGATIVE",
+              "offset_mm": 100.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "axis_interpretation": "source_reference_axis_or_measured_proxy",
+          "reconstruction_status": "source_reference_axis",
+          "solid_detail": {
+            "schema_version": "text2ifc/ifc2text-wall-detail/0.7",
+            "status": "supported_vertical_extrusion",
+            "source_profile_type": "IfcRectangleProfileDef",
+            "requires_explicit_outline": false,
+            "bottom_outline_xy_mm": [
+              [
+                1584.3506664507636,
+                5492.11741120076
+              ],
+              [
+                1827.0000000000005,
+                5492.11741120076
+              ],
+              [
+                1827.0000000000005,
+                5692.11741120076
+              ],
+              [
+                1584.3506664507636,
+                5692.11741120076
+              ],
+              [
+                1584.3506664507636,
+                5492.11741120076
+              ]
+            ],
+            "bottom_z_mm": -1140.0,
+            "height_mm": 2160.0,
+            "direction": "world_positive_z",
+            "coordinate_frame": "world",
+            "geometry_role": "wall_solid_before_opening_subtraction",
+            "area_mm2": 48529.866709847374
+          }
+        }
+      ],
+      "openings": [
+        {
+          "label": "O001",
+          "source_global_id": "0BxgxoBvf7SuWh1Ua00iQW",
+          "name": "基本墙:墙170:5110",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "2R3hYUonf5OxYPUpi0xGyt",
+          "filling_global_id": null,
+          "dimensions_mm": {
+            "width": 543.974,
+            "depth": 500.169,
+            "height": 1100.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 1281.001,
+            "normal_offset_mm": 261.567,
+            "sill_height_mm": 830.0
+          },
+          "bounds_mm": {
+            "x": [
+              4650.91,
+              5190.856
+            ],
+            "y": [
+              3036.003,
+              3541.07
+            ],
+            "z": [
+              -310.0,
+              790.0
+            ]
+          },
+          "centroid_mm": [
+            4920.883,
+            3288.537,
+            240.0
+          ],
+          "host_wall": "W005",
+          "filling": null,
+          "bbox_center_mm": [
+            4920.883,
+            3288.537,
+            240.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O002",
+          "source_global_id": "2kMG42Fj9FqRe6eAYjhXp3",
+          "name": "基本墙:墙90:14599",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKB2$",
+          "filling_global_id": null,
+          "dimensions_mm": {
+            "width": 240.0,
+            "depth": 300.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 1342.176,
+            "normal_offset_mm": -340.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              3263.94,
+              3645.777
+            ],
+            "y": [
+              4102.617,
+              4484.454
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            3454.859,
+            4293.535,
+            -115.0
+          ],
+          "host_wall": "W012",
+          "filling": null,
+          "bbox_center_mm": [
+            3454.859,
+            4293.535,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O003",
+          "source_global_id": "3EL$pKgMn4tvx190Trfsdp",
+          "name": "基本墙:墙140:14848",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKBEu",
+          "filling_global_id": null,
+          "dimensions_mm": {
+            "width": 142.011,
+            "depth": 605.035,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 37.616,
+            "normal_offset_mm": 395.235,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              4098.494,
+              4600.54
+            ],
+            "y": [
+              3055.606,
+              3557.652
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            4349.517,
+            3306.629,
+            -115.0
+          ],
+          "host_wall": "W013",
+          "filling": null,
+          "bbox_center_mm": [
+            4349.517,
+            3306.629,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O004",
+          "source_global_id": "3LHk_OmYD0ChSQ2H7R1gjX",
+          "name": "基本墙:墙110:15134",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKBAc",
+          "filling_global_id": null,
+          "dimensions_mm": {
+            "width": 300.0,
+            "depth": 3048.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 1659.124,
+            "normal_offset_mm": 54.771,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              2186.309,
+              4553.702
+            ],
+            "y": [
+              3024.986,
+              5392.379
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            3370.006,
+            4208.682,
+            -115.0
+          ],
+          "host_wall": "W014",
+          "filling": null,
+          "bbox_center_mm": [
+            3370.006,
+            4208.682,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O005",
+          "source_global_id": "3aeNnwA1TCgho8fL8wHVWT",
+          "name": "基本墙:墙120:15310",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKB9s",
+          "filling_global_id": null,
+          "dimensions_mm": {
+            "width": 251.268,
+            "depth": 308.936,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 111.141,
+            "normal_offset_mm": 300.398,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              3263.94,
+              3645.777
+            ],
+            "y": [
+              4102.617,
+              4484.454
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            3454.859,
+            4293.535,
+            -115.0
+          ],
+          "host_wall": "W015",
+          "filling": null,
+          "bbox_center_mm": [
+            3454.859,
+            4293.535,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O006",
+          "source_global_id": "1N$DqFwUP2Cfj_f5t$_LS$",
+          "name": "单扇百叶窗:高1100宽850:30431:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "2R3hYUonf5OxYPUpi0xGyt",
+          "filling_global_id": "1N$DqFwUP2Cfj_f4x$_LS$",
+          "dimensions_mm": {
+            "width": 850.0,
+            "depth": 170.0,
+            "height": 1100.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 455.837,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 855.0
+          },
+          "bounds_mm": {
+            "x": [
+              5316.247,
+              6168.503
+            ],
+            "y": [
+              3470.587,
+              3652.254
+            ],
+            "z": [
+              -285.0,
+              815.0
+            ]
+          },
+          "centroid_mm": [
+            5742.375,
+            3561.421,
+            265.0
+          ],
+          "host_wall": "W005",
+          "filling": "N002",
+          "bbox_center_mm": [
+            5742.375,
+            3561.421,
+            265.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O007",
+          "source_global_id": "1N$DqFwUP2Cfj_f5t$_L4e",
+          "name": "单扇百叶窗:高1100宽850:28872:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "0ts1NuGzn4BQ$mq81bsDkC",
+          "filling_global_id": "1N$DqFwUP2Cfj_f4x$_L4e",
+          "dimensions_mm": {
+            "width": 850.0,
+            "depth": 240.0,
+            "height": 1100.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 3205.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 855.0
+          },
+          "bounds_mm": {
+            "x": [
+              6196.0,
+              6436.0
+            ],
+            "y": [
+              2589.305,
+              3439.305
+            ],
+            "z": [
+              -285.0,
+              815.0
+            ]
+          },
+          "centroid_mm": [
+            6316.0,
+            3014.305,
+            265.0
+          ],
+          "host_wall": "W007",
+          "filling": "N001",
+          "bbox_center_mm": [
+            6316.0,
+            3014.305,
+            265.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O008",
+          "source_global_id": "3aFh60A8f2thPpFQCTM99j",
+          "name": "单扇木门:宽700高2050:35359:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "0ts1NuGzn4BQ$mq81bsE3G",
+          "filling_global_id": "3aFh60A8f2thPpFR0TM99j",
+          "dimensions_mm": {
+            "width": 700.0,
+            "depth": 240.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 390.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              821.0,
+              1521.0
+            ],
+            "y": [
+              5119.0,
+              5359.0
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            1171.0,
+            5239.0,
+            -115.0
+          ],
+          "host_wall": "W008",
+          "filling": "D005",
+          "bbox_center_mm": [
+            1171.0,
+            5239.0,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O009",
+          "source_global_id": "1wrfKpDNf4oA2LKoHOnY3Q",
+          "name": "单扇木门:宽600高2050:35806:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKAQc",
+          "filling_global_id": "1wrfKpDNf4oA2LKpTOnY3Q",
+          "dimensions_mm": {
+            "width": 600.0,
+            "depth": 110.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 1070.17,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              2208.38,
+              2710.426
+            ],
+            "y": [
+              4150.143,
+              4652.189
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            2459.403,
+            4401.166,
+            -115.0
+          ],
+          "host_wall": "W011",
+          "filling": "D006",
+          "bbox_center_mm": [
+            2459.403,
+            4401.166,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O010",
+          "source_global_id": "1N$DqFwUP2Cfj_f5t$_LQr",
+          "name": "单扇百叶窗:高1100宽600:30549:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKBEu",
+          "filling_global_id": "1N$DqFwUP2Cfj_f4x$_LQr",
+          "dimensions_mm": {
+            "width": 600.0,
+            "depth": 140.0,
+            "height": 1100.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 450.625,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 830.0
+          },
+          "bounds_mm": {
+            "x": [
+              4650.91,
+              5190.856
+            ],
+            "y": [
+              3036.003,
+              3541.07
+            ],
+            "z": [
+              -310.0,
+              790.0
+            ]
+          },
+          "centroid_mm": [
+            4920.883,
+            3288.537,
+            240.0
+          ],
+          "host_wall": "W013",
+          "filling": "N003",
+          "bbox_center_mm": [
+            4920.883,
+            3288.537,
+            240.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O011",
+          "source_global_id": "1N$DqFwUP2Cfj_f5t$_QPI",
+          "name": "单扇木门:宽600高2050:34738:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "07QwGbnh91nQk2EDUwKBAc",
+          "filling_global_id": "1N$DqFwUP2Cfj_f4x$_QPI",
+          "dimensions_mm": {
+            "width": 600.0,
+            "depth": 110.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 328.657,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              4098.494,
+              4600.54
+            ],
+            "y": [
+              3055.606,
+              3557.652
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            4349.517,
+            3306.629,
+            -115.0
+          ],
+          "host_wall": "W014",
+          "filling": "D003",
+          "bbox_center_mm": [
+            4349.517,
+            3306.629,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O012",
+          "source_global_id": "3aFh60A8f2thPpFQCTM97Q",
+          "name": "单扇木门:宽600高2050:35240:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "3AtClL2Dr2B8t7cghkDHg8",
+          "filling_global_id": "3aFh60A8f2thPpFR0TM97Q",
+          "dimensions_mm": {
+            "width": 600.0,
+            "depth": 240.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 405.205,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              3444.42,
+              4038.39
+            ],
+            "y": [
+              3080.355,
+              3674.325
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            3741.405,
+            3377.34,
+            -115.0
+          ],
+          "host_wall": "W020",
+          "filling": "D004",
+          "bbox_center_mm": [
+            3741.405,
+            3377.34,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O013",
+          "source_global_id": "1wrfKpDNf4oA2LKoHOnZcG",
+          "name": "推拉门-单扇:宽300高2050:37524:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "3AtClL2Dr2B8t7cghkDHtM",
+          "filling_global_id": "1wrfKpDNf4oA2LKpTOnZcG",
+          "dimensions_mm": {
+            "width": 300.0,
+            "depth": 240.0,
+            "height": 2050.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 295.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              3263.94,
+              3645.777
+            ],
+            "y": [
+              4102.617,
+              4484.454
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            3454.859,
+            4293.535,
+            -115.0
+          ],
+          "host_wall": "W022",
+          "filling": "D007",
+          "bbox_center_mm": [
+            3454.859,
+            4293.535,
+            -115.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O014",
+          "source_global_id": "37teTCsZT7Qe4JdU61Otue",
+          "name": "平开门-玻璃-双扇:宽1600高2000:25890:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "2e66MSsc18nO_zMzjW2DoI",
+          "filling_global_id": "37teTCsZT7Qe4JdVA1Otue",
+          "dimensions_mm": {
+            "width": 1600.0,
+            "depth": 240.0,
+            "height": 2000.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 1161.428,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              1387.928,
+              2987.928
+            ],
+            "y": [
+              -1020.0,
+              -780.0
+            ],
+            "z": [
+              -1140.0,
+              860.0
+            ]
+          },
+          "centroid_mm": [
+            2187.928,
+            -900.0,
+            -140.0
+          ],
+          "host_wall": "W023",
+          "filling": "D002",
+          "bbox_center_mm": [
+            2187.928,
+            -900.0,
+            -140.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "O015",
+          "source_global_id": "37teTCsZT7Qe4JdU61Otbq",
+          "name": "平开门-玻璃-双扇:宽1600高2000:25214:1",
+          "ifc_class": "IfcOpeningElement",
+          "storey": "S01",
+          "measurement_status": "measured",
+          "host_global_id": "2e66MSsc18nO_zMzjW2DWR",
+          "filling_global_id": "37teTCsZT7Qe4JdVA1Otbq",
+          "dimensions_mm": {
+            "width": 1600.0,
+            "depth": 240.0,
+            "height": 2000.0
+          },
+          "host_position_mm": {
+            "center_offset_mm": 845.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              4094.356,
+              5694.356
+            ],
+            "y": [
+              -1030.0,
+              -790.0
+            ],
+            "z": [
+              -1140.0,
+              860.0
+            ]
+          },
+          "centroid_mm": [
+            4894.356,
+            -910.0,
+            -140.0
+          ],
+          "host_wall": "W027",
+          "filling": "D001",
+          "bbox_center_mm": [
+            4894.356,
+            -910.0,
+            -140.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        }
+      ],
+      "doors": [
+        {
+          "label": "D001",
+          "source_global_id": "37teTCsZT7Qe4JdVA1Otbq",
+          "name": "平开门-玻璃-双扇:宽1600高2000:25214",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 1600.0,
+          "overall_height_mm": 2000.0,
+          "measurement_status": "measured",
+          "opening_global_id": "37teTCsZT7Qe4JdU61Otbq",
+          "host_global_id": "2e66MSsc18nO_zMzjW2DWR",
+          "host_position_mm": {
+            "center_offset_mm": 845.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              4094.356,
+              5694.356
+            ],
+            "y": [
+              -960.0,
+              -860.0
+            ],
+            "z": [
+              -1140.0,
+              860.0
+            ]
+          },
+          "centroid_mm": [
+            4894.356,
+            -910.0,
+            -140.0
+          ],
+          "geometry_size_mm": {
+            "x": 1600.0,
+            "y": 100.0,
+            "z": 2000.0
+          },
+          "host_wall": "W027",
+          "opening": "O015",
+          "bbox_center_mm": [
+            4894.356,
+            -910.0,
+            -140.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "D002",
+          "source_global_id": "37teTCsZT7Qe4JdVA1Otue",
+          "name": "平开门-玻璃-双扇:宽1600高2000:25890",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 1600.0,
+          "overall_height_mm": 2000.0,
+          "measurement_status": "measured",
+          "opening_global_id": "37teTCsZT7Qe4JdU61Otue",
+          "host_global_id": "2e66MSsc18nO_zMzjW2DoI",
+          "host_position_mm": {
+            "center_offset_mm": 1161.428,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              1387.928,
+              2987.928
+            ],
+            "y": [
+              -950.0,
+              -850.0
+            ],
+            "z": [
+              -1140.0,
+              860.0
+            ]
+          },
+          "centroid_mm": [
+            2187.928,
+            -900.0,
+            -140.0
+          ],
+          "geometry_size_mm": {
+            "x": 1600.0,
+            "y": 100.0,
+            "z": 2000.0
+          },
+          "host_wall": "W023",
+          "opening": "O014",
+          "bbox_center_mm": [
+            2187.928,
+            -900.0,
+            -140.0
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor"
+        },
+        {
+          "label": "D003",
+          "source_global_id": "1N$DqFwUP2Cfj_f4x$_QPI",
+          "name": "单扇木门:宽600高2050:34738",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 600.0,
+          "overall_height_mm": 2050.0,
+          "measurement_status": "measured",
+          "opening_global_id": "1N$DqFwUP2Cfj_f5t$_QPI",
+          "host_global_id": "07QwGbnh91nQk2EDUwKBAc",
+          "host_position_mm": {
+            "center_offset_mm": 328.657,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              4119.707,
+              4579.327
+            ],
+            "y": [
+              3076.82,
+              3536.439
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            4349.517,
+            3306.63,
+            -115.0
+          ],
+          "geometry_size_mm": {
+            "x": 459.62,
+            "y": 459.619,
+            "z": 2050.0
+          },
+          "host_wall": "W014",
+          "opening": "O011",
+          "bbox_center_mm": [
+            4349.517,
+            3306.63,
+            -115.0
+          ],
+          "materials": [
+            {
+              "kind": "material_list",
+              "names": [
+                "金属漆_冷灰",
+                "木材"
+              ],
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        },
+        {
+          "label": "D004",
+          "source_global_id": "3aFh60A8f2thPpFR0TM97Q",
+          "name": "单扇木门:宽600高2050:35240",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 600.0,
+          "overall_height_mm": 2050.0,
+          "measurement_status": "measured",
+          "opening_global_id": "3aFh60A8f2thPpFQCTM97Q",
+          "host_global_id": "3AtClL2Dr2B8t7cghkDHg8",
+          "host_position_mm": {
+            "center_offset_mm": 405.205,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              3465.633,
+              4017.177
+            ],
+            "y": [
+              3101.568,
+              3653.112
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            3741.405,
+            3377.34,
+            -115.0
+          ],
+          "geometry_size_mm": {
+            "x": 551.544,
+            "y": 551.544,
+            "z": 2050.0
+          },
+          "host_wall": "W020",
+          "opening": "O012",
+          "bbox_center_mm": [
+            3741.405,
+            3377.34,
+            -115.0
+          ],
+          "materials": [
+            {
+              "kind": "material_list",
+              "names": [
+                "金属漆_冷灰",
+                "木材"
+              ],
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        },
+        {
+          "label": "D005",
+          "source_global_id": "3aFh60A8f2thPpFR0TM99j",
+          "name": "单扇木门:宽700高2050:35359",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 700.0,
+          "overall_height_mm": 2050.0,
+          "measurement_status": "measured",
+          "opening_global_id": "3aFh60A8f2thPpFQCTM99j",
+          "host_global_id": "0ts1NuGzn4BQ$mq81bsE3G",
+          "host_position_mm": {
+            "center_offset_mm": 390.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              821.0,
+              1521.0
+            ],
+            "y": [
+              5149.0,
+              5329.0
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            1171.0,
+            5239.0,
+            -115.0
+          ],
+          "geometry_size_mm": {
+            "x": 700.0,
+            "y": 180.0,
+            "z": 2050.0
+          },
+          "host_wall": "W008",
+          "opening": "O008",
+          "bbox_center_mm": [
+            1171.0,
+            5239.0,
+            -115.0
+          ],
+          "materials": [
+            {
+              "kind": "material_list",
+              "names": [
+                "金属漆_冷灰",
+                "木材"
+              ],
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        },
+        {
+          "label": "D006",
+          "source_global_id": "1wrfKpDNf4oA2LKpTOnY3Q",
+          "name": "单扇木门:宽600高2050:35806",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 600.0,
+          "overall_height_mm": 2050.0,
+          "measurement_status": "measured",
+          "opening_global_id": "1wrfKpDNf4oA2LKoHOnY3Q",
+          "host_global_id": "07QwGbnh91nQk2EDUwKAQc",
+          "host_position_mm": {
+            "center_offset_mm": 1070.17,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              2229.593,
+              2689.212
+            ],
+            "y": [
+              4171.357,
+              4630.976
+            ],
+            "z": [
+              -1140.0,
+              910.0
+            ]
+          },
+          "centroid_mm": [
+            2459.403,
+            4401.166,
+            -115.0
+          ],
+          "geometry_size_mm": {
+            "x": 459.619,
+            "y": 459.619,
+            "z": 2050.0
+          },
+          "host_wall": "W011",
+          "opening": "O009",
+          "bbox_center_mm": [
+            2459.403,
+            4401.166,
+            -115.0
+          ],
+          "materials": [
+            {
+              "kind": "material_list",
+              "names": [
+                "金属漆_冷灰",
+                "木材"
+              ],
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        },
+        {
+          "label": "D007",
+          "source_global_id": "1wrfKpDNf4oA2LKpTOnZcG",
+          "name": "推拉门-单扇:宽300高2050:37524",
+          "ifc_class": "IfcDoor",
+          "storey": "S01",
+          "overall_width_mm": 300.0,
+          "overall_height_mm": 2050.0,
+          "measurement_status": "measured",
+          "opening_global_id": "1wrfKpDNf4oA2LKoHOnZcG",
+          "host_global_id": "3AtClL2Dr2B8t7cghkDHtM",
+          "host_position_mm": {
+            "center_offset_mm": 295.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 0.0
+          },
+          "bounds_mm": {
+            "x": [
+              3210.058,
+              3699.659
+            ],
+            "y": [
+              4048.735,
+              4538.336
+            ],
+            "z": [
+              -1140.0,
+              981.2
+            ]
+          },
+          "centroid_mm": [
+            3454.859,
+            4293.535,
+            -79.4
+          ],
+          "geometry_size_mm": {
+            "x": 489.601,
+            "y": 489.601,
+            "z": 2121.2
+          },
+          "host_wall": "W022",
+          "opening": "O013",
+          "bbox_center_mm": [
+            3454.859,
+            4293.535,
+            -79.4
+          ],
+          "materials": [
+            {
+              "kind": "material_list",
+              "names": [
+                "抛光不锈钢",
+                "玻璃",
+                "白油漆"
+              ],
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        }
+      ],
+      "windows": [],
+      "spaces": [
+        {
+          "label": "R001",
+          "source_global_id": "2GPynTKoP0LwsOgDzr$nDR",
+          "name": "1",
+          "long_name": "房间",
+          "storey": "S01",
+          "source_kind": "ifc_space",
+          "bounds_mm": {
+            "x": [
+              1824.351,
+              4261.954
+            ],
+            "y": [
+              4160.75,
+              5647.117
+            ],
+            "z": [
+              -1140.0,
+              1298.4
+            ]
+          },
+          "centroid_mm": [
+            3043.153,
+            4903.934,
+            79.2
+          ],
+          "size_mm": {
+            "x": 2437.603,
+            "y": 1486.367,
+            "z": 2438.4
+          },
+          "boundary_walls": [],
+          "bbox_center_mm": [
+            3043.153,
+            4903.934,
+            79.2
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 2.58974544,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    1824.350666,
+                    5360.595272
+                  ],
+                  [
+                    1824.350666,
+                    5492.117411
+                  ],
+                  [
+                    1927.0,
+                    5492.117411
+                  ],
+                  [
+                    1927.0,
+                    5647.117411
+                  ],
+                  [
+                    3267.0,
+                    5647.117411
+                  ],
+                  [
+                    3267.0,
+                    5486.0
+                  ],
+                  [
+                    4261.954363,
+                    5486.0
+                  ],
+                  [
+                    4261.954363,
+                    4713.57194
+                  ],
+                  [
+                    3713.060767,
+                    4205.038839
+                  ],
+                  [
+                    3267.475171,
+                    4650.624435
+                  ],
+                  [
+                    2777.600702,
+                    4160.749965
+                  ],
+                  [
+                    1824.350666,
+                    5114.0
+                  ],
+                  [
+                    1824.350666,
+                    5360.595272
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              -1140.0000000000002,
+              1298.4
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        },
+        {
+          "label": "R002",
+          "source_global_id": "2GPynTKoP0LwsOgDzr$nD5",
+          "name": "2",
+          "long_name": "房间",
+          "storey": "S01",
+          "source_kind": "ifc_space",
+          "bounds_mm": {
+            "x": [
+              3702.375,
+              6197.0
+            ],
+            "y": [
+              3113.125,
+              5456.0
+            ],
+            "z": [
+              -1140.0,
+              1298.4
+            ]
+          },
+          "centroid_mm": [
+            4949.688,
+            4284.562,
+            79.2
+          ],
+          "size_mm": {
+            "x": 2494.625,
+            "y": 2342.875,
+            "z": 2438.4
+          },
+          "boundary_walls": [],
+          "bbox_center_mm": [
+            4949.688,
+            4284.562,
+            79.2
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 4.01128862,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    3702.374717,
+                    4031.553166
+                  ],
+                  [
+                    3708.203898,
+                    4036.953724
+                  ],
+                  [
+                    4351.954363,
+                    4633.368807
+                  ],
+                  [
+                    4351.954363,
+                    5456.0
+                  ],
+                  [
+                    6197.0,
+                    5456.0
+                  ],
+                  [
+                    6197.0,
+                    3652.677558
+                  ],
+                  [
+                    5206.422384,
+                    3639.060791
+                  ],
+                  [
+                    4620.80327,
+                    3113.124614
+                  ],
+                  [
+                    4048.996529,
+                    3684.931355
+                  ],
+                  [
+                    3702.374717,
+                    4031.553166
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              -1140.0000000000002,
+              1298.4
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        },
+        {
+          "label": "R003",
+          "source_global_id": "2GPynTKoP0LwsOgDzr$nD7",
+          "name": "3",
+          "long_name": "房间",
+          "storey": "S01",
+          "source_kind": "ifc_space",
+          "bounds_mm": {
+            "x": [
+              2802.349,
+              3886.362
+            ],
+            "y": [
+              2997.661,
+              4417.279
+            ],
+            "z": [
+              -1140.0,
+              1298.4
+            ]
+          },
+          "centroid_mm": [
+            3344.356,
+            3707.47,
+            79.2
+          ],
+          "size_mm": {
+            "x": 1084.013,
+            "y": 1419.618,
+            "z": 2438.4
+          },
+          "boundary_walls": [],
+          "bbox_center_mm": [
+            3344.356,
+            3707.47,
+            79.2
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 0.76385514,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    2802.349439,
+                    4058.219482
+                  ],
+                  [
+                    3161.409154,
+                    4417.279197
+                  ],
+                  [
+                    3580.813241,
+                    3997.87511
+                  ],
+                  [
+                    3580.651261,
+                    3997.713131
+                  ],
+                  [
+                    3886.361969,
+                    3692.002423
+                  ],
+                  [
+                    3285.176561,
+                    3090.817014
+                  ],
+                  [
+                    3192.020579,
+                    2997.661033
+                  ],
+                  [
+                    2802.349439,
+                    4058.219482
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              -1140.0000000000002,
+              1298.4
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        },
+        {
+          "label": "R004",
+          "source_global_id": "2GPynTKoP0LwsOgDzr$nD1",
+          "name": "4",
+          "long_name": "房间",
+          "storey": "S01",
+          "source_kind": "ifc_space",
+          "bounds_mm": {
+            "x": [
+              2909.091,
+              3613.438
+            ],
+            "y": [
+              2131.911,
+              2836.259
+            ],
+            "z": [
+              -1140.0,
+              1298.4
+            ]
+          },
+          "centroid_mm": [
+            3261.265,
+            2484.085,
+            79.2
+          ],
+          "size_mm": {
+            "x": 704.347,
+            "y": 704.348,
+            "z": 2438.4
+          },
+          "boundary_walls": [],
+          "bbox_center_mm": [
+            3261.265,
+            2484.085,
+            79.2
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 0.22439306,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    3152.5,
+                    2131.911255
+                  ],
+                  [
+                    2909.091028,
+                    2375.320227
+                  ],
+                  [
+                    3370.029375,
+                    2836.258573
+                  ],
+                  [
+                    3613.438346,
+                    2592.849601
+                  ],
+                  [
+                    3152.5,
+                    2131.911255
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              -1140.0000000000002,
+              1298.4
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        },
+        {
+          "label": "R005",
+          "source_global_id": "2GPynTKoP0LwsOgDzr$nD3",
+          "name": "5",
+          "long_name": "房间",
+          "storey": "S01",
+          "source_kind": "ifc_space",
+          "bounds_mm": {
+            "x": [
+              781.0,
+              6196.0
+            ],
+            "y": [
+              -790.0,
+              5119.0
+            ],
+            "z": [
+              -1140.0,
+              1298.4
+            ]
+          },
+          "centroid_mm": [
+            3488.5,
+            2164.5,
+            79.2
+          ],
+          "size_mm": {
+            "x": 5415.0,
+            "y": 5909.0,
+            "z": 2438.4
+          },
+          "boundary_walls": [],
+          "bbox_center_mm": [
+            3488.5,
+            2164.5,
+            79.2
+          ],
+          "materials": [],
+          "material_status": "not_confirmed_by_extractor",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 22.77009829,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    1266.500267,
+                    -780.0
+                  ],
+                  [
+                    1266.500267,
+                    -380.0
+                  ],
+                  [
+                    781.0,
+                    -380.0
+                  ],
+                  [
+                    781.0,
+                    5119.0
+                  ],
+                  [
+                    1663.787175,
+                    5119.0
+                  ],
+                  [
+                    2699.818956,
+                    4082.968219
+                  ],
+                  [
+                    2233.560547,
+                    3616.70981
+                  ],
+                  [
+                    3022.314952,
+                    2827.955405
+                  ],
+                  [
+                    2569.679773,
+                    2375.320227
+                  ],
+                  [
+                    3152.5,
+                    1792.5
+                  ],
+                  [
+                    3952.849601,
+                    2592.849601
+                  ],
+                  [
+                    3539.735002,
+                    3005.964201
+                  ],
+                  [
+                    4056.067597,
+                    3522.296795
+                  ],
+                  [
+                    4637.98272,
+                    2940.381671
+                  ],
+                  [
+                    5226.952398,
+                    3469.326942
+                  ],
+                  [
+                    6196.0,
+                    3482.647751
+                  ],
+                  [
+                    6196.0,
+                    -190.694664
+                  ],
+                  [
+                    5804.355503,
+                    -190.694664
+                  ],
+                  [
+                    5804.355503,
+                    -790.0
+                  ],
+                  [
+                    4049.355503,
+                    -790.0
+                  ],
+                  [
+                    4049.355503,
+                    -260.0
+                  ],
+                  [
+                    3019.355503,
+                    -260.0
+                  ],
+                  [
+                    3019.355503,
+                    -780.0
+                  ],
+                  [
+                    1266.500267,
+                    -780.0
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              -1140.0000000000002,
+              1298.4
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        }
+      ],
+      "derived_spaces": [],
+      "stairs": [],
+      "slabs": [
+        {
+          "label": "L001",
+          "source_global_id": "1ukSMo4O5C2vDWD0Ts9IdV",
+          "name": "楼板:楼板 1:42574",
+          "ifc_class": "IfcSlab",
+          "predefined_type": "FLOOR",
+          "storey": "S01",
+          "bounds_mm": {
+            "x": [
+              541.0,
+              6436.0
+            ],
+            "y": [
+              -1030.0,
+              5817.117
+            ],
+            "z": [
+              -1440.0,
+              -1140.0
+            ]
+          },
+          "centroid_mm": [
+            3488.5,
+            2393.5585,
+            -1290.0
+          ],
+          "bbox_center_mm": [
+            3488.5,
+            2393.5585,
+            -1290.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "楼板:楼板 1",
+              "layers": [
+                {
+                  "name": " <Unnamed>",
+                  "thickness_mm": 300.0
+                }
+              ],
+              "direction": "AXIS3",
+              "direction_sense": "POSITIVE",
+              "offset_mm": 0.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 38.72910772,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    1026.500267,
+                    -1020.0
+                  ],
+                  [
+                    1026.500267,
+                    -620.0
+                  ],
+                  [
+                    541.0,
+                    -620.0
+                  ],
+                  [
+                    541.0,
+                    5354.0
+                  ],
+                  [
+                    1584.350666,
+                    5354.0
+                  ],
+                  [
+                    1584.350666,
+                    5692.117411
+                  ],
+                  [
+                    1827.0,
+                    5692.117411
+                  ],
+                  [
+                    1827.0,
+                    5817.117411
+                  ],
+                  [
+                    3352.0,
+                    5817.117411
+                  ],
+                  [
+                    3352.0,
+                    5696.0
+                  ],
+                  [
+                    6436.0,
+                    5696.0
+                  ],
+                  [
+                    6436.0,
+                    -430.694664
+                  ],
+                  [
+                    6044.355503,
+                    -430.694664
+                  ],
+                  [
+                    6044.355503,
+                    -1030.0
+                  ],
+                  [
+                    3809.355503,
+                    -1030.0
+                  ],
+                  [
+                    3809.355503,
+                    -500.0
+                  ],
+                  [
+                    3259.355503,
+                    -500.0
+                  ],
+                  [
+                    3259.355503,
+                    -1020.0
+                  ],
+                  [
+                    1026.500267,
+                    -1020.0
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              -1440.0000000000002,
+              -1140.0000000000002
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        }
+      ],
+      "coverings": [],
+      "declared_elevation_mm": -1140.0
+    },
+    {
+      "label": "S02",
+      "source_global_id": "0NecgMSWfCx99iBiCL91V$",
+      "name": "标高 3",
+      "elevation_mm": 40.0,
+      "walls": [],
+      "openings": [],
+      "doors": [],
+      "windows": [
+        {
+          "label": "N001",
+          "source_global_id": "1N$DqFwUP2Cfj_f4x$_L4e",
+          "name": "单扇百叶窗:高1100宽850:28872",
+          "ifc_class": "IfcWindow",
+          "storey": "S02",
+          "overall_width_mm": 850.0,
+          "overall_height_mm": 1100.0,
+          "measurement_status": "measured",
+          "opening_global_id": "1N$DqFwUP2Cfj_f5t$_L4e",
+          "host_global_id": "0ts1NuGzn4BQ$mq81bsDkC",
+          "host_position_mm": {
+            "center_offset_mm": 3205.0,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 855.0
+          },
+          "bounds_mm": {
+            "x": [
+              6196.0,
+              6436.0
+            ],
+            "y": [
+              2589.305,
+              3439.305
+            ],
+            "z": [
+              -285.0,
+              815.0
+            ]
+          },
+          "centroid_mm": [
+            6316.0,
+            3014.305,
+            265.0
+          ],
+          "geometry_size_mm": {
+            "x": 240.0,
+            "y": 850.0,
+            "z": 1100.0
+          },
+          "host_wall": "W007",
+          "opening": "O007",
+          "bbox_center_mm": [
+            6316.0,
+            3014.305,
+            265.0
+          ],
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "金属漆_冷灰",
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        },
+        {
+          "label": "N002",
+          "source_global_id": "1N$DqFwUP2Cfj_f4x$_LS$",
+          "name": "单扇百叶窗:高1100宽850:30431",
+          "ifc_class": "IfcWindow",
+          "storey": "S02",
+          "overall_width_mm": 850.0,
+          "overall_height_mm": 1100.0,
+          "measurement_status": "measured",
+          "opening_global_id": "1N$DqFwUP2Cfj_f5t$_LS$",
+          "host_global_id": "2R3hYUonf5OxYPUpi0xGyt",
+          "host_position_mm": {
+            "center_offset_mm": 455.837,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 855.0
+          },
+          "bounds_mm": {
+            "x": [
+              5316.247,
+              6168.503
+            ],
+            "y": [
+              3470.587,
+              3652.254
+            ],
+            "z": [
+              -285.0,
+              815.0
+            ]
+          },
+          "centroid_mm": [
+            5742.375,
+            3561.421,
+            265.0
+          ],
+          "geometry_size_mm": {
+            "x": 852.256,
+            "y": 181.667,
+            "z": 1100.0
+          },
+          "host_wall": "W005",
+          "opening": "O006",
+          "bbox_center_mm": [
+            5742.375,
+            3561.421,
+            265.0
+          ],
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "金属漆_冷灰",
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        },
+        {
+          "label": "N003",
+          "source_global_id": "1N$DqFwUP2Cfj_f4x$_LQr",
+          "name": "单扇百叶窗:高1100宽600:30549",
+          "ifc_class": "IfcWindow",
+          "storey": "S02",
+          "overall_width_mm": 600.0,
+          "overall_height_mm": 1100.0,
+          "measurement_status": "measured",
+          "opening_global_id": "1N$DqFwUP2Cfj_f5t$_LQr",
+          "host_global_id": "07QwGbnh91nQk2EDUwKBEu",
+          "host_position_mm": {
+            "center_offset_mm": 450.625,
+            "normal_offset_mm": 0.0,
+            "sill_height_mm": 830.0
+          },
+          "bounds_mm": {
+            "x": [
+              4650.91,
+              5164.215
+            ],
+            "y": [
+              3065.667,
+              3541.07
+            ],
+            "z": [
+              -310.0,
+              790.0
+            ]
+          },
+          "centroid_mm": [
+            4907.562,
+            3303.369,
+            240.0
+          ],
+          "geometry_size_mm": {
+            "x": 513.305,
+            "y": 475.403,
+            "z": 1100.0
+          },
+          "host_wall": "W013",
+          "opening": "O010",
+          "bbox_center_mm": [
+            4907.562,
+            3303.369,
+            240.0
+          ],
+          "materials": [
+            {
+              "kind": "single_material",
+              "name": "金属漆_冷灰",
+              "origin": "occurrence"
+            }
+          ],
+          "material_status": "observed"
+        }
+      ],
+      "spaces": [],
+      "derived_spaces": [],
+      "stairs": [],
+      "slabs": [],
+      "coverings": [],
+      "declared_elevation_mm": 40.0
+    },
+    {
+      "label": "S03",
+      "source_global_id": "0NecgMSWfCx99iBiCL920w",
+      "name": "天花板标高",
+      "elevation_mm": 1020.0,
+      "walls": [],
+      "openings": [],
+      "doors": [],
+      "windows": [],
+      "spaces": [],
+      "derived_spaces": [],
+      "stairs": [],
+      "slabs": [],
+      "coverings": [
+        {
+          "label": "C001",
+          "source_global_id": "1ukSMo4O5C2vDWD0Ts9IBf",
+          "name": "复合天花板:天花板 2:44408",
+          "ifc_class": "IfcCovering",
+          "predefined_type": "CEILING",
+          "storey": "S03",
+          "bounds_mm": {
+            "x": [
+              544.351,
+              6436.0
+            ],
+            "y": [
+              -1030.0,
+              5817.117
+            ],
+            "z": [
+              1020.0,
+              1320.0
+            ]
+          },
+          "centroid_mm": [
+            3490.1755,
+            2393.5585,
+            1170.0
+          ],
+          "bbox_center_mm": [
+            3490.1755,
+            2393.5585,
+            1170.0
+          ],
+          "materials": [
+            {
+              "kind": "material_layer_set_usage",
+              "name": "复合天花板:天花板 2",
+              "layers": [
+                {
+                  "name": " <Unnamed>",
+                  "thickness_mm": 300.0
+                }
+              ],
+              "direction": "AXIS3",
+              "direction_sense": "POSITIVE",
+              "offset_mm": 0.0,
+              "origin": "occurrence",
+              "parser": "text2ifc_extractor.materials+description_projection"
+            }
+          ],
+          "material_status": "observed",
+          "footprint": {
+            "status": "measured_projection",
+            "method": "world_mesh_triangle_xy_union",
+            "area_m2": 38.72273294,
+            "polygons": [
+              {
+                "exterior_xy_mm": [
+                  [
+                    1026.500267,
+                    -1020.0
+                  ],
+                  [
+                    1026.500267,
+                    -620.0
+                  ],
+                  [
+                    544.350666,
+                    -620.0
+                  ],
+                  [
+                    544.350666,
+                    5367.117411
+                  ],
+                  [
+                    1584.350666,
+                    5367.117411
+                  ],
+                  [
+                    1584.350666,
+                    5692.117411
+                  ],
+                  [
+                    1827.0,
+                    5692.117411
+                  ],
+                  [
+                    1827.0,
+                    5817.117411
+                  ],
+                  [
+                    3352.0,
+                    5817.117411
+                  ],
+                  [
+                    3352.0,
+                    5696.0
+                  ],
+                  [
+                    6436.0,
+                    5696.0
+                  ],
+                  [
+                    6436.0,
+                    -430.694664
+                  ],
+                  [
+                    6044.355503,
+                    -430.694664
+                  ],
+                  [
+                    6044.355503,
+                    -1030.0
+                  ],
+                  [
+                    3809.355503,
+                    -1030.0
+                  ],
+                  [
+                    3809.355503,
+                    -500.0
+                  ],
+                  [
+                    3259.355503,
+                    -500.0
+                  ],
+                  [
+                    3259.355503,
+                    -1020.0
+                  ],
+                  [
+                    1026.500267,
+                    -1020.0
+                  ]
+                ],
+                "holes_xy_mm": []
+              }
+            ],
+            "z_range_mm": [
+              1020.0,
+              1320.0
+            ],
+            "not_proven": [
+              "walkability",
+              "room_function",
+              "semantic_connectivity"
+            ]
+          }
+        }
+      ],
+      "declared_elevation_mm": 1020.0
+    }
+  ],
+  "unassigned": {
+    "walls": [],
+    "openings": [],
+    "doors": [],
+    "windows": [],
+    "spaces": [],
+    "stairs": [],
+    "slabs": [],
+    "coverings": []
+  },
+  "issues": [
+    {
+      "code": "SPACE_INFERENCE_INSUFFICIENT_WALLS",
+      "storey": "S02"
+    },
+    {
+      "code": "SPACE_INFERENCE_INSUFFICIENT_WALLS",
+      "storey": "S03"
+    }
+  ],
+  "capability": {
+    "explicit_space_count": 5,
+    "derived_space_count": 0,
+    "wall_count": 34,
+    "door_count": 7,
+    "window_count": 3,
+    "opening_count": 15,
+    "measurement_issue_count": 2
+  },
+  "unrepresented_classes": {},
+  "description_precision": {
+    "coordinate_unit": "metre",
+    "coordinate_decimal_places": 2,
+    "facts_unit": "millimetre",
+    "facts_rounded_for_text_only": true
+  },
+  "wall_detail_version": "text2ifc/ifc2text-wall-detail/0.7"
+}

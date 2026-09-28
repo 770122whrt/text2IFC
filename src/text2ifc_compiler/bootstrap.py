@@ -295,10 +295,15 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
     entities: dict[str, Any] = {}
     for record in document["entities"]:
         attributes = record["attributes"]
+        # IFC2X3 IfcProject.WR31 requires Name, while BIM JSON permits omission.
+        # Use the existing technical identifier; do not invent a project title.
+        name = attributes.get("Name")
+        if record["ifc_class"] == "IfcProject" and "Name" not in attributes:
+            name = record["id"]
         entity = create_entity(
             ifc_file,
             ifc_class=record["ifc_class"],
-            name=attributes.get("Name"),
+            name=name,
         )
         assign_identity(
             ifc_file,
@@ -357,7 +362,10 @@ def build_ifc_v2(document: Mapping[str, Any]) -> BootstrapResult:
         entity = entities[record["id"]]
         representation = record["attributes"].get("Representation")
         if representation is not None:
-            if representation.get("kind") == "basic_railing":
+            if representation.get("kind") == "component_geometry":
+                from .component_geometry import add_component_geometry
+                add_component_geometry(ifc_file, entity, representation, body_context)
+            elif representation.get("kind") == "basic_railing":
                 from .basic_railing import add_basic_railing_geometry
                 add_basic_railing_geometry(ifc_file, entity, representation, body_context)
             elif representation.get("kind") == "basic_filling":

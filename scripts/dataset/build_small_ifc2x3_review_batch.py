@@ -28,7 +28,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 LOCAL_MANIFEST = ROOT / "dataset/manifests/ifc-files.jsonl"
 TMP_OUTPUT = ROOT / ".tmp/dataset-acquisition/ifc2x3-small-review-batch.jsonl"
-REPORT = ROOT / "docs/reports/ifc2x3-small-model-review-batch.md"
+REPORT = ROOT / "docs/reports/ifc-datasets/ifc2x3-small-model-review-batch.md"
 MAX_BYTES = 10 * 1024 * 1024
 MIB = 1024 * 1024
 USER_AGENT = "text2ifc-dataset-review-batch/1.0"

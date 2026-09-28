@@ -30,7 +30,7 @@ def evaluate_dynamic_gates(
     BIM JSON 2.0; they compare the generated candidate with explicit Design
     Brief-derived expectations.
     """
-    graph = _CandidateGraph(candidate)
+    graph = _CandidateGraph(candidate, expected_facts=expected_facts)
     return [
         _entity_completeness_gate(graph, expected_facts),
         _storey_containment_gate(graph, expected_facts),
@@ -86,7 +86,7 @@ def _storey_containment_gate(
 ) -> dict[str, Any]:
     expected_storey_counts = _expected_counts_by_storey(expected_facts)
     exact_expected = _exact_expected_records(expected_facts)
-    if not expected_storey_counts and not exact_expected:
+    if not expected_storey_counts and not exact_expected and not graph.storey_identity_issues:
         return _gate(
             "dynamic_storey_containment",
             applicability="not_applicable",
@@ -95,7 +95,7 @@ def _storey_containment_gate(
             source_paths=["expected-facts.json", "generator/candidate.json"],
         )
 
-    issues: list[dict[str, Any]] = []
+    issues: list[dict[str, Any]] = list(graph.storey_identity_issues)
     entity_matches: list[dict[str, Any]] = []
     for collection, counts in sorted(expected_storey_counts.items()):
         ifc_class = _CLASS_BY_COLLECTION[collection]
@@ -168,7 +168,7 @@ def _storey_containment_gate(
                         }
                     )
 
-    return _gate(
+    result = _gate(
         "dynamic_storey_containment",
         applicability="applicable",
         status="failed" if issues else "passed",
@@ -177,6 +177,9 @@ def _storey_containment_gate(
         entity_matches=entity_matches,
         source_paths=["expected-facts.json", "generator/candidate.json"],
     )
+    if graph.storey_matches:
+        result['storey_matches'] = graph.storey_matches
+    return result
 
 
 def _storey_name_consistency_gate(
@@ -424,8 +427,6 @@ def _opening_fill_gate(
     issues: list[dict[str, Any]] = []
     for collection, expected_count in sorted(expected.items()):
         ifc_class = _CLASS_BY_COLLECTION[collection]
-        if expected_count <= 0:
-            continue
         expected_by_candidate: dict[str, Mapping[str, Any]] = {}
         for record in _records(expected_facts.get(collection)):
             match = _resolve_expected_entity(
@@ -437,17 +438,30 @@ def _opening_fill_gate(
             if match is not None:
                 expected_by_candidate[match["candidate_id"]] = record
         actual_elements = graph.ids_by_class(ifc_class)
+        standalone = {entity_id for entity_id, record in expected_by_candidate.items()
+                      if record.get('installation') == 'standalone'}
+        for entity_id in standalone:
+            if graph.explicit_fill_opening_for(entity_id):
+                issues.append({'code': 'STANDALONE_FILL_HAS_OPENING',
+                               'path': f'/{collection}/{entity_id}',
+                               'message': 'The explicitly standalone product must not gain an opening/host.'})
+        if expected_count <= 0:
+            continue
         elements_with_fill = [
             entity_id
             for entity_id in actual_elements
-            if graph.explicit_fill_opening_for(entity_id)
+            if entity_id not in standalone and graph.explicit_fill_opening_for(entity_id)
         ]
         elements_with_void = [
             entity_id
             for entity_id in actual_elements
-            if graph.explicit_host_wall_for_opening_element(entity_id)
+            if entity_id not in standalone and graph.explicit_host_wall_for_opening_element(entity_id)
         ]
         for entity_id in elements_with_fill:
+            expected_record = expected_by_candidate.get(entity_id)
+            component_expectations = [entry for entry in _records(expected_facts.get('semantic_expectations'))
+                if entry.get('kind') == 'component_geometry' and isinstance(expected_record, Mapping)
+                and entry.get('entity_id') == expected_record.get('id')]
             opening_id = graph.explicit_fill_opening_for(entity_id)
             host_wall = (
                 graph.explicit_host_wall_for_opening(opening_id)
@@ -460,7 +474,8 @@ def _opening_fill_gate(
                     element_id=entity_id,
                     opening_id=opening_id,
                     host_wall=host_wall,
-                    expected_record=expected_by_candidate.get(entity_id),
+                    expected_record=expected_record,
+                    component_geometry=component_expectations[0].get('value') if len(component_expectations) == 1 else None,
                 )
             )
         if len(elements_with_fill) < expected_count:
@@ -501,6 +516,7 @@ def _opening_fill_geometry_issues(
     opening_id: str | None,
     host_wall: str | None,
     expected_record: Mapping[str, Any] | None = None,
+    component_geometry: Mapping[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     if not opening_id or not host_wall:
         return []
@@ -630,7 +646,12 @@ def _opening_fill_geometry_issues(
                 "expected_relative_to": opening_id,
             }
         )
-    if element_relative_to == opening_id and element_ref and element_ref != [1, 0, 0]:
+    expected_pose = expected_record.get('placement') if isinstance(expected_record, Mapping) else None
+    if isinstance(component_geometry, Mapping) and isinstance(expected_pose, Mapping):
+        from .component_world_placement import component_world_placement_issues
+        issues.extend(component_world_placement_issues(
+            {'entities': list(graph.entities.values())}, element_id, expected_pose, component_geometry))
+    elif element_relative_to == opening_id and element_ref and element_ref != [1, 0, 0]:
         issues.append(
             {
                 "code": "FILLING_RELATIVE_ROTATION_MISMATCH",
@@ -724,7 +745,7 @@ def _opening_frame_correction() -> dict[str, Any]:
 
 
 class _CandidateGraph:
-    def __init__(self, candidate: Mapping[str, Any]) -> None:
+    def __init__(self, candidate: Mapping[str, Any], *, expected_facts=None) -> None:
         entities = candidate.get("entities", [])
         relationships = candidate.get("relationships", [])
         self.entities: dict[str, Mapping[str, Any]] = {
@@ -740,6 +761,8 @@ class _CandidateGraph:
         self._containment = self._build_explicit_containment()
         self._fill_by_element = self._build_fill_by_element()
         self._host_by_opening = self._build_host_by_opening()
+        from .storey_identity import resolve_storey_identities
+        self._storey_aliases, self.storey_matches, self.storey_identity_issues = resolve_storey_identities(candidate, expected_facts or {})
 
     def count_by_class(self, ifc_class: str) -> int:
         return len(self.ids_by_class(ifc_class))
@@ -761,6 +784,10 @@ class _CandidateGraph:
         return counts
 
     def storey_for_entity(self, entity_id: str) -> str | None:
+        actual = self.raw_storey_for_entity(entity_id)
+        return self._storey_aliases.get(actual, actual)
+
+    def raw_storey_for_entity(self, entity_id: str) -> str | None:
         if entity_id in self._containment:
             return self._containment[entity_id]
         current = entity_id

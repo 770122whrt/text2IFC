@@ -1,0 +1,439 @@
+{
+  "evidence_kind": "two real public-Brief calls plus independent deterministic analysis",
+  "arms": {
+    "original": {
+      "controller_status": "draft_required",
+      "finish_reason": "stop",
+      "provider_model": "deepseek-flash",
+      "response_id": "d3297787-b9c7-4bd8-89ba-749c6fff793d",
+      "prompt_template_id": "design-brief.v2.24",
+      "prompt_template_hash": "sha256:1c535db7e03597e4b2217c7aa535ddc9b24ccb085327bfb63fb918a5ed0abb4a",
+      "usage": {
+        "completion_tokens": 90366,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 70835,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 30336,
+        "prompt_cache_miss_tokens": 170,
+        "prompt_tokens": 30506,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 30336
+        },
+        "total_tokens": 120872
+      },
+      "windows": [
+        {
+          "id": "N001",
+          "actual_array_storey": "storey-s01",
+          "recorded_storey": null,
+          "host_wall": "W007",
+          "host_storey": null,
+          "dimensions": [
+            850.0,
+            1100.0
+          ]
+        },
+        {
+          "id": "N002",
+          "actual_array_storey": "storey-s01",
+          "recorded_storey": null,
+          "host_wall": "W005",
+          "host_storey": null,
+          "dimensions": [
+            850.0,
+            1100.0
+          ]
+        },
+        {
+          "id": "N003",
+          "actual_array_storey": "storey-s01",
+          "recorded_storey": null,
+          "host_wall": "W013",
+          "host_storey": null,
+          "dimensions": [
+            600.0,
+            1100.0
+          ]
+        }
+      ],
+      "space_vertical_fields": [
+        {
+          "id": "R001",
+          "keys": [
+            "elevation_range_mm",
+            "id",
+            "name",
+            "polygon"
+          ],
+          "vertical_fields": {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ]
+          }
+        },
+        {
+          "id": "R002",
+          "keys": [
+            "elevation_range_mm",
+            "id",
+            "name",
+            "polygon"
+          ],
+          "vertical_fields": {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ]
+          }
+        },
+        {
+          "id": "R003",
+          "keys": [
+            "elevation_range_mm",
+            "id",
+            "name",
+            "polygon"
+          ],
+          "vertical_fields": {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ]
+          }
+        },
+        {
+          "id": "R004",
+          "keys": [
+            "elevation_range_mm",
+            "id",
+            "name",
+            "polygon"
+          ],
+          "vertical_fields": {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ]
+          }
+        },
+        {
+          "id": "R005",
+          "keys": [
+            "elevation_range_mm",
+            "id",
+            "name",
+            "polygon"
+          ],
+          "vertical_fields": {
+            "elevation_range_mm": [
+              -1140.0,
+              1298.4
+            ]
+          }
+        }
+      ],
+      "blocking_unsupported": [
+        {
+          "blocking": true,
+          "evidence_refs": [
+            "schema:bim-json-v2:entity"
+          ],
+          "id": "ur-material-list-d003-d006",
+          "message": "D003–D006 的单位材料 M09 是“直接材料列表（非分层）：金属漆_冷灰、木材”，当前材料编码只支持单一材料或带层厚的层集。",
+          "path": "/known_facts/semantic_requirements",
+          "reason": "BIM JSON 2.3 与 IFC2X3 的材料契约只提供 single_material、material_layer_set、material_layer_set_usage 三种赋值；同一构件上的两个非分层材料没有层厚可依，无法保真生成，也不能删除或改写其中任一材料。",
+          "requested_value": {
+            "kind": "material_list_non_layered",
+            "materials": [
+              "金属漆_冷灰",
+              "木材"
+            ],
+            "source_material_id": "M09",
+            "targets": [
+              "D003",
+              "D004",
+              "D005",
+              "D006"
+            ]
+          },
+          "source_turns": [
+            "turn-user-001"
+          ]
+        },
+        {
+          "blocking": true,
+          "evidence_refs": [
+            "schema:bim-json-v2:entity"
+          ],
+          "id": "ur-material-list-d007",
+          "message": "D007 的单位材料 M10 是“直接材料列表（非分层）：抛光不锈钢、玻璃、白油漆”，当前材料编码只支持单一材料或带层厚的层集。",
+          "path": "/known_facts/semantic_requirements",
+          "reason": "同一构件上的三个非分层材料在 BIM JSON 2.3 材料契约中无对应赋值形式，且没有层厚可依；按保真要求记录该不可生成语义，而不是改写成单材料或凭空分层。",
+          "requested_value": {
+            "kind": "material_list_non_layered",
+            "materials": [
+              "抛光不锈钢",
+              "玻璃",
+              "白油漆"
+            ],
+            "source_material_id": "M10",
+            "targets": [
+              "D007"
+            ]
+          },
+          "source_turns": [
+            "turn-user-001"
+          ]
+        }
+      ],
+      "blocking_missing": [],
+      "generator_invoked": false,
+      "ifc_publication": false
+    },
+    "explicit_containment": {
+      "controller_status": "draft_required",
+      "finish_reason": "stop",
+      "provider_model": "deepseek-flash",
+      "response_id": "5f567167-0935-40e9-b013-305f04ba833a",
+      "prompt_template_id": "design-brief.v2.24",
+      "prompt_template_hash": "sha256:1c535db7e03597e4b2217c7aa535ddc9b24ccb085327bfb63fb918a5ed0abb4a",
+      "usage": {
+        "completion_tokens": 79875,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 61126,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_cache_hit_tokens": 5376,
+        "prompt_cache_miss_tokens": 25286,
+        "prompt_tokens": 30662,
+        "prompt_tokens_details": {
+          "audio_tokens": null,
+          "cached_tokens": 5376
+        },
+        "total_tokens": 110537
+      },
+      "windows": [
+        {
+          "id": "N001",
+          "actual_array_storey": "S02",
+          "recorded_storey": "S02",
+          "host_wall": "W007",
+          "host_storey": "S01",
+          "dimensions": [
+            850.0,
+            1100.0
+          ]
+        },
+        {
+          "id": "N002",
+          "actual_array_storey": "S02",
+          "recorded_storey": "S02",
+          "host_wall": "W005",
+          "host_storey": "S01",
+          "dimensions": [
+            850.0,
+            1100.0
+          ]
+        },
+        {
+          "id": "N003",
+          "actual_array_storey": "S02",
+          "recorded_storey": "S02",
+          "host_wall": "W013",
+          "host_storey": "S01",
+          "dimensions": [
+            600.0,
+            1100.0
+          ]
+        }
+      ],
+      "space_vertical_fields": [
+        {
+          "id": "R001",
+          "keys": [
+            "bottom_elevation_mm",
+            "boundary_walls",
+            "id",
+            "polygon",
+            "shape",
+            "top_elevation_mm"
+          ],
+          "vertical_fields": {
+            "bottom_elevation_mm": -1140.0,
+            "top_elevation_mm": 1298.4
+          }
+        },
+        {
+          "id": "R002",
+          "keys": [
+            "bottom_elevation_mm",
+            "boundary_walls",
+            "id",
+            "polygon",
+            "shape",
+            "top_elevation_mm"
+          ],
+          "vertical_fields": {
+            "bottom_elevation_mm": -1140.0,
+            "top_elevation_mm": 1298.4
+          }
+        },
+        {
+          "id": "R003",
+          "keys": [
+            "bottom_elevation_mm",
+            "boundary_walls",
+            "id",
+            "polygon",
+            "shape",
+            "top_elevation_mm"
+          ],
+          "vertical_fields": {
+            "bottom_elevation_mm": -1140.0,
+            "top_elevation_mm": 1298.4
+          }
+        },
+        {
+          "id": "R004",
+          "keys": [
+            "bottom_elevation_mm",
+            "boundary_walls",
+            "id",
+            "polygon",
+            "shape",
+            "top_elevation_mm"
+          ],
+          "vertical_fields": {
+            "bottom_elevation_mm": -1140.0,
+            "top_elevation_mm": 1298.4
+          }
+        },
+        {
+          "id": "R005",
+          "keys": [
+            "bottom_elevation_mm",
+            "boundary_walls",
+            "id",
+            "polygon",
+            "shape",
+            "top_elevation_mm"
+          ],
+          "vertical_fields": {
+            "bottom_elevation_mm": -1140.0,
+            "top_elevation_mm": 1298.4
+          }
+        }
+      ],
+      "blocking_unsupported": [
+        {
+          "blocking": true,
+          "evidence_refs": [
+            "capability:IFC2X3:IfcWindow",
+            "schema:bim-json-v2:entity"
+          ],
+          "id": "UR_WINDOW_RECORDED_STOREY_VS_HOST_STOREY",
+          "message": "窗 N001、N002、N003 的记录楼层为 S02，其宿主墙 W007、W005、W013 属于 S01。当前输出合同要求门窗归属其宿主墙所在楼层，无法在同一 canonical 结构中同时表达记录楼层 S02 与宿主墙楼层 S01，因此按源要求报告冲突而非静默改变归属。",
+          "path": "/known_facts/storeys/1/windows",
+          "reason": "源说明规定构件记录楼层与宿主墙归属是两种不同关系、必须分别保留且不得用宿主墙楼层替换记录楼层；合同不支持同一构件同时归属两个楼层，故作为不支持项保留。",
+          "requested_value": {
+            "N001": {
+              "host_storey": "S01",
+              "host_wall": "W007",
+              "recorded_storey": "S02"
+            },
+            "N002": {
+              "host_storey": "S01",
+              "host_wall": "W005",
+              "recorded_storey": "S02"
+            },
+            "N003": {
+              "host_storey": "S01",
+              "host_wall": "W013",
+              "recorded_storey": "S02"
+            }
+          },
+          "source_turns": [
+            "turn-user-001"
+          ]
+        },
+        {
+          "blocking": true,
+          "evidence_refs": [
+            "capability:IFC2X3:IfcDoor",
+            "schema:bim-json-v2:entity"
+          ],
+          "id": "UR_DOOR_NON_LAYERED_MULTI_MATERIAL_LIST",
+          "message": "门 D003、D004、D005、D006 的材料 M09（金属漆_冷灰、木材）与门 D007 的材料 M10（抛光不锈钢、玻璃、白油漆）是非分层多材料列表；当前材料合同只支持 single_material(name) 或 material_layer_set/material_layer_set_usage（需层厚与方向），无法保真表达多材料列表。",
+          "path": "/known_facts/semantic_requirements",
+          "reason": "源说明给出明确的非分层多材料关联，既不能丢弃任一材料，也不能改写为单一材料或凭空赋予层厚，故作为不支持项保留。",
+          "requested_value": {
+            "D003": [
+              "金属漆_冷灰",
+              "木材"
+            ],
+            "D004": [
+              "金属漆_冷灰",
+              "木材"
+            ],
+            "D005": [
+              "金属漆_冷灰",
+              "木材"
+            ],
+            "D006": [
+              "金属漆_冷灰",
+              "木材"
+            ],
+            "D007": [
+              "抛光不锈钢",
+              "玻璃",
+              "白油漆"
+            ]
+          },
+          "source_turns": [
+            "turn-user-001"
+          ]
+        }
+      ],
+      "blocking_missing": [],
+      "generator_invoked": false,
+      "ifc_publication": false
+    }
+  },
+  "same_prompt": true,
+  "same_runtime_controls": true,
+  "same_context_selection": false,
+  "context_selection_changed_fields": [
+    "/request_sha256"
+  ],
+  "same_evidence_content": true,
+  "same_fewshot_content": true,
+  "new_provider_tokens": 231409,
+  "cumulative": {
+    "used_or_reserved": 1283761,
+    "unknown_usage_conservative_charge": 293791,
+    "known_usage_including_history": 989970,
+    "remaining_allowance": 716239,
+    "calls": {
+      "writing": 19,
+      "reconstruction": 10
+    },
+    "limits": {
+      "writing": 26,
+      "reconstruction": 12,
+      "tokens": 2000000
+    },
+    "halted": false
+  },
+  "limitations": [
+    "One run per arm on a revealed building, not statistical causal proof or unseen-building evaluation.",
+    "Only Brief is tested live; there is no newly generated IFC and no acceptance promotion.",
+    "The model unsupported explanation is an observation, not proof of an IFC standard restriction."
+  ]
+}

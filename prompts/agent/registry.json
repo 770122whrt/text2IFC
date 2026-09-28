@@ -2734,6 +2734,906 @@
         "unselected_profile",
         "unregistered_operation"
       ]
+    },
+    {
+      "template_id": "ifc2text-compact-narrator.v0.7",
+      "role": "ifc2text_section_writer",
+      "mode": "space_and_component_guide_materials_owned_by_deterministic_section",
+      "path": "prompts/agent/ifc2text/ifc2text-compact-narrator-v0.7.md",
+      "sha256": "sha256:7cb560bbf80ebc12f0a860d4bb19448cbee3b663eec243dc0891707f37234295",
+      "required_inputs": [
+        "FACT_SUMMARY",
+        "OUTPUT_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "invented_fact",
+        "source_path",
+        "source_global_id",
+        "floor_material_claim"
+      ]
+    },
+    {
+      "template_id": "ifc2text-compact-narrator.v0.6",
+      "role": "ifc2text_section_writer",
+      "mode": "compact_narrative_with_explicit_space_observations",
+      "path": "prompts/agent/ifc2text/ifc2text-compact-narrator-v0.6.md",
+      "sha256": "sha256:6be4d992942625a3c1df48af42f2e637e366f834e92e1faffa8c6b9a3f6518ed",
+      "required_inputs": [
+        "FACT_SUMMARY",
+        "OUTPUT_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "invented_fact",
+        "source_path",
+        "source_global_id",
+        "floor_name_used_as_id",
+        "invented_enclosed_region"
+      ]
+    },
+    {
+      "template_id": "ifc2text-compact-narrator.v0.5",
+      "role": "ifc2text_section_writer",
+      "mode": "compact_narrative_with_canonical_floor_ids",
+      "path": "prompts/agent/ifc2text/ifc2text-compact-narrator-v0.5.md",
+      "sha256": "sha256:35c039e8cff918a80f2a50f486a0d0e42e682b598ae793c6fa8c2237d84f127f",
+      "required_inputs": [
+        "FACT_SUMMARY",
+        "OUTPUT_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "invented_fact",
+        "source_path",
+        "source_global_id",
+        "floor_name_used_as_id"
+      ]
+    },
+    {
+      "template_id": "ifc2text-compact-narrator.v0.4",
+      "role": "ifc2text_section_writer",
+      "mode": "compact_narrative_with_measured_detail_tables",
+      "path": "prompts/agent/ifc2text/ifc2text-compact-narrator-v0.4.md",
+      "sha256": "sha256:3d070a96c00e5a1ca4d3524d8314ed6fcf7400c754fce1dbad2f5daebfbe9ca7",
+      "required_inputs": [
+        "FACT_SUMMARY",
+        "OUTPUT_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "invented_building_fact",
+        "source_path",
+        "source_global_id"
+      ]
+    },
+    {
+      "template_id": "ifc2text-hierarchical-writer.v0.3",
+      "role": "ifc2text_section_writer",
+      "mode": "hierarchical_fact_preserving_paragraph_layout",
+      "path": "prompts/agent/ifc2text/ifc2text-hierarchical-writer-v0.3.md",
+      "sha256": "sha256:27dcc6ade796c03d45dc245cbcc3b95413783b825c33ded1ea3b5a10504d3be4",
+      "required_inputs": [
+        "BATCH",
+        "OUTPUT_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "new_building_fact",
+        "rewritten_coordinate",
+        "omitted_fact",
+        "source_global_id",
+        "source_path"
+      ]
+    },
+    {
+      "template_id": "ifc2text-outline.v0.1",
+      "role": "ifc2text_outline",
+      "mode": "plan_sections",
+      "path": "prompts/agent/ifc2text/ifc2text-outline-v0.1.md",
+      "sha256": "sha256:04cb4c27d23b2785d11d1c8f4475a9ecbcfaeb920496067eba85107a31105160",
+      "required_inputs": [
+        "BUILDING_FACTS",
+        "FACT_INDEX",
+        "EXTRACTION_ISSUES",
+        "OUTLINE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "invented_building_fact"
+      ]
+    },
+    {
+      "template_id": "ifc2text-outline.v0.2",
+      "role": "ifc2text_outline",
+      "mode": "plan_bounded_sections",
+      "path": "prompts/agent/ifc2text/ifc2text-outline-v0.2.md",
+      "sha256": "sha256:26c1513bd650e95c359237e499a89595740aa894b87cba20601538b7ccb3f3fe",
+      "required_inputs": [
+        "BUILDING_FACTS",
+        "FACT_INDEX",
+        "EXTRACTION_ISSUES",
+        "OUTLINE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "invented_building_fact",
+        "unbounded_primary_fact_section"
+      ]
+    },
+    {
+      "template_id": "ifc2text-section-writer.v0.1",
+      "role": "ifc2text_section_writer",
+      "mode": "write_bounded_section",
+      "path": "prompts/agent/ifc2text/ifc2text-section-writer-v0.1.md",
+      "sha256": "sha256:31a8bdd7e96e934c21c014b3f20a663bba540e91755dbd12d089368f31667964",
+      "required_inputs": [
+        "SECTION_PLAN",
+        "SECTION_FACTS",
+        "WRITING_CONTEXT",
+        "SECTION_LIMITATIONS",
+        "SECTION_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "fact_outside_allowed_fact_refs"
+      ]
+    },
+    {
+      "template_id": "ifc2text-merge.v0.1",
+      "role": "ifc2text_merge",
+      "mode": "order_without_body_rewrite",
+      "path": "prompts/agent/ifc2text/ifc2text-merge-v0.1.md",
+      "sha256": "sha256:790d7c441c806644bd1a31448b4ea7448406e7b3eb41ed6d308b58fc1b8af721",
+      "required_inputs": [
+        "OUTLINE",
+        "SECTION_RESULTS",
+        "GLOBAL_FACTS_AND_LIMITATIONS",
+        "MERGE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "rewritten_section_body",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "source_global_id",
+        "source_path",
+        "invented_building_fact"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.7",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.7.md",
+      "sha256": "sha256:5f5538ffb4d2f60376f7571227390577122b806e29edf6bc1f1749dce9a88a1e",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.5",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.5.md",
+      "sha256": "sha256:203bf10e7a34c39fb370b107ce6e54c7a9586b06145298f7084796bcdbf9d3ed",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.11",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.11.md",
+      "sha256": "sha256:a727ace5477cc2ee894fa60f5e208916fc5db5e19b34f1b7e8df5af7f50252c4",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "SEMANTIC_CORRECTION"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.26",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.26.md",
+      "sha256": "sha256:474a11a94c56fe105ed3c331a2cae0bc7797c97799d584fb880aa09b4d8761c3",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.27",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.27.md",
+      "sha256": "sha256:c9655b1cbe492328c9d95d592a47451c13e6baa631daf6aa74449539799de8c5",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.7",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.7.md",
+      "sha256": "sha256:773a2e8a79642830f3440ffc2af12fbbe19013aacbdac6c1315f1e1c50c13378",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-plan-repair.v1.2",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-plan-repair-v1.2.md",
+      "sha256": "sha256:771413f09ab7a647d4f0954829f598f16d13150d148e7515e086daeabe03de55",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "ALLOWED_PATHS",
+        "DESIGN_BRIEF_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.8",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.8.md",
+      "sha256": "sha256:dcb51db37934421031f19e39c2e79fddfafba40db9bfc5d43cb8acbec5b9d7cb",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.6",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.6.md",
+      "sha256": "sha256:d8d78c3cced2aa4609c12e91f68fbd38a3c3eeae01060bf509956ae47f269305",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.12",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.12.md",
+      "sha256": "sha256:4225d995a8fe67a49218a41d8779a23e8456620563528bb0849ba3503a0c1f1a",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "SEMANTIC_CORRECTION"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.28",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.28.md",
+      "sha256": "sha256:67326a5ad08f1ab2359ea25b6a318bf3b21342e0d134617fa8cc1477d8cd80d6",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.29",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.29.md",
+      "sha256": "sha256:2f68d38c3e1935ba6de9a9c5ca4df588d4b5f2d04adeba8fafdc29246bbcd483",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.9",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.9.md",
+      "sha256": "sha256:027dd14e7c7bfd8e0b9711d8631834e373ab61f8e049b81dcf7c5dd026c3016d",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.7",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.7.md",
+      "sha256": "sha256:b66ae00d0693b91defeb04d89e68caca0c863e679408d598f4281a6576e344e9",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
+      "template_id": "design-brief-semantic-repair.v1.8",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-semantic-repair-v1.8.md",
+      "sha256": "sha256:35172f4128171af44e036d2d04378744477d204de2dbcce0219f19a02dec5752",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "DESIGN_BRIEF_SCHEMA",
+        "ELEMENT_APPEARANCE_SCHEMA",
+        "REMOVABLE_SEMANTIC_PATHS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief-plan-repair.v1.3",
+      "role": "design_brief",
+      "mode": "semantic_repair",
+      "path": "prompts/agent/design-brief-plan-repair-v1.3.md",
+      "sha256": "sha256:7a52efc373363974e3e42e10bb5ec209985241dab446ca44cb8e66c76a706460",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "PREVIOUS_BRIEF",
+        "VALIDATION_ISSUES",
+        "ALLOWED_PATHS",
+        "DESIGN_BRIEF_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.13",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.13.md",
+      "sha256": "sha256:4ff9af9e68db76042748085c3805f14fd83bb0ab4c09eebf31140a13d2eae32d",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "SEMANTIC_CORRECTION"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.30",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.30.md",
+      "sha256": "sha256:e7acf7172941053c1012052bcd1b548d63210a19246621a638823834663686de",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.31",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.31.md",
+      "sha256": "sha256:473bb2cfbcbed1dc19d29e414a179584ff74a471a7ca27b5ae691167c1bdfa92",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.32",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.32.md",
+      "sha256": "sha256:b2c6f3a8f3ea3502b7e3615641012200988ca8a5fbb1764b1b719ad57e1476c4",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "design-brief.v2.33",
+      "role": "design_brief",
+      "mode": "extract_or_clarify",
+      "path": "prompts/agent/design-brief-v2.33.md",
+      "sha256": "sha256:29ba06bda99fef44c1a8cd8b5373bf42e17896a466f357b23b24307eb017780c",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF_SCHEMA",
+        "EVIDENCE_CATALOG",
+        "FEW_SHOTS"
+      ],
+      "forbidden_outputs": [
+        "bim_json_entities",
+        "bim_json_relationships",
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.10",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.10.md",
+      "sha256": "sha256:ed162525a53e327e838445db9bbda410ed3e0bfbe535ccb180471a744ce259f7",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator.v2.11",
+      "role": "bim_json_generator",
+      "mode": "generate",
+      "path": "prompts/agent/bim-json-generator-v2.11.md",
+      "sha256": "sha256:16ff7d2305e5aa804ba734c40f8ff0089eedf4fd4555fbc1443885293d2cbd2e",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "ENTITY_ID_CONTRACT",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "FEW_SHOTS",
+        "GENERATION_FEEDBACK",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unknown_contract_version"
+      ]
+    },
+    {
+      "template_id": "bim-json-generator-repair.v2.8",
+      "role": "bim_json_generator",
+      "mode": "repair",
+      "path": "prompts/agent/bim-json-generator-repair-v2.8.md",
+      "sha256": "sha256:288d0943546c9962d7fc8b7d428f22ba0d69fc7d998047b4f5ad4e0e953f3341",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "CANDIDATE",
+        "FORMAL_SCHEMA",
+        "DRAFT_SCHEMA",
+        "CAPABILITY_PROFILE",
+        "VALIDATION_FEEDBACK",
+        "GEOMETRY_FEEDBACK",
+        "ALLOWED_CHANGE_PATHS",
+        "EVIDENCE_BY_PATH",
+        "IFC_AUTHORING_CONTRACT"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "unsupported_user_fact",
+        "supervisor_semantic_patch"
+      ]
+    },
+    {
+      "template_id": "bim-json-changeset.v1.14",
+      "role": "bim_json_generator",
+      "mode": "changeset",
+      "path": "prompts/agent/bim-json-changeset-v1.14.md",
+      "sha256": "sha256:528434d14110a56fe6d40a3552ad4fab25b6fbccab28eb26367bcd36abb828c3",
+      "required_inputs": [
+        "USER_REQUEST",
+        "CONVERSATION",
+        "DESIGN_BRIEF",
+        "EXPECTED_FACTS",
+        "SCOPED_COMPONENTS",
+        "BASE_REVISION",
+        "CHANGE_SCOPE",
+        "ISSUES",
+        "CONTEXT_ISSUES",
+        "CHANGESET_SCHEMA",
+        "DRAFT_SCHEMA",
+        "FEW_SHOTS",
+        "FORMAL_SCHEMA",
+        "IFC_AUTHORING_CONTRACT",
+        "READ_ONLY_COMPONENTS",
+        "FIELD_RECOVERY_VALUES"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc",
+        "step_text",
+        "step_id",
+        "IfcCartesianPoint",
+        "IfcDirection",
+        "IfcOwnerHistory",
+        "compiler_only_object",
+        "full_bim_json_replacement",
+        "array_index_target",
+        "unauthorized_component_change"
+      ]
     }
   ]
 }

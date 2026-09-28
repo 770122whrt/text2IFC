@@ -1,0 +1,200 @@
+{
+  "schema_version": "bim-json/2.3",
+  "ifc_schema": "IFC2X3",
+  "units": {
+    "length": "MILLIMETRE"
+  },
+  "entities": [
+    {
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "attributes": {
+        "Name": "Project"
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "storey-1",
+      "ifc_class": "IfcBuildingStorey",
+      "attributes": {
+        "Name": "Level 1",
+        "Elevation": 0.0,
+        "ObjectPlacement": {
+          "origin": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "property_sets": {},
+      "provenance": {
+        "source": "test"
+      }
+    },
+    {
+      "id": "wall-1",
+      "ifc_class": "IfcWall",
+      "attributes": {
+        "Name": "Wall",
+        "ObjectPlacement": {
+          "origin": [
+            4585.61759969512,
+            2987.43908385443,
+            -1140.0
+          ],
+          "axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ref_direction": [
+            0.744001900894084,
+            0.668177499969873,
+            0.0
+          ],
+          "relative_to": "storey-1"
+        },
+        "Representation": {
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                799.140933724948,
+                -70.0
+              ],
+              [
+                638.876288776099,
+                70.0
+              ],
+              [
+                110.158448541218,
+                70.0
+              ],
+              [
+                0.0,
+                70.0
+              ],
+              [
+                7.51704501771871,
+                -70.0
+              ],
+              [
+                799.140933724948,
+                -70.0
+              ]
+            ]
+          },
+          "position": {
+            "origin": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "axis": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "ref_direction": [
+              1.0,
+              0.0,
+              0.0
+            ]
+          },
+          "direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "depth": 2160.0
+        }
+      },
+      "property_sets": {
+        "Pset_WallCommon": {
+          "IsExternal": true
+        }
+      },
+      "provenance": {
+        "source": "test"
+      }
+    }
+  ],
+  "relationships": [],
+  "provenance": {
+    "source": "test"
+  }
+}

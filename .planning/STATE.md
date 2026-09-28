@@ -14,6 +14,16 @@ progress:
 
 # Project State
 
+## 当前开发：参数化门窗与 IFC2Text 往返（2026-09-28 整理）
+
+本轮 Goal 批准范围已完成，分支 `codex/bim2text-research`。唯一实施计划为[门窗部件 v1.0](../docs/architecture/text2ifc-component-plan-v1.0.md)。实际成功范围、部分重建缺项、最大误差、预算与本地证据路径统一维护在[结果页](../docs/validation/ifc2text/component-v26/README.md)，不再在 STATE 重复数字。接续开发从[当前入口](../docs/validation/ifc2text/README.md)开始；原始失败、冻结摘要与旧准入保留。本次只整理文档，没有新增 Provider 调用。
+
+## 当前整理：旧工作树退役与 LFS 按需恢复（2026-09-24）
+
+旧 `.tmp/main-integration-20260912` 已退役，项目先从 40.38 GiB 降至 30.06 GiB。用户随后明确：GitHub 可恢复的 LFS 副本不必留在本地。已核对并移除根 LFS 存储中的 518 个副本，释放 5.54 GiB，项目约 24.53 GiB；当前展开的数据和 Proof、模型缓存、依赖及 Git 提交对象保留。3,122 个未获远端确认的对象保留。恢复清单标注每个对象的固定提交、路径、OID 和大小，按需下载，见[清理报告](../docs/reports/repository-cleanup-20260923/REPORT.md#2026-09-24github-lfs-按需恢复已执行)。原四个测试目录归档与 Git 重打包方案未执行。
+
+旧 main 的独有运行文件和五份不同的旧 RVT 仍保存在 `.tmp/retired-worktrees/main-integration-20260912/local-artifacts.zip`，仅本地保留；其 463 个 LFS 恢复对象改为从 GitHub 获取，恢复说明及索引已同步。Zcode 的远端最新提交 `d0e18fa0` 已经由 `f49bbf42` 合入 main，当前分支及远端 main 均包含它；旧镜像不是待合并工作。下方 9 月 13 日的工作树与存储保留描述只表示当时状态。
+
 ## 当前重构：接入 Zcode 有效实现（2026-09-13）
 
 用户要求的有效重构已接入：生产／基准评估分离（`2d1a18bb`）、独立 Proof 包（`d9a91212`）、25 个 runner 分类并保留旧入口。当前实现作为基线，未覆盖后续修复或冻结合同。评估 211 项通过；Proof 168 项通过、16 项原有失败已用原代码复现；分组新入口／公共链检查及本轮夹具修复已完成，另确认 2 项旧 Window 数据路径失败。完整分段结果与 18 项既有测试债务见[执行记录](../docs/reports/zcode-refactor-adoption-20260913/REPORT.md)。无新 Provider／Full Preflight／main 合并。
@@ -307,7 +317,7 @@ R1 evidence: fresh ordered genuine run r1-20260901T055419268779Z passed E1-E4,
              Calls before stop: Stage 1=12, Stage 1.5=11, Stage 2=10.
 R1 boundary: nine successful cases retain repaired IFC and recorded L0/L1/L2;
              R1 Proof 0.3, final IFCCompare and Phase closure were not run.
-Handoff: docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md
+Handoff: [2026-09-01 historical checkpoint](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md)
 Matrix: docs/validation/repair-milestone-r1/
         plan07-r1-genuine-execution-matrix-2026-09-01.md
 Next: Start the next conversation from the handoff. Diagnose H3 target
@@ -551,7 +561,7 @@ Plan: 7 of 7 complete; Plan 07 closed by accepted R1 Proof
 
 ## Next Action
 
-Use `docs/handoffs/repair-milestone-r1-closure-2026-09-03.md` and the linked
+Use `docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md` and the linked
 final Proof Matrix as the authoritative R1/Phase 12.1 continuation point.
 Preserve all genuine runs and curated Proof append-only. Do not start Phase 13
 without a separate explicit task.

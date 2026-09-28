@@ -1,0 +1,225 @@
+{
+  "schema_version": "text2ifc/component-stage2-development/1.0",
+  "status": "offline_development_checks_complete_live_admission_pending",
+  "real_provider_calls": 0,
+  "checks": [
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-family-01.txt",
+      "sha256": "96a1dbb3b2b0b305e590243e9dccfb9b7a47270507cb3cd181548cf3b6f9fd17",
+      "result": "45 passed in 109.36s (0:01:49)"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-regression-01.txt",
+      "sha256": "9264c0250ddd9ef619363e85ec167692b3de1868ed9d9f03ff18801f45c0b429",
+      "result": "3 failed, 307 passed in 468.14s (0:07:48)"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-old-bridge-02.txt",
+      "sha256": "bcedf06f91027c7a6c2d50d58da4f52e0530fa9cd30cfff63832eea86af79bfe",
+      "result": "5 passed in 48.31s"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-family-02.txt",
+      "sha256": "59c4f6ebf2e392b436d982223cb9072906f5f23584a7156faa909ba9977ddddf",
+      "result": "1 failed, 47 passed in 103.12s (0:01:43)"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-identity-regression-03.txt",
+      "sha256": "3256adfe6fe5688251728c2c5060003a684e1db1230415ab44cd997f30fc5450",
+      "result": "40 passed in 11.95s"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-final-routes-03.txt",
+      "sha256": "54441fb0a5dfd668c5d11df78b227e4a98029f391434e536430f9036b5427559",
+      "result": "1 failed, 19 passed in 68.54s (0:01:08)"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-cli-03.txt",
+      "sha256": "36f5aafc78515fbfdbcf96ba73e1b86d04c29cbfe4e5c8c6132338867a743222",
+      "result": "1 passed, 12 deselected in 2.30s"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-campaign-regression-01.txt",
+      "sha256": "62a56e6e255d8e3f8b9fe20aa786d8e08f6fee648d1d9c615931e31b0917eb85",
+      "result": "61 passed in 48.40s"
+    },
+    {
+      "log": ".tmp/component-v26-baseline-20260924/s2-mm-boundary-01.txt",
+      "sha256": "03fae2b3e589ee4770636043c470cc8f3324a0c4412d7b8a558cbe1dc2df118b",
+      "result": "6 passed, 15 deselected in 23.61s"
+    }
+  ],
+  "real_description_preparation": [
+    {
+      "case": "hxp",
+      "source_sha256": "31f8f5a05b1965e2ab11122559385203229f316a4ea8fe15feec31c86d80d942",
+      "source_unchanged": true,
+      "elapsed_seconds": 3.4311234999913722,
+      "utf8_bytes": 44898,
+      "real_provider_calls": 0,
+      "report": {
+        "schema_version": "text2ifc/compact-prepared/1.0",
+        "status": "prepared_requires_component_review",
+        "source_path": "dataset\\external\\bimnet\\hxp.ifc",
+        "schema": "IFC2X3",
+        "counts": {
+          "walls": 34,
+          "openings": 15,
+          "doors": 7,
+          "windows": 3,
+          "spaces": 5,
+          "stairs": 0,
+          "slabs": 1,
+          "coverings": 1
+        },
+        "effective_source_path": "dataset\\processed\\experiments\\component-v26-text-prepared-20260924-01\\hxp\\source-host-normalized.ifc",
+        "description_version": "1.0",
+        "containment_policy": "host_storey_for_selected_fillings",
+        "normalization": {
+          "schema_version": "text2ifc/source-normalization/0.7",
+          "policy": "host_storey_for_selected_fillings",
+          "source": "dataset\\external\\bimnet\\hxp.ifc",
+          "destination": "dataset\\processed\\experiments\\component-v26-text-prepared-20260924-01\\hxp\\source-host-normalized.ifc",
+          "role": "policy_normalized_working_copy_not_proof_of_source_defect",
+          "moved_count": 3,
+          "changes": [
+            {
+              "global_id": "1N$DqFwUP2Cfj_f4x$_L4e",
+              "from": {
+                "global_id": "0NecgMSWfCx99iBiCL91V$",
+                "name": "标高 3",
+                "class": "IfcBuildingStorey"
+              },
+              "to": {
+                "global_id": "0NecgMSWfCx99iBiCL933E",
+                "name": "地板标高",
+                "class": "IfcBuildingStorey"
+              },
+              "host": {
+                "global_id": "0ts1NuGzn4BQ$mq81bsDkC",
+                "name": "基本墙:墙240:7073",
+                "class": "IfcWallStandardCase"
+              }
+            },
+            {
+              "global_id": "1N$DqFwUP2Cfj_f4x$_LS$",
+              "from": {
+                "global_id": "0NecgMSWfCx99iBiCL91V$",
+                "name": "标高 3",
+                "class": "IfcBuildingStorey"
+              },
+              "to": {
+                "global_id": "0NecgMSWfCx99iBiCL933E",
+                "name": "地板标高",
+                "class": "IfcBuildingStorey"
+              },
+              "host": {
+                "global_id": "2R3hYUonf5OxYPUpi0xGyt",
+                "name": "基本墙:墙170:5110",
+                "class": "IfcWallStandardCase"
+              }
+            },
+            {
+              "global_id": "1N$DqFwUP2Cfj_f4x$_LQr",
+              "from": {
+                "global_id": "0NecgMSWfCx99iBiCL91V$",
+                "name": "标高 3",
+                "class": "IfcBuildingStorey"
+              },
+              "to": {
+                "global_id": "0NecgMSWfCx99iBiCL933E",
+                "name": "地板标高",
+                "class": "IfcBuildingStorey"
+              },
+              "host": {
+                "global_id": "07QwGbnh91nQk2EDUwKBEu",
+                "name": "基本墙:墙140:14848",
+                "class": "IfcWallStandardCase"
+              }
+            }
+          ],
+          "geometry_and_noncontainment_entities_unchanged": true,
+          "source_unchanged": true,
+          "reference_storeys_preserved": true,
+          "original_roundtrip_evidence_replaced": false
+        },
+        "derived_regions": 0,
+        "unrepresented_classes": {},
+        "characters": 30483,
+        "han_characters": 5296,
+        "source_unchanged": true,
+        "coordinate_unit": "mm",
+        "coordinate_decimals": 1,
+        "opening_profile_coordinate_decimals": 6,
+        "component_supported_count": 5,
+        "component_unsupported_count": 5
+      }
+    },
+    {
+      "case": "tall-building",
+      "source_sha256": "9f180a7148bb7bcf43dd80800068553f1c8b189ebe0dc84b6c498061832960d1",
+      "source_unchanged": true,
+      "elapsed_seconds": 10.256661699997494,
+      "utf8_bytes": 87451,
+      "real_provider_calls": 0,
+      "report": {
+        "schema_version": "text2ifc/compact-prepared/1.0",
+        "status": "prepared_requires_component_review",
+        "source_path": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+        "schema": "IFC2X3",
+        "counts": {
+          "walls": 24,
+          "openings": 26,
+          "doors": 5,
+          "windows": 21,
+          "spaces": 3,
+          "stairs": 0,
+          "slabs": 5,
+          "coverings": 0
+        },
+        "effective_source_path": "dataset\\external\\bim-whale-ifc-samples\\TallBuilding\\IFC\\TallBuilding.ifc",
+        "description_version": "1.0",
+        "containment_policy": "host_storey_for_selected_fillings",
+        "normalization": {
+          "moved_count": 0,
+          "source_unchanged": true
+        },
+        "derived_regions": 9,
+        "unrepresented_classes": {
+          "IfcRoof": 1
+        },
+        "characters": 56315,
+        "han_characters": 11719,
+        "source_unchanged": true,
+        "coordinate_unit": "mm",
+        "coordinate_decimals": 1,
+        "opening_profile_coordinate_decimals": 6,
+        "component_supported_count": 25,
+        "component_unsupported_count": 1
+      }
+    }
+  ],
+  "limits": [
+    "No real Provider loop yet",
+    "No whole-building reconstruction yet",
+    "Not a Stage Admission record",
+    "Part physics materials remain out of scope"
+  ],
+  "failure_resolutions": [
+    {
+      "failed_log": "s2-regression-01.txt",
+      "cause": "Three old offline fixtures claimed a design-review template without review context. Production correctly refused. Fixture template now follows its declared schema and non-review mode.",
+      "verified_by": "s2-old-bridge-02.txt"
+    },
+    {
+      "failed_log": "s2-family-02.txt",
+      "cause": "Test incorrectly required the canonical internal entity ID to equal the original Brief ID. The existing contract retains brief_id and its canonical mapping. The original ID is now preserved through flat opening projection.",
+      "verified_by": "s2-identity-regression-03.txt"
+    },
+    {
+      "failed_log": "s2-final-routes-03.txt",
+      "cause": "CLI test passed a falsey empty iterable, selecting captured stdin. Switched fixture to an explicit empty StringIO stream.",
+      "verified_by": "s2-cli-03.txt"
+    }
+  ]
+}

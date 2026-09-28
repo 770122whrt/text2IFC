@@ -50,6 +50,7 @@ def run_changeset_stage(
     context_issues: list[dict[str, Any]] | None = None,
     trace_level: str | None = "debug",
     field_recovery: bool = False,
+    field_recovery_values: Mapping[str, Any] | None = None,
     generation_package: Mapping[str, Any] | None = None,
     semantic_correction: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -58,12 +59,13 @@ def run_changeset_stage(
     output = Path(output_dir)
     output.mkdir(parents=True, exist_ok=True)
     field_removal = any(e.get('remove_paths') for e in (semantic_correction or {}).get('edits', {}).values())
-    changeset_version = 'text2ifc/bim-json-changeset/1.3' if candidate.get('schema_version') == 'bim-json/2.3' else 'text2ifc/bim-json-changeset/1.2' if any('/part_appearance' in e.get('remove_paths', []) for e in (semantic_correction or {}).get('edits', {}).values()) else 'text2ifc/bim-json-changeset/1.1' if field_removal else 'text2ifc/bim-json-changeset/1.0'
+    changeset_version = 'text2ifc/bim-json-changeset/1.3' if candidate.get('schema_version') in {'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'} else 'text2ifc/bim-json-changeset/1.2' if any('/part_appearance' in e.get('remove_paths', []) for e in (semantic_correction or {}).get('edits', {}).values()) else 'text2ifc/bim-json-changeset/1.1' if field_removal else 'text2ifc/bim-json-changeset/1.0'
     changeset_schema = load_changeset_schema(changeset_version)
     draft_schema = load_draft_schema()
-    new_semantics = candidate.get('schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3'}
+    new_semantics = candidate.get('schema_version') in {'bim-json/2.1', 'bim-json/2.2', 'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'}
     if new_semantics:
-        draft_schema = _load_schema_path(PROJECT_ROOT / ('schemas/bim-json/draft/1.3/schema.json' if candidate.get('schema_version') == 'bim-json/2.3' else 'schemas/bim-json/draft/1.2/schema.json' if candidate.get('schema_version') == 'bim-json/2.2' else 'schemas/bim-json/draft/1.1/schema.json'))
+        from .generation_contract import draft_schema_relative_path
+        draft_schema = _load_schema_path(PROJECT_ROOT / draft_schema_relative_path(candidate['schema_version']))
     renderer_inputs = {
         "USER_REQUEST": user_request,
         "CONVERSATION": conversation,
@@ -97,9 +99,12 @@ def run_changeset_stage(
     if candidate.get('schema_version') == 'bim-json/2.2':
         template_id = 'bim-json-changeset.v1.9'
         renderer_inputs.setdefault('SEMANTIC_CORRECTION', {})
-    if candidate.get('schema_version') == 'bim-json/2.3':
-        template_id = 'bim-json-changeset.v1.10'
+    if candidate.get('schema_version') in {'bim-json/2.3', 'bim-json/2.4', 'bim-json/2.5', 'bim-json/2.6'}:
+        template_id = 'bim-json-changeset.v1.13' if candidate.get('schema_version') == 'bim-json/2.6' else 'bim-json-changeset.v1.12' if candidate.get('schema_version') == 'bim-json/2.5' else 'bim-json-changeset.v1.11' if candidate.get('schema_version') == 'bim-json/2.4' else 'bim-json-changeset.v1.10'
         renderer_inputs.setdefault('SEMANTIC_CORRECTION', {})
+    if field_recovery and candidate.get('schema_version') == 'bim-json/2.6':
+        template_id = 'bim-json-changeset.v1.14'
+        renderer_inputs['FIELD_RECOVERY_VALUES'] = dict(field_recovery_values or {})
     rendered = render_prompt(template_id=template_id, inputs=renderer_inputs)
     _write_json(output / "prompt-render-input.json", renderer_inputs)
     _write_text(output / "prompt-rendered.md", rendered["text"])
@@ -160,7 +165,7 @@ def run_changeset_stage(
         if not diagnostics:
             classification = "changeset"
             artifact_name = "changeset.json"
-    elif parsed.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3'}:
+    elif parsed.get("draft_version") in {"bim-json-draft/1.0", "bim-json-draft/1.1", "bim-json-draft/1.2", 'bim-json-draft/1.3', 'bim-json-draft/1.4', 'bim-json-draft/1.5', 'bim-json-draft/1.6'}:
         diagnostics.extend(_issue_payload(issue) for issue in validate_draft(parsed))
         if not diagnostics:
             classification = "draft"

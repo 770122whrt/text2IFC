@@ -1,0 +1,184 @@
+{
+  "entities": [
+    {
+      "attributes": {
+        "Name": "Single Wall Geometry Diagnostic"
+      },
+      "id": "project-1",
+      "ifc_class": "IfcProject",
+      "property_sets": {},
+      "provenance": {
+        "brief_path": "/known_facts/building/project",
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Site",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "project-1"
+        }
+      },
+      "id": "site-1",
+      "ifc_class": "IfcSite",
+      "property_sets": {},
+      "provenance": {
+        "brief_path": "/known_facts/building/site",
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "Building",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "site-1"
+        }
+      },
+      "id": "building-1",
+      "ifc_class": "IfcBuilding",
+      "property_sets": {},
+      "provenance": {
+        "brief_path": "/known_facts/building",
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Elevation": -1140.0,
+        "Name": "S01",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            -1140.0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "building-1"
+        }
+      },
+      "id": "storey-S01",
+      "ifc_class": "IfcBuildingStorey",
+      "property_sets": {},
+      "provenance": {
+        "brief_path": "/known_facts/storeys/0",
+        "source": "turn-user-001"
+      }
+    },
+    {
+      "attributes": {
+        "Name": "W013",
+        "ObjectPlacement": {
+          "axis": [
+            0,
+            0,
+            1
+          ],
+          "origin": [
+            0,
+            0,
+            0
+          ],
+          "ref_direction": [
+            1,
+            0,
+            0
+          ],
+          "relative_to": "storey-S01"
+        },
+        "Representation": {
+          "depth": 2160.0,
+          "direction": [
+            0,
+            0,
+            1
+          ],
+          "kind": "extruded_profile",
+          "profile": {
+            "kind": "polygon",
+            "points": [
+              [
+                5227.0,
+                3469.3
+              ],
+              [
+                5014.2,
+                3466.4
+              ],
+              [
+                4620.8,
+                3113.1
+              ],
+              [
+                4538.8,
+                3039.5
+              ],
+              [
+                4638.0,
+                2940.4
+              ]
+            ]
+          }
+        }
+      },
+      "id": "wall-storey-S01-w013",
+      "ifc_class": "IfcWall",
+      "property_sets": {},
+      "provenance": {
+        "brief_path": "/known_facts/storeys/0/walls/interior/0",
+        "is_solid_body_before_openings": true,
+        "outline_role": "bottom_face_polygon",
+        "source": "turn-user-001"
+      }
+    }
+  ],
+  "ifc_schema": "IFC2X3",
+  "provenance": {
+    "authoring_contract": "text2ifc/generation-authoring-contract/1.3",
+    "brief_schema_version": "text2ifc/design-brief/2.7",
+    "source": "turn-user-001"
+  },
+  "relationships": [],
+  "schema_version": "bim-json/2.3",
+  "units": {
+    "length": "MILLIMETRE"
+  }
+}
