@@ -10,6 +10,18 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 
 本目录集中保存可执行的验证设计、评估协议、样例冻结规则和配套实施指令。
 
+## 当前规划：Repair 四组对比实验（2026-09-29）
+
+[专题入口](repair-comparison/README.md)维持原路径v0.2：约20个不同IFC的四组实验，正式方案暂按20题，包含2–4个必要信息澄清案例、全量人审与按题预算。两道开发题使用方位／几何坐标、明确尺寸和唯一参照，公开请求无GUID／构件名／方法提示，撤销普通门开向必答项。固定目录原位更新；37项测试及两份损坏IFC的schema＋EXPRESS和独立CLI通过。同步网格查看器已生成，浏览器视觉验收尚未完成。未安装Harness、修改生产代码或启动真实实验。
+
+| 文档 | 内容 |
+|---|---|
+| [实验计划](repair-comparison/plan.md) | 四组中性输入、任务准备与人审、实施顺序和动态预算 |
+| [指标规范](repair-comparison/metrics.md) | 数量、构件、关系、整任务、IFC 校验、保全、交互和成本 |
+| [DeepSeek Harness 接入与隔离](repair-comparison/deepseek-harness-integration.md) | 渐进调研、完整运行时隔离、同题澄清继续与推理记录 |
+| [Codex 开发启动提示词](repair-comparison/development-start-prompt.md) | 直接读取仓库文档，核对代码和环境，提出首批开发建议 |
+| [首批交付与开发建议](repair-comparison/development-readiness.md) | 两道开发题、准备／检查工具与验证，环境／DSH 证据和后续范围 |
+
 ## Repair Milestone R1 最终验收冻结包
 
 - [R1 冻结包索引](repair-milestone-r1/README.md)

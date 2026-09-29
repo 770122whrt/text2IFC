@@ -1,0 +1,280 @@
+# Repair 对比实验：代码、环境核对与首批开发建议
+
+> 核对日期：2026-09-29｜依据：本目录现行 v0.2 三份正文及启动提示词。
+> 结论：可以进入小范围离线开发；尚不具备四组真实运行条件。
+> 后续实施：用户批准先交两道开发题；2026-09-29 已完成最小准备／检查工具和待审材料，见 §6。§2–5 保留同日先前只读核对的时点事实。未安装软件、启动服务、调用模型或修改生产代码；本文不是 Stage Admission 或正式实验结果。
+
+## 1. 当前交付与下一步
+
+**已按用户第一轮反馈重写两套简单开发题，两题均为信息充分题。** 请求不用GUID、构件名或方法提示；窗题按西侧外墙的方位和现有窗排序定位，门题按二层唯一空门洞定位，开向不再强设澄清。新版附实际IFC、验收条件、来源许可和独立格式报告，保持pending_human_review供复核。工具支持准备、检查及白名单导出，尚不执行模型或问答循环，见§6。
+
+题包形式确认后，阶段 2 再实现同题预算／问答账本、A/C 中性工具、B 薄适配和独立评分基本自检。DSH 安装与正式制题可按依赖交错，安装范围及付费联调保留单独节点；正式材料每批 5 题审阅。按用户最新要求保持约 20 个不同源 IFC 的规模，优先明确许可，不把同族变体当独立样本；开发数与正式数一并登记，见[计划 §6.1](plan.md#61-源模型选择)。
+
+最影响开发顺序的四个事实：
+
+1. **B 的公共入口可以复用。** 已有澄清、状态版本、恢复和正式发布边界，不需要复制修复流程。
+2. **现有 benchmark 不是方法无关评分器。** 它依赖 ChangeSet 和 application record；可复用差分、几何和语义原语，须另建实验侧评分入口。
+3. **现有生产 validator 是“相对 D 无新增诊断”，且不执行 EXPRESS。** 不能直接拿其 `passed` 填四组的最终 IFC 校验成绩，也不应为实验改写旧生产 policy。
+4. **DSH 尚未安装，Docker 引擎当前不可连接。** SDK 源码版本与 PyPI 发布存在差距，标准 SDK 协议也没有现成的人工问答 RPC；这些阻断 D 的接入验收，不阻断 W1。
+
+## 2. 实际工作区与 v0.2 核对
+
+### 2.1 分支、权限与变更边界
+
+- Git 根：`E:\code for project\bimnet`；实际分支：`codex/repair-experiment`。
+- HEAD：`ef4b7a2d198373403d1373969a388e165b65f090`。这是本次代码核对基线，不表示工作树干净。
+- 开始时 `.planning/STATE.md`、文档索引、研究登记及多份 dataset 文件已有修改；整个 `repair-comparison/` 目录和 `tests/dataset/test_rvt_pipeline.py` 为已有未跟踪内容。保留这些增量，不暂存、提交或推送。
+- 受限沙盒的 Git 曾把 426 个不可访问 Proof 文件显示为 `D`；一次提升权限的只读 `git status` 没有这些删除，仅显示原有修改。不能据受限输出恢复或删除 Proof。
+- 本轮未读取 `.env`、密钥或 SSH 私钥。只核对 SSH 配置中的 Host 别名，不连接远程服务器。
+- 已按仓库接管指南、文档入口、STATE、ROADMAP／PROJECT 和 Agent 准入协议核对。本次是 W0，未启动 Phase 13 或其他代码阶段。
+
+使用已安装的 `fast-architecture-review`、`documentation-contract-audit`；可用技能目录未找到 `write-technical-document`，不为此安装。一个只读子任务核对评分和制题代码；没有委派文件修改。
+
+### 2.2 条款一致性
+
+| v0.2 要求 | 核对结论与实施影响 |
+|---|---|
+| A/B/C/D，20 源 IFC、20 题、80 个任务单元 | 三份正文一致；没有发现实际四组执行骨架。SDK turn、工具调用和澄清不另增任务数 |
+| A/C 中性输入，可脚本也可直接文本编辑 | 正文一致。B 的禁止模型直接输出 STEP 仍约束 B；新执行器不能复用 B 的输出禁令 |
+| 冻结 D 与可写副本分开 | 正文一致。需独立目录和字节复制，不能 hardlink 同一 inode，也不能把被修改副本作为评分 D |
+| 全部 20 题人审，2–4 个澄清题先按 3 个准备 | 正文一致。制题程序默认 pending；小规模评分自检不能替代人审 |
+| 普通提问、同题继续、预算不清零 | 正文一致；B 已有中间状态，外部任务 ledger 及 D 问答桥未实现 |
+| 保存返回推理、工具、usage、失败和摘要 | 正文一致；已有原始响应保存可复用，但跨阶段、重试、子 Agent、摘要的完整覆盖尚未证明 |
+| 按任务动态预算，不继承统一 128k／900 秒 | 正文一致。旧 Generation／IFC2Text 预算只能参考实现，不能继承额度、历史账本和默认值 |
+| 关系为正确数／应修数，四组独立评分 | 正文一致；当前 validator 和 benchmark 的语义缺口属于待实施工作，不是应回退 v0.2 的理由 |
+
+没有发现需要改回研究决定的正文冲突。本轮在原文增加核对结果入口、更新执行状态，并澄清 DSH 版本与接口边界；不复制指标公式或另建版本正文。
+
+### 2.3 GPT／DeepSeek 型号证据的边界
+
+OpenAI 官方模型页明确列出 `gpt-6-sol`；因此 C 的目标 ID 有[官方依据][O1]。本地已有 2026-09-28 的[网关最小请求记录](../../../.tmp/openai-model-probe-20260928-155317/gpt-6-sol.json)，仅证明当时该用户指定网关的 Chat Completions 返回 HTTP 200／`OK`，不证明工具往返、长上下文、真实上游版本或此次实验准入。本轮不重测，也不改选 Astra。
+
+DeepSeek 当前官方 Chat Completions 文档的模型枚举为 `deepseek-flash`／`deepseek-v4-pro`，DSH SDK 示例仍使用 `deepseek-v4-flash`。依据：[API 文档][D10]、[SDK 示例][D1]。不据此自动替换项目原配置，也不能把两个 Flash 名称认作不可变同一快照。正式冻结前须核对 A/B/D 实际共同可用的精确路由、返回标识与推理参数；确认过程属于后续获准联调。
+
+## 3. 代码复用与缺口
+
+以下为静态代码核对；本轮没有重跑旧测试，不引用历史通过数作为当前验证。
+
+| 责任 | 现有准确入口 | 可复用内容 | 本实验仍缺什么 |
+|---|---|---|---|
+| B 公共修复流程 | [`api.py`](../../../src/text2ifc_ifc_repair/api.py)：`RepairAPI`，`start`（140）、`continue_with_answer`（280）、`read_result`（467）、`resume`（470） | 保留原生入口；构造器接受 Provider 注入，公共输入不含 G／mutation mapping | 外部 task/run 与 native run 绑定；只收集正式发布结果；任务总预算与问答转接 |
+| 等待和发布 | [`run_models.py`](../../../src/text2ifc_ifc_repair/run_models.py)：`RunStage`、`TERMINAL_STAGES`；[`run_store.py`](../../../src/text2ifc_ifc_repair/run_store.py)：`commit_terminal_publication`（185） | `clarification_required` 不在终态集合；有 state_version、clarification_id 与持久化边界 | 映射为实验 `awaiting_user`；恢复时保持外部身份、文件和累计资源；不得读 staging 挑结果 |
+| B 模型传输 | [`openai_compat.py`](../../../src/text2ifc_agent/openai_compat.py)：`OpenAICompatibleLiveProvider.generate_live`（236） | DeepSeek Chat Completions、JSON 输出、connection retry、原始 envelope 与 usage | 当前是一轮结构化响应，未实现 A/C 工具循环；固定 `response_format=json_object`、`temperature=0`，没有独立 OpenAI 实验路由配置，不应拿历史 `mimo` 名称包装 C |
+| 原始推理与 trace | [`request_stage.py`](../../../src/text2ifc_ifc_repair/request_stage.py)：`_call_provider`（426）；[`provider_stage.py`](../../../src/text2ifc_ifc_repair/provider_stage.py)：`_call_bound_provider`（851）；[`property_resolution_stage.py`](../../../src/text2ifc_ifc_repair/property_resolution_stage.py)：`_call_provider`（445） | 正常返回保留 live response／events；原始 envelope 可以携带返回的 `reasoning_content`，不是只有最终文本 | 缺统一 reasoning_ref/status、task 级 request/attempt 关联；连接重试循环未逐次发出完整失败 ledger。不能宣称全部失败已保存 |
+| trace 写出 | [`live_trace.py`](../../../src/text2ifc_agent/live_trace.py)：`write_provider_failure_trace`（23）、`write_live_trace`（51） | 脱敏、原始证据及引用的写出模式 | compact 模式可能只存摘要／哈希，取决于 preserve_deep_evidence；需实验侧明确保留政策，日志副本不能破坏在线工具历史 |
+| 现有预算 | [`generation_budget.py`](../../../src/text2ifc_agent/generation_budget.py)、[`goal_budget.py`](../../../src/text2ifc_ifc2text/goal_budget.py)：`GoalBudget.reserve/settle` | 持久账本、预留／结算、请求阻断的实现思路 | 四组共享 task 语义、人工等待、并发在途、DSH Messages cache 口径、动态增额规则；不直接接旧账本 |
+| 旧私有比较 | [`benchmark_evaluation.py`](../../../src/text2ifc_ifc_repair/benchmark_evaluation.py)：`BenchmarkEvaluationInputs`（53）、`evaluate_benchmark`（151） | B 的生产／私有比较隔离 | 依赖 `ProductionEvaluationInputs` 的 ChangeSet、application_result 和 registry；不是四组 scorer |
+| 独立 IFC 差分 | [`compare.py`](../../../src/text2ifc_ifc_repair/compare.py)：`build_ifc_difference_report`（580）、`normalized_model_diff`（659）、`compare_mapped_elements`（1332） | D/R 文件差分、STEP 归一化、重复 GUID 检查、已有映射后的新 GUID 对比 | 事前合同驱动的一对一目标匹配、关系归一化与指标；mapped comparison 不负责生成公平映射 |
+| IFC 规则检查 | [`ifc_validation.py`](../../../src/text2ifc_ifc_repair/ifc_validation.py)：`compare_validation_models`（54）、`_collect_diagnostics`（127） | 生产相对诊断、缓存与差分流程 | policy 为 `ifcopenshell-schema-no-express/0.1`，`express_rules=False`；实验侧需固定规则、完整执行和最终阻断错误判定 |
+| 几何、语义、保全 | [`geometry.py`](../../../src/text2ifc_ifc_repair/geometry.py)：`product_geometry_bounds_in_host_mm`、`measure_straight_rectangular_member`；[`semantic_facts.py`](../../../src/text2ifc_ifc_repair/semantic_facts.py)；[`occurrence_fidelity.py`](../../../src/text2ifc_ifc_repair/occurrence_fidelity.py) | 适用形状下的度量、属性／单位／ownership 抽取 | 不能泛化为任意几何；occurrence fidelity 的通用路径只覆盖 Window/Door/Opening。整 GUID allowlist 不足以表达“允许开洞但不许改墙厚” |
+| 数据身份 | [`IFC_DATASET.md`](../../../dataset/external/IFC_DATASET.md)、`dataset/external/ifc-asset-register.jsonl`／`ifc-usable-register.jsonl` | 来源、实际 assessment 字节、哈希、family/leakage_group、许可与使用条件 | usable 不等于实验题合格；只对后续候选逐一核对 IFC2X3、支持前提、独立场景与权限，不能把文件变体算独立建筑 |
+| 制题 | [`mutation.py`](../../../src/text2ifc_ifc_repair/mutation.py)：`remove_window_and_opening`（189）、批量窗（326）、`remove_door`（557）、批量门（695）、`remove_structural_members`（41） | 源不变、损坏副本和 private mutation 记录 | 人工合同、分母、人审卡、答复卡和公开包；程序 valid 不等于 accepted |
+
+另需避开两个旧入口：`build_ifc_repair_benchmarks.py` 仅面向固定历史 benchmark，默认打印、指定 `--write` 才写旧 manifest；`build_small_ifc2x3_review_batch.py` 会联网发现／下载外部模型。它们都不是本次 20 题人审材料生成器。`run_damage_restoration.py` 还会进入 RepairAPI，不能当“只制题”命令使用。
+
+在 `src/`、`scripts/`、`tests/`、`schemas/` 定向检索，未发现 v0.2 的四组执行器、answer card、task budget 或实验 run ledger。`text2ifc/ifc-repair-comparison/0.1` 是已有 IFC 差分 schema，不能误认作本次实验骨架。
+
+## 4. 环境只读核对
+
+| 项目 | 本轮实测 | 对开发的影响 |
+|---|---|---|
+| Python | 仓库 `.venv\Scripts\python.exe` 为 3.12.4；`pyproject.toml` 要求 ≥3.12 | 足以开展首批本地离线开发 |
+| IFC／测试依赖 | IfcOpenShell 0.8.5，实际 import 成功；pytest 8.4.2；Pydantic 2.13.4 | 版本可查；未据此声明几何或评分正确 |
+| API 库 | openai 2.43.0、openai-agents 0.17.6 | 已安装不等于有中性执行器；首批无需新增 SDK |
+| validator CLI | `python -B -m ifcopenshell.validate --help` 列出 `--rules`、`--json` | 文档命令参数存在；尚未验证真实 IFC 的退出码、诊断和规则完整性 |
+| DSH | 当前 venv 无 SDK/runtime-bin，PATH 无 dsh | 无本机初始化、隔离或原生联调证据 |
+| Docker | Client 29.6.2、context `desktop-linux`；Server 为 null，`dockerDesktopLinuxEngine` pipe 不存在 | 引擎当前不可连接；未启动 Desktop、拉镜像或创建容器 |
+| WSL | 提升权限只读查询可见 Ubuntu-22.04、docker-desktop，均 WSL2、Stopped | 不是“没装 WSL”；可在后续获准时启动现有环境再做 canary 隔离测试 |
+| 磁盘 | C 盘剩余约 22.08 GiB，E 盘约 262.70 GiB | 后续先核实 Docker 数据盘位置及镜像实际大小；本轮不迁移或清理 |
+| 服务器入口 | SSH CLI 存在；有 `suanliyun-agentic-AUV`、`Aliyun-IDSagent`、`agentic-AUV` 等别名 | 只是已配置入口，未连接、未核实空闲资源／Docker，也未将 AUV 服务器指定给本实验 |
+
+受限环境第一次查询 Docker 配置、WSL 和 SSH config 时出现 Access denied／`E_ACCESSDENIED`。只做一次提升权限的只读核实即取得上述结果，没有更改 ACL、服务或凭据。
+
+本轮环境证据止于版本、导入、CLI help、状态和磁盘；没有运行 pytest、IFC 规则实验或全仓 Preflight。
+
+## 5. DSH 官方调研：入口可确定，原生接入仍有工作
+
+### 5.1 固定版本，避免拿 master 文档安装旧 wheel
+
+2026-09-29 查询官方仓库：标签 `dsh-v0.2.0-rc.1` 对应提交 `4878cdabd87d4041bdaff61d04c966883b9fd07a`（提交时间 2026-09-28 11:48 UTC）。下列源码结论绑定这个提交，不泛指所有版本。[固定源码][D0]
+
+PyPI 元数据显示 SDK/runtime 最新发布为 **0.1.5rc1**，SDK 精确依赖同版本 runtime；提供 Linux x64／arm64、macOS、Windows x64 制品，Python ≥3.10。依据：[SDK 元数据][D2]、[runtime 元数据][D16]。因而现在无版本约束的 `pip install deepseek-harness-sdk` 不能被写成安装了上述 0.2.0 源码。
+
+**建议 D 的接入候选固定到已审阅的 0.2.0-rc.1 源码与完整 `sdk` profile。** 获准安装阶段再检查该版配套制品；若尚未发布，则按上游 `scripts/build-python-release.py` 从同一提交构建 SDK/runtime 配套 wheel，记录哈希及镜像 digest，构建只发生在独立环境。不能把源码中占位的 `0.0.0.dev0` 当正式发行版。若构建成本不合适，可另行将候选降为配套 0.1.5rc1，但必须按它对应提交重核接口，不能套用本文的新源码能力。构建依据：[runtime 说明][D3]。这只是后续版本建议，本轮没有下载 wheel、clone 仓库或执行构建。
+
+### 5.2 SDK、profile 与运行位置
+
+Python `DeepSeekHarness` 通过 stdio JSON-RPC 启动 `dsh --profile sdk`；完整 `sdk` 基于 dsh-base，含原生提示、工具和编排。`sdk-minimal` 缺少部分文件工具、子 Agent 和压缩等，不适合作为这里的完整 D。运行完整打包 wheel 不要求宿主安装 Node；源码构建是另一条准备路径。依据：[SDK 接口][D1]、[runtime 包][D3]、[完整组合][D4]。
+
+建议每个 task×arm 一个 Linux 容器：SDK 驱动、dsh、文件工具、Shell、子 Agent 全部在其中；容器可见本题公共请求、IFC 工作副本及固定依赖。G、冻结 D、答复卡、其他组、开发仓库及个人配置不挂载。独立 `HOME`、`DSH_HOME`、XDG 配置／缓存及临时目录，同题继续保留、换题全部换新。SDK `client.py` 会复制父进程环境，因此必须先清理容器启动环境，不能把 `env={...}` 当“不继承”。[client 源码][D5]
+
+明确 `cwd=/workspace`、`runtime_cwd=/workspace`，只规定路径，不把 cwd 当沙箱。采用非特权用户、资源限制、无宿主 socket、白名单构建上下文；公共 task 文件只读、model 副本可写。挂载限制与实际 shell 越界结果要独立验证。上游也明确不能将自身权限提示当唯一隔离措施。依据：[官方安全说明][D6]、[Docker 挂载说明][D11]。
+
+### 5.3 提问与继续：存在一个必须补的接缝
+
+- `Session.run()` 从本次消息入队到整 agent idle 返回；`finish_reason` 来自最后的 root `turn/end`。同一个 harness／home／session_id 可继续原会话。`completed` 不代表 IFC 已明确提交。[SDK 接口][D1]
+- 上游有原生 `ask_user_question` 和 `ctx.userQuestions.ask`。它等待 answerer，缺少 answerer 时返回错误；模型自己提出问题，转接器不生成问题。[问答服务][D7]、[工具说明][D15]
+- **已读 SDK 协议只有 `initialize`、`session/prompt`、`shutdown` 三类请求，以及 session／subagent 通知，没有专用问答 request/answer 方法。** Python client 有通用 `next_request()/respond()`，不等于运行时已经把原生问题转成了这种请求。[SDK 协议][D8]、[client 源码][D5]
+
+建议后续做一个仅呈现／转接的 user-questions answerer bridge，连接外部人工答复端；保留原生工具 schema、问题内容和 DSH loop。桥不接 G，不代选、不补意图、不提供修复建议。自然语言最终消息中的问题可先人工识别，按同 session 提交答复；这能验证文本继续，但不能冒充原生阻塞工具桥已通过。两条路径都进入同一个外部 run ledger。
+
+标准 SDK 通知仅区分 `idle/running`，不能从它直接推导 `human_wait_s`。纯人工等待需证明全部活动已暂停；若子任务仍工作，继续计活动和用量。SDK 原生工具的挂起不等于子 Agent 全部暂停。
+
+### 5.4 推理、用量和失败覆盖
+
+| 来源 | 源码／文档支持 | 仍需离线核验 |
+|---|---|---|
+| `RunResult.events` | 根会话事件 | 不能单独统计整题 |
+| `notifications`／`on_notification` | 根及已发现后代；保留原生会话关系 | 重启重订阅、在途事件、失败时的持久归集；远端子任务不是默认完整覆盖 |
+| LLM 类型 | reasoning block／delta、usage、request attribution | request_id 与 stage/attempt 对齐，缺失／截断状态，协议原文与脱敏分析副本分离 |
+| compaction | 原生压缩会额外调用模型，摘要有独立输出限制 | 源码只把返回文本写入摘要，不能凭摘要日志声称保存了该次完整推理；需传输层观察 |
+| headless `--json` | 提供 text/thinking/tool/final 事件 | committed 投影省略被丢弃／重试内容；非 final 内容有截断，不能作为完整轨迹唯一来源 |
+
+依据：[SDK 接口][D1]、[协议][D8]、[压缩][D9]、[LLM 类型][D13]、[headless 投影][D14]。建议在调用层只观察、不改模型输入输出，将所有原始返回推理、工具、usage 分开引用。先用固定协议 fixture 验证根、子 Agent、摘要、retry 和中断；不足就标 `partial/unavailable`，不能填零或以文本长度补算。
+
+DSH `TokenUsage.inputTokens` 表示非缓存输入，cacheRead/cacheWrite 分列；`totalTokens` 可另返回。与 Chat Completions 的 prompt 总数不是可直接相加的同一口径。保留原始 usage，按协议规范化，事件重放去重；reasoning 若已包含于 output 不再加一次。依据：[DSH 类型][D13]、[Chat Completions 字段][D10]。
+
+### 5.5 模型协议、网络与停止
+
+原生 `deepseek-official` 使用 Messages：默认根 `https://api.deepseek.com/anthropic`，请求 `/v1/messages`，API key 使用 `x-api-key`；推理 effort 为 `output_config.effort`，工具／推理历史按块回传。它不是 B 的 Chat Completions。该版本 adapter 不接受一个 `protocol` 配置把它改成另一套协议。[Messages adapter][D12]
+
+文本 IFC 实验不需要主动给模型图片或上传原文件；只让必要模型通道出站，普通网页、远程 MCP 和其他外联默认不开放。完整 profile 的组成和网络限制都应记录，不能悄悄删原生方法后仍称等同默认配置。请求中默认的 session-log／plugin inventory 扩展也要在隔离后核实其实际内容。[Messages adapter][D12]
+
+**不建议现在搭完整网关。** 先做本地 fake Messages 服务验证真实 DSH 工具与记录。若原生观察接口不能涵盖摘要／重试，或需要在工具不可见处保管凭据和统一预留额度，再增加仅转发、记录和限额的薄服务。必须同时验证禁止直连，单设 HTTP_PROXY 不构成隔离；官方 adapter 使用 raw fetch，不能假定所有请求自动经过统一代理。[传输说明][D12]
+
+SDK `max_tokens` 是请求输出上限，不是 task 总预算；摘要另有上限。源码 `close()` 先请求 shutdown，后 terminate／kill 直接子进程；SDK wire 没有 per-session cancel。后续应一任务一运行时，超限先停止新调用，再有界 shutdown，必要时终止整个容器并验证孙进程已退出；冻结文件前保证无写入者。仅 SDK 退出或设置 `request_timeout_seconds` 不足以证明任务总时限已实现。依据：[SDK 参数][D1]、[close 实现][D5]、[协议][D8]。
+
+### 5.6 本轮证据等级
+
+已取得：官方固定源码／文档、公开发行元数据、本地版本与服务状态。**未取得：DSH 安装、运行时离线启动、问答桥、隔离逃逸 canary、usage 全覆盖、进程树回收或真实联调结果。** 本文所有 D 接入流程均为拟实施建议。
+
+## 6. 阶段 1 实际交付：两道开发题与最小工具
+
+### 6.1 两套可审阅材料
+
+[本地题包入口](../../../dataset/processed/ifc-repair/repair-comparison/development/README.md)。固定使用 `development/`，在原位置修订；当前输入、配方、审阅条件和工具纳入 Git。大型 `VIEW.html` 是可重建的本地输出。题包未安装到 accepted Proof，原始来源及采用的历史修复副本均保持不变。
+
+| 题目 | 来源与损坏 | 公开要求与待审语义 | 检查结果 |
+|---|---|---|---|
+| [case-001](../../../dataset/processed/ifc-repair/repair-comparison/development/case-001/REVIEW.md) | LargeBuilding，MIT；使用事前选定的已登记历史修复副本作为 G，删除中间窗及洞口 | 两个参照窗中心连线的中点补窗；明确915×1830 mm、窗台305 mm，框和玻璃等指定以自北向南第二扇现存窗为准；1个主目标、3条应修关系 | G/D原生schema＋EXPRESS各0诊断；只删除指定窗和洞口；两扇参照的放置及世界网格完全一致 |
+| [case-002](../../../dataset/processed/ifc-repair/repair-comparison/development/case-002/REVIEW.md) | Duplex Apartment，CC BY 4.0；删除Tag 150378的门，保留洞口及其void | 门为864×2032 mm；公开给出空洞和唯一样式参照门的全局平面坐标，左右开启均允许；1个主目标、2条应修关系 | G/D原生schema＋EXPRESS各0诊断；保留洞口及Tag 150478、159734门的放置、世界顶点和面索引完全一致；150478没有移动 |
+
+每题含公开 `model.ifc`＋`request.txt`，私有 `reference.ifc`、`mutation/damaged.ifc`、损坏记录、任务条件、答复卡、来源许可、检查 JSON、定位 SVG 与可读 `REVIEW.md`。新增[窗题查看器](../../../dataset/processed/ifc-repair/repair-comparison/development/case-001/VIEW.html)／[门题查看器](../../../dataset/processed/ifc-repair/repair-comparison/development/case-002/VIEW.html)：用现有IfcOpenShell将真实几何编译成自包含HTML，G/D使用同一世界坐标和同步视角，支持俯视、斜视、定位参照、缩放和目标层剖切；不渲染原材质。SVG仍只是包围盒定位图。查看器和所有参考材料仅供人工审阅，不能送入被测系统。许可与修改说明见[来源说明](../../../scripts/ifc_repair/repair_comparison/source-notices.md)。
+
+按用户意见，撤销门题此前“必须答复某一开向”的草案，答复卡的必要事实列表为空；不因未询问开向扣分，也不要求猜中G。后续澄清案例应确实缺位置、楼层或必需尺寸，不能把普通选项强行变成缺失事实。两题的1mm／0.1度仍为待审容差；旧门损坏快照的 `dimensions_mm` 标签仍以此处独立单位换算为准，未改生产代码。
+
+两个请求全文见各题 `public/request.txt`。窗题方位已用D的TrueNorth≈(0,1)及同墙现存窗的南北顺序核对；Duplex没有TrueNorth，门题使用楼层和全局几何坐标，不编造方位。两题不再泛称“跟旁边一样”，而是指定唯一参照及需相同的部件。私有 `task.json` 记录定位依据和 `damage_profile`；两题均S1。S2两窗／一窗一门、S3多目标的分级规则已就位，当前生成器仍仅支持单目标，不把分级功能冒充多目标损坏生成已完成。
+
+公开请求不提供IFC关系名称或修复方法，只表达在指定楼层开洞、安装门窗。评分侧保留任务必需的void/fill/containment语义检查；`IfcRelDefinesByType`不再作为必修边，允许实例表达等价语义。格式校验通过不代表这些任务关系齐全；模型能否自然补全是后续实验的问题，本轮没有调用模型验证。
+
+### 6.2 实现与边界
+
+| 已创建文件 | 实际职责 |
+|---|---|
+| [contracts.py](../../../scripts/ifc_repair/repair_comparison/contracts.py) | 开发定义、损伤规模标签、许可与源哈希引用、澄清事实约束；拒绝请求中的GUID及明确方法词，仍需人审自然性；拒绝越界、链接／junction／共享硬链接 |
+| [prepare.py](../../../scripts/ifc_repair/repair_comparison/prepare.py) | 调用现有单门／单窗损坏器；同一待审开发题可原位刷新，已接受或不明目录拒绝覆盖；只保留关键IFC绑定，审阅文本不逐文件锁哈希；仅两份公共文件导出 |
+| [inspection.py](../../../scripts/ifc_repair/repair_comparison/inspection.py) | 独立重开G/D、根差分、损坏数量、真实应修成员边及相关几何；G/D均须原生schema＋EXPRESS通过，不能只凭无新增错误；宿主无整体豁免 |
+| [review_materials.py](../../../scripts/ifc_repair/repair_comparison/review_materials.py) | 可读审阅卡、私有定位图、答复和验收草案，不自动接受 |
+| [viewer.py](../../../scripts/ifc_repair/repair_comparison/viewer.py)／[viewer.html](../../../scripts/ifc_repair/repair_comparison/viewer.html) | 真实世界坐标三角网格、同步视角本地查看器，以及保留参照的放置／顶点／面索引比较 |
+| [development_cases.private.json](../../../scripts/ifc_repair/repair_comparison/development_cases.private.json) | 两道明确标注为私有的开发配方、公共请求、待审语义和来源；绝不能挂载到被测环境 |
+| [test_preparation.py](../../../tests/ifc_repair/repair_comparison/test_preparation.py) | 37项聚焦测试；格式门禁、关键IFC绑定、原位刷新、可编辑审阅文字、权限继承、实际网格和移动检测、公共投影及CLI |
+
+这是原 M1.1–M1.3 的开发样例子集，未宣称完整正式 TaskSpec、人审状态流转或唯一提交收集器已完成。目录分层和白名单导出只验证文件投影，不能证明运行时沙箱隔离。没有 ledger、预算执行、问答恢复、A/C/B/D 执行器或独立结果评分；工具不会导入 `.env` 或调用模型。
+
+### 6.3 已执行检查与复现
+
+当前聚焦测试 **37 passed**。先保留原位刷新、审阅文本不锁哈希、权限继承及查看器的失败用例，再修正准备工具。已有格式门禁继续覆盖G/D同样有原生错误但无新增错误的负例。两题真实IFC另行校验，不用简化夹具代表建筑结果。HTML脚本通过 `node --check`；浏览器连接不可用，备用入口又因安全策略拒绝 `file:` URL，因此未完成浏览器交互及视觉验收，不将离线网格测试当作浏览器验收。
+
+实际执行：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m pytest tests/ifc_repair/repair_comparison/test_preparation.py -q --basetemp .tmp/repair-final
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/prepare.py prepare --output dataset/processed/ifc-repair/repair-comparison/development
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/prepare.py check dataset/processed/ifc-repair/repair-comparison/development/case-001
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/prepare.py check dataset/processed/ifc-repair/repair-comparison/development/case-002
+```
+
+准备命令允许刷新同编号、待审的开发题。按用户授权，已删除 `development-20260929`、`development-review-20260929`、`development-natural-20260929` 三个旧副本，只维护 `development/`。不再生成全文件 `integrity.json`；保留源G、损坏D、公开副本及格式报告的必要绑定。检查返回 `valid: true, human_accepted: false`；格式结果见每题 `IFC-VALIDATION.md`。
+
+旧 `mutation/` 的受保护ACL来自生产损坏器用临时目录原子重命名，未发现显式设置权限的制题逻辑。准备工具现在将临时结果的文件字节复制到普通新建目录，不继承临时目录ACL，也未改生产损坏器。实际两题 `mutation/` 的 `AreAccessRulesProtected=false`，继承父目录权限。
+
+另独立执行本地validator命令行，两题都返回 `No validation issues found.`，退出码0：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m ifcopenshell.validate --rules dataset/processed/ifc-repair/repair-comparison/development/case-001/private/mutation/damaged.ifc
+.\.venv\Scripts\python.exe -X utf8 -m ifcopenshell.validate --rules dataset/processed/ifc-repair/repair-comparison/development/case-002/private/mutation/damaged.ifc
+```
+
+这是IfcOpenShell 0.8.5的schema＋EXPRESS结果，不声称已向buildingSMART在线服务上传验证。输入格式正确仍然可以缺少任务要求的门窗，修复是否完成由后续独立评分判定。
+
+直接复用的旧损坏器另做最窄回归：`test_mutation.py` 和 `test_door_mutation.py::test_door_mutation_records_identity_type_and_exact_scope` 合计 **5 passed**，覆盖单窗链和保留／删除洞口的单门路径；未运行批量制题或全仓 Preflight。
+
+公开导出用法（尚未启动四组运行）：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/prepare.py export dataset/processed/ifc-repair/repair-comparison/development/case-001 .tmp/repair-comparison-public-example
+```
+
+导出仅含 `model.ifc` 和 `request.txt`，目标需位于私有题包外且尚不存在；新副本可写。正式部署仍需阶段 3/5 的真实隔离检查，不能把整个题包或仓库挂进去。
+
+### 6.4 题包确认后的最小开发建议
+
+先补 M1.4 的 `ledger.py`、`budget.py` 与对应聚焦测试，再衔接 §7 的执行器与评分。保存原样问答、人工事实标注、追加事件、恢复状态、请求预留／结算、时间区间、实际推理引用及唯一终态。澄清和重启不清零；重复通知去重，缺失 usage 保留未知及未结清预留，仍有后台活动不暂停计时；并发不能重复花余额。
+
+真实额度在开发联调和费用批准后填写，未赋合法额度不得发请求。fake 用量与轨迹明确标记，不记模型成绩。fact ID 由答复／评估端依据已认可题卡标注，适配器不猜意图或代提问；被测侧只取得实际回答，不取得整卡。完成这些后才具备“准备→问答→继续→累计→唯一提交”的离线全链路，当前尚未达到。
+
+## 7. 后续任务按依赖安排，不并入本轮授权
+
+| 后续任务 | 拟创建／复用路径与输入输出 | 验收及拟最窄测试 | 文件／环境副作用 |
+|---|---|---|---|
+| W2 A/C 公共工具 | 拟 `neutral_tools.py`、`direct_runner.py`、`protocols.py`；相同公共包＋模型 tool calls → 读写／补丁／Shell／普通问答／唯一提交。JSON 响应的 B Provider 不作通用 loop | 拟 `test_neutral_tools.py`、`test_direct_runner.py`：同一 fake transcript 对 A/C 语义一致；直接改 STEP、写脚本、截断、路径越界、继续与超时；真实 Shell 隔离另验 | 仅隔离目录／后续获准容器；不挂载开发仓库或凭据 |
+| W3 B 薄适配 | 拟 `ours_adapter.py`、`provider_observer.py`；用 `RepairAPI` 和现有 Provider 注入 → 原生 run 引用、问题和正式输出；优先在外围补日志 | 拟 `test_ours_adapter.py`、`test_provider_observer.py`；再按变更范围跑已有 `test_run_state.py`、`test_provider_stage.py`、`test_phase6_2_openai_compat.py`。覆盖 state_version／候选 token 机械绑定、无 Gold、失败 trace、禁止拾取 staging | 新实验运行目录；如必须动生产日志接缝，另列具体范围及 red reproduction，不默认改 Prompt／Schema |
+| W5 独立评分基本自检 | 拟 `scoring.py`、`matching.py`、`ifc_rules.py`；冻结 D＋唯一 R/终态＋人工 TaskSpec，必要时 evaluator-only G；另读 M1.4 原样问答、事实命中及取得记录 → 产物／澄清／完整交互的独立明细。复用 §3 原语，不导入 B application record 作为输入 | 拟 `test_scoring.py`、`test_target_matching.py`、`test_ifc_rules.py`。1–2 开发 IFC 覆盖下面控制情形；可先于 20 题人审完成 | 仅开发评分产物；不改旧 policy、正式分母和冻结 Proof |
+| W4 D 完整运行时接入 | 拟 `dsh_adapter.py`、`dsh/answerer-bridge/`、`dsh/Dockerfile`、`dsh/requirements.lock`；公共包＋原生 SDK/profile → 原样问题、全任务轨迹、正式提交或终态 | 拟 `test_dsh_protocol.py` 验证帧／事件；拟 `test_dsh_runtime_offline.py` 必须使用安装后的真实 DSH＋fake Messages，覆盖真实文件／Shell、问答桥、子 Agent、摘要、截断、超时、后代清理和不可达 canary | 需要后续批准安装／构建与启动现有 Docker；mock 整个 loop 不算通过 |
+
+上表拟测试命令均采用 `python -m pytest tests/ifc_repair/repair_comparison/<指定测试文件> -q`；DSH 运行时测试在获准固定镜像内执行同一相对测试路径，依赖缺失则保持 blocked，不能跳过后称通过。现有 B 相关测试分别位于 `tests/ifc_repair/` 和 `tests/agent/`，不把同名拟测试当现成脚本。
+
+独立评分的最低自检：外部 IFC 不含 ChangeSet 仍可评分；未修 D；合法新 GUID／STEP 重排；数量齐但尺寸错；错宿主／漏关系；属性写错对象；非目标误删；重复补建；目标无几何；最终无输出保留原分母；awaiting_user 保持 pending；未问但碰巧修对；问对但没修好；评分器异常为不可评估。匹配不能按待评分尺寸或关系挑最有利对象，墙开洞允许范围也不能放宽为整墙任意漂移。规则测试同时保留“已有错误”与“新增错误”，区分最终通过、预先冻结例外和相对诊断。
+
+现有可参考的最窄回归入口是 `tests/ifc_repair/test_compare.py`、`test_ifc_validation.py`、`test_benchmark_evaluation.py`、`test_evaluation_boundaries.py`；本轮未跑。旧 validator 测试允许 baseline errors，不能替代新实验规则检查。
+
+每次失败先区分基础设施、任务合同、评分器和模型输出；评分故障用原提交重算，不能重调模型挑成功轨迹。正式揭示结果后不换 GPT、放宽容差、改分母或单组追加额度。
+
+## 8. 人工节点、阻断与本轮验证
+
+**当前已完成第一轮人审意见的简单制题修订。** 用户认可其余内容并要求去GUID／无必要Name、自然语言定位、无方法引导、按数量组合分级，以及格式合格的D；已落实到§6题包和工具。门开向必答卡已撤销，修订后的请求与验收仍保留待复核状态。后续按批准计划衔接实验基础及每批5题正式材料，不重复请求已经获得的制题授权。
+
+后续需用户参与的节点只有：审阅开发题卡的形式；正式 20 题逐一人工接受；批准独立安装／启动与必要网络边界；在有效 Stage Admission 后分别批准开发联调和正式费用上限。具体容差、合法替代或答复事实有语义歧义时，带已准备好的题卡询问。无需再选择四组结构、20 题、GPT API 或关系指标。
+
+当前真实运行阻断包括：未冻结／人审 20 题；无四组执行器与方法无关 scorer；无本实验 Stage Admission；DSH 配套版本、问答桥和记录覆盖未实测；Docker 引擎不可连接；没有本实验费用授权。缺失准入不会触发 Full Preflight，也不继承以前 IFC2Text 的额度。
+
+初次就绪核对包括UTF-8文档读取、指定代码检查、Python／IfcOpenShell／Docker／WSL／磁盘只读查询、官方固定源码和发行元数据检索。修订后§6已有37项pytest通过、两题真实IFC的原生schema＋EXPRESS及独立CLI、网格位置和文件边界检查。浏览器视觉验收尚未完成。没有模型调用、正式20题生成、正式评分、软件安装、生产改动或Full Preflight；这些结果不能作为真实模型调用准入。
+
+## 官方资料
+
+下面 DSH 源码链接绑定同一提交；访问日期均为 2026-09-29。文档支持、静态源码结论和实测环境已在正文分别标明。
+
+[D0]: https://github.com/deepseek-ai/deepseek-harness/tree/4878cdabd87d4041bdaff61d04c966883b9fd07a
+[D1]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/python/sdk/README.md
+[D2]: https://pypi.org/pypi/deepseek-harness-sdk/0.1.5rc1/json
+[D3]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/python/sdk-runtime/README.md
+[D4]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/bundle/sdk-app/README.md
+[D5]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/python/sdk/src/deepseek_harness/client.py
+[D6]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/SAFETY.md
+[D7]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/interaction/user-questions/README.md
+[D8]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/sdk/protocol/src/types.ts
+[D9]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/compaction/compaction-basic/README.md
+[D10]: https://api-docs.deepseek.com/api/create-chat-completion/
+[D11]: https://docs.docker.com/engine/storage/bind-mounts/
+[D12]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/llm/llm-deepseek/README.md
+[D13]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/llm/llm/src/types.ts
+[D14]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/bundle/headless/README.md
+[D15]: https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/interaction/tool-ask-user/README.md
+[D16]: https://pypi.org/pypi/deepseek-harness-runtime-bin/0.1.5rc1/json
+[O1]: https://developers.openai.com/api/docs/models/gpt-6-sol
+
+- [DSH 固定源码与标签][D0]；[SDK 接口][D1]；[SDK 发布元数据][D2]；[runtime 发布元数据][D16]。
+- [runtime 包与构建][D3]；[完整 sdk 组合][D4]；[Python client 生命周期][D5]；[官方隔离说明][D6]。
+- [原生问答服务][D7]；[ask_user_question 工具][D15]；[SDK 协议][D8]；[SDK server 限制](https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/packages/sdk/server/README.md)。
+- [原生压缩][D9]；[usage／reasoning 类型][D13]；[headless 投影][D14]。
+- [DeepSeek Chat Completions][D10]；[Messages adapter][D12]；[Docker 挂载][D11]；[GPT-6 Sol 官方模型页][O1]。

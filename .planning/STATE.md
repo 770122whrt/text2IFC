@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前规划：Repair 四组实验开发准备（2026-09-29）
+
+当前分支 `codex/repair-experiment`；[Repair 四组实验专题](../docs/validation/repair-comparison/README.md)维持原路径v0.2。两道许可明确的S1开发题在固定 `development/` 原位维护，三个旧副本已按用户授权删除。公开请求无GUID／构件名／方法提示，使用方位、坐标、明确尺寸和唯一参照；开向不强设澄清，类型关系不强制恢复原实现。37项聚焦测试通过，两题损坏IFC的schema＋EXPRESS及独立CLI通过；删除门150378，150478的放置及网格未变。已交付同步网格查看器，浏览器视觉验收受安全策略限制尚未完成。[交付与后续范围](../docs/validation/repair-comparison/development-readiness.md)保留DSH调研，账本、四组执行器和独立评分器尚未开发。整体约20个不同IFC，开发族排除于正式未见样本，正式材料每批5题审阅。未安装软件、启动服务、修改生产代码或调用模型；既有Phase、R1与Proof状态不变。
+
 ## 当前开发：参数化门窗与 IFC2Text 往返（2026-09-28 整理）
 
 本轮 Goal 批准范围已完成，分支 `codex/bim2text-research`。唯一实施计划为[门窗部件 v1.0](../docs/architecture/text2ifc-component-plan-v1.0.md)。实际成功范围、部分重建缺项、最大误差、预算与本地证据路径统一维护在[结果页](../docs/validation/ifc2text/component-v26/README.md)，不再在 STATE 重复数字。接续开发从[当前入口](../docs/validation/ifc2text/README.md)开始；原始失败、冻结摘要与旧准入保留。本次只整理文档，没有新增 Provider 调用。

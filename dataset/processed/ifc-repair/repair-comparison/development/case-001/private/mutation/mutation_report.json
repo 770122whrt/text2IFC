@@ -1,0 +1,60 @@
+{
+  "checks": {
+    "host_wall_preserved": true,
+    "schema_preserved": true,
+    "source_unchanged": true,
+    "target_chain_removed": true
+  },
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 59,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 59,
+      "IfcRelVoidsElement": 59,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 41
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 60,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    }
+  },
+  "damaged_sha256": "48f37b74fb88ce614af6c92554520932d65fad13a0719f7d074e5288a00c6dcd",
+  "geometry": {
+    "expected_closed_void_volume_m3": 0.33488999999999974,
+    "host_wall_volume_after_m3": 12.609615999999875,
+    "host_wall_volume_before_m3": 12.274725999999877,
+    "host_wall_volume_delta_m3": 0.3348899999999979,
+    "target_region_closed": true
+  },
+  "mutation_type": "remove_window_and_opening",
+  "removed_classes": [
+    "IfcWindow",
+    "IfcRelFillsElement",
+    "IfcOpeningElement",
+    "IfcRelVoidsElement"
+  ],
+  "removed_windows": [
+    {
+      "name": "M_Fixed:0915 x 1830mm:354004",
+      "target_id": "window-repair-001"
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-mutation-report/0.1",
+  "source_sha256": "5a0c3abcd22689dd6a4537339aadce4af17678cbc9d6f5cf26742156e0f25262",
+  "valid": true
+}

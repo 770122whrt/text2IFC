@@ -1,0 +1,56 @@
+{
+  "checks": {
+    "door_removed": true,
+    "opening_preservation_matches_mode": true,
+    "schema_preserved": true,
+    "source_unchanged": true
+  },
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcDoor": 13,
+      "IfcOpeningElement": 50,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 37,
+      "IfcRelVoidsElement": 50,
+      "IfcSite": 1,
+      "IfcSpace": 21,
+      "IfcWall": 57,
+      "IfcWindow": 24
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcDoor": 14,
+      "IfcOpeningElement": 50,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 38,
+      "IfcRelVoidsElement": 50,
+      "IfcSite": 1,
+      "IfcSpace": 21,
+      "IfcWall": 57,
+      "IfcWindow": 24
+    }
+  },
+  "damage_scope": {
+    "door_removed": true,
+    "fill_removed": true,
+    "opening_removed": false,
+    "void_removed": false
+  },
+  "damaged_sha256": "84f28b942adb7526ec3edc573d994cd162b0cd26d8b7730766ab436d6d42fbbb",
+  "mutation_type": "remove_door_preserve_opening",
+  "removed_doors": [
+    {
+      "global_id": "1hOSvn6df7F8_7GcBWlSFK",
+      "name": "M_Single-Flush:0864 x 2032mm:0864 x 2032mm:150378",
+      "operation_type": "SINGLE_SWING_RIGHT",
+      "type_global_id": "3HoP2o48vFlPEmd6lsQCdI",
+      "type_name": "0864 x 2032mm"
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-door-mutation-report/0.1",
+  "source_sha256": "b347a2c8aa8fff6db896a4417a9c50c22ac0ccd7c5cfc22b99b8d29336c606ed",
+  "valid": true
+}

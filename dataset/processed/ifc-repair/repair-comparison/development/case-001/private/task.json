@@ -1,0 +1,128 @@
+{
+  "budget": {
+    "provider_calls_allowed": false,
+    "status": "not_calibrated"
+  },
+  "case_id": "case-001",
+  "damage_profile": {
+    "composition": "single",
+    "level": "S1",
+    "target_count": 1,
+    "targets": {
+      "IfcWindow": 1
+    }
+  },
+  "damaged_sha256": "48f37b74fb88ce614af6c92554520932d65fad13a0719f7d074e5288a00c6dcd",
+  "definition": {
+    "case_id": "case-001",
+    "clarification": {
+      "out_of_card_policy": "pending_user_decision",
+      "required_user_facts": []
+    },
+    "damage": {
+      "kind": "window",
+      "opening_guid": "2cXV28XOjE6f6irhW0CO_u",
+      "target_guid": "2cXV28XOjE6f6irgi0CO_u",
+      "wall_guid": "2cXV28XOjE6f6irgi0COkg"
+    },
+    "request": {
+      "basis": [
+        "2026-09-29 用户要求改为自然语言和方位定位；公开请求不使用 GUID、构件 Name、类型名或方法提示。",
+        "仅用 D 核对：IFC TrueNorth 约为(0,1)，最西侧长外墙的一层现存窗由北向南排序，第二、第三扇正是两扇保留参照；其中心Y约3.2942与0.2642m。",
+        "中点、915×1830mm、窗台305mm及明确指定的第二扇窗样式均由 D 中公开参照确定；不要求恢复原 Tag、GUID 或隐藏属性。关系术语不写入请求，开洞、安装和楼层语义由任务表达。"
+      ],
+      "text": "一层最西边那栋楼的西侧长外墙上，从北往南数第二扇和第三扇现有窗之间缺了一扇窗。请在这两扇窗中心连线的中点补一扇固定窗：宽915毫米、高1830毫米，窗台距这一层地面305毫米。窗框截面、框内分格、玻璃和表面外观以刚才数到的第二扇窗为准；沿墙安装，朝向与它一致，并在墙上开出对应的窗洞。其余窗和墙的其他部分保持原样。"
+    },
+    "source": {
+      "approved_use": "research-evaluation",
+      "asset_id": "bim-whale-ifc-samples-largebuilding-102f8123f85e",
+      "attribution_files": [
+        "scripts/ifc_repair/repair_comparison/source-notices.md",
+        "dataset/external/bim-whale-ifc-samples/LICENSE"
+      ],
+      "leakage_group": "unresolved-bim-whale-ifc-samples-largebuilding-102f8123f85e",
+      "path": "dataset/external/_checks/ifc-assets-20260913-v4/repairs/bim-whale-ifc-samples-largebuilding-102f8123f85e/repaired.ifc",
+      "reference_role": "事前选择的损坏前参考；采用已登记、通过既有检查的历史修复副本，不是下载原件。本题语义与参考角色仍待人审。",
+      "rights": "MIT；保留版权和许可声明",
+      "scene_family": "LargeBuilding",
+      "sha256": "5a0c3abcd22689dd6a4537339aadce4af17678cbc9d6f5cf26742156e0f25262"
+    },
+    "task": {
+      "acceptance": [
+        "新增一扇 IfcWindow，具备可生成的窗框和玻璃几何，宽915 mm、高1830 mm、窗台305 mm，方向与两侧一致。",
+        "新窗中心位于同墙两侧公开参照窗中心的中点；拟定中心墙局部X=12227.5 mm，数值用于私有核对，公开依赖两侧参照。",
+        "建立一处相应洞口；墙的开洞区域与窗匹配，host/void/fill与楼层关系满足上列三条边。",
+        "框/玻璃部件、表面外观和摆放与参照一致；不把原始序列化、隐藏Tag或未请求的性能属性加入义务。"
+      ],
+      "allowed_alternatives": [
+        "新增窗、洞口及必要关系可以采用新 GlobalId、不同STEP编号。",
+        "允许几何等价的表示；可以复用或新建固定窗类型，也可在实例表达所需语义。IfcRelDefinesByType不设为必修边，不要求复制原实体树。"
+      ],
+      "localization_evidence": {
+        "north_xy": [
+          0.0,
+          1.0
+        ],
+        "reference_center_y_m": [
+          3.29420155,
+          0.26420155
+        ],
+        "reference_order_north_to_south": [
+          2,
+          3
+        ],
+        "source": "damaged IFC only",
+        "wall_guid": "2cXV28XOjE6f6irgi0COkg"
+      },
+      "matching": "按 D 中最西侧长外墙及自北向南第二、第三扇现存窗的中点匹配唯一新增窗；粗区域前后各0.5 m，尺寸和关系另行评分，不以它们挑选最有利对象。",
+      "preservation": [
+        "除目标窗与必要洞口、关系外，不新增或删除其他构件。",
+        "允许目标墙因重新开洞发生相应体积变化；墙轴线、厚度、高度、材料和其他洞口不变。",
+        "两个参照窗及其他现存对象保持身份、几何、属性与关系。"
+      ],
+      "reference_guids": [
+        "2cXV28XOjE6f6irgi0CO$D",
+        "2cXV28XOjE6f6irgi0COvo"
+      ],
+      "required_products": {
+        "IfcWindow": 1
+      },
+      "required_relations": [
+        {
+          "basis": "新洞口必须切开请求指定的存活墙；G–D 中对应一条 void 关系消失。",
+          "id": "host_void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "新窗填充新洞口；G–D 中对应一条 fill 关系消失。",
+          "id": "opening_fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "新窗属于 Level 1；按窗到楼层的一条成员边计数，不把关系实体数量当分母。",
+          "id": "storey_containment",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "summary": "在两扇现存窗正中补回同型固定窗",
+      "tolerances": {
+        "angle_degrees": 0.1,
+        "length_mm": 1.0,
+        "note": "开发审阅草案；需要评分器自检支持后再冻结，不继承IFC2Text旧阈值。",
+        "status": "pending_human_review"
+      }
+    }
+  },
+  "excluded_formal_scene_family": "LargeBuilding",
+  "formal_eligible": false,
+  "purpose": "development_only",
+  "required_product_count": 1,
+  "required_relation_count": 3,
+  "review": {
+    "reviewed_at": null,
+    "reviewer": null,
+    "status": "pending_human_review"
+  },
+  "schema_version": "repair-comparison-development/0.1",
+  "source_sha256": "5a0c3abcd22689dd6a4537339aadce4af17678cbc9d6f5cf26742156e0f25262"
+}

@@ -3,7 +3,7 @@
 本页是 `docs/` 的稳定入口。具体文档按职责分区，避免把设计、实施 Prompt、
 验证方案和历史报告混放在根目录。
 
-## 按功能阅读（2026-09-23）
+## 按功能阅读（2026-09-29）
 
 给老师汇报 Repair，先读下表第一行的技术主文档。旧交接和已完成计划是历史资料，
 不按文件日期把它们当成新执行指令。完整文件分类、归档与删除建议见
@@ -12,6 +12,7 @@
 | 功能 | 当前正文入口 | 证据与补充 |
 |---|---|---|
 | **已有 IFC 修复（本次汇报）** | [Repair Demo Method：问题、方法和案例](architecture/ifc-repair-pipeline-status-and-roadmap.md) | [三份主文档](reports/repair-demo/README.md)、[Repair Proof](../dataset/processed/proof/repair/) |
+| Repair 四组对比实验（开发题待审） | [约 20 IFC 实验专题](validation/repair-comparison/README.md) | [首批交付与开发建议](validation/repair-comparison/development-readiness.md)、[实验计划](validation/repair-comparison/plan.md)、[指标](validation/repair-comparison/metrics.md)、[DSH 接入与隔离](validation/repair-comparison/deepseek-harness-integration.md)；v0.2 两道开发题及最小工具已交付，待人审 |
 | 从文字生成新 IFC | [Generation 研究与文献](reports/generation-demo/README.md)、[生成工作流](architecture/current-workflow-and-data-flow.md) | [语义与外观范围](architecture/semantic-appearance-plan.md)、[Generation Proof](../dataset/processed/proof/generation/) |
 | IFC2Text 与往返重建 | [当前入口：结果、维护与研究](validation/ifc2text/README.md) | [门窗部件扩展计划 v1.0](architecture/text2ifc-component-plan-v1.0.md)、[结果与证据](validation/ifc2text/component-v26/README.md) |
 
