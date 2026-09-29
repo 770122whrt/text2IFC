@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'src'))
 from scripts.ifc2text.rerun_v10 import load, save, digest, now, fingerprint, SOURCE
 from scripts.ifc2text.compact_campaign import runtime
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from text2ifc_ifc2text.goal_budget import GoalBudget, GoalStopped
 
 PARENT = ROOT / 'dataset/processed/experiments/ifc2text-rerun-20260922/material-list-continuation'
@@ -120,7 +120,7 @@ def validate(*, finalization=False):
                'tests/agent/test_phase6_3_gate_audit_bundle.py', 'tests/ifc2text/test_audit_continuation_v12.py'] if finalization else TARGETS
     args = [*targets, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(new_pytest_basetemp(ROOT)), '--junitxml=' + str(directory / 'tests.xml')]
     with observer.network_guard(), contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-        code = int(pytest.main(args, plugins=[observer]))
+        code = int(run_pytest_with_cleanup(ROOT, args, pytest.main, plugins=[observer]))
         gates = run_candidate_gate_stage(case_dir=CASE, output_dir=CASE, case_id='frozen-live-candidate-audit-v12')
     (directory / 'pytest.log').write_text(stream.getvalue(), encoding='utf-8')
     valid = code == 0 and not observer.counts['failed'] and not observer.counts['skipped'] and not observer.setup_errors and not observer.network_attempts and before == fingerprint(scope=SCOPE) and gates['deterministic_gates_passed']

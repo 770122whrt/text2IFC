@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 from scripts.ifc2text.recover_wall_v07 import OUT, git
 from scripts.ifc2text.attribute_roundtrip_v01 import dump, load
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 
 SCOPE=['src/text2ifc_ifc2text','src/text2ifc_agent','src/text2ifc_compiler','src/text2ifc_contract',
        'prompts/agent','schemas','scripts/ifc2text/recover_wall_v07.py','scripts/ifc2text/validate_wall_recovery_v07.py','scripts/ifc2text/temporary_output.py',
@@ -50,7 +50,7 @@ def main():
     command=['-o','addopts=',*selected_targets,'-q','--basetemp='+str(new_pytest_basetemp(ROOT)),'-p','no:cacheprovider']
     started=time.time()
     with contextlib.redirect_stdout(log),contextlib.redirect_stderr(log),recorder.network_guard():
-        exit_code=pytest.main(command,plugins=[recorder])
+        exit_code=run_pytest_with_cleanup(ROOT, command, pytest.main, plugins=[recorder])
     (out/'pytest.log').write_text(log.getvalue(),encoding='utf-8',newline='\n')
     compiled=all(compileall.compile_file(str(ROOT/p),quiet=1) for p in ['scripts/ifc2text/recover_wall_v07.py',
         'scripts/ifc2text/validate_wall_recovery_v07.py','src/text2ifc_ifc2text/wall_details_v07.py','src/text2ifc_ifc2text/source_containment_v07.py'])

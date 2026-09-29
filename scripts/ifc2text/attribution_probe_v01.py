@@ -15,7 +15,7 @@ import time
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 from scripts.ifc2text.compact_campaign import budget_for, runtime, load
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker, run_design_brief_clarification_loop
 from text2ifc_agent.session_store import SessionStore
 from text2ifc_agent.generation_budget import GenerationBudget, BudgetLimits
@@ -105,7 +105,7 @@ def validate():
         '-q','--basetemp='+str(new_pytest_basetemp(ROOT)),'-p','no:cacheprovider',
         '--junitxml='+str(validation/'tests.xml')]
     started=time.time()
-    result=subprocess.run(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180)
+    result=run_pytest_with_cleanup(ROOT, command, subprocess.run, cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180)
     (validation/'pytest.log').write_bytes(result.stdout)
     import xml.etree.ElementTree as ET
     xml=ET.parse(validation/'tests.xml').getroot()

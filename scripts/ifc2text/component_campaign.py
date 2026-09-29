@@ -15,7 +15,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT),str(ROOT/'src'),str(ROOT/'.deps/python312')]
 from scripts.ifc2text.rerun_v10 import digest,now,load,save,fingerprint
 from scripts.ifc2text.run_goal import git
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from scripts.ifc2text.compact_campaign import runtime
 from scripts.ifc2text.continue_audit_v12 import budget
 from text2ifc_ifc2text.goal_budget import GoalStopped
@@ -110,7 +110,7 @@ def validate(cfg):
     observer=OfflineRecorder();start=now()
     with (directory/'pytest.log').open('w',encoding='utf-8') as stream:
         with observer.network_guard(),contextlib.redirect_stdout(stream),contextlib.redirect_stderr(stream):
-            code=int(pytest.main(args,plugins=[observer]))
+            code=int(run_pytest_with_cleanup(ROOT, args, pytest.main, plugins=[observer]))
     test_end=now()
     compiled=all(compileall.compile_dir(str(ROOT/p),quiet=1) for p in SCOPE
                  if p.startswith(('src/','tests/','scripts/')) and (ROOT/p).is_dir())

@@ -10,7 +10,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'src'))
 from scripts.ifc2text import rerun_v10 as prior_run
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from scripts.ifc2text.rerun_v10 import load, save, digest, now, SCOPE as PRIOR_SCOPE, SOURCE
 from scripts.ifc2text.compact_campaign import runtime, verify_text
 from text2ifc_ifc2text.goal_budget import GoalBudget, GoalStopped
@@ -72,7 +72,7 @@ def validate():
     start = now(); observer = OfflineRecorder(); stream = io.StringIO()
     args = [*TARGETS, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(new_pytest_basetemp(ROOT)), '--junitxml=' + str(directory / 'tests.xml')]
     with observer.network_guard(), contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-        code = int(pytest.main(args, plugins=[observer]))
+        code = int(run_pytest_with_cleanup(ROOT, args, pytest.main, plugins=[observer]))
     log = stream.getvalue(); (directory / 'pytest.log').write_text(log, encoding='utf-8')
     valid = code == 0 and not observer.counts['failed'] and not observer.counts['skipped'] and not observer.setup_errors and not observer.network_attempts and before == fingerprint()
     record = {'status': 'admitted' if valid else 'blocked', 'stage': 'reviewed IFC2Text 0.8 -> Brief 2.8 -> Generation 2.5 -> Compare 1.1',

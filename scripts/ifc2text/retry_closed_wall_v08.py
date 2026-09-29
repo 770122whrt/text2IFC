@@ -20,7 +20,7 @@ sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 from text2ifc_ifc2text.goal_budget import GoalBudget,GoalStopped
 from scripts.ifc2text.compact_campaign import load,budget_for,runtime
 from scripts.ifc2text.attribute_roundtrip_v01 import dump
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from scripts.ifc2text.attribution_probe_v01 import run_public_brief
 from scripts.ifc2text.recover_wall_v07 import generator_diagnostic
 
@@ -137,7 +137,7 @@ def validate():
              '-q','--basetemp='+str(new_pytest_basetemp(ROOT)),'-p','no:cacheprovider']
     recorder=OfflineRecorder();log=io.StringIO();start=time.time()
     with contextlib.redirect_stdout(log),contextlib.redirect_stderr(log),recorder.network_guard():
-        code=pytest.main(command,plugins=[recorder])
+        code=run_pytest_with_cleanup(ROOT, command, pytest.main, plugins=[recorder])
     (out/'pytest.log').write_text(log.getvalue(),encoding='utf-8')
     compiled=compileall.compile_file(__file__,quiet=1)
     ok=code==0 and compiled and not recorder.network_attempts and not recorder.setup_errors and not recorder.counts['skipped']

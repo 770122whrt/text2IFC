@@ -11,7 +11,7 @@ sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'src'))
 from scripts.ifc2text.rerun_v10 import load, save, digest, now, fingerprint, SOURCE, SCOPE
 from scripts.ifc2text.continue_audit_v12 import budget, OUT as AUDIT_OUT
 from scripts.ifc2text.compact_campaign import runtime, verify_text
-from scripts.ifc2text.temporary_output import new_pytest_basetemp
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from text2ifc_ifc2text.goal_budget import GoalStopped
 
 OUT = ROOT / 'dataset/processed/experiments/ifc2text-geometry-debug-20260922/opening-live-v13'
@@ -60,7 +60,7 @@ def validate():
     stream = io.StringIO(); observer = OfflineRecorder()
     args = [*TARGETS, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(new_pytest_basetemp(ROOT)), '--junitxml=' + str(directory / 'tests.xml')]
     with observer.network_guard(), contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-        code = int(pytest.main(args, plugins=[observer]))
+        code = int(run_pytest_with_cleanup(ROOT, args, pytest.main, plugins=[observer]))
     (directory / 'pytest.log').write_text(stream.getvalue(), encoding='utf-8')
     valid = code == 0 and not observer.counts['failed'] and not observer.counts['skipped'] and not observer.setup_errors and not observer.network_attempts and before == fingerprint(scope=SCOPE)
     record = {'status': 'admitted' if valid else 'blocked', 'at': now(), 'tests': observer.counts,
