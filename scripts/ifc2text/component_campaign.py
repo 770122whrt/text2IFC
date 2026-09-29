@@ -15,6 +15,7 @@ ROOT=Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT),str(ROOT/'src'),str(ROOT/'.deps/python312')]
 from scripts.ifc2text.rerun_v10 import digest,now,load,save,fingerprint
 from scripts.ifc2text.run_goal import git
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 from scripts.ifc2text.compact_campaign import runtime
 from scripts.ifc2text.continue_audit_v12 import budget
 from text2ifc_ifc2text.goal_budget import GoalStopped
@@ -104,7 +105,7 @@ def validate(cfg):
     for case in cfg['cases']:frozen_text(case)
     before=fingerprint(scope=SCOPE);save(directory/'source-snapshot.json',before)
     save(out/'config.json',cfg)
-    args=[*TARGETS,'-q','--import-mode=importlib','-p','no:cacheprovider','--basetemp='+str(directory/'pytest-temp'),
+    args=[*TARGETS,'-q','--import-mode=importlib','-p','no:cacheprovider','--basetemp='+str(new_pytest_basetemp(ROOT)),
           '--junitxml='+str(directory/'tests.xml')]
     observer=OfflineRecorder();start=now()
     with (directory/'pytest.log').open('w',encoding='utf-8') as stream:

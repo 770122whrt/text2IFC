@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'src'))
 
 from scripts.ifc2text.run_goal import SCOPE, git, load
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 from text2ifc_ifc2text.llm_pipeline import _write_json
 
 TARGETS = [
@@ -100,7 +101,7 @@ def main():
     root = base / ('check-' + commit[:12])
     root.mkdir(exist_ok=False)
     _write_json(base.parent / 'config.json', cfg)
-    temp = root / 'pytest-temp'
+    temp = new_pytest_basetemp(ROOT)
     command = [*TARGETS, '-q', '--basetemp=' + str(temp), '-p', 'no:cacheprovider']
     observer = OfflineRecorder()
     stream = io.StringIO()

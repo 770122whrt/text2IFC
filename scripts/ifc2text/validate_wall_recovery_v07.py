@@ -7,14 +7,14 @@ from pathlib import Path
 import subprocess
 import sys
 import time
-import uuid
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 from scripts.ifc2text.recover_wall_v07 import OUT, git
 from scripts.ifc2text.attribute_roundtrip_v01 import dump, load
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 
 SCOPE=['src/text2ifc_ifc2text','src/text2ifc_agent','src/text2ifc_compiler','src/text2ifc_contract',
-       'prompts/agent','schemas','scripts/ifc2text/recover_wall_v07.py','scripts/ifc2text/validate_wall_recovery_v07.py',
+       'prompts/agent','schemas','scripts/ifc2text/recover_wall_v07.py','scripts/ifc2text/validate_wall_recovery_v07.py','scripts/ifc2text/temporary_output.py',
        'tests/ifc2text/test_wall_details_v07.py','tests/ifc2text/test_source_containment_v07.py','tests/ifc2text/test_recover_wall_v07.py']
 TARGETS=['tests/ifc2text/test_wall_details_v07.py','tests/ifc2text/test_source_containment_v07.py','tests/ifc2text/test_recover_wall_v07.py',
          'tests/ifc2text/test_attribution_probe_v01.py','tests/ifc2text/test_compact_public_v04.py',
@@ -46,8 +46,8 @@ def main():
     else:selected_targets=TARGETS
     clean=not git('status','--porcelain','--untracked-files=all','--',*SCOPE)
     if not clean:raise RuntimeError('COMMIT_SCOPE_BEFORE_LIVE_ADMISSION')
-    suffix=uuid.uuid4().hex[:10]; log=io.StringIO(); recorder=OfflineRecorder()
-    command=['-o','addopts=',*selected_targets,'-q','--basetemp='+str(out/('tmp-'+suffix)),'-p','no:cacheprovider']
+    log=io.StringIO(); recorder=OfflineRecorder()
+    command=['-o','addopts=',*selected_targets,'-q','--basetemp='+str(new_pytest_basetemp(ROOT)),'-p','no:cacheprovider']
     started=time.time()
     with contextlib.redirect_stdout(log),contextlib.redirect_stderr(log),recorder.network_guard():
         exit_code=pytest.main(command,plugins=[recorder])

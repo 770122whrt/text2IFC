@@ -11,7 +11,7 @@
 |---|---|
 | Repair 论文和老师汇报 | [技术正文](architecture/ifc-repair-pipeline-status-and-roadmap.md)、[Claim／实验](reports/repair-demo/claims-and-experiments.md)、[文献矩阵](reports/repair-demo/repair-literature-matrix-20260921.md) |
 | Generation 研究 | [三份主稿导航](reports/generation-demo/README.md) |
-| IFC2Text 与往返重建 | [研究与实现](architecture/bim2text-bidirectional-bridge-research.md)、[进展与限制](reports/ifc2text-stepwise-fixes-2026-09-22.md) |
+| IFC2Text 与往返重建 | [当前入口](validation/ifc2text/README.md)、[正式结果与限制](validation/ifc2text/component-v26/README.md)、[历史索引](validation/ifc2text/history.md) |
 | 开发、验证及历史证据 | [接管指南](how-to/agent-takeover.md)、[验证索引](validation/README.md)、[Proof](../dataset/processed/proof/README.md) |
 
 “当前正文”与“必要证据”分开保存：前者简明、持续更新；后者即使年代较早，也可能是论文结果、失败和来源的唯一依据。

@@ -8,6 +8,12 @@
 .pytest-*.log
 tmp_ifc_*/
 .tmp/
+# Preserved historical source RVT bytes; provenance remains visible to Git.
+/dataset/external/RVT/additional/retired-worktree-20260912/*.rvt
+# Recovered historical success traces stay local; retain their navigation/index.
+/dataset/processed/experiments/retired-generation-recheck-20260912/*
+!/dataset/processed/experiments/retired-generation-recheck-20260912/README.md
+!/dataset/processed/experiments/retired-generation-recheck-20260912/PROVENANCE.json
 
 # Local experiment/UAT output. Reproducible, reviewable success bundles belong
 # under dataset/processed/proof/ and are committed separately.

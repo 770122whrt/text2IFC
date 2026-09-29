@@ -12,10 +12,10 @@ from types import SimpleNamespace
 import subprocess
 import sys
 import time
-import uuid
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 from scripts.ifc2text.compact_campaign import budget_for, runtime, load
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 from text2ifc_agent.interactive_cli_flow import make_openai_design_brief_invoker, run_design_brief_clarification_loop
 from text2ifc_agent.session_store import SessionStore
 from text2ifc_agent.generation_budget import GenerationBudget, BudgetLimits
@@ -24,7 +24,7 @@ OUT=ROOT/'dataset/processed/experiments/ifc2text-attribution-20260921-v01'
 PUBLIC=ROOT/'dataset/processed/experiments/ifc2text-phase1-20260917/compact-campaign-v06/closeout/hxp-description.md'
 BASE_ADMISSION=ROOT/'dataset/processed/experiments/ifc2text-phase1-20260917/compact-campaign-v06/validation/admission.json'
 SUFFIX='\n\n## 记录楼层与宿主关系的保留规则\n本次任务是复现记录，不是纠正源模型。构件所在章节给出的楼层归属与宿主墙归属是两种不同关系；即使不同，也必须分别保留，不得自动用宿主墙楼层替换构件的记录楼层。现有输出合同确实不能同时表达时，明确报告冲突或不支持，不静默改变归属。\n'
-SCOPE=['src/text2ifc_agent','src/text2ifc_ifc2text','src/text2ifc_compiler','prompts/agent','schemas/agent/design-brief','scripts/ifc2text/attribution_probe_v01.py','scripts/ifc2text/attribute_roundtrip_v01.py','tests/ifc2text/test_attribution_probe_v01.py']
+SCOPE=['src/text2ifc_agent','src/text2ifc_ifc2text','src/text2ifc_compiler','prompts/agent','schemas/agent/design-brief','scripts/ifc2text/attribution_probe_v01.py','scripts/ifc2text/attribute_roundtrip_v01.py','scripts/ifc2text/temporary_output.py','tests/ifc2text/test_attribution_probe_v01.py']
 
 def dump(p,d):
     p.parent.mkdir(parents=True,exist_ok=True)
@@ -102,7 +102,7 @@ def validate():
     command=[sys.executable,'-c',guard_code,'-o','addopts=','tests/ifc2text/test_attribution_probe_v01.py',
         'tests/ifc2text/test_goal_budget_v03.py','tests/ifc2text/test_transport_retry_public.py',
         'tests/agent/test_public_brief_failure_evidence.py','tests/ifc2text/test_compact_public_v04.py',
-        '-q','--basetemp='+str(validation/('tmp-'+uuid.uuid4().hex[:12])),'-p','no:cacheprovider',
+        '-q','--basetemp='+str(new_pytest_basetemp(ROOT)),'-p','no:cacheprovider',
         '--junitxml='+str(validation/'tests.xml')]
     started=time.time()
     result=subprocess.run(command,cwd=ROOT,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180)

@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'src'))
 from scripts.ifc2text.rerun_v10 import load, save, digest, now, fingerprint, SOURCE
 from scripts.ifc2text.compact_campaign import runtime
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 from text2ifc_ifc2text.goal_budget import GoalBudget, GoalStopped
 
 PARENT = ROOT / 'dataset/processed/experiments/ifc2text-rerun-20260922/material-list-continuation'
@@ -22,7 +23,7 @@ SCOPE = ['src/text2ifc_agent', 'src/text2ifc_contract', 'src/text2ifc_compiler',
          'src/text2ifc_quality', 'src/text2ifc_extractor', 'src/text2ifc_knowledge',
          'src/text2ifc_text', 'prompts/agent', 'schemas', 'pyproject.toml',
          'src/text2ifc_ifc2text/goal_budget.py', 'scripts/ifc2text/continue_audit_v12.py',
-         'scripts/ifc2text/compact_campaign.py', 'scripts/ifc2text/rerun_v10.py']
+         'scripts/ifc2text/compact_campaign.py', 'scripts/ifc2text/rerun_v10.py', 'scripts/ifc2text/temporary_output.py']
 TARGETS = ['tests/ifc2text/test_audit_continuation_v12.py',
            'tests/ifc2text/test_budget_transport_classification.py', 'tests/ifc2text/test_goal_budget_v03.py',
            'tests/agent/test_phase6_2_openai_compat.py', 'tests/agent/test_audit_failure_terminal.py',
@@ -117,7 +118,7 @@ def validate(*, finalization=False):
     observer = OfflineRecorder(); stream = io.StringIO()
     targets = ['tests/agent/test_phase6_1_live.py', 'tests/agent/test_audit_failure_terminal.py',
                'tests/agent/test_phase6_3_gate_audit_bundle.py', 'tests/ifc2text/test_audit_continuation_v12.py'] if finalization else TARGETS
-    args = [*targets, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(directory / 'tmp'), '--junitxml=' + str(directory / 'tests.xml')]
+    args = [*targets, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(new_pytest_basetemp(ROOT)), '--junitxml=' + str(directory / 'tests.xml')]
     with observer.network_guard(), contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
         code = int(pytest.main(args, plugins=[observer]))
         gates = run_candidate_gate_stage(case_dir=CASE, output_dir=CASE, case_id='frozen-live-candidate-audit-v12')

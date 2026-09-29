@@ -10,6 +10,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT)); sys.path.insert(0, str(ROOT / 'src'))
 from scripts.ifc2text import rerun_v10 as prior_run
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 from scripts.ifc2text.rerun_v10 import load, save, digest, now, SCOPE as PRIOR_SCOPE, SOURCE
 from scripts.ifc2text.compact_campaign import runtime, verify_text
 from text2ifc_ifc2text.goal_budget import GoalBudget, GoalStopped
@@ -69,7 +70,7 @@ def validate():
     directory = OUT / 'validation'; directory.mkdir(exist_ok=False)
     before = fingerprint(); save(directory / 'source-snapshot.json', before)
     start = now(); observer = OfflineRecorder(); stream = io.StringIO()
-    args = [*TARGETS, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(directory / 'pytest-temp'), '--junitxml=' + str(directory / 'tests.xml')]
+    args = [*TARGETS, '-q', '-p', 'no:cacheprovider', '--basetemp=' + str(new_pytest_basetemp(ROOT)), '--junitxml=' + str(directory / 'tests.xml')]
     with observer.network_guard(), contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
         code = int(pytest.main(args, plugins=[observer]))
     log = stream.getvalue(); (directory / 'pytest.log').write_text(log, encoding='utf-8')

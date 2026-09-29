@@ -15,12 +15,12 @@ import shutil
 import subprocess
 import sys
 import time
-import uuid
 ROOT=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'src'))
 from text2ifc_ifc2text.goal_budget import GoalBudget,GoalStopped
 from scripts.ifc2text.compact_campaign import load,budget_for,runtime
 from scripts.ifc2text.attribute_roundtrip_v01 import dump
+from scripts.ifc2text.temporary_output import new_pytest_basetemp
 from scripts.ifc2text.attribution_probe_v01 import run_public_brief
 from scripts.ifc2text.recover_wall_v07 import generator_diagnostic
 
@@ -134,7 +134,7 @@ def validate():
     out=OUT/'validation';out.mkdir(parents=True,exist_ok=False)
     command=['-o','addopts=','tests/ifc2text/test_wall_retry_v08.py','tests/ifc2text/test_wall_closure_v08.py',
              'tests/ifc2text/test_recover_wall_v07.py','tests/ifc2text/test_goal_budget_v03.py',
-             '-q','--basetemp='+str(out/('tmp-'+uuid.uuid4().hex[:10])),'-p','no:cacheprovider']
+             '-q','--basetemp='+str(new_pytest_basetemp(ROOT)),'-p','no:cacheprovider']
     recorder=OfflineRecorder();log=io.StringIO();start=time.time()
     with contextlib.redirect_stdout(log),contextlib.redirect_stderr(log),recorder.network_guard():
         code=pytest.main(command,plugins=[recorder])
