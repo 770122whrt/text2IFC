@@ -1,0 +1,647 @@
+{
+  "purpose": "Private preparation inventory; never mount in any tested environment. This is not five admitted tasks.",
+  "date": "2026-09-29",
+  "batch": 1,
+  "candidates": [
+    {
+      "candidate_slot": "formal-001",
+      "status": "candidate_only_not_a_task_package",
+      "human_review": "pending_human_review",
+      "asset_id": "tafraout-architectural-v8-model2",
+      "source_path": "dataset/external/tafraout-architectural/20260926/model2.ifc",
+      "source_sha256": "2d5d89c0928270e7ce844f27928ed9bd35bfb1c369e8258e596c27e15c991c79",
+      "source_bytes": 933382,
+      "schema": "IFC2X3",
+      "source_register": "dataset/external/ifc-asset-register.jsonl",
+      "scene_family": "tafraout-architectural-unresolved",
+      "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+      "source_role": "preselected_reference_from_registered_original",
+      "license": "CC-BY-4.0",
+      "rights_record": "dataset/external/_checks/ifc-expand-20260926-v8/rights/rights.jsonl",
+      "rights_policy": "open_modification_with_notice",
+      "rights_source_url": "https://zenodo.org/records/6397164",
+      "rights_conditions": "CC BY: retain author/source/license links and supplied notices, indicate changes, no implied endorsement. MIT: retain original copyright and permission notice; repair/date/hash log recommended.",
+      "schema_validation": {
+        "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+        "evidence": "dataset/external/_checks/ifc-expand-20260926-v8/tafraout/stages/2d5d89c0928270e7ce844f27928ed9bd35bfb1c369e8258e596c27e15c991c79/native.json",
+        "errors": 0,
+        "rerun_this_turn": false
+      },
+      "current_read_only_checks": {
+        "reopened": true,
+        "ifcopenshell_version": "0.8.5",
+        "source_hash_matches": true,
+        "storeys": 3,
+        "door_window_chains": {
+          "IfcDoor": {
+            "elements": 28,
+            "wall_fill_void_chains": 28
+          },
+          "IfcWindow": {
+            "elements": 10,
+            "wall_fill_void_chains": 10
+          }
+        },
+        "sample_geometry": {
+          "2959": {
+            "guid": "19O0H9Yl90m8iFTntBfE4D",
+            "class": "IfcDoor",
+            "name": "Int. Simple:PP (0.73m x 2.04m):294948",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 800.0,
+            "OverallHeight_mm": 2075.0,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                -8.789867940372751,
+                -7.959867940372754
+              ],
+              [
+                -0.540583771182872,
+                -0.334555610498494
+              ],
+              [
+                0.0,
+                2.09000000000001
+              ]
+            ]
+          },
+          "2995": {
+            "guid": "19O0H9Yl90m8iFTntBfE6b",
+            "class": "IfcDoor",
+            "name": "Int. Simple:PP (0.73m x 2.04m):295052",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 800.0,
+            "OverallHeight_mm": 2075.0,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                -5.789867940372761,
+                -4.959867940372765
+              ],
+              [
+                -0.5405837711828816,
+                -0.3345556104985036
+              ],
+              [
+                0.0,
+                2.09000000000001
+              ]
+            ]
+          }
+        }
+      },
+      "task_proposal": {
+        "damage_scale": "S1",
+        "description": "补一扇门",
+        "provisional_source_step_ids": [
+          2959
+        ],
+        "retained_reference_step_ids": [
+          2995
+        ],
+        "frozen": false,
+        "public_request": null,
+        "clarification_required": null
+      },
+      "remaining": [
+        "Confirm target and retained-reference geometry/style compatibility",
+        "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+        "Write natural public request using D and explicit user intent",
+        "Freeze preservation, allowed alternatives and score denominators",
+        "Human review complete case package"
+      ]
+    },
+    {
+      "candidate_slot": "formal-002",
+      "status": "candidate_only_not_a_task_package",
+      "human_review": "pending_human_review",
+      "asset_id": "european-lca-typical-buildings-v8-Type4",
+      "source_path": "dataset/external/european-lca-typical-buildings/20260926/Type 4.ifc",
+      "source_sha256": "49f13fedf98c6535ad7b141f0c1141a6ab5de5500c613a0d04427c65ba0b7c17",
+      "source_bytes": 10328201,
+      "schema": "IFC2X3",
+      "source_register": "dataset/external/ifc-asset-register.jsonl",
+      "scene_family": "european-lca-shared-template",
+      "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+      "source_role": "preselected_reference_from_registered_original",
+      "license": "CC-BY-4.0",
+      "rights_record": "dataset/external/_checks/ifc-expand-20260926-v8/rights/rights.jsonl",
+      "rights_policy": "open_modification_with_notice",
+      "rights_source_url": "https://data.mendeley.com/datasets/yv723tdtv9/1",
+      "rights_conditions": "CC BY: retain author/source/license links and supplied notices, indicate changes, no implied endorsement. MIT: retain original copyright and permission notice; repair/date/hash log recommended.",
+      "schema_validation": {
+        "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+        "evidence": "dataset/external/_checks/ifc-expand-20260926-v8/acquisitions/stages/49f13fedf98c6535ad7b141f0c1141a6ab5de5500c613a0d04427c65ba0b7c17/native.json",
+        "errors": 0,
+        "rerun_this_turn": false
+      },
+      "current_read_only_checks": {
+        "reopened": true,
+        "ifcopenshell_version": "0.8.5",
+        "source_hash_matches": true,
+        "storeys": 2,
+        "door_window_chains": {
+          "IfcDoor": {
+            "elements": 6,
+            "wall_fill_void_chains": 6
+          },
+          "IfcWindow": {
+            "elements": 8,
+            "wall_fill_void_chains": 8
+          }
+        },
+        "sample_geometry": {
+          "58630": {
+            "guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+            "class": "IfcWindow",
+            "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 1199.999999999998,
+            "OverallHeight_mm": 1200.0000000000018,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                3.82966964303023,
+                5.079669643030231
+              ],
+              [
+                -4.92303657829133,
+                -4.615448078245867
+              ],
+              [
+                0.8429815000000359,
+                2.050000000000007
+              ]
+            ]
+          },
+          "58644": {
+            "guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+            "class": "IfcWindow",
+            "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 1199.9999999999984,
+            "OverallHeight_mm": 1200.0000000000018,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                -3.2203303569697717,
+                -1.9703303569697708
+              ],
+              [
+                -4.923036578291308,
+                -4.615448078245845
+              ],
+              [
+                0.8429815000000359,
+                2.050000000000007
+              ]
+            ]
+          },
+          "58608": {
+            "guid": "3UH$Yu7uLAlvnoFYVwGbgC",
+            "class": "IfcWindow",
+            "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450375",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 1199.9999999999984,
+            "OverallHeight_mm": 1200.0000000000018,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                5.929669643030244,
+                6.237258143075707
+              ],
+              [
+                -3.315448078245872,
+                -2.065448078245871
+              ],
+              [
+                0.8429815000000359,
+                2.050000000000007
+              ]
+            ]
+          }
+        }
+      },
+      "task_proposal": {
+        "damage_scale": "S2",
+        "description": "补两扇窗",
+        "provisional_source_step_ids": [
+          58630,
+          58644
+        ],
+        "retained_reference_step_ids": [
+          58608
+        ],
+        "frozen": false,
+        "public_request": null,
+        "clarification_required": null
+      },
+      "remaining": [
+        "Confirm target and retained-reference geometry/style compatibility",
+        "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+        "Write natural public request using D and explicit user intent",
+        "Freeze preservation, allowed alternatives and score denominators",
+        "Human review complete case package"
+      ]
+    },
+    {
+      "candidate_slot": "formal-003",
+      "status": "candidate_only_not_a_task_package",
+      "human_review": "pending_human_review",
+      "asset_id": "gni-bim-dataset-model_18-096eb462ed00",
+      "source_path": "dataset/external/repairs/metadata-v2/gni-bim-dataset-model_18-096eb462ed00/model_18.ifc",
+      "source_sha256": "8e66549f11819fe61346d828fdf3e80a76fed08ebc5a6b8564cb71fd4847c37c",
+      "source_bytes": 1774640,
+      "schema": "IFC2X3",
+      "source_register": "dataset/external/ifc-asset-register.jsonl",
+      "scene_family": "gni-2025-shared-course-building",
+      "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+      "source_role": "preselected_reference_from_registered_repair_copy",
+      "license": "CC-BY-4.0",
+      "rights_record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
+      "rights_policy": "open_modification_with_notice",
+      "rights_source_url": "https://zenodo.org/records/19722012",
+      "rights_conditions": "保留来源、原作者、许可原文和既有通知；修改副本注明修改日期、内容和原件哈希。",
+      "schema_validation": {
+        "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+        "evidence": "dataset/external/_checks/ifc-assets-20260913-v2/audit/8e66549f11819fe61346d828fdf3e80a76fed08ebc5a6b8564cb71fd4847c37c.json",
+        "errors": 0,
+        "rerun_this_turn": false
+      },
+      "current_read_only_checks": {
+        "reopened": true,
+        "ifcopenshell_version": "0.8.5",
+        "source_hash_matches": true,
+        "storeys": 7,
+        "door_window_chains": {
+          "IfcDoor": {
+            "elements": 17,
+            "wall_fill_void_chains": 17
+          },
+          "IfcWindow": {
+            "elements": 63,
+            "wall_fill_void_chains": 63
+          }
+        },
+        "sample_geometry": {
+          "1428": {
+            "guid": "2Q69Ms$n1BU8D4uFXz2tk1",
+            "class": "IfcWindow",
+            "name": "Fenster 2-flg - Variabel:Fenster 2-flg - Variabel:467185",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 2009.9999999999998,
+            "OverallHeight_mm": 1260.0,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                -11.019059171059709,
+                -9.00905917105971
+              ],
+              [
+                10.603149892376706,
+                10.90314989237673
+              ],
+              [
+                0.9899999999999929,
+                2.26
+              ]
+            ]
+          },
+          "5152": {
+            "guid": "003scTgrHDgBv7$yEfwsDC",
+            "class": "IfcDoor",
+            "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476720",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 885.0,
+            "OverallHeight_mm": 2359.99999999998,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                -7.149059171059758,
+                -6.809059171058259
+              ],
+              [
+                -7.213810428324465,
+                -6.279889786922135
+              ],
+              [
+                0.100000000000002,
+                2.38446032070115
+              ]
+            ]
+          },
+          "1440": {
+            "guid": "2Q69Ms$n1BU8D4uFXz2tet",
+            "class": "IfcWindow",
+            "name": "Fenster 2-flg - Variabel:Fenster 2-flg - Variabel:467271",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 2009.9999999999998,
+            "OverallHeight_mm": 1260.0,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                -7.1640591710597175,
+                -6.8640591710596945
+              ],
+              [
+                6.74814989237671,
+                8.75814989237671
+              ],
+              [
+                0.9899999999999929,
+                2.26
+              ]
+            ]
+          },
+          "5165": {
+            "guid": "003scTgrHDgBv7$yEfwsC5",
+            "class": "IfcDoor",
+            "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476793",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 885.0,
+            "OverallHeight_mm": 2359.99999999998,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                2.780940828938779,
+                3.120940828940279
+              ],
+              [
+                -7.213810428324466,
+                -6.279889786922136
+              ],
+              [
+                0.100000000000002,
+                2.38446032070115
+              ]
+            ]
+          }
+        }
+      },
+      "task_proposal": {
+        "damage_scale": "S2",
+        "description": "补一扇窗和一扇门",
+        "provisional_source_step_ids": [
+          1428,
+          5152
+        ],
+        "retained_reference_step_ids": [
+          1440,
+          5165
+        ],
+        "frozen": false,
+        "public_request": null,
+        "clarification_required": null
+      },
+      "remaining": [
+        "Confirm target and retained-reference geometry/style compatibility",
+        "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+        "Write natural public request using D and explicit user intent",
+        "Freeze preservation, allowed alternatives and score denominators",
+        "Human review complete case package"
+      ]
+    },
+    {
+      "candidate_slot": "formal-004",
+      "status": "candidate_only_not_a_task_package",
+      "human_review": "pending_human_review",
+      "asset_id": "opensourcebim-testfiles-ac90r1-jasmin-sun-105-2x3-b7244828bfe2",
+      "source_path": "dataset/external/opensourcebim-testfiles/AC90R1-Jasmin-Sun-105-2x3.ifc",
+      "source_sha256": "b7244828bfe2360c683728e2ad446263c548c12e27526f951e87f60f68937750",
+      "source_bytes": 3217862,
+      "schema": "IFC2X3",
+      "source_register": "dataset/external/ifc-asset-register.jsonl",
+      "scene_family": "jasmin-house",
+      "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+      "source_role": "preselected_reference_from_registered_original",
+      "license": "GPL-3.0-or-later",
+      "rights_record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
+      "rights_policy": "open_modification_with_copyleft",
+      "rights_source_url": "https://github.com/opensourceBIM/TestFiles",
+      "rights_conditions": "保留 GPL3+ 许可及版权，修改注明日期；以对应 GPL 条件提供修改成果及适用的可编辑源码/生成脚本；不能把受覆盖 IFC 改贴 MIT/CC BY。普通独立聚合不会自动改变其他独立文件的许可。",
+      "schema_validation": {
+        "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+        "evidence": "dataset/external/_checks/ifc-assets-20260913/audit/b7244828bfe2360c683728e2ad446263c548c12e27526f951e87f60f68937750.json",
+        "errors": 0,
+        "rerun_this_turn": false
+      },
+      "current_read_only_checks": {
+        "reopened": true,
+        "ifcopenshell_version": "0.8.5",
+        "source_hash_matches": true,
+        "storeys": 3,
+        "door_window_chains": {
+          "IfcDoor": {
+            "elements": 8,
+            "wall_fill_void_chains": 8
+          },
+          "IfcWindow": {
+            "elements": 12,
+            "wall_fill_void_chains": 12
+          }
+        },
+        "sample_geometry": {
+          "268439642": {
+            "guid": "39U3OtsbzBlAxL2q4aFMZF",
+            "class": "IfcWindow",
+            "name": "Wind-080",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 900.0,
+            "OverallHeight_mm": 500.0,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                0.09499999999999646,
+                0.16999999999999943
+              ],
+              [
+                3.5549999999999997,
+                4.455
+              ],
+              [
+                -1.0999999999999999,
+                -0.5999999999999999
+              ]
+            ]
+          },
+          "268440508": {
+            "guid": "0ok7v5mx9D$Q3xn0$Jigtv",
+            "class": "IfcWindow",
+            "name": "Wind-080",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 900.0,
+            "OverallHeight_mm": 500.0,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                0.09499999999999646,
+                0.16999999999999887
+              ],
+              [
+                0.48985049999999947,
+                1.3898504999999994
+              ],
+              [
+                -1.0999999999999999,
+                -0.5999999999999999
+              ]
+            ]
+          }
+        }
+      },
+      "task_proposal": {
+        "damage_scale": "S1",
+        "description": "补一扇窗",
+        "provisional_source_step_ids": [
+          268439642
+        ],
+        "retained_reference_step_ids": [
+          268440508
+        ],
+        "frozen": false,
+        "public_request": null,
+        "clarification_required": null
+      },
+      "remaining": [
+        "Confirm target and retained-reference geometry/style compatibility",
+        "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+        "Write natural public request using D and explicit user intent",
+        "Freeze preservation, allowed alternatives and score denominators",
+        "Human review complete case package"
+      ]
+    },
+    {
+      "candidate_slot": "formal-005",
+      "status": "candidate_only_not_a_task_package",
+      "human_review": "pending_human_review",
+      "asset_id": "opensourcebim-testfiles-ac90r1-niedriha-v2-2x3-47eb2faed9eb",
+      "source_path": "dataset/external/opensourcebim-testfiles/AC90R1-niedriha-V2-2x3.ifc",
+      "source_sha256": "47eb2faed9ebdeb4caf31621bc9898442618631e71e8eb91d3056b18ca3fdac4",
+      "source_bytes": 2442051,
+      "schema": "IFC2X3",
+      "source_register": "dataset/external/ifc-asset-register.jsonl",
+      "scene_family": "niedriha",
+      "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+      "source_role": "preselected_reference_from_registered_original",
+      "license": "GPL-3.0-or-later",
+      "rights_record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
+      "rights_policy": "open_modification_with_copyleft",
+      "rights_source_url": "https://github.com/opensourceBIM/TestFiles",
+      "rights_conditions": "保留 GPL3+ 许可及版权，修改注明日期；以对应 GPL 条件提供修改成果及适用的可编辑源码/生成脚本；不能把受覆盖 IFC 改贴 MIT/CC BY。普通独立聚合不会自动改变其他独立文件的许可。",
+      "schema_validation": {
+        "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+        "evidence": "dataset/external/_checks/ifc-assets-20260913/audit/47eb2faed9ebdeb4caf31621bc9898442618631e71e8eb91d3056b18ca3fdac4.json",
+        "errors": 0,
+        "rerun_this_turn": false
+      },
+      "current_read_only_checks": {
+        "reopened": true,
+        "ifcopenshell_version": "0.8.5",
+        "source_hash_matches": true,
+        "storeys": 4,
+        "door_window_chains": {
+          "IfcDoor": {
+            "elements": 16,
+            "wall_fill_void_chains": 16
+          },
+          "IfcWindow": {
+            "elements": 16,
+            "wall_fill_void_chains": 16
+          }
+        },
+        "sample_geometry": {
+          "268448036": {
+            "guid": "0kVdZTYg13cwnVDoUXpf$4",
+            "class": "IfcDoor",
+            "name": "Door-034",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 870.0,
+            "OverallHeight_mm": 2009.9999999999998,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                3.7702851299999995,
+                4.64028513
+              ],
+              [
+                5.530000299999999,
+                5.8385936
+              ],
+              [
+                -2.85,
+                -0.8400000000000003
+              ]
+            ]
+          },
+          "268455793": {
+            "guid": "1CiM_eC5zDggvjiOKu9tst",
+            "class": "IfcDoor",
+            "name": "Door-035",
+            "project_unit_to_mm": 1000,
+            "OverallWidth_mm": 870.0,
+            "OverallHeight_mm": 2009.9999999999998,
+            "geometry_status": "available",
+            "bounds_world_m": [
+              [
+                3.033972622665806,
+                3.3428015921114853
+              ],
+              [
+                4.052566113666792,
+                4.922742377700374
+              ],
+              [
+                -2.85,
+                -0.8400000000000003
+              ]
+            ]
+          }
+        }
+      },
+      "task_proposal": {
+        "damage_scale": "S1",
+        "description": "补一扇门",
+        "provisional_source_step_ids": [
+          268448036
+        ],
+        "retained_reference_step_ids": [
+          268455793
+        ],
+        "frozen": false,
+        "public_request": null,
+        "clarification_required": null
+      },
+      "remaining": [
+        "Confirm target and retained-reference geometry/style compatibility",
+        "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+        "Write natural public request using D and explicit user intent",
+        "Freeze preservation, allowed alternatives and score denominators",
+        "Human review complete case package"
+      ]
+    }
+  ],
+  "element_identity_overlap": [],
+  "overlap_limit": "No shared GUID does not prove different design families; grouping follows source evidence.",
+  "prior_repair_use_search": {
+    "scope": [
+      "scripts/ifc_repair",
+      "tests/ifc_repair",
+      "dataset/manifests/ifc-repair-cases",
+      "docs/validation/repair-comparison"
+    ],
+    "patterns": [
+      "tafraout",
+      "niedriha",
+      "jasmin",
+      "gni.*model_18",
+      "european-lca.*Type.?4",
+      "Type 4.ifc"
+    ],
+    "matches_before_this_inventory": 0,
+    "limit": "Scoped path/name search, not a claim of global novelty or absence from model training."
+  },
+  "changed_source_files": 0,
+  "mutations_created": 0,
+  "paid_calls": 0
+}

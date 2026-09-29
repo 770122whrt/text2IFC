@@ -1,7 +1,7 @@
 # DeepSeek Harness：渐进调研、实验接入与隔离计划
 
 > 更新：2026-09-29｜版本：v0.2｜文档类型：接入与环境设计。
-> 状态：已完成官方固定源码／发行信息调研和本地只读环境核对；未安装、未接入、未调用模型。具体证据见[开发就绪审查](development-readiness.md)。
+> 状态：§13安装范围已获准，固定版DSH已安装并完成首批原生离线验证；阶段3的统一账本和四组隔离接线仍在推进，不含真实模型调用。实际结果见[开发就绪审查§6.9](development-readiness.md#69-阶段3dsh安装与首批原生离线验收)。
 > 适用对象：D / `deepseek_native`；分组与任务见[计划](plan.md)，计分与资源口径见[指标](metrics.md)。
 
 ## 1. 要接入什么，不接入什么
@@ -16,7 +16,7 @@
 
 2026-09-29 重新核对官方源码与发行元数据：源码标签 `dsh-v0.2.0-rc.1` 对应 `4878cdabd87d4041bdaff61d04c966883b9fd07a`，PyPI SDK/runtime 最新发布仍为 `0.1.5rc1`。建议后续固定已审阅源码的完整 `sdk` profile，使用同版配套制品或从同一提交构建；不能拿新源码文档混装旧 wheel。固定引用、环境事实和实现建议集中在[就绪审查 §5](development-readiness.md#5-dsh-官方调研入口可确定原生接入仍有工作)。
 
-静态核对确认 SDK 支持同会话继续、根事件和子 Agent 通知，但标准协议没有现成人工问答 RPC；原生 question 服务需要仅转接的 answerer bridge。摘要／失败用量、完整推理和超时后的后代清理仍须实际运行时离线验证。**官方文档与源码支持不等于本机已验收。** 当前 venv/PATH 未发现 DSH；Docker 客户端存在而引擎不可连接，WSL 发行版已安装但停止。未启动任何服务。
+最初D0静态核对确认 SDK 支持同会话继续、根事件和子Agent通知，但标准协议没有现成人工问答RPC；原生question服务需要仅转接的answerer bridge。当时venv/PATH没有DSH，Docker客户端存在但引擎不可连接，未启动服务。这是安装前记录；安装后版本、问答、摘要／失败记录和停止实测统一见就绪报告§6.9，不能继续把D0环境当作当前状态。
 
 | 需要核对的内容 | 前版读取线索 | 接入前动作 |
 |---|---|---|
@@ -211,7 +211,7 @@ SDK 的单次输出参数与整个任务累计 budget 分开。摘要、子 Agen
 
 ## 12. 来源与更新记录
 
-以下保留上游导航入口；2026-09-29 实际核对所用的固定提交、PyPI 元数据及逐项引用见[就绪审查的官方资料](development-readiness.md#官方资料)。导航中的 master 不作为实验版本锁，当前也没有本机运行证据：
+以下保留上游导航入口；2026-09-29 实际核对所用的固定提交、PyPI 元数据及逐项引用见[就绪审查的官方资料](development-readiness.md#官方资料)。导航中的master不作为实验版本锁，本机运行证据见该报告§6.9：
 
 - Python SDK：`https://github.com/deepseek-ai/deepseek-harness/blob/master/python/sdk/README.md`
 - headless：`https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/bundle/headless/README.md`
@@ -221,4 +221,69 @@ SDK 的单次输出参数与整个任务累计 budget 分开。摘要、子 Agen
 
 2026-09-28 / v0.2：将一次性完整 SDK／网关实施改为先调研、最小环境、逐步验证；保留完整原生边界，采用可写工作副本；补澄清同题继续、推理轨迹和任务动态预算。详细安装命令和 SDK 代码等到选定版本核实后写入，不将旧示例当已验证本机执行说明。
 
-2026-09-29：完成 D0 只读核对与上游调研，标明 SDK/runtime 版本差距、问答转接缺口和轨迹／停止待验项。D1–D4 接入工作仍未执行；不由本次调研自动安装或调用模型。
+2026-09-29：先完成D0只读核对；随后用户另行批准§13安装，实际完成固定版构建／安装和首批原生离线验证。统一实验账本及四组完整准入尚未完成，没有真实模型调用。
+
+## 13. 阶段3安装与隔离方案：已批准的具体范围
+
+用户于2026-09-29明确答复“批准按§13安装并做离线验收”。下列范围已获准，不重复申请；实测结果在就绪报告更新，方案中的拟执行项不自动等于已通过。
+
+2026-09-29批准前核对：Docker的`desktop-linux`引擎不可连接，WSL中的Ubuntu-22.04与docker-desktop均停止。Docker设置的`CustomWslDistroDir`为`G:\dockerdata\DockerDesktopWSL`，该目录存在；G盘剩余92.88 GiB，E盘266.09 GiB，C盘22.29 GiB。批准后启动成功，实际VHD位置也已核实，见就绪报告§6.9；未迁移已有Docker数据。
+
+### 13.1 推荐执行范围
+
+保持已审阅的`dsh-v0.2.0-rc.1`／`4878cdabd87d4041bdaff61d04c966883b9fd07a`，从同一提交构建Linux x64的SDK与runtime配套wheel，保留完整`sdk` profile。重新读取PyPI元数据后，公开SDK/runtime仍为`0.1.5rc1`；它不是本方案的替代安装来源。官方构建产物还包含ripgrep、Office资源及其配套运行时，不能只拷贝一个可执行文件或删掉原生能力来节约空间。[构建说明](https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/python/development.md)、[运行时内容](https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/python/sdk-runtime/README.md)。
+
+| 项目 | 本次拟执行的范围 |
+|---|---|
+| 宿主变化 | 启动已安装的Docker Desktop及其WSL2后端；不另装Docker／WSL，不更改个人Codex、DSH、系统Python或仓库`.venv` |
+| 构建 | 独立Linux x64 builder；Node 24、源码指定pnpm 11.7.0、Python构建工具、编译依赖均在容器内；使用源码锁文件，保存实际依赖版本、wheel哈希和镜像digest |
+| 固定依赖 | 最终公共工具环境使用Python 3.12、IfcOpenShell 0.8.5；A/C共用完全相同镜像。B另加白名单生产包／公开schema／prompt及必要资源；D另加官方完整运行时及问答转接层 |
+| 主机保存位置 | 专用构建缓存／镜像由现有Docker数据盘管理；实验导出物只在`E:\code for project\bimnet\.cache\repair-comparison\dsh`，运行测试在仓库`.tmp/repair-comparison-isolation`。只维持这一套活动目录 |
+| 构建网络 | 仅构建容器可访问官方源码和常规依赖源：GitHub及其制品域名、Docker Hub、npm registry、PyPI、Node/Python发行源和基础镜像系统包源；不传入`.env`或API凭据，不执行安装脚本中的真实模型smoke |
+| 离线运行网络 | A/C工具容器禁网；B/D原生离线验证仅连专用内部网络中的假模型服务，服务无外网出口，不发布宿主端口。真实模型网络另在阶段5/6验收与费用授权后启用 |
+| 资源边界 | 首次构建最多4 CPU、8 GiB内存、60分钟；本轮新增Docker构建数据与导出物以20 GiB为停止阈值，定期检查磁盘，不把它宣称为文件系统硬配额。C盘低于10 GiB或G盘低于20 GiB时停止准备并报告，不自行清理其他项目 |
+| 费用 | 不读取模型密钥，不调用真实模型，不购买云资源；仅本机下载、构建和假模型验收 |
+
+启动Docker后先核实引擎、数据盘、资源限制和是否有其他活动容器；不停止其他项目。Docker若要求更新、重新安装或迁移数据，先报告具体变更，不把它含混归入本次启动。完成测试后只移除本实验容器／临时网络；镜像和必要诊断保留在上述固定位置，不执行全局`docker system prune`。
+
+### 13.2 已核对的构建入口
+
+下面命令已在固定源码容器中执行成功。`build-python-release.py`把仓库版本规范化为`0.2.0rc1`，SDK精确绑定到同版runtime。实际入口为`dsh/build-runtime.sh`：Git archive保留Unix模式／符号链接，显式传入官方支持的`DSH_CLIENT_COMMIT_HASH`；依赖按锁文件安装，基础镜像固定digest。版本、耗时和失败修正见就绪报告§6.9。
+
+```sh
+pnpm install --frozen-lockfile
+pnpm exec tsx scripts/build-exe-for-python-sdk.ts --targets=node24-linux-x64
+python scripts/build-python-release.py --package sdk --output-dir dist-python
+python scripts/build-python-release.py --package runtime --platform linux-x64 --runtime-exe dist-exe/deepseek-harness-sdk-runtime-linux-x64 --output-dir dist-python
+```
+
+参数依据：[可执行文件构建器](https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/scripts/build-exe-for-python-sdk.ts)、[wheel构建器](https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/scripts/build-python-release.py)、[官方构建工作流](https://github.com/deepseek-ai/deepseek-harness/blob/4878cdabd87d4041bdaff61d04c966883b9fd07a/.github/workflows/build-exe-for-python-sdk.yml)。不运行上游带`sdk-live`的验收命令，也不直接运行可能包含真实调用的`all`场景。
+
+若同版构建失败或超过上述范围，保存日志，先判断缺失的具体依赖；不自动切为0.1.5rc1、`sdk-minimal`或另一套loop。源码中的Office和原生系统构建可能影响耗时／体积，20 GiB和60分钟是本次准备的限制，不是已测得的用量或耗时。
+
+### 13.3 容器与验收顺序
+
+1. **先验隔离。** 每个task×arm独立`/workspace`与`/state`，非root、只读安装区、drop capabilities、no-new-privileges、PID／CPU／内存限制；不挂载仓库、Docker socket、Gold、答复卡、其他组或个人配置。B只打包实际生产依赖；A/C/D不包含B代码。用无敏感canary验证读不到宿主与其他组，并验证A/C直接文本编辑及脚本执行均可用。
+2. **再验真实DSH。** 新home、完整`sdk`、假模型传输，调用实际文件和Shell工具。记录根／子Agent、摘要、重试、返回推理与usage；缺失字段保留未知。原生问题通过仅转发的bridge呈现，人工回答后沿同session继续，预算不重置。
+3. **最后验外部控制。** 原生Shell挂起和后台子进程、模型超时、人工等待、恢复与取消；先停止全部写入者及收费通道，才暂停活动计时或收集唯一产物。B也增加容器外停止看护，不能沿用同步API调用就宣称超时回收成立。
+
+本轮安装验收只回答运行时和隔离是否成立。正式20题人审、评分冻结、完整阶段准入及真实模型费用仍各自独立；没有通过的条目照实保留，不用A/C/B的已有回放测试替代D的真实运行时测试。
+
+### 13.4 已安装环境的离线探针入口
+
+从仓库根目录执行下列准备，仅使用§6.9记录的本地镜像，不下载依赖。假服务单独挂载测试答复与wire记录；D只获得当前工作区、Linux状态卷、驱动和问答桥。该服务只用于测试，不是正式人工答复或费用网关。
+
+```powershell
+$repairRoot = Join-Path (Get-Location).Path '.tmp/repair-comparison-isolation'
+$repairGateway = (Resolve-Path tests/ifc_repair/repair_comparison/dsh_fake_gateway.py).Path
+New-Item -ItemType Directory -Force -Path "$repairRoot/gateway" | Out-Null
+docker network create --internal --label text2ifc.experiment=repair-comparison text2ifc-repair-offline
+docker run -d --pull never --name text2ifc-repair-dsh-fixture --network text2ifc-repair-offline --network-alias dsh-fixture --label text2ifc.experiment=repair-comparison --user 10001:10001 --read-only --cap-drop ALL --security-opt no-new-privileges --cpus 1 --memory 512m --pids-limit 64 --tmpfs /tmp:rw,nosuid,size=64m --mount "type=bind,source=$repairGateway,target=/fixture.py,readonly" --mount "type=bind,source=$repairRoot/gateway,target=/evidence" text2ifc/repair-tools:py312-ifc085 python /fixture.py
+& scripts/ifc_repair/repair_comparison/dsh/run-offline-probe.ps1 -Case core
+docker wait text2ifc-repair-dsh-core-native
+docker logs text2ifc-repair-dsh-core-native
+```
+
+可选case为`core / retry / missing-usage / subagent / truncated / hang / compaction`，逐个运行并检查退出、`/state`原始结果及独立wire；正常case有150秒容器外层截止。`hang`需在确认子进程心跳后从控制侧`docker stop --timeout 3`，再核对停止状态和停止后的文件不再变化。`compaction`仅验证人工降低压力阈值下的原生组件行为。重复场景须先导出证据并显式清理相应测试容器／状态卷、重新启动假服务计数，不能把旧state当新题。
+
+原生可执行文件和缓存需要Linux可执行临时空间；运行探针使用`/tmp`的`exec` tmpfs及独立Linux状态卷，安装区保持只读。验收后已导出原始记录、移除本次测试容器／临时网络和用例状态卷；本地镜像、wheel、源码和唯一构建缓存保留，未清理其他项目。

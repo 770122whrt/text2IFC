@@ -2,20 +2,20 @@
 
 > 核对日期：2026-09-29｜依据：本目录现行 v0.2 三份正文及启动提示词。
 > 结论：可以进入小范围离线开发；尚不具备四组真实运行条件。
-> 后续实施：两题形式获确认后继续阶段2离线基础，见§6.5；过程中发现单位写回错误，用户另行明确批准最小生产修复，见§6.6。§2–5保留同日先前只读核对的时点事实。未安装软件、启动服务或调用模型；本文不是Stage Admission或正式实验结果。
+> 当前实施：阶段2离线基础与获准单位修复已完成；阶段3获准安装DSH并完成首批原生离线验证，见§6.9；正式首批5个源候选见§6.10。§2–5保留先前只读核对的时点事实。未调用真实模型；本文不是Stage Admission或正式实验结果。
 
 ## 1. 当前交付与下一步
 
 **已按用户第一轮反馈重写两套简单开发题，两题均为信息充分题。** 请求不用GUID、构件名或方法提示；窗题按西侧外墙的方位和现有窗排序定位，门题按二层唯一空门洞定位，开向不再强设澄清。新版附实际IFC、验收条件、来源许可和独立格式报告，保持pending_human_review供复核。工具支持准备、检查及白名单导出，尚不执行模型或问答循环，见§6。
 
-题包形式确认后，阶段 2 再实现同题预算／问答账本、A/C 中性工具、B 薄适配和独立评分基本自检。DSH 安装与正式制题可按依赖交错，安装范围及付费联调保留单独节点；正式材料每批 5 题审阅。按用户最新要求保持约 20 个不同源 IFC 的规模，优先明确许可，不把同族变体当独立样本；开发数与正式数一并登记，见[计划 §6.1](plan.md#61-源模型选择)。
+题包形式已经确认，阶段2账本、A/C中性工具、B薄适配和独立开发评分已落地。接下来完成D与账本的接线及四组容器运行路径，并把首批5个候选制成完整人审题包。DSH安装范围已批准，付费联调另留节点。整体保持约20个不同源IFC，优先明确许可，不把同族变体当独立样本；口径见[计划§6.1](plan.md#61-源模型选择)。
 
-最影响开发顺序的四个事实：
+影响开发顺序的四个事实（含最新状态）：
 
 1. **B 的公共入口可以复用。** 已有澄清、状态版本、恢复和正式发布边界，不需要复制修复流程。
 2. **现有 benchmark 不是方法无关评分器。** 它依赖 ChangeSet 和 application record；可复用差分、几何和语义原语，须另建实验侧评分入口。
 3. **现有生产 validator 是“相对 D 无新增诊断”，且不执行 EXPRESS。** 不能直接拿其 `passed` 填四组的最终 IFC 校验成绩，也不应为实验改写旧生产 policy。
-4. **DSH 尚未安装，Docker 引擎当前不可连接。** SDK 源码版本与 PyPI 发布存在差距，标准 SDK 协议也没有现成的人工问答 RPC；这些阻断 D 的接入验收，不阻断 W1。
+4. **Docker及配套DSH已安装，完整四组接线仍待完成。** 同进程原生问答已验证；标准SDK没有pending question冷恢复RPC，不能把另启会话当同题恢复，见§6.9。
 
 ## 2. 实际工作区与 v0.2 核对
 
@@ -301,18 +301,79 @@ SDK `max_tokens` 是请求输出上限，不是 task 总预算；摘要另有上
 .\.venv\Scripts\python.exe -X utf8 -m pytest tests/ifc_repair/repair_comparison/test_scoring.py tests/ifc_repair/repair_comparison/test_experiment_cli.py -q --basetemp .tmp/repair-score-final --tb=short
 ```
 
-下一步仍按原阶段顺序：准备DSH与A/C/B共用隔离环境的具体安装／构建范围，获准后再执行；同时开始筛选正式首批5个不同源IFC，优先明确许可、排除两个开发场景族。阶段3必须用真实DSH运行时＋假模型验证，不能拿本轮A/C/B回放替代。正式20题按每批5题人审；多目标与外观等价评价需随题卡补齐再冻结。
+后续仍按原阶段顺序推进。DSH安装现已获准并完成首批原生离线验证，正式首批5个源IFC已筛选，见§6.9–6.10。正式20题按每批5题人审；多目标与外观等价评价需随题卡补齐再冻结。
 
-## 7. 后续任务按依赖安排（实施状态以§6.5为准）
+### 6.9 阶段3：DSH安装与首批原生离线验收
+
+用户明确批准[DSH方案§13](deepseek-harness-integration.md#13-阶段3安装与隔离方案已批准的具体范围)：启动已有Docker，在独立Linux容器内构建固定版DSH和实验依赖并做假模型验收；4 CPU／8 GiB、首次构建60分钟、新增数据20 GiB停止阈值。不读取模型密钥，不调用真实模型。该安装授权与后续付费授权分开。
+
+Docker引擎现已可用：Desktop 4.83.0、Engine 29.6.2、Linux amd64；启动核对时没有活动容器。实际数据VHD位于`G:\dockerdata\DockerDesktopWSL\disk\docker_data.vhdx`，与设置相符。已下载官方Node 24 bookworm基础镜像，digest为`sha256:64af3819f9275802414d7cdc38c27e9d82bd564dec4d4da87d008255d36c63b4`；官方源码HEAD核对为`4878cdabd87d4041bdaff61d04c966883b9fd07a`。
+
+构建入口为[`dsh/build-runtime.sh`](../../../scripts/ifc_repair/repair_comparison/dsh/build-runtime.sh)，仅在容器执行。专用Linux构建卷为`text2ifc-repair-dsh-build`，宿主源码只读，导出至`.cache/repair-comparison/dsh/artifacts`。从首次启动到构建完成为UTC 11:26:43–11:46:22，**19分39秒**，所有修正共用原截止时间。SDK与完整runtime均为`0.2.0rc1`，未降级PyPI旧版、裁剪工具或替换原生loop。官方构建中的Office运行时／文档往返检查通过；这里只验证bookworm本机容器，不据wheel名称宣称跨发行版manylinux兼容。
+
+安装入口为[`install-runtime.sh`](../../../scripts/ifc_repair/repair_comparison/dsh/install-runtime.sh)。实际Python **3.12.14**、IfcOpenShell **0.8.5**、Pydantic **2.13.5**，依赖检查通过；仓库`.venv`和系统Python不变。公共工具镜像供后续A/C容器后端共用，D另加同版wheel。固定制品如下，哈希只用于安装重现，不增加题包逐字节约束：
+
+| 制品 | 固定值 |
+|---|---|
+| Python基础镜像digest | `sha256:392307d22300de8b5986851a12d9176dfc0fc073e65bf6523ebd7dcbeb23564e` |
+| `text2ifc/repair-tools:py312-ifc085`镜像ID | `sha256:8488143fe4cf4031b66fc0a41fbbfd0ca10dce0b1f248e942bd5056ab7d47905` |
+| `text2ifc/repair-dsh:0.2.0rc1`镜像ID | `sha256:754a47a1ff5113193fc85498a3b44321363bbfb86980c193c948bc5011184931` |
+| SDK wheel SHA-256 | `26896976e1536c87266c34ef192c836fe251c0df2f202f31a5add19bcd04e4e5` |
+| runtime wheel SHA-256 | `9f0b02797b48c21314725649de7feb73936a4df7ad20c770fcb4dbf9002864e1` |
+
+原始构建／安装日志和wheel留在上述活动缓存；实际会话、SDK通知和假服务SSE留在`.tmp/repair-comparison-isolation/`。以下全部是**真实DSH运行时＋手写假模型**证据，token是夹具值，不是模型成绩或费用；未读取`.env`或真实密钥。
+
+资源各次采样均未触发20 GiB新增数据停止阈值；收尾C盘约21.78 GiB、G盘约88.73 GiB可用。原始记录导出后已移除本实验18个容器、7个用例状态卷和内部网络，未遗留活动测试；保留两个实验镜像、wheel及唯一构建缓存，不清理其他项目的镜像或Build Cache。
+
+| 实测项目 | 结果与边界 |
+|---|---|
+| 官方默认SDK | 原版`smoke-python-runtime.py --scenario sdk-default --installed-wheel`通过；完整`sdk`，非root、只读安装区、禁网 |
+| 文件／Shell | 原生`read → edit → bash`通过；核对实际文件修改及Shell导入IfcOpenShell 0.8.5 |
+| 问答及继续 | 挂载官方`dsh-tool-ask-user`与仅转发的[`question-bridge.mjs`](../../../scripts/ifc_repair/repair_comparison/dsh/question-bridge.mjs)；问题原样到独立控制容器，模拟人等待2秒期间无新增模型请求；答复后原session完成，再次继续仍保留问答 |
+| 子Agent | 原生`subagent`通过；根2次＋子1次请求、子session通知与持久日志均保存，根收到子结果 |
+| 503重试 | 首次503失败保留；原生重试后完成，共2次请求；失败请求无用量字段不能记零成本 |
+| 推理／缺用量 | 返回内容中保留独立`reasoning`块；缺token字段时原生usage确实变成0，评估须依据wire字段存在性记`unavailable` |
+| 截断响应 | 以`STREAM_CLOSED`终止，保留`assistant/attempt.stream`，没有自动续调。首版探针错误期待重试，其断言失败保留；只对原始结果核实正确终止并修正探针期望，未重跑挑成功结果 |
+| 摘要组件 | 仅此用例降低原生压缩阈值、使用较长合成上下文，完整工具仍开启。实际2次摘要请求，1次写入`compaction/summary`，1次因摘要未缩短而不提交；两次wire响应均保存。不能只统计已提交摘要，也不由该用例确定正式阈值 |
+| 进程停止 | 原生bash超时转后台；停止前可见Python子进程持续心跳。外部停止整个容器后`Running=false`、PID=0、退出143，2秒观察心跳不再变化 |
+| 隔离 | D仅挂探针、桥、当前工作副本和Linux状态卷；假答复／wire日志在另一容器，不挂仓库、Gold、个人配置或Docker socket；内部网络无宿主端口，外网TCP探测返回`ENETUNREACH`。这不是四组隔离已完成 |
+
+问答桥另有**7项Node聚焦测试通过**：等待、取消、错request／错问题／缺失／重复／未提供选项的答复拒绝。重复探针入口为[`run-offline-probe.ps1`](../../../scripts/ifc_repair/repair_comparison/dsh/run-offline-probe.ps1)，假服务／驱动为`tests/ifc_repair/repair_comparison/dsh_{fake_gateway,runtime_probe}.py`。这些入口没有真实模型选项，非空状态不能被当作新会话。
+
+准备中保留了两类失败：tmpfs默认禁止执行，阻止解包的原生扩展及DSH自身缓存资源；在临时区允许执行后官方默认smoke通过，安装区仍只读。Windows绑定状态目录下首个turn停滞，150秒外部截止后退出；相同用例改用Linux卷后通过，未进一步断言具体文件锁根因，也未修改上游代码。
+
+**阶段3整体仍未完成。** 下一步把D的wire／原生通知、人工答复与阶段2账本接起来，完成A/C容器工具后端和B白名单镜像／外部停止看护。当前只证明同进程问答继续；官方SDK没有冷恢复pending question的RPC，进程丢失不能声称恢复同一Promise或自动重开。需补冷中断终态、等待前无后台活动、未知用量及在途预算控制。阶段5四组完整准入和费用批准仍是进入真实调用的前提。
+
+### 6.10 首批5个正式源IFC候选
+
+当前只完成源模型筛选及只读几何检查，**尚不是5套待人审完整题包**。唯一候选清单为[`formal_candidates.private.json`](../../../scripts/ifc_repair/repair_comparison/formal_candidates.private.json)，含来源、既有许可证据、预选目标／保留参照、几何及后续事项；它是制题侧私有材料，不进入任何被测环境。没有复制或修改源IFC，也未改全局数据登记、训练划分或开发题。
+
+| 暂定题号 | 源模型／许可 | 大小 | 门／窗数 | 拟制题内容 |
+|---|---|---:|---:|---|
+| formal-001 | Tafraout model2／CC BY4 | 0.89 MiB | 28／10 | S1：保留洞口，补一扇门 |
+| formal-002 | European LCA Type4／CC BY4 | 9.85 MiB | 6／8 | S2同类：补两扇窗，保留另一扇同尺寸参照 |
+| formal-003 | GNI model_18／CC BY4 | 1.69 MiB | 17／63 | S2混合：补一扇窗和一扇门，各留明确参照 |
+| formal-004 | Jasmin-Sun-105／GPL3+ | 3.07 MiB | 8／12 | S1：补一扇地下层窗 |
+| formal-005 | niedriha-V2／GPL3+ | 2.33 MiB | 16／16 | S1：保留洞口，补一扇门 |
+
+五份均实际重开为IFC2X3，字节与已有schema＋EXPRESS零错误报告绑定一致；本轮复用了这些原生报告，没有把旧报告写成新跑的validator结果。当前重新核对所有门／窗的fill→opening→void→wall链，表中门窗均具有唯一有效墙链；13个预选目标／保留参照实际生成世界坐标几何。坐标尚只作私有选题检查，不把删除记录直接翻译成公开答案。制题时G和最终D仍须按既定规则独立校验。
+
+场景去重采用现有保守分组：Tafraout三份模型整族只取一份，欧洲LCA原型族只取一份，GNI 2025课程模型整族只取一份；Jasmin与niedriha分别属于已有不同住宅模型族。五份之间以及与LargeBuilding／Duplex两开发题之间没有共享IfcElement GUID，但这只是辅助核对，不以GUID不相交证明设计独立。限定搜索既有Repair脚本、测试、私有案例登记和专题文档，没有命中这五个源名称；不宣称模型训练未见或全仓历史从未使用。
+
+许可按逐模型记录使用：[Tafraout来源](https://zenodo.org/records/6397164)、[European LCA来源](https://data.mendeley.com/datasets/yv723tdtv9/1)、[GNI来源](https://zenodo.org/records/19722012)。GPL两题依据[TestData专项许可](https://github.com/opensourceBIM/TestFiles/blob/master/TestData/license.txt)，后续材料保留该许可及修改说明，不统一改贴MIT／CC BY。具体字节、版权声明和修改发布条件仍链接现有rights记录，不从整个仓库的软件许可推导陌生模型授权。GNI采用已登记的格式修复副本作为事前参考，原始下载文件与修复谱系继续保留。
+
+下步制作这五套可逐项审阅的完整材料。S2双目标／混合制题与统一评分尚需实现和离线回归；不为赶批次默默退回五道单目标，也不按B的修复成绩筛选。真实澄清题另外从必要位置／楼层缺项选取，必须验证至少两个与D及初始请求相容的有效解释，不能把这批尚未完成的提案计作3道已成立澄清题。
+
+## 7. 后续任务按依赖安排（实施状态以§6.5和§6.9为准）
 
 | 后续任务 | 拟创建／复用路径与输入输出 | 验收及拟最窄测试 | 文件／环境副作用 |
 |---|---|---|---|
 | W2 A/C 公共工具 | `neutral_tools.py`、`direct_runner.py`离线实现已落地；后续补实际Provider协议和容器工具后端 | `test_direct_runner.py`、`test_experiment_cli.py`、`test_public_repair_flow.py`已覆盖离线路径；真实网络和Shell隔离另验 | 当前仅可信离线脚本；后续获准容器不挂载仓库或凭据 |
 | W3 B 薄适配 | `ours_adapter.py`、`provider_observer.py`离线实现已落地；后续补真实HTTP重试、用量观测和外部超时看护 | `test_ours_adapter.py`及既有`test_run_state.py`、`test_provider_stage.py`；本轮未改HTTP适配器，未重跑无关的`test_phase6_2_openai_compat.py` | 仅实验目录；已单独获准的尺寸写回修复见§6.6，未改Prompt／Schema |
 | W5 独立评分基本自检 | `scoring.py`已支持两题开发范围；后续扩展多目标、不同几何剖分和形式等价保全，再结合正式题卡冻结 | `test_scoring.py`及公共D脚本闭环；不导入B application record作为输入 | 仅开发评分；不改旧policy、正式分母和冻结Proof |
-| W4 D 完整运行时接入 | 拟 `dsh_adapter.py`、`dsh/answerer-bridge/`、`dsh/Dockerfile`、`dsh/requirements.lock`；公共包＋原生 SDK/profile → 原样问题、全任务轨迹、正式提交或终态 | 拟 `test_dsh_protocol.py` 验证帧／事件；拟 `test_dsh_runtime_offline.py` 必须使用安装后的真实 DSH＋fake Messages，覆盖真实文件／Shell、问答桥、子 Agent、摘要、截断、超时、后代清理和不可达 canary | 需要后续批准安装／构建与启动现有 Docker；mock 整个 loop 不算通过 |
+| W4 D 完整运行时接入 | `dsh/`已有构建、安装、原生问答桥和隔离探针；下一步接阶段2账本、人工答复和唯一提交 | §6.9已使用真实DSH＋fake Messages验证核心工具／问答／子Agent／摘要／失败／停止；冷中断、累计预算和四组准入仍待完成 | §13安装已获准并执行；不改上游loop，不调用真实模型 |
 
-测试命令采用`python -m pytest tests/ifc_repair/repair_comparison/<指定测试文件> -q`；DSH运行时测试待安装获准后在固定镜像内执行，依赖缺失则保持未验收，不能跳过后称通过。上表只有W4仍为拟创建文件。
+普通测试采用`python -m pytest tests/ifc_repair/repair_comparison/<指定测试文件> -q`；问答桥采用`node --test tests/ifc_repair/repair_comparison/dsh_question_bridge.test.mjs`；DSH原生探针在§6.9固定镜像中执行。缺失检查保持未验收，不能跳过后称通过。
 
 独立评分的最低自检：外部 IFC 不含 ChangeSet 仍可评分；未修 D；合法新 GUID／STEP 重排；数量齐但尺寸错；错宿主／漏关系；属性写错对象；非目标误删；重复补建；目标无几何；最终无输出保留原分母；awaiting_user 保持 pending；未问但碰巧修对；问对但没修好；评分器异常为不可评估。匹配不能按待评分尺寸或关系挑最有利对象，墙开洞允许范围也不能放宽为整墙任意漂移。规则测试同时保留“已有错误”与“新增错误”，区分最终通过、预先冻结例外和相对诊断。
 
@@ -324,11 +385,11 @@ SDK `max_tokens` 是请求输出上限，不是 task 总预算；摘要另有上
 
 **当前已完成第一轮人审意见的简单制题修订。** 用户认可其余内容并要求去GUID／无必要Name、自然语言定位、无方法引导、按数量组合分级，以及格式合格的D；已落实到§6题包和工具。门开向必答卡已撤销，修订后的请求与验收仍保留待复核状态。后续按批准计划衔接实验基础及每批5题正式材料，不重复请求已经获得的制题授权。
 
-开发题卡形式已认可。后续需用户参与：正式20题逐一人工接受；批准独立安装／启动与必要网络边界；在有效Stage Admission后分别批准开发联调和正式费用上限。具体容差、合法替代或答复事实有语义歧义时，带已准备好的题卡询问。无需再选择四组结构、20题、GPT API或关系指标。
+开发题卡形式及§13安装／Docker／构建网络范围已获准。后续需用户参与：正式20题逐一人工接受；在有效Stage Admission后分别批准开发联调和正式费用上限。具体容差、合法替代或答复事实有语义歧义时，带已准备好的题卡询问。无需再选择四组结构、20题、GPT API或关系指标。
 
-当前真实运行阻断包括：未冻结／人审20题；A/C/B仅离线入口和两题范围的评分器；无本实验Stage Admission；DSH配套版本、问答桥和记录覆盖未实测；Docker引擎不可连接；没有本实验费用授权。缺失准入不会触发Full Preflight，也不继承以前IFC2Text的额度。
+当前真实运行阻断包括：未冻结／人审20题；A/C/B仅离线入口和两题范围评分；D原生探针尚未接入统一账本，四组隔离与完整准入未完成；没有本实验费用授权。Docker及DSH配套安装已经可用，不能继续列为未批准／不可连接。缺失准入不触发Full Preflight，也不继承以前IFC2Text额度。
 
-初次就绪核对包括UTF-8文档、代码／环境和官方源码检查；阶段1验证见§6.3，阶段2及获准单位修复的验证见§6.8。浏览器视觉验收尚未完成。没有模型调用、正式20题生成、正式评分、软件安装或Full Preflight；这些离线结果不能作为真实模型调用准入。
+初次就绪核对包括UTF-8文档、代码／环境和官方源码检查；阶段1验证见§6.3，阶段2及获准单位修复见§6.8，阶段3安装与原生离线实测见§6.9。浏览器视觉验收尚未完成。没有真实模型调用、正式20题生成、正式评分或Full Preflight；这些离线结果尚不构成四组真实调用准入。
 
 ## 官方资料
 
