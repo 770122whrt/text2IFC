@@ -2,7 +2,7 @@
 
 > 核对日期：2026-09-29｜依据：本目录现行 v0.2 三份正文及启动提示词。
 > 结论：可以进入小范围离线开发；尚不具备四组真实运行条件。
-> 后续实施：用户批准先交两道开发题；2026-09-29 已完成最小准备／检查工具和待审材料，见 §6。§2–5 保留同日先前只读核对的时点事实。未安装软件、启动服务、调用模型或修改生产代码；本文不是 Stage Admission 或正式实验结果。
+> 后续实施：两题形式获确认后继续阶段2离线基础，见§6.5；过程中发现单位写回错误，用户另行明确批准最小生产修复，见§6.6。§2–5保留同日先前只读核对的时点事实。未安装软件、启动服务或调用模型；本文不是Stage Admission或正式实验结果。
 
 ## 1. 当前交付与下一步
 
@@ -179,7 +179,7 @@ SDK `max_tokens` 是请求输出上限，不是 task 总预算；摘要另有上
 | [development_cases.private.json](../../../scripts/ifc_repair/repair_comparison/development_cases.private.json) | 两道明确标注为私有的开发配方、公共请求、待审语义和来源；绝不能挂载到被测环境 |
 | [test_preparation.py](../../../tests/ifc_repair/repair_comparison/test_preparation.py) | 37项聚焦测试；格式门禁、关键IFC绑定、原位刷新、可编辑审阅文字、权限继承、实际网格和移动检测、公共投影及CLI |
 
-这是原 M1.1–M1.3 的开发样例子集，未宣称完整正式 TaskSpec、人审状态流转或唯一提交收集器已完成。目录分层和白名单导出只验证文件投影，不能证明运行时沙箱隔离。没有 ledger、预算执行、问答恢复、A/C/B/D 执行器或独立结果评分；工具不会导入 `.env` 或调用模型。
+上述是原 M1.1–M1.3 的开发样例子集。用户随后认可材料风格并要求继续计划，已推进下方§6.5的离线基础；正式TaskSpec与20题人审仍未完成。目录分层和白名单导出不能证明运行时沙箱隔离。工具不会导入 `.env` 或调用模型。
 
 ### 6.3 已执行检查与复现
 
@@ -217,22 +217,102 @@ SDK `max_tokens` 是请求输出上限，不是 task 总预算；摘要另有上
 
 导出仅含 `model.ifc` 和 `request.txt`，目标需位于私有题包外且尚不存在；新副本可写。正式部署仍需阶段 3/5 的真实隔离检查，不能把整个题包或仓库挂进去。
 
-### 6.4 题包确认后的最小开发建议
+### 6.4 题包确认时的最小开发建议（实施见§6.5）
 
 先补 M1.4 的 `ledger.py`、`budget.py` 与对应聚焦测试，再衔接 §7 的执行器与评分。保存原样问答、人工事实标注、追加事件、恢复状态、请求预留／结算、时间区间、实际推理引用及唯一终态。澄清和重启不清零；重复通知去重，缺失 usage 保留未知及未结清预留，仍有后台活动不暂停计时；并发不能重复花余额。
 
-真实额度在开发联调和费用批准后填写，未赋合法额度不得发请求。fake 用量与轨迹明确标记，不记模型成绩。fact ID 由答复／评估端依据已认可题卡标注，适配器不猜意图或代提问；被测侧只取得实际回答，不取得整卡。完成这些后才具备“准备→问答→继续→累计→唯一提交”的离线全链路，当前尚未达到。
+真实额度在开发联调和费用批准后填写，未赋合法额度不得发请求。fake用量与轨迹明确标记，不记模型成绩。fact ID由答复／评估端依据已认可题卡标注，适配器不猜意图或代提问；被测侧只取得实际回答，不取得整卡。该建议已实施为下节的“准备→问答→继续→累计→唯一提交”离线入口；尚不构成真实四组准入。
 
-## 7. 后续任务按依赖安排，不并入本轮授权
+### 6.5 按确认的形式继续：离线实验基础（2026-09-29）
+
+用户确认题包风格并要求按计划继续后，阶段2已实施下列开发模块。实验代码位于`scripts/ifc_repair/repair_comparison/`；随后另经用户明确授权修复一个生产尺寸写回点，见§6.6。不是正式四组准入。现有两题信息充分，测试里的提问用于验证暂停／恢复，不计为必要澄清题。
+
+| 模块 | 已实施行为与实际边界 |
+|---|---|
+| `budget.py`、`ledger.py` | SQLite事务记录请求预留、原样响应、已知／未知用量、原样问答、人工事实标签、活动及等待时间、原生结果引用与唯一终态；重启不清零，未知用量不按0计算；只允许一个活动任务，同题各组预算一致 |
+| `neutral_tools.py`、`direct_runner.py` | A/C同一工具协议：分页读文件、写文件、精确替换、命令执行、提问、显式提交；不附IFC方法指导。原子认领工具，疑似中断操作不自动重做；无提交不会挑工作区文件冒充结果 |
+| `process_control.py`、`_command_worker.py` | 当前Windows用Job约束可信离线脚本的进程生命周期；超时及正常结束都确认子进程停止。这不是文件系统／网络沙箱，不能据此声称私有资料不可达 |
+| `provider_observer.py`、`ours_adapter.py` | B调用现有`RepairAPI`，使用默认Intent 0.10及真实索引、解析、应用、校验、发布；只接受固定假响应。保留原生候选token、state_version和原样回答，恢复同一任务；只从原生正式发布路径收集IFC，不扫描staging |
+| `scoring.py` | 当前两道单目标开发题的独立评分入口，仅读D、显式R／终态、事前题卡和问答证据，评估侧可读G；不要求ChangeSet或B评价。检查原生schema＋EXPRESS、数量、粗位置匹配后独立检查尺寸／几何／关系、原对象保全及澄清 |
+| `experiment.py` | 离线CLI：`create`、`run`、`status`、`answer`、`score`；预算必须显式给定。无真实Provider入口，无D模拟器，无自动题卡代答 |
+
+评分规则仍是开发实现，不能直接冻结为正式20题通用评价：支持新GUID和STEP重排；门允许左右替代；相同世界表面三角网格及样式可作为外观相符证据。不同剖分或尚不能证明的等价表示标为`needs_review`，不直接判错或放行。保全比较先在评估内存副本扣除新增对象，再比较原根对象；不整体豁免宿主，忽略编辑者／编辑时间元数据。原对象的等价重建、复杂外观、多目标匹配仍需后续扩展和人审。异常返回`not_evaluable`；待答返回`pending`，失败和无输出保留分母。
+
+已经以真实公开D跑通两题×A/C的四次脚本工具、提交和评分闭环。脚本是**手写测试夹具**，仅在测试中作为假模型输出，不向实际A/C默认注入，也不读G。G派生的正确／错误产物仅作为独立评分器的评估侧对照。B的米制失败证据单独保留，获准修复后在原D上重验；另有公开D的毫米制转换对照，不计为新IFC样本。B的固定Intent旨在验证索引、确定性执行和正式发布，不证明模型能从自然语言生成同一Intent，也不表示其默认几何已满足请求中的全部参照样式条件。
+
+聚焦验证使用本专题全部测试，及直接相关的既有`test_run_state.py`、`test_provider_stage.py`。不调用付费模型，不运行全仓Preflight。命令与结果见§6.8；D、真实隔离、B原生强制超时及HTTP内部重试用量覆盖尚未验收。
+
+### 6.6 B自然语言定位核对与单位修复
+
+**B支持自然语言定位。** `request_stage.py:149`将自然语言转为查询，`target_query.py:120/218`按类别、楼层、名称、宿主、空间、方向和几何条件解析真实IFC，`resolution_flow.py:170`及`api.py:934`提供候选澄清；保留洞口选定后，`door_resolution.py:552`可读取其尺寸及位置。不应因缺少某个查询字段就否定整个Harness。
+
+针对当前两题的只读核对：西侧墙被索引为轴线朝north，所以“建筑西侧”不能直接翻译成墙朝west。门题按公开楼层高3100、宽864、高2032筛选有6个候选，5已填、1空；此人工查询默认5时目标排第6，`max_candidates=10`可包含它，当前候选不会自动扩大。这证明已有检索／澄清路径及具体边界，尚不是模型对自然语言请求的成功或失败证据。“最西侧＋自北向南窗排序＋中点”能否由现有模型／流程完整处理仍待获准实测；不为离线接线偷偷修改定位逻辑。
+
+**另发现一个与自然语言无关的米／毫米写回缺陷。** 真实case-002的固定假Intent已定位正确门洞并进入Stage2；原生链路随后返回`UNIFIED_TRANSACTION_FAILED`、回滚且无正式IFC。证据链：
+
+1. `operations/door.py:539–540`创建门时正确把864/2032 mm换为0.864/2.032 m。
+2. `operations/door.py:811–826`产生规范化尺寸语义事实；`semantic_facts.py:674–684`的读取约定也使用毫米。
+3. `apply.py:144`调用语义赋值；`semantic_authoring.py:533`直接把规范化864/2032写入IFC米制属性，覆盖了正确值。
+4. 实际回读被解释为864000/2032000 mm，`DOOR_DIMENSIONS_MATCH`、`DOOR_GEOMETRY_ALIGNED_WITH_OPENING`失败。源D不变，失败没有被替换成毫米制对照的成功。
+
+原始失败保存在`tests/ifc_repair/repair_comparison/fixtures/door-metre-before-fix.json`，来源及边界见同目录README；当前回归为`test_ours_adapter.py::test_native_real_metre_door_repair_and_preserved_before_fix_evidence`。`test_b_publication_control.py`单独验证毫米制对照。
+
+用户已明确答复“同意修复该单位错误”。生产修改仅在`semantic_authoring.py`：对`attribute:OverallWidth/OverallHeight`将规范化毫米值换回IFC项目单位；显式长度单位复用既有转换函数，其他属性照常写入。题目、schema、语义事实、门创建器与定位策略不变。新回归族包含**门／窗×米／毫米×规范化None／显式mm**、显式m/cm、未知／非长度单位拒绝和普通文本属性不变；修复前9失败／5通过。旧窗语义测试原本未声明单位却断言毫米值，现明确补上毫米制项目单位，并验证语义回读仍为915mm。该修复是确定性执行bug修复，不是自然语言定位能力提升。
+
+原米制case-002修复后已由真实RepairAPI发布IFC并回读0.864m×2.032m，源D不变；补充说明后重启也能继续同一任务、累计预算并发布。具体测试结果见下节。真实隔离、DSH及模型接入仍未放行。
+
+另把该B固定响应生成的默认门交给独立评分：原生schema＋EXPRESS、数量、名义尺寸、关系和保全通过；与请求参照的几何范围／外观未全部符合，统一`repair_success=false`。固定Intent没有完整表达外观要求，因此这是评分分离对照，不是模型理解能力失败率。不能拿原生`successful_artifact_publishable`代替正式实验的任务分数。
+
+### 6.7 离线CLI用法
+
+用`.venv`运行，`--root`放在命令前。所有命令仅供离线开发；下面的预算文件和replay文件必须由开发者显式准备，不读取`.env`。
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/experiment.py --root .tmp/repair-offline create --public dataset/processed/ifc-repair/repair-comparison/development/case-001/public --case-id case-001 --arm A --budget <offline-budget.json>
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/experiment.py --root .tmp/repair-offline run case-001-A --replay <replay.json> --reservation 100
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/experiment.py --root .tmp/repair-offline status case-001-A
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/experiment.py --root .tmp/repair-offline answer case-001-A --question-id <当前问题ID> --text <用户原样答复> --event-id <唯一答复ID>
+.\.venv\Scripts\python.exe -X utf8 scripts/ifc_repair/repair_comparison/experiment.py --root .tmp/repair-offline score case-001-A --case dataset/processed/ifc-repair/repair-comparison/development/case-001
+```
+
+预算JSON字段：`tokens`、`calls`、`active_seconds`、`tool_seconds`均为正值，`extensions`为预先定义的扩额规则数组（可空）。示例测试额度仅用于假响应，不是正式额度建议。A/C的replay是响应数组，各项含`tool_calls: [{name, arguments}]`及可选`usage`／接口实际返回的推理字段；B的replay是按全任务顺序排列的Intent响应，Stage2由固定的公开投影回放产生。B回答另通过`--native-answer <json>`传原生回答结构，并核对当前候选token；人工事实标签可用`--requested-fact`／`--answered-fact`记录，只作为评估元数据。
+
+### 6.8 聚焦验证记录与下一步
+
+以下数量对应各自命令，有重叠，不相加成一个总测试数：
+
+| 验证范围 | 结果与解释 |
+|---|---|
+| 本专题全部测试＋既有`test_run_state.py`、`test_provider_stage.py` | **124 passed**；在生产单位修复前完成，米制B案例当时明确检查失败保留，没有把失败改称成功 |
+| 单位修复及直接相关门窗应用／语义回归＋B两开发题／问答恢复／毫米对照 | **54 passed**；修复后的原米制D和窗题均通过真实RepairAPI发布；回读尺寸及源D不变。旧窗测试补明确单位声明，未削弱期望 |
+| A/C两题公共D脚本闭环 | **4 passed**；真实命令工具→唯一IFC→独立评分，手写离线夹具，不是模型成绩 |
+| 最终评分器与离线CLI回归 | **17 passed**；覆盖正确／错误产物、无输出、待答、答复卡`fact_id`接线及评估异常；内部评估错误不算模型修复失败 |
+
+实际命令：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m pytest tests/ifc_repair/repair_comparison tests/ifc_repair/test_run_state.py tests/ifc_repair/test_provider_stage.py -q --basetemp .tmp/repair-offline-validation --tb=short
+.\.venv\Scripts\python.exe -X utf8 -m pytest tests/ifc_repair/test_semantic_attribute_units.py tests/ifc_repair/test_semantic_authoring.py tests/ifc_repair/test_door_application.py tests/ifc_repair/test_window_application.py tests/ifc_repair/test_window_semantic_authoring.py tests/ifc_repair/repair_comparison/test_ours_adapter.py tests/ifc_repair/repair_comparison/test_b_publication_control.py -q --basetemp .tmp/repair-units-verified --tb=short
+```
+
+最终自检另补了答复卡`fact_id`接线及评分器异常的测试，保证“问对但无产物”只算澄清成功，内部评估错误不算模型修复失败。评分／CLI命令为：
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 -m pytest tests/ifc_repair/repair_comparison/test_scoring.py tests/ifc_repair/repair_comparison/test_experiment_cli.py -q --basetemp .tmp/repair-score-final --tb=short
+```
+
+下一步仍按原阶段顺序：准备DSH与A/C/B共用隔离环境的具体安装／构建范围，获准后再执行；同时开始筛选正式首批5个不同源IFC，优先明确许可、排除两个开发场景族。阶段3必须用真实DSH运行时＋假模型验证，不能拿本轮A/C/B回放替代。正式20题按每批5题人审；多目标与外观等价评价需随题卡补齐再冻结。
+
+## 7. 后续任务按依赖安排（实施状态以§6.5为准）
 
 | 后续任务 | 拟创建／复用路径与输入输出 | 验收及拟最窄测试 | 文件／环境副作用 |
 |---|---|---|---|
-| W2 A/C 公共工具 | 拟 `neutral_tools.py`、`direct_runner.py`、`protocols.py`；相同公共包＋模型 tool calls → 读写／补丁／Shell／普通问答／唯一提交。JSON 响应的 B Provider 不作通用 loop | 拟 `test_neutral_tools.py`、`test_direct_runner.py`：同一 fake transcript 对 A/C 语义一致；直接改 STEP、写脚本、截断、路径越界、继续与超时；真实 Shell 隔离另验 | 仅隔离目录／后续获准容器；不挂载开发仓库或凭据 |
-| W3 B 薄适配 | 拟 `ours_adapter.py`、`provider_observer.py`；用 `RepairAPI` 和现有 Provider 注入 → 原生 run 引用、问题和正式输出；优先在外围补日志 | 拟 `test_ours_adapter.py`、`test_provider_observer.py`；再按变更范围跑已有 `test_run_state.py`、`test_provider_stage.py`、`test_phase6_2_openai_compat.py`。覆盖 state_version／候选 token 机械绑定、无 Gold、失败 trace、禁止拾取 staging | 新实验运行目录；如必须动生产日志接缝，另列具体范围及 red reproduction，不默认改 Prompt／Schema |
-| W5 独立评分基本自检 | 拟 `scoring.py`、`matching.py`、`ifc_rules.py`；冻结 D＋唯一 R/终态＋人工 TaskSpec，必要时 evaluator-only G；另读 M1.4 原样问答、事实命中及取得记录 → 产物／澄清／完整交互的独立明细。复用 §3 原语，不导入 B application record 作为输入 | 拟 `test_scoring.py`、`test_target_matching.py`、`test_ifc_rules.py`。1–2 开发 IFC 覆盖下面控制情形；可先于 20 题人审完成 | 仅开发评分产物；不改旧 policy、正式分母和冻结 Proof |
+| W2 A/C 公共工具 | `neutral_tools.py`、`direct_runner.py`离线实现已落地；后续补实际Provider协议和容器工具后端 | `test_direct_runner.py`、`test_experiment_cli.py`、`test_public_repair_flow.py`已覆盖离线路径；真实网络和Shell隔离另验 | 当前仅可信离线脚本；后续获准容器不挂载仓库或凭据 |
+| W3 B 薄适配 | `ours_adapter.py`、`provider_observer.py`离线实现已落地；后续补真实HTTP重试、用量观测和外部超时看护 | `test_ours_adapter.py`及既有`test_run_state.py`、`test_provider_stage.py`；本轮未改HTTP适配器，未重跑无关的`test_phase6_2_openai_compat.py` | 仅实验目录；已单独获准的尺寸写回修复见§6.6，未改Prompt／Schema |
+| W5 独立评分基本自检 | `scoring.py`已支持两题开发范围；后续扩展多目标、不同几何剖分和形式等价保全，再结合正式题卡冻结 | `test_scoring.py`及公共D脚本闭环；不导入B application record作为输入 | 仅开发评分；不改旧policy、正式分母和冻结Proof |
 | W4 D 完整运行时接入 | 拟 `dsh_adapter.py`、`dsh/answerer-bridge/`、`dsh/Dockerfile`、`dsh/requirements.lock`；公共包＋原生 SDK/profile → 原样问题、全任务轨迹、正式提交或终态 | 拟 `test_dsh_protocol.py` 验证帧／事件；拟 `test_dsh_runtime_offline.py` 必须使用安装后的真实 DSH＋fake Messages，覆盖真实文件／Shell、问答桥、子 Agent、摘要、截断、超时、后代清理和不可达 canary | 需要后续批准安装／构建与启动现有 Docker；mock 整个 loop 不算通过 |
 
-上表拟测试命令均采用 `python -m pytest tests/ifc_repair/repair_comparison/<指定测试文件> -q`；DSH 运行时测试在获准固定镜像内执行同一相对测试路径，依赖缺失则保持 blocked，不能跳过后称通过。现有 B 相关测试分别位于 `tests/ifc_repair/` 和 `tests/agent/`，不把同名拟测试当现成脚本。
+测试命令采用`python -m pytest tests/ifc_repair/repair_comparison/<指定测试文件> -q`；DSH运行时测试待安装获准后在固定镜像内执行，依赖缺失则保持未验收，不能跳过后称通过。上表只有W4仍为拟创建文件。
 
 独立评分的最低自检：外部 IFC 不含 ChangeSet 仍可评分；未修 D；合法新 GUID／STEP 重排；数量齐但尺寸错；错宿主／漏关系；属性写错对象；非目标误删；重复补建；目标无几何；最终无输出保留原分母；awaiting_user 保持 pending；未问但碰巧修对；问对但没修好；评分器异常为不可评估。匹配不能按待评分尺寸或关系挑最有利对象，墙开洞允许范围也不能放宽为整墙任意漂移。规则测试同时保留“已有错误”与“新增错误”，区分最终通过、预先冻结例外和相对诊断。
 
@@ -244,11 +324,11 @@ SDK `max_tokens` 是请求输出上限，不是 task 总预算；摘要另有上
 
 **当前已完成第一轮人审意见的简单制题修订。** 用户认可其余内容并要求去GUID／无必要Name、自然语言定位、无方法引导、按数量组合分级，以及格式合格的D；已落实到§6题包和工具。门开向必答卡已撤销，修订后的请求与验收仍保留待复核状态。后续按批准计划衔接实验基础及每批5题正式材料，不重复请求已经获得的制题授权。
 
-后续需用户参与的节点只有：审阅开发题卡的形式；正式 20 题逐一人工接受；批准独立安装／启动与必要网络边界；在有效 Stage Admission 后分别批准开发联调和正式费用上限。具体容差、合法替代或答复事实有语义歧义时，带已准备好的题卡询问。无需再选择四组结构、20 题、GPT API 或关系指标。
+开发题卡形式已认可。后续需用户参与：正式20题逐一人工接受；批准独立安装／启动与必要网络边界；在有效Stage Admission后分别批准开发联调和正式费用上限。具体容差、合法替代或答复事实有语义歧义时，带已准备好的题卡询问。无需再选择四组结构、20题、GPT API或关系指标。
 
-当前真实运行阻断包括：未冻结／人审 20 题；无四组执行器与方法无关 scorer；无本实验 Stage Admission；DSH 配套版本、问答桥和记录覆盖未实测；Docker 引擎不可连接；没有本实验费用授权。缺失准入不会触发 Full Preflight，也不继承以前 IFC2Text 的额度。
+当前真实运行阻断包括：未冻结／人审20题；A/C/B仅离线入口和两题范围的评分器；无本实验Stage Admission；DSH配套版本、问答桥和记录覆盖未实测；Docker引擎不可连接；没有本实验费用授权。缺失准入不会触发Full Preflight，也不继承以前IFC2Text的额度。
 
-初次就绪核对包括UTF-8文档读取、指定代码检查、Python／IfcOpenShell／Docker／WSL／磁盘只读查询、官方固定源码和发行元数据检索。修订后§6已有37项pytest通过、两题真实IFC的原生schema＋EXPRESS及独立CLI、网格位置和文件边界检查。浏览器视觉验收尚未完成。没有模型调用、正式20题生成、正式评分、软件安装、生产改动或Full Preflight；这些结果不能作为真实模型调用准入。
+初次就绪核对包括UTF-8文档、代码／环境和官方源码检查；阶段1验证见§6.3，阶段2及获准单位修复的验证见§6.8。浏览器视觉验收尚未完成。没有模型调用、正式20题生成、正式评分、软件安装或Full Preflight；这些离线结果不能作为真实模型调用准入。
 
 ## 官方资料
 
