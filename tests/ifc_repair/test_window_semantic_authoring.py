@@ -56,6 +56,13 @@ def test_generic_semantic_dispatch_reopens_typed_window_facts(tmp_path) -> None:
         ChangeAction="ADDED",
         CreationDate=0,
     )
+    # This fixture's dimensions and quantities are expressed in millimetres.
+    # Declare the project unit rather than relying on the library's metre fallback.
+    length_unit = model.createIfcSIUnit(None, "LENGTHUNIT", "MILLI", "METRE")
+    model.create_entity(
+        "IfcProject", GlobalId="0000000000000000000009", OwnerHistory=owner_history,
+        UnitsInContext=model.createIfcUnitAssignment([length_unit]),
+    )
     window = model.create_entity(
         "IfcWindow",
         GlobalId="0000000000000000000001",
@@ -110,6 +117,7 @@ def test_generic_semantic_dispatch_reopens_typed_window_facts(tmp_path) -> None:
     by_key = {fact.fact_key: fact for fact in facts}
 
     assert float(repaired.OverallWidth) == 915.0
+    assert by_key["attribute:OverallWidth"].value == 915.0
     assert by_key["pset:Pset_WindowCommon.IsExternal"].value is True
     assert by_key["quantity:window-base.Area"].value == 1674450.0
     assert by_key["material:Glass"].value_type == "IfcMaterial"

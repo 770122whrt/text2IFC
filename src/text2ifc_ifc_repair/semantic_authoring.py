@@ -530,7 +530,15 @@ def apply_semantic_assignments(
         attribute = str(item["fact_key"]).split(":", 1)[1]
         if not hasattr(target, attribute):
             raise SemanticManifestError("SEMANTIC_ATTRIBUTE_UNSUPPORTED", attribute)
-        setattr(target, attribute, item["value"])
+        value = item["value"]
+        if item["fact_key"] in {"attribute:OverallWidth", "attribute:OverallHeight"}:
+            # Dimension facts are normalized to mm by semantic_facts, including
+            # legacy assignments with unit=None. IFC stores project-unit values.
+            unit = "mm" if item.get("unit") is None else item["unit"]
+            value = _quantity_value_in_project_units(
+                model, {**item, "unit": unit}, dimension=1
+            )
+        setattr(target, attribute, value)
 
     psets: dict[str, list[Mapping[str, Any]]] = {}
     quantities: dict[str, dict[str, Mapping[str, Any]]] = {}
