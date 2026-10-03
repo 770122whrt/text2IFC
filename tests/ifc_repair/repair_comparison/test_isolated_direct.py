@@ -8,14 +8,14 @@ from scripts.ifc_repair.repair_comparison.direct_runner import DirectRunner
 from scripts.ifc_repair.repair_comparison.ledger import Ledger
 
 
-def runner(tmp_path, handler):
+def runner(tmp_path, handler, *, budget=None):
     from scripts.ifc_repair.repair_comparison.isolated_direct import ChatExecutor
     from scripts.ifc_repair.repair_comparison.wire_gateway import WireGateway
     public = tmp_path / 'public'
     public.mkdir()
     (public/'model.ifc').write_text('IFC test bytes')
     (public/'request.txt').write_text('请修复这扇窗。',encoding='utf8')
-    raw = DirectRunner.create(public,tmp_path/'runs',case_id='demo',arm='A',budget={
+    raw = DirectRunner.create(public,tmp_path/'runs',case_id='demo',arm='A',budget=budget or {
         'tokens':500000,'calls':10,'active_seconds':100,'tool_seconds':10,'extensions':[]})
     gateway = WireGateway(raw.ledger,tmp_path/'wire',transport=httpx.MockTransport(handler))
     token = gateway.register(raw.run_id,model='test-model',api_key='unused',endpoints={'chat':'https://test/v1/chat/completions'},evidence_class='deterministic_fake_http',max_output_tokens=100)
@@ -53,6 +53,55 @@ def test_human_question_waits_and_continues_same_budget(tmp_path):
         engine.ledger.answer(engine.run_id,question_id=state['question']['question_id'],text='二层',event_id='human-1')
         state=engine.run()
     assert state['status']=='no_output' and state['usage']['calls']==2
+
+
+@pytest.mark.parametrize('reason', ['tokens', 'calls'])
+def test_controller_budget_denial_is_a_recorded_budget_terminal(tmp_path, reason):
+    budget = {'tokens': 500000, 'calls': 1 if reason == 'calls' else 10,
+              'active_seconds': 100, 'tool_seconds': 10, 'extensions': []}
+    def upstream(request):
+        response = completion({'tool_calls': [{'id': 'write', 'type': 'function', 'function': {
+            'name': 'write_file', 'arguments': '{"path":"output/candidate.ifc","text":"intermediate"}'}}]})
+        if reason == 'tokens':
+            payload = json.loads(response.content)
+            payload['usage'] = {'prompt_tokens': 499000, 'completion_tokens': 3}
+            return httpx.Response(200, json=payload)
+        return response
+    engine, gateway = runner(tmp_path, upstream, budget=budget)
+    with gateway:
+        state = engine.run()
+    assert state['status'] == 'budget_exhausted'
+    assert state['usage']['calls'] == 1 and state['artifact'] is None
+    assert (engine.workspace / 'output/candidate.ifc').is_file()
+    rejected = [e for e in engine.ledger.events(engine.run_id) if e['kind'] == 'controller_request_rejected']
+    assert rejected[-1]['payload']['error'] == ('TOKEN' if reason == 'tokens' else 'CALL') + '_BUDGET_EXHAUSTED'
+
+
+@pytest.mark.parametrize('payload', [{'error': 'TOKEN_BUDGET_EXHAUSTED'}, {'error': 'not authorized'}])
+def test_upstream_403_is_not_relabelled_as_controller_budget(tmp_path, payload):
+    engine, gateway = runner(tmp_path, lambda request: httpx.Response(403, json=payload))
+    with gateway:
+        state = engine.run()
+    assert state['status'] == 'runtime_error' and state['usage']['calls'] == 1
+    assert not [e for e in engine.ledger.events(engine.run_id) if e['kind'] == 'controller_request_rejected']
+
+
+def test_controller_active_time_stop_is_not_a_provider_attempt(tmp_path):
+    engine, gateway = runner(tmp_path, lambda request: pytest.fail('budget denial reached Provider'))
+    clock = [100.0]
+    engine.ledger.clock = gateway.ledger.clock = lambda: clock[0]
+    original = engine.messages
+    def elapsed_before_http():
+        messages = original()
+        clock[0] = 201.0
+        return messages
+    engine.messages = elapsed_before_http
+    with gateway:
+        state = engine.run()
+    assert state['status'] == 'budget_exhausted' and state['active_elapsed_s'] == 101
+    assert state['usage']['calls'] == 0
+    assert any(e['kind'] == 'controller_request_rejected' and
+               e['payload']['error'] == 'TIME_BUDGET_EXHAUSTED' for e in engine.ledger.events(engine.run_id))
 
 
 @pytest.mark.parametrize('message,finish',[({'tool_calls':[{'id':'bad','type':'function','function':{'name':'write_file','arguments':'{truncated'}}]},'tool_calls'),({'content':'half response'},'length')])

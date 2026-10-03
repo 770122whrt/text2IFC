@@ -159,7 +159,9 @@ class WireGateway:
                 'native_session_id': handler.headers.get('x-deepseek-harness-session-id'),
                 'stage': 'compaction' if handler.headers.get('x-deepseek-harness-compact') == '1' else 'model'})
         except (ValueError, KeyError, UnicodeError) as error:
-            return self.reply(handler, 403, {'error': str(error)})
+            rejection = {'error': str(error), 'origin': 'repair-controller', 'wire_protocol': protocol}
+            self.ledger.record(route.run_id, 'controller_request_rejected', rejection)
+            return self.reply(handler, 403, rejection)
         wire_dir = self.root / route.run_id
         wire_dir.mkdir(parents=True, exist_ok=True)
         allowed_headers = {'content-type', 'anthropic-version', 'anthropic-beta',

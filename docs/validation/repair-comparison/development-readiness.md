@@ -386,6 +386,8 @@ Docker引擎现已可用：Desktop 4.83.0、Engine 29.6.2、Linux amd64；启动
 
 DSH 截断暴露了实验侧的协议计账错误，已通过红测定位后修正：Messages 的未缓存输入、缓存读取和缓存写入相加，Chat 不重复加缓存；流初始输出零值不能当作最终用量。计账／HTTP／恢复的 42 项聚焦回归通过后刷新阶段准入。窗题 D 的旧推导 75857 token 由[追加更正](../../../.tmp/repair-comparison-demo-live/accounting-correction.json)取代，22 个完整响应合计 1093264 token，最后一个响应的最终用量未知并保留预留。原始 wire、原结算事件、原失败与最初准入保留，未重调该任务或修改原生 DSH。
 
+门题 A 在 49 次调用、2185669 个返回 token 后因下一次预留超上限而停止，原终态误记为一般 403／runtime_error。原轨迹离线重建确认下一次预留 320467，合计超过 2500000；未为它补跑或冻结中间文件。实验端预算拒绝现在单独记录并正确标为 budget_exhausted，token／次数／活动时间及上游 403 对照的 47 项聚焦回归通过，再作 scoped 准入刷新。原失败状态保持，报告明确实际原因。当前六个任务已终止，两个 B 任务等待人答；尚无格式合格的正式开发提交，不把 HTTP 接通称为修复成功。
+
 入口：`python -m scripts.ifc_repair.repair_comparison.demo_workflow status --root .tmp/repair-comparison-demo-live`；人工确认答复写入 UTF-8 JSON 后用 `answer --run-id <任务> --answer-file <文件>`，再恢复 A/C/B；DSH 原生提问由原进程接收答复继续。`check`只用冻结提交做开发检查，不重调模型。
 
 ## 7. 后续任务按依赖安排（最新实施状态见§6.11）

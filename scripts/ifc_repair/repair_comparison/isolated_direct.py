@@ -120,6 +120,14 @@ class ChatExecutor(DirectRunner):
                     body.update(max_completion_tokens=self.max_output_tokens,reasoning_effort='high',store=False)
                 with httpx.Client(timeout=self.request_timeout_s,trust_env=False) as client:
                     response=client.post(self.gateway_url+'/chat/completions',json=body)
+                if response.status_code == 403:
+                    try:
+                        denial = response.json()
+                    except ValueError:
+                        denial = None
+                    if isinstance(denial, dict) and denial.get('origin') == 'repair-controller' and denial.get('error') in {
+                            'TOKEN_BUDGET_EXHAUSTED', 'CALL_BUDGET_EXHAUSTED', 'TIME_BUDGET_EXHAUSTED'}:
+                        raise ValueError(denial['error'])
                 response.raise_for_status()
                 payload=response.json()
                 choice=payload['choices'][0]
