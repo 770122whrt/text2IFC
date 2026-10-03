@@ -12,7 +12,7 @@
 | 功能 | 当前正文入口 | 证据与补充 |
 |---|---|---|
 | **已有 IFC 修复（本次汇报）** | [Repair Demo Method：问题、方法和案例](architecture/ifc-repair-pipeline-status-and-roadmap.md) | [三份主文档](reports/repair-demo/README.md)、[Repair Proof](../dataset/processed/proof/repair/) |
-| Repair 四组对比实验（开发题待审） | [约 20 IFC 实验专题](validation/repair-comparison/README.md) | [首批交付与开发建议](validation/repair-comparison/development-readiness.md)、[实验计划](validation/repair-comparison/plan.md)、[指标](validation/repair-comparison/metrics.md)、[DSH 接入与隔离](validation/repair-comparison/deepseek-harness-integration.md)；v0.2 两道开发题及最小工具已交付，待人审 |
+| Repair 四组对比实验（开发联调中） | [约 20 IFC 实验专题](validation/repair-comparison/README.md) | [首批五题审阅](../dataset/processed/ifc-repair/repair-comparison/formal/README.md)、[两 demo 真实结果](validation/repair-comparison/demo-results.md)、[开发建议](validation/repair-comparison/development-readiness.md)、[实验计划](validation/repair-comparison/plan.md)、[指标](validation/repair-comparison/metrics.md)、[DSH 接入](validation/repair-comparison/deepseek-harness-integration.md)；六项终止、两项 B 待答，五题保留作正式候选 |
 | 从文字生成新 IFC | [Generation 研究与文献](reports/generation-demo/README.md)、[生成工作流](architecture/current-workflow-and-data-flow.md) | [语义与外观范围](architecture/semantic-appearance-plan.md)、[Generation Proof](../dataset/processed/proof/generation/) |
 | IFC2Text 与往返重建 | [当前入口：结果、维护与研究](validation/ifc2text/README.md) | [门窗部件扩展计划 v1.0](architecture/text2ifc-component-plan-v1.0.md)、[结果与证据](validation/ifc2text/component-v26/README.md) |
 

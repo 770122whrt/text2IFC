@@ -63,3 +63,7 @@ C累计20次/1,597,750 token包括额度实验等C历史；Audit配对另计2次
 ## 早期 JSON 局部修复
 
 [旧 JSON 修复示例](legacy-jsonfix/README.md) 保留原 processed/jsonfix 的完整 14 份材料；只归档，不新增验收。
+
+## Repair 四组开发联调
+
+[两个 demo 的六项真实终止记录](repair-comparison-demo-20261004/README.md)保存原始 HTTP、工具／原生会话、失败用量和唯一提交。两项 B 等待人工答复，未记为失败；首批五道正式候选只做审题及离线检查。实际状态持续更新在[联调结果页](../../../docs/validation/repair-comparison/demo-results.md)。

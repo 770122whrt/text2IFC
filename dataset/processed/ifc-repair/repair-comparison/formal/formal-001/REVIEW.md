@@ -2,7 +2,9 @@
 
 **待人工审阅（pending_human_review）**。五题测试先检查输入与损伤；未调用模型，不是模型成绩。
 
-[打开 G/D 同步视角查看器](VIEW.html) · [格式校验](IFC-VALIDATION.md) · [许可与修改说明](private/SOURCE-LICENSE.md)
+[局部剖切图](REVIEW.png) · [打开 G/D 同步视角查看器](VIEW.html) · [格式校验](IFC-VALIDATION.md) · [许可与修改说明](private/SOURCE-LICENSE.md)
+
+![损坏前后的同尺度局部水平剖切；D 红十字只作定位标注](REVIEW.png)
 
 ## 公开请求
 
