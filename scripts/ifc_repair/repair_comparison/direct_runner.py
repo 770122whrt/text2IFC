@@ -31,8 +31,8 @@ class DirectRunner:
         self.tools = NeutralTools(self.workspace, tool_seconds=state['limits']['tool_seconds'])
 
     @classmethod
-    def create(cls, public: Path, root: Path, *, case_id, arm, budget):
-        if arm not in {'A', 'C', 'B'}:
+    def create(cls, public: Path, root: Path, *, case_id, arm, budget, mode='offline_development', runtime_metadata=None):
+        if arm not in {'A', 'C', 'B', 'D'}:
             raise ValueError('ARM_NOT_IMPLEMENTED')
         identifier(case_id)
         public, root = safe_path(Path(public)), safe_path(Path(root))
@@ -53,9 +53,9 @@ class DirectRunner:
             for name in PUBLIC_FILES:
                 shutil.copyfile(public / name, inputs / name)
         ledger = Ledger(root / 'control.sqlite')
-        ledger.create(run_id, case_id=case_id, arm=arm, budget=budget,
+        ledger.create(run_id, case_id=case_id, arm=arm, budget=budget, mode=mode,
                       metadata={'workspace': str(workspace), 'input_dir': str(inputs), 'input_sha256': sha256(inputs / 'model.ifc'),
-                                'runtime_isolation_verified': False, 'network_transport_attempted': False})
+                                'runtime_isolation_verified': False, 'network_transport_attempted': False, 'runtime': runtime_metadata or {}})
         workspace.mkdir(parents=True)
         for folder in ('work', 'output'):
             (workspace / folder).mkdir()

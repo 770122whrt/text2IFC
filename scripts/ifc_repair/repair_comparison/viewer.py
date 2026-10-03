@@ -51,13 +51,16 @@ def compare_meshes(before: dict, after: dict, guids: list[str]) -> list[dict]:
 def write_viewer(package: Path, definition: dict) -> dict:
     before = collect_meshes(package / 'private/reference.ifc')
     after = collect_meshes(package / 'private/mutation/damaged.ifc')
-    target = definition['damage']['target_guid']
+    damage = definition['damage']
+    targets = [t['target_guid'] for t in damage] if isinstance(damage, list) else [damage['target_guid']]
+    target = targets[0]
     refs = definition['task'].get('reference_guids', [])
     comparisons = compare_meshes(before, after, refs)
     audit = {
         'purpose': 'private human visual inspection; never export to tested system',
         'removed_target': {k: v for k, v in before['meshes'][target].items() if k not in ('vertices', 'faces')},
-        'removed_target_absent_in_d': target not in after['meshes'],
+        'removed_targets': [{k: v for k, v in before['meshes'][g].items() if k not in ('vertices', 'faces')} for g in targets],
+        'removed_target_absent_in_d': all(g not in after['meshes'] for g in targets),
         'reference_geometry_unchanged': all(row['unchanged'] for row in comparisons),
         'references': comparisons,
         'mesh_count': {'G': len(before['meshes']), 'D': len(after['meshes'])},
@@ -67,7 +70,7 @@ def write_viewer(package: Path, definition: dict) -> dict:
     checks = json.loads((package / 'private/checks.json').read_text(encoding='utf-8'))
     data = {'title': definition['case_id'] + ' · ' + definition['task']['summary'],
             'floor_z': checks['host']['bounds_world_m'][2][0],
-            'target': target, 'refs': refs, 'before': before, 'after': after, 'audit': audit}
+            'target': target, 'targets': targets, 'refs': refs, 'before': before, 'after': after, 'audit': audit}
     payload = json.dumps(data, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c').replace('>', '\\u003e').replace('&', '\\u0026')
     template = Path(__file__).with_name('viewer.html').read_text(encoding='utf-8')
     (package / 'VIEW.html').write_text(template.replace('__IFC_DATA__', payload), encoding='utf-8')

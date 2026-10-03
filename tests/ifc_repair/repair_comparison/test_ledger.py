@@ -154,3 +154,24 @@ def test_malformed_usage_stays_unknown_not_zero(setup, usage):
     ledger.settle('run-a', 'r', usage=usage, response={})
     assert ledger.snapshot('run-a')['usage']['total_tokens'] is None
     assert ledger.snapshot('run-a')['usage']['reserved_tokens'] == 40
+
+
+def test_existing_messages_rows_recompute_without_rewriting_raw_evidence(setup):
+    ledger, _, _ = setup
+    raw = {'input_tokens': 4, 'cache_read_input_tokens': 30, 'cache_creation_input_tokens': 2,
+           'output_tokens': 3}
+    ledger.reserve('run-a', 'cached', 50, metadata={'wire_protocol': 'messages'})
+    ledger.settle('run-a', 'cached', usage=raw, response={'stream_complete': True})
+    reopened = api().Ledger(ledger.path)
+    assert reopened.snapshot('run-a')['usage']['total_tokens'] == 39
+    assert reopened.calls('run-a')[0]['usage'] == raw
+    assert reopened.calls('run-a')[0]['response'] == {'stream_complete': True}
+
+
+@pytest.mark.parametrize('cached', [-1, True, None, '30'])
+def test_invalid_messages_cache_count_stays_unknown(setup, cached):
+    ledger, _, _ = setup
+    ledger.reserve('run-a', 'cached', 50, metadata={'wire_protocol': 'messages'})
+    ledger.settle('run-a', 'cached', usage={'input_tokens': 4, 'cache_read_input_tokens': cached,
+                  'output_tokens': 3}, response={'stream_complete': True})
+    assert ledger.snapshot('run-a')['usage']['total_tokens'] is None

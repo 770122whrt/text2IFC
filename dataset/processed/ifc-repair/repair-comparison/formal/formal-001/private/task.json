@@ -1,0 +1,248 @@
+{
+  "allowed_alternatives": [
+    "New identities and different STEP serialization are allowed.",
+    "Door swing is not a mandatory clarification; match the retained frame/leaf/material reference."
+  ],
+  "budget": {
+    "provider_calls_allowed": false,
+    "status": "not_frozen"
+  },
+  "case_id": "formal-001",
+  "damage": [
+    {
+      "kind": "door",
+      "opening_guid": "19O0H9Yl90m8iFTmxBfE4D",
+      "preserve_opening": true,
+      "source_step_id": 2959,
+      "target_guid": "19O0H9Yl90m8iFTntBfE4D",
+      "wall_guid": "2FSKU$qsnFk8_bY_98rsnP"
+    }
+  ],
+  "damage_profile": {
+    "composition": "single",
+    "level": "S1",
+    "target_count": 1,
+    "targets": {
+      "IfcDoor": 1
+    }
+  },
+  "damaged_sha256": "ba29acc5355a0039e0e7504f5003abebfcd69fa0fb209dea3a55a2d22e255189",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred_by_user"
+  },
+  "preservation": [
+    "Only the requested target areas may change; retain all other products and their geometry/relationships."
+  ],
+  "purpose": "formal_candidate",
+  "request": "地面标高为0的这一层，平面坐标约（-8.375，-0.461）米的内墙门洞空着。请在这个现有洞口里补一扇宽800毫米、高2075毫米的单扇门。门框、门扇厚度、材质和表面外观以同一面墙上、沿X正方向3米处的现有门为准；沿墙安装、门底与洞口底对齐，洞口尺寸保持不变。其他门窗和墙体保持原样。",
+  "required_product_count": 1,
+  "required_products": {
+    "IfcDoor": 1
+  },
+  "required_relation_count": 2,
+  "review": {
+    "reviewed_at": null,
+    "reviewer": null,
+    "status": "pending_human_review"
+  },
+  "schema_version": "repair-comparison-task-candidate/0.1",
+  "source": {
+    "asset_id": "tafraout-architectural-v8-model2",
+    "candidate_slot": "formal-001",
+    "current_read_only_checks": {
+      "door_window_chains": {
+        "IfcDoor": {
+          "elements": 28,
+          "wall_fill_void_chains": 28
+        },
+        "IfcWindow": {
+          "elements": 10,
+          "wall_fill_void_chains": 10
+        }
+      },
+      "ifcopenshell_version": "0.8.5",
+      "reopened": true,
+      "sample_geometry": {
+        "2959": {
+          "OverallHeight_mm": 2075.0,
+          "OverallWidth_mm": 800.0,
+          "bounds_world_m": [
+            [
+              -8.789867940372751,
+              -7.959867940372754
+            ],
+            [
+              -0.540583771182872,
+              -0.334555610498494
+            ],
+            [
+              0.0,
+              2.09000000000001
+            ]
+          ],
+          "class": "IfcDoor",
+          "geometry_status": "available",
+          "guid": "19O0H9Yl90m8iFTntBfE4D",
+          "name": "Int. Simple:PP (0.73m x 2.04m):294948",
+          "project_unit_to_mm": 1000
+        },
+        "2995": {
+          "OverallHeight_mm": 2075.0,
+          "OverallWidth_mm": 800.0,
+          "bounds_world_m": [
+            [
+              -5.789867940372761,
+              -4.959867940372765
+            ],
+            [
+              -0.5405837711828816,
+              -0.3345556104985036
+            ],
+            [
+              0.0,
+              2.09000000000001
+            ]
+          ],
+          "class": "IfcDoor",
+          "geometry_status": "available",
+          "guid": "19O0H9Yl90m8iFTntBfE6b",
+          "name": "Int. Simple:PP (0.73m x 2.04m):295052",
+          "project_unit_to_mm": 1000
+        }
+      },
+      "source_hash_matches": true,
+      "storeys": 3
+    },
+    "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+    "human_review": "pending_human_review",
+    "license": "CC-BY-4.0",
+    "remaining": [
+      "Confirm target and retained-reference geometry/style compatibility",
+      "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+      "Write natural public request using D and explicit user intent",
+      "Freeze preservation, allowed alternatives and score denominators",
+      "Human review complete case package"
+    ],
+    "rights_conditions": "CC BY: retain author/source/license links and supplied notices, indicate changes, no implied endorsement. MIT: retain original copyright and permission notice; repair/date/hash log recommended.",
+    "rights_policy": "open_modification_with_notice",
+    "rights_record": "dataset/external/_checks/ifc-expand-20260926-v8/rights/rights.jsonl",
+    "rights_source_url": "https://zenodo.org/records/6397164",
+    "scene_family": "tafraout-architectural-unresolved",
+    "schema": "IFC2X3",
+    "schema_validation": {
+      "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+      "errors": 0,
+      "evidence": "dataset/external/_checks/ifc-expand-20260926-v8/tafraout/stages/2d5d89c0928270e7ce844f27928ed9bd35bfb1c369e8258e596c27e15c991c79/native.json",
+      "rerun_this_turn": false
+    },
+    "source_bytes": 933382,
+    "source_path": "dataset/external/tafraout-architectural/20260926/model2.ifc",
+    "source_register": "dataset/external/ifc-asset-register.jsonl",
+    "source_role": "preselected_reference_from_registered_original",
+    "source_sha256": "2d5d89c0928270e7ce844f27928ed9bd35bfb1c369e8258e596c27e15c991c79",
+    "status": "prepared_pending_human_review",
+    "task_proposal": {
+      "clarification_required": false,
+      "damage_scale": "S1",
+      "description": "补一扇门",
+      "frozen": false,
+      "provisional_source_step_ids": [
+        2959
+      ],
+      "public_basis": "Author-specified repair intent; surviving openings/references and walls identifiable in D. No deleted identity, Name or method hints.",
+      "public_request": "地面标高为0的这一层，平面坐标约（-8.375，-0.461）米的内墙门洞空着。请在这个现有洞口里补一扇宽800毫米、高2075毫米的单扇门。门框、门扇厚度、材质和表面外观以同一面墙上、沿X正方向3米处的现有门为准；沿墙安装、门底与洞口底对齐，洞口尺寸保持不变。其他门窗和墙体保持原样。",
+      "retained_reference_step_ids": [
+        2995
+      ]
+    }
+  },
+  "source_sha256": "2d5d89c0928270e7ce844f27928ed9bd35bfb1c369e8258e596c27e15c991c79",
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -9.049867940372781,
+            2.025132059627218
+          ],
+          [
+            -0.535583771181906,
+            -0.385583771181906
+          ],
+          [
+            0.0,
+            3.65000000000002
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2FSKU$qsnFk8_bY_98rsnP",
+        "name": "Mur de base:Générique - Ext. 150 mm:286975",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "door",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -8.774867940372772,
+            -7.974867940372772
+          ],
+          [
+            -0.535583771181907,
+            -0.385583771181907
+          ],
+          [
+            0.0,
+            2.075
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "19O0H9Yl90m8iFTmxBfE4D",
+        "name": "Int. Simple:PP (0.73m x 2.04m):294948:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "19O0H9Yl90m8iFTmxBfE4D",
+      "preserve_opening": true,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 2959,
+      "target": {
+        "OverallHeight_mm": 2075.0,
+        "OverallWidth_mm": 800.0,
+        "bounds_world_m": [
+          [
+            -8.789867940372751,
+            -7.959867940372754
+          ],
+          [
+            -0.540583771182872,
+            -0.334555610498494
+          ],
+          [
+            0.0,
+            2.09000000000001
+          ]
+        ],
+        "class": "IfcDoor",
+        "geometry_status": "available",
+        "guid": "19O0H9Yl90m8iFTntBfE4D",
+        "name": "Int. Simple:PP (0.73m x 2.04m):294948",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "19O0H9Yl90m8iFTntBfE4D",
+      "wall_guid": "2FSKU$qsnFk8_bY_98rsnP"
+    }
+  ]
+}

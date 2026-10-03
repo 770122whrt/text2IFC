@@ -1,0 +1,705 @@
+{
+  "checks": {
+    "damaged_native_validation_passed": true,
+    "no_products_created": true,
+    "no_unexpected_modified_products": true,
+    "only_expected_products_removed": true,
+    "removed_window_regions_closed": true,
+    "required_relation_edges_verified": true,
+    "retained_door_openings_empty_and_hosted": true,
+    "schema_preserved": true,
+    "source_native_validation_passed": true,
+    "source_unchanged": true,
+    "targets_and_references_have_geometry": true
+  },
+  "damaged_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "host": {
+    "bounds_world_m": [
+      [
+        -3.5527137e-15,
+        0.29999999999999644
+      ],
+      [
+        0.0,
+        8.01
+      ],
+      [
+        -2.9,
+        -0.1499999999999999
+      ]
+    ],
+    "class": "IfcWallStandardCase",
+    "geometry_status": "available",
+    "guid": "19m_Wpll56NfVWYe8BsxDh",
+    "name": "IfcWall-6",
+    "project_unit_to_mm": 1000
+  },
+  "removed_product_guids": [
+    "2A0NmxRUH62xAjtnn5aP3G",
+    "39U3OtsbzBlAxL2q4aFMZF"
+  ],
+  "required_relation_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "39U3OtsbzBlAxL2q4aFMZF",
+          "parent_guid": "2A0NmxRUH62xAjtnn5aP3G",
+          "relation_guid": "3zEzs_DhP6qf4szKAEtxT6"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "2A0NmxRUH62xAjtnn5aP3G",
+          "parent_guid": "19m_Wpll56NfVWYe8BsxDh",
+          "relation_guid": "3Hm4PW6sf72h$WyQYGM6$8"
+        }
+      ],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "39U3OtsbzBlAxL2q4aFMZF",
+          "parent_guid": "1smz0v6l10Nxym5PBdZkqX",
+          "relation_guid": "0RYWD7r0DDJgjXbUHHwoNB"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "after": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "0CagwV4TjDzAHChnkNSZTP",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0Xi0XO0P1Dw8$UVdi0ej4x",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0elONJornFNeOjDcBd3tVD",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "0ok7v5mx9D$Q3xn0$Jigtv",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19m_Wpll56NfVWYe8BsxDh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1AYUCi9TjAbw$hRjStQv3B",
+                "ifc_class": "IfcStair"
+              },
+              {
+                "global_id": "1NlPq2Qy5FNPHd4Z_0$ZdI",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2J1ukQvA1AyPyrwUqPt0DL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2fC1BaGlrEchbhCaiFjyrw",
+                "ifc_class": "IfcSlab"
+              },
+              {
+                "global_id": "3OAAAhIOrFFez5sGmCojcs",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3S0rhtVIv6nfTp3HSPyo0b",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3fbWx8X5z0M8XUAhwLByLP",
+                "ifc_class": "IfcWallStandardCase"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "1smz0v6l10Nxym5PBdZkqX",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:b46bcb410fec7a3fad0dae04640c95ce0a91c86077d364cf3403433b50190549",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": "BuildingStoreyContainer"
+        },
+        "before": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "0CagwV4TjDzAHChnkNSZTP",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0Xi0XO0P1Dw8$UVdi0ej4x",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0elONJornFNeOjDcBd3tVD",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "0ok7v5mx9D$Q3xn0$Jigtv",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19m_Wpll56NfVWYe8BsxDh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1AYUCi9TjAbw$hRjStQv3B",
+                "ifc_class": "IfcStair"
+              },
+              {
+                "global_id": "1NlPq2Qy5FNPHd4Z_0$ZdI",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2J1ukQvA1AyPyrwUqPt0DL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2fC1BaGlrEchbhCaiFjyrw",
+                "ifc_class": "IfcSlab"
+              },
+              {
+                "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3OAAAhIOrFFez5sGmCojcs",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3S0rhtVIv6nfTp3HSPyo0b",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3fbWx8X5z0M8XUAhwLByLP",
+                "ifc_class": "IfcWallStandardCase"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "1smz0v6l10Nxym5PBdZkqX",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:eb4accd2f0323e3d7ef85a7bc98d960bb1aa12d66d93d5a4ef352a85c0d3bf3d",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": "BuildingStoreyContainer"
+        },
+        "change_kind": "modified",
+        "global_id": "0RYWD7r0DDJgjXbUHHwoNB",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true
+      }
+    ],
+    "removed": [
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3Z8XWganvD$utzfIDkCiku",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:e4c3af4e0e8ead3ba58a742f7b3bde558dc78b902ae2b7cde2c404b40bdd4f13",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0HvXb9h6X8hOIYcjMfOQ5F",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3r4QYGBzn4CxQLFbbtuE8p",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:196fb3829af38ab0e183d353c736bd52211d0ae80f830a24e4343afa7fbb9016",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0ZfnJy1SnAhw2XF9xTV_48",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ConnectionGeometry": {
+              "attributes": {
+                "SurfaceOnRelatedElement": null,
+                "SurfaceOnRelatingElement": {
+                  "attributes": {
+                    "BasisSurface": {
+                      "ifc_class": "IfcPlane",
+                      "name": null
+                    },
+                    "InnerBoundaries": [],
+                    "OuterBoundary": {
+                      "ifc_class": "Ifc2DCompositeCurve",
+                      "name": null
+                    }
+                  },
+                  "ifc_class": "IfcCurveBoundedPlane"
+                }
+              },
+              "ifc_class": "IfcConnectionSurfaceGeometry"
+            },
+            "InternalOrExternalBoundary": "EXTERNAL",
+            "PhysicalOrVirtualBoundary": "PHYSICAL",
+            "RelatedBuildingElement": {
+              "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingSpace": {
+              "global_id": "1fIGrji7r0UuwLCj_LJPVj",
+              "ifc_class": "IfcSpace"
+            }
+          },
+          "content_sha256": "sha256:e2a15bcf8000e51cacfb18cfda3bddc20e16a68ff182f60581f037b964a50ae8",
+          "ifc_class": "IfcRelSpaceBoundary",
+          "name": "Second Level"
+        },
+        "change_kind": "removed",
+        "global_id": "161e6$zu91ff1MEN_F7Qfd",
+        "ifc_class": "IfcRelSpaceBoundary",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": null,
+            "Tag": null
+          },
+          "containers": [],
+          "content_sha256": "sha256:0a2e8e20d8a1f748ac7a687c421b9c71327f595949a7a93ee07a99eef2f9dff4",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:c91566fae086aece0dd5ef58506b427ddbf020bac817fa003237ffbf7f8f4bb8"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": null,
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              -0.0
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              4.005
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              -1.1
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "2A0NmxRUH62xAjtnn5aP3G",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": null,
+            "OverallHeight": 0.5,
+            "OverallWidth": 0.9,
+            "Tag": null
+          },
+          "containers": [
+            "1smz0v6l10Nxym5PBdZkqX"
+          ],
+          "content_sha256": "sha256:7c76c7fabbe31e08cc0eab2be176e3aed618a6f6e686132107e192e961c33e42",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:1fb978445aa6fee5d5e2085dd5433eddb2cb69feb6f43a222e630eaed4dfce1a"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "Wind-080",
+          "placement": [
+            [
+              0.0,
+              -1.0,
+              0.0,
+              0.17
+            ],
+            [
+              1.0,
+              0.0,
+              0.0,
+              3.555
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              -1.1
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "3WRONycKH1hx_R4ge2O9$R"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "2A0NmxRUH62xAjtnn5aP3G",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "19m_Wpll56NfVWYe8BsxDh",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:4dfd249c7e440e43cfc451c619c35e9b7f34f9615312ab09fdf5ecd3cb5ac35e",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3Hm4PW6sf72h$WyQYGM6$8",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "HasProperties": [
+                    {
+                      "attributes": {
+                        "Description": null,
+                        "Name": "Blue",
+                        "NominalValue": {
+                          "ifc_class": "IfcInteger",
+                          "name": null
+                        },
+                        "Unit": null
+                      },
+                      "ifc_class": "IfcPropertySingleValue"
+                    },
+                    {
+                      "attributes": {
+                        "Description": null,
+                        "Name": "Green",
+                        "NominalValue": {
+                          "ifc_class": "IfcInteger",
+                          "name": null
+                        },
+                        "Unit": null
+                      },
+                      "ifc_class": "IfcPropertySingleValue"
+                    },
+                    {
+                      "attributes": {
+                        "Description": null,
+                        "Name": "Red",
+                        "NominalValue": {
+                          "ifc_class": "IfcInteger",
+                          "name": null
+                        },
+                        "Unit": null
+                      },
+                      "ifc_class": "IfcPropertySingleValue"
+                    }
+                  ],
+                  "Name": "Color",
+                  "UsageName": "Color"
+                },
+                "ifc_class": "IfcComplexProperty"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Layername",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Keller-Aussenwaende"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:2305fad88644a240b9aa541e9e841a1ffba11db147459cd92f0918a870b64cc2",
+          "ifc_class": "IfcPropertySet",
+          "name": "PSet_Draughting"
+        },
+        "change_kind": "removed",
+        "global_id": "3Z8XWganvD$utzfIDkCiku",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "3WRONycKH1hx_R4ge2O9$R",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:8d92d208bb9db29825359a57489186b9ab74b3198bee1666426c9f6a591c3961",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": "IFC_FensterFlügel"
+        },
+        "change_kind": "removed",
+        "global_id": "3gfOzL78rEwgMhIK_NqcnH",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExterior",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": true
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:f7778c362672df4cbd13173e8436b193b279354ae845d91ddf2fa4f1d34645f8",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "3r4QYGBzn4CxQLFbbtuE8p",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "39U3OtsbzBlAxL2q4aFMZF",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "2A0NmxRUH62xAjtnn5aP3G",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:fa6b0a290231195b81cf9a714af8a9bff0b166eca69fb0ced6b90f32ed7d991b",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3zEzs_DhP6qf4szKAEtxT6",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      }
+    ]
+  },
+  "source_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -3.5527137e-15,
+            0.29999999999999644
+          ],
+          [
+            0.0,
+            8.01
+          ],
+          [
+            -2.9,
+            -0.1499999999999999
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "19m_Wpll56NfVWYe8BsxDh",
+        "name": "IfcWall-6",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -3.5527137e-15,
+            0.29999999999999644
+          ],
+          [
+            3.5549999999999997,
+            4.455
+          ],
+          [
+            -1.0999999999999999,
+            -0.5999999999999999
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "2A0NmxRUH62xAjtnn5aP3G",
+        "name": null,
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "2A0NmxRUH62xAjtnn5aP3G",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 268439642,
+      "target": {
+        "OverallHeight_mm": 500.0,
+        "OverallWidth_mm": 900.0,
+        "bounds_world_m": [
+          [
+            0.09499999999999646,
+            0.16999999999999943
+          ],
+          [
+            3.5549999999999997,
+            4.455
+          ],
+          [
+            -1.0999999999999999,
+            -0.5999999999999999
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "39U3OtsbzBlAxL2q4aFMZF",
+        "name": "Wind-080",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "39U3OtsbzBlAxL2q4aFMZF",
+      "wall_guid": "19m_Wpll56NfVWYe8BsxDh"
+    }
+  ],
+  "wall_closure": {
+    "19m_Wpll56NfVWYe8BsxDh": {
+      "actual_delta_m3": 0.13500000000000068,
+      "closed": true,
+      "expected_delta_m3": 0.135,
+      "volume_after_m3": 6.225750000000001,
+      "volume_before_m3": 6.09075
+    }
+  }
+}

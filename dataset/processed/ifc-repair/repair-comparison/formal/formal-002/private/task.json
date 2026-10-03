@@ -1,0 +1,375 @@
+{
+  "allowed_alternatives": [
+    "New identities and different STEP serialization are allowed.",
+    "Door swing is not a mandatory clarification; match the retained frame/leaf/material reference."
+  ],
+  "budget": {
+    "provider_calls_allowed": false,
+    "status": "not_frozen"
+  },
+  "case_id": "formal-002",
+  "damage": [
+    {
+      "kind": "window",
+      "opening_guid": "02Dv1Xl$kfATxxxYAh4dyd",
+      "preserve_opening": false,
+      "source_step_id": 58630,
+      "target_guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+      "wall_guid": "3UH$Yu7uLAlvnoFYVwGblQ"
+    },
+    {
+      "kind": "window",
+      "opening_guid": "2RSe2HhlvNk5U1xE$7AxvX",
+      "preserve_opening": false,
+      "source_step_id": 58644,
+      "target_guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+      "wall_guid": "3UH$Yu7uLAlvnoFYVwGblQ"
+    }
+  ],
+  "damage_profile": {
+    "composition": "same_type",
+    "level": "S2",
+    "target_count": 2,
+    "targets": {
+      "IfcWindow": 2
+    }
+  },
+  "damaged_sha256": "df01658cd17f2030a2936cbb8208554e605ba96792b23a5d89f72a5c9aad4a27",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred_by_user"
+  },
+  "preservation": [
+    "Only the requested target areas may change; retain all other products and their geometry/relationships."
+  ],
+  "purpose": "formal_candidate",
+  "request": "地面标高为0的这一层，Y约-4.780米的外墙上少了两扇窗。请在这面墙上补两扇宽1200毫米、高1200毫米的窗：平面中心的X分别为4.455米和-2.595米，窗洞底距本层地面850毫米。窗框截面、玻璃、开启形式、材质和表面外观以同层平面坐标约（6.095，-2.690）米的现有窗为准；按各自所在墙的方向安装，开出匹配的窗洞。其余门窗和墙的其他部分保持原样。这里的坐标均为模型全局坐标，单位为米。",
+  "required_product_count": 2,
+  "required_products": {
+    "IfcWindow": 2
+  },
+  "required_relation_count": 6,
+  "review": {
+    "reviewed_at": null,
+    "reviewer": null,
+    "status": "pending_human_review"
+  },
+  "schema_version": "repair-comparison-task-candidate/0.1",
+  "source": {
+    "asset_id": "european-lca-typical-buildings-v8-Type4",
+    "candidate_slot": "formal-002",
+    "current_read_only_checks": {
+      "door_window_chains": {
+        "IfcDoor": {
+          "elements": 6,
+          "wall_fill_void_chains": 6
+        },
+        "IfcWindow": {
+          "elements": 8,
+          "wall_fill_void_chains": 8
+        }
+      },
+      "ifcopenshell_version": "0.8.5",
+      "reopened": true,
+      "sample_geometry": {
+        "58608": {
+          "OverallHeight_mm": 1200.0000000000018,
+          "OverallWidth_mm": 1199.9999999999984,
+          "bounds_world_m": [
+            [
+              5.929669643030244,
+              6.237258143075707
+            ],
+            [
+              -3.315448078245872,
+              -2.065448078245871
+            ],
+            [
+              0.8429815000000359,
+              2.050000000000007
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "3UH$Yu7uLAlvnoFYVwGbgC",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450375",
+          "project_unit_to_mm": 1000
+        },
+        "58630": {
+          "OverallHeight_mm": 1200.0000000000018,
+          "OverallWidth_mm": 1199.999999999998,
+          "bounds_world_m": [
+            [
+              3.82966964303023,
+              5.079669643030231
+            ],
+            [
+              -4.92303657829133,
+              -4.615448078245867
+            ],
+            [
+              0.8429815000000359,
+              2.050000000000007
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475",
+          "project_unit_to_mm": 1000
+        },
+        "58644": {
+          "OverallHeight_mm": 1200.0000000000018,
+          "OverallWidth_mm": 1199.9999999999984,
+          "bounds_world_m": [
+            [
+              -3.2203303569697717,
+              -1.9703303569697708
+            ],
+            [
+              -4.923036578291308,
+              -4.615448078245845
+            ],
+            [
+              0.8429815000000359,
+              2.050000000000007
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513",
+          "project_unit_to_mm": 1000
+        }
+      },
+      "source_hash_matches": true,
+      "storeys": 2
+    },
+    "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+    "human_review": "pending_human_review",
+    "license": "CC-BY-4.0",
+    "remaining": [
+      "Confirm target and retained-reference geometry/style compatibility",
+      "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+      "Write natural public request using D and explicit user intent",
+      "Freeze preservation, allowed alternatives and score denominators",
+      "Human review complete case package"
+    ],
+    "rights_conditions": "CC BY: retain author/source/license links and supplied notices, indicate changes, no implied endorsement. MIT: retain original copyright and permission notice; repair/date/hash log recommended.",
+    "rights_policy": "open_modification_with_notice",
+    "rights_record": "dataset/external/_checks/ifc-expand-20260926-v8/rights/rights.jsonl",
+    "rights_source_url": "https://data.mendeley.com/datasets/yv723tdtv9/1",
+    "scene_family": "european-lca-shared-template",
+    "schema": "IFC2X3",
+    "schema_validation": {
+      "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+      "errors": 0,
+      "evidence": "dataset/external/_checks/ifc-expand-20260926-v8/acquisitions/stages/49f13fedf98c6535ad7b141f0c1141a6ab5de5500c613a0d04427c65ba0b7c17/native.json",
+      "rerun_this_turn": false
+    },
+    "source_bytes": 10328201,
+    "source_path": "dataset/external/european-lca-typical-buildings/20260926/Type 4.ifc",
+    "source_register": "dataset/external/ifc-asset-register.jsonl",
+    "source_role": "preselected_reference_from_registered_original",
+    "source_sha256": "49f13fedf98c6535ad7b141f0c1141a6ab5de5500c613a0d04427c65ba0b7c17",
+    "status": "prepared_pending_human_review",
+    "task_proposal": {
+      "clarification_required": false,
+      "damage_scale": "S2",
+      "description": "补两扇窗",
+      "frozen": false,
+      "provisional_source_step_ids": [
+        58630,
+        58644
+      ],
+      "public_basis": "Author-specified repair intent; surviving openings/references and walls identifiable in D. No deleted identity, Name or method hints.",
+      "public_request": "地面标高为0的这一层，Y约-4.780米的外墙上少了两扇窗。请在这面墙上补两扇宽1200毫米、高1200毫米的窗：平面中心的X分别为4.455米和-2.595米，窗洞底距本层地面850毫米。窗框截面、玻璃、开启形式、材质和表面外观以同层平面坐标约（6.095，-2.690）米的现有窗为准；按各自所在墙的方向安装，开出匹配的窗洞。其余门窗和墙的其他部分保持原样。这里的坐标均为模型全局坐标，单位为米。",
+      "retained_reference_step_ids": [
+        58608
+      ]
+    }
+  },
+  "source_sha256": "49f13fedf98c6535ad7b141f0c1141a6ab5de5500c613a0d04427c65ba0b7c17",
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -4.325330356969773,
+            6.234669643030243
+          ],
+          [
+            -4.92044807824589,
+            -4.640448078245856
+          ],
+          [
+            0.0,
+            3.130566144283413
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "name": "Basic Wall:Ext. Wall:450065",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            3.8546696430302374,
+            5.054669643030236
+          ],
+          [
+            -4.920448078245866,
+            -4.640448078245866
+          ],
+          [
+            0.8500000000000001,
+            2.0500000000000016
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "02Dv1Xl$kfATxxxYAh4dyd",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "02Dv1Xl$kfATxxxYAh4dyd",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 58630,
+      "target": {
+        "OverallHeight_mm": 1200.0000000000018,
+        "OverallWidth_mm": 1199.999999999998,
+        "bounds_world_m": [
+          [
+            3.82966964303023,
+            5.079669643030231
+          ],
+          [
+            -4.92303657829133,
+            -4.615448078245867
+          ],
+          [
+            0.8429815000000359,
+            2.050000000000007
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+      "wall_guid": "3UH$Yu7uLAlvnoFYVwGblQ"
+    },
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -4.325330356969773,
+            6.234669643030243
+          ],
+          [
+            -4.92044807824589,
+            -4.640448078245856
+          ],
+          [
+            0.0,
+            3.130566144283413
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "name": "Basic Wall:Ext. Wall:450065",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -3.1953303569697638,
+            -1.9953303569697654
+          ],
+          [
+            -4.920448078245844,
+            -4.640448078245844
+          ],
+          [
+            0.8500000000000001,
+            2.0500000000000016
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "2RSe2HhlvNk5U1xE$7AxvX",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "2RSe2HhlvNk5U1xE$7AxvX",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 58644,
+      "target": {
+        "OverallHeight_mm": 1200.0000000000018,
+        "OverallWidth_mm": 1199.9999999999984,
+        "bounds_world_m": [
+          [
+            -3.2203303569697717,
+            -1.9703303569697708
+          ],
+          [
+            -4.923036578291308,
+            -4.615448078245845
+          ],
+          [
+            0.8429815000000359,
+            2.050000000000007
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+      "wall_guid": "3UH$Yu7uLAlvnoFYVwGblQ"
+    }
+  ]
+}

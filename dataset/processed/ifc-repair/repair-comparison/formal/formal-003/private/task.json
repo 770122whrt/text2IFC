@@ -1,0 +1,396 @@
+{
+  "allowed_alternatives": [
+    "New identities and different STEP serialization are allowed.",
+    "Door swing is not a mandatory clarification; match the retained frame/leaf/material reference."
+  ],
+  "budget": {
+    "provider_calls_allowed": false,
+    "status": "not_frozen"
+  },
+  "case_id": "formal-003",
+  "damage": [
+    {
+      "kind": "window",
+      "opening_guid": "118zHzt161LTGW8QvF6CWZ",
+      "preserve_opening": false,
+      "source_step_id": 1428,
+      "target_guid": "2Q69Ms$n1BU8D4uFXz2tk1",
+      "wall_guid": "2Q69Ms$n1BU8D4uFXz2g6t"
+    },
+    {
+      "kind": "door",
+      "opening_guid": "2_DxybBFYubz9Z$fy3kNzZ",
+      "preserve_opening": true,
+      "source_step_id": 5152,
+      "target_guid": "003scTgrHDgBv7$yEfwsDC",
+      "wall_guid": "2Q69Ms$n1BU8D4uFXz2g7i"
+    }
+  ],
+  "damage_profile": {
+    "composition": "mixed",
+    "level": "S2",
+    "target_count": 2,
+    "targets": {
+      "IfcDoor": 1,
+      "IfcWindow": 1
+    }
+  },
+  "damaged_sha256": "136fb7891b986e14221d6718a06fd7a5f0e7f015ac6a4a0aa547be3f671f7a9b",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred_by_user"
+  },
+  "preservation": [
+    "Only the requested target areas may change; retain all other products and their geometry/relationships."
+  ],
+  "purpose": "formal_candidate",
+  "request": "地面标高为0的这一层需要补一扇窗和一扇门。窗位于Y约10.753米的外墙上，平面中心X为-10.014米；请补一扇宽2010毫米、高1260毫米的双扇窗，窗洞底距本层地面1000毫米，框、玻璃、分格和表面外观以同层平面坐标约（-7.014，7.753）米的现有窗为准，并开出对应窗洞。门补在平面坐标约（-7.014，-6.747）米的现有空门洞内，宽885毫米、高2360毫米，门框、门扇、材质和表面外观以同层门洞平面中心约（2.986，-6.747）米处的现有门为准。两者沿各自墙体安装，门底与现有洞口底对齐；其余门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
+  "required_product_count": 2,
+  "required_products": {
+    "IfcDoor": 1,
+    "IfcWindow": 1
+  },
+  "required_relation_count": 5,
+  "review": {
+    "reviewed_at": null,
+    "reviewer": null,
+    "status": "pending_human_review"
+  },
+  "schema_version": "repair-comparison-task-candidate/0.1",
+  "source": {
+    "asset_id": "gni-bim-dataset-model_18-096eb462ed00",
+    "candidate_slot": "formal-003",
+    "current_read_only_checks": {
+      "door_window_chains": {
+        "IfcDoor": {
+          "elements": 17,
+          "wall_fill_void_chains": 17
+        },
+        "IfcWindow": {
+          "elements": 63,
+          "wall_fill_void_chains": 63
+        }
+      },
+      "ifcopenshell_version": "0.8.5",
+      "reopened": true,
+      "sample_geometry": {
+        "1428": {
+          "OverallHeight_mm": 1260.0,
+          "OverallWidth_mm": 2009.9999999999998,
+          "bounds_world_m": [
+            [
+              -11.019059171059709,
+              -9.00905917105971
+            ],
+            [
+              10.603149892376706,
+              10.90314989237673
+            ],
+            [
+              0.9899999999999929,
+              2.26
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "2Q69Ms$n1BU8D4uFXz2tk1",
+          "name": "Fenster 2-flg - Variabel:Fenster 2-flg - Variabel:467185",
+          "project_unit_to_mm": 1000
+        },
+        "1440": {
+          "OverallHeight_mm": 1260.0,
+          "OverallWidth_mm": 2009.9999999999998,
+          "bounds_world_m": [
+            [
+              -7.1640591710597175,
+              -6.8640591710596945
+            ],
+            [
+              6.74814989237671,
+              8.75814989237671
+            ],
+            [
+              0.9899999999999929,
+              2.26
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "2Q69Ms$n1BU8D4uFXz2tet",
+          "name": "Fenster 2-flg - Variabel:Fenster 2-flg - Variabel:467271",
+          "project_unit_to_mm": 1000
+        },
+        "5152": {
+          "OverallHeight_mm": 2359.99999999998,
+          "OverallWidth_mm": 885.0,
+          "bounds_world_m": [
+            [
+              -7.149059171059758,
+              -6.809059171058259
+            ],
+            [
+              -7.213810428324465,
+              -6.279889786922135
+            ],
+            [
+              0.100000000000002,
+              2.38446032070115
+            ]
+          ],
+          "class": "IfcDoor",
+          "geometry_status": "available",
+          "guid": "003scTgrHDgBv7$yEfwsDC",
+          "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476720",
+          "project_unit_to_mm": 1000
+        },
+        "5165": {
+          "OverallHeight_mm": 2359.99999999998,
+          "OverallWidth_mm": 885.0,
+          "bounds_world_m": [
+            [
+              2.780940828938779,
+              3.120940828940279
+            ],
+            [
+              -7.213810428324466,
+              -6.279889786922136
+            ],
+            [
+              0.100000000000002,
+              2.38446032070115
+            ]
+          ],
+          "class": "IfcDoor",
+          "geometry_status": "available",
+          "guid": "003scTgrHDgBv7$yEfwsC5",
+          "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476793",
+          "project_unit_to_mm": 1000
+        }
+      },
+      "source_hash_matches": true,
+      "storeys": 7
+    },
+    "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+    "human_review": "pending_human_review",
+    "license": "CC-BY-4.0",
+    "remaining": [
+      "Confirm target and retained-reference geometry/style compatibility",
+      "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+      "Write natural public request using D and explicit user intent",
+      "Freeze preservation, allowed alternatives and score denominators",
+      "Human review complete case package"
+    ],
+    "rights_conditions": "保留来源、原作者、许可原文和既有通知；修改副本注明修改日期、内容和原件哈希。",
+    "rights_policy": "open_modification_with_notice",
+    "rights_record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
+    "rights_source_url": "https://zenodo.org/records/19722012",
+    "scene_family": "gni-2025-shared-course-building",
+    "schema": "IFC2X3",
+    "schema_validation": {
+      "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+      "errors": 0,
+      "evidence": "dataset/external/_checks/ifc-assets-20260913-v2/audit/8e66549f11819fe61346d828fdf3e80a76fed08ebc5a6b8564cb71fd4847c37c.json",
+      "rerun_this_turn": false
+    },
+    "source_bytes": 1774640,
+    "source_path": "dataset/external/repairs/metadata-v2/gni-bim-dataset-model_18-096eb462ed00/model_18.ifc",
+    "source_register": "dataset/external/ifc-asset-register.jsonl",
+    "source_role": "preselected_reference_from_registered_repair_copy",
+    "source_sha256": "8e66549f11819fe61346d828fdf3e80a76fed08ebc5a6b8564cb71fd4847c37c",
+    "status": "prepared_pending_human_review",
+    "task_proposal": {
+      "clarification_required": false,
+      "damage_scale": "S2",
+      "description": "补一扇窗和一扇门",
+      "frozen": false,
+      "provisional_source_step_ids": [
+        1428,
+        5152
+      ],
+      "public_basis": "Author-specified repair intent; surviving openings/references and walls identifiable in D. No deleted identity, Name or method hints.",
+      "public_request": "地面标高为0的这一层需要补一扇窗和一扇门。窗位于Y约10.753米的外墙上，平面中心X为-10.014米；请补一扇宽2010毫米、高1260毫米的双扇窗，窗洞底距本层地面1000毫米，框、玻璃、分格和表面外观以同层平面坐标约（-7.014，7.753）米的现有窗为准，并开出对应窗洞。门补在平面坐标约（-7.014，-6.747）米的现有空门洞内，宽885毫米、高2360毫米，门框、门扇、材质和表面外观以同层门洞平面中心约（2.986，-6.747）米处的现有门为准。两者沿各自墙体安装，门底与现有洞口底对齐；其余门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
+      "retained_reference_step_ids": [
+        1440,
+        5165
+      ]
+    }
+  },
+  "source_sha256": "8e66549f11819fe61346d828fdf3e80a76fed08ebc5a6b8564cb71fd4847c37c",
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -12.894059171059709,
+            -7.13405917105971
+          ],
+          [
+            10.633149892376698,
+            10.8731498923767
+          ],
+          [
+            0.0,
+            23.0
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2Q69Ms$n1BU8D4uFXz2g6t",
+        "name": "Basic Wall:MW 24cm:457415",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -11.019059171059709,
+            -9.00905917105971
+          ],
+          [
+            10.633149892376712,
+            10.873149892376713
+          ],
+          [
+            0.999999999999998,
+            2.259999999999998
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "118zHzt161LTGW8QvF6CWZ",
+        "name": "Fenster 2-flg - Variabel:Fenster 2-flg - Variabel:467185:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "118zHzt161LTGW8QvF6CWZ",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 1428,
+      "target": {
+        "OverallHeight_mm": 1260.0,
+        "OverallWidth_mm": 2009.9999999999998,
+        "bounds_world_m": [
+          [
+            -11.019059171059709,
+            -9.00905917105971
+          ],
+          [
+            10.603149892376706,
+            10.90314989237673
+          ],
+          [
+            0.9899999999999929,
+            2.26
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "2Q69Ms$n1BU8D4uFXz2tk1",
+        "name": "Fenster 2-flg - Variabel:Fenster 2-flg - Variabel:467185",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "2Q69Ms$n1BU8D4uFXz2tk1",
+      "wall_guid": "2Q69Ms$n1BU8D4uFXz2g6t"
+    },
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -7.1340591710597705,
+            -6.89405917105977
+          ],
+          [
+            -24.3668501076233,
+            10.873149892376702
+          ],
+          [
+            0.0,
+            23.0
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2Q69Ms$n1BU8D4uFXz2g7i",
+        "name": "Basic Wall:MW 24cm:457372",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "door",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -7.134059171059741,
+            -6.894059171059741
+          ],
+          [
+            -7.1893501076233,
+            -6.3043501076233
+          ],
+          [
+            0.0,
+            2.35999999999998
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "2_DxybBFYubz9Z$fy3kNzZ",
+        "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476720:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "2_DxybBFYubz9Z$fy3kNzZ",
+      "preserve_opening": true,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 5152,
+      "target": {
+        "OverallHeight_mm": 2359.99999999998,
+        "OverallWidth_mm": 885.0,
+        "bounds_world_m": [
+          [
+            -7.149059171059758,
+            -6.809059171058259
+          ],
+          [
+            -7.213810428324465,
+            -6.279889786922135
+          ],
+          [
+            0.100000000000002,
+            2.38446032070115
+          ]
+        ],
+        "class": "IfcDoor",
+        "geometry_status": "available",
+        "guid": "003scTgrHDgBv7$yEfwsDC",
+        "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476720",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "003scTgrHDgBv7$yEfwsDC",
+      "wall_guid": "2Q69Ms$n1BU8D4uFXz2g7i"
+    }
+  ]
+}

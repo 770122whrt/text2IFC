@@ -1,0 +1,253 @@
+{
+  "allowed_alternatives": [
+    "New identities and different STEP serialization are allowed.",
+    "Door swing is not a mandatory clarification; match the retained frame/leaf/material reference."
+  ],
+  "budget": {
+    "provider_calls_allowed": false,
+    "status": "not_frozen"
+  },
+  "case_id": "formal-004",
+  "damage": [
+    {
+      "kind": "window",
+      "opening_guid": "2A0NmxRUH62xAjtnn5aP3G",
+      "preserve_opening": false,
+      "source_step_id": 268439642,
+      "target_guid": "39U3OtsbzBlAxL2q4aFMZF",
+      "wall_guid": "19m_Wpll56NfVWYe8BsxDh"
+    }
+  ],
+  "damage_profile": {
+    "composition": "single",
+    "level": "S1",
+    "target_count": 1,
+    "targets": {
+      "IfcWindow": 1
+    }
+  },
+  "damaged_sha256": "003650338759fbd223378285e8c7347daa7743e6d2804c79d80dd97b39c45bec",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred_by_user"
+  },
+  "preservation": [
+    "Only the requested target areas may change; retain all other products and their geometry/relationships."
+  ],
+  "purpose": "formal_candidate",
+  "request": "地下层地面标高为-2.900米，X约0.150米的长外墙上缺了一扇小窗。请在这面墙上Y为4.005米处补一扇宽900毫米、高500毫米的窗，窗洞底距地下层地面1800毫米。窗框、玻璃、分格、材质和表面外观以同墙Y约0.940米处的现有小窗为准，朝向与它一致，开出匹配的窗洞。其他窗和墙的其他部分保持原样。这里的X、Y为模型全局平面坐标，单位为米。",
+  "required_product_count": 1,
+  "required_products": {
+    "IfcWindow": 1
+  },
+  "required_relation_count": 3,
+  "review": {
+    "reviewed_at": null,
+    "reviewer": null,
+    "status": "pending_human_review"
+  },
+  "schema_version": "repair-comparison-task-candidate/0.1",
+  "source": {
+    "asset_id": "opensourcebim-testfiles-ac90r1-jasmin-sun-105-2x3-b7244828bfe2",
+    "candidate_slot": "formal-004",
+    "current_read_only_checks": {
+      "door_window_chains": {
+        "IfcDoor": {
+          "elements": 8,
+          "wall_fill_void_chains": 8
+        },
+        "IfcWindow": {
+          "elements": 12,
+          "wall_fill_void_chains": 12
+        }
+      },
+      "ifcopenshell_version": "0.8.5",
+      "reopened": true,
+      "sample_geometry": {
+        "268439642": {
+          "OverallHeight_mm": 500.0,
+          "OverallWidth_mm": 900.0,
+          "bounds_world_m": [
+            [
+              0.09499999999999646,
+              0.16999999999999943
+            ],
+            [
+              3.5549999999999997,
+              4.455
+            ],
+            [
+              -1.0999999999999999,
+              -0.5999999999999999
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "39U3OtsbzBlAxL2q4aFMZF",
+          "name": "Wind-080",
+          "project_unit_to_mm": 1000
+        },
+        "268440508": {
+          "OverallHeight_mm": 500.0,
+          "OverallWidth_mm": 900.0,
+          "bounds_world_m": [
+            [
+              0.09499999999999646,
+              0.16999999999999887
+            ],
+            [
+              0.48985049999999947,
+              1.3898504999999994
+            ],
+            [
+              -1.0999999999999999,
+              -0.5999999999999999
+            ]
+          ],
+          "class": "IfcWindow",
+          "geometry_status": "available",
+          "guid": "0ok7v5mx9D$Q3xn0$Jigtv",
+          "name": "Wind-080",
+          "project_unit_to_mm": 1000
+        }
+      },
+      "source_hash_matches": true,
+      "storeys": 3
+    },
+    "family_basis": "Existing conservative source grouping; one file per family in this batch. Not proof of unseen model-training data.",
+    "human_review": "pending_human_review",
+    "license": "GPL-3.0-or-later",
+    "remaining": [
+      "Confirm target and retained-reference geometry/style compatibility",
+      "Implement or reuse damage generation; independently validate final D with schema and EXPRESS",
+      "Write natural public request using D and explicit user intent",
+      "Freeze preservation, allowed alternatives and score denominators",
+      "Human review complete case package"
+    ],
+    "rights_conditions": "保留 GPL3+ 许可及版权，修改注明日期；以对应 GPL 条件提供修改成果及适用的可编辑源码/生成脚本；不能把受覆盖 IFC 改贴 MIT/CC BY。普通独立聚合不会自动改变其他独立文件的许可。",
+    "rights_policy": "open_modification_with_copyleft",
+    "rights_record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
+    "rights_source_url": "https://github.com/opensourceBIM/TestFiles",
+    "scene_family": "jasmin-house",
+    "schema": "IFC2X3",
+    "schema_validation": {
+      "basis": "unchanged_bytes_of_existing_native_schema_express_evidence",
+      "errors": 0,
+      "evidence": "dataset/external/_checks/ifc-assets-20260913/audit/b7244828bfe2360c683728e2ad446263c548c12e27526f951e87f60f68937750.json",
+      "rerun_this_turn": false
+    },
+    "source_bytes": 3217862,
+    "source_path": "dataset/external/opensourcebim-testfiles/AC90R1-Jasmin-Sun-105-2x3.ifc",
+    "source_register": "dataset/external/ifc-asset-register.jsonl",
+    "source_role": "preselected_reference_from_registered_original",
+    "source_sha256": "b7244828bfe2360c683728e2ad446263c548c12e27526f951e87f60f68937750",
+    "status": "prepared_pending_human_review",
+    "task_proposal": {
+      "clarification_required": false,
+      "damage_scale": "S1",
+      "description": "补一扇窗",
+      "frozen": false,
+      "provisional_source_step_ids": [
+        268439642
+      ],
+      "public_basis": "Author-specified repair intent; surviving openings/references and walls identifiable in D. No deleted identity, Name or method hints.",
+      "public_request": "地下层地面标高为-2.900米，X约0.150米的长外墙上缺了一扇小窗。请在这面墙上Y为4.005米处补一扇宽900毫米、高500毫米的窗，窗洞底距地下层地面1800毫米。窗框、玻璃、分格、材质和表面外观以同墙Y约0.940米处的现有小窗为准，朝向与它一致，开出匹配的窗洞。其他窗和墙的其他部分保持原样。这里的X、Y为模型全局平面坐标，单位为米。",
+      "retained_reference_step_ids": [
+        268440508
+      ]
+    }
+  },
+  "source_sha256": "b7244828bfe2360c683728e2ad446263c548c12e27526f951e87f60f68937750",
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -3.5527137e-15,
+            0.29999999999999644
+          ],
+          [
+            0.0,
+            8.01
+          ],
+          [
+            -2.9,
+            -0.1499999999999999
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "19m_Wpll56NfVWYe8BsxDh",
+        "name": "IfcWall-6",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -3.5527137e-15,
+            0.29999999999999644
+          ],
+          [
+            3.5549999999999997,
+            4.455
+          ],
+          [
+            -1.0999999999999999,
+            -0.5999999999999999
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "2A0NmxRUH62xAjtnn5aP3G",
+        "name": null,
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "2A0NmxRUH62xAjtnn5aP3G",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 268439642,
+      "target": {
+        "OverallHeight_mm": 500.0,
+        "OverallWidth_mm": 900.0,
+        "bounds_world_m": [
+          [
+            0.09499999999999646,
+            0.16999999999999943
+          ],
+          [
+            3.5549999999999997,
+            4.455
+          ],
+          [
+            -1.0999999999999999,
+            -0.5999999999999999
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "39U3OtsbzBlAxL2q4aFMZF",
+        "name": "Wind-080",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "39U3OtsbzBlAxL2q4aFMZF",
+      "wall_guid": "19m_Wpll56NfVWYe8BsxDh"
+    }
+  ]
+}

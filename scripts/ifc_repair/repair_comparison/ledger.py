@@ -107,11 +107,13 @@ class Ledger:
         if inflight or state['activities']:
             raise ValueError('INFLIGHT_WORK_PREVENTS_PAUSE_OR_TERMINATION')
 
-    def create(self, run_id, *, case_id, arm, budget, metadata=None):
+    def create(self, run_id, *, case_id, arm, budget, metadata=None, mode='offline_development'):
         identifier(run_id)
         identifier(case_id)
         if arm not in {'A', 'B', 'C', 'D'}:
             raise ValueError('INVALID_ARM')
+        if mode not in {'offline_development','real_runtime_fake_model','live_development'}:
+            raise ValueError('INVALID_EVIDENCE_MODE')
         validate_budget(budget)
         with self.transaction() as db:
             for row in db.execute('SELECT state FROM runs'):
@@ -121,13 +123,13 @@ class Ledger:
                         raise ValueError('UNEQUAL_CASE_BUDGET')
                     if other['arm'] == arm:
                         raise ValueError('CASE_ARM_ALREADY_REGISTERED')
-            state = {'run_id': run_id, 'case_id': case_id, 'arm': arm, 'mode': 'offline_development',
+            state = {'run_id': run_id, 'case_id': case_id, 'arm': arm, 'mode': mode,
                      'status': 'ready', 'budget': budget, 'extensions_used': [], 'question': None,
                      'activities': [], 'metadata': metadata or {}, 'artifact': None, 'native': {},
                      'started': None, 'ended': None, 'checkpoint': None,
                      'active_elapsed_s': 0.0, 'human_wait_s': 0.0}
             db.execute('INSERT INTO runs VALUES(?,?)', (run_id, encode(state)))
-            self._event(db, run_id, 'created', {'case_id': case_id, 'arm': arm, 'evidence_class': 'offline_development'})
+            self._event(db, run_id, 'created', {'case_id': case_id, 'arm': arm, 'evidence_class': mode})
         return self.snapshot(run_id)
 
     def start(self, run_id):
@@ -150,13 +152,22 @@ class Ledger:
                 'active_seconds': profile['active_seconds'] + sum(r['active_seconds'] for r in rules), 'tool_seconds': profile['tool_seconds']}
 
     @staticmethod
+    def _normalized_usage(usage, metadata, response):
+        protocol = (metadata or {}).get('wire_protocol', 'chat')
+        complete = True
+        if protocol == 'messages':
+            record = response if isinstance(response, dict) else {}
+            complete = record.get('usage_complete', record.get('stream_complete')) is True
+        return normalize_usage(usage, protocol=protocol, complete=complete)
+
+    @staticmethod
     def _calls(db, run_id):
         result = []
         for row in db.execute('SELECT * FROM calls WHERE run_id=? ORDER BY rowid', (run_id,)):
             call = dict(row)
             for key in ('metadata', 'usage', 'response'):
                 call[key] = json.loads(call[key]) if call[key] is not None else None
-            call['normalized_usage'] = normalize_usage(call['usage']) if call['state'] != 'inflight' else None
+            call['normalized_usage'] = Ledger._normalized_usage(call['usage'], call['metadata'], call['response']) if call['state'] != 'inflight' else None
             result.append(call)
         return result
 
@@ -212,7 +223,8 @@ class Ledger:
             self._tick(state)
             db.execute('UPDATE calls SET state=?,usage=?,response=?,failed=? WHERE run_id=? AND request_id=?', ('failed' if failed else 'completed', encode(usage), encode(response), int(failed), run_id, request_id))
             self._save(db, state)
-            self._event(db, run_id, 'request_settled', {'request_id': request_id, 'failed': failed, 'usage_known': normalize_usage(usage) is not None})
+            known = self._normalized_usage(usage, json.loads(row['metadata']), response) is not None
+            self._event(db, run_id, 'request_settled', {'request_id': request_id, 'failed': failed, 'usage_known': known})
 
     def activity(self, run_id, activity_id, *, begin):
         identifier(activity_id)

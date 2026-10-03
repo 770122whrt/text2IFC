@@ -22,14 +22,23 @@ def validate_budget(profile: dict) -> None:
         ids.add(rule['id'])
 
 
-def normalize_usage(raw):
-    """Only input + output are additive; cached/reasoning may be subsets."""
-    if not isinstance(raw, dict):
+def normalize_usage(raw, *, protocol='chat', complete=True):
+    """Normalize returned counts using the wire protocol, retaining unknowns.
+
+    Chat prompt_tokens includes cache hits. Messages input_tokens excludes
+    cache reads/creation; its stream-start output count is not final usage.
+    """
+    if not isinstance(raw, dict) or not complete:
         return None
     input_tokens = raw.get('input_tokens', raw.get('prompt_tokens'))
     output_tokens = raw.get('output_tokens', raw.get('completion_tokens'))
     if any(type(value) is not int or value < 0 for value in (input_tokens, output_tokens)):
         return None
+    if protocol == 'messages':
+        cached = [raw.get(key, 0) for key in ('cache_read_input_tokens', 'cache_creation_input_tokens')]
+        if any(type(value) is not int or value < 0 for value in cached):
+            return None
+        input_tokens += sum(cached)
     return {'input_tokens': input_tokens, 'output_tokens': output_tokens, 'total_tokens': input_tokens + output_tokens}
 
 

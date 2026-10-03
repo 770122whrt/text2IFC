@@ -1,9 +1,9 @@
 # IFC Repair 四组实验文档
 
-> 更新：2026-09-29｜专题版本：v0.2。
-> 当前：两道开发题形式获确认，阶段2离线账本、A/C通用执行器、B薄适配、独立开发评分和CLI已实施。B米制尺寸写回缺陷已另经用户批准修复；不是四组运行准入。只维护本目录这一套正文，不另存版本副本。
+> 更新：2026-10-04｜专题版本：v0.2。
+> 当前：首批五题完整待审材料已生成并通过损坏IFC格式检查，按用户决定保留作正式测试；两道开发demo的四组运行准入已通过，真实联调正在执行。只维护本目录这一套正文，不另存版本副本。
 
-阶段3的[独立安装范围](deepseek-harness-integration.md#13-阶段3安装与隔离方案已批准的具体范围)已获准：固定版DSH构建／安装及首批原生工具、问答、子Agent、摘要和停止验证已完成，实际边界见[§6.9](development-readiness.md#69-阶段3dsh安装与首批原生离线验收)。D与统一账本、四组隔离仍待接线。[首批5个正式源候选](development-readiness.md#610-首批5个正式源ifc候选)已筛选，尚不是完整人审题包。真实模型调用仍未批准。
+阶段3的[独立安装范围](deepseek-harness-integration.md#13-阶段3安装与隔离方案已批准的具体范围)已获准；固定完整DSH 0.2.0rc1原生工具、问答、子Agent、摘要和停止证据见[§6.9](development-readiness.md#69-阶段3dsh安装与首批原生离线验收)。本轮统一账本、容器公共CLI、准入及真实运行见[§6.11](development-readiness.md#611-goal-本轮首批五题与两个-demo-的四组接线2026-10-04)。用户已批准开发调用约20M token目标，超出不重复审批。
 
 20 个源 IFC、每模型一个任务、四组共 80 个任务单元；其中 2–4 个任务需要澄清，先按 3 个准备。A 是 DeepSeek API 通用执行器，B 是 DeepSeek＋我们的 Harness，C 是 GPT API＋与 A 相同的执行器，D 按 DeepSeek 官方 Harness 调研接入。日常 Codex 是开发工具，不是 C 组被测产品。
 
@@ -16,6 +16,7 @@
 | [DSH 接入与隔离](deepseek-harness-integration.md) | 先调研再隔离，原生问答继续、推理记录与预算停止 |
 | [Codex 启动提示词](development-start-prompt.md) | 直接读取仓库正文，只读核对并提出开发建议，不重复导入更新包 |
 | [代码核对与首批开发建议](development-readiness.md) | 实际复用入口、环境状态、DSH 固定版本证据及 M1.1–M1.4 文件与验收 |
+| [两道 demo 的真实联调](demo-results.md) | 八任务的实际状态、提交、格式检查、人工等待及失败用量 |
 
 计划管范围与安排，指标文档管计分，DSH 文档管接入细节；提示词引用这些正文，不成为另一个实验规范。`development-readiness.md` 记录本次实际核对和开发建议，不替代三份正文，也不是 Stage Admission 或正式成绩。
 
@@ -34,6 +35,7 @@ A/C 只接收中性请求和 IFC，可自行选择脚本或直接编辑，不默
 2026-09-29 阶段 1 的可审阅交付已生成：
 
 - [开发题包总入口](../../../dataset/processed/ifc-repair/repair-comparison/development/README.md)：固定目录内的待审材料，输入与配方纳入Git，后续原位更新。
+- [首批五题人审入口](../../../dataset/processed/ifc-repair/repair-comparison/formal/README.md)：S1/S2、三份CC BY 4.0及两份GPL；五题均有格式报告与G/D查看器，尚待逐题人审，未向模型发送。
 - [case-001：补中间固定窗](../../../dataset/processed/ifc-repair/repair-comparison/development/case-001/REVIEW.md)：LargeBuilding，MIT，信息充分题。
 - [case-002：保留洞口补门](../../../dataset/processed/ifc-repair/repair-comparison/development/case-002/REVIEW.md)：Duplex Apartment，CC BY 4.0，二层唯一空室内门洞；左右开启均允许，信息充分题。
 - [窗题格式校验](../../../dataset/processed/ifc-repair/repair-comparison/development/case-001/IFC-VALIDATION.md)／[门题格式校验](../../../dataset/processed/ifc-repair/repair-comparison/development/case-002/IFC-VALIDATION.md)：schema＋EXPRESS零诊断，两份D均为PASS。
@@ -42,4 +44,4 @@ A/C 只接收中性请求和 IFC，可自行选择脚本或直接编辑，不默
 
 整体按用户要求保持约 20 个不同源 IFC 的规模，优先许可明确的独立场景族；导出版本、损坏副本和修复副本不增加样本数。开发题与正式未见样本分开，数量口径见[计划 §6.1](plan.md#61-源模型选择)。
 
-用户已认可形式并要求继续，未代写正式题accepted。损伤规模分S1单目标、S2双目标（同类／混合）、S3三个及以上目标，当前实际两题为S1，混合损坏尚未生成。后续澄清题只选位置、楼层或不可推导的必要尺寸等真实缺项。[阶段2实现与边界](development-readiness.md#65-按确认的形式继续离线实验基础2026-09-29)包括持久问答、预算、A/C/B离线执行、唯一产物及独立开发评分。A/C两题公共输入的手写脚本回放闭环通过；B支持自然语言检索和候选澄清，原题完整链路的米制尺寸写回缺陷已按用户批准修复，见[定位核对及单位修复](development-readiness.md#66-b自然语言定位核对与单位修复)。DSH、真实隔离和正式准入尚未完成；独立安装按新批准范围执行，尚无真实模型调用；生产改动仅有已获准的尺寸单位写回修复。后续遵守[现有准入协议](../agent-capability-evaluation.md)。
+用户已认可形式并要求继续，未代写正式题accepted。损伤按S1单目标、S2双目标（同类／混合）、S3三个及以上分级；首批五题已包含S2两窗和窗门混合。后续必要澄清题仍选位置、楼层或不可推导的尺寸缺项。两demo真实联调只验证可运行链路，失败、无输出和人工等待均保留；正式20题人审、指标和80任务冻结仍未完成。生产改动仍仅有此前获准的尺寸单位修复。遵守[现有准入协议](../agent-capability-evaluation.md)。
