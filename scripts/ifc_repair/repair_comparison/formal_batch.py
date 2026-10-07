@@ -29,6 +29,9 @@ from .viewer import write_viewer
 
 def _recipe(row, model):
     proposal = row['task_proposal']
+    door_damage = proposal.get('door_damage', 'remove_door_keep_opening')
+    if door_damage not in {'remove_door_keep_opening', 'remove_door_and_opening'}:
+        raise ValueError('UNKNOWN_DOOR_DAMAGE')
     ids = proposal['provisional_source_step_ids']
     if not ids or len(set(ids)) != len(ids):
         raise ValueError('EMPTY_OR_DUPLICATE_TARGETS')
@@ -53,7 +56,7 @@ def _recipe(row, model):
         kind = 'door' if entity.is_a('IfcDoor') else 'window'
         targets.append({'kind': kind, 'target_guid': entity.GlobalId,
             'opening_guid': opening.GlobalId, 'wall_guid': wall.GlobalId,
-            'preserve_opening': kind == 'door', 'source_step_id': step})
+            'preserve_opening': kind == 'door' and door_damage == 'remove_door_keep_opening', 'source_step_id': step})
     return targets
 
 
@@ -155,7 +158,8 @@ def prepare_candidate(row, *, repository_root, output):
         'source_native_validation_passed': source_validation['passed'],
         'damaged_native_validation_passed': damaged_validation['passed'],
         'required_relation_edges_verified': all(r['verified'] for r in relations),
-        'removed_window_regions_closed': all(r['closed'] for r in closure.values()),
+        'removed_window_regions_closed': all(closure[t['wall_guid']]['closed'] for t in damage if t['kind'] == 'window'),
+        'removed_door_regions_closed': all(closure[t['wall_guid']]['closed'] for t in damage if t['kind'] == 'door' and not t['preserve_opening']),
         'retained_door_openings_empty_and_hosted': all(not after.by_guid(t['opening_guid']).HasFillings and len(after.by_guid(t['opening_guid']).VoidsElements) == 1 for t in damage if t['preserve_opening']),
         'targets_and_references_have_geometry': all(t['target']['geometry_status'] == 'available' for t in targets) and all(geometry_snapshot(after.by_guid(g))['geometry_status'] == 'available' for g in refs),
     }, 'source_validation': source_validation, 'damaged_validation': damaged_validation,
@@ -208,7 +212,8 @@ def prepare_candidate(row, *, repository_root, output):
         shutil.copyfile(license_file, attribution / 'license.txt')
     lines = [f'# {task["case_id"]}：{row["task_proposal"].get("description", "局部修复")}', '',
         '**待人工审阅（pending_human_review）**。五题测试先检查输入与损伤；未调用模型，不是模型成绩。', '',
-        '[打开 G/D 同步视角查看器](VIEW.html) · [格式校验](IFC-VALIDATION.md) · [许可与修改说明](private/SOURCE-LICENSE.md)', '',
+        '[局部剖切图](REVIEW.png) · [打开 G/D 同步视角查看器](VIEW.html) · [格式校验](IFC-VALIDATION.md) · [许可与修改说明](private/SOURCE-LICENSE.md)', '',
+        '![损坏前后的同尺度局部剖切；D 红十字只作定位标注](REVIEW.png)', '',
         '## 公开请求', '', task['request'], '', '## 损伤及私有核对', '',
         '|删除构件 STEP ID|类别|保留洞口|世界包围盒中心（m）|', '|---|---|---|---|']
     for t in targets:

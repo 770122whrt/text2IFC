@@ -87,6 +87,50 @@ def test_pending_refresh_is_in_place_but_human_review_is_not_overwritten(candida
         prepare_candidate(row, repository_root=root, output=output)
 
 
+@pytest.mark.parametrize('two_doors', [False, True])
+def test_door_and_opening_damage_closes_wall_without_touching_reference(candidate, two_doors):
+    from scripts.ifc_repair.repair_comparison.formal_batch import prepare_candidate
+    root, source, row = candidate
+    row = copy.deepcopy(row)
+    if two_doors:
+        model = ifcopenshell.open(str(source))
+        window = model.by_type('IfcWindow')[0]
+        values = {k: v for k, v in window.get_info().items() if k not in {'id', 'type'}}
+        door = model.create_entity('IfcDoor', **values)
+        for relation in list(window.FillsVoids):
+            relation.RelatedBuildingElement = door
+        row['task_proposal']['provisional_source_step_ids'][1] = door.id()
+        model.remove(window)
+        model.write(str(source))
+        row['source_sha256'] = sha256(source)
+    row['task_proposal']['door_damage'] = 'remove_door_and_opening'
+    output = root / ('closed-two-doors' if two_doors else 'closed-mixed')
+    source_bytes = source.read_bytes()
+    report = prepare_candidate(row, repository_root=root, output=output)
+    assert report['valid'] and not report['human_accepted']
+    assert source.read_bytes() == source_bytes
+    result = ifcopenshell.open(str(output / 'public/model.ifc'))
+    assert not result.by_type('IfcOpeningElement')
+    assert len(result.by_type('IfcDoor')) == 1  # retained style reference
+    task = json.loads((output / 'private/task.json').read_text(encoding='utf8'))
+    assert all(not item['preserve_opening'] for item in task['damage'])
+    checks = json.loads((output / 'private/checks.json').read_text(encoding='utf8'))
+    assert checks['checks']['removed_door_regions_closed']
+    assert checks['damaged_validation']['passed']
+    assert all(item['closed'] for item in checks['wall_closure'].values())
+    assert all(t['host']['geometry_status'] == 'available' for t in checks['targets'])
+
+
+def test_unknown_door_damage_fails_before_writing_candidate(candidate):
+    from scripts.ifc_repair.repair_comparison.formal_batch import prepare_candidate
+    root, _, row = candidate
+    row = copy.deepcopy(row)
+    row['task_proposal']['door_damage'] = 'unreviewed_guess'
+    with pytest.raises(ValueError, match='DOOR_DAMAGE'):
+        prepare_candidate(row, repository_root=root, output=root / 'invalid-mode')
+    assert not (root / 'invalid-mode').exists()
+
+
 @pytest.mark.parametrize('bad', ['duplicate', 'guid', 'method'])
 def test_ambiguous_recipe_or_private_public_hints_fail_before_damage(candidate, bad):
     from scripts.ifc_repair.repair_comparison.formal_batch import prepare_candidate

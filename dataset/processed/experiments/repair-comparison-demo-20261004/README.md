@@ -16,6 +16,8 @@
 
 每个任务包中的 `artifact/result.ifc` 才是显式提交；`workspace/` 内的 IFC 只是原工作区记录，不能据此补造正式产物。`ledger/events.original.json` 保留原事件，`calls.with-current-accounting.json` 在原调用旁附加修正后的协议计账；原 HTTP 字节不改。
 
+DSH 实际返回的思考文本已保存。窗题 23 次请求中 22 次包含 thinking，共 92,087 个字符；门题 7 次均包含，共 4,312 个字符。可读导出在 [dsh-returned-reasoning.jsonl](dsh-returned-reasoning.jsonl)，逐次索引在 [dsh-reasoning-audit.json](dsh-reasoning-audit.json)。每条导出对应原 ZIP 的 SSE 字节；原生 `session.v4.jsonl` 也保留在各任务 ZIP 中。字符数不是 token 数，两题末次响应均缺 `message_stop`，只能保留收到的片段，不能称为完整最终思考。没有重构未返回的内部推理。
+
 两项 B 仍等待用户答复，没有收入终止归档。它们的原 Linux 状态卷、本地账本和只读导出保留，答复后继续原任务。此处的 `pending_at_curation` 只表示归档时状态，不是以后运行的当前状态。
 
 Git 修订字段表示归档前的仓库位置；最初准入另留真实调用前的文件绑定。两者不能代替每次调用时所有源码的冻结快照。后续 B 终止记录另行追加，不覆盖本集合已冻结字节。

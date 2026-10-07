@@ -20,7 +20,7 @@
     {
       "kind": "door",
       "opening_guid": "2_DxybBFYubz9Z$fy3kNzZ",
-      "preserve_opening": true,
+      "preserve_opening": false,
       "source_step_id": 5152,
       "target_guid": "003scTgrHDgBv7$yEfwsDC",
       "wall_guid": "2Q69Ms$n1BU8D4uFXz2g7i"
@@ -35,7 +35,7 @@
       "IfcWindow": 1
     }
   },
-  "damaged_sha256": "136fb7891b986e14221d6718a06fd7a5f0e7f015ac6a4a0aa547be3f671f7a9b",
+  "damaged_sha256": "669a82c530bb294db3dbc4310f2999372fb4c69fb58fd0ecfc1c59634dda656b",
   "metrics": {
     "formal_scoring_frozen": false,
     "status": "deferred_by_user"
@@ -44,13 +44,13 @@
     "Only the requested target areas may change; retain all other products and their geometry/relationships."
   ],
   "purpose": "formal_candidate",
-  "request": "地面标高为0的这一层需要补一扇窗和一扇门。窗位于Y约10.753米的外墙上，平面中心X为-10.014米；请补一扇宽2010毫米、高1260毫米的双扇窗，窗洞底距本层地面1000毫米，框、玻璃、分格和表面外观以同层平面坐标约（-7.014，7.753）米的现有窗为准，并开出对应窗洞。门补在平面坐标约（-7.014，-6.747）米的现有空门洞内，宽885毫米、高2360毫米，门框、门扇、材质和表面外观以同层门洞平面中心约（2.986，-6.747）米处的现有门为准。两者沿各自墙体安装，门底与现有洞口底对齐；其余门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
+  "request": "地面标高为0的这一层需要恢复一扇窗和一扇门。窗位于Y约10.753米的外墙上，平面中心X为-10.014米；请补一扇宽2010毫米、高1260毫米的双扇窗，窗洞底距本层地面1000毫米，框、玻璃、分格和表面外观以同层平面坐标约（-7.014，7.753）米的现有窗为准，并开出对应窗洞。门的位置在平面坐标约（-7.014，-6.747）米的内墙上，这里现在是完整墙面；请重新开出宽885毫米、高2360毫米、底部与本层地面齐平的门洞，并安装对应的单扇门。门框、门扇、材质和表面外观以同层门洞平面中心约（2.986，-6.747）米处的现有门为准。两者沿各自墙体安装，其余门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
   "required_product_count": 2,
   "required_products": {
     "IfcDoor": 1,
     "IfcWindow": 1
   },
-  "required_relation_count": 5,
+  "required_relation_count": 6,
   "review": {
     "reviewed_at": null,
     "reviewer": null,
@@ -202,13 +202,14 @@
       "clarification_required": false,
       "damage_scale": "S2",
       "description": "补一扇窗和一扇门",
+      "door_damage": "remove_door_and_opening",
       "frozen": false,
       "provisional_source_step_ids": [
         1428,
         5152
       ],
       "public_basis": "Author-specified repair intent; surviving openings/references and walls identifiable in D. No deleted identity, Name or method hints.",
-      "public_request": "地面标高为0的这一层需要补一扇窗和一扇门。窗位于Y约10.753米的外墙上，平面中心X为-10.014米；请补一扇宽2010毫米、高1260毫米的双扇窗，窗洞底距本层地面1000毫米，框、玻璃、分格和表面外观以同层平面坐标约（-7.014，7.753）米的现有窗为准，并开出对应窗洞。门补在平面坐标约（-7.014，-6.747）米的现有空门洞内，宽885毫米、高2360毫米，门框、门扇、材质和表面外观以同层门洞平面中心约（2.986，-6.747）米处的现有门为准。两者沿各自墙体安装，门底与现有洞口底对齐；其余门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
+      "public_request": "地面标高为0的这一层需要恢复一扇窗和一扇门。窗位于Y约10.753米的外墙上，平面中心X为-10.014米；请补一扇宽2010毫米、高1260毫米的双扇窗，窗洞底距本层地面1000毫米，框、玻璃、分格和表面外观以同层平面坐标约（-7.014，7.753）米的现有窗为准，并开出对应窗洞。门的位置在平面坐标约（-7.014，-6.747）米的内墙上，这里现在是完整墙面；请重新开出宽885毫米、高2360毫米、底部与本层地面齐平的门洞，并安装对应的单扇门。门框、门扇、材质和表面外观以同层门洞平面中心约（2.986，-6.747）米处的现有门为准。两者沿各自墙体安装，其余门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
       "retained_reference_step_ids": [
         1440,
         5165
@@ -352,12 +353,17 @@
         "project_unit_to_mm": 1000
       },
       "opening_guid": "2_DxybBFYubz9Z$fy3kNzZ",
-      "preserve_opening": true,
+      "preserve_opening": false,
       "required_relations": [
         {
           "basis": "One required membership edge for this target.",
           "id": "target-2.fill",
           "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.void",
+          "ifc_class": "IfcRelVoidsElement"
         },
         {
           "basis": "One required membership edge for this target.",

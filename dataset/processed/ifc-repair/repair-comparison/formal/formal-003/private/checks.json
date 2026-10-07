@@ -4,6 +4,7 @@
     "no_products_created": true,
     "no_unexpected_modified_products": true,
     "only_expected_products_removed": true,
+    "removed_door_regions_closed": true,
     "removed_window_regions_closed": true,
     "required_relation_edges_verified": true,
     "retained_door_openings_empty_and_hosted": true,
@@ -44,7 +45,8 @@
   "removed_product_guids": [
     "003scTgrHDgBv7$yEfwsDC",
     "118zHzt161LTGW8QvF6CWZ",
-    "2Q69Ms$n1BU8D4uFXz2tk1"
+    "2Q69Ms$n1BU8D4uFXz2tk1",
+    "2_DxybBFYubz9Z$fy3kNzZ"
   ],
   "required_relation_evidence": [
     {
@@ -97,6 +99,19 @@
       ],
       "id": "target-2.fill",
       "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "2_DxybBFYubz9Z$fy3kNzZ",
+          "parent_guid": "2Q69Ms$n1BU8D4uFXz2g7i",
+          "relation_guid": "003scTgrHDgBv7$zUfwsDC"
+        }
+      ],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
       "verified": true
     },
     {
@@ -2376,6 +2391,28 @@
         "after": null,
         "before": {
           "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "2_DxybBFYubz9Z$fy3kNzZ",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "2Q69Ms$n1BU8D4uFXz2g7i",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:ba5d7529dcbba3c10606601fef845f8a0a0cdff5a6565a12cd71f29e9f7fc94a",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "003scTgrHDgBv7$zUfwsDC",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
             "RelatedObjects": [
               {
                 "global_id": "003scTgrHDgBv7$yEfwsDC",
@@ -2690,6 +2727,54 @@
         "after": null,
         "before": {
           "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "476720"
+          },
+          "containers": [],
+          "content_sha256": "sha256:0bf84f6655b29f15c7ad77600f72d6f0005bb6b3901f95450fc0ef2f428ee383",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:65813d0bcd98fbde72a036e73749616c344fadea1669c7141fa9d22a3bd43d6b"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Drehflügel 1-flg - Stahlzarge:88.5 x 2.26:476720:1",
+          "placement": [
+            [
+              0.0,
+              -1.0,
+              0.0,
+              -7.134059
+            ],
+            [
+              1.0,
+              0.0,
+              0.0,
+              -6.30435
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "2_DxybBFYubz9Z$fy3kNzZ",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
             "RelatedObjects": [
               {
                 "global_id": "003scTgrHDgBv7$yEfwsDC",
@@ -2930,12 +3015,17 @@
         "project_unit_to_mm": 1000
       },
       "opening_guid": "2_DxybBFYubz9Z$fy3kNzZ",
-      "preserve_opening": true,
+      "preserve_opening": false,
       "required_relations": [
         {
           "basis": "One required membership edge for this target.",
           "id": "target-2.fill",
           "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.void",
+          "ifc_class": "IfcRelVoidsElement"
         },
         {
           "basis": "One required membership edge for this target.",
@@ -2978,6 +3068,13 @@
       "expected_delta_m3": 0.6078239999999998,
       "volume_after_m3": 30.910896000000257,
       "volume_before_m3": 30.303072000000252
+    },
+    "2Q69Ms$n1BU8D4uFXz2g7i": {
+      "actual_delta_m3": 0.5012639999999919,
+      "closed": true,
+      "expected_delta_m3": 0.5012639999999957,
+      "volume_after_m3": 185.03812800000003,
+      "volume_before_m3": 184.53686400000004
     }
   }
 }

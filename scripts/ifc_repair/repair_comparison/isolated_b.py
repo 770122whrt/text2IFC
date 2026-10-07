@@ -266,6 +266,44 @@ class IsolatedB:
             archive.extractall(target, filter='data')
         return target / 'state'
 
+    def restore_state(self, snapshot: Path) -> dict:
+        """Restore a quiescent host export into a new Linux volume only.
+
+        This recovers native persistence after Docker data loss, without a new
+        model task or budget. Callers must verify the pending ledger separately.
+        """
+        snapshot = Path(snapshot).absolute()
+        if not snapshot.is_dir() or {p.name for p in snapshot.iterdir()} != {'task.json', 'native'}:
+            raise ValueError('STATE_RESTORE_LAYOUT_REQUIRED')
+        for path in snapshot.rglob('*'):
+            if path.is_file():
+                _checked_file(snapshot, path)
+            elif path.is_symlink() or path.is_junction():
+                raise ValueError('STATE_RESTORE_LINK_FORBIDDEN')
+        binding = json.loads(_checked_file(snapshot, snapshot / 'task.json').read_text(encoding='utf8'))
+        work = Path(self.config.workspace)
+        expected = {'source_sha256': _sha(_checked_file(work, work / 'model.ifc')),
+                    'request_sha256': _sha(_checked_file(work, work / 'task.txt')),
+                    'model': self.config.model, 'evidence_class': self.config.evidence_class}
+        if any(binding.get(key) != value for key, value in expected.items()):
+            raise ValueError('STATE_RESTORE_BINDING_MISMATCH')
+        c = self.config
+        exists = subprocess.run(['docker', 'volume', 'inspect', c.state_volume], capture_output=True)
+        if exists.returncode == 0:
+            raise ValueError('STATE_RESTORE_VOLUME_ALREADY_EXISTS')
+        self.prepare_state_volume()
+        program = ('from pathlib import Path; import shutil; '
+                   'assert not list(Path("/state").iterdir()); '
+                   'shutil.copytree("/snapshot","/state",dirs_exist_ok=True)')
+        subprocess.run(['docker', 'run', '--rm', '--pull=never', '--network=none', '--read-only',
+            '--user=65532:65532', '--cap-drop=ALL', '--security-opt=no-new-privileges',
+            '--memory=512m', '--cpus=1', '--pids-limit=32',
+            '--mount', f'type=bind,source={snapshot},target=/snapshot,readonly',
+            '--mount', f'type=volume,source={c.state_volume},target=/state,volume-nocopy',
+            c.image, 'python', '-c', program], capture_output=True, check=True, timeout=120)
+        return {'restored': True, 'state_volume': c.state_volume, 'binding': binding,
+                'model_calls': 0, 'snapshot_unchanged': True}
+
     def stop(self) -> bool:
         name = self.config.container_name
         subprocess.run(['docker', 'kill', name], capture_output=True, text=True, timeout=30)

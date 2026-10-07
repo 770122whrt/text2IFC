@@ -4,7 +4,7 @@
 - 校验器：ifcopenshell.validate，IfcOpenShell 0.8.5。
 - Schema：IFC2X3；EXPRESS rules：已执行。
 - 诊断数量：0。
-- SHA-256：`136fb7891b986e14221d6718a06fd7a5f0e7f015ac6a4a0aa547be3f671f7a9b`。
+- SHA-256：`669a82c530bb294db3dbc4310f2999372fb4c69fb58fd0ecfc1c59634dda656b`。
 - [机器结果与全部诊断](private/damaged-ifc-validation.json)。
 
 PASS 表示该文件通过本地 IFC schema／EXPRESS 校验，构件缺失仍是待修任务。

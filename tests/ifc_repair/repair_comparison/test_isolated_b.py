@@ -217,6 +217,32 @@ def test_native_http_clarification_binding_survives_new_worker(tmp_path):
         assert len(requests) == 3
 
 
+def test_state_restore_rejects_wrong_input_binding_before_docker(tmp_path):
+    m = module()
+    work = workspace(tmp_path)
+    state = tmp_path / 'snapshot'
+    state.mkdir()
+    (state / 'native').mkdir()
+    (state / 'task.json').write_text(json.dumps({'source_sha256': 'wrong', 'request_sha256': 'wrong',
+                                                'model': m.MODEL, 'evidence_class': 'deterministic_fake_http'}))
+    carrier = m.IsolatedB(m.IsolatedBConfig(tmp_path / 'bundle', work, 'restore-test', 'internal-test',
+                                           'http://repair-gateway:8000/v1'))
+    with pytest.raises(ValueError, match='RESTORE_BINDING'):
+        carrier.restore_state(state)
+
+
+def test_state_restore_requires_native_snapshot_not_an_arbitrary_folder(tmp_path):
+    m = module()
+    work = workspace(tmp_path)
+    state = tmp_path / 'snapshot'
+    state.mkdir()
+    (state / 'private_gold.ifc').write_text('unrelated input')
+    carrier = m.IsolatedB(m.IsolatedBConfig(tmp_path / 'bundle', work, 'restore-test', 'internal-test',
+                                           'http://repair-gateway:8000/v1'))
+    with pytest.raises(ValueError, match='RESTORE_LAYOUT'):
+        carrier.restore_state(state)
+
+
 def test_native_http_candidate_answer_must_be_offered_and_cancel_keeps_usage(tmp_path):
     from scripts.ifc_repair.repair_comparison.ours_adapter import fixture_intent
     work = workspace(tmp_path)

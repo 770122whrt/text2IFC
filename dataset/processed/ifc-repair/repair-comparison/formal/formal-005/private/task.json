@@ -12,21 +12,29 @@
     {
       "kind": "door",
       "opening_guid": "29ZeWUMuDAi8PgVmZwxdan",
-      "preserve_opening": true,
+      "preserve_opening": false,
       "source_step_id": 268448036,
       "target_guid": "0kVdZTYg13cwnVDoUXpf$4",
       "wall_guid": "3sJItHCw9CAAmpIdHDyL2s"
+    },
+    {
+      "kind": "door",
+      "opening_guid": "3sGPvoI8b9tQNNcoDWLcZJ",
+      "preserve_opening": false,
+      "source_step_id": 268456366,
+      "target_guid": "3i$22ZAOP0RP$TfkLhesWf",
+      "wall_guid": "23Q1WiFO10vw5KCfABAOfN"
     }
   ],
   "damage_profile": {
-    "composition": "single",
-    "level": "S1",
-    "target_count": 1,
+    "composition": "same_type",
+    "level": "S2",
+    "target_count": 2,
     "targets": {
-      "IfcDoor": 1
+      "IfcDoor": 2
     }
   },
-  "damaged_sha256": "369179efae46e83a0afab611fb34dc777f1a82653d7d448cdc382340997fe36a",
+  "damaged_sha256": "f4ecea67260e02bb322a874f9ae6c07d4607afba6c1770d7b44579d5e104fe7a",
   "metrics": {
     "formal_scoring_frozen": false,
     "status": "deferred_by_user"
@@ -35,12 +43,12 @@
     "Only the requested target areas may change; retain all other products and their geometry/relationships."
   ],
   "purpose": "formal_candidate",
-  "request": "地下层地面标高为-2.850米，平面坐标约（4.205，5.505）米的内墙门洞空着。请在这个现有洞口内补一扇宽870毫米、高2010毫米的单扇门，门框、门扇、材质和表面外观以同层门洞平面中心约（3.367，4.488）米处的现有门为准。沿目标墙安装、门底与洞口底对齐，保留现有洞口尺寸；其他门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
-  "required_product_count": 1,
+  "request": "地下层地面标高为-2.850米，需要在两面内墙上恢复两扇单扇门。第一处门洞的平面中心约为（4.205，5.505）米，第二处约为（7.330，5.271）米；这两处现在都是完整墙面。请分别开出宽870毫米、高2010毫米的门洞，洞底与地下层地面齐平，并各安装一扇门。门框、门扇、材质和表面外观均以同层门洞平面中心约（3.367，4.488）米处的现有门为准；两扇门沿各自墙体安装，左右开启均可。其余门窗及墙的其他部分保持原样。这里的坐标均为模型全局坐标，单位为米。",
+  "required_product_count": 2,
   "required_products": {
-    "IfcDoor": 1
+    "IfcDoor": 2
   },
-  "required_relation_count": 2,
+  "required_relation_count": 6,
   "review": {
     "reviewed_at": null,
     "reviewer": null,
@@ -144,14 +152,16 @@
     "status": "prepared_pending_human_review",
     "task_proposal": {
       "clarification_required": false,
-      "damage_scale": "S1",
-      "description": "补一扇门",
+      "damage_scale": "S2",
+      "description": "重新开门洞并补两扇门",
+      "door_damage": "remove_door_and_opening",
       "frozen": false,
       "provisional_source_step_ids": [
-        268448036
+        268448036,
+        268456366
       ],
       "public_basis": "Author-specified repair intent; surviving openings/references and walls identifiable in D. No deleted identity, Name or method hints.",
-      "public_request": "地下层地面标高为-2.850米，平面坐标约（4.205，5.505）米的内墙门洞空着。请在这个现有洞口内补一扇宽870毫米、高2010毫米的单扇门，门框、门扇、材质和表面外观以同层门洞平面中心约（3.367，4.488）米处的现有门为准。沿目标墙安装、门底与洞口底对齐，保留现有洞口尺寸；其他门窗和墙体保持原样。这里的坐标均为模型全局坐标，单位为米。",
+      "public_request": "地下层地面标高为-2.850米，需要在两面内墙上恢复两扇单扇门。第一处门洞的平面中心约为（4.205，5.505）米，第二处约为（7.330，5.271）米；这两处现在都是完整墙面。请分别开出宽870毫米、高2010毫米的门洞，洞底与地下层地面齐平，并各安装一扇门。门框、门扇、材质和表面外观均以同层门洞平面中心约（3.367，4.488）米处的现有门为准；两扇门沿各自墙体安装，左右开启均可。其余门窗及墙的其他部分保持原样。这里的坐标均为模型全局坐标，单位为米。",
       "retained_reference_step_ids": [
         268455793
       ]
@@ -204,12 +214,17 @@
         "project_unit_to_mm": 1000
       },
       "opening_guid": "29ZeWUMuDAi8PgVmZwxdan",
-      "preserve_opening": true,
+      "preserve_opening": false,
       "required_relations": [
         {
           "basis": "One required membership edge for this target.",
           "id": "target-1.fill",
           "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
         },
         {
           "basis": "One required membership edge for this target.",
@@ -243,6 +258,96 @@
       },
       "target_guid": "0kVdZTYg13cwnVDoUXpf$4",
       "wall_guid": "3sJItHCw9CAAmpIdHDyL2s"
+    },
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            7.2500019,
+            7.4100019
+          ],
+          [
+            4.7897558,
+            7.830000200000001
+          ],
+          [
+            -2.85,
+            -0.1499999999999999
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "23Q1WiFO10vw5KCfABAOfN",
+        "name": "IfcWall-2",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "door",
+      "opening": {
+        "bounds_world_m": [
+          [
+            7.2500019,
+            7.4100019
+          ],
+          [
+            4.836289400000001,
+            5.7062894
+          ],
+          [
+            -2.85,
+            -0.8400000000000003
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "3sGPvoI8b9tQNNcoDWLcZJ",
+        "name": null,
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "3sGPvoI8b9tQNNcoDWLcZJ",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 268456366,
+      "target": {
+        "OverallHeight_mm": 2009.9999999999998,
+        "OverallWidth_mm": 870.0,
+        "bounds_world_m": [
+          [
+            7.310001899999999,
+            7.6185952
+          ],
+          [
+            4.8362894,
+            5.706289400000001
+          ],
+          [
+            -2.85,
+            -0.8400000000000003
+          ]
+        ],
+        "class": "IfcDoor",
+        "geometry_status": "available",
+        "guid": "3i$22ZAOP0RP$TfkLhesWf",
+        "name": "Door-034",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "3i$22ZAOP0RP$TfkLhesWf",
+      "wall_guid": "23Q1WiFO10vw5KCfABAOfN"
     }
   ]
 }

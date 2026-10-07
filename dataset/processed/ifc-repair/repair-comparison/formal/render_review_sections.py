@@ -28,22 +28,23 @@ def center(mesh):
     return np.mean(np.asarray(mesh['bounds']), axis=1)
 
 
-def segments(mesh, z):
+def segments(mesh, z, normal_axis=2, display_axes=(0,1)):
     vertices = np.asarray(mesh['vertices'], dtype=float).reshape(-1, 3)
     triangles = vertices[np.asarray(mesh['faces'], dtype=int).reshape(-1, 3)]
-    triangles = triangles[(triangles[:, :, 2].min(axis=1) < z) & (triangles[:, :, 2].max(axis=1) > z)]
+    triangles = triangles[(triangles[:, :, normal_axis].min(axis=1) < z) & (triangles[:, :, normal_axis].max(axis=1) > z)]
     for triangle in triangles:
         points = []
         for a, b in [(triangle[0],triangle[1]), (triangle[1],triangle[2]), (triangle[2],triangle[0])]:
-            if (a[2] - z) * (b[2] - z) < 0:
-                points.append(a[:2] + (b[:2] - a[:2]) * ((z - a[2]) / (b[2] - a[2])))
-            elif abs(a[2] - z) < 1e-9:
-                points.append(a[:2])
+            if (a[normal_axis] - z) * (b[normal_axis] - z) < 0:
+                point=a+(b-a)*((z-a[normal_axis])/(b[normal_axis]-a[normal_axis]))
+                points.append(point[list(display_axes)])
+            elif abs(a[normal_axis] - z) < 1e-9:
+                points.append(a[list(display_axes)])
         if len(points) >= 2:
             yield points[0], points[1]
 
 
-def panel(draw, area, meshes, data, target, reference, limits, z, caption, damaged):
+def panel(draw, area, meshes, data, target, reference, limits, z, caption, damaged, normal_axis=2, display_axes=(0,1)):
     x0,y0,x1,y1 = area
     draw.rectangle(area, fill='#f8fafc', outline='#c7d1d8', width=2)
     text(draw, (x0+14,y0+10), caption, size=26)
@@ -65,15 +66,15 @@ def panel(draw, area, meshes, data, target, reference, limits, z, caption, damag
         a,b = project((xmin,y)),project((xmax,y))
         draw.line([a,b], fill='#e1e7ec', width=1)
         text(draw, (x0+10,a[1]-10), f'{0 if abs(y)<1e-8 else y:g}', size=16, color='#586d78')
-    text(draw, (right-75,y0+19), 'X / m →', size=16)
-    text(draw, (x0+10,top-19), 'Y / m', size=16)
+    text(draw, (right-75,y0+19), 'XYZ'[display_axes[0]]+' / m →', size=16)
+    text(draw, (x0+10,top-19), 'XYZ'[display_axes[1]]+' / m', size=16)
 
     def layer(guid, mesh, color, width):
         if mesh['class'] in {'IfcOpeningElement','IfcSlab','IfcRoof','IfcCovering'}:
             return
-        if mesh['bounds'][0][1] < xmin or mesh['bounds'][0][0] > xmax or mesh['bounds'][1][1] < ymin or mesh['bounds'][1][0] > ymax:
+        if mesh['bounds'][display_axes[0]][1] < xmin or mesh['bounds'][display_axes[0]][0] > xmax or mesh['bounds'][display_axes[1]][1] < ymin or mesh['bounds'][display_axes[1]][0] > ymax:
             return
-        for a,b in segments(mesh,z):
+        for a,b in segments(mesh,z,normal_axis,display_axes):
             # Clip line segments to the plot rectangle, without changing geometry.
             p,q = np.asarray(project(a)),np.asarray(project(b))
             delta = q-p
@@ -99,13 +100,13 @@ def panel(draw, area, meshes, data, target, reference, limits, z, caption, damag
     for guid in data['targets']:
         if guid in meshes:
             layer(guid,meshes[guid],RED,4)
-    p = project(center(target)[:2])
+    p = project(center(target)[list(display_axes)])
     if damaged:
         draw.line([(p[0]-10,p[1]),(p[0]+10,p[1])],fill=RED,width=2)
         draw.line([(p[0],p[1]-10),(p[0],p[1]+10)],fill=RED,width=2)
     label = '删除位置（十字为标注）' if damaged else '损伤目标'
     text(draw, (min(max(p[0]+12,left),right-270),max(top,p[1]-36)), label, size=19, color=RED)
-    r = project(center(reference)[:2])
+    r = project(center(reference)[list(display_axes)])
     text(draw, (min(max(r[0]+12,left),right-170),min(max(top,r[1]+12),bottom-26)), '保留参照', size=19, color=BLUE)
 
 
@@ -149,6 +150,41 @@ def render(case):
     print(json.dumps({'case':case.name,'image':str(output),'dimensions':image.size,'targets':rows,'ifc_changed':False},ensure_ascii=False))
 
 
+def render_elevation(case):
+    html=(case/'VIEW.html').read_text(encoding='utf-8')
+    data=json.loads(re.search(r'<script id="ifc-data" type="application/json">(.*?)</script>',html,re.S).group(1))
+    target=data['before']['meshes'][data['target']]
+    reference=data['before']['meshes'][data['refs'][0]]
+    checks=json.loads((case/'private/checks.json').read_text(encoding='utf8'))
+    host=checks['targets'][0]['wall_guid']
+    x=float(center(target)[0])
+    points=np.asarray([center(target)[[1,2]],center(reference)[[1,2]]])
+    lo,hi=points.min(axis=0)-[1.05,1.5],points.max(axis=0)+[1.05,1.5]
+    span=hi-lo
+    if span[0]/span[1]<1.64:
+        padding=(span[1]*1.64-span[0])/2
+        lo[0]-=padding;hi[0]+=padding
+    else:
+        padding=(span[0]/1.64-span[1])/2
+        lo[1]-=padding;hi[1]+=padding
+    image=Image.new('RGB',(1800,810),'white')
+    draw=ImageDraw.Draw(image)
+    text(draw,(25,15),data['title']+' · 目标墙立面放大',size=31)
+    text(draw,(25,64),'900 × 500 mm 小窗；D 已删除窗及洞口，墙体恢复连续实体。',size=25)
+    text(draw,(25,106),f'真实 IFC 网格剖切 X={x:.4f} m；横轴 Y，竖轴 Z。仅显示宿主墙、目标与保留参照。',size=22)
+    text(draw,(25,145),'红：G 中被删窗；D 红十字仅标注位置。蓝：保留窗。灰：墙体。两侧同尺度。',size=22)
+    keep={host,data['target'],*data['refs']}
+    limits=(lo[0],hi[0],lo[1],hi[1])
+    for key,area,caption,damaged in [('before',(25,198,885,775),'G · 损坏前',False),('after',(915,198,1775,775),'D · 损坏后',True)]:
+        meshes={g:m for g,m in data[key]['meshes'].items() if g in keep}
+        panel(draw,area,meshes,data,target,reference,limits,x,caption,damaged,normal_axis=0,display_axes=(1,2))
+    output=case/'REVIEW-ELEVATION.png'
+    image.save(output)
+    Image.open(output).verify()
+    print(json.dumps({'case':case.name,'image':str(output),'dimensions':image.size,'ifc_changed':False},ensure_ascii=False))
+
+
 if __name__=='__main__':
     for folder in sorted(ROOT.glob('formal-*')):
         render(folder)
+    render_elevation(ROOT/'formal-004')
