@@ -273,3 +273,168 @@ def seal_revision_evidence(evidence, suite_receipt):
     validate_revision_seams(report,current_bindings=carrier.bindings(report['configuration']),families={'AC','B','D'})
     write_json(Path(evidence),report)
     return report
+
+
+class LegacyRectangleTransport(_FormalHTTPTransport):
+    """Only fake HTTP responses; real Linux B handles its legacy geometry path."""
+    def __call__(self, request):
+        from tests.ifc_repair.test_door_installation_legacy_compatibility import CompatibilityProvider
+        run_id=request.url.path.strip('/').split('/')[0]
+        assert run_id=='synthetic-legacy-B'
+        body=json.loads(request.content)
+        provider=self.providers.setdefault(run_id,CompatibilityProvider())
+        value=provider.generate_candidate(prompt=body['messages'][0]['content']).text
+        response=httpx.Response(200,json={'id':'offline-legacy-rectangle','model':body['model'],
+            'choices':[{'index':0,'message':{'role':'assistant','content':value},'finish_reason':'stop'}],
+            'usage':{'prompt_tokens':11,'completion_tokens':7,'total_tokens':18}})
+        path=self.root/'runtime/legacy-upstream.jsonl'
+        path.parent.mkdir(parents=True,exist_ok=True)
+        with path.open('a',encoding='utf8') as handle:
+            handle.write(json.dumps({'run_id':run_id,'request':body,'response_status':response.status_code,
+                'response_body':response.content.decode('utf8'),
+                'evidence_class':'deterministic_controller_upstream'},ensure_ascii=False)+'\n')
+        return response
+
+
+def legacy_revision_fixture_cli():
+    """Reuse the same actual CLI and approved B delayed-cleanup instrumentation."""
+    # Each CLI call is a fresh process. Only its controller fake changes; the
+    # original mapped/AC/D seam and its evidence remain untouched.
+    global RevisionTransport
+    RevisionTransport=LegacyRectangleTransport
+    revision_fixture_cli()
+
+
+@pytest.mark.skipif(os.environ.get('REPAIR_FORMAL_DOCKER')!='1',reason='explicit keyless legacy B Linux validation')
+def test_formal_revision_legacy_rectangle_real_linux_public_cli(tmp_path):
+    from tests.ifc_repair.test_door_installation_legacy_compatibility import direct_rectangle_scene, REQUEST
+    from text2ifc_ifc_repair.geometry import product_geometry_bounds_in_host_mm
+    before=capture_sources('admission')
+    helper=Path(__file__).resolve().parents[1]/'test_door_installation_legacy_compatibility.py'
+    helper_binding=file_ref(helper)
+    case_id='synthetic-legacy';run_id=case_id+'-B'
+    cases=tmp_path/'public-cases';public=cases/case_id/'public';public.mkdir(parents=True)
+    model,opening,reference,_=direct_rectangle_scene(millimetres=False,angle=0.)
+    # Replacing the synthetic reference Body leaves its old product wrapper
+    # unattached. Drop their unshared representation subgraphs before freezing D.
+    from ifcopenshell.util.element import remove_deep2
+    unattached=[shape for shape in model.by_type('IfcProductDefinitionShape') if not model.get_inverse(shape)]
+    for shape in unattached:
+        remove_deep2(model,shape)
+    source=public/'model.ifc';model.write(str(source))
+    (public/'request.txt').write_text(REQUEST,encoding='utf8')
+    reference_id=reference.GlobalId;opening_id=opening.GlobalId
+    type_id=reference.IsDefinedBy[0].RelatingType.GlobalId
+    assert reference.IsDefinedBy[0].RelatingType.RepresentationMaps is None
+    assert reference.Representation.Representations[0].RepresentationType=='SweptSolid'
+    source_hash=sha256(source)
+    source_log=ifcopenshell.validate.json_logger()
+    ifcopenshell.validate.validate(model,source_log,express_rules=True)
+    assert not source_log.statements,source_log.statements[:3]
+    budgets={case_id:{'tokens':2500000,'calls':50,'active_seconds':600,'tool_seconds':120,'extensions':[]}}
+    budget_path=tmp_path/'budgets.json';write_json(budget_path,budgets)
+    root=tmp_path/'experiment';logs=tmp_path/'logs';logs.mkdir()
+    command=[sys.executable,'-c','from tests.ifc_repair.repair_comparison.test_formal_revision_seams import legacy_revision_fixture_cli; legacy_revision_fixture_cli()']
+    commands=[]
+    def call(action,*arguments,timeout=600):
+        argv=command+[action,'--root',str(root),*map(str,arguments)]
+        response=subprocess.run(argv,cwd=carrier.REPO,capture_output=True,text=True,encoding='utf8',timeout=timeout)
+        log=logs/f'{len(commands):02d}-{action}.log'
+        log.write_text(response.stdout+'\nSTDERR\n'+response.stderr,encoding='utf8')
+        commands.append({'argv':argv,'exit_code':response.returncode,'log':file_ref(log)})
+        assert response.returncode==0,(action,response.stdout[-3000:],response.stderr[-3000:])
+        return json.loads(response.stdout)
+    config=call('init','--mode','offline','--cases-root',cases,'--case-ids',case_id,'--budgets',budget_path,
+        '--stage',carrier.FORMAL_STAGE,'--scene-grounding')
+    report={'schema_version':'repair-comparison-legacy-door-native-seam/0.1','real_models_called':False,
+        'source_bindings':before,'configuration':config['configuration'],
+        'images':carrier.bindings(config['configuration'])['images'],'fixture_helper':helper_binding,
+        'fixture_normalization':{'unattached_product_definition_shapes_removed':len(unattached)},
+        'runs':[],'checks':{},'instrumentation':'Same delayed B --rm cleanup as mapped seam; actual worker, SDK, CLI, network and publication.'}
+    evidence=tmp_path/'legacy-native-seam.json';write_json(evidence,report)
+    service_log=(logs/'service.log').open('wb')
+    service=subprocess.Popen(command+['serve','--root',str(root)],cwd=carrier.REPO,stdout=service_log,stderr=subprocess.STDOUT)
+    ledger=Ledger(root/'control.sqlite')
+    try:
+        deadline=time.monotonic()+90
+        while not (root/'service.json').exists() or read_json(root/'service.json').get('state')!='running':
+            assert service.poll() is None and time.monotonic()<deadline,'Legacy fixture service failed to start.'
+            time.sleep(.25)
+        state=call('run','--run-id',run_id,timeout=300)
+        assert state['status']=='submitted' and state['native']['result']['successful_artifact_publishable'],state
+        assert state['mode']=='real_runtime_fake_model' and not state['activities']
+        assert state['usage']['calls']>=3
+        assert sum(e['kind']=='started' for e in ledger.events(run_id))==1
+        assert not any(c['state']=='inflight' for c in ledger.calls(run_id))
+        assert sha256(source)==source_hash==sha256(Path(state['metadata']['input_dir'])/'model.ifc')
+        assert sha256(root/'workspaces'/run_id/'model.ifc')==source_hash
+        repaired=ifcopenshell.open(state['artifact']['path'])
+        created=[d for d in repaired.by_type('IfcDoor') if d.GlobalId!=reference_id]
+        assert len(created)==1
+        door=created[0];target=repaired.by_guid(opening_id)
+        assert door.FillsVoids[0].RelatingOpeningElement.GlobalId==opening_id
+        assert door.IsDefinedBy[0].RelatingType.GlobalId==type_id
+        assert door.IsDefinedBy[0].RelatingType.RepresentationMaps is None
+        bounds=product_geometry_bounds_in_host_mm(door,target)
+        for axis,expected in {'x':[0.,900.],'y':[50.,100.],'z':[0.,2100.]}.items():
+            assert bounds[axis]==pytest.approx(expected,abs=1e-5)
+        output_log=ifcopenshell.validate.json_logger()
+        ifcopenshell.validate.validate(repaired,output_log,express_rules=True)
+        assert not output_log.statements,output_log.statements[:3]
+        native_root=root/'runtime'/run_id/'state/native'/state['native']['result']['run_directory']
+        resolution_path=native_root/'resolution.json';resolution=read_json(resolution_path)
+        assert len(resolution['operations'])==1
+        assert 'door_installation_anchor' not in resolution['operations'][0]['parameters']
+        context=read_json(native_root/'api-context.json')
+        assert context['installation_references']['offline-repair-0']['reference_global_id']==reference_id
+        manifest=read_json(native_root/state['native']['result']['artifacts']['manifest'])
+        public_evidence=next(a['path'] for a in manifest['artifacts'] if a['role']=='public_evidence')
+        application=read_json(native_root/public_evidence)['evidence']['application']
+        assert application['published'] and application['valid']
+        report['runs']=[{'family':'B','run_id':run_id,'experiment_root':str(root.resolve()),
+            'expected_status':'submitted','public_source':file_ref(source),
+            'container_state':file_ref(root/'runtime'/f'{run_id}-start-container.json'),
+            'resolution':file_ref(resolution_path),'artifact':file_ref(Path(state['artifact']['path']))}]
+        report['checks']={'legacy_rectangle_supported':True,'source_unchanged':True,'exact_type_reused':True,
+            'type_representation_maps_absent':True,'installation_anchor_absent':True,
+            'source_schema_express_errors':0,'result_schema_express_errors':0,'bounds_in_opening_mm':bounds,
+            'native_publication_valid':True}
+        call('stop');service.wait(timeout=40)
+        assert before==capture_sources('admission'),'Source changed during legacy native seam execution.'
+        assert helper_binding==file_ref(helper),'Legacy fixture helper changed during execution.'
+        report.update(commands=commands,upstream_records=file_ref(root/'runtime/legacy-upstream.jsonl'))
+        write_json(evidence,report)
+        print('LEGACY_NATIVE_SEAM',str(evidence.resolve()),flush=True)
+    except BaseException as error:
+        report.update(error=f'{type(error).__name__}: {error}',commands=commands)
+        write_json(evidence,report)
+        raise
+    finally:
+        if service.poll() is None:
+            service.terminate();service.wait(timeout=30)
+            for name in [r['container'] for r in config['routes'].values()]+[config['relay']]:
+                inspected=subprocess.run(['docker','inspect',name],capture_output=True,text=True)
+                if inspected.returncode==0:
+                    carrier.docker('stop','--time','2',name)
+                    if name==config['relay']:carrier.docker('rm',name)
+            subprocess.run(['docker','network','rm',config['network']],capture_output=True)
+        service_log.close()
+
+
+def seal_revision_with_legacy(mapped_evidence,legacy_evidence,suite_receipt,output):
+    """Create a new combined certificate; never rewrite prior mapped evidence."""
+    from scripts.ifc_repair.repair_comparison.formal_admission import validate_revision_suite, validate_revision_seams
+    validate_revision_suite(suite_receipt,phase='green')
+    report=read_json(Path(mapped_evidence));legacy=read_json(Path(legacy_evidence))
+    assert 'error' not in report and 'error' not in legacy
+    assert len(report['runs'])==5 and len(legacy['runs'])==1
+    assert report['source_bindings']==legacy['source_bindings']==capture_sources('admission')
+    assert report['images']==legacy['images']
+    assert legacy['checks']['legacy_rectangle_supported'] and legacy['checks']['installation_anchor_absent']
+    report['suite_receipt']=file_ref(Path(suite_receipt))
+    report['runs']=[*report['runs'],*legacy['runs']]
+    report['checks']={**report.get('checks',{}),'legacy_direct_sweptsolid_door':file_ref(Path(legacy_evidence))}
+    validate_revision_seams(report,current_bindings=carrier.bindings(report['configuration']),families={'AC','B','D'})
+    assert not Path(output).exists(),'Combined evidence destination must be new.'
+    write_json(Path(output),report)
+    return report

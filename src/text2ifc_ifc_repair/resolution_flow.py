@@ -315,14 +315,26 @@ def resolve_repair_intent(
                     raise ValueError("DOOR_INSTALLATION_SOURCE_MISMATCH")
                 public_model = ifcopenshell.file.from_string(source_bytes.decode("utf-8"))
                 reference = public_model.by_guid(str(installation["reference_global_id"]))
-                anchor = public_door_installation_anchor(reference)
+                if not reference.is_a("IfcDoor"):
+                    raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
+                reference_types = [relation.RelatingType for relation in reference.IsDefinedBy
+                                   if relation.is_a("IfcRelDefinesByType")]
+                if len(reference_types) != 1 or not reference_types[0].is_a("IfcDoorStyle"):
+                    raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
                 prototype = operation.to_dict().get("prototype_intent") or {}
                 if (prototype.get("reference_kind") != "global_id"
-                        or prototype.get("reference") != anchor["type_global_id"]):
+                        or prototype.get("reference") != str(reference_types[0].GlobalId)):
                     raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_MISMATCH")
-                if operation.operation_type == "fill_existing_opening_with_door":
-                    validate_door_installation_target(public_model.by_guid(record.ifc_global_id), anchor)
-                resolved_parameters = {**resolved_parameters, "door_installation_anchor": anchor}
+                # The installation witness applies only to geometry reused from
+                # Type maps. A mapless Type keeps the existing simple-geometry
+                # creator; it does not imply cloning the reference occurrence.
+                # A mapped Type must still pass every anchor check, without a
+                # catch-and-fallback for malformed or incompatible geometry.
+                if reference_types[0].RepresentationMaps:
+                    anchor = public_door_installation_anchor(reference)
+                    if operation.operation_type == "fill_existing_opening_with_door":
+                        validate_door_installation_target(public_model.by_guid(record.ifc_global_id), anchor)
+                    resolved_parameters = {**resolved_parameters, "door_installation_anchor": anchor}
             except (ValueError, RuntimeError, KeyError, TypeError, AttributeError) as error:
                 return _failure(intent, str(error), operation_id=operation.operation_id,
                                 operations=completed, source_sha=expected_source_sha256)

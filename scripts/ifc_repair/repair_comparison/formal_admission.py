@@ -69,6 +69,7 @@ REVISION_TESTS = {
     TESTS+'test_submission_protocol.py': {'AC'},
     TESTS+'test_d_budget_terminal.py': {'D'},
     'tests/ifc_repair/test_door_installation_anchor.py': {'B'},
+    'tests/ifc_repair/test_door_installation_legacy_compatibility.py': {'B'},
 }
 REVISION_NATIVE_TEST = TESTS+'test_formal_revision_seams.py'
 REVISION_EXTRA_TESTS = {TESTS+name for name in ('test_direct_runner.py','test_isolated_direct.py',
