@@ -2,15 +2,15 @@
 
 
 
-许可：GPL-3.0-or-later
+许可：MIT
 
-来源：https://github.com/opensourceBIM/TestFiles
+来源：https://github.com/andrewisen/bim-whale-ifc-samples
 
-源模型：opensourcebim-testfiles-ac90r1-jasmin-sun-105-2x3-b7244828bfe2
+源模型：bim-whale-ifc-samples-tallbuilding-9f180a7148bb
 
-参考角色：preselected_reference_from_registered_original
+参考角色：preselected_reference_from_registered_repair_copy
 
-保留 GPL3+ 许可及版权，修改注明日期；以对应 GPL 条件提供修改成果及适用的可编辑源码/生成脚本；不能把受覆盖 IFC 改贴 MIT/CC BY。普通独立聚合不会自动改变其他独立文件的许可。
+保留来源、原作者、许可原文和既有通知；修改副本注明修改日期、内容和原件哈希。
 
 
 

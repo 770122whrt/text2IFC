@@ -14,6 +14,10 @@ progress:
 
 # Project State
 
+## 当前 Goal：Repair 二十题四组评测（2026-10-08，进行中）
+
+用户授权替换usBIM显示失败的formal-004，补齐20个不同IFC并运行ABCD共80任务；审题明确委托Codex先完成，后续人工查看可选，实际记录`accepted_by_delegation`与`human_viewed=false`。允许B必要的最小修复和失败族测试；约20M模型token目标，超出无需再次费用审批。004已换为MIT许可的TallBuilding，20题共38个门窗目标的损坏输入、数值、参照、保全和必要澄清均已核验，全部技术接受并冻结。真实Docker的四组假模型提交、问答恢复和DSH预算停止，加上正式20题／80工作区的编排、独立评分及异常路径，已经形成当前正式阶段准入。80个真实任务已于北京时间2026-10-08 02:17左右启动，按冻结顺序单任务运行；当前成绩以实验账本为准，离线结果不计为模型成绩。最新实际证据维护在[就绪报告§6.15](../docs/validation/repair-comparison/development-readiness.md#615-二十题与四组评测-goal2026-10-08进行中)。原Phase、R1和已接受Proof状态不变。
+
 ## 当前规划：Repair 四组实验开发联调（2026-10-04）
 
 本轮Goal的首批五题已在固定 `dataset/processed/ifc-repair/repair-comparison/formal/` 生成完整待审材料，五个不同且许可明确的IFC，含S1/S2同类与混合损伤，schema＋EXPRESS全部通过。用户明确仅审题和离线检查，保留正式测试用途，未代写人审通过、未向模型发送。两个demo的A/C通用容器、原生B API/SDK、官方完整DSH及统一HTTP账本接线已通过开发阶段准入；真实八任务均已请求，六项终态、两项B等待人答。两个C提交均格式不通过，A为非法JSON／预算停止，D为原生流截断；原失败未补跑。Messages计账与实验预算停止分类经红测修复，47项相关回归通过；原始事件及追加诊断保留。用户批准约20M token开发目标，超出不重复审批。指标之后确定，不能据此宣称修复成功、模型能力提升或正式80任务通过。最新证据见[真实联调结果](../docs/validation/repair-comparison/demo-results.md)及[就绪报告§6.11](../docs/validation/repair-comparison/development-readiness.md#611-goal-本轮首批五题与两个-demo-的四组接线2026-10-04)。以下段落保留9月29日实施快照，正式20题／指标／预算仍待人审和冻结；原Phase、R1及Proof状态不变。

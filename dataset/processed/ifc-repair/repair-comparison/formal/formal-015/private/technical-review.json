@@ -1,0 +1,922 @@
+{
+  "accepted": true,
+  "authorization": {
+    "at": "2026-10-07T17:48:42.740592+00:00",
+    "user_quote": "审题托付给你先 我后续再审 你先做实验吧 如果没问题我就不审题了"
+  },
+  "case_id": "formal-015",
+  "checks": {
+    "author_contract_bound": true,
+    "clarification_contract_bound": true,
+    "damage_and_preservation_recomputed": true,
+    "denominators_match": true,
+    "exact_removed_product_set": true,
+    "input_hash_bindings": true,
+    "native_recomputed": true,
+    "public_facts_match_measurements": true,
+    "public_files_only": true,
+    "public_request_bound": true,
+    "relation_edges_recomputed": true,
+    "removed_targets_not_visible": true,
+    "retained_geometry_recomputed": true,
+    "retained_reference_geometry_unchanged": true,
+    "wall_closure_recomputed": true
+  },
+  "clarification": {
+    "passed": true,
+    "required": [],
+    "witness": null
+  },
+  "effective_opening_evidence": {
+    "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+    "openings": [
+      {
+        "effective_volume_m3": 0.17090999999999817,
+        "ifcopenshell_version": "0.8.5",
+        "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+        "opening_guid": "22uC72A3vRJogJMFekDIoQ",
+        "positive_volume_epsilon_m3": 1e-09,
+        "raw_cutter_volume_m3": 0.17090999999999998,
+        "wall_guid": "0czr4CX$5BNOOrbw_mEmfh",
+        "wall_volume_before_m3": 0.4950899999999953,
+        "wall_volume_without_opening_m3": 0.6659999999999935
+      },
+      {
+        "effective_volume_m3": 0.17090999999999767,
+        "ifcopenshell_version": "0.8.5",
+        "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+        "opening_guid": "1ayBaRcke7gMHqFV3VQ8XW",
+        "positive_volume_epsilon_m3": 1e-09,
+        "raw_cutter_volume_m3": 0.17090999999999948,
+        "wall_guid": "0czr4CX$5BNOOrbw_mEmff",
+        "wall_volume_before_m3": 1.107839999999988,
+        "wall_volume_without_opening_m3": 1.2787499999999856
+      }
+    ],
+    "walls": {
+      "0czr4CX$5BNOOrbw_mEmff": {
+        "absolute_difference_m3": 0.0,
+        "effective_sum_m3": 0.17090999999999767,
+        "group_delta_m3": 0.17090999999999767,
+        "non_overlapping": true,
+        "opening_guids": [
+          "1ayBaRcke7gMHqFV3VQ8XW"
+        ],
+        "tolerance_m3": 1e-07,
+        "wall_guid": "0czr4CX$5BNOOrbw_mEmff",
+        "wall_volume_before_m3": 1.107839999999988,
+        "wall_volume_without_openings_m3": 1.2787499999999856
+      },
+      "0czr4CX$5BNOOrbw_mEmfh": {
+        "absolute_difference_m3": 0.0,
+        "effective_sum_m3": 0.17090999999999817,
+        "group_delta_m3": 0.17090999999999817,
+        "non_overlapping": true,
+        "opening_guids": [
+          "22uC72A3vRJogJMFekDIoQ"
+        ],
+        "tolerance_m3": 1e-07,
+        "wall_guid": "0czr4CX$5BNOOrbw_mEmfh",
+        "wall_volume_before_m3": 0.4950899999999953,
+        "wall_volume_without_openings_m3": 0.6659999999999935
+      }
+    }
+  },
+  "errors": [],
+  "human_viewed": false,
+  "input_bindings": {
+    "D": "9b34138c9e14f0abc899276875073d321776dc2847561bdb281a18f910964984",
+    "G": "0a0523e913f7a884c9a990d87086ad8d0d4304c36b4e64e1787fafb0652de654",
+    "answer_card": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "contract": "b0d4fc631c560fbdf67ce8b204353194f31078c9b3ab16bc4c65bf05b44c4100",
+    "public_ifc": "9b34138c9e14f0abc899276875073d321776dc2847561bdb281a18f910964984",
+    "request": "29bee93fdb5fc812c11593fd1e64b1223605daeeec1006f59dc39eeac1edad3e"
+  },
+  "native_validation": {
+    "D": {
+      "diagnostic_count": 0,
+      "diagnostics": [],
+      "express_rules": true,
+      "passed": true,
+      "validator": "ifcopenshell.validate",
+      "version": "0.8.5"
+    },
+    "G": {
+      "diagnostic_count": 0,
+      "diagnostics": [],
+      "express_rules": true,
+      "passed": true,
+      "validator": "ifcopenshell.validate",
+      "version": "0.8.5"
+    }
+  },
+  "passed": true,
+  "reference_comparisons": [
+    {
+      "bounds_d_m": [
+        [
+          7.566999999999025,
+          7.75
+        ],
+        [
+          7.08,
+          7.960000000000001
+        ],
+        [
+          0.0,
+          2.145
+        ]
+      ],
+      "bounds_g_m": [
+        [
+          7.566999999999025,
+          7.75
+        ],
+        [
+          7.08,
+          7.960000000000001
+        ],
+        [
+          0.0,
+          2.145
+        ]
+      ],
+      "guid": "0czr4CX$5BNOOrbw_mEmfi",
+      "tag": "378942",
+      "unchanged": true
+    },
+    {
+      "bounds_d_m": [
+        [
+          7.566999999999025,
+          7.75
+        ],
+        [
+          7.08,
+          7.960000000000001
+        ],
+        [
+          0.0,
+          2.145
+        ]
+      ],
+      "bounds_g_m": [
+        [
+          7.566999999999025,
+          7.75
+        ],
+        [
+          7.08,
+          7.960000000000001
+        ],
+        [
+          0.0,
+          2.145
+        ]
+      ],
+      "guid": "0czr4CX$5BNOOrbw_mEmfi",
+      "tag": "378942",
+      "unchanged": true
+    }
+  ],
+  "relationship_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0czr4CX$5BNOOrbw_mEmfe",
+          "parent_guid": "22uC72A3vRJogJMFekDIoQ",
+          "relation_guid": "0xvZhMTmurUJWJ4OhItoOm"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "22uC72A3vRJogJMFekDIoQ",
+          "parent_guid": "0czr4CX$5BNOOrbw_mEmfh",
+          "relation_guid": "0czr4CX$5BNOOrbxkmEmfe"
+        }
+      ],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0czr4CX$5BNOOrbw_mEmfe",
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0czr4CX$5BNOOrbw_mEmfk",
+          "parent_guid": "1ayBaRcke7gMHqFV3VQ8XW",
+          "relation_guid": "0GMQlIVlEoBPJYvHIZQAiY"
+        }
+      ],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "1ayBaRcke7gMHqFV3VQ8XW",
+          "parent_guid": "0czr4CX$5BNOOrbw_mEmff",
+          "relation_guid": "0czr4CX$5BNOOrbxkmEmfk"
+        }
+      ],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0czr4CX$5BNOOrbw_mEmfk",
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "schema_version": "repair-comparison-technical-review/0.1",
+  "scope": "Delegated technical task review; no usBIM visual confirmation or model capability result.",
+  "targets": [
+    {
+      "errors": [],
+      "id": "target-1",
+      "measured": {
+        "bounds_world_m": [
+          [
+            5.486999999999026,
+            5.670000000000001
+          ],
+          [
+            10.68,
+            11.559999999999999
+          ],
+          [
+            0.0,
+            2.145
+          ]
+        ],
+        "height_mm": 2110.0,
+        "host_bounds_world_m": [
+          [
+            5.550000000000001,
+            5.65
+          ],
+          [
+            9.89,
+            12.110000000000003
+          ],
+          [
+            0.0,
+            3.0
+          ]
+        ],
+        "host_guid": "0czr4CX$5BNOOrbw_mEmfh",
+        "host_placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5.6000000000000005
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            9.89
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.09999999999999964,
+        "ifc_class": "IfcDoor",
+        "kind": "door",
+        "mesh_center_world_m": [
+          5.578499999999513,
+          11.12,
+          1.0725
+        ],
+        "mesh_local_extents_mm": [
+          879.999999999999,
+          183.00000000097504,
+          2145.0
+        ],
+        "mesh_sha256": "88b4bf7b6f0cdadd89fb88f92e2974f7a1c7229c250a021bcde0938b3237e4dd",
+        "mesh_triangles": 460,
+        "opening_bottom_world_m": 0.0,
+        "opening_bounds_world_m": [
+          [
+            5.550000000000001,
+            5.65
+          ],
+          [
+            10.715,
+            11.525
+          ],
+          [
+            0.0,
+            2.11
+          ]
+        ],
+        "opening_center_world_m": [
+          5.6000000000000005,
+          11.120000000000001,
+          1.055
+        ],
+        "opening_center_xy_m": [
+          5.6000000000000005,
+          11.120000000000001
+        ],
+        "opening_guid": "22uC72A3vRJogJMFekDIoQ",
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 810.0000000000005,
+        "operation_type": "SINGLE_SWING_RIGHT",
+        "placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5.6000000000000005
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            11.120000000000001
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 0.0,
+        "source_step_id": 6250,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "0czr4CX$5BNOOrbw_mEmfe",
+        "type_guid": "0czr4CX$5BNOOrbxgmEmeU",
+        "unit_to_mm": 1.0,
+        "width_mm": 810.0
+      },
+      "mesh_local_extents_mm": [
+        879.999999999999,
+        183.00000000097504,
+        2145.0
+      ],
+      "nominal_dimensions_mm": [
+        810.0,
+        2110.0
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          -0.02150000000048724,
+          -1.7763568394002505e-15,
+          0.01750000000000007
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "reference_offset_world_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "target_validation_delta_m": 2.6645352591003757e-15
+      },
+      "opening_dimensions_mm": [
+        810.0000000000005,
+        2110.0
+      ],
+      "opening_sill_mm": 0.0,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            7.566999999999025,
+            7.75
+          ],
+          [
+            7.08,
+            7.960000000000001
+          ],
+          [
+            0.0,
+            2.145
+          ]
+        ],
+        "height_mm": 2110.0,
+        "host_bounds_world_m": [
+          [
+            7.63,
+            7.7299999999999995
+          ],
+          [
+            5.04,
+            9.89
+          ],
+          [
+            0.0,
+            3.0
+          ]
+        ],
+        "host_guid": "0czr4CX$5BNOOrbw_mEmfl",
+        "host_placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            7.68
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            5.04
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.09999999999999964,
+        "ifc_class": "IfcDoor",
+        "kind": "door",
+        "mesh_center_world_m": [
+          7.6584999999995125,
+          7.5200000000000005,
+          1.0725
+        ],
+        "mesh_local_extents_mm": [
+          880.0000000000008,
+          183.00000000097504,
+          2145.0
+        ],
+        "mesh_sha256": "88b4bf7b6f0cdadd89fb88f92e2974f7a1c7229c250a021bcde0938b3237e4dd",
+        "mesh_triangles": 460,
+        "opening_bottom_world_m": 0.0,
+        "opening_bounds_world_m": [
+          [
+            7.63,
+            7.7299999999999995
+          ],
+          [
+            7.115,
+            7.925
+          ],
+          [
+            0.0,
+            2.11
+          ]
+        ],
+        "opening_center_world_m": [
+          7.68,
+          7.52,
+          1.055
+        ],
+        "opening_center_xy_m": [
+          7.68,
+          7.52
+        ],
+        "opening_guid": "2jaodDyZPilz7Nw2pzUrES",
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 809.9999999999997,
+        "operation_type": "SINGLE_SWING_RIGHT",
+        "placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            7.68
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            7.5200000000000005
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 0.0,
+        "source_step_id": 9575,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "0czr4CX$5BNOOrbw_mEmfi",
+        "type_guid": "2T09f4ZmrDYhABWqw34uAF",
+        "unit_to_mm": 1.0,
+        "width_mm": 810.0
+      },
+      "reference_guid": "0czr4CX$5BNOOrbw_mEmfi",
+      "reference_nominal_dimensions_mm": [
+        810.0,
+        2110.0
+      ],
+      "requested_dimensions_mm": [
+        810.0,
+        2110.0
+      ],
+      "step_id": 6250
+    },
+    {
+      "errors": [],
+      "id": "target-2",
+      "measured": {
+        "bounds_world_m": [
+          [
+            6.846999999999025,
+            7.03
+          ],
+          [
+            14.04,
+            14.919999999999998
+          ],
+          [
+            0.0,
+            2.145
+          ]
+        ],
+        "height_mm": 2110.0,
+        "host_bounds_world_m": [
+          [
+            6.91,
+            7.01
+          ],
+          [
+            12.11,
+            16.372499999999995
+          ],
+          [
+            0.0,
+            3.0
+          ]
+        ],
+        "host_guid": "0czr4CX$5BNOOrbw_mEmff",
+        "host_placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            6.96
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            12.11
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.09999999999999964,
+        "ifc_class": "IfcDoor",
+        "kind": "door",
+        "mesh_center_world_m": [
+          6.938499999999513,
+          14.479999999999999,
+          1.0725
+        ],
+        "mesh_local_extents_mm": [
+          879.999999999999,
+          183.00000000097504,
+          2145.0
+        ],
+        "mesh_sha256": "88b4bf7b6f0cdadd89fb88f92e2974f7a1c7229c250a021bcde0938b3237e4dd",
+        "mesh_triangles": 460,
+        "opening_bottom_world_m": 0.0,
+        "opening_bounds_world_m": [
+          [
+            6.91,
+            7.01
+          ],
+          [
+            14.075,
+            14.884999999999998
+          ],
+          [
+            0.0,
+            2.11
+          ]
+        ],
+        "opening_center_world_m": [
+          6.96,
+          14.479999999999999,
+          1.055
+        ],
+        "opening_center_xy_m": [
+          6.96,
+          14.479999999999999
+        ],
+        "opening_guid": "1ayBaRcke7gMHqFV3VQ8XW",
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 809.9999999999987,
+        "operation_type": "SINGLE_SWING_RIGHT",
+        "placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            6.96
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            14.48
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 0.0,
+        "source_step_id": 7936,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "0czr4CX$5BNOOrbw_mEmfk",
+        "type_guid": "1G$MZxwEr0o8UrJwvn8crc",
+        "unit_to_mm": 1.0,
+        "width_mm": 810.0
+      },
+      "mesh_local_extents_mm": [
+        879.999999999999,
+        183.00000000097504,
+        2145.0
+      ],
+      "nominal_dimensions_mm": [
+        810.0,
+        2110.0
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          -0.02150000000048724,
+          0.0,
+          0.01750000000000007
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "reference_offset_world_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "target_validation_delta_m": 8.881784197001252e-16
+      },
+      "opening_dimensions_mm": [
+        809.9999999999987,
+        2110.0
+      ],
+      "opening_sill_mm": 0.0,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            7.566999999999025,
+            7.75
+          ],
+          [
+            7.08,
+            7.960000000000001
+          ],
+          [
+            0.0,
+            2.145
+          ]
+        ],
+        "height_mm": 2110.0,
+        "host_bounds_world_m": [
+          [
+            7.63,
+            7.7299999999999995
+          ],
+          [
+            5.04,
+            9.89
+          ],
+          [
+            0.0,
+            3.0
+          ]
+        ],
+        "host_guid": "0czr4CX$5BNOOrbw_mEmfl",
+        "host_placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            7.68
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            5.04
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.09999999999999964,
+        "ifc_class": "IfcDoor",
+        "kind": "door",
+        "mesh_center_world_m": [
+          7.6584999999995125,
+          7.5200000000000005,
+          1.0725
+        ],
+        "mesh_local_extents_mm": [
+          880.0000000000008,
+          183.00000000097504,
+          2145.0
+        ],
+        "mesh_sha256": "88b4bf7b6f0cdadd89fb88f92e2974f7a1c7229c250a021bcde0938b3237e4dd",
+        "mesh_triangles": 460,
+        "opening_bottom_world_m": 0.0,
+        "opening_bounds_world_m": [
+          [
+            7.63,
+            7.7299999999999995
+          ],
+          [
+            7.115,
+            7.925
+          ],
+          [
+            0.0,
+            2.11
+          ]
+        ],
+        "opening_center_world_m": [
+          7.68,
+          7.52,
+          1.055
+        ],
+        "opening_center_xy_m": [
+          7.68,
+          7.52
+        ],
+        "opening_guid": "2jaodDyZPilz7Nw2pzUrES",
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 809.9999999999997,
+        "operation_type": "SINGLE_SWING_RIGHT",
+        "placement_world_m": [
+          [
+            0.0,
+            -1.0,
+            0.0,
+            7.68
+          ],
+          [
+            1.0,
+            0.0,
+            0.0,
+            7.5200000000000005
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 0.0,
+        "source_step_id": 9575,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "0czr4CX$5BNOOrbw_mEmfi",
+        "type_guid": "2T09f4ZmrDYhABWqw34uAF",
+        "unit_to_mm": 1.0,
+        "width_mm": 810.0
+      },
+      "reference_guid": "0czr4CX$5BNOOrbw_mEmfi",
+      "reference_nominal_dimensions_mm": [
+        810.0,
+        2110.0
+      ],
+      "requested_dimensions_mm": [
+        810.0,
+        2110.0
+      ],
+      "step_id": 7936
+    }
+  ],
+  "wall_closure": {
+    "0czr4CX$5BNOOrbw_mEmff": {
+      "after": 1.2787499999999856,
+      "before": 1.107839999999988,
+      "cutting_solid_volume_sum": 0.17090999999999948,
+      "effective_delta_m3": 0.17090999999999767,
+      "expected_after": 1.2787499999999856
+    },
+    "0czr4CX$5BNOOrbw_mEmfh": {
+      "after": 0.6659999999999935,
+      "before": 0.4950899999999953,
+      "cutting_solid_volume_sum": 0.17090999999999998,
+      "effective_delta_m3": 0.17090999999999817,
+      "expected_after": 0.6659999999999935
+    }
+  }
+}

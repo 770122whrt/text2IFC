@@ -31,6 +31,128 @@ PASS 表示该文件通过本地 IFC schema／EXPRESS 校验，构件缺失仍�
 """
 
 
+def render_formal_review(task, checks, references, *, geometry_audit=None, subset_report=None):
+    """Names and measurement evidence belong to human review, not requests."""
+    def cell(value):
+        return str(value if value is not None else '未命名').replace('|', r'\|').replace('\n', ' ')
+
+    def xy(values):
+        return ', '.join(f'{v:.6f}' for v in values[:2])
+
+    review = task.get('review', {})
+    status = review.get('status', 'pending_human_review')
+    accepted = status in {'accepted', 'accepted_by_delegation'}
+    if status == 'accepted_by_delegation':
+        state = '**委托技术审题已接受（accepted_by_delegation）**。'
+    elif status == 'accepted':
+        state = '**审题记录已接受（accepted）**。'
+    elif status == 'pending_human_review':
+        state = '**待人工审阅（pending_human_review）**。'
+    else:
+        state = f'**审题记录状态：{cell(status)}**。'
+    metrics = task.get('metrics') or {}
+    frozen = metrics.get('formal_scoring_frozen') is True
+    scoring = ('评分合同已冻结' + (f'，版本 `{metrics["policy_version"]}`' if metrics.get('policy_version') else '') + '。'
+               if frozen else '评分合同为草案，尚未正式冻结。')
+    title = task['source']['task_proposal'].get('description', '局部修复')
+    lines = [f'# {task["case_id"]}：{title}', '', state, '',
+        '本页记录制题与审题依据；模型是否运行、正式提交和修复成绩以各方法的运行记录为准。']
+    if review.get('reviewer'):
+        lines += ['', f'审题者：{cell(review["reviewer"])}；审题类型：`{cell(review.get("kind", "未记录"))}`。']
+    if 'human_viewed' in review:
+        viewed = review['human_viewed']
+        recorded = str(viewed).lower() if isinstance(viewed, bool) else cell(viewed)
+        lines += [f'查看记录：`human_viewed={recorded}`。' + ('未标记用户已逐题亲自查看。' if viewed is False else '')]
+    if review.get('reviewed_at'):
+        lines += [f'审题时间：`{review["reviewed_at"]}`。']
+    if status == 'accepted_by_delegation':
+        authorization = review.get('authorization') or {}
+        lines += ['', '用户委托原话：', '']
+        lines += ['> ' + line for line in str(authorization.get('user_quote', '委托原话未记录')).splitlines()]
+        lines += ['', f'委托时间：`{authorization.get("at", "未记录")}`。'
+                  '该记录表示按用户委托完成技术审题，不表示用户已打开 usBIM 逐题确认。',
+                  '[委托技术审题证据](private/technical-review.json)。']
+    lines += ['', ('后续复审可检查' if accepted else '请你检查') + '：在 usBIM 等查看器中构件与损伤能否看清，'
+        '公开请求是否合理、是否符合希望修复的内容。毫米尺寸、坐标、楼层、参照一致性和保全由开发侧核验，不要求你手工量测。', '',
+        '- [完整损坏前原件 G](private/reference.ifc)',
+        '- [完整损坏 IFC D：正式公开输入](public/model.ifc)',
+        '- [公开请求](public/request.txt) · [格式校验](IFC-VALIDATION.md) · [来源与许可](private/SOURCE-LICENSE.md)', '',
+        f'登记源角色：`{task["source"].get("source_role", "未记录")}`。G 仅为私有制题／评估参考，不作为被测输入。', '',
+        '本地 schema／EXPRESS 校验只说明相应格式规则检查结果，不等于修复完成，'
+        '也不代表 buildingSMART 在线验证或 usBIM 导入／显示已成功。', '',
+        '## 哪些原件被损伤', '',
+        '下表 Name 是原 IFC 的真实名称，仅用于人工查找。重复名称用位置区分；名称中的数字不作为尺寸依据。'
+        '这些身份不写入公开请求，也不发送给被测模型。', '',
+        '|原件 Name|类别|损伤|原洞口平面中心 X, Y（m）|',
+        '|---|---|---|---|']
+    for item in checks['targets']:
+        position = [sum(b) / 2 for b in item['opening']['bounds_world_m']]
+        damage = '删除门，保留空洞口' if item['preserve_opening'] else '删除构件及洞口，恢复连续墙体'
+        lines.append(f'|{cell(item["target"].get("name"))}|{item["target"]["class"]}|{damage}|{xy(position)}|')
+    lines += ['', '保留参照：', '', '|原件 Name|类别|', '|---|---|']
+    lines += [f'|{cell(r.get("name"))}|{r["class"]}|' for r in references]
+    lines += ['', '## 公开请求', '', task['request'], '', '## 开发侧数值核验', '']
+    if geometry_audit and geometry_audit['passed']:
+        lines += ['已重开 G/D，独立从三维网格、IFC 长度单位、洞口和楼层重算下表；公开坐标按三位小数表达。'
+                  '名义尺寸与带框构件外包尺寸分别记录，检查误差不作为正式评分容差。', '',
+                  '|目标 Name（原洞口 X, Y，m）|请求宽×高（mm）|IFC 名义宽×高（mm）|实测洞口宽×高（mm）|洞底距楼层标高（mm）|',
+                  '|---|---|---|---|---:|']
+        targets_by_step = {item['source_step_id']: item for item in checks['targets']}
+        for item in geometry_audit['targets']:
+            pairs = [' × '.join(f'{v:g}' for v in item[k]) for k in ('requested_dimensions_mm', 'nominal_dimensions_mm', 'opening_dimensions_mm')]
+            target = targets_by_step[item['step_id']]
+            position = [sum(b) / 2 for b in target['opening']['bounds_world_m']]
+            identity = f'{cell(target["target"].get("name"))}（{xy(position)}）'
+            lines.append(f'|{identity}|{pairs[0]}|{pairs[1]}|{pairs[2]}|{item["opening_sill_mm"]:g}|')
+        lines += ['', *geometry_audit.get('notes', []), '',
+                  '[完整数值、参照和原件几何核验](private/geometry-review.json)。这是制题检查；'
+                  '数值证据本身不代表用户亲自审阅或模型修复成功。']
+    else:
+        lines += ['完整请求数值核验尚未记录，不能据此进入正式实验。']
+    if subset_report:
+        lines += ['', '## usBIM 局部查看', '',
+            '[局部原件 G](private/review-original.ifc) · [局部损坏 D](private/review-damaged.ifc)。', '',
+            '这对 IFC 只供查看：保留原目标、参照、宿主墙及墙上的完整洞口／填充关系，移除其余遮挡构件；'
+            '空间层级、坐标、几何和表达上下文保持原样。它们不替换完整 G/D，也不能用于正式实验输入或评分。', '',
+            '先打开局部 G 确认构件能显示，再看局部 D 的缺失与连续墙面。完整模型中按表中 Name、楼层和位置查找；'
+            '地下层可先单独显示，或隐藏上层、楼板及空间体。若局部 G 仍无法显示目标，需继续核查 usBIM 的导入／显示兼容性。', '',
+            f'局部 G/D 的 schema＋EXPRESS 均零诊断，所有保留网格及位置与完整原件逐项相同；'
+            f'产品数 {subset_report["G"]["product_count"]}/{subset_report["D"]["product_count"]}。'
+            '[查看副本核验记录](private/review-subsets.json)。未直接验证用户当前 usBIM 画面。']
+    lines += ['', '## 局部对照图', '',
+        '[可旋转的同步网格查看器](VIEW.html)。下面是实际 IFC 网格的水平剖切；红色为 G 中删除构件，D 的十字仅标注删除位置，蓝色为保留参照。', '',
+        '![同尺度局部剖切对照](REVIEW.png)', '',
+        '## 修复验收含义', '',
+        f'主目标 {task["required_product_count"]} 个；{task["damage_profile"]["level"]}。'
+        '修复需恢复实际构件及洞口／宿主／楼层关系，保留范围外对象。允许新身份和等价序列化。', '',
+        scoring, '', '## 澄清与事前答复卡（私有）', '']
+    clarification = task.get('clarification') or {}
+    required = clarification.get('required_user_facts', [])
+    facts = clarification.get('facts') or {}
+    if not required:
+        lines += ['本题未登记必须补充的用户事实；仍提供普通问答通道，不预设模型必须提问。']
+    for required_fact in required:
+        fact_id = required_fact if isinstance(required_fact, str) else required_fact.get('fact_id', required_fact.get('id', '未记录'))
+        fact = facts.get(fact_id, required_fact if isinstance(required_fact, dict) else {})
+        lines += [f'- 缺失事实 `{fact_id}`：{fact.get("why_needed", fact.get("why_required", fact.get("field", "缺项说明未记录")))}']
+        if fact.get('target_id'):
+            lines += [f'  对应目标：`{fact["target_id"]}`。']
+        if fact.get('answer'):
+            label = '事前认可答复' if accepted else '事前编写答复（待审）'
+            lines += [f'  {label}：**{fact["answer"]}**']
+        else:
+            lines += ['  答复未记录，不能临时从 G 补造。']
+        if fact.get('basis') or fact.get('answer_basis'):
+            lines += [f'  答复依据：{fact.get("basis", fact.get("answer_basis"))}']
+    lines += ['', '只回答实际问到的事实；未问到的事前答复不提前提供，卡外问题保留待处理。'
+        '执行时不查 G 临时补答案；未问碰巧做对与合格澄清分别计分。', '',
+        ('用户可按题号给出后续复审或修改意见；当前委托／接受状态以本页记录为准。' if accepted else
+         '请按题号给出请求合理性与查看结果的接受／修改意见；开发侧数值核验不代替实际审阅。'), '',
+        'private/、REVIEW 和查看器仅用于审阅／评估。初始被测输入只含 public/ 中两个文件；'
+        '以上缺失事实与答复只在合格提问后按卡提供，不回填公开请求。', '']
+    return '\n'.join(lines)
+
+
 def render_review(definition: dict[str, Any], checks: dict[str, Any], visual: dict[str, Any] | None = None) -> str:
     source, task = definition["source"], definition["task"]
     facts = definition["clarification"]["required_user_facts"]

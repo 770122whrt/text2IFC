@@ -106,8 +106,11 @@ def panel(draw, area, meshes, data, target, reference, limits, z, caption, damag
         draw.line([(p[0],p[1]-10),(p[0],p[1]+10)],fill=RED,width=2)
     label = '删除位置（十字为标注）' if damaged else '损伤目标'
     text(draw, (min(max(p[0]+12,left),right-270),max(top,p[1]-36)), label, size=19, color=RED)
-    r = project(center(reference)[list(display_axes)])
-    text(draw, (min(max(r[0]+12,left),right-170),min(max(top,r[1]+12),bottom-26)), '保留参照', size=19, color=BLUE)
+    if reference['bounds'][normal_axis][0] <= z <= reference['bounds'][normal_axis][1]:
+        r = project(center(reference)[list(display_axes)])
+        text(draw, (min(max(r[0]+12,left),right-170),min(max(top,r[1]+12),bottom-26)), '保留参照', size=19, color=BLUE)
+    else:
+        text(draw, (left, bottom-30), f'参照在另一标高 Z={center(reference)[2]:.3f} m；请在三维查看器中查看', size=18, color=BLUE)
 
 
 def render(case):
@@ -187,4 +190,3 @@ def render_elevation(case):
 if __name__=='__main__':
     for folder in sorted(ROOT.glob('formal-*')):
         render(folder)
-    render_elevation(ROOT/'formal-004')

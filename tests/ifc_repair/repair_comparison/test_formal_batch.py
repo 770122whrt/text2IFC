@@ -131,6 +131,52 @@ def test_unknown_door_damage_fails_before_writing_candidate(candidate):
     assert not (root / 'invalid-mode').exists()
 
 
+def test_author_contract_and_answer_card_are_carried_without_acceptance(candidate):
+    from scripts.ifc_repair.repair_comparison.formal_batch import prepare_candidate
+    root, _, row = candidate
+    row = copy.deepcopy(row)
+    row['task_proposal']['author_expectations'] = {'target-1': {'width_mm': 900}}
+    row['task_proposal']['public_numeric_spec'] = {'targets': [{'width_mm': 900}]}
+    row['task_proposal']['clarification_proposal'] = {'fact_id': 'target-1.width', 'answer': '宽900毫米。'}
+    output = root / 'authored'
+    prepare_candidate(row, repository_root=root, output=output)
+    task = json.loads((output / 'private/task.json').read_text(encoding='utf8'))
+    assert task['author_expectations'] == row['task_proposal']['author_expectations']
+    assert task['review']['status'] == 'pending_human_review'
+    card = json.loads((output / 'private/answer-card.json').read_text(encoding='utf8'))
+    assert card['proposal'] == row['task_proposal']['clarification_proposal']
+    assert card['status'] == 'pending_human_review'
+
+
+def test_each_door_can_have_its_own_damage_mode(candidate):
+    from scripts.ifc_repair.repair_comparison.formal_batch import _recipe
+    root, source, row = candidate
+    model = ifcopenshell.open(str(source))
+    target = model.by_type('IfcDoor')[0]
+    row = copy.deepcopy(row)
+    row['task_proposal']['target_damage'] = {str(target.id()): 'remove_door_and_opening'}
+    recipe = _recipe(row, model)
+    assert not recipe[0]['preserve_opening']
+
+
+def test_cutters_deeper_than_wall_use_effective_wall_material_volume(candidate):
+    from scripts.ifc_repair.repair_comparison.formal_batch import prepare_candidate
+    root, source, row = candidate
+    model = ifcopenshell.open(str(source))
+    for opening in model.by_type('IfcOpeningElement'):
+        for entity in model.traverse(opening.Representation):
+            if entity.is_a('IfcRectangleProfileDef'):
+                entity.YDim = 1.0
+    model.write(str(source))
+    row = copy.deepcopy(row)
+    row['source_sha256'] = sha256(source)
+    result = prepare_candidate(row,repository_root=root,output=root/'deep-cutters')
+    assert result['valid']
+    evidence=json.loads((root/'deep-cutters/private/checks.json').read_text(encoding='utf8'))
+    assert evidence['checks']['removed_window_regions_closed']
+    assert any(v['raw_cutter_volume_m3'] > v['effective_volume_m3'] for v in evidence['effective_opening_evidence']['openings'])
+
+
 @pytest.mark.parametrize('bad', ['duplicate', 'guid', 'method'])
 def test_ambiguous_recipe_or_private_public_hints_fail_before_damage(candidate, bad):
     from scripts.ifc_repair.repair_comparison.formal_batch import prepare_candidate

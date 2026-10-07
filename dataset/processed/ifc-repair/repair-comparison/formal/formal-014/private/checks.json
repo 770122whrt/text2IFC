@@ -1,0 +1,1767 @@
+{
+  "checks": {
+    "damaged_native_validation_passed": true,
+    "no_products_created": true,
+    "no_unexpected_modified_products": true,
+    "only_expected_products_removed": true,
+    "removed_door_regions_closed": true,
+    "removed_window_regions_closed": true,
+    "required_relation_edges_verified": true,
+    "retained_door_openings_empty_and_hosted": true,
+    "schema_preserved": true,
+    "source_native_validation_passed": true,
+    "source_unchanged": true,
+    "targets_and_references_have_geometry": true
+  },
+  "damaged_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "effective_opening_evidence": {
+    "openings": [],
+    "walls": {}
+  },
+  "host": {
+    "bounds_world_m": [
+      [
+        9.055000000000001,
+        9.185
+      ],
+      [
+        10.465,
+        14.805
+      ],
+      [
+        0.0,
+        2.95
+      ]
+    ],
+    "class": "IfcWall",
+    "geometry_status": "available",
+    "guid": "20qmL4_cXAqvLHe6WvA2pE",
+    "name": "Basic Wall:Wall-Partn_30Gwb-70MStd-30Gwb:378687",
+    "project_unit_to_mm": 1.0
+  },
+  "removed_product_guids": [
+    "20qmL4_cXAqvLHe6WvA2on"
+  ],
+  "required_relation_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "20qmL4_cXAqvLHe6WvA2on",
+          "parent_guid": "0gQKYpaRzMEgdK6Ar4shKl",
+          "relation_guid": "1ORZCyIuNud2X9Ddm2N3Lk"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "20qmL4_cXAqvLHe6WvA2on",
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "12yEvT_0lTDDG_iJo5bcLw",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:9f476db2d144e392faaf701c884f99ef562925f7a56fdfc4b8728e0a4f6e47c0",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "12yEvT_0lTDDG_iJo5bcLw",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:6fc66d2d9c5fdab0bbe76854c26e6ab387861256baeee4d3b23e69f570a0534a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "0PrSpoPcL4pB6Agy9409mK",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1De$7_rUneoT3ROrkH7b3o",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:91cf543f81571f97d0dd930e0800aafc7c2d2b905019ed4ef8def0e34257d708",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1De$7_rUneoT3ROrkH7b3o",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:f19ecaf5f4c36d701f88d612f28b99d97df58d58508d9808dc4b4a429274f936",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "0aI3DrAzr1XejDXsz2FalU",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0wB4WNEu0q4MkRTGjEmAIJ",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:03d40dc3e792d1a933267fdcbaea5757113ed9b49cb075c53aa581bce0aa3a3a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0wB4WNEu0q4MkRTGjEmAIJ",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:2c2c4438df69a5113586dc99b10fecdb6e78dc70e2e6b03990b1635ba5f853ed",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "1HzGa$N_T3QumV0dbuIdim",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3$MQQ2E$lHDyIT0lP0zQyM",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:4ff5a7a5a8d3fff388779e7463c7dc19a011d193045ac5553028044172e06c7f",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3$MQQ2E$lHDyIT0lP0zQyM",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:1817633632e81b72466257b4b7d47f445e3607a065686b78f954b8c4320f0fc0",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "1d0XCUP$L1S8M1TGEYONvV",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3pZ0UOzeigcUryxRW0VRVU",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:ef66181d120e1f7d3291ec5b2543c4db3e4d97ab7826fb29bfae5b6736b01d3e",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3pZ0UOzeigcUryxRW0VRVU",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:18c9847c86d63d9372e66b9ddb92d9d6d45b09426122e627a5c1cc116468c4d8",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "2IzbO3SOr3AeBXu0q7OuQ4",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "11Ss8J5nNOc_QMIUQ4PD3x",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:eaa10b70291f3a42059783aba475a087c3493f5302e94883c50c55a4922b0239",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "11Ss8J5nNOc_QMIUQ4PD3x",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:aa7a2d0c732f6ac91057c5407b310923362a91675a79fa99e8c67014da4428dc",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "37zDxlaUjFZw3yOXkcOEKA",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "19G48UHw5yMrRrxjO7N5N8",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:64c4e084a639d9d7dba38acd5e1cbe219f1cbd875352da1f456b33f8983b48ab",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "19G48UHw5yMrRrxjO7N5N8",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:9389ca59b07aabfbd4cbb6dd6f525d08b668a80e74d41538babbdbec220ca7df",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "3WDW5TOHjDFuP0uomNCkQ0",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2om",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2op",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oq",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2or",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2ot",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2ov",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p1",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p2",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p3",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p4",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p9",
+                "ifc_class": "IfcSlab"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pE",
+                "ifc_class": "IfcWall"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pQ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pT",
+                "ifc_class": "IfcWall"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pU",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pV",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "2BZ4exMKhQLvK3ivzV3e3d",
+                "ifc_class": "IfcGrid"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "3Zu5Bv0LOHrPC10026FoQQ",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:4768f22382a7add96b3832f0d8de7d2846c83ab2961aa7303707394c069f3c9e",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2om",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2op",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oq",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2or",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2ot",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2ov",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p1",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p2",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p3",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p4",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2p9",
+                "ifc_class": "IfcSlab"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pE",
+                "ifc_class": "IfcWall"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pQ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pT",
+                "ifc_class": "IfcWall"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pU",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2pV",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "2BZ4exMKhQLvK3ivzV3e3d",
+                "ifc_class": "IfcGrid"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "3Zu5Bv0LOHrPC10026FoQQ",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:656371462697d6d1816555a204edd415834fa1230d4aca4fac06060e0939dfab",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe7qvA2ow",
+                "ifc_class": "IfcDoorStyle"
+              },
+              {
+                "global_id": "22rnMiR3PA_BR3TxMyuq4g",
+                "ifc_class": "IfcDoorStyle"
+              },
+              {
+                "global_id": "2pdJuVFGn1k8FebLtvUWaw",
+                "ifc_class": "IfcDoorStyle"
+              }
+            ],
+            "RelatingMaterial": {
+              "attributes": {
+                "Materials": [
+                  {
+                    "attributes": {
+                      "Name": "Door - Architrave"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Architrave"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Frame/Mullion (1)"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Frame/Mullion (1)"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Panel"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  }
+                ]
+              },
+              "ifc_class": "IfcMaterialList"
+            }
+          },
+          "content_sha256": "sha256:b19c780402aa299bdb0e45611cb784e7c1b73b42b34a7eb542c5b63699d976db",
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe7qvA2ow",
+                "ifc_class": "IfcDoorStyle"
+              },
+              {
+                "global_id": "22rnMiR3PA_BR3TxMyuq4g",
+                "ifc_class": "IfcDoorStyle"
+              },
+              {
+                "global_id": "2pdJuVFGn1k8FebLtvUWaw",
+                "ifc_class": "IfcDoorStyle"
+              }
+            ],
+            "RelatingMaterial": {
+              "attributes": {
+                "Materials": [
+                  {
+                    "attributes": {
+                      "Name": "Door - Architrave"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Architrave"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Frame/Mullion (1)"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Frame/Mullion (1)"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Handle"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Door - Panel"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  }
+                ]
+              },
+              "ifc_class": "IfcMaterialList"
+            }
+          },
+          "content_sha256": "sha256:2fff8df59c6698df40a5a457890ca15d8c125cd159dacf7f577b0998eafc057e",
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "3htUQpwyccQbVuMW5bIBFO",
+        "ifc_class": "IfcRelAssociatesMaterial",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1dY38cLnPIZgjGPJ3g8iOm",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:e11a04bca7f87d6190188a6097bc699905a770d74aa572860f92c6b5ad3efc37",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2oo",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2os",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1dY38cLnPIZgjGPJ3g8iOm",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:83e9130d03dc23d2e9f22118cd2e05640411fa2a68b87615044581ca41c1026d",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "modified",
+        "global_id": "3yrRYs8zn9z8J_ZWKm4L3u",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      }
+    ],
+    "removed": [
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1WDUAjbRn3uMreSebDpwhx",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:6d25b44873858986623c878aff768e8f659c14e8037ff6e689e737cbccf4de99",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "08ye4mk3vBTxzLBCgC5drd",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0Mofm2vdB3RbAWn_soiqPF",
+              "ifc_class": "IfcElementQuantity"
+            }
+          },
+          "content_sha256": "sha256:bb4ca685fd92ea84c75452f9e1bf43d49af37d14e758b200ee63d703fee7e5b9",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "0A_a7PEtX0MehbWVY5UGtF",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Sill Height",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    },
+                    "ifc_class": "IfcLengthMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:319d82e5306fd8dc6493217dfc2c533eceb00fb86f49954db35bc94f62f50226",
+          "ifc_class": "IfcPropertySet",
+          "name": "Constraints"
+        },
+        "change_kind": "removed",
+        "global_id": "0En3VC8pjsfCI_5QUyYIqE",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "MethodOfMeasurement": null,
+            "Quantities": [
+              {
+                "attributes": {
+                  "AreaValue": 2.9017280000051584,
+                  "Description": "",
+                  "Name": "Area",
+                  "Unit": null
+                },
+                "ifc_class": "IfcQuantityArea"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "LengthValue": 1010.0,
+                  "Name": "Width",
+                  "Unit": null
+                },
+                "ifc_class": "IfcQuantityLength"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "LengthValue": 2110.0,
+                  "Name": "Height",
+                  "Unit": null
+                },
+                "ifc_class": "IfcQuantityLength"
+              }
+            ]
+          },
+          "content_sha256": "sha256:690b0df313cc7f706b2175fb6c6f3a2bef0dcd9d4ce5b1c72d734b0c7a6b9ea4",
+          "ifc_class": "IfcElementQuantity",
+          "name": "BaseQuantities"
+        },
+        "change_kind": "removed",
+        "global_id": "0Mofm2vdB3RbAWn_soiqPF",
+        "ifc_class": "IfcElementQuantity",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3IsAiCHkwG_MiLPYerfpFD",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:5085a7e2c25432f98f01ebd6e898eb10aef16bd447e68487c40637ea26b6619a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "0aOcUSrWvDv8rXcULKwQiF",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "20qmL4_cXAqvLHe6WvA2on",
+              "ifc_class": "IfcDoor"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "0gQKYpaRzMEgdK6Ar4shKl",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:5bc6ff12ca2464e95c86279717714919be8b8021bb99f4262c17bf1431ea51de",
+          "ifc_class": "IfcRelFillsElement",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "1ORZCyIuNud2X9Ddm2N3Lk",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2hiOLnJjpL8_LetZuQK20O",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:c1ba83c455cf7db00771c59b605444cff80b751e08b30b84e54a77c44f45a288",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "1TkuKN_mLEtewZRDLBZPrB",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "1010x2110mm"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:2896dafa971b3d8b1ac749c092dd408cac5a41f25c37675598cb78d71f8186e2",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff"
+        },
+        "change_kind": "removed",
+        "global_id": "1WDUAjbRn3uMreSebDpwhx",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3eZfw$AbTD_3_NC4YqaEPn",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:68c5a6053ec0ecbc9831a27b088dbfd0233feb8c8b1ccd8fce28eb856afec6da",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "1Y$6Aho4P5wO8hLgA9vx6V",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Manufacturer",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Revit"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:9f42422801d69c38a644e5e5f100c01c021bc2303639d065370d4aa07a5baafa",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ManufacturerTypeInformation"
+        },
+        "change_kind": "removed",
+        "global_id": "1arLbPbgtbnoMRYJbpv5AV",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0En3VC8pjsfCI_5QUyYIqE",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:1e86effe0402530aed57b95d163075643fcec1cc36684034d6f6b9ad77375c0a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "1s5lZBN15B9hYlTDIpBG8Q",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "1010x2110mm"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:a0080f4c655fbce4ea762e48b6aaedb98339b353679a34301595df218f15e66e",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_DistributionFlowElementCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "1yc3WyE7MJFlOX9QAI1_vW",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": false
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "1010x2110mm"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:4c6a8fccc07b1371f753627f601b99946e0c12279778280b641d860237ae658c",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_DoorCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "1z11aoiOL7fkybvtQF1599",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Doors_IntSgl:1010x2110mm",
+            "OverallHeight": 2110.0,
+            "OverallWidth": 1010.0,
+            "Tag": "378688"
+          },
+          "containers": [
+            "3Zu5Bv0LOHrPC10026FoQQ"
+          ],
+          "content_sha256": "sha256:c3c057af6a1d19c86decd2097c41cd654472cf0c1260212b0ebb839c7cf5f1ba",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:a3e13eb542cc175e2bd7f58d025d5c0ce2053722641e958da20f281d2209de91"
+          },
+          "ifc_class": "IfcDoor",
+          "name": "Doors_IntSgl:1010x2110mm:378688",
+          "placement": [
+            [
+              0.0,
+              -1.0,
+              0.0,
+              9120.0
+            ],
+            [
+              1.0,
+              0.0,
+              0.0,
+              11440.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "20qmL4_cXAqvLHe7qvA2ow"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "20qmL4_cXAqvLHe6WvA2on",
+        "ifc_class": "IfcDoor",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "20qmL4_cXAqvLHe7qvA2ow",
+              "ifc_class": "IfcDoorStyle"
+            }
+          },
+          "content_sha256": "sha256:ff546c68b91f169ef683add25cd5589f05280658316b139bcdd09bdbe5d5e3c8",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "2BiWnNPl1T0cX7AE4p_13s",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3U$PW99efgQXnIuon26RcE",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:6105e3f48e8b5cb988675dc0f888f47763b2baadb85b4cea76765dfc4b88198b",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "2JFkPL25LCWPX_0$xtq_Xy",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1arLbPbgtbnoMRYJbpv5AV",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:cd868297f780572c715f2c983827eb82bce43a2794612ce850cc780ac8c06a05",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "2JnD1Ep8DCBxiSKfgQeT5r",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1z11aoiOL7fkybvtQF1599",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:ead0036584a95fe097d756fc3352e4951e7622cab7370e9ef2e0e83e69c1f4c7",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "2OEBOZgFL3Eh8rLI8zeZn5",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Mark",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "1246"
+                    },
+                    "ifc_class": "IfcText"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:250767bf576ad855e6f9f4b4b8547ddfadd9c3e5aaa326a47e6f36b333db5a65",
+          "ifc_class": "IfcPropertySet",
+          "name": "Identity Data"
+        },
+        "change_kind": "removed",
+        "global_id": "2hiOLnJjpL8_LetZuQK20O",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Area",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 2.9017280000051584
+                    },
+                    "ifc_class": "IfcAreaMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Volume",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.09926728000020818
+                    },
+                    "ifc_class": "IfcVolumeMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:49a6b3755f824eab34d2f10fde5c0896a5ccb99aaf42c20985b4e5d9c463d1ac",
+          "ifc_class": "IfcPropertySet",
+          "name": "Dimensions"
+        },
+        "change_kind": "removed",
+        "global_id": "3IsAiCHkwG_MiLPYerfpFD",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Category",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "OST_Doors"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Family and Type",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Doors_IntSgl : 1010x2110mm"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Family",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Doors_IntSgl"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Head Height",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 2110.0
+                    },
+                    "ifc_class": "IfcLengthMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Host Id",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Wall-Partn_30Gwb-70MStd-30Gwb"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Type Id",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "177726"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Type",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "1010x2110mm"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:9f858c49c3648547c6f7b7a1d84116dd612842937ba9b831b7fce6890c1a5dc6",
+          "ifc_class": "IfcPropertySet",
+          "name": "Other"
+        },
+        "change_kind": "removed",
+        "global_id": "3U$PW99efgQXnIuon26RcE",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "20qmL4_cXAqvLHe6WvA2on",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1yc3WyE7MJFlOX9QAI1_vW",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:218a00c7200ab297d362c9ca0279196158531d4f798900c0dc9b03fde1ba7c15",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": ""
+        },
+        "change_kind": "removed",
+        "global_id": "3eKsrNlEj3afdw1EmiecRB",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": "",
+                  "Name": "Phase Created",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "New Construction"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:b17c172f570c603293f6d242c8d128cfedc25a593b7de989acbd065901e4aa3f",
+          "ifc_class": "IfcPropertySet",
+          "name": "Phasing"
+        },
+        "change_kind": "removed",
+        "global_id": "3eZfw$AbTD_3_NC4YqaEPn",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      }
+    ]
+  },
+  "source_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            9.055000000000001,
+            9.185
+          ],
+          [
+            10.465,
+            14.805
+          ],
+          [
+            0.0,
+            2.95
+          ]
+        ],
+        "class": "IfcWall",
+        "geometry_status": "available",
+        "guid": "20qmL4_cXAqvLHe6WvA2pE",
+        "name": "Basic Wall:Wall-Partn_30Gwb-70MStd-30Gwb:378687",
+        "project_unit_to_mm": 1.0
+      },
+      "kind": "door",
+      "opening": {
+        "bounds_world_m": [
+          [
+            9.055,
+            9.185
+          ],
+          [
+            10.935,
+            11.945
+          ],
+          [
+            0.0,
+            2.11
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "0gQKYpaRzMEgdK6Ar4shKl",
+        "name": "Doors_IntSgl:1010x2110mm:378688",
+        "project_unit_to_mm": 1.0
+      },
+      "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
+      "preserve_opening": true,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 6277,
+      "target": {
+        "OverallHeight_mm": 2110.0,
+        "OverallWidth_mm": 1010.0,
+        "bounds_world_m": [
+          [
+            8.991999999999026,
+            9.205000000000002
+          ],
+          [
+            10.900000000000002,
+            11.98
+          ],
+          [
+            0.0,
+            2.145
+          ]
+        ],
+        "class": "IfcDoor",
+        "geometry_status": "available",
+        "guid": "20qmL4_cXAqvLHe6WvA2on",
+        "name": "Doors_IntSgl:1010x2110mm:378688",
+        "project_unit_to_mm": 1.0
+      },
+      "target_guid": "20qmL4_cXAqvLHe6WvA2on",
+      "wall_guid": "20qmL4_cXAqvLHe6WvA2pE"
+    }
+  ],
+  "wall_closure": {}
+}

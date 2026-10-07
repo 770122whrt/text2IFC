@@ -1,0 +1,80 @@
+{
+  "authorization": {
+    "at": "2026-10-07T17:52:43.570347+00:00",
+    "user_quote": "审题托付给你先 我后续再审 你先做实验吧 如果没问题我就不审题了"
+  },
+  "facts": {
+    "target-1.opening_bottom_world_m": {
+      "alternative_feasibility": {
+        "attempts": [
+          {
+            "bottom_world_m": 1.05,
+            "opening_volume_m3": 0.47765900000000056,
+            "removed_host_volume_m3": 0.47765899999999917,
+            "same_aperture_fits_public_host": true,
+            "same_wall_aperture_volume": true,
+            "shift_m": 0.2,
+            "source_position_removed_host_volume_m3": 0.4776589999999987,
+            "vertical_bounds_fit": true
+          }
+        ],
+        "basis": "Same positive wall-intersection cut volume at original and alternate bottom, with opening vertical bounds inside the public host. Cutting solids may legitimately extend through wall faces. Appearance-only reference does not impose vertical alignment.",
+        "limitation": "Geometric non-uniqueness under the public wording; not a statistical test of what any model will infer.",
+        "passed": true,
+        "selected_bottom_world_m": 0.85
+      },
+      "answer": "第 1 处窗洞下沿距该层标高 850.0 毫米，世界标高 0.850 米。",
+      "basis": "Pre-authored user intent before task preparation, not facts retrieved from G during execution.",
+      "field": "opening_bottom_world_m",
+      "id": "target-1.opening_bottom_world_m",
+      "keywords": [
+        "窗台",
+        "下沿",
+        "标高",
+        "高度",
+        "height",
+        "sill"
+      ],
+      "omitted_public_sentence": "洞口下沿距该层标高 850 毫米（世界标高 0.850 米）。",
+      "sill_mm": 850.0,
+      "target_id": "target-1",
+      "value": 0.85,
+      "why_needed": "洞口已删除，公开只指定平面位置、尺寸和外观。外观参照没有约束竖向对齐；另一个洞底高度在同一墙上同样容纳完整开口。"
+    }
+  },
+  "human_viewed": false,
+  "out_of_card_policy": "Ask the human; never retrieve an answer from G.",
+  "proposal": {
+    "alternative_feasibility": {
+      "attempts": [
+        {
+          "bottom_world_m": 1.05,
+          "opening_volume_m3": 0.47765900000000056,
+          "removed_host_volume_m3": 0.47765899999999917,
+          "same_aperture_fits_public_host": true,
+          "same_wall_aperture_volume": true,
+          "shift_m": 0.2,
+          "source_position_removed_host_volume_m3": 0.4776589999999987,
+          "vertical_bounds_fit": true
+        }
+      ],
+      "basis": "Same positive wall-intersection cut volume at original and alternate bottom, with opening vertical bounds inside the public host. Cutting solids may legitimately extend through wall faces. Appearance-only reference does not impose vertical alignment.",
+      "limitation": "Geometric non-uniqueness under the public wording; not a statistical test of what any model will infer.",
+      "passed": true,
+      "selected_bottom_world_m": 0.85
+    },
+    "answer_card": "第 1 处窗洞下沿距该层标高 850.0 毫米，世界标高 0.850 米。",
+    "automatic_clarification_admission": false,
+    "enabled": true,
+    "necessary_fact_candidate": "target-1.opening_bottom_world_m",
+    "omittable_text": "洞口下沿距该层标高 850 毫米（世界标高 0.850 米）。",
+    "public_request_with_full_facts": "请完成以下门窗补全。下面的位置均按模型世界坐标描述，X、Y 和楼层标高的单位是米，尺寸的单位是毫米。\n\n1．在标高 0.000 米的楼层，平面中心位于（X=5.040、Y=15.600 米）的墙面位置，补一扇窗，名义宽 1810 毫米、高 910 毫米；墙洞宽 1810 毫米、高 910 毫米，洞口下沿距该层标高 850 毫米（世界标高 0.850 米）。外观参照标高 0.000 米楼层、平面中心（X=7.120、Y=6.000 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n2．在标高 0.000 米的楼层，平面中心位于（X=9.840、Y=14.800 米）的墙面位置，补一扇窗，名义宽 1810 毫米、高 910 毫米；墙洞宽 1810 毫米、高 910 毫米，洞口下沿距该层标高 850 毫米（世界标高 0.850 米）。外观参照标高 0.000 米楼层、平面中心（X=7.120、Y=6.000 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n3．在标高 0.000 米的楼层，为平面中心位于（X=11.280、Y=6.640 米）的现有空门洞补一扇门，名义宽 1010 毫米、高 2110 毫米；墙洞宽 1010 毫米、高 2110 毫米，洞口下沿距该层标高 0 毫米（世界标高 0.000 米）。外观参照标高 0.000 米楼层、平面中心（X=6.720、Y=13.360 米）处保留的门：保持相同的框、门扇形状及开启形式；在目标墙面按该参照门相对于所在墙面的方式设置开向。\n\n请保留其余墙体、门窗和其他构件及其位置；只在上述位置补全，使门窗、墙洞和所在墙体的关系完整。"
+  },
+  "reply_policy": "Only answer the requested fact using this pre-authored card; never look up G at runtime.",
+  "required_user_facts": [
+    "target-1.opening_bottom_world_m"
+  ],
+  "reviewer": "Codex",
+  "schema_version": "repair-comparison-clarification/0.1",
+  "status": "accepted_by_delegation"
+}

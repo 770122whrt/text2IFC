@@ -1,0 +1,499 @@
+{
+  "accepted": true,
+  "authorization": {
+    "at": "2026-10-07T17:48:42.740592+00:00",
+    "user_quote": "审题托付给你先 我后续再审 你先做实验吧 如果没问题我就不审题了"
+  },
+  "case_id": "formal-006",
+  "checks": {
+    "author_contract_bound": true,
+    "clarification_contract_bound": true,
+    "damage_and_preservation_recomputed": true,
+    "denominators_match": true,
+    "exact_removed_product_set": true,
+    "input_hash_bindings": true,
+    "native_recomputed": true,
+    "public_facts_match_measurements": true,
+    "public_files_only": true,
+    "public_request_bound": true,
+    "relation_edges_recomputed": true,
+    "removed_targets_not_visible": true,
+    "retained_geometry_recomputed": true,
+    "retained_reference_geometry_unchanged": true,
+    "wall_closure_recomputed": true
+  },
+  "clarification": {
+    "passed": true,
+    "required": [],
+    "witness": null
+  },
+  "effective_opening_evidence": {
+    "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+    "openings": [
+      {
+        "effective_volume_m3": 0.38365599999999844,
+        "ifcopenshell_version": "0.8.5",
+        "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+        "opening_guid": "314RKHJGrMRLHl_rJsqxxe",
+        "positive_volume_epsilon_m3": 1e-09,
+        "raw_cutter_volume_m3": 0.38365600000000044,
+        "wall_guid": "1liwxY5MLB$fPkp2_DFxnx",
+        "wall_volume_before_m3": 3.930582999999986,
+        "wall_volume_without_opening_m3": 4.314238999999985
+      }
+    ],
+    "walls": {
+      "1liwxY5MLB$fPkp2_DFxnx": {
+        "absolute_difference_m3": 0.0,
+        "effective_sum_m3": 0.38365599999999844,
+        "group_delta_m3": 0.38365599999999844,
+        "non_overlapping": true,
+        "opening_guids": [
+          "314RKHJGrMRLHl_rJsqxxe"
+        ],
+        "tolerance_m3": 1e-07,
+        "wall_guid": "1liwxY5MLB$fPkp2_DFxnx",
+        "wall_volume_before_m3": 3.930582999999986,
+        "wall_volume_without_openings_m3": 4.314238999999985
+      }
+    }
+  },
+  "errors": [],
+  "human_viewed": false,
+  "input_bindings": {
+    "D": "3859c6e7f3c004e043bd5625fb92871c9b8a25d041b0a03745185f229a8a85b3",
+    "G": "1e03199ccaed384dcdbd4a5382b23c7a4cec235692cb8b478cba7108ef89fb2e",
+    "answer_card": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "contract": "ab6365bda7d8b0488c8979e05f6ce77a6d3180718fe7a1451684b467b73a6eb3",
+    "public_ifc": "3859c6e7f3c004e043bd5625fb92871c9b8a25d041b0a03745185f229a8a85b3",
+    "request": "66670c794b90e5a3a28b0601eb687388f1ada6e6334d74908235114a131db392"
+  },
+  "native_validation": {
+    "D": {
+      "diagnostic_count": 0,
+      "diagnostics": [],
+      "express_rules": true,
+      "passed": true,
+      "validator": "ifcopenshell.validate",
+      "version": "0.8.5"
+    },
+    "G": {
+      "diagnostic_count": 0,
+      "diagnostics": [],
+      "express_rules": true,
+      "passed": true,
+      "validator": "ifcopenshell.validate",
+      "version": "0.8.5"
+    }
+  },
+  "passed": true,
+  "reference_comparisons": [
+    {
+      "bounds_d_m": [
+        [
+          11.695,
+          13.105
+        ],
+        [
+          5.64749999999904,
+          6.019999999999998
+        ],
+        [
+          0.9500000000000001,
+          1.8599999999999999
+        ]
+      ],
+      "bounds_g_m": [
+        [
+          11.695,
+          13.105
+        ],
+        [
+          5.64749999999904,
+          6.019999999999998
+        ],
+        [
+          0.9500000000000001,
+          1.8599999999999999
+        ]
+      ],
+      "guid": "1liwxY5MLB$fPkp2_DFxn3",
+      "tag": "390115",
+      "unchanged": true
+    }
+  ],
+  "relationship_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "1liwxY5MLB$fPkp2_DFxnz",
+          "parent_guid": "314RKHJGrMRLHl_rJsqxxe",
+          "relation_guid": "1CgNsQDeXYrjwS11K5Va6a"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "314RKHJGrMRLHl_rJsqxxe",
+          "parent_guid": "1liwxY5MLB$fPkp2_DFxnx",
+          "relation_guid": "1liwxY5MLB$fPkp3kDFxnz"
+        }
+      ],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "1liwxY5MLB$fPkp2_DFxnz",
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "schema_version": "repair-comparison-technical-review/0.1",
+  "scope": "Delegated technical task review; no usBIM visual confirmation or model capability result.",
+  "targets": [
+    {
+      "errors": [],
+      "id": "target-1",
+      "measured": {
+        "bounds_world_m": [
+          [
+            6.654999999999999,
+            8.065
+          ],
+          [
+            15.580000000000002,
+            15.95250000000096
+          ],
+          [
+            0.9500000000000001,
+            1.8599999999999999
+          ]
+        ],
+        "height_mm": 910.0000000000009,
+        "host_bounds_world_m": [
+          [
+            6.075,
+            11.515
+          ],
+          [
+            15.605,
+            15.915
+          ],
+          [
+            0.0,
+            2.95
+          ]
+        ],
+        "host_guid": "1liwxY5MLB$fPkp2_DFxnx",
+        "host_placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            6.075
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            15.76
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.3099999999999987,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          7.359999999999999,
+          15.76625000000048,
+          1.405
+        ],
+        "mesh_local_extents_mm": [
+          1410.0000000000002,
+          372.5000000009579,
+          909.9999999999997
+        ],
+        "mesh_sha256": "f83462f1b9e951d9c5ec2bc6b1365917de3a6435d06f94992f43967df4b24b57",
+        "mesh_triangles": 208,
+        "opening_bottom_world_m": 0.9500000000000001,
+        "opening_bounds_world_m": [
+          [
+            6.68,
+            8.040000000000001
+          ],
+          [
+            15.605,
+            15.915000000000001
+          ],
+          [
+            0.9500000000000001,
+            1.860000000000001
+          ]
+        ],
+        "opening_center_world_m": [
+          7.36,
+          15.760000000000002,
+          1.4050000000000005
+        ],
+        "opening_center_xy_m": [
+          7.36,
+          15.760000000000002
+        ],
+        "opening_guid": "314RKHJGrMRLHl_rJsqxxe",
+        "opening_height_mm": 910.000000000001,
+        "opening_width_mm": 1360.0000000000011,
+        "operation_type": "SINGLE_PANEL",
+        "placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            7.36
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            15.75154343217484
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.25
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 950.0000000000001,
+        "source_step_id": 2855,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "1liwxY5MLB$fPkp2_DFxnz",
+        "type_guid": "1liwxY5MLB$fPkp3gDFxnQ",
+        "unit_to_mm": 1.0,
+        "width_mm": 1360.0000000000005
+      },
+      "mesh_local_extents_mm": [
+        1410.0000000000002,
+        372.5000000009579,
+        909.9999999999997
+      ],
+      "nominal_dimensions_mm": [
+        1360.0000000000005,
+        910.0000000000009
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          -8.881784197001252e-16,
+          0.006250000000479261,
+          -4.440892098500626e-16
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          -1.7763568394002505e-15,
+          0.006250000000481037,
+          -4.440892098500626e-16
+        ],
+        "reference_offset_world_m": [
+          1.7763568394002505e-15,
+          -0.006250000000481037,
+          -4.440892098500626e-16
+        ],
+        "target_validation_delta_m": 1.9860273225978185e-15
+      },
+      "opening_dimensions_mm": [
+        1360.0000000000011,
+        910.000000000001
+      ],
+      "opening_sill_mm": 950.0000000000001,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            11.695,
+            13.105
+          ],
+          [
+            5.64749999999904,
+            6.019999999999998
+          ],
+          [
+            0.9500000000000001,
+            1.8599999999999999
+          ]
+        ],
+        "height_mm": 910.0000000000009,
+        "host_bounds_world_m": [
+          [
+            9.924999999999997,
+            14.485
+          ],
+          [
+            5.685,
+            5.995
+          ],
+          [
+            0.0,
+            2.950000000000001
+          ]
+        ],
+        "host_guid": "1liwxY5MLB$fPkp2_DFxn2",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            14.485
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5.84
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.3100000000000005,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          12.4,
+          5.833749999999519,
+          1.405
+        ],
+        "mesh_local_extents_mm": [
+          1410.0000000000002,
+          372.5000000009579,
+          909.9999999999997
+        ],
+        "mesh_sha256": "f83462f1b9e951d9c5ec2bc6b1365917de3a6435d06f94992f43967df4b24b57",
+        "mesh_triangles": 208,
+        "opening_bottom_world_m": 0.9500000000000001,
+        "opening_bounds_world_m": [
+          [
+            11.719999999999999,
+            13.079999999999998
+          ],
+          [
+            5.6850000000000005,
+            5.995
+          ],
+          [
+            0.9500000000000001,
+            1.860000000000001
+          ]
+        ],
+        "opening_center_world_m": [
+          12.399999999999999,
+          5.84,
+          1.4050000000000005
+        ],
+        "opening_center_xy_m": [
+          12.399999999999999,
+          5.84
+        ],
+        "opening_guid": "0gn3P7Lrdk3kE7cwN2qqrA",
+        "opening_height_mm": 910.000000000001,
+        "opening_width_mm": 1359.9999999999995,
+        "operation_type": "SINGLE_PANEL",
+        "placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            12.4
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5.84845656782516
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.25
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 950.0000000000001,
+        "source_step_id": 3897,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "1liwxY5MLB$fPkp2_DFxn3",
+        "type_guid": "2P3s7$enLFje2$TRxtxldZ",
+        "unit_to_mm": 1.0,
+        "width_mm": 1360.0000000000027
+      },
+      "reference_guid": "1liwxY5MLB$fPkp2_DFxn3",
+      "reference_nominal_dimensions_mm": [
+        1360.0000000000027,
+        910.0000000000009
+      ],
+      "requested_dimensions_mm": [
+        1360.0000000000005,
+        910.0000000000009
+      ],
+      "step_id": 2855
+    }
+  ],
+  "wall_closure": {
+    "1liwxY5MLB$fPkp2_DFxnx": {
+      "after": 4.314238999999985,
+      "before": 3.930582999999986,
+      "cutting_solid_volume_sum": 0.38365600000000044,
+      "effective_delta_m3": 0.38365599999999844,
+      "expected_after": 4.314238999999985
+    }
+  }
+}

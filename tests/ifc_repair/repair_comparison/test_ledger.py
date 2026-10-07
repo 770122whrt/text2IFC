@@ -17,6 +17,13 @@ def test_ledger_entrypoint_exists():
     assert api().Ledger
 
 
+def test_formal_mode_keeps_distinct_evidence_label(setup):
+    ledger, _, profile = setup
+    ledger.create('formal-001-A', case_id='formal-001', arm='A', budget=profile, mode='live_formal')
+    assert ledger.snapshot('formal-001-A')['mode'] == 'live_formal'
+    assert ledger.events('formal-001-A')[0]['payload']['evidence_class'] == 'live_formal'
+
+
 @pytest.fixture
 def setup(tmp_path):
     clock = [100.0]

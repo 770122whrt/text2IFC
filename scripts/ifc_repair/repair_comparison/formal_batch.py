@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+from copy import deepcopy
 from collections import Counter
 import json
 from pathlib import Path
@@ -23,8 +24,9 @@ from text2ifc_ifc_repair.mutation import (
 )
 from .contracts import PUBLIC_FILES, damage_profile, read_json, safe_path, sha256, write_json
 from .inspection import geometry_snapshot, native_validation, relation_evidence
-from .review_materials import render_validation
+from .review_materials import render_formal_review, render_validation
 from .viewer import write_viewer
+from .damage_geometry import effective_opening_volumes
 
 
 def _recipe(row, model):
@@ -54,9 +56,12 @@ def _recipe(row, model):
         if not wall.is_a('IfcWall'):
             raise ValueError('UNSUPPORTED_TARGET_HOST')
         kind = 'door' if entity.is_a('IfcDoor') else 'window'
+        mode = proposal.get('target_damage', {}).get(str(step), door_damage)
+        if mode not in {'remove_door_keep_opening', 'remove_door_and_opening'}:
+            raise ValueError('UNKNOWN_DOOR_DAMAGE')
         targets.append({'kind': kind, 'target_guid': entity.GlobalId,
             'opening_guid': opening.GlobalId, 'wall_guid': wall.GlobalId,
-            'preserve_opening': kind == 'door' and door_damage == 'remove_door_keep_opening', 'source_step_id': step})
+            'preserve_opening': kind == 'door' and mode == 'remove_door_keep_opening', 'source_step_id': step})
     return targets
 
 
@@ -79,7 +84,12 @@ def check_candidate(output):
     public_bytes = (output / 'public/model.ifc').read_text(encoding='utf8') + text
     if any(guid in public_bytes for guid in checks['removed_product_guids']):
         errors.append('DELETED_ID_IN_PUBLIC_INPUT')
-    return {'valid': not errors, 'human_accepted': task['review']['status'] == 'accepted',
+    review = task['review']
+    delegated = (review.get('status') == 'accepted_by_delegation'
+        and review.get('kind') == 'delegated_technical' and review.get('human_viewed') is False
+        and review.get('technical_review_passed') is True and bool(review.get('authorization', {}).get('user_quote')))
+    return {'valid': not errors, 'human_accepted': review['status'] == 'accepted',
+        'review_accepted': review['status'] == 'accepted' or delegated,
         'case_id': task['case_id'], 'errors': errors,
         'scope': 'Input preparation/reopen/schema/EXPRESS and intended damage; no model capability claim'}
 
@@ -108,12 +118,11 @@ def prepare_candidate(row, *, repository_root, output):
     shutil.copyfile(source, reference)
     model = ifcopenshell.open(str(reference))
     owners = _snapshot_owner_history(model)
-    closure = {}
-    for target in damage:
-        if not target['preserve_opening']:
-            wall = model.by_guid(target['wall_guid'])
-            item = closure.setdefault(wall.GlobalId, {'volume_before_m3': _element_volume_m3(wall), 'expected_delta_m3': 0.0})
-            item['expected_delta_m3'] += _element_volume_m3(model.by_guid(target['opening_guid']))
+    removed_openings = [target['opening_guid'] for target in damage if not target['preserve_opening']]
+    effective = effective_opening_volumes(before, removed_openings) if removed_openings else {'openings': [], 'walls': {}}
+    closure = {guid: {'volume_before_m3': item['wall_volume_before_m3'],
+                      'expected_delta_m3': item['group_delta_m3'], 'basis': effective['method']}
+               for guid, item in effective['walls'].items()}
     # General deletion is a preparation operation, independent of B's wall
     # axis restrictions. Retain shared representations and other occurrences.
     for target in damage:
@@ -164,7 +173,8 @@ def prepare_candidate(row, *, repository_root, output):
         'targets_and_references_have_geometry': all(t['target']['geometry_status'] == 'available' for t in targets) and all(geometry_snapshot(after.by_guid(g))['geometry_status'] == 'available' for g in refs),
     }, 'source_validation': source_validation, 'damaged_validation': damaged_validation,
         'removed_product_guids': sorted(removed), 'targets': targets,
-        'required_relation_evidence': relations, 'wall_closure': closure, 'root_diff': diff, 'host': targets[0]['host']}
+        'required_relation_evidence': relations, 'wall_closure': closure, 'effective_opening_evidence': effective,
+        'root_diff': diff, 'host': targets[0]['host']}
     write_json(private / 'checks.json', checks)
     write_json(mutation_dir / 'mutation_manifest.private.json', {'targets': damage, 'wall_closure': closure,
         'method': 'IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets'})
@@ -182,8 +192,14 @@ def prepare_candidate(row, *, repository_root, output):
         'allowed_alternatives': ['New identities and different STEP serialization are allowed.', 'Door swing is not a mandatory clarification; match the retained frame/leaf/material reference.'],
         'preservation': ['Only the requested target areas may change; retain all other products and their geometry/relationships.'],
         'metrics': {'status': 'deferred_by_user', 'formal_scoring_frozen': False}}
+    for key in ('author_expectations', 'public_numeric_spec', 'clarification_required', 'clarification'):
+        if key in row['task_proposal']:
+            task[key] = deepcopy(row['task_proposal'][key])
     write_json(private / 'task.json', task)
-    write_json(private / 'answer-card.json', {'status': 'pending_human_review', 'required_user_facts': [], 'out_of_card_policy': 'Ask the human; never retrieve an answer from G.'})
+    clarification = deepcopy(task.get('clarification', {}))
+    write_json(private / 'answer-card.json', {**clarification, 'status': 'pending_human_review', 'required_user_facts': clarification.get('required_user_facts', []),
+        'proposal': deepcopy(row['task_proposal'].get('clarification_proposal')),
+        'out_of_card_policy': 'Ask the human; never retrieve an answer from G.'})
     public = output / 'public'
     public.mkdir(exist_ok=True)
     shutil.copyfile(damaged, public / 'model.ifc')
@@ -207,24 +223,34 @@ def prepare_candidate(row, *, repository_root, output):
         if not matched:
             raise ValueError('MODEL_RIGHTS_RECORD_MISSING')
         (attribution / 'rights.jsonl').write_text('\n'.join(matched) + '\n', encoding='utf8')
-    if row['license'].startswith('GPL'):
-        license_file = root / 'dataset/external/_checks/ifc-assets-20260913/sources/opensourcebim-testdata-license.txt'
+    license_path = row.get('license_path')
+    if license_path or row['license'].startswith('GPL'):
+        license_file = root / (license_path or 'dataset/external/_checks/ifc-assets-20260913/sources/opensourcebim-testdata-license.txt')
         shutil.copyfile(license_file, attribution / 'license.txt')
-    lines = [f'# {task["case_id"]}：{row["task_proposal"].get("description", "局部修复")}', '',
-        '**待人工审阅（pending_human_review）**。五题测试先检查输入与损伤；未调用模型，不是模型成绩。', '',
-        '[局部剖切图](REVIEW.png) · [打开 G/D 同步视角查看器](VIEW.html) · [格式校验](IFC-VALIDATION.md) · [许可与修改说明](private/SOURCE-LICENSE.md)', '',
-        '![损坏前后的同尺度局部剖切；D 红十字只作定位标注](REVIEW.png)', '',
-        '## 公开请求', '', task['request'], '', '## 损伤及私有核对', '',
-        '|删除构件 STEP ID|类别|保留洞口|世界包围盒中心（m）|', '|---|---|---|---|']
-    for t in targets:
-        center = ', '.join(f'{sum(b)/2:.4f}' for b in t['target']['bounds_world_m'])
-        lines.append(f'|{t["source_step_id"]}|{t["target"]["class"]}|{"是" if t["preserve_opening"] else "否"}|{center}|')
-    lines += ['', f'主目标 {len(targets)} 个；{task["damage_profile"]["level"]} / {task["damage_profile"]["composition"]}。独立 schema＋EXPRESS：G 与 D 均零诊断。', '',
-        '## 审阅要点', '', '请核对定位是否唯一、尺寸／参照是否清楚、损伤是否合理，以及其余对象是否原位保留。门开向不是必答项。本批都是信息充分题；必要澄清题随后另选。', '',
-        '修复需生成实际构件及相应洞口／宿主／楼层成员关系。允许新身份和等价序列化，不能只补数量、移动参照、重复补建或误改其他对象。具体容差与指标随后确认。', '',
-        'private/ 和查看器只供审题／评估；被测环境只获得 public/ 的两个文件。']
-    (output / 'REVIEW.md').write_text('\n'.join(lines) + '\n', encoding='utf8')
+    write_candidate_review(output)
     return check_candidate(output)
+
+
+def write_candidate_review(output):
+    """Refresh only the readable view; IFC and task/review state are untouched."""
+    output = safe_path(Path(output))
+    private = output / 'private'
+    task, checks = read_json(private / 'task.json'), read_json(private / 'checks.json')
+    model = ifcopenshell.open(str(private / 'reference.ifc'))
+    refs = [model.by_id(i) for i in task['source']['task_proposal']['retained_reference_step_ids']]
+    references = [{'name': e.Name, 'step_id': e.id(), 'class': e.is_a()} for e in refs]
+    numeric_path, subset_path = private / 'geometry-review.json', private / 'review-subsets.json'
+    numeric = read_json(numeric_path) if numeric_path.exists() else None
+    subset = read_json(subset_path) if subset_path.exists() else None
+    if numeric and (numeric['request'] != task['request'] or numeric['source_sha256'] != task['source_sha256']
+                    or numeric['damaged_sha256'] != task['damaged_sha256']):
+        numeric = None
+    if subset and subset['input_bindings'] != {'G': task['source_sha256'], 'D': task['damaged_sha256']}:
+        subset = None
+    text = render_formal_review(task, checks, references, geometry_audit=numeric, subset_report=subset)
+    if (output / 'REVIEW-ELEVATION.png').exists():
+        text += '\n![目标墙立面剖切放大](REVIEW-ELEVATION.png)\n'
+    (output / 'REVIEW.md').write_text(text, encoding='utf8')
 
 
 def main():
@@ -237,7 +263,7 @@ def main():
     for row in rows:
         results.append(prepare_candidate(row, repository_root=ROOT, output=args.output / row['candidate_slot']))
         print(json.dumps(results[-1], ensure_ascii=False), flush=True)
-    lines = ['# Repair 首批五题', '', '五个不同 IFC；三份 CC BY 4.0、两份 GPL。输入测试已做，人审未自动接受，指标尚未冻结。', '']
+    lines = [f'# Repair {len(rows)}题', '', '不同源 IFC；许可和共享场景族逐题登记。准备检查不代表模型修复结果，实际审查记录见各题。', '']
     lines += [f'- [{row["candidate_slot"]}：{row["task_proposal"]["description"]}]({row["candidate_slot"]}/REVIEW.md)' for row in rows]
     (args.output / 'README.md').write_text('\n'.join(lines) + '\n', encoding='utf8')
     write_json(args.output / 'batch-checks.json', {'cases': results, 'scope': 'preparation_only_not_model_results'})

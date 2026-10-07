@@ -112,7 +112,7 @@ class Ledger:
         identifier(case_id)
         if arm not in {'A', 'B', 'C', 'D'}:
             raise ValueError('INVALID_ARM')
-        if mode not in {'offline_development','real_runtime_fake_model','live_development'}:
+        if mode not in {'offline_development','real_runtime_fake_model','live_development','live_formal'}:
             raise ValueError('INVALID_EVIDENCE_MODE')
         validate_budget(budget)
         with self.transaction() as db:
