@@ -61,6 +61,7 @@ REVISION_SOURCES = {
     HERE+'formal_admission.py': 'admission',
     HERE+'isolated_direct.py': 'AC', HERE+'direct_runner.py': 'AC',
     HERE+'demo_workflow.py': 'D',
+    HERE+'isolated_dsh.py': 'D',
     **{'src/text2ifc_ifc_repair/'+name: 'B' for name in
        ('door_geometry.py','operations/door.py','scene_grounding.py','api.py','resolution_flow.py')},
 }
@@ -68,10 +69,14 @@ REVISION_TESTS = {
     'tests/test_formal_admission.py': {'admission'},
     TESTS+'test_submission_protocol.py': {'AC'},
     TESTS+'test_d_budget_terminal.py': {'D'},
+    TESTS+'test_d_submission_envelope.py': {'D'},
+    TESTS+'test_d_submission_native_seam.py': {'D'},
+    TESTS+'test_d_submission_admission.py': {'admission'},
     'tests/ifc_repair/test_door_installation_anchor.py': {'B'},
     'tests/ifc_repair/test_door_installation_legacy_compatibility.py': {'B'},
 }
 REVISION_NATIVE_TEST = TESTS+'test_formal_revision_seams.py'
+REVISION_D_SUBMISSION_NATIVE_TEST = TESTS+'test_d_submission_native_seam.py'
 REVISION_EXTRA_TESTS = {TESTS+name for name in ('test_direct_runner.py','test_isolated_direct.py',
     'test_formal_public_path.py','test_batch_workflow.py','test_wire_gateway.py')}
 
@@ -418,7 +423,7 @@ def validate_revision_suite(receipt, *, phase):
         # on their registered source owners and all unmapped shared sources.
         # Other changed owners require their own green family below. The final
         # native seam always binds every current source at once.
-        dependencies={path for path in current if REVISION_NATIVE_TEST in targets
+        dependencies={path for path in current if ({REVISION_NATIVE_TEST, REVISION_D_SUBMISSION_NATIVE_TEST} & set(targets))
                       or path not in REVISION_SOURCES or REVISION_SOURCES[path] in families}
         _need(all(before[path]==after[path]==current[path] for path in dependencies), 'REVISION_GREEN_SOURCE_STALE')
         _need(tests=={path:sha256(ROOT/path) for path in tests}, 'REVISION_GREEN_TEST_STALE')
@@ -444,15 +449,25 @@ def _sealed_references(value, seen=None):
         for item in value: _sealed_references(item,seen)
 
 
+def require_d_submission_scenarios(rows):
+    expected = [('bare_json', 'submitted'), ('fenced_with_prose', 'submitted'),
+                ('duplicate_declarations', 'runtime_error')]
+    _need(sorted(rows) == sorted(expected), 'REVISION_D_SUBMISSION_SCENARIOS_REQUIRED')
+
+
 def validate_revision_seams(receipt, *, current_bindings, families):
     if not isinstance(receipt,dict): receipt=read_json(safe_path(Path(receipt)))
-    _need(receipt.get('schema_version')=='repair-comparison-revision-seams/0.1'
+    submission_seam = receipt.get('schema_version') == 'repair-comparison-d-submission-native-seams/0.1'
+    if submission_seam:
+        _need('D' in families and families <= {'D', 'admission'}, 'REVISION_D_SUBMISSION_SCOPE_REQUIRED')
+    _need((submission_seam or receipt.get('schema_version')=='repair-comparison-revision-seams/0.1')
           and receipt.get('real_models_called') is False, 'REVISION_NATIVE_SEAMS_REQUIRED')
     _need(receipt.get('source_bindings')==capture_sources('admission')
           and receipt.get('images')==current_bindings['images'], 'REVISION_NATIVE_BINDING_STALE')
     suite=validate_revision_suite(_ref(receipt['suite_receipt']),phase='green')
-    _need(REVISION_NATIVE_TEST in suite['targets'], 'REVISION_NATIVE_TEST_NOT_RUN')
-    observed={}; resumed=False
+    native_test = REVISION_D_SUBMISSION_NATIVE_TEST if submission_seam else REVISION_NATIVE_TEST
+    _need(native_test in suite['targets'], 'REVISION_NATIVE_TEST_NOT_RUN')
+    observed={}; resumed=False; submission_scenarios=[]
     for row in receipt.get('runs',[]):
         family=row['family']; root=safe_path(Path(row['experiment_root']))
         _need((root/'control.sqlite').is_file(), 'REVISION_NATIVE_LEDGER_REQUIRED')
@@ -462,6 +477,9 @@ def validate_revision_seams(receipt, *, current_bindings, families):
         _need(not any(c['state']=='inflight' for c in ledger.calls(row['run_id'])), 'REVISION_NATIVE_CALL_INFLIGHT')
         expected_family={'A':'AC','C':'AC','B':'B','D':'D'}[state['arm']]
         _need(family==expected_family, 'REVISION_NATIVE_ARM_MISMATCH')
+        if submission_seam:
+            _need(family == 'D', 'REVISION_D_SUBMISSION_SCOPE_REQUIRED')
+            submission_scenarios.append((row.get('scenario', ''), state['status']))
         source=_ref(row['public_source'])
         _need(sha256(source)==state['metadata']['input_sha256'] and
               sha256(Path(state['metadata']['input_dir'])/'model.ifc')==sha256(source), 'REVISION_NATIVE_SOURCE_CHANGED')
@@ -471,6 +489,12 @@ def validate_revision_seams(receipt, *, current_bindings, families):
             path=safe_path(Path(artifact['path']))
             _need(path.is_relative_to(root/'artifacts'/state['run_id']) and sha256(path)==artifact['sha256'],
                   'REVISION_NATIVE_ARTIFACT_CHANGED')
+            if submission_seam:
+                import ifcopenshell
+                from .inspection import native_validation
+                validation = native_validation(ifcopenshell.open(str(path)))
+                _need(validation['passed'] and validation['express_rules'] and validation['diagnostic_count'] == 0,
+                      'REVISION_D_SUBMISSION_NATIVE_VALIDATION_FAILED')
         else: _need(artifact is None, 'REVISION_NATIVE_FAILURE_HAS_ARTIFACT')
         events=ledger.events(row['run_id'])
         observed.setdefault(family,set()).add((state['arm'],state['status']))
@@ -499,7 +523,10 @@ def validate_revision_seams(receipt, *, current_bindings, families):
     if 'B' in families:
         _need(('B','submitted') in observed.get('B',set()) and resumed, 'REVISION_B_PUBLIC_RESUME_REQUIRED')
     if 'D' in families:
-        _need({('D','budget_exhausted'),('D','runtime_error')}<=observed.get('D',set()), 'REVISION_D_DENIAL_FAMILY_REQUIRED')
+        if submission_seam:
+            require_d_submission_scenarios(submission_scenarios)
+        else:
+            _need({('D','budget_exhausted'),('D','runtime_error')}<=observed.get('D',set()), 'REVISION_D_DENIAL_FAMILY_REQUIRED')
     return receipt
 
 

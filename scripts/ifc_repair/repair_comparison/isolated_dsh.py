@@ -15,18 +15,57 @@ IMAGE='text2ifc/repair-dsh:0.2.0rc1'
 
 
 def submitted_path(text):
+    """Read one declaration, optionally in the sole final top-level JSON fence.
+
+    Explanatory prose is not parsed for JSON. Marked examples/quotes and any
+    competing declaration or code fence are ambiguous, so they fail closed.
+    """
     text = text.strip()
-    if text.startswith('```json\n') and text.endswith('```'):
-        text=text[8:-3].strip()
+    if '```' in text or '~~~' in text:
+        if text.count('```')>2:
+            declarations=0
+            for body in re.findall(r'^```json[ \t]*\r?\n(.*?)\r?\n```[ \t]*\r?$',text,re.DOTALL|re.MULTILINE):
+                try:
+                    candidate=json.loads(body)
+                except (json.JSONDecodeError,TypeError):
+                    continue
+                declarations+=isinstance(candidate,dict) and 'submitted_ifc' in candidate
+            if declarations>1:
+                raise ValueError('ONE_EXPLICIT_IFC_REQUIRED')
+        match=re.fullmatch(r'(.*?)^```json[ \t]*\r?\n(.*?)\r?\n```',text,re.DOTALL|re.MULTILINE)
+        if not match or text.count('```')!=2 or '~~~' in text:
+            return None
+        prefix,body=match.groups()
+        # No extraction from nested objects, inline references, quotes or
+        # examples. These lexical markers deliberately err toward no output.
+        if (any(marker in prefix for marker in ('{','}','submitted_ifc','<!--'))
+                or re.search(r'^\s*>|<blockquote\b',prefix,re.MULTILINE|re.IGNORECASE)
+                or re.search(r'\b(?:example|sample|illustration|illustrative|quoted?|quotation|template)\b'
+                             r'|\be\.g\.|\bdo not submit\b|\bnot (?:a )?submission\b'
+                             r'|示例|例如|举例|范例|样例|引用|模板|仅供|不要提交|未提交',prefix,re.IGNORECASE)):
+            return None
+        text=body.strip()
+
+    def unique_keys(pairs):
+        value={}
+        for key,item in pairs:
+            if key in value:
+                raise ValueError('ONE_EXPLICIT_IFC_REQUIRED')
+            value[key]=item
+        return value
+
     try:
-        value=json.loads(text)
-    except (ValueError,TypeError):
+        value=json.loads(text,object_pairs_hook=unique_keys)
+    except (json.JSONDecodeError,TypeError):
         return None
     if not isinstance(value,dict) or 'submitted_ifc' not in value:
         return None
     if set(value)!={'submitted_ifc'}:
         raise ValueError('ONE_EXPLICIT_IFC_REQUIRED')
     path=relative_path(value['submitted_ifc'])
+    if (path!=value['submitted_ifc'] or path!=path.strip()
+            or any(ord(character)<32 or ord(character)==127 for character in path)):
+        raise ValueError('INVALID_RELATIVE_PATH')
     if not path.lower().endswith('.ifc'):
         raise ValueError('EXPLICIT_IFC_REQUIRED')
     return path
