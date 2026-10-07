@@ -1,0 +1,54 @@
+{
+  "archive": "scene-b-20261007.zip",
+  "archive_bytes_verified": true,
+  "bytes": 8155542,
+  "created_at": "2026-10-07T14:14:17.786320+00:00",
+  "credential_values_absent": true,
+  "known_tokens": 364661,
+  "live_code_commit": "fe4a09b2b501d22991fec947daf6c0ba4559933a",
+  "members": 638,
+  "optimization_evidence": "offline-coverage-replay/comparison.json; replay and fake HTTP, not additional real model attempts.",
+  "real_calls": 12,
+  "results": [
+    {
+      "repair_success": true,
+      "run_id": "case-001-B",
+      "status": "submitted",
+      "usage": {
+        "accounting": "actual returned usage; unresolved calls retain their reservation",
+        "calls": 8,
+        "coverage": "complete",
+        "known_total_tokens": 309657,
+        "reserved_tokens": 0,
+        "token_overrun": 0,
+        "total_tokens": 309657,
+        "unknown_calls": 0
+      }
+    },
+    {
+      "repair_success": true,
+      "run_id": "case-002-B",
+      "status": "submitted",
+      "usage": {
+        "accounting": "actual returned usage; unresolved calls retain their reservation",
+        "calls": 4,
+        "coverage": "complete",
+        "known_total_tokens": 55004,
+        "reserved_tokens": 0,
+        "token_overrun": 0,
+        "total_tokens": 55004,
+        "unknown_calls": 0
+      }
+    }
+  ],
+  "returned_reasoning": {
+    "characters": 206082,
+    "path": "scene-b-returned-reasoning.jsonl",
+    "responses": 12,
+    "scope": "Only actually returned reasoning_content; no hidden reasoning reconstructed."
+  },
+  "scene_grounding_version": "text2ifc/ifc-scene-grounding/0.2",
+  "scope": "Two genuine B development attempts before coverage optimization; excludes formal five and formal capability comparison.",
+  "sha256": "5cad37d5d12b77f84de55b5bef99ee165b2934a656ff6552b6c02610eee16baf",
+  "unknown_calls": 0
+}
