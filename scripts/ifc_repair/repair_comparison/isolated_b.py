@@ -155,6 +155,7 @@ class IsolatedBConfig:
     model: str = MODEL
     timeout_seconds: float = 1800.0
     evidence_class: str = 'deterministic_fake_http'
+    scene_grounding: bool = False
 
     def __post_init__(self):
         for value in (self.state_volume, self.network, self.container_name):
@@ -220,6 +221,8 @@ class IsolatedB:
         payload = {'action': action, 'run_id': _identifier(run_id), 'base_url': c.base_url,
                    'model': c.model, 'timeout_seconds': c.timeout_seconds,
                    'evidence_class': c.evidence_class, **answer_binding}
+        if c.scene_grounding:
+            payload['scene_grounding_version'] = 'text2ifc/ifc-scene-grounding/0.2'
         try:
             result = subprocess.run(self.docker_argv(), input=json.dumps(payload, ensure_ascii=False),
                                     text=True, encoding='utf-8', capture_output=True, timeout=c.timeout_seconds)
@@ -287,6 +290,9 @@ class IsolatedB:
                     'model': self.config.model, 'evidence_class': self.config.evidence_class}
         if any(binding.get(key) != value for key, value in expected.items()):
             raise ValueError('STATE_RESTORE_BINDING_MISMATCH')
+        if binding.get('scene_grounding_version') != (
+                'text2ifc/ifc-scene-grounding/0.2' if self.config.scene_grounding else None):
+            raise ValueError('STATE_RESTORE_METHOD_MISMATCH')
         c = self.config
         exists = subprocess.run(['docker', 'volume', 'inspect', c.state_volume], capture_output=True)
         if exists.returncode == 0:
@@ -343,6 +349,11 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
     source_hash = _sha(source)
     binding = {'run_id': run_id, 'source_sha256': source_hash, 'request_sha256': _sha(request),
                'model': MODEL, 'evidence_class': evidence_class}
+    scene_version = payload.get('scene_grounding_version')
+    if scene_version not in (None, 'text2ifc/ifc-scene-grounding/0.2'):
+        raise ValueError('SCENE_GROUNDING_VERSION_UNSUPPORTED')
+    if scene_version:
+        binding['scene_grounding_version'] = scene_version
     state_root.mkdir(parents=True, exist_ok=True)
     binding_path = state_root / 'task.json'
     if action == 'start':
@@ -358,7 +369,7 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
         timeout_seconds=float(payload.get('timeout_seconds', 1800)))
     provider = OpenAICompatibleLiveProvider(config=config)
     native_root = state_root / 'native'
-    api = RepairAPI(native_root, provider=provider)
+    api = RepairAPI(native_root, provider=provider, scene_grounding=bool(scene_version))
     try:
         if action == 'start':
             result = api.start(source, request.read_text(encoding='utf-8'), run_id=native_id)

@@ -3634,6 +3634,46 @@
         "array_index_target",
         "unauthorized_component_change"
       ]
+    },
+    {
+      "template_id": "ifc-scene-grounding.v0.1",
+      "role": "ifc_repair_scene_grounding",
+      "mode": "production",
+      "path": "prompts/agent/ifc-scene-grounding-v0.1.md",
+      "sha256": "sha256:1245129e8350547a57d627129ecbd30d0c1fb5059bc45db45604d904ba5afaa7",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "CURRENT_PUBLIC_SCENE",
+        "SCENE_QUERIES",
+        "VALIDATION_FEEDBACK",
+        "RESPONSE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc_step",
+        "private_gold",
+        "mutation_recipe"
+      ]
+    },
+    {
+      "template_id": "ifc-scene-grounding.v0.2",
+      "role": "ifc_repair_scene_grounding",
+      "mode": "production",
+      "path": "prompts/agent/ifc-scene-grounding-v0.2.md",
+      "sha256": "sha256:cc0c2c9000a9ad249b373e85fd995c683472f676e5a84dc60eb4ef7260a5da46",
+      "required_inputs": [
+        "REPAIR_REQUEST",
+        "SUPPORTED_OPERATIONS",
+        "CURRENT_PUBLIC_SCENE",
+        "SCENE_QUERIES",
+        "VALIDATION_FEEDBACK",
+        "RESPONSE_SCHEMA"
+      ],
+      "forbidden_outputs": [
+        "raw_ifc_step",
+        "private_gold",
+        "mutation_recipe"
+      ]
     }
   ]
 }

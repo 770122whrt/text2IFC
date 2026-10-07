@@ -15,6 +15,18 @@ from text2ifc_ifc_repair.run_models import (
 )
 
 
+def test_scene_flag_reaches_environment_factory_without_loading_a_real_provider(tmp_path,monkeypatch):
+    module=_cli()
+    options=[]
+    fake=FakeAPI(_result('succeeded'))
+    monkeypatch.setattr(module.RepairAPI,'from_environment',lambda root,**kw:(options.append(kw) or fake))
+    output=io.StringIO()
+    code=module.main(['start',str(tmp_path/'public.ifc'),'--request','按描述修复。',
+                     '--output-root',str(tmp_path),'--json','--scene-grounding'],output_stream=output)
+    assert code==0 and options==[{'scene_grounding':True}]
+    assert json.loads(output.getvalue())['status']=='succeeded'
+
+
 def _cli():
     try:
         return importlib.import_module("text2ifc_ifc_repair.cli")

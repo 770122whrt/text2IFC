@@ -39,7 +39,10 @@ def main(
     try:
         args = parser.parse_args(argv)
         factory = api_factory or _default_api_factory
-        api = factory(args.output_root)
+        if args.command == "start" and args.scene_grounding and api_factory is None:
+            api = RepairAPI.from_environment(args.output_root, scene_grounding=True)
+        else:
+            api = factory(args.output_root)
         if args.command == "start":
             result = api.start(args.source, args.request, run_id=args.run_id)
         elif args.command == "continue":
@@ -81,6 +84,7 @@ def _parser() -> argparse.ArgumentParser:
     start.add_argument("source", type=Path)
     start.add_argument("--request", required=True)
     start.add_argument("--run-id")
+    start.add_argument("--scene-grounding", action="store_true", help="Ground requests using the current public IFC scene (v0.2)")
     cont = sub.add_parser("continue")
     cont.add_argument("run_id")
     cont.add_argument("--answer", required=True)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from collections import Counter
+import math
 from typing import Any
 
 import ifcopenshell.util.placement
@@ -11,6 +12,7 @@ import ifcopenshell.util.unit
 from .geometry import (
     product_geometry_bounds_in_host_mm,
     product_local_geometry_bounds_mm,
+    straight_wall_axis,
 )
 
 
@@ -18,6 +20,7 @@ def select_window_placement_in_opening(
     window: Any,
     opening: Any,
     window_type: Any,
+    *, host_wall: Any | None = None,
 ) -> dict[str, Any]:
     """Place reused mapped geometry using surviving same-Type orientation.
 
@@ -30,7 +33,9 @@ def select_window_placement_in_opening(
 
     local_bounds = product_local_geometry_bounds_mm(window)
     opening_bounds = product_geometry_bounds_in_host_mm(opening, opening)
-    votes = _surviving_orientation_votes(window, window_type)
+    votes = _surviving_orientation_votes(window, window_type) if host_wall is None else (
+        _wall_relative_orientation_votes(window, opening, window_type, host_wall)
+    )
     if votes:
         counts = Counter(votes)
         highest = max(counts.values())
@@ -40,7 +45,7 @@ def select_window_placement_in_opening(
         if len(winners) != 1:
             raise ValueError("WINDOW_TYPE_PLACEMENT_ORIENTATION_AMBIGUOUS")
         sign = winners[0]
-        source = "surviving_same_type_occurrences"
+        source = "surviving_same_type_occurrences" if host_wall is None else "surviving_same_type_wall_axis"
     else:
         # Preserve the historical deterministic orientation when no surviving
         # same-Type occurrence exposes the authoring convention.
@@ -77,6 +82,65 @@ def select_window_placement_in_opening(
         "orientation_source": source,
         "orientation_votes": votes,
     }
+
+
+def _wall_relative_orientation_votes(new_window: Any, opening: Any,
+                                     window_type: Any, host_wall: Any) -> list[float]:
+    """Normalize surviving windows to wall axes, not imported opening axes.
+
+    Opening placement axes may be reversed independently of the wall. Reusing
+    a window-to-opening sign on a freshly generated opening can turn the frame
+    and glazing around while preserving the bounding box. Same-host evidence
+    takes priority over other walls that share the Type.
+    """
+    target_frame = _wall_axis_frame(host_wall)
+    opening_frame = ifcopenshell.util.placement.get_local_placement(opening.ObjectPlacement)
+    opening_sign = _canonical_half_turn_sign(_inverse_rigid_transform(target_frame) @ opening_frame)
+    if opening_sign is None:
+        raise ValueError("WINDOW_OPENING_AXIS_UNSUPPORTED")
+    votes, same_host, seen = [], [], set()
+    for relation in getattr(window_type, "ObjectTypeOf", ()) or ():
+        for peer in relation.RelatedObjects:
+            if peer == new_window or not peer.is_a("IfcWindow") or peer.id() in seen:
+                continue
+            fillings = [r for r in getattr(peer, "FillsVoids", ()) if r.is_a("IfcRelFillsElement")]
+            if len(fillings) != 1:
+                continue
+            peer_opening = fillings[0].RelatingOpeningElement
+            voids = list(getattr(peer_opening, "VoidsElements", ()) or ())
+            if len(voids) != 1:
+                continue
+            peer_wall = voids[0].RelatingBuildingElement
+            if not peer_wall.is_a("IfcWall"):
+                continue
+            try:
+                frame = _wall_axis_frame(peer_wall)
+            except ValueError:
+                continue
+            peer_matrix = ifcopenshell.util.placement.get_local_placement(peer.ObjectPlacement)
+            sign = _canonical_half_turn_sign(_inverse_rigid_transform(frame) @ peer_matrix)
+            if sign is not None:
+                seen.add(peer.id())
+                votes.append(sign * opening_sign)
+                if peer_wall == host_wall:
+                    same_host.append(sign * opening_sign)
+    if same_host and len(set(same_host)) != 1:
+        raise ValueError("WINDOW_TYPE_PLACEMENT_ORIENTATION_AMBIGUOUS")
+    return same_host or votes
+
+
+def _wall_axis_frame(wall: Any) -> Any:
+    start, end = straight_wall_axis(wall)
+    delta = [end[i]-start[i] for i in range(3)]
+    length = math.hypot(delta[0], delta[1])
+    if length <= 0 or abs(delta[2]) > 1e-6:
+        raise ValueError("WINDOW_HOST_AXIS_UNSUPPORTED")
+    x, y = delta[0]/length, delta[1]/length
+    wall_matrix = ifcopenshell.util.placement.get_local_placement(wall.ObjectPlacement)
+    frame = wall_matrix.copy()
+    frame[:3,0] = wall_matrix[:3,:3] @ [x,y,0]
+    frame[:3,1] = wall_matrix[:3,:3] @ [-y,x,0]
+    return frame
 
 
 def _surviving_orientation_votes(

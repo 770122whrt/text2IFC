@@ -27,6 +27,8 @@ from .semantic_authoring import semantic_manifest_to_dict
 from .repair_intent import RepairIntent
 from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_10
 from .request_stage import generate_repair_intent
+from .scene_context import PublicScene, SceneError
+from .scene_grounding import generate_scene_repair_intent, SCENE_GROUNDING_VERSION
 from .run_models import (
     Clarification,
     ClarificationCandidate,
@@ -74,6 +76,7 @@ class RepairAPI:
         orchestrator_factory: Callable[..., RepairOrchestrator] = RepairOrchestrator,
         orchestrator_options: Mapping[str, Any] | None = None,
         intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_10,
+        scene_grounding: bool = False,
         property_knowledge_resolver: Any | None = None,
         property_knowledge_runtime: Any | None = None,
         property_resolution_stage: Callable[..., Mapping[str, Any]] = (
@@ -88,6 +91,7 @@ class RepairAPI:
         self._changeset_stage = changeset_stage
         self._orchestrator_factory = orchestrator_factory
         self._intent_schema_version = intent_schema_version
+        self._scene_grounding = scene_grounding
         self._property_knowledge_resolver = property_knowledge_resolver
         self._property_knowledge_runtime = property_knowledge_runtime
         self._property_resolution_stage = property_resolution_stage
@@ -113,7 +117,8 @@ class RepairAPI:
 
     @classmethod
     def from_environment(
-        cls, output_root: Path | str, environment: Mapping[str, str] | None = None
+        cls, output_root: Path | str, environment: Mapping[str, str] | None = None,
+        *, scene_grounding: bool = False,
     ) -> "RepairAPI":
         """Build the public facade from the established redacted Provider config."""
 
@@ -132,6 +137,7 @@ class RepairAPI:
             output_root,
             provider=OpenAICompatibleLiveProvider(config=config),
             intent_schema_version=intent_schema_version,
+            scene_grounding=scene_grounding,
             property_knowledge_runtime=create_property_runtime_from_environment(
                 dict(os.environ) if environment is None else dict(environment)
             ),
@@ -183,13 +189,11 @@ class RepairAPI:
             },
         )
         intent_dir = self.store.prepare_stage_directory(state.run_id, "intent")
-        intent_result = self._intent_stage(
-            provider=self.provider,
+        intent_result = self._generate_intent(
+            state=state, run_dir=run_dir, scene_mode=self._scene_grounding,
             request_id=request_id,
             repair_request=repair_text,
-            registry=self.registry,
             output_dir=intent_dir,
-            intent_schema_version=self._intent_schema_version,
         )
         if not intent_result.get("valid") or intent_result.get("intent") is None:
             return self._fail(state.run_id, RunStage.PROVIDER_FAILED, str(intent_result.get("error_code") or "INTENT_STAGE_FAILED"))
@@ -200,7 +204,8 @@ class RepairAPI:
                 intent_path,
                 json.dumps(intent.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
             )
-        context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent)
+        context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent,
+                                          scene_mode=self._scene_grounding)
         if intent_result.get("classification") == "unsupported":
             reason_code = str(
                 intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"
@@ -218,7 +223,7 @@ class RepairAPI:
                     "api_context": self.store.artifact_binding(
                         state.run_id,
                         context_ref,
-                        "text2ifc/ifc-repair-api-context/0.1",
+                        _context_version(self._scene_grounding),
                     ),
                     "route": {
                         "classification": "unsupported",
@@ -240,13 +245,14 @@ class RepairAPI:
                 state.run_id,
                 state.state_version + 1,
                 missing_parameters,
+                scene_question=intent_result.get("scene_question"),
             )
             self.store.transition(
                 state.run_id,
                 to_stage=RunStage.CLARIFICATION_REQUIRED,
                 expected_state_version=state.state_version,
                 clarification=clarification,
-                reason_code="missing_required_parameter",
+                reason_code=clarification.reason_code,
                 stage_payload={
                     "intent": self.store.artifact_binding(
                         state.run_id,
@@ -256,7 +262,7 @@ class RepairAPI:
                     "api_context": self.store.artifact_binding(
                         state.run_id,
                         context_ref,
-                        "text2ifc/ifc-repair-api-context/0.1",
+                        _context_version(self._scene_grounding),
                     ),
                     "missing_parameters": missing_parameters,
                 },
@@ -271,7 +277,7 @@ class RepairAPI:
                     state.run_id, "intent/repair-intent.json", self._intent_schema_version
                 ),
                 "api_context": self.store.artifact_binding(
-                    state.run_id, context_ref, "text2ifc/ifc-repair-api-context/0.1"
+                    state.run_id, context_ref, _context_version(self._scene_grounding)
                 ),
             },
         )
@@ -294,6 +300,7 @@ class RepairAPI:
         run_dir = self.store.runs_root / run_id
         context_path = run_dir / _latest_api_context(pending)
         context = json.loads(context_path.read_text(encoding="utf-8"))
+        scene_mode = _context_scene_mode(context)
         repair_text = str(context["repair_text"])
         intent_document = dict(context["intent"])
         kind = str(answer.get("kind", ""))
@@ -316,6 +323,8 @@ class RepairAPI:
         attempt_id = uuid.uuid4().hex
         resume_intent_ref: str | None = None
         missing_parameters: list[dict[str, Any]] = []
+        scene_question: str | None = None
+        generated: Mapping[str, Any] = {}
         property_resolution_answer: dict[str, str] | None = None
         property_resolution_generation: int | None = None
         if kind == "select_candidate" and clarification.reason_code == (
@@ -356,18 +365,17 @@ class RepairAPI:
             resume_dir = self.store.prepare_stage_directory(
                 run_id, str(Path(resume_intent_ref).parent).replace("\\", "/")
             )
-            generated = self._intent_stage(
-                provider=self.provider,
+            generated = self._generate_intent(
+                state=pending, run_dir=run_dir, scene_mode=scene_mode,
                 request_id=str(intent_document["request_id"]),
                 repair_request=repair_text,
-                registry=self.registry,
                 output_dir=resume_dir,
-                intent_schema_version=self._intent_schema_version,
             )
             if not generated.get("valid") or generated.get("intent") is None:
                 return self._fail(run_id, RunStage.PROVIDER_FAILED, "INTENT_RESUME_FAILED")
             intent_document = generated["intent"].to_dict()
             missing_parameters = list(generated.get("missing_parameters") or ())
+            scene_question = generated.get("scene_question")
             resumed_intent_path = resume_dir / "repair-intent.json"
             if not resumed_intent_path.exists():
                 atomic_write_text(
@@ -383,15 +391,16 @@ class RepairAPI:
         intent = RepairIntent.from_dict(
             intent_document,
             registry=self.registry,
-            require_complete=not missing_parameters,
+            require_complete=not (missing_parameters or scene_question),
         )
         context_ref = self._write_context(
             run_dir, repair_text=repair_text, intent=intent,
             name=f"api-context-v{expected_state_version + 1:03d}-{attempt_id}.json",
+            scene_mode=scene_mode,
         )
         resume_payload: dict[str, Any] = {
             "api_context": self.store.artifact_binding(
-                run_id, context_ref, "text2ifc/ifc-repair-api-context/0.1"
+                run_id, context_ref, _context_version(scene_mode)
             )
         }
         if kind == "add_detail":
@@ -412,18 +421,22 @@ class RepairAPI:
             stage_payload=resume_payload,
             result_artifacts=None,
         )
-        if missing_parameters:
+        if scene_mode and generated.get("classification") == "unsupported":
+            return self._fail(run_id, RunStage.UNSUPPORTED,
+                              str(generated.get("reason_code") or "REPAIR_REQUEST_OUT_OF_SCOPE"))
+        if missing_parameters or scene_question:
             next_clarification = _parameter_clarification(
                 run_id,
                 resumed.state_version + 1,
                 missing_parameters,
+                scene_question=scene_question,
             )
             self.store.transition(
                 run_id,
                 to_stage=RunStage.CLARIFICATION_REQUIRED,
                 expected_state_version=resumed.state_version,
                 clarification=next_clarification,
-                reason_code="missing_required_parameter",
+                reason_code=next_clarification.reason_code,
                 stage_payload={
                     **resume_payload,
                     "missing_parameters": missing_parameters,
@@ -466,6 +479,20 @@ class RepairAPI:
 
     def read_result(self, run_id: str) -> RunResult:
         return self.store.read_result(run_id)
+
+    def _generate_intent(self, *, state: Any, run_dir: Path, scene_mode: bool,
+                         request_id: str, repair_request: str, output_dir: Path) -> Mapping[str, Any]:
+        arguments = dict(provider=self.provider, request_id=request_id, repair_request=repair_request,
+                         registry=self.registry, output_dir=output_dir,
+                         intent_schema_version=self._intent_schema_version)
+        if not scene_mode:
+            return self._intent_stage(**arguments)
+        try:
+            scene = PublicScene.from_ifc(state.source.reference, run_dir / "index/targets.sqlite",
+                                         source_sha256=state.source.sha256)
+        except (SceneError, RuntimeError, ValueError) as error:
+            return {"valid": False, "intent": None, "error_code": _safe_code(error, "SCENE_READ_FAILED")}
+        return generate_scene_repair_intent(**arguments, scene=scene)
 
     def resume(self, run_id: str) -> RunResult:
         """Resume a non-terminal run from its last committed public boundary."""
@@ -918,10 +945,12 @@ class RepairAPI:
     def _write_context(
         run_dir: Path, *, repair_text: str, intent: RepairIntent,
         name: str = "api-context.json",
+        scene_mode: bool = False,
     ) -> str:
         payload = (
             json.dumps(
-                {"schema_version": "text2ifc/ifc-repair-api-context/0.1", "repair_text": repair_text, "intent": intent.to_dict()},
+                {"schema_version": _context_version(scene_mode), "repair_text": repair_text, "intent": intent.to_dict(),
+                 **({"scene_grounding_version": SCENE_GROUNDING_VERSION} if scene_mode else {})},
                 ensure_ascii=False,
                 sort_keys=True,
                 separators=(",", ":"),
@@ -1087,6 +1116,7 @@ def _parameter_clarification(
     run_id: str,
     version: int,
     missing_parameters: list[dict[str, Any]],
+    *, scene_question: str | None = None,
 ) -> Clarification:
     labels = {
         "/opening/width_mm": "窗宽",
@@ -1111,11 +1141,22 @@ def _parameter_clarification(
         operation_id=str(first.get("operation_id") or "operation"),
         stage=RunStage.INTENT_READY,
         resume_stage=RunStage.INDEX_READY,
-        reason_code="missing_required_parameter",
-        question=question,
+        reason_code="additional_target_detail" if scene_question else "missing_required_parameter",
+        question=scene_question or question,
         answer_modes=("add_detail", "cancel"),
         candidates=(),
     )
+
+
+def _context_version(scene_mode: bool) -> str:
+    return "text2ifc/ifc-repair-api-context/0.2" if scene_mode else "text2ifc/ifc-repair-api-context/0.1"
+
+
+def _context_scene_mode(context: Mapping[str, Any]) -> bool:
+    version = context.get("scene_grounding_version")
+    if version not in (None, SCENE_GROUNDING_VERSION):
+        raise RunStoreError("RUN_STATE_CONFLICT", "saved scene method is unsupported; no implicit migration")
+    return version == SCENE_GROUNDING_VERSION
 
 
 def _artifact_references(run_dir: Path, result: OrchestrationResult) -> dict[str, str]:

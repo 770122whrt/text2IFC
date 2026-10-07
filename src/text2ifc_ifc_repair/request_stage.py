@@ -247,82 +247,13 @@ def generate_repair_intent(
                 issues.extend(_normalize_issues(parse_issues))
             else:
                 try:
-                    body_errors = sorted(
-                        Draft202012Validator(schema).iter_errors(parsed),
-                        key=lambda error: tuple(
-                            str(part) for part in error.absolute_path
-                        ),
+                    intent, normalizations = parse_repair_intent_body(
+                        parsed, registry=registry, request_id=request_id,
+                        repair_request=repair_request,
+                        model=str(provider_output.metadata.get("model", "")),
+                        prompt_hash=str(rendered["metadata"]["template_hash"]),
+                        intent_schema_version=intent_schema_version,
                     )
-                    if body_errors:
-                        error = body_errors[0]
-                        raise RepairIntentError(
-                            RepairIntentCode.SCHEMA_INVALID,
-                            error.message,
-                            path=_pointer(error.absolute_path),
-                        )
-                    if intent_schema_version in {
-                        REPAIR_INTENT_SCHEMA_VERSION_0_8,
-                        REPAIR_INTENT_SCHEMA_VERSION_0_9,
-                        REPAIR_INTENT_SCHEMA_VERSION_0_10,
-                    }:
-                        _validate_stable_internal_operation_ids(parsed)
-                    parsed, normalizations = (
-                        _fold_created_occurrence_property_operations(
-                            parsed, registry=registry
-                        )
-                    )
-                    if (
-                        intent_schema_version
-                        in {
-                            REPAIR_INTENT_SCHEMA_VERSION_0_5,
-                            REPAIR_INTENT_SCHEMA_VERSION_0_6,
-                            REPAIR_INTENT_SCHEMA_VERSION_0_7,
-                            REPAIR_INTENT_SCHEMA_VERSION_0_8,
-                            REPAIR_INTENT_SCHEMA_VERSION_0_9,
-                            REPAIR_INTENT_SCHEMA_VERSION_0_10,
-                        }
-                    ):
-                        _validate_operation_routing(
-                            parsed,
-                            registry=registry,
-                            intent_schema_version=intent_schema_version,
-                        )
-                    model = str(provider_output.metadata.get("model", ""))
-                    if not model:
-                        raise RepairIntentError(
-                            RepairIntentCode.MODEL_FINGERPRINT_MISMATCH,
-                            "Provider response metadata does not identify the model.",
-                        )
-                    operations = []
-                    for raw_operation in parsed["operations"]:
-                        operation = json.loads(json.dumps(raw_operation))
-                        operation["parameters"] = registry.prepare_partial_parameters(
-                            operation
-                        )
-                        operations.append(operation)
-                    envelope = {
-                        "schema_version": envelope_schema["$id"],
-                        "request_id": request_id,
-                        "source_request_hash": source_request_hash,
-                        "model_fingerprint": fingerprint_text(model),
-                        "prompt_fingerprint": str(
-                            rendered["metadata"]["template_hash"]
-                        ),
-                        "operations": operations,
-                        "provenance": parsed["provenance"],
-                    }
-                    if "unsupported_requests" in parsed:
-                        envelope["unsupported_requests"] = parsed[
-                            "unsupported_requests"
-                        ]
-                    if "semantic_bundles" in parsed:
-                        envelope["semantic_bundles"] = parsed["semantic_bundles"]
-                    intent = RepairIntent.from_dict(
-                        envelope,
-                        registry=registry,
-                        require_complete=False,
-                    )
-                    intent = canonicalize_semantic_bundle_claims(intent)
                 except OperationRegistryError as error:
                     issues.append(
                         _issue(
@@ -361,59 +292,10 @@ def generate_repair_intent(
         )
         _write_live_evidence(output, attempt_number, live_evidence)
         if intent is not None and not issues:
-            unsupported_operations = _unsupported_operations(intent, registry)
-            missing_parameters = (
-                []
-                if unsupported_operations
-                else _missing_parameters(intent, registry)
+            return finish_repair_intent(
+                intent, registry=registry, output=output, attempts=attempts,
+                prompt=_prompt_identity(rendered),
             )
-            missing_properties = (
-                [] if unsupported_operations else _missing_properties(intent)
-            )
-            if (
-                not unsupported_operations
-                and not missing_parameters
-                and not missing_properties
-            ):
-                intent = RepairIntent.from_dict(intent.to_dict(), registry=registry)
-                intent = canonicalize_semantic_bundle_claims(intent)
-            classification = (
-                "unsupported"
-                if unsupported_operations
-                else "clarification_required"
-                if missing_parameters or missing_properties
-                else "repair_intent"
-            )
-            atomic_write_text(
-                output / "repair-intent.json", _pretty_json(intent.to_dict())
-            )
-            completeness = {
-                "schema_version": "text2ifc/ifc-repair-intent-completeness/0.1",
-                "status": classification,
-                "missing_parameters": missing_parameters,
-                "missing_properties": missing_properties,
-                "unsupported_operations": unsupported_operations,
-            }
-            atomic_write_text(
-                output / "repair-intent-completeness.json",
-                _pretty_json(completeness),
-            )
-            return {
-                "valid": True,
-                "classification": classification,
-                "intent": intent,
-                "missing_parameters": missing_parameters,
-                "missing_properties": missing_properties,
-                "unsupported_operations": unsupported_operations,
-                "reason_code": (
-                    unsupported_operations[0]["reason_code"]
-                    if unsupported_operations
-                    else None
-                ),
-                "prompt": _prompt_identity(rendered),
-                "attempts": attempts,
-                "error_code": None,
-            }
         feedback = issues
 
     return _failure(
@@ -421,6 +303,152 @@ def generate_repair_intent(
         attempts=tuple(attempts),
         prompt=_prompt_identity(rendered),
     )
+
+
+def parse_repair_intent_body(
+    parsed: dict[str, Any], *, registry: OperationRegistry, request_id: str,
+    repair_request: str, model: str, prompt_hash: str,
+    intent_schema_version: str,
+) -> tuple[RepairIntent, list[str]]:
+    """Validate one actual Stage 1 body without another Provider call."""
+    body_version, _ = _INTENT_CONTRACTS[intent_schema_version]
+    schema = load_repair_intent_body_schema(body_version)
+    envelope_schema = load_repair_intent_schema(intent_schema_version)
+    source_request_hash = hash_request(repair_request)
+    body_errors = sorted(
+        Draft202012Validator(schema).iter_errors(parsed),
+        key=lambda error: tuple(
+            str(part) for part in error.absolute_path
+        ),
+    )
+    if body_errors:
+        error = body_errors[0]
+        raise RepairIntentError(
+            RepairIntentCode.SCHEMA_INVALID,
+            error.message,
+            path=_pointer(error.absolute_path),
+        )
+    if intent_schema_version in {
+        REPAIR_INTENT_SCHEMA_VERSION_0_8,
+        REPAIR_INTENT_SCHEMA_VERSION_0_9,
+        REPAIR_INTENT_SCHEMA_VERSION_0_10,
+    }:
+        _validate_stable_internal_operation_ids(parsed)
+    parsed, normalizations = (
+        _fold_created_occurrence_property_operations(
+            parsed, registry=registry
+        )
+    )
+    if (
+        intent_schema_version
+        in {
+            REPAIR_INTENT_SCHEMA_VERSION_0_5,
+            REPAIR_INTENT_SCHEMA_VERSION_0_6,
+            REPAIR_INTENT_SCHEMA_VERSION_0_7,
+            REPAIR_INTENT_SCHEMA_VERSION_0_8,
+            REPAIR_INTENT_SCHEMA_VERSION_0_9,
+            REPAIR_INTENT_SCHEMA_VERSION_0_10,
+        }
+    ):
+        _validate_operation_routing(
+            parsed,
+            registry=registry,
+            intent_schema_version=intent_schema_version,
+        )
+    if not model:
+        raise RepairIntentError(
+            RepairIntentCode.MODEL_FINGERPRINT_MISMATCH,
+            "Provider response metadata does not identify the model.",
+        )
+    operations = []
+    for raw_operation in parsed["operations"]:
+        operation = json.loads(json.dumps(raw_operation))
+        operation["parameters"] = registry.prepare_partial_parameters(
+            operation
+        )
+        operations.append(operation)
+    envelope = {
+        "schema_version": envelope_schema["$id"],
+        "request_id": request_id,
+        "source_request_hash": source_request_hash,
+        "model_fingerprint": fingerprint_text(model),
+        "prompt_fingerprint": prompt_hash,
+        "operations": operations,
+        "provenance": parsed["provenance"],
+    }
+    if "unsupported_requests" in parsed:
+        envelope["unsupported_requests"] = parsed[
+            "unsupported_requests"
+        ]
+    if "semantic_bundles" in parsed:
+        envelope["semantic_bundles"] = parsed["semantic_bundles"]
+    intent = RepairIntent.from_dict(
+        envelope,
+        registry=registry,
+        require_complete=False,
+    )
+    intent = canonicalize_semantic_bundle_claims(intent)
+    return intent, normalizations
+
+
+def finish_repair_intent(
+    intent: RepairIntent, *, registry: OperationRegistry, output: Path,
+    attempts: list[dict[str, Any]], prompt: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Publish validated intent and the unchanged registry completeness result."""
+    unsupported_operations = _unsupported_operations(intent, registry)
+    missing_parameters = (
+        []
+        if unsupported_operations
+        else _missing_parameters(intent, registry)
+    )
+    missing_properties = (
+        [] if unsupported_operations else _missing_properties(intent)
+    )
+    if (
+        not unsupported_operations
+        and not missing_parameters
+        and not missing_properties
+    ):
+        intent = RepairIntent.from_dict(intent.to_dict(), registry=registry)
+        intent = canonicalize_semantic_bundle_claims(intent)
+    classification = (
+        "unsupported"
+        if unsupported_operations
+        else "clarification_required"
+        if missing_parameters or missing_properties
+        else "repair_intent"
+    )
+    atomic_write_text(
+        output / "repair-intent.json", _pretty_json(intent.to_dict())
+    )
+    completeness = {
+        "schema_version": "text2ifc/ifc-repair-intent-completeness/0.1",
+        "status": classification,
+        "missing_parameters": missing_parameters,
+        "missing_properties": missing_properties,
+        "unsupported_operations": unsupported_operations,
+    }
+    atomic_write_text(
+        output / "repair-intent-completeness.json",
+        _pretty_json(completeness),
+    )
+    return {
+        "valid": True,
+        "classification": classification,
+        "intent": intent,
+        "missing_parameters": missing_parameters,
+        "missing_properties": missing_properties,
+        "unsupported_operations": unsupported_operations,
+        "reason_code": (
+            unsupported_operations[0]["reason_code"]
+            if unsupported_operations
+            else None
+        ),
+        "prompt": prompt,
+        "attempts": attempts,
+        "error_code": None,
+    }
 
 
 def _call_provider(

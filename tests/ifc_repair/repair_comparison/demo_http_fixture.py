@@ -10,6 +10,7 @@ class FakeDemoTransport:
     def __init__(self,root,config):
         self.root,self.config=Path(root),config
         self.counts={}
+        self.scene_providers={}
 
     def __call__(self,request):
         run_id=request.url.path.strip('/').split('/')[0]
@@ -31,8 +32,15 @@ class FakeDemoTransport:
         if arm=='B':
             from scripts.ifc_repair.repair_comparison.ours_adapter import _draft,_section
             prompt=body['messages'][0]['content']
-            value=_draft(prompt,_section(prompt,'Draft schema')) if '## Immutable bindings' in prompt else intent(self.root/'workspaces'/run_id,kind)
-            if scenario=='question' and step==0:
+            if self.config.get('scene_grounding_version'):
+                from tests.ifc_repair.test_scene_repair_api import SceneDemoProvider
+                provider=self.scene_providers.setdefault(run_id,SceneDemoProvider(kind,ask_first=scenario=='question'))
+                result=provider.generate_candidate(prompt=prompt,schema=None,state={'stage':
+                    'ifc_repair_changeset' if '## Immutable bindings' in prompt else 'ifc_repair_scene_grounding'})
+                value=json.loads(result.text)
+            else:
+                value=_draft(prompt,_section(prompt,'Draft schema')) if '## Immutable bindings' in prompt else intent(self.root/'workspaces'/run_id,kind)
+            if scenario=='question' and step==0 and not self.config.get('scene_grounding_version'):
                 value['operations'][0]['parameters'].pop('door',None)
             message={'role':'assistant','content':json.dumps(value),'reasoning_content':'Deterministic fixture; no model inference.'}
             finish='stop'

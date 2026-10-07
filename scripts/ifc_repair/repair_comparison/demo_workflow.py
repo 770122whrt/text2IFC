@@ -26,6 +26,7 @@ from .isolated_dsh import NativeDSH, submitted_path, QUIESCENT_SCRIPT, IMAGE as 
 from .ledger import Ledger, TERMINAL
 from .wire_gateway import WireGateway
 from .controller_owner import task_owner
+from text2ifc_ifc_repair.scene_grounding import SCENE_GROUNDING_VERSION
 
 REPO=Path(__file__).resolve().parents[3]
 CASES=REPO/'dataset/processed/ifc-repair/repair-comparison/development'
@@ -56,24 +57,36 @@ def verify_admission(path):
     return value
 
 
-def initialize(root,*,mode,admission=None):
+def initialize(root,*,mode,admission=None,scene_grounding=False,arms=None):
     root=safe_path(Path(root))
-    if mode=='live':verify_admission(admission)
+    if mode=='live':
+        admitted=verify_admission(admission)
+        if scene_grounding and admitted.get('scene_grounding_version')!=SCENE_GROUNDING_VERSION:
+            raise ValueError('SCENE_METHOD_ADMISSION_REQUIRED')
+    selected=list('ABCD') if arms is None else list(arms)
+    if not selected or len(set(selected))!=len(selected) or set(selected)-set('ABCD'):
+        raise ValueError('INVALID_EXPERIMENT_ARMS')
+    order=[r for r in ORDER if r[-1] in selected]
+    if mode=='live' and admitted.get('authorized_arms') and set(selected)-set(admitted['authorized_arms']):
+        raise ValueError('ARM_OUTSIDE_STAGE_ADMISSION')
     if (root/'experiment.json').exists():raise ValueError('EXPERIMENT_EXISTS_USE_STATUS_OR_RESUME')
     root.mkdir(parents=True,exist_ok=True)
     suffix=uuid.uuid4().hex[:10]
-    config={'mode':mode,'order':ORDER,'models':MODELS,'budget':BUDGET,
+    config={'mode':mode,'order':order,'models':MODELS,'budget':BUDGET,
             'network':'repair-demo-'+suffix,'relay':'repair-relay-'+suffix,
             'admission':str(Path(admission).resolve()) if admission else None,'routes':{}}
+    if scene_grounding:
+        config['scene_grounding_version']=SCENE_GROUNDING_VERSION
     bundle=root/'runtime/b'
     build_runtime_bundle(REPO,bundle)
-    for run_id in ORDER:
+    for run_id in order:
         case_id,arm=run_id.rsplit('-',1)
         config['routes'][run_id]={'token':uuid.uuid4().hex,'container':'repair-'+suffix+'-'+run_id.lower(),
                                 'volume':'repair-state-'+suffix+'-'+run_id.lower()}
         DirectRunner.create(CASES/case_id/'public',root,case_id=case_id,arm=arm,budget=BUDGET,
                             mode='live_development' if mode=='live' else 'real_runtime_fake_model',
-                            runtime_metadata={'model_requested':MODELS[arm],'arm':arm,'image':DSH_IMAGE if arm=='D' else IMAGE})
+                            runtime_metadata={'model_requested':MODELS[arm],'arm':arm,'image':DSH_IMAGE if arm=='D' else IMAGE,
+                                **({'scene_grounding_version':SCENE_GROUNDING_VERSION} if scene_grounding and arm=='B' else {})})
     write_json(root/'experiment.json',config)
     return config
 
@@ -164,7 +177,8 @@ def run_owned(root,run_id):
         raise ValueError('RECOVERY_REQUIRED_NO_AUTOMATIC_REDISPATCH')
     if arm=='B':
         cfg=IsolatedBConfig(root/'runtime/b',runner.workspace,route['volume'],config['network'],base+'/v1',
-                            container_name=route['container'],evidence_class='live' if config['mode']=='live' else 'deterministic_fake_http')
+                            container_name=route['container'],evidence_class='live' if config['mode']=='live' else 'deterministic_fake_http',
+                            scene_grounding=config.get('scene_grounding_version')==SCENE_GROUNDING_VERSION)
         worker=IsolatedB(cfg)
         previous=state.get('native',{}).get('result')
         runner.ledger.activity(run_id,'native-worker',begin=True)
@@ -257,8 +271,11 @@ def main():
     parser.add_argument('--admission',type=Path)
     parser.add_argument('--run-id')
     parser.add_argument('--answer-file',type=Path)
+    parser.add_argument('--scene-grounding',action='store_true')
+    parser.add_argument('--arms',nargs='+',choices=list('ABCD'))
     args=parser.parse_args()
-    if args.command=='init':value=initialize(args.root,mode=args.mode,admission=args.admission)
+    if args.command=='init':value=initialize(args.root,mode=args.mode,admission=args.admission,
+                                          scene_grounding=args.scene_grounding,arms=args.arms)
     elif args.command=='serve':serve(args.root);return
     elif args.command=='run':value=run(args.root,args.run_id)
     elif args.command=='answer':value=answer(args.root,args.run_id,read_json(args.answer_file))

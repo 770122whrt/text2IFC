@@ -803,6 +803,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
             window,
             opening,
             window_type,
+            host_wall=wall,
         )
         window.ObjectPlacement = _local_placement(
             model,
