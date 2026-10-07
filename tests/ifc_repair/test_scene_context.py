@@ -63,3 +63,100 @@ def test_unknown_geometry_is_disclosed_not_silently_excluded():
 def test_query_rejects_unbounded_or_non_scene_access(query):
     with pytest.raises(SceneError):
         fixture_scene().query(query)
+
+
+def mixed_scene(*, unknown_extra=False):
+    records = scene_records()
+    extra = {**deepcopy(records[1]), 'id': 'opening-extra', 'ifc_class': 'IfcOpeningElement'}
+    if unknown_extra:
+        extra.update(geometry_status='unavailable', bounds_world_mm=None, center_world_mm=None)
+    return PublicScene(records + [extra], [], project_unit_scale=0.001)
+
+
+def ranked_query():
+    return {'ifc_classes': ['IfcWindow'], 'host_id': 'wall', 'order_by': 'world_y', 'descending': True}
+
+
+@pytest.mark.parametrize('extra_filter', [{}, {'storey_id': 'level'},
+    {'world_bounds_mm': {'z': [0, 3000]}}])
+def test_complete_target_set_can_be_reused_from_mixed_query(extra_filter):
+    scene = mixed_scene()
+    page = scene.query({'ifc_classes': ['IfcOpeningElement', 'IfcWindow'], 'host_id': 'wall',
+                        'order_by': 'id', **extra_filter})
+    assert page['complete']
+    before = deepcopy(scene.pages)
+    result = scene.complete_records(ranked_query())
+    assert result is not None
+    assert [r['id'] for r in result] == [f'window-{i}' for i in range(4)]
+    result[0]['center_world_mm'][1] = -1
+    assert scene.pages == before and scene.records[1]['center_world_mm'][1] == 9000
+
+
+def test_differently_filtered_pages_can_cover_the_same_target_set():
+    scene = mixed_scene()
+    scene.query({'ids': ['window-0', 'window-2']})
+    assert scene.complete_records(ranked_query()) is None
+    scene.query({'ifc_classes': ['IfcWindow', 'IfcOpeningElement'],
+                 'world_bounds_mm': {'y': [0, 7100]}})
+    assert [r['id'] for r in scene.complete_records(ranked_query())] == [f'window-{i}' for i in range(4)]
+
+
+def test_mixed_pagination_requires_all_targets_not_query_signature():
+    scene = mixed_scene()
+    query = {'ifc_classes': ['IfcWindow', 'IfcOpeningElement'], 'host_id': 'wall', 'limit': 2}
+    scene.query(query)
+    assert scene.complete_records(ranked_query()) is None
+    scene.query({**query, 'offset': 2})
+    assert scene.complete_records(ranked_query()) is None
+    scene.query({**query, 'offset': 4})
+    assert len(scene.complete_records(ranked_query())) == 4
+
+
+def test_complete_narrow_page_cannot_hide_an_unoffered_target():
+    records = scene_records()
+    records[-1]['storey_id'] = 'other-level'
+    scene = PublicScene(records, [], project_unit_scale=1)
+    assert scene.query({'ifc_classes': ['IfcWindow'], 'host_id': 'wall', 'storey_id': 'level'})['complete']
+    assert scene.complete_records(ranked_query()) is None
+
+
+def test_repeated_pages_cannot_count_missing_targets_twice():
+    scene = mixed_scene()
+    query = {'ifc_classes': ['IfcWindow', 'IfcOpeningElement'], 'host_id': 'wall', 'limit': 2}
+    scene.query(query)
+    scene.query(query)
+    assert scene.complete_records(ranked_query()) is None
+
+
+def test_irrelevant_geometry_gap_does_not_invalidate_known_target_set():
+    scene = mixed_scene(unknown_extra=True)
+    page = scene.query({'ifc_classes': ['IfcWindow', 'IfcOpeningElement'],
+                        'host_id': 'wall', 'order_by': 'world_y'})
+    assert not page['geometry_complete']
+    assert len(scene.complete_records(ranked_query())) == 4
+
+
+def test_relevant_geometry_gap_still_blocks_ordinal_evidence():
+    records = scene_records()
+    records[-1].update(geometry_status='unavailable', bounds_world_mm=None, center_world_mm=None)
+    scene = PublicScene(records, [], project_unit_scale=1)
+    scene.query({'ifc_classes': ['IfcWindow'], 'host_id': 'wall'})
+    assert scene.complete_records(ranked_query()) is None
+
+
+def test_partial_broad_query_is_sufficient_only_if_target_subset_is_complete():
+    scene = mixed_scene()
+    page = scene.query({'ifc_classes': ['IfcWindow', 'IfcOpeningElement'],
+                        'host_id': 'wall', 'order_by': 'world_y', 'descending': True, 'limit': 4})
+    assert not page['complete'] and scene.complete_records(ranked_query()) is None
+    scene.query({'ids': ['window-3']})
+    assert len(scene.complete_records(ranked_query())) == 4
+
+
+def test_coverage_is_checked_against_selected_host_not_all_same_class_objects():
+    records = scene_records()
+    records.append({**deepcopy(records[1]), 'id': 'other-host-window', 'host_id': 'other-wall'})
+    scene = PublicScene(records, [], project_unit_scale=1)
+    scene.query({'ifc_classes': ['IfcWindow', 'IfcOpeningElement'], 'host_id': 'wall'})
+    assert len(scene.complete_records(ranked_query())) == 4
+    assert scene.complete_records({'ifc_classes': ['IfcWindow']}) is None

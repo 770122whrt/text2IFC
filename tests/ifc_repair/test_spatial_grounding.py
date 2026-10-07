@@ -3,7 +3,7 @@ from copy import deepcopy
 import pytest
 
 from text2ifc_ifc_repair.spatial_grounding import bind_spatial_intent, GroundingError
-from tests.ifc_repair.test_scene_context import fixture_scene
+from tests.ifc_repair.test_scene_context import fixture_scene, mixed_scene
 from scripts.ifc_repair.repair_comparison.ours_adapter import fixture_intent
 
 
@@ -100,3 +100,15 @@ def test_coincident_neighbors_are_ambiguous_even_if_order_has_id_tiebreak():
     with pytest.raises(GroundingError, match='SCENE_ORDER_AMBIGUOUS'):
         bind_spatial_intent(body(), [binding(kind='between_ranked', ifc_class='IfcWindow', order_by='world_y',
                             descending=True, ranks=[2,3], reference_ids=['window-2','window-1'])], scene)
+
+
+def test_ranked_binding_reuses_complete_mixed_query_without_another_tool_call():
+    scene = mixed_scene()
+    scene.query({'ids': ['wall']})
+    scene.query({'ifc_classes': ['IfcWindow', 'IfcOpeningElement'], 'host_id': 'wall',
+                 'storey_id': 'level', 'order_by': 'id'})
+    before = deepcopy(scene.pages)
+    bound, _ = bind_spatial_intent(body(), [binding(kind='between_ranked', ifc_class='IfcWindow',
+        order_by='world_y', descending=True, ranks=[2,3], reference_ids=['window-1','window-2'])], scene)
+    assert bound['operations'][0]['parameters']['position']['center_offset_mm'] == 5000
+    assert scene.pages == before

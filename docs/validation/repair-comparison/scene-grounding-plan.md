@@ -48,7 +48,7 @@
 
 ## 验证记录（2026-10-07）
 
-所有 Provider 为确定性夹具或本地假 HTTP；未调用付费模型。各组命令有重叠，不相加成能力样本数。
+下面的离线验证使用确定性夹具或本地假 HTTP；不涉及真实模型调用。各组命令有重叠，不相加成能力样本数。
 
 | 范围 | 结果 | 证据位置 |
 |---|---|---|
@@ -63,3 +63,21 @@
 初次 Docker 检查的窗外观未通过完整判定（`needs_review`），旧输出及诊断保留在 `.tmp/scene-docker-01/`；没有降低或重写评分器。两正式 IFC 只来自唯一发布位置，源 D 不变，Gold 与评分器不在 B 挂载/运行包中。正式五题仍未进入模型。
 
 本次准入保存为 `.tmp/repair-comparison-runtime/scene-stage-admission.json`，只授权新 B 方法的两道开发题，绑定实际代码、公共输入、模型与镜像；原四组准入与失败证据保留。用户已恢复 Goal，按原 20M 开发预算继续真实联调。新 B 运行区为 `.tmp/repair-comparison-demo-scene-live`，原自然语言请求不变；旧真实失败/待答记录独立保留，新方法结果按开发候选记录，不加入正式比较分母。
+
+## 两题真实开发结果与完整列表核验优化
+
+代码 `fe4a09b2` 的新 B 两题已完成真实开发调用：窗题 8 次请求、309657 token；门题 4 次请求、55004 token。均未人工补充事实，唯一 IFC 经原固定评分器检查，schema＋EXPRESS 零诊断，位置、尺寸、关系、外观和保全均通过。运行及归档见[联调结果](demo-results.md)。这不是未见样本或正式四组比较。
+
+用户随后要求优化混合查询的重复往返。根因是 `complete_records` 按查询条件完全一致来确认完整列表；即使已返回同墙全部窗，混合类别、额外楼层过滤或不同排序仍被误拒。现在查询与核验共用公共场景筛选逻辑，核验目标全集的 ID 是否全部已提供，再在本地排序。可以合并不同查询和分页，但不会引入未提供身份；缺少目标、相关几何未知、错误排序参照和同位置歧义仍拒绝。混合查询中的无关类别几何缺失不再阻断已完整提供的目标类别。
+
+定位阶段最多 8 轮的上限、上下文预算、Prompt／Schema v0.2 和原操作合同不变。没有为优化重新请求真实模型，也不把离线重放推算成实测的调用次数下降。
+
+| 优化验证 | 结果 | 证据 |
+|---|---|---|
+| 修改前冻结的混合查询／分页／缺项／几何／跨宿主族 | 9 failed, 24 passed；误拒稳定复现，保留红测 | `.tmp/repair-comparison-runtime/scene-coverage-red.log` |
+| 覆盖核验、位置和定位阶段回归 | 43 passed | `.tmp/repair-comparison-runtime/scene-coverage-green.log` |
+| 完整公共 API、SDK、澄清恢复、拒绝与回滚 | 9 passed；混合查询窗题无追加请求 | `.tmp/repair-comparison-runtime/scene-coverage-api.log` |
+| 真实 Linux 两题＋假 HTTP＋原固定评分 | 1 passed, 1 deselected；两题各 4 次假 HTTP，均修复通过 | `.tmp/repair-comparison-runtime/scene-coverage-linux.log` |
+| 同一公共 D、原样前两次真实响应的离线对照 | 旧核验器拒绝；新核验器接受定位意图；无模型请求 | `.tmp/scene-coverage-replay/comparison.json` |
+
+优化后的 scoped 准入另存为 `.tmp/repair-comparison-runtime/scene-stage-admission-coverage.json`，原调用使用的准入字节保留。辅助重放的哈希前缀、请求路径及模型元数据问题已修正；失败日志明确属于辅助脚本，不归为模型失败。重放实际使用的索引已核对仍绑定公共 D，不从修复结果、私有 G 或损伤记录定位。

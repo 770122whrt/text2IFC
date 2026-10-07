@@ -25,6 +25,10 @@ def test_two_scene_demo_runtimes_through_public_cli_and_wire_ledger(tmp_path):
     config=call('init','--arms','B','--scene-grounding')
     assert config['order']==['case-001-B','case-002-B']
     assert config['scene_grounding_version']==SCENE_GROUNDING_VERSION
+    # Mixed windows/openings + redundant floor and a different ordering must
+    # not require an extra model request to establish the ranked window set.
+    config['fixture_mixed_queries']=True
+    (root/'experiment.json').write_text(json.dumps(config),encoding='utf8')
     console=(tmp_path/'service.txt').open('wb')
     service=subprocess.Popen(COMMAND+['serve','--root',str(root)],cwd=REPO,stdout=console,stderr=subprocess.STDOUT)
     try:

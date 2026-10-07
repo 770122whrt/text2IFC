@@ -34,7 +34,8 @@ class FakeDemoTransport:
             prompt=body['messages'][0]['content']
             if self.config.get('scene_grounding_version'):
                 from tests.ifc_repair.test_scene_repair_api import SceneDemoProvider
-                provider=self.scene_providers.setdefault(run_id,SceneDemoProvider(kind,ask_first=scenario=='question'))
+                provider=self.scene_providers.setdefault(run_id,SceneDemoProvider(kind,ask_first=scenario=='question',
+                    mixed_queries=bool(self.config.get('fixture_mixed_queries'))))
                 result=provider.generate_candidate(prompt=prompt,schema=None,state={'stage':
                     'ifc_repair_changeset' if '## Immutable bindings' in prompt else 'ifc_repair_scene_grounding'})
                 value=json.loads(result.text)

@@ -15,8 +15,8 @@ DEVELOPMENT = ROOT / "dataset/processed/ifc-repair/repair-comparison/development
 
 class SceneDemoProvider:
     """Frozen deterministic search fixture, not a model localization score."""
-    def __init__(self, kind, *, ask_first=False):
-        self.kind, self.ask_first = kind, ask_first
+    def __init__(self, kind, *, ask_first=False, mixed_queries=False):
+        self.kind, self.ask_first, self.mixed_queries = kind, ask_first, mixed_queries
         self.calls = []
 
     def generate_candidate(self, **kw):
@@ -58,9 +58,14 @@ class SceneDemoProvider:
         if len(pages) == 1:
             walls = [r for r in pages[0]["records"] if r.get("wall_axis") and r["wall_axis"]["length_mm"] > 10000]
             host = min(walls, key=lambda r: r["center_world_mm"][0])
-            return {"kind": "query", "query": {"ifc_classes": ["IfcWindow"], "host_id": host["id"],
-                     "order_by": "world_y", "descending": True}}
-        windows = pages[1]["records"]
+            query = {"ifc_classes": ["IfcWindow"], "host_id": host["id"],
+                     "order_by": "world_y", "descending": True}
+            if self.mixed_queries:
+                query.update(ifc_classes=['IfcWindow', 'IfcOpeningElement'],
+                             storey_id=host['storey_id'], order_by='id', descending=False)
+            return {"kind": "query", "query": query}
+        windows = sorted([r for r in pages[1]["records"] if r['ifc_class']=='IfcWindow'],
+                         key=lambda r:r['center_world_mm'][1], reverse=True)
         target_id = pages[1]["query"]["host_id"]
         body = fixture_intent("window", {"allowed_ifc_classes": ["IfcWall"]},
                    {"opening": {"width_mm": 915., "height_mm": 1830., "sill_height_mm": 305.}, "window": {"fit_opening": True}})
@@ -82,17 +87,19 @@ def _reuse_type(body, reference):
         "source": body["operations"][0]["provenance"][0]}
 
 
-@pytest.mark.parametrize("case,kind", [("case-001", "window"), ("case-002", "door")])
-def test_scene_mode_public_demo_complete_chain_no_identity_in_request(tmp_path, case, kind):
+@pytest.mark.parametrize("case,kind,mixed_queries", [("case-001", "window", False),
+    ("case-002", "door", False), ("case-001", "window", True)])
+def test_scene_mode_public_demo_complete_chain_no_identity_in_request(tmp_path, case, kind, mixed_queries):
     public = DEVELOPMENT / case / "public"
     source = public / "model.ifc"
     request = (public / "request.txt").read_text(encoding="utf-8")
     before = hashlib.sha256(source.read_bytes()).hexdigest()
-    provider = SceneDemoProvider(kind)
+    provider = SceneDemoProvider(kind, mixed_queries=mixed_queries)
     api = RepairAPI(tmp_path / "native", provider=provider, scene_grounding=True)
     result = api.start(source, request)
     assert result.status == "succeeded", result.to_dict()
     assert result.successful_artifact_publishable
+    assert len(provider.calls) == 4  # no extra lookup or model correction for mixed-query coverage
     run = tmp_path / "native" / result.run_directory
     repaired = run / result.artifacts["successful_ifc"]
     import ifcopenshell

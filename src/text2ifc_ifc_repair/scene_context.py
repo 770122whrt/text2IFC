@@ -136,6 +136,22 @@ class PublicScene:
 
     def query(self, query: Mapping[str, Any]) -> dict:
         q = _validate_query(query)
+        matches, unknown = self._matching_records(q)
+        matches = _ordered_records(matches, q)
+        offset, limit = q["offset"], q["limit"]
+        page = matches[offset:offset+limit]
+        total = len(matches)
+        result = {"schema_version": SCENE_VERSION, "query": q, "records": deepcopy(page),
+                  "total_matches": total, "omitted_count": total-len(page),
+                  "complete": offset == 0 and len(page) == total,
+                  "geometry_complete": not unknown, "geometry_unknown_ids": sorted(set(unknown)),
+                  "next_offset": offset+len(page) if offset+len(page) < total else None}
+        self.offered_ids.update(r["id"] for r in page)
+        self.pages.append(deepcopy(result))
+        return result
+
+    def _matching_records(self, q: Mapping[str, Any]) -> tuple[list[dict], list[str]]:
+        """Select the actual public set, retaining relevant geometry gaps."""
         matches, unknown = [], []
         for r in self.records:
             if q.get("ids") is not None and r["id"] not in q["ids"]:
@@ -154,25 +170,12 @@ class PublicScene:
                        for a, limits in region.items()):
                     continue
             matches.append(r)
-        order = q["order_by"]
-        axis = ORDER_AXES.get(order)
+        axis = ORDER_AXES.get(q["order_by"])
         if axis is not None:
             sortable = [r for r in matches if r.get("center_world_mm")]
             unknown.extend(r["id"] for r in matches if not r.get("center_world_mm"))
             matches = sortable
-        matches.sort(key=lambda r: (r["center_world_mm"][axis], r["id"]) if axis is not None else (r["id"],),
-                     reverse=q["descending"])
-        offset, limit = q["offset"], q["limit"]
-        page = matches[offset:offset+limit]
-        total = len(matches)
-        result = {"schema_version": SCENE_VERSION, "query": q, "records": deepcopy(page),
-                  "total_matches": total, "omitted_count": total-len(page),
-                  "complete": offset == 0 and len(page) == total,
-                  "geometry_complete": not unknown, "geometry_unknown_ids": sorted(set(unknown)),
-                  "next_offset": offset+len(page) if offset+len(page) < total else None}
-        self.offered_ids.update(r["id"] for r in page)
-        self.pages.append(deepcopy(result))
-        return result
+        return matches, unknown
 
     def offered_record(self, identity: str) -> dict:
         if identity not in self.offered_ids:
@@ -180,22 +183,25 @@ class PublicScene:
         return deepcopy(self._by_id[identity])
 
     def complete_records(self, query: Mapping[str, Any]) -> list[dict] | None:
-        signature = _signature(_validate_query(query))
-        pages = [p for p in self.pages if _signature(p["query"]) == signature]
-        if not pages or any(not p["geometry_complete"] for p in pages):
+        """Verify coverage, not the wording/filter shape of previous queries.
+
+        Any served pages may supply the target set, including mixed classes or
+        different orderings. The known public scene verifies that *every*
+        matching identity was offered; no unoffered fact becomes model input.
+        Relevant unknown geometry and incomplete coverage still fail closed.
+        """
+        q = _validate_query(query)
+        records, unknown = self._matching_records(q)
+        if not self.pages or unknown or any(r["id"] not in self.offered_ids for r in records):
             return None
-        records = {r["id"]: r for p in pages for r in p["records"]}
-        if len(records) != pages[0]["total_matches"]:
-            return None
-        q = pages[0]["query"]
-        axis = ORDER_AXES.get(q["order_by"])
-        return sorted(deepcopy(list(records.values())),
-                      key=lambda r: (r["center_world_mm"][axis], r["id"]) if axis is not None else (r["id"],),
-                      reverse=q["descending"])
+        return deepcopy(_ordered_records(records, q))
 
 
-def _signature(query: Mapping) -> dict:
-    return {k: v for k, v in query.items() if k not in {"offset", "limit"}}
+def _ordered_records(records: list[dict], query: Mapping[str, Any]) -> list[dict]:
+    axis = ORDER_AXES.get(query["order_by"])
+    return sorted(records,
+                  key=lambda r: (r["center_world_mm"][axis], r["id"]) if axis is not None else (r["id"],),
+                  reverse=query["descending"])
 
 
 def _validate_query(query: Mapping) -> dict:
