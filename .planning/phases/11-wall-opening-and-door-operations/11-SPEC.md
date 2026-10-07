@@ -4,10 +4,10 @@
 **Date:** 2026-07-28
 **Depends on:** Phases 7, 8, 9, 09.1 and 10 through 10.5
 **Requirements:** OPS-01, OPS-02
-**Decision record:** [11-CONTEXT.md](11-CONTEXT.md)
-**Execution plans:** [11-01](11-01-PLAN.md) →
-[11-02](11-02-PLAN.md) → [11-03](11-03-PLAN.md) →
-[11-04](11-04-PLAN.md) → [11-05](11-05-PLAN.md)
+**Decision record:** [11-CONTEXT.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-CONTEXT.md)
+**Execution plans:** [11-01](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) →
+[11-02](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-02-PLAN.md) → [11-03](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-03-PLAN.md) →
+[11-04](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-04-PLAN.md) → [11-05](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-05-PLAN.md)
 **Validation:** [11-VALIDATION.md](11-VALIDATION.md)
 
 ## 0. 中文执行摘要

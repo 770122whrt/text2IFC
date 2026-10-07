@@ -58,20 +58,20 @@
 
 | 原路径（相对仓库根） | 当前入口 |
 |---|---|
-| `docs/reports/generation-demo/broader-method-directions.md` | [docs/reports/generation-demo/archive/broader-method-directions.md](../../../docs/reports/generation-demo/archive/broader-method-directions.md) |
-| `docs/reports/generation-demo/claims-and-novelty-synthesis-20260916.md` | [docs/reports/generation-demo/archive/claims-and-novelty-synthesis-20260916.md](../../../docs/reports/generation-demo/archive/claims-and-novelty-synthesis-20260916.md) |
-| `docs/reports/generation-demo/coding-agent-knowledge-direction.md` | [docs/reports/generation-demo/archive/coding-agent-knowledge-direction.md](../../../docs/reports/generation-demo/archive/coding-agent-knowledge-direction.md) |
-| `docs/reports/generation-demo/research-shortlist-evidence.md` | [docs/reports/generation-demo/archive/research-shortlist-evidence.md](../../../docs/reports/generation-demo/archive/research-shortlist-evidence.md) |
-| `docs/reports/generation-demo/text2ids-www2026-demo-overview-and-writing-reference.md` | [docs/reports/generation-demo/archive/text2ids-www2026-demo-overview-and-writing-reference.md](../../../docs/reports/generation-demo/archive/text2ids-www2026-demo-overview-and-writing-reference.md) |
-| `docs/reports/Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md` | [docs/reports/generation-demo/archive/Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md](../../../docs/reports/generation-demo/archive/Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md) |
-| `docs/architecture/phase-2-5-summary.md` | [docs/architecture/history/phase-2-5-summary.md](../../../docs/architecture/history/phase-2-5-summary.md) |
-| `docs/architecture/phase-3-summary.md` | [docs/architecture/history/phase-3-summary.md](../../../docs/architecture/history/phase-3-summary.md) |
-| `docs/architecture/phase-4-summary.md` | [docs/architecture/history/phase-4-summary.md](../../../docs/architecture/history/phase-4-summary.md) |
-| `docs/architecture/phase-4-wave-0-generated-ifc-gate.md` | [docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md](../../../docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md) |
-| `docs/architecture/phase-5-summary.md` | [docs/architecture/history/phase-5-summary.md](../../../docs/architecture/history/phase-5-summary.md) |
-| `docs/architecture/phase-6-acceptance-and-trace-report.md` | [docs/architecture/history/phase-6-acceptance-and-trace-report.md](../../../docs/architecture/history/phase-6-acceptance-and-trace-report.md) |
-| `docs/handoffs/phase12-plan07-closeout-handover-2026-09-03.md` | [docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md](../../../docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) |
-| `docs/handoffs/repair-milestone-r1-closure-2026-09-03.md` | [docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md](../../../docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md) |
+| `docs/reports/generation-demo/broader-method-directions.md` | [docs/reports/generation-demo/archive/broader-method-directions.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/generation-demo/archive/broader-method-directions.md) |
+| `docs/reports/generation-demo/claims-and-novelty-synthesis-20260916.md` | [docs/reports/generation-demo/archive/claims-and-novelty-synthesis-20260916.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/generation-demo/archive/claims-and-novelty-synthesis-20260916.md) |
+| `docs/reports/generation-demo/coding-agent-knowledge-direction.md` | [docs/reports/generation-demo/archive/coding-agent-knowledge-direction.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/generation-demo/archive/coding-agent-knowledge-direction.md) |
+| `docs/reports/generation-demo/research-shortlist-evidence.md` | [docs/reports/generation-demo/archive/research-shortlist-evidence.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/generation-demo/archive/research-shortlist-evidence.md) |
+| `docs/reports/generation-demo/text2ids-www2026-demo-overview-and-writing-reference.md` | [docs/reports/generation-demo/archive/text2ids-www2026-demo-overview-and-writing-reference.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/generation-demo/archive/text2ids-www2026-demo-overview-and-writing-reference.md) |
+| `docs/reports/Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md` | [docs/reports/generation-demo/archive/Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/generation-demo/archive/Text2IFC-Generation-Claim-Novelty-Audit-2026-09-14.md) |
+| `docs/architecture/phase-2-5-summary.md` | [docs/architecture/history/phase-2-5-summary.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-2-5-summary.md) |
+| `docs/architecture/phase-3-summary.md` | [docs/architecture/history/phase-3-summary.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-3-summary.md) |
+| `docs/architecture/phase-4-summary.md` | [docs/architecture/history/phase-4-summary.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-4-summary.md) |
+| `docs/architecture/phase-4-wave-0-generated-ifc-gate.md` | [docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md) |
+| `docs/architecture/phase-5-summary.md` | [docs/architecture/history/phase-5-summary.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-5-summary.md) |
+| `docs/architecture/phase-6-acceptance-and-trace-report.md` | [docs/architecture/history/phase-6-acceptance-and-trace-report.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-6-acceptance-and-trace-report.md) |
+| `docs/handoffs/phase12-plan07-closeout-handover-2026-09-03.md` | [docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) |
+| `docs/handoffs/repair-milestone-r1-closure-2026-09-03.md` | [docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md) |
 | `docs/reports/ifc2x3-dataset-size-index.md` | [docs/reports/ifc-datasets/ifc2x3-dataset-size-index.md](../../../docs/reports/ifc-datasets/ifc2x3-dataset-size-index.md) |
 | `docs/reports/ifc2x3-small-model-meaningfulness.md` | [docs/reports/ifc-datasets/ifc2x3-small-model-meaningfulness.md](../../../docs/reports/ifc-datasets/ifc2x3-small-model-meaningfulness.md) |
 | `docs/reports/ifc2x3-small-model-refined-shortlist.md` | [docs/reports/ifc-datasets/ifc2x3-small-model-refined-shortlist.md](../../../docs/reports/ifc-datasets/ifc2x3-small-model-refined-shortlist.md) |
@@ -79,7 +79,7 @@
 | `docs/reports/ifc2x3-small-model-web-search.md` | [docs/reports/ifc-datasets/ifc2x3-small-model-web-search.md](../../../docs/reports/ifc-datasets/ifc2x3-small-model-web-search.md) |
 | `docs/reports/ifc2x3-small-source-search-followup.md` | [docs/reports/ifc-datasets/ifc2x3-small-source-search-followup.md](../../../docs/reports/ifc-datasets/ifc2x3-small-source-search-followup.md) |
 | `docs/reports/kaggle-ifc-examples-small-ifc2x3.md` | [docs/reports/ifc-datasets/kaggle-ifc-examples-small-ifc2x3.md](../../../docs/reports/ifc-datasets/kaggle-ifc-examples-small-ifc2x3.md) |
-| `tests/test_json_to_ifc.py` | [tests/compiler/test_json_to_ifc.py](../../../tests/compiler/test_json_to_ifc.py) |
+| `tests/test_json_to_ifc.py` | [tests/compiler/test_json_to_ifc.py](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/tests/compiler/test_json_to_ifc.py) |
 
 R1 原始验收任务 `docs/handoffs/repair-milestone-r1-final-acceptance.md` 保持原路径和原字节：它被 `repair-acceptance-freeze.json` 与 Proof 校验器按路径及 SHA-256 绑定。新 Repair 目录只提供导航。SHA-256 核对仍为 `bb8c7ecfbf5afd2c231b3be2ef21288101f25f0547e4f3ef770a1b349acff49e`，未修改校验器、冻结清单或其证据副本。
 

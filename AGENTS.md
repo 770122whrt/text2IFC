@@ -1,5 +1,10 @@
 # Repository Guidance
 
+The 2026-10-07 lean cleanup intentionally removes test sources after validation under
+the user's 2026-10-07 instruction. See `docs/reports/lean-branch-20261007/REPORT.md`
+for the validation checkpoint and recovery procedure. Missing tests never
+count as a passed preflight; all production and evidence contracts below apply.
+
 ## First-time project takeover
 
 - Use `text2IFC` as the project and product name. `bimnet` may be the local

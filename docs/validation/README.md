@@ -48,8 +48,8 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 
 ## 相关验证资料
 
-- [Generated IFC Gate](../architecture/history/phase-4-wave-0-generated-ifc-gate.md)
-- [Phase 6 Acceptance and Trace Report](../architecture/history/phase-6-acceptance-and-trace-report.md)
+- [Generated IFC Gate](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md)
+- [Phase 6 Acceptance and Trace Report](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-6-acceptance-and-trace-report.md)
 - [Phase 1 Validation](../../.planning/phases/01-bim-json-1-0-contract-and-validator/01-VALIDATION.md)
 - [Phase 2 Verification](../../.planning/phases/02-minimum-bim-json-to-ifc2x3-compiler/02-VERIFICATION.md)
 

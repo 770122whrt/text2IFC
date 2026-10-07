@@ -39,7 +39,7 @@ Stage 1/Stage 2 调用数均为 0，因此 Phase 11 尚未最终关闭。
 Bound ChangeSet、验证证据和独立报告。
 
 审计前的 Door 假阳性没有留在成功案例中；原始失败二进制、哈希和缺陷说明保存在
-[Phase 11 Door known-failure fixture](../../../tests/fixtures/ifc_repair/phase11-door-known-failure/README.md)。
+[Phase 11 Door known-failure fixture](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/tests/fixtures/ifc_repair/phase11-door-known-failure/README.md)。
 
 人工属性核验：
 [LargeBuilding 真实修复 Window 属性对比](phase10.1-largebuilding-window-property-comparison.md)。
@@ -54,13 +54,13 @@ Phase 8 验证报告：[Evaluation 0.2、Benchmark Gold 隔离与 LargeBuilding 
 | 文档 | 职责 | 当前状态 |
 |---|---|---|
 | [Phase 11 SPEC](../../../.planning/phases/11-wall-opening-and-door-operations/11-SPEC.md) | Opening/Door operation、Type/swing/position/属性边界、Prompt Profile、L1/L2 和验收矩阵 | 已实现；2026-07-29 严格 Door 几何/Storey 审计通过 |
-| [Phase 11 RESEARCH](../../../.planning/phases/11-wall-opening-and-door-operations/11-RESEARCH.md) | 当前 Window 专用耦合、IFC2X3 DoorStyle/Openings 事实、版本升级和推荐扩展缝 | 2026-07-28 规划研究完成 |
+| [Phase 11 RESEARCH](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-RESEARCH.md) | 当前 Window 专用耦合、IFC2X3 DoorStyle/Openings 事实、版本升级和推荐扩展缝 | 2026-07-28 规划研究完成 |
 | [Phase 11 VALIDATION](../../../.planning/phases/11-wall-opening-and-door-operations/11-VALIDATION.md) | schema、索引、authoring、L1/L2、批量/混合、大型 IFC、真实 DeepSeek 和 Proof 验收 | 2026-07-28 验证矩阵完成 |
 | [Phase 11 Door Storey Policy Erratum](phase11-door-storey-policy-erratum.md) | 多楼层贯通墙中 direct containment 与 Opening 高度上下文冲突时的正式 Storey 决策 | 2026-07-30 已冻结并有 fail-closed 回归 |
 | [Phase 12 Structural Type Visual Fidelity 修复计划](phase12-structural-type-visual-fidelity-plan-2026-09-03.md) | Beam/Column 精确复用现有 Type 时的 RepresentationMap、Material 与 SurfaceStyle 灰色回归调研、根因和最小修复/验证计划 | 2026-09-03 调研完成，实施中 |
 | [IFC Presentation Development Boundary](ifc-presentation-development-boundary-2026-09-03.md) | Generation colorful appearance 与 Repair visual fidelity 的共享 IFC2X3 presentation primitives、分离策略优先级、禁止改动项和测试/live 准入顺序 | 2026-09-03 已冻结，实施中 |
 | [Restoration Validation Boundary](restoration-validation-boundary-2026-09-04.md) | 真实 Beam damage→repair、Case 1 exact-Type 恢复、中心轴输入勘误、world-bbox/IFCcompare 双门禁，以及 Case 2 用户显式 appearance + occurrence Material 恢复与最小版本升级原则 | Case 1 / Case 2 genuine live 均 PASS；Repair restoration validation 已关闭，下一阶段为 Generation appearance validation |
-| [Phase 11 执行计划](../../../.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) | 五步顺序入口：契约/Prompt → 索引/解析 → IFC 写入 → 评估 → 数据集/live UAT | 离线实现与 Proof 完成；真实 Provider UAT 待执行 |
+| [Phase 11 执行计划](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/.planning/phases/11-wall-opening-and-door-operations/11-01-PLAN.md) | 五步顺序入口：契约/Prompt → 索引/解析 → IFC 写入 → 评估 → 数据集/live UAT | 离线实现与 Proof 完成；真实 Provider UAT 待执行 |
 | [phase10.5-window-fidelity-validation-report.md](phase10.5-window-fidelity-validation-report.md) | occurrence 属性输入/授权复用、Ground Truth Comparator、validation cache、冷/热大型 IFC 性能与真实 DeepSeek UAT | 2026-07-26 全部通过；Production/private L1/L2 与 occurrence fidelity passed |
 | [phase10.4-comparator-0.2-validation-report.md](phase10.4-comparator-0.2-validation-report.md) | 大型 IFC 全局保全门禁、fail-closed 指纹、三次性能/内存基准与完整 Production 重放 | 2026-07-25 Comparator 与 AdvancedProject 五窗 L1/L2/发布闭环通过 |
 | [phase10.3-five-window-batch-validation-report.md](phase10.3-five-window-batch-validation-report.md) | dataset 审计、五窗 damage/repair、统一 ChangeSet、原子回滚、逐项 L1/L2、真实 DeepSeek 与大型 IFC 矩阵 | 2026-07-24 通过；五项 L1/L2 passed |

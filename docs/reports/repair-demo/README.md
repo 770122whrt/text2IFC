@@ -20,7 +20,7 @@
 - 展示版 Method 沿用上传原稿的“总体路线图—分 Part 解释—贯穿案例”风格，采用研究者向老师汇报的叙述方式；用图说明澄清、有限纠正、核验与下一轮请求，过时状态按当前证据更新；不写函数、代码路径、内部数据结构清单或调试交接流程；必要术语用其方法作用解释，不保留助理对话措辞。
 - Claims 与实验设计区分候选主张、已有证据、待验证问题和实验批准状态；文档更新不等于用户审阅通过或同意执行实验。
 
-技术原稿已确认为 [Text2IFC-Pipeline-Feishu-2026-08-29.md](archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)，不是 9 月 3 日 Plan 07 handover。它按原字节保存为历史来源，当前技术说明仍在原固定路径维护。飞书[Repair 技术文档](https://xcnn3ovwdml4.feishu.cn/wiki/LGB0wgMkliWUr7kBRvGchADgn7b)是技术正文的汇报副本，不另立第四份主稿。
+技术原稿已确认为 [Text2IFC-Pipeline-Feishu-2026-08-29.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)，不是 9 月 3 日 Plan 07 handover。它按原字节保存为历史来源，当前技术说明仍在原固定路径维护。飞书[Repair 技术文档](https://xcnn3ovwdml4.feishu.cn/wiki/LGB0wgMkliWUr7kBRvGchADgn7b)是技术正文的汇报副本，不另立第四份主稿。
 
 ### 更新分工
 
@@ -30,13 +30,13 @@
 
 ### 历史材料：保留引用，不再并行维护
 
-旧 Claim 审查、v0.3 研究草案及三方比较草案已按用户批准删除；有效内容维护在 [Claims 与实验设计](claims-and-experiments.md)，历史原文与删除理由见[清理记录](../../document-catalog.md#第一批删除已完成d1d4)。
+旧 Claim 审查、v0.3 研究草案及三方比较草案已按用户批准删除；有效内容维护在 [Claims 与实验设计](claims-and-experiments.md)，历史原文与删除理由见[清理记录](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/document-catalog.md#第一批删除已完成d1d4)。
 
 [SGSS 全文阅读快照](sgss-fulltext-review-20260921.md)保留前作阅读证据；新原文核查统一在 literature 更新，不作为第四份现行综述。Generation 的计划与历史材料保持其原有职责。
 
 ### 本轮执行记录
 
-技术主文档重写为汇报正文，补齐材料／Type／外观，核对 R1 和三个 presentation 案例；相关三份聚焦测试文件 29 passed，仅离线回归。历史草案归档并修复引用，未删除文档、修改生产代码或运行新 Provider 实验。全体文档分类见[分类与归档目录](../../document-catalog.md)。
+技术主文档重写为汇报正文，补齐材料／Type／外观，核对 R1 和三个 presentation 案例；相关三份聚焦测试文件 29 passed，仅离线回归。历史草案归档并修复引用，未删除文档、修改生产代码或运行新 Provider 实验。全体文档分类见[分类与归档目录](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/document-catalog.md)。
 
 9 月 23 日 v0.7 进一步恢复原稿的图解结构：三个 Part、七幅流程图，以及 Type／材料、梁柱补全两个贯穿案例；同步 Claims 中的闭环边界，未新增文献或实验结论。
 

@@ -37,14 +37,14 @@
 
 ## 阶段总结
 
-早期 Phase 2.5–6 的六份总结已收至 [history](history/README.md)，当前设计仍在本层。
+早期 Phase 2.5–6 的六份总结已收至 [history](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/README.md)，当前设计仍在本层。
 
-- [Phase 2.5 BIM JSON 2.0 IFC Semantic Graph](history/phase-2-5-summary.md)
-- [Phase 3 Text-to-JSON Dataset and Baseline](history/phase-3-summary.md)
-- [Phase 4 High-fidelity IFC Round Trip](history/phase-4-summary.md)
-- [Phase 4 Wave 0 Generated IFC Gate](history/phase-4-wave-0-generated-ifc-gate.md)
-- [Phase 5 Multi-turn Clarification Agent](history/phase-5-summary.md)
-- [Phase 6 Acceptance and Trace Report](history/phase-6-acceptance-and-trace-report.md)
+- [Phase 2.5 BIM JSON 2.0 IFC Semantic Graph](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-2-5-summary.md)
+- [Phase 3 Text-to-JSON Dataset and Baseline](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-3-summary.md)
+- [Phase 4 High-fidelity IFC Round Trip](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-4-summary.md)
+- [Phase 4 Wave 0 Generated IFC Gate](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md)
+- [Phase 5 Multi-turn Clarification Agent](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-5-summary.md)
+- [Phase 6 Acceptance and Trace Report](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-6-acceptance-and-trace-report.md)
 
 阶段规格、计划和验证记录的权威位置仍是
 [`../../.planning/phases/`](../../.planning/phases/)。

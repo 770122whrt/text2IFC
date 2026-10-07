@@ -54,7 +54,7 @@ git lfs ls-files
 ```
 
 Choose validation for the change, following the
-[takeover guide](agent-takeover.md#6-验证强度如何选择). Documentation-only work needs
+[takeover guide](agent-takeover.md). Documentation-only work needs
 link, claim and diff checks; behavioral changes need their applicable tests.
 Do not automatically run all tests or a Full Preflight for a push.
 

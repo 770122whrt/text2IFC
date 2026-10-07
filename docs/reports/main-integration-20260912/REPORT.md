@@ -56,6 +56,6 @@
 
 ## 2026-09-23：重复 Prompt 快照去重
 
-用户批准后，九个离线 fixture 基线案例的相同 `rendered-prompt.md` 保留[setsem-01 共享原件](baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，其余八份删除。九份工作目录字节原本完全相同；各案例的原始响应、诊断、renderer-input、profile 与 metadata 仍分别保留。读取其他八案的 Prompt 时使用共享原件；旧路径、哈希和历史恢复版本见[去重记录](../../document-catalog.md#第三批删除已完成重复-prompt-快照-d15d22)。
+用户批准后，九个离线 fixture 基线案例的相同 `rendered-prompt.md` 保留[setsem-01 共享原件](baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，其余八份删除。九份工作目录字节原本完全相同；各案例的原始响应、诊断、renderer-input、profile 与 metadata 仍分别保留。读取其他八案的 Prompt 时使用共享原件；旧路径、哈希和历史恢复版本见[去重记录](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/document-catalog.md#第三批删除已完成重复-prompt-快照-d15d22)。
 
 上文“9 目录／54 文件”是 9 月 12 日归档时的数量；本次仅删除八份相同 Markdown 后为 46 文件。该批为 fixture 基线，不是真实 Provider 运行；没有合并失败次数或改写任何诊断。
