@@ -2,7 +2,7 @@
 
 本目录是 `Repair Milestone R1 — IFC2X3 Bounded Semantic Repair Closed Loop`
 的执行前冻结包。权威任务边界来自
-[`repair-milestone-r1-final-acceptance.md`](../../handoffs/repair-milestone-r1-final-acceptance.md)。
+[`repair-milestone-r1-final-acceptance.md`](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/handoffs/repair-milestone-r1-final-acceptance.md)。
 
 本冻结包建立时只声明当前实现、选择公开 IFC2X3 模型、绑定测试请求并规划未来
 Proof；该段是冻结时的历史边界。2026-09-01 的 partial genuine 状态继续保留在下方。
@@ -24,7 +24,7 @@ Plan 07 原 validation 0.2 继续作为独立 Proof。最终代码四案的第�
 三个 repaired IFC 的 reopen/L0/L1/L2 或 unsupported guard，留待后续修复。
 
 详见[最终 Proof Matrix](repair-proof-matrix-2026-09-03.md)和
-[闭合 handoff](../../handoffs/repair/repair-milestone-r1-closure-2026-09-03.md)。
+[闭合 handoff](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md)。
 
 ## 冻结结论
 
@@ -58,7 +58,7 @@ curation 全部通过后，才能升级为已接受能力。
 - [Plan 07 / R1 genuine execution matrix](plan07-r1-genuine-execution-matrix-2026-09-01.md)
 - [2026-09-01 checkpoint handoff](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md)
 - [2026-09-03 final Proof Matrix](repair-proof-matrix-2026-09-03.md)
-- [2026-09-03 closure handoff](../../handoffs/repair/repair-milestone-r1-closure-2026-09-03.md)
+- [2026-09-03 closure handoff](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md)
 
 ## 冻结时后续执行顺序（历史计划，现已完成）
 
