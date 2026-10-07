@@ -1,6 +1,6 @@
 # Restore the approved development images from the original base and DSH wheels.
 [CmdletBinding()]
-param([int]$TimeoutSeconds = 3600)
+param([int]$TimeoutSeconds = 3600, [switch]$Reinstall)
 $ErrorActionPreference = 'Stop'
 $repairRepo = (Resolve-Path (Join-Path $PSScriptRoot '../../../..')).Path
 $repairArtifacts = Join-Path $repairRepo '.cache/repair-comparison/dsh/artifacts'
@@ -42,6 +42,19 @@ function Install-RepairImage {
         & docker stop --time 2 $repairName 2>&1 | Out-Null
         & docker rm $repairName 2>&1 | Out-Null
     }
+}
+
+$repairSnapshot = Join-Path $repairRepo '.cache/repair-comparison/runtime-images.tar.gz'
+$repairSnapshotMetadata = Join-Path $repairRepo '.cache/repair-comparison/runtime-images.json'
+if (-not $Reinstall -and (Test-Path -LiteralPath $repairSnapshot) -and (Test-Path -LiteralPath $repairSnapshotMetadata)) {
+    $repairSaved = Get-Content -LiteralPath $repairSnapshotMetadata -Encoding UTF8 | ConvertFrom-Json
+    Invoke-RepairDocker -Arguments @('load', '--input', $repairSnapshot)
+    foreach ($repairImage in @($repairCommon, $repairFull, $repairDsh)) {
+        $repairActual = & docker image inspect $repairImage --format '{{.Id}}'
+        if ($LASTEXITCODE -ne 0 -or $repairActual -ne $repairSaved.images.$repairImage) { throw 'SAVED_IMAGE_ID_MISMATCH' }
+    }
+    Write-Output 'REPAIR_IMAGES_RESTORED from local image snapshot; no installation downloads.'
+    return
 }
 
 $repairExpected = @{
