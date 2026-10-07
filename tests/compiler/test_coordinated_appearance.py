@@ -28,7 +28,9 @@ def signatures(entity):
 def mesh(entity):
     settings = ifcopenshell.geom.settings()
     settings.set(settings.USE_WORLD_COORDS, True)
-    return tuple(ifcopenshell.geom.create_shape(settings, entity).geometry.verts)
+    # Keep the owning shape alive until its native vertex buffer is copied.
+    shape = ifcopenshell.geom.create_shape(settings, entity)
+    return tuple(shape.geometry.verts)
 
 
 def test_default_is_coordinated_without_new_material_or_properties(tmp_path):
