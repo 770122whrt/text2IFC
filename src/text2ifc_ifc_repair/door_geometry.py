@@ -11,6 +11,7 @@ import ifcopenshell.util.unit
 from .geometry import (
     product_geometry_bounds_in_host_mm,
     product_local_geometry_bounds_mm,
+    wall_dimensions_mm,
 )
 
 
@@ -20,9 +21,126 @@ MAX_AXIS_DEVIATION_DEGREES = 0.1
 MAX_DIMENSION_DEVIATION_MM = 1.0
 
 
+def public_door_installation_anchor(reference: Any) -> dict[str, Any]:
+    """Derive an installation witness from one surviving public occurrence.
+
+    This internal canonical parameter is not a model-authored intent field.
+    Its caller must authorize the exact offered occurrence; geometry alone
+    cannot authorize selecting a different occurrence of the same type.
+    """
+    if not reference.is_a("IfcDoor") or len(reference.FillsVoids) != 1:
+        raise ValueError("DOOR_INSTALLATION_REFERENCE_FILL_AMBIGUOUS")
+    opening = reference.FillsVoids[0].RelatingOpeningElement
+    wall = _unique_installation_host(opening)
+    if len(opening.HasFillings) != 1:
+        raise ValueError("DOOR_INSTALLATION_REFERENCE_FILL_AMBIGUOUS")
+    types = [r.RelatingType for r in reference.IsDefinedBy
+             if r.is_a("IfcRelDefinesByType")]
+    if len(types) != 1 or not types[0].is_a("IfcDoorStyle"):
+        raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
+    relative = _relative_placement(reference, opening)
+    if _axis_deviation_degrees(relative) > MAX_AXIS_DEVIATION_DEGREES:
+        raise ValueError("DOOR_INSTALLATION_REFERENCE_AXIS_UNSUPPORTED")
+    bounds = product_geometry_bounds_in_host_mm(reference, opening)
+    opening_bounds = product_geometry_bounds_in_host_mm(opening, opening)
+    offset = _center(bounds["y"]) - _center(opening_bounds["y"])
+    # Keep the original overlap, width/height, X and base checks. Only the
+    # normal installation target comes from the retained reference, not zero.
+    diagnostics = measure_door_opening_alignment(reference, opening)
+    if (diagnostics["projected_overlap_ratio"] < MIN_PROJECTED_OVERLAP_RATIO
+            or diagnostics["normal_axis_intersection_mm"] <= 0
+            or diagnostics["geometry_center_deviation_by_axis_mm"]["x"] > MAX_CENTER_DEVIATION_MM
+            or diagnostics["geometry_base_deviation_mm"] > MAX_CENTER_DEVIATION_MM
+            or diagnostics["width_deviation_mm"] > MAX_DIMENSION_DEVIATION_MM
+            or diagnostics["height_deviation_mm"] > MAX_DIMENSION_DEVIATION_MM):
+        raise ValueError("DOOR_INSTALLATION_REFERENCE_ALIGNMENT_UNSUPPORTED")
+    return {
+        "method": "public-door-opening-installation/0.1",
+        "reference_global_id": str(reference.GlobalId),
+        "reference_opening_global_id": str(opening.GlobalId),
+        "reference_wall_global_id": str(wall.GlobalId),
+        "type_global_id": str(types[0].GlobalId),
+        "width_mm": round(_millimetres(reference, float(reference.OverallWidth)), 6),
+        "height_mm": round(_millimetres(reference, float(reference.OverallHeight)), 6),
+        "opening_depth_mm": round(_extent(opening_bounds["y"]), 6),
+        "wall_thickness_mm": round(float(wall_dimensions_mm(wall)["thickness"]), 6),
+        "opening_normal_offset_from_wall_mm": round(_opening_normal_offset_in_wall(opening, wall), 6),
+        "normal_center_offset_mm": round(offset, 6),
+        "axis_sign": 1.0 if relative[0, 0] > 0 else -1.0,
+        "mapped_body": _mapped_body_signature(reference, types[0]),
+    }
+
+
+def _unique_installation_host(opening: Any) -> Any:
+    if len(opening.VoidsElements) != 1:
+        raise ValueError("DOOR_INSTALLATION_HOST_AMBIGUOUS")
+    wall = opening.VoidsElements[0].RelatingBuildingElement
+    if not wall.is_a("IfcWall"):
+        raise ValueError("DOOR_INSTALLATION_HOST_UNSUPPORTED")
+    if _axis_deviation_degrees(_relative_placement(opening, wall)) > MAX_AXIS_DEVIATION_DEGREES:
+        raise ValueError("DOOR_INSTALLATION_OPENING_AXIS_UNSUPPORTED")
+    return wall
+
+
+def _mapped_body_signature(product: Any, style: Any) -> list[dict[str, Any]]:
+    """Require the same maps and occurrence mapping conventions, not AABB fit."""
+    maps = list(style.RepresentationMaps or ())
+    body = [r for r in product.Representation.Representations
+            if r.RepresentationIdentifier == "Body"] if product.Representation else []
+    if not maps or not body:
+        raise ValueError("DOOR_INSTALLATION_MAPPED_BODY_REQUIRED")
+    signature = []
+    for representation in body:
+        for item in representation.Items:
+            if not item.is_a("IfcMappedItem") or item.MappingSource not in maps:
+                raise ValueError("DOOR_INSTALLATION_MAPPED_BODY_UNSUPPORTED")
+            matrix = ifcopenshell.util.placement.get_mappeditem_transformation(item)
+            signature.append({"map_index": maps.index(item.MappingSource),
+                              "transform": [round(float(v), 9) for v in matrix.flat]})
+    return sorted(signature, key=lambda item: (item["map_index"], item["transform"]))
+
+
+def validate_door_installation_target(opening: Any, anchor: Mapping[str, Any]) -> None:
+    """No implicit wall-face/thickness adaptation has been authorized here."""
+    wall = _unique_installation_host(opening)
+    depth = _extent(product_geometry_bounds_in_host_mm(opening, opening)["y"])
+    if (abs(depth - float(anchor["opening_depth_mm"])) > MAX_DIMENSION_DEVIATION_MM
+            or abs(float(wall_dimensions_mm(wall)["thickness"]) - float(anchor["wall_thickness_mm"])) > MAX_DIMENSION_DEVIATION_MM):
+        raise ValueError("DOOR_INSTALLATION_THICKNESS_ADAPTATION_UNSUPPORTED")
+    if abs(_opening_normal_offset_in_wall(opening, wall)
+           - float(anchor["opening_normal_offset_from_wall_mm"])) > MAX_DIMENSION_DEVIATION_MM:
+        raise ValueError("DOOR_INSTALLATION_OPENING_DEPTH_ORIGIN_UNSUPPORTED")
+
+
+def _opening_normal_offset_in_wall(opening: Any, wall: Any) -> float:
+    return (_center(product_geometry_bounds_in_host_mm(opening, wall)["y"])
+            - _center(product_geometry_bounds_in_host_mm(wall, wall)["y"]))
+
+
+def _verified_installation_anchor(door: Any, opening: Any,
+                                  anchor: Mapping[str, Any]) -> Mapping[str, Any]:
+    try:
+        reference = door.file.by_guid(str(anchor["reference_global_id"]))
+        measured = public_door_installation_anchor(reference)
+        if dict(anchor) != measured:
+            raise ValueError("DOOR_INSTALLATION_ANCHOR_MISMATCH")
+        validate_door_installation_target(opening, measured)
+        style = door.file.by_guid(str(measured["type_global_id"]))
+        if _mapped_body_signature(door, style) != measured["mapped_body"]:
+            raise ValueError("DOOR_INSTALLATION_MAPPING_MISMATCH")
+        if any(abs(_millimetres(door, float(getattr(door, attr))) - measured[key])
+               > MAX_DIMENSION_DEVIATION_MM
+               for attr, key in (("OverallWidth", "width_mm"), ("OverallHeight", "height_mm"))):
+            raise ValueError("DOOR_INSTALLATION_DIMENSIONS_MISMATCH")
+        return measured
+    except (KeyError, RuntimeError, TypeError, AttributeError) as error:
+        raise ValueError("DOOR_INSTALLATION_ANCHOR_UNAVAILABLE") from error
+
+
 def select_door_placement_in_opening(
     door: Any,
     opening: Any,
+    *, installation_anchor: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Choose the canonical 0/180-degree placement that best fills Opening.
 
@@ -36,10 +154,13 @@ def select_door_placement_in_opening(
     opening_center_y = _center(opening_bounds["y"])
     width_mm = _millimetres(door, float(door.OverallWidth))
     height_mm = _millimetres(door, float(door.OverallHeight))
+    anchor = (_verified_installation_anchor(door, opening, installation_anchor)
+              if installation_anchor is not None else None)
+    expected_normal_offset = float(anchor["normal_center_offset_mm"]) if anchor else 0.0
     candidates = []
-    for sign in (1.0, -1.0):
+    for sign in ((float(anchor["axis_sign"]),) if anchor else (1.0, -1.0)):
         rotated_center_y = sign * _center(local_bounds["y"])
-        location_y = opening_center_y - rotated_center_y
+        location_y = opening_center_y + expected_normal_offset - rotated_center_y
         location_z = opening_bounds["z"][0] - local_bounds["z"][0]
         nominal_edge_x = (
             opening_bounds["x"][0]
@@ -69,6 +190,7 @@ def select_door_placement_in_opening(
                 opening_bounds=opening_bounds,
                 nominal_bounds=nominal_bounds,
                 axis_deviation_degrees=0.0,
+                expected_normal_offset_mm=expected_normal_offset,
             )
             candidates.append(
                 {
@@ -102,6 +224,7 @@ def select_door_placement_in_opening(
 def measure_door_opening_alignment(
     door: Any,
     opening: Any,
+    *, installation_anchor: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Measure actual and nominal Door envelopes in Opening-local axes."""
 
@@ -127,11 +250,17 @@ def measure_door_opening_alignment(
         ]
         for axis, axis_name in enumerate(("x", "y", "z"))
     }
+    anchor = (_verified_installation_anchor(door, opening, installation_anchor)
+              if installation_anchor is not None else None)
+    axis_deviation = _axis_deviation_degrees(relative)
+    if anchor and (relative[0, 0] > 0) != (anchor["axis_sign"] > 0):
+        axis_deviation = 180.0
     return _alignment_diagnostics(
         door_bounds=door_bounds,
         opening_bounds=opening_bounds,
         nominal_bounds=nominal_bounds,
-        axis_deviation_degrees=_axis_deviation_degrees(relative),
+        axis_deviation_degrees=axis_deviation,
+        expected_normal_offset_mm=float(anchor["normal_center_offset_mm"]) if anchor else 0.0,
     )
 
 
@@ -141,6 +270,7 @@ def _alignment_diagnostics(
     opening_bounds: Mapping[str, list[float]],
     nominal_bounds: Mapping[str, list[float]],
     axis_deviation_degrees: float,
+    expected_normal_offset_mm: float = 0.0,
 ) -> dict[str, Any]:
     intersection_x = _intersection_length(
         door_bounds["x"], opening_bounds["x"]
@@ -185,10 +315,14 @@ def _alignment_diagnostics(
     geometry_base_deviation = abs(
         float(door_bounds["z"][0]) - float(opening_bounds["z"][0])
     )
+    normal_installation_deviation = abs(
+        _center(door_bounds["y"]) - _center(opening_bounds["y"])
+        - expected_normal_offset_mm
+    )
     geometry_placement_excess = max(
         0.0,
         geometry_center_by_axis["x"] - MAX_CENTER_DEVIATION_MM,
-        geometry_center_by_axis["y"] - MAX_CENTER_DEVIATION_MM,
+        normal_installation_deviation - MAX_CENTER_DEVIATION_MM,
         geometry_base_deviation - MAX_CENTER_DEVIATION_MM,
     )
     width_deviation = abs(
@@ -222,6 +356,8 @@ def _alignment_diagnostics(
         "geometry_base_deviation_mm": round(
             geometry_base_deviation, 6
         ),
+        "expected_normal_offset_mm": round(expected_normal_offset_mm, 6),
+        "normal_installation_deviation_mm": round(normal_installation_deviation, 6),
         "geometry_placement_excess_mm": round(
             geometry_placement_excess, 6
         ),

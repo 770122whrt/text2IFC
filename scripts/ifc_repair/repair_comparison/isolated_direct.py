@@ -5,7 +5,7 @@ import json
 import httpx
 
 from .container_tools import ContainerTools
-from .direct_runner import DirectRunner
+from .direct_runner import DirectRunner, submission_messages
 from .controller_owner import task_owner
 
 
@@ -39,7 +39,7 @@ class ChatExecutor(DirectRunner):
     def messages(self):
         events=self.ledger.events(self.run_id)
         results={e['payload']['action_id']:e['payload'] for e in events if e['kind']=='chat_tool_result'}
-        messages=[]
+        messages=submission_messages(events)
         for event in events:
             kind,p=event['kind'],event['payload']
             if kind=='initial_message':messages.append(p)

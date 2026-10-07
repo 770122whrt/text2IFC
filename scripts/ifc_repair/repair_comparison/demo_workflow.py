@@ -280,6 +280,32 @@ def run(root,run_id):
     with task_owner(root,run_id):return run_owned(root,run_id)
 
 
+def d_failure_terminal(ledger, run_id, detail):
+    """Classify native failure from task-bound controller evidence only.
+
+    DSH exposes a controller HTTP 403 as an authentication error. A recent
+    budget refusal is therefore authoritative; an SDK error string is not.
+    A later reservation makes an earlier refusal stale for this purpose.
+    """
+    for event in reversed(ledger.events(run_id)):
+        if event['kind'] == 'request_reserved':
+            break
+        if event['kind'] == 'controller_request_rejected':
+            payload = event['payload']
+            if (payload.get('origin') == 'repair-controller'
+                and payload.get('wire_protocol') == 'messages'
+                and payload.get('error') in {
+                    'TOKEN_BUDGET_EXHAUSTED', 'CALL_BUDGET_EXHAUSTED',
+                    'TIME_BUDGET_EXHAUSTED'}):
+                return 'budget_exhausted', payload['error']
+            break
+    if detail == 'ACTIVE_TIME_BUDGET_EXHAUSTED':
+        state = ledger.snapshot(run_id)
+        if state['active_elapsed_s'] >= state['limits']['active_seconds']:
+            return 'budget_exhausted', detail
+    return 'runtime_error', detail
+
+
 def run_owned(root,run_id):
     root=safe_path(Path(root))
     config=read_json(root/'experiment.json')
@@ -356,9 +382,12 @@ def run_owned(root,run_id):
     runner.ledger.record(run_id,'isolated_native_return',result)
     runner.ledger.set_native(run_id,{'result':result,'state_volume':route['volume']})
     if not result['ok']:
-        return runner.ledger.finish(run_id,'budget_exhausted' if 'BUDGET' in result.get('error','') else 'runtime_error',detail=result.get('error'))
+        status, detail = d_failure_terminal(runner.ledger, run_id, result.get('error'))
+        return runner.ledger.finish(run_id, status, detail=detail)
     native=result['result']
-    if native['finish_reason']=='error':return runner.ledger.finish(run_id,'runtime_error',detail='native turn ended with error')
+    if native['finish_reason']=='error':
+        status, detail = d_failure_terminal(runner.ledger, run_id, 'native turn ended with error')
+        return runner.ledger.finish(run_id, status, detail=detail)
     try:path=submitted_path(native['final_response'])
     except ValueError as error:return runner.ledger.finish(run_id,'runtime_error',detail=str(error))
     if path:return runner.submit(path)

@@ -130,6 +130,20 @@ def generate_scene_repair_intent(*, provider: Any, request_id: str, repair_reque
                 "schema_version": SCENE_GROUNDING_VERSION, "derivations": derivations,
                 "offered_ids": sorted(scene.offered_ids), "scene_question": question}))
             result["scene_grounding_version"] = SCENE_GROUNDING_VERSION
+            # Trusted internal metadata, produced only after offered-identity
+            # and reference/type verification. Never accept this from Stage 2.
+            result["installation_references"] = {
+                item["operation_id"]: {
+                    "reference_global_id": item["reference_occurrence_id"],
+                    "target_global_id": item["target_id"],
+                }
+                for item in derivations
+                if item.get("reference_occurrence_id") and any(
+                    op.operation_id == item["operation_id"]
+                    and op.operation_type in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall"}
+                    for op in final_intent.operations
+                )
+            }
             return result
     return _failure("SCENE_GROUNDING_EXHAUSTED", attempts)
 

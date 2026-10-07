@@ -144,7 +144,7 @@ class PublicOnlyProvider(ReplayProvider):
     def complete(self, index, *, messages, tools):
         question = self.run_id == 'formal-001-A'
         out_of_card = self.run_id == 'formal-003-C'
-        answers = [m['content'] for m in messages[1:] if m['role']=='user']
+        answers = [m['content'] for m in messages if m['role']=='user'][1:]
         request = '\n'.join(m['content'] for m in messages if m['role']=='user')
         if 'PRIVATE-GOLD-CANARY' in json.dumps(messages): raise AssertionError('PRIVATE_LEAK')
         reads = [json.loads(m['content']) for m in messages if m['role']=='tool' and '"text"' in m['content']]

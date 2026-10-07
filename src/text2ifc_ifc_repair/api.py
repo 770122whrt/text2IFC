@@ -205,7 +205,8 @@ class RepairAPI:
                 json.dumps(intent.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":")) + "\n",
             )
         context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent,
-                                          scene_mode=self._scene_grounding)
+                                          scene_mode=self._scene_grounding,
+                                          installation_references=intent_result.get("installation_references"))
         if intent_result.get("classification") == "unsupported":
             reason_code = str(
                 intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"
@@ -397,6 +398,8 @@ class RepairAPI:
             run_dir, repair_text=repair_text, intent=intent,
             name=f"api-context-v{expected_state_version + 1:03d}-{attempt_id}.json",
             scene_mode=scene_mode,
+            installation_references=(generated.get("installation_references", {})
+                if kind == "add_detail" else context.get("installation_references", {})),
         )
         resume_payload: dict[str, Any] = {
             "api_context": self.store.artifact_binding(
@@ -722,6 +725,9 @@ class RepairAPI:
                 )
             if intent.schema_version == REPAIR_INTENT_SCHEMA_VERSION_0_10:
                 resolver_options["source_ifc_path"] = state.source.reference
+            public_context = json.loads((run_dir / _latest_api_context(state)).read_text(encoding="utf-8"))
+            if _context_scene_mode(public_context):
+                resolver_options["installation_references"] = public_context.get("installation_references", {})
             orchestrator_options["resolver_options"] = resolver_options
             orchestrator = self._orchestrator_factory(
                 run_directory=run_dir,
@@ -946,11 +952,13 @@ class RepairAPI:
         run_dir: Path, *, repair_text: str, intent: RepairIntent,
         name: str = "api-context.json",
         scene_mode: bool = False,
+        installation_references: Mapping[str, Any] | None = None,
     ) -> str:
         payload = (
             json.dumps(
                 {"schema_version": _context_version(scene_mode), "repair_text": repair_text, "intent": intent.to_dict(),
-                 **({"scene_grounding_version": SCENE_GROUNDING_VERSION} if scene_mode else {})},
+                 **({"scene_grounding_version": SCENE_GROUNDING_VERSION,
+                     "installation_references": dict(installation_references or {})} if scene_mode else {})},
                 ensure_ascii=False,
                 sort_keys=True,
                 separators=(",", ":"),
@@ -1149,7 +1157,7 @@ def _parameter_clarification(
 
 
 def _context_version(scene_mode: bool) -> str:
-    return "text2ifc/ifc-repair-api-context/0.2" if scene_mode else "text2ifc/ifc-repair-api-context/0.1"
+    return "text2ifc/ifc-repair-api-context/0.3" if scene_mode else "text2ifc/ifc-repair-api-context/0.1"
 
 
 def _context_scene_mode(context: Mapping[str, Any]) -> bool:

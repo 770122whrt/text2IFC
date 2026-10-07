@@ -561,7 +561,16 @@ def _create_door(
     door.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=representations
     )
-    selected_placement = select_door_placement_in_opening(door, opening)
+    installation_anchor = operation["parameters"].get("door_installation_anchor")
+    if installation_anchor is not None and (
+        door_style is None
+        or str(door_style.GlobalId) != installation_anchor.get("type_global_id")
+    ):
+        raise ValueError("DOOR_INSTALLATION_TYPE_MISMATCH")
+    selected_placement = select_door_placement_in_opening(
+        door, opening, **({"installation_anchor": installation_anchor}
+                         if installation_anchor is not None else {}),
+    )
     door.ObjectPlacement = local_placement(
         model,
         relative_to=opening.ObjectPlacement,
@@ -869,7 +878,11 @@ def _postconditions(
         }
     expected = operation["parameters"]["door"]
     try:
-        alignment = measure_door_opening_alignment(door, opening)
+        installation_anchor = operation["parameters"].get("door_installation_anchor")
+        alignment = measure_door_opening_alignment(
+            door, opening, **({"installation_anchor": installation_anchor}
+                             if installation_anchor is not None else {}),
+        )
     except Exception as error:
         alignment = {
             "valid": False,

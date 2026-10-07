@@ -2,13 +2,42 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from pathlib import Path
 import shutil
 
 from .contracts import PUBLIC_FILES, safe_path, sha256
-from .ledger import Ledger, TERMINAL, identifier
+from .ledger import Ledger, TERMINAL, identifier, encode
 from .neutral_tools import NeutralTools, TOOLS
+
+
+# Experimental transport instruction, separate from registered repair prompts.
+# Keep this version's bytes stable; future changes require another version.
+SUBMISSION_PROFILE = 'repair-comparison-neutral-submission/0.1'
+SUBMISSION_PROFILES = {SUBMISSION_PROFILE: {
+    'role': 'system',
+    'content': ('提交说明：完成后，请调用 submit 工具一次，并在 path 参数中明确指定工作目录内'
+                '唯一最终 IFC 文件的相对路径。仅写入文件、在文字中给出路径或链接，均不构成提交。'
+                'submit 成功后任务结束。'),
+}}
+
+
+def submission_messages(events):
+    """Reconstruct only the frozen opt-in event, never infer from current state."""
+    protocols = [event['payload'] for event in events if event['kind'] == 'submission_protocol']
+    if not protocols:
+        return []
+    if len(protocols) != 1:
+        raise ValueError('AMBIGUOUS_SUBMISSION_PROTOCOL')
+    payload = protocols[0]
+    expected = SUBMISSION_PROFILES.get(payload.get('profile_version'))
+    if expected is None or payload.get('message') != expected or payload.get('content_sha256') != hashlib.sha256(expected['content'].encode('utf8')).hexdigest():
+        raise ValueError('SUBMISSION_PROTOCOL_BINDING_CHANGED')
+    initial = [event['payload'] for event in events if event['kind'] == 'initial_message']
+    if len(initial) != 1 or payload.get('initial_message_sha256') != hashlib.sha256(encode(initial[0]).encode('utf8')).hexdigest():
+        raise ValueError('SUBMISSION_PROTOCOL_INITIAL_MESSAGE_CHANGED')
+    return [copy.deepcopy(payload['message'])]
 
 
 class ReplayProvider:
@@ -31,9 +60,17 @@ class DirectRunner:
         self.tools = NeutralTools(self.workspace, tool_seconds=state['limits']['tool_seconds'])
 
     @classmethod
-    def create(cls, public: Path, root: Path, *, case_id, arm, budget, mode='offline_development', runtime_metadata=None):
+    def create(cls, public: Path, root: Path, *, case_id, arm, budget, mode='offline_development', runtime_metadata=None, submission_profile='auto'):
         if arm not in {'A', 'C', 'B', 'D'}:
             raise ValueError('ARM_NOT_IMPLEMENTED')
+        if submission_profile == 'auto':
+            formal = mode == 'live_formal' or (runtime_metadata or {}).get('stage') == 'repair-comparison-formal-live'
+            submission_profile = SUBMISSION_PROFILE if formal and arm in {'A', 'C'} else None
+        if submission_profile is not None:
+            if submission_profile not in SUBMISSION_PROFILES:
+                raise ValueError('UNKNOWN_SUBMISSION_PROFILE')
+            if arm not in {'A', 'C'}:
+                raise ValueError('SUBMISSION_PROTOCOL_REQUIRES_A_OR_C')
         identifier(case_id)
         public, root = safe_path(Path(public)), safe_path(Path(root))
         if set(p.name for p in public.iterdir()) != PUBLIC_FILES:
@@ -63,7 +100,47 @@ class DirectRunner:
         request = (inputs / 'request.txt').read_text(encoding='utf-8').strip()
         (workspace / 'task.txt').write_text(request + '\n', encoding='utf-8')
         ledger.record(run_id, 'initial_message', {'role': 'user', 'content': f'请按以下要求操作这个 IFC 文件：\n\n{request}\n\nIFC 文件：model.ifc'})
-        return cls(root, run_id)
+        runner = cls(root, run_id)
+        if submission_profile is not None:
+            runner._enable_submission_protocol(profile=submission_profile, reason='new task initialization', application='new_task')
+        return runner
+
+    def enable_submission_protocol(self, *, profile, reason):
+        """Explicit migration for a never-started ready A/C task; no model call."""
+        return self._enable_submission_protocol(profile=profile, reason=reason, application='explicit_ready_migration')
+
+    def _enable_submission_protocol(self, *, profile, reason, application):
+        if profile not in SUBMISSION_PROFILES:
+            raise ValueError('UNKNOWN_SUBMISSION_PROFILE')
+        if not isinstance(reason, str) or not reason.strip():
+            raise ValueError('SUBMISSION_PROTOCOL_REASON_REQUIRED')
+        # A single SQLite write transaction closes the check/append race with
+        # start/reserve. No initial message, prior event, or source is rewritten.
+        with self.ledger.transaction() as db:
+            state = self.ledger._load(db, self.run_id)
+            if state['arm'] not in {'A', 'C'}:
+                raise ValueError('SUBMISSION_PROTOCOL_REQUIRES_A_OR_C')
+            rows = db.execute('SELECT kind,payload FROM events WHERE run_id=? ORDER BY seq', (self.run_id,)).fetchall()
+            events = [{'kind':row['kind'],'payload':json.loads(row['payload'])} for row in rows]
+            initial = [event['payload'] for event in events if event['kind'] == 'initial_message']
+            if (state['status'] != 'ready' or state['started'] is not None or state['ended'] is not None
+                    or state['activities'] or state['question'] or state['artifact']
+                    or self.ledger._calls(db, self.run_id)
+                    or any(event['kind'] not in {'created','initial_message','submission_protocol'} for event in events)
+                    or len(initial) != 1):
+                raise ValueError('SUBMISSION_PROTOCOL_REQUIRES_PRISTINE_READY_TASK')
+            existing = submission_messages(events)
+            if existing:
+                if existing != [SUBMISSION_PROFILES[profile]]:
+                    raise ValueError('SUBMISSION_PROTOCOL_ALREADY_FROZEN')
+            else:
+                message = copy.deepcopy(SUBMISSION_PROFILES[profile])
+                payload = {'profile_version':profile, 'message':message,
+                    'content_sha256':hashlib.sha256(message['content'].encode('utf8')).hexdigest(),
+                    'initial_message_sha256':hashlib.sha256(encode(initial[0]).encode('utf8')).hexdigest(),
+                    'application':application, 'reason':reason}
+                self.ledger._event(db, self.run_id, 'submission_protocol', payload, event_id='submission-protocol')
+        return self.ledger.snapshot(self.run_id)
 
     def submit(self, relative):
         state = self.ledger.snapshot(self.run_id)
@@ -92,9 +169,10 @@ class DirectRunner:
         return self.ledger.finish(self.run_id, 'submitted', artifact=artifact)
 
     def messages(self):
-        messages = []
+        events = self.ledger.events(self.run_id)
+        messages = submission_messages(events)
         calls = {row['request_id']: row for row in self.ledger.calls(self.run_id)}
-        for event in self.ledger.events(self.run_id):
+        for event in events:
             kind, payload = event['kind'], event['payload']
             if kind == 'initial_message':
                 messages.append(payload)
@@ -199,3 +277,22 @@ class DirectRunner:
             except Exception as error:
                 self.ledger.settle(self.run_id, request_id, usage=None, response={'error': type(error).__name__, 'detail': str(error)}, failed=True)
                 return self.ledger.finish(self.run_id, 'runtime_error', detail=str(error))
+
+
+def main(argv=None):
+    """Explicit operator entry point; does not migrate all tasks implicitly."""
+    import argparse
+    parser = argparse.ArgumentParser(description='Opt one pristine ready A/C task into a versioned neutral submission protocol.')
+    parser.add_argument('--root', type=Path, required=True)
+    parser.add_argument('--run-id', required=True)
+    parser.add_argument('--profile', choices=list(SUBMISSION_PROFILES), required=True)
+    parser.add_argument('--reason', required=True)
+    args = parser.parse_args(argv)
+    runner = DirectRunner(args.root, args.run_id)
+    state = runner.enable_submission_protocol(profile=args.profile, reason=args.reason)
+    print(json.dumps({'run_id':state['run_id'], 'status':state['status'], 'profile':args.profile}, ensure_ascii=False))
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

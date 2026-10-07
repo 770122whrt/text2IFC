@@ -12,6 +12,7 @@ import json
 import math
 import uuid
 from dataclasses import dataclass, replace
+from pathlib import Path
 from typing import Any, Mapping, Protocol
 
 import ifcopenshell.guid
@@ -134,6 +135,7 @@ def resolve_repair_intent(
     property_registry: IfcKnowledgeRegistry | None = None,
     property_knowledge_resolver: PropertyKnowledgeResolverProtocol | None = None,
     source_ifc_path: Any = None,
+    installation_references: Mapping[str, Any] | None = None,
 ) -> ResolutionBatch:
     """Resolve all operations in stable order or return one fail-closed pause."""
 
@@ -298,6 +300,32 @@ def resolve_repair_intent(
                         for item in decision.get("authorized_semantics", ())
                     ),
                 )
+        # Only the scene API's verified, persisted reference identities enter
+        # this internal canonical field. Provider parameters cannot supply it.
+        installation = (installation_references or {}).get(operation.operation_id)
+        if installation is not None:
+            from .door_geometry import public_door_installation_anchor, validate_door_installation_target
+            try:
+                if (operation.operation_type not in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall"}
+                        or installation["target_global_id"] != record.ifc_global_id
+                        or source_ifc_path is None):
+                    raise ValueError("DOOR_INSTALLATION_BINDING_MISMATCH")
+                source_bytes = Path(source_ifc_path).read_bytes()
+                if hashlib.sha256(source_bytes).hexdigest() != expected_source_sha256.removeprefix("sha256:"):
+                    raise ValueError("DOOR_INSTALLATION_SOURCE_MISMATCH")
+                public_model = ifcopenshell.file.from_string(source_bytes.decode("utf-8"))
+                reference = public_model.by_guid(str(installation["reference_global_id"]))
+                anchor = public_door_installation_anchor(reference)
+                prototype = operation.to_dict().get("prototype_intent") or {}
+                if (prototype.get("reference_kind") != "global_id"
+                        or prototype.get("reference") != anchor["type_global_id"]):
+                    raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_MISMATCH")
+                if operation.operation_type == "fill_existing_opening_with_door":
+                    validate_door_installation_target(public_model.by_guid(record.ifc_global_id), anchor)
+                resolved_parameters = {**resolved_parameters, "door_installation_anchor": anchor}
+            except (ValueError, RuntimeError, KeyError, TypeError, AttributeError) as error:
+                return _failure(intent, str(error), operation_id=operation.operation_id,
+                                operations=completed, source_sha=expected_source_sha256)
         completed.append(
             ResolvedOperation(
                 operation_id=operation.operation_id,
