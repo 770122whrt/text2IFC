@@ -1,0 +1,43 @@
+{
+  "schema_version": "text2ifc/phase12-public-structural-request/0.1",
+  "case_id": "candidate-011-after-containment-fix",
+  "request": "首层（楼层标高0米）少了一根水平梁。请在两个端面中心（12.875，29，2.95）米和（12.875，25，2.95）米之间补回矩形梁，梁宽250毫米，竖向高500毫米。\n\n以上位置使用模型全局坐标，坐标和标高的单位是米。请保留其余构件及其位置、几何和现有属性。",
+  "operations": [
+    {
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "value": 0.0,
+            "tolerance_mm": 0.1
+          }
+        ]
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": 12875.0,
+            "y_mm": 29000.0,
+            "z_mm": 2950.0
+          },
+          "end": {
+            "x_mm": 12875.0,
+            "y_mm": 25000.0,
+            "z_mm": 2950.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 250.0,
+          "height_mm": 500.0
+        }
+      }
+    }
+  ]
+}

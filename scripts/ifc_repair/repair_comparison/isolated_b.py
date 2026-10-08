@@ -31,6 +31,8 @@ SOURCE_PACKAGES = frozenset(('text2ifc_agent', 'text2ifc_contract', 'text2ifc_ex
                              'text2ifc_ifc_repair', 'text2ifc_knowledge',
                              'text2ifc_presentation', 'text2ifc_text'))
 RESULT_PREFIX = 'ISOLATED_B_RESULT='
+PROPERTY_RUNTIME_VERSION = 'text2ifc/isolated-b-property-runtime/0.1'
+PROPERTY_RUNTIME_IMAGE = 'text2ifc/repair-tools:py312-ifc085-property-v1'
 
 
 def _checked_file(root: Path, path: Path) -> Path:
@@ -156,6 +158,7 @@ class IsolatedBConfig:
     timeout_seconds: float = 1800.0
     evidence_class: str = 'deterministic_fake_http'
     scene_grounding: bool = False
+    property_model_directory: Path | None = None
 
     def __post_init__(self):
         for value in (self.state_volume, self.network, self.container_name):
@@ -169,6 +172,17 @@ class IsolatedBConfig:
             raise ValueError('POSITIVE_TIMEOUT_REQUIRED')
         if self.evidence_class not in {'deterministic_fake_http', 'live'}:
             raise ValueError('INVALID_EVIDENCE_CLASS')
+        if self.property_model_directory is not None:
+            if self.image != PROPERTY_RUNTIME_IMAGE:
+                raise ValueError('PROPERTY_RUNTIME_IMAGE_REQUIRED')
+            model = Path(self.property_model_directory).absolute()
+            if ',' in str(model) or not model.is_dir():
+                raise ValueError('PROPERTY_MODEL_DIRECTORY_INVALID')
+            if any(p.is_symlink() or (hasattr(p, 'is_junction') and p.is_junction())
+                   for p in (model, *model.parents)):
+                raise ValueError('PROPERTY_MODEL_LINK_FORBIDDEN')
+            for name in ('config.json', 'modules.json'):
+                _checked_file(model, model / name)
 
 
 class IsolatedB:
@@ -198,6 +212,14 @@ class IsolatedB:
         for path in (bundle, work, output):
             if ',' in str(path):
                 raise ValueError('DOCKER_MOUNT_PATH_CONTAINS_COMMA')
+        property_args = []
+        if c.property_model_directory is not None:
+            property_args = [
+                '--env=HF_HUB_OFFLINE=1', '--env=TRANSFORMERS_OFFLINE=1',
+                '--env=HF_HUB_DISABLE_TELEMETRY=1', '--env=OMP_NUM_THREADS=4',
+                '--env=MKL_NUM_THREADS=4', '--env=TOKENIZERS_PARALLELISM=false',
+                '--mount', f'type=bind,source={Path(c.property_model_directory).absolute()},target=/models/bge-m3,readonly',
+            ]
         return ['docker', 'run', '--rm', '--pull=never', '-i', '--name', c.container_name,
                 '--network', c.network, '--add-host=host.docker.internal:host-gateway',
                 '--user=65532:65532', '--read-only', '--cap-drop=ALL',
@@ -209,6 +231,7 @@ class IsolatedB:
                 '--mount', f'type=bind,source={work / "task.txt"},target=/workspace/task.txt,readonly',
                 '--mount', f'type=bind,source={output},target=/workspace/output',
                 '--mount', f'type=volume,source={c.state_volume},target=/state,volume-nocopy',
+                *property_args,
                 c.image, 'python', '/runtime/isolated_b.py', 'worker']
 
     def execute(self, action: str, run_id: str, **answer_binding) -> dict:
@@ -223,6 +246,8 @@ class IsolatedB:
                    'evidence_class': c.evidence_class, **answer_binding}
         if c.scene_grounding:
             payload['scene_grounding_version'] = 'text2ifc/ifc-scene-grounding/0.2'
+        if c.property_model_directory is not None:
+            payload['property_runtime_version'] = PROPERTY_RUNTIME_VERSION
         try:
             result = subprocess.run(self.docker_argv(), input=json.dumps(payload, ensure_ascii=False),
                                     text=True, encoding='utf-8', capture_output=True, timeout=c.timeout_seconds)
@@ -276,7 +301,9 @@ class IsolatedB:
         model task or budget. Callers must verify the pending ledger separately.
         """
         snapshot = Path(snapshot).absolute()
-        if not snapshot.is_dir() or {p.name for p in snapshot.iterdir()} != {'task.json', 'native'}:
+        if (not snapshot.is_dir()
+                or not {'task.json', 'native'} <= {p.name for p in snapshot.iterdir()}
+                or {p.name for p in snapshot.iterdir()} - {'task.json', 'native', 'property-runtime'}):
             raise ValueError('STATE_RESTORE_LAYOUT_REQUIRED')
         for path in snapshot.rglob('*'):
             if path.is_file():
@@ -292,6 +319,11 @@ class IsolatedB:
             raise ValueError('STATE_RESTORE_BINDING_MISMATCH')
         if binding.get('scene_grounding_version') != (
                 'text2ifc/ifc-scene-grounding/0.2' if self.config.scene_grounding else None):
+            raise ValueError('STATE_RESTORE_METHOD_MISMATCH')
+        property_version = PROPERTY_RUNTIME_VERSION if self.config.property_model_directory is not None else None
+        if binding.get('property_runtime_version') != property_version:
+            raise ValueError('STATE_RESTORE_METHOD_MISMATCH')
+        if (snapshot / 'property-runtime').exists() and not property_version:
             raise ValueError('STATE_RESTORE_METHOD_MISMATCH')
         c = self.config
         exists = subprocess.run(['docker', 'volume', 'inspect', c.state_volume], capture_output=True)
@@ -330,6 +362,7 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
     """
     from text2ifc_agent.openai_compat import OpenAICompatRuntimeConfig, OpenAICompatibleLiveProvider
     from text2ifc_ifc_repair.api import RepairAPI
+    from text2ifc_knowledge import create_property_runtime_from_environment
     import jsonschema
 
     action = payload['action']
@@ -354,6 +387,11 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
         raise ValueError('SCENE_GROUNDING_VERSION_UNSUPPORTED')
     if scene_version:
         binding['scene_grounding_version'] = scene_version
+    property_version = payload.get('property_runtime_version')
+    if property_version not in (None, PROPERTY_RUNTIME_VERSION):
+        raise ValueError('PROPERTY_RUNTIME_VERSION_UNSUPPORTED')
+    if property_version:
+        binding['property_runtime_version'] = property_version
     state_root.mkdir(parents=True, exist_ok=True)
     binding_path = state_root / 'task.json'
     if action == 'start':
@@ -369,8 +407,25 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
         timeout_seconds=float(payload.get('timeout_seconds', 1800)))
     provider = OpenAICompatibleLiveProvider(config=config)
     native_root = state_root / 'native'
-    api = RepairAPI(native_root, provider=provider, scene_grounding=bool(scene_version))
+    property_runtime = None
     try:
+        options = {}
+        if property_version and action != 'read':
+            runtime_root = Path(__file__).resolve().parent
+            if not (runtime_root / 'src').is_dir():
+                runtime_root = Path(__file__).resolve().parents[3]
+            # This explicit environment is independent of Provider credentials
+            # and host Qdrant settings. The encoder uses local_files_only=True.
+            property_runtime = create_property_runtime_from_environment({
+                'TEXT2IFC_PROPERTY_BGE_MODEL_PATH': '/models/bge-m3',
+                'TEXT2IFC_PROPERTY_BGE_DEVICE': 'cpu',
+                'TEXT2IFC_PROPERTY_QDRANT_PATH': str(state_root / 'property-runtime/qdrant'),
+            }, project_root=runtime_root)
+            if (property_runtime.health.status != 'ready'
+                    or not property_runtime.health.acceptance_eligible):
+                raise ValueError('PROPERTY_RUNTIME_NOT_READY:' + str(property_runtime.health.reason_code))
+            options['property_knowledge_runtime'] = property_runtime
+        api = RepairAPI(native_root, provider=provider, scene_grounding=bool(scene_version), **options)
         if action == 'start':
             result = api.start(source, request.read_text(encoding='utf-8'), run_id=native_id)
         elif action == 'answer':
@@ -404,7 +459,11 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
         return {'ok': True, 'task_run_id': run_id, 'result': result.to_dict(), 'artifact_relative': artifact,
                 'source_unchanged': True, 'native_root': '/state/native', 'evidence_class': evidence_class}
     finally:
-        provider.client.close()
+        try:
+            if property_runtime is not None and property_runtime.vector_index is not None:
+                property_runtime.vector_index.close()
+        finally:
+            provider.client.close()
 
 
 def main() -> int:

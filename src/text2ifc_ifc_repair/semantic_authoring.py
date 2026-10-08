@@ -587,7 +587,7 @@ def apply_semantic_assignments(
                 pset = ifcopenshell.util.element.copy_deep(
                     model,
                     pset,
-                    exclude=("OwnerHistory",),
+                    exclude=("IfcOwnerHistory",),
                 )
                 pset.GlobalId = _semantic_global_id(
                     operation,

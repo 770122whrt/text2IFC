@@ -324,14 +324,6 @@ def _preconditions(
             }
         )
     containment = list(storey.ContainsElements)
-    if len(containment) > 1:
-        issues.append(
-            {
-                "code": "STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS",
-                "path": "/target/storey_global_id",
-                "message": storey_id,
-            }
-        )
     for relation in containment:
         for existing_beam in relation.RelatedElements:
             if not existing_beam.is_a("IfcBeam"):
@@ -455,7 +447,8 @@ def _applicator(
         *binding["created"],
     ]
     modified: list[dict[str, str]] = [*binding["modified"]]
-    if containment:
+    # Multiple existing relations stay untouched; the new member gets its own.
+    if len(containment) == 1:
         add_to_containment(containment[0], beam)
         modified.append(
             {

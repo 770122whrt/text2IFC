@@ -1,1036 +1,208 @@
 {
-  "allowed_alternatives": [
-    "New identities and different STEP serialization are allowed.",
-    "Door swing is not a mandatory clarification; match the retained frame/leaf/material reference."
-  ],
-  "author_expectations": {
-    "target-1": {
-      "basis": "public_author_intent",
-      "basis_detail": "Task-author requested facts are authored before damage. Source measurements independently verify feasibility; they are not silently added during scoring.",
-      "bounds_world_m": [
-        [
-          8.991999999999026,
-          9.205000000000002
-        ],
-        [
-          10.900000000000002,
-          11.98
-        ],
-        [
-          0.0,
-          2.145
-        ]
-      ],
-      "center_offset_evidence": {
-        "actual_target_offset_world_m": [
-          -0.021500000000486352,
-          0.0,
-          0.01750000000000007
-        ],
-        "basis": "retained_public_reference_geometry",
-        "matches_target_within_1mm": true,
-        "offset_m": [
-          -0.021500000000486352,
-          1.7763568394002505e-15,
-          0.01750000000000007
-        ],
-        "reference_offset_world_m": [
-          1.7763568394002505e-15,
-          0.021500000000486352,
-          0.01750000000000007
-        ],
-        "target_validation_delta_m": 1.7763568394002505e-15
-      },
-      "coarse_match_m": 0.35,
-      "geometry_checks": {
-        "mesh_tolerance_mm": 0.01,
-        "nominal_mesh_height_delta_mm": 35.0,
-        "nominal_mesh_width_delta_mm": 69.99999999999818,
-        "reference_derived_center_offset_matches_target": true,
-        "reference_mesh_equal": true,
-        "storey_elevation_attribute_agrees": true
-      },
-      "height_mm": 2110.0,
-      "host_bounds_world_m": [
-        [
-          9.055000000000001,
-          9.185
-        ],
-        [
-          10.465,
-          14.805
-        ],
-        [
-          0.0,
-          2.95
-        ]
-      ],
-      "host_guid": "20qmL4_cXAqvLHe6WvA2pE",
-      "host_placement_world_m": [
-        [
-          0.0,
-          -1.0,
-          0.0,
-          9.120000000000001
-        ],
-        [
-          1.0,
-          0.0,
-          0.0,
-          10.465
-        ],
-        [
-          0.0,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0,
-          1.0
-        ]
-      ],
-      "id": "target-1",
-      "ifc_class": "IfcDoor",
-      "kind": "door",
-      "match_center_world_m": [
-        9.120000000000001,
-        11.440000000000001,
-        1.055
-      ],
-      "mesh_center_world_m": [
-        9.098499999999515,
-        11.440000000000001,
-        1.0725
-      ],
-      "mesh_local_extents_mm": [
-        1079.9999999999982,
-        213.00000000097617,
-        2145.0
-      ],
-      "mesh_sha256": "3400b44568b6fb751236a270cb319ea912d428bdeaaa1509b769ee9c1c02163d",
-      "mesh_triangles": 460,
-      "opening_bottom_world_m": 0.0,
-      "opening_bounds_world_m": [
-        [
-          9.055,
-          9.185
-        ],
-        [
-          10.935,
-          11.945
-        ],
-        [
-          0.0,
-          2.11
-        ]
-      ],
-      "opening_center_world_m": [
-        9.120000000000001,
-        11.440000000000001,
-        1.055
-      ],
-      "opening_center_xy_m": [
-        9.120000000000001,
-        11.440000000000001
-      ],
-      "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
-      "opening_height_mm": 2110.0,
-      "opening_width_mm": 1009.9999999999998,
-      "operation_type": "SINGLE_SWING_RIGHT",
-      "placement_world_m": [
-        [
-          0.0,
-          -1.0,
-          0.0,
-          9.120000000000001
-        ],
-        [
-          1.0,
-          0.0,
-          0.0,
-          11.44
-        ],
-        [
-          0.0,
-          0.0,
-          1.0,
-          0.0
-        ],
-        [
-          0.0,
-          0.0,
-          0.0,
-          1.0
-        ]
-      ],
-      "preserve_opening": true,
-      "reference_center_xy_m": [
-        13.52,
-        11.760000000000002
-      ],
-      "reference_guid": "20qmL4_cXAqvLHe6WvA2os",
-      "reference_step_id": 9969,
-      "reference_storey_world_elevation_m": 0.0,
-      "sill_mm": 0.0,
-      "source_step_id": 6277,
-      "storey_attribute_elevation_m": 0.0,
-      "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
-      "storey_world_elevation_m": 0.0,
-      "target_center_offset_basis": "retained_public_reference_geometry",
-      "target_center_offset_from_opening_m": [
-        -0.021500000000486352,
-        1.7763568394002505e-15,
-        0.01750000000000007
-      ],
-      "target_guid": "20qmL4_cXAqvLHe6WvA2on",
-      "type_guid": "20qmL4_cXAqvLHe7qvA2ow",
-      "unit_to_mm": 1.0,
-      "width_mm": 1010.0
-    }
-  },
-  "budget": {
-    "limits": {
-      "active_seconds": 1800,
-      "calls": 48,
-      "extensions": [],
-      "tokens": 1250000,
-      "tool_seconds": 120
-    },
-    "provider_calls_allowed": true,
-    "requires_current_stage_admission": true,
-    "status": "frozen"
-  },
+  "schema_version": "repair-comparison-task-candidate/0.2",
+  "purpose": "formal_candidate",
   "case_id": "formal-014",
-  "clarification": {
-    "facts": {},
-    "required_user_facts": []
+  "summary": "补回一根矩形柱",
+  "data_scope": "evaluator_preparation_only",
+  "draft": true,
+  "freeze_status": "not_frozen",
+  "published_as_formal": false,
+  "old_global_plan_applies": false,
+  "source": {
+    "asset_id": "gni-bim-dataset-model_123-c9b24fc7b2a4",
+    "source_id": "gni-bim-dataset",
+    "source_path": "dataset/external/repairs/metadata-v2/gni-bim-dataset-model_123-c9b24fc7b2a4/model_123.ifc",
+    "license": "CC-BY-4.0",
+    "registry": "dataset/external/ifc-asset-register.jsonl",
+    "registry_line": 202,
+    "reference_role": "preselected_reference_from_registered_repair_copy"
   },
-  "clarification_required": false,
+  "source_sha256": "09d112a3e3760c08cc6540da9a38d7b7e8bda4e3809846eb022dae7e45aeafe3",
+  "damaged_sha256": "c49baf2aaff8f197d30c997ec930360f2453ca0ddaf5d8f3efc4075f97312a7e",
+  "request": "地面标高0米的这一层，在平面中心（X=-15.845，Y=15.919）米处少了一根贯通到23米标高的柱。请补回这根竖直矩形柱：柱底中心标高0米，柱顶中心标高23米，截面200×450毫米。它仍归属于柱底所在的地面层。\n\n以上位置使用模型全局坐标，坐标和标高的单位是米。请保留其余构件及其位置、几何和现有属性。",
+  "public": {
+    "ifc": "public/model.ifc",
+    "request": "public/request.txt"
+  },
+  "private_inputs_never_for_tested_system": [
+    "private/",
+    "REVIEW.md",
+    "VIEW.html",
+    "IFC-VALIDATION.md"
+  ],
   "damage": [
     {
-      "kind": "door",
-      "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
-      "preserve_opening": true,
-      "source_step_id": 6277,
-      "target_guid": "20qmL4_cXAqvLHe6WvA2on",
-      "wall_guid": "20qmL4_cXAqvLHe6WvA2pE"
+      "target_id": "target-1",
+      "kind": "column",
+      "target_guid": "0x6DwwA218Jw4vC5fvh0RS",
+      "source_name": "Columns_Rectangular:450 x450:384197",
+      "mutation": "remove_structural_members"
     }
   ],
   "damage_profile": {
     "composition": "single",
-    "level": "S1",
     "target_count": 1,
-    "targets": {
-      "IfcDoor": 1
-    }
+    "level": "S1"
   },
-  "damaged_sha256": "2ea443e6a8fb168c2dd159cf2cf4f18442053d4d8f738de3978d707b02f797ff",
-  "metrics": {
-    "formal_scoring_frozen": true,
-    "policy_version": "repair-comparison-formal-policy/0.1",
-    "status": "frozen"
-  },
-  "preservation": [
-    "Only the requested target areas may change; retain all other products and their geometry/relationships."
-  ],
-  "public_numeric_spec": {
-    "coordinate_system": "IFC world",
-    "length_unit": "millimetres",
-    "position_unit": "metres",
-    "private_bindings": true,
-    "targets": [
-      {
-        "basis": "public_author_intent",
-        "basis_detail": "Task-author requested facts are authored before damage. Source measurements independently verify feasibility; they are not silently added during scoring.",
-        "bounds_world_m": [
-          [
-            8.991999999999026,
-            9.205000000000002
-          ],
-          [
-            10.900000000000002,
-            11.98
-          ],
-          [
-            0.0,
-            2.145
-          ]
-        ],
-        "center_offset_evidence": {
-          "actual_target_offset_world_m": [
-            -0.021500000000486352,
-            0.0,
-            0.01750000000000007
-          ],
-          "basis": "retained_public_reference_geometry",
-          "matches_target_within_1mm": true,
-          "offset_m": [
-            -0.021500000000486352,
-            1.7763568394002505e-15,
-            0.01750000000000007
-          ],
-          "reference_offset_world_m": [
-            1.7763568394002505e-15,
-            0.021500000000486352,
-            0.01750000000000007
-          ],
-          "target_validation_delta_m": 1.7763568394002505e-15
-        },
-        "coarse_match_m": 0.35,
-        "geometry_checks": {
-          "mesh_tolerance_mm": 0.01,
-          "nominal_mesh_height_delta_mm": 35.0,
-          "nominal_mesh_width_delta_mm": 69.99999999999818,
-          "reference_derived_center_offset_matches_target": true,
-          "reference_mesh_equal": true,
-          "storey_elevation_attribute_agrees": true
-        },
-        "height_mm": 2110.0,
-        "host_bounds_world_m": [
-          [
-            9.055000000000001,
-            9.185
-          ],
-          [
-            10.465,
-            14.805
-          ],
-          [
-            0.0,
-            2.95
-          ]
-        ],
-        "host_guid": "20qmL4_cXAqvLHe6WvA2pE",
-        "host_placement_world_m": [
-          [
-            0.0,
-            -1.0,
-            0.0,
-            9.120000000000001
-          ],
-          [
-            1.0,
-            0.0,
-            0.0,
-            10.465
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "id": "target-1",
-        "ifc_class": "IfcDoor",
-        "kind": "door",
-        "match_center_world_m": [
-          9.120000000000001,
-          11.440000000000001,
-          1.055
-        ],
-        "mesh_center_world_m": [
-          9.098499999999515,
-          11.440000000000001,
-          1.0725
-        ],
-        "mesh_local_extents_mm": [
-          1079.9999999999982,
-          213.00000000097617,
-          2145.0
-        ],
-        "mesh_sha256": "3400b44568b6fb751236a270cb319ea912d428bdeaaa1509b769ee9c1c02163d",
-        "mesh_triangles": 460,
-        "opening_bottom_world_m": 0.0,
-        "opening_bounds_world_m": [
-          [
-            9.055,
-            9.185
-          ],
-          [
-            10.935,
-            11.945
-          ],
-          [
-            0.0,
-            2.11
-          ]
-        ],
-        "opening_center_world_m": [
-          9.120000000000001,
-          11.440000000000001,
-          1.055
-        ],
-        "opening_center_xy_m": [
-          9.120000000000001,
-          11.440000000000001
-        ],
-        "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
-        "opening_height_mm": 2110.0,
-        "opening_width_mm": 1009.9999999999998,
-        "operation_type": "SINGLE_SWING_RIGHT",
-        "placement_world_m": [
-          [
-            0.0,
-            -1.0,
-            0.0,
-            9.120000000000001
-          ],
-          [
-            1.0,
-            0.0,
-            0.0,
-            11.44
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            0.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "preserve_opening": true,
-        "reference_center_xy_m": [
-          13.52,
-          11.760000000000002
-        ],
-        "reference_guid": "20qmL4_cXAqvLHe6WvA2os",
-        "reference_step_id": 9969,
-        "reference_storey_world_elevation_m": 0.0,
-        "sill_mm": 0.0,
-        "source_step_id": 6277,
-        "storey_attribute_elevation_m": 0.0,
-        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
-        "storey_world_elevation_m": 0.0,
-        "target_center_offset_basis": "retained_public_reference_geometry",
-        "target_center_offset_from_opening_m": [
-          -0.021500000000486352,
-          1.7763568394002505e-15,
-          0.01750000000000007
-        ],
-        "target_guid": "20qmL4_cXAqvLHe6WvA2on",
-        "type_guid": "20qmL4_cXAqvLHe7qvA2ow",
-        "unit_to_mm": 1.0,
-        "width_mm": 1010.0
-      }
-    ]
-  },
-  "purpose": "formal_candidate",
-  "request": "请完成以下门窗补全。下面的位置均按模型世界坐标描述，X、Y 和楼层标高的单位是米，尺寸的单位是毫米。\n\n1．在标高 0.000 米的楼层，为平面中心位于（X=9.120、Y=11.440 米）的现有空门洞补一扇门，名义宽 1010 毫米、高 2110 毫米；墙洞宽 1010 毫米、高 2110 毫米，洞口下沿距该层标高 0 毫米（世界标高 0.000 米）。外观参照标高 0.000 米楼层、平面中心（X=13.520、Y=11.760 米）处保留的门：保持相同的框、门扇形状及开启形式；在目标墙面按该参照门相对于所在墙面的方式设置开向。\n\n请保留其余墙体、门窗和其他构件及其位置；只在上述位置补全，使门窗、墙洞和所在墙体的关系完整。",
-  "required_product_count": 1,
-  "required_products": {
-    "IfcDoor": 1
-  },
-  "required_relation_count": 2,
-  "review": {
-    "authorization": {
-      "at": "2026-10-07T17:48:42.740592+00:00",
-      "user_quote": "审题托付给你先 我后续再审 你先做实验吧 如果没问题我就不审题了"
-    },
-    "human_viewed": false,
-    "input_bindings": {
-      "D": "2ea443e6a8fb168c2dd159cf2cf4f18442053d4d8f738de3978d707b02f797ff",
-      "G": "81cd34f9b55fa4df31dbd713a67e5f64c7d1e6bb3895705d7a440394a55099fa",
-      "answer_card": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
-      "contract": "b82e8b08d990fcc1a8c6a8b9ed7e91a1dddcc853896a4c3244fa83d7b5a77840",
-      "public_ifc": "2ea443e6a8fb168c2dd159cf2cf4f18442053d4d8f738de3978d707b02f797ff",
-      "request": "fb32f1d7946c6b3d64d41c38c5a6ac60c5c3d83642d3b8abfcca1b84d2160d7d"
-    },
-    "kind": "delegated_technical",
-    "reviewed_at": "2026-10-07T17:55:00.777807+00:00",
-    "reviewer": "Codex",
-    "status": "accepted_by_delegation",
-    "technical_review_passed": true
-  },
-  "schema_version": "repair-comparison-task-candidate/0.1",
-  "source": {
-    "asset_id": "resbim-inv-001",
-    "building_identity": "synthetic-residential-layout-resbim-inv-001",
-    "candidate_slot": "formal-014",
-    "current_read_only_checks": {
-      "actual_world_storey_placement_checked": true,
-      "purpose": "Source measurement and authored intent, not damaged-model validation or capability evidence",
-      "source_hash_matches": true,
-      "source_modified": false,
-      "target_reference_meshes_match": true,
-      "viewer_status": "not_verified_in_usBIM"
-    },
-    "family_basis": "Distinct registered RVT source and distinct IFC wall-layout coordinate signature; not independent real building, shares generator/assets.",
-    "historical_repair_evidence": [],
-    "human_review": "not_performed",
-    "human_viewed": false,
-    "independent_building_verified": false,
-    "license": "MIT",
-    "license_path": "dataset/external/RVT/additional/ResBIM/LICENSE",
-    "rights_conditions": "保留来源、原作者、许可原文和既有通知；修改副本注明修改日期、内容和原件哈希。",
-    "rights_evidence": {
-      "archive_member_or_local_name": null,
-      "asset_id": "resbim-inv-001",
-      "collection_rights_clear_registered": true,
-      "conditions": "保留来源、原作者、许可原文和既有通知；修改副本注明修改日期、内容和原件哈希。",
-      "evidence_basis": "frozen local source and license evidence; no claim of fresh remote retrieval",
-      "generic_license_terms_url": "https://opensource.org/license/mit",
-      "license_evidence_urls": [
-        "https://github.com/RogerLiang0725/ResBIM"
-      ],
-      "license_registered": "MIT",
-      "line": 72,
-      "live_source_rechecked_20260924": false,
-      "local_evidence": [],
-      "missing_evidence": "",
-      "model_url": "https://github.com/RogerLiang0725/ResBIM",
-      "model_url_scope": "recorded_download_or_source",
-      "original_path": "dataset/external/RVT/IFC/dataset-resbim50-20260913/ResBIM/INV-001.ifc",
-      "original_sha256": "81cd34f9b55fa4df31dbd713a67e5f64c7d1e6bb3895705d7a440394a55099fa",
-      "preferred_path": "dataset/external/RVT/IFC/dataset-resbim50-20260913/ResBIM/INV-001.ifc",
-      "preferred_sha256": "81cd34f9b55fa4df31dbd713a67e5f64c7d1e6bb3895705d7a440394a55099fa",
-      "prior_evidence_review_date": "2026-09-13_or_16_frozen_register",
-      "public_fallback": "来源链接、文件 ID/哈希、独立通用修复与校验脚本；不含受限 IFC 或可重建受限模型的参数/补丁。",
-      "public_release_policy": "open_modification_with_notice",
-      "publication_review_date": "2026-09-24",
-      "publish_original_ifc": "allowed_with_original_license_conditions",
-      "publish_repaired_or_mutated_ifc": "allowed_with_original_license_conditions",
-      "record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
-      "repair_evidence": [],
-      "schema": "IFC2X3",
-      "source_id": "resbim",
-      "source_url": "https://github.com/RogerLiang0725/ResBIM",
-      "training_eligible_unchanged": false
-    },
-    "rights_policy": "open_modification_with_notice",
-    "rights_record": "dataset/external/_checks/ifc-readiness-20260924-v7/rights/rights.jsonl",
-    "rights_source_url": "https://github.com/RogerLiang0725/ResBIM",
-    "scene_family": null,
-    "schema": "IFC2X3",
-    "schema_validation": {
-      "evidence": "dataset/external/_checks/ifc-assets-20260913/audit/81cd34f9b55fa4df31dbd713a67e5f64c7d1e6bb3895705d7a440394a55099fa.json",
-      "prior_summary": {
-        "nested_native": {
-          "native_error_count": 0,
-          "schema": "IFC2X3",
-          "validation_scope": "native_schema_express_and_all_represented_products"
-        }
-      },
-      "registered_native_pass": true,
-      "rerun_during_authoring": false
-    },
-    "source_bytes": 574953,
-    "source_path": "dataset/external/RVT/IFC/dataset-resbim50-20260913/ResBIM/INV-001.ifc",
-    "source_register": "dataset/external/ifc-asset-register.jsonl",
-    "source_role": "preselected_reference_from_registered_original",
-    "source_rvt_path": "dataset/external/RVT/extracted/01_RVT/ResBIM/0/0.rvt",
-    "source_sha256": "81cd34f9b55fa4df31dbd713a67e5f64c7d1e6bb3895705d7a440394a55099fa",
-    "status": "authored_draft_pending_technical_review",
-    "task_proposal": {
-      "author_expectations": {
-        "target-1": {
-          "basis": "public_author_intent",
-          "basis_detail": "Task-author requested facts are authored before damage. Source measurements independently verify feasibility; they are not silently added during scoring.",
-          "bounds_world_m": [
-            [
-              8.991999999999026,
-              9.205000000000002
-            ],
-            [
-              10.900000000000002,
-              11.98
-            ],
-            [
-              0.0,
-              2.145
-            ]
-          ],
-          "center_offset_evidence": {
-            "actual_target_offset_world_m": [
-              -0.021500000000486352,
-              0.0,
-              0.01750000000000007
-            ],
-            "basis": "retained_public_reference_geometry",
-            "matches_target_within_1mm": true,
-            "offset_m": [
-              -0.021500000000486352,
-              1.7763568394002505e-15,
-              0.01750000000000007
-            ],
-            "reference_offset_world_m": [
-              1.7763568394002505e-15,
-              0.021500000000486352,
-              0.01750000000000007
-            ],
-            "target_validation_delta_m": 1.7763568394002505e-15
-          },
-          "coarse_match_m": 0.35,
-          "geometry_checks": {
-            "mesh_tolerance_mm": 0.01,
-            "nominal_mesh_height_delta_mm": 35.0,
-            "nominal_mesh_width_delta_mm": 69.99999999999818,
-            "reference_derived_center_offset_matches_target": true,
-            "reference_mesh_equal": true,
-            "storey_elevation_attribute_agrees": true
-          },
-          "height_mm": 2110.0,
-          "host_bounds_world_m": [
-            [
-              9.055000000000001,
-              9.185
-            ],
-            [
-              10.465,
-              14.805
-            ],
-            [
-              0.0,
-              2.95
-            ]
-          ],
-          "host_guid": "20qmL4_cXAqvLHe6WvA2pE",
-          "host_placement_world_m": [
-            [
-              0.0,
-              -1.0,
-              0.0,
-              9.120000000000001
-            ],
-            [
-              1.0,
-              0.0,
-              0.0,
-              10.465
-            ],
-            [
-              0.0,
-              0.0,
-              1.0,
-              0.0
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "id": "target-1",
-          "ifc_class": "IfcDoor",
-          "kind": "door",
-          "match_center_world_m": [
-            9.120000000000001,
-            11.440000000000001,
-            1.055
-          ],
-          "mesh_center_world_m": [
-            9.098499999999515,
-            11.440000000000001,
-            1.0725
-          ],
-          "mesh_local_extents_mm": [
-            1079.9999999999982,
-            213.00000000097617,
-            2145.0
-          ],
-          "mesh_sha256": "3400b44568b6fb751236a270cb319ea912d428bdeaaa1509b769ee9c1c02163d",
-          "mesh_triangles": 460,
-          "opening_bottom_world_m": 0.0,
-          "opening_bounds_world_m": [
-            [
-              9.055,
-              9.185
-            ],
-            [
-              10.935,
-              11.945
-            ],
-            [
-              0.0,
-              2.11
-            ]
-          ],
-          "opening_center_world_m": [
-            9.120000000000001,
-            11.440000000000001,
-            1.055
-          ],
-          "opening_center_xy_m": [
-            9.120000000000001,
-            11.440000000000001
-          ],
-          "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
-          "opening_height_mm": 2110.0,
-          "opening_width_mm": 1009.9999999999998,
-          "operation_type": "SINGLE_SWING_RIGHT",
-          "placement_world_m": [
-            [
-              0.0,
-              -1.0,
-              0.0,
-              9.120000000000001
-            ],
-            [
-              1.0,
-              0.0,
-              0.0,
-              11.44
-            ],
-            [
-              0.0,
-              0.0,
-              1.0,
-              0.0
-            ],
-            [
-              0.0,
-              0.0,
-              0.0,
-              1.0
-            ]
-          ],
-          "preserve_opening": true,
-          "reference_center_xy_m": [
-            13.52,
-            11.760000000000002
-          ],
-          "reference_guid": "20qmL4_cXAqvLHe6WvA2os",
-          "reference_step_id": 9969,
-          "reference_storey_world_elevation_m": 0.0,
-          "sill_mm": 0.0,
-          "source_step_id": 6277,
-          "storey_attribute_elevation_m": 0.0,
-          "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
-          "storey_world_elevation_m": 0.0,
-          "target_center_offset_basis": "retained_public_reference_geometry",
-          "target_center_offset_from_opening_m": [
-            -0.021500000000486352,
-            1.7763568394002505e-15,
-            0.01750000000000007
-          ],
-          "target_guid": "20qmL4_cXAqvLHe6WvA2on",
-          "type_guid": "20qmL4_cXAqvLHe7qvA2ow",
-          "unit_to_mm": 1.0,
-          "width_mm": 1010.0
-        }
-      },
-      "clarification_proposal": null,
-      "clarification_required": false,
-      "damage_profile": {
-        "composition": "single",
-        "level": "S1",
-        "target_count": 1,
-        "targets": {
-          "IfcDoor": 1
-        }
-      },
-      "damage_scale": "S1",
-      "description": "补全1扇门",
-      "door_damage": "remove_door_keep_opening",
-      "frozen": false,
-      "provisional_source_step_ids": [
-        6277
-      ],
-      "public_basis": [
-        "预先编写的用户修复意图；公开给出目标位置、名义尺寸、墙洞尺寸、竖向位置以及仍可见的外观参照。"
-      ],
-      "public_numeric_spec": {
-        "coordinate_system": "IFC world",
-        "length_unit": "millimetres",
-        "position_unit": "metres",
-        "private_bindings": true,
-        "targets": [
-          {
-            "basis": "public_author_intent",
-            "basis_detail": "Task-author requested facts are authored before damage. Source measurements independently verify feasibility; they are not silently added during scoring.",
-            "bounds_world_m": [
-              [
-                8.991999999999026,
-                9.205000000000002
-              ],
-              [
-                10.900000000000002,
-                11.98
-              ],
-              [
-                0.0,
-                2.145
-              ]
-            ],
-            "center_offset_evidence": {
-              "actual_target_offset_world_m": [
-                -0.021500000000486352,
-                0.0,
-                0.01750000000000007
-              ],
-              "basis": "retained_public_reference_geometry",
-              "matches_target_within_1mm": true,
-              "offset_m": [
-                -0.021500000000486352,
-                1.7763568394002505e-15,
-                0.01750000000000007
-              ],
-              "reference_offset_world_m": [
-                1.7763568394002505e-15,
-                0.021500000000486352,
-                0.01750000000000007
-              ],
-              "target_validation_delta_m": 1.7763568394002505e-15
-            },
-            "coarse_match_m": 0.35,
-            "geometry_checks": {
-              "mesh_tolerance_mm": 0.01,
-              "nominal_mesh_height_delta_mm": 35.0,
-              "nominal_mesh_width_delta_mm": 69.99999999999818,
-              "reference_derived_center_offset_matches_target": true,
-              "reference_mesh_equal": true,
-              "storey_elevation_attribute_agrees": true
-            },
-            "height_mm": 2110.0,
-            "host_bounds_world_m": [
-              [
-                9.055000000000001,
-                9.185
-              ],
-              [
-                10.465,
-                14.805
-              ],
-              [
-                0.0,
-                2.95
-              ]
-            ],
-            "host_guid": "20qmL4_cXAqvLHe6WvA2pE",
-            "host_placement_world_m": [
-              [
-                0.0,
-                -1.0,
-                0.0,
-                9.120000000000001
-              ],
-              [
-                1.0,
-                0.0,
-                0.0,
-                10.465
-              ],
-              [
-                0.0,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-              ]
-            ],
-            "id": "target-1",
-            "ifc_class": "IfcDoor",
-            "kind": "door",
-            "match_center_world_m": [
-              9.120000000000001,
-              11.440000000000001,
-              1.055
-            ],
-            "mesh_center_world_m": [
-              9.098499999999515,
-              11.440000000000001,
-              1.0725
-            ],
-            "mesh_local_extents_mm": [
-              1079.9999999999982,
-              213.00000000097617,
-              2145.0
-            ],
-            "mesh_sha256": "3400b44568b6fb751236a270cb319ea912d428bdeaaa1509b769ee9c1c02163d",
-            "mesh_triangles": 460,
-            "opening_bottom_world_m": 0.0,
-            "opening_bounds_world_m": [
-              [
-                9.055,
-                9.185
-              ],
-              [
-                10.935,
-                11.945
-              ],
-              [
-                0.0,
-                2.11
-              ]
-            ],
-            "opening_center_world_m": [
-              9.120000000000001,
-              11.440000000000001,
-              1.055
-            ],
-            "opening_center_xy_m": [
-              9.120000000000001,
-              11.440000000000001
-            ],
-            "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
-            "opening_height_mm": 2110.0,
-            "opening_width_mm": 1009.9999999999998,
-            "operation_type": "SINGLE_SWING_RIGHT",
-            "placement_world_m": [
-              [
-                0.0,
-                -1.0,
-                0.0,
-                9.120000000000001
-              ],
-              [
-                1.0,
-                0.0,
-                0.0,
-                11.44
-              ],
-              [
-                0.0,
-                0.0,
-                1.0,
-                0.0
-              ],
-              [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-              ]
-            ],
-            "preserve_opening": true,
-            "reference_center_xy_m": [
-              13.52,
-              11.760000000000002
-            ],
-            "reference_guid": "20qmL4_cXAqvLHe6WvA2os",
-            "reference_step_id": 9969,
-            "reference_storey_world_elevation_m": 0.0,
-            "sill_mm": 0.0,
-            "source_step_id": 6277,
-            "storey_attribute_elevation_m": 0.0,
-            "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
-            "storey_world_elevation_m": 0.0,
-            "target_center_offset_basis": "retained_public_reference_geometry",
-            "target_center_offset_from_opening_m": [
-              -0.021500000000486352,
-              1.7763568394002505e-15,
-              0.01750000000000007
-            ],
-            "target_guid": "20qmL4_cXAqvLHe6WvA2on",
-            "type_guid": "20qmL4_cXAqvLHe7qvA2ow",
-            "unit_to_mm": 1.0,
-            "width_mm": 1010.0
-          }
-        ]
-      },
-      "public_request": "请完成以下门窗补全。下面的位置均按模型世界坐标描述，X、Y 和楼层标高的单位是米，尺寸的单位是毫米。\n\n1．在标高 0.000 米的楼层，为平面中心位于（X=9.120、Y=11.440 米）的现有空门洞补一扇门，名义宽 1010 毫米、高 2110 毫米；墙洞宽 1010 毫米、高 2110 毫米，洞口下沿距该层标高 0 毫米（世界标高 0.000 米）。外观参照标高 0.000 米楼层、平面中心（X=13.520、Y=11.760 米）处保留的门：保持相同的框、门扇形状及开启形式；在目标墙面按该参照门相对于所在墙面的方式设置开向。\n\n请保留其余墙体、门窗和其他构件及其位置；只在上述位置补全，使门窗、墙洞和所在墙体的关系完整。",
-      "retained_reference_step_ids": [
-        9969
-      ]
-    }
-  },
-  "source_sha256": "81cd34f9b55fa4df31dbd713a67e5f64c7d1e6bb3895705d7a440394a55099fa",
   "targets": [
     {
-      "host": {
-        "bounds_world_m": [
-          [
-            9.055000000000001,
-            9.185
-          ],
-          [
-            10.465,
-            14.805
-          ],
-          [
-            0.0,
-            2.95
-          ]
+      "id": "target-1",
+      "kind": "column",
+      "ifc_class": "IfcColumn",
+      "source_name_private": "Columns_Rectangular:450 x450:384197",
+      "source_global_id_private": "0x6DwwA218Jw4vC5fvh0RS",
+      "operation_type": "add_column",
+      "axis_world_m": [
+        [
+          -15.845,
+          15.919,
+          0.0
         ],
-        "class": "IfcWall",
-        "geometry_status": "available",
-        "guid": "20qmL4_cXAqvLHe6WvA2pE",
-        "name": "Basic Wall:Wall-Partn_30Gwb-70MStd-30Gwb:378687",
-        "project_unit_to_mm": 1.0
-      },
-      "kind": "door",
-      "opening": {
-        "bounds_world_m": [
-          [
-            9.055,
-            9.185
-          ],
-          [
-            10.935,
-            11.945
-          ],
-          [
-            0.0,
-            2.11
-          ]
-        ],
-        "class": "IfcOpeningElement",
-        "geometry_status": "available",
-        "guid": "0gQKYpaRzMEgdK6Ar4shKl",
-        "name": "Doors_IntSgl:1010x2110mm:378688",
-        "project_unit_to_mm": 1.0
-      },
-      "opening_guid": "0gQKYpaRzMEgdK6Ar4shKl",
-      "preserve_opening": true,
-      "required_relations": [
-        {
-          "basis": "One required membership edge for this target.",
-          "id": "target-1.fill",
-          "ifc_class": "IfcRelFillsElement"
-        },
-        {
-          "basis": "One required membership edge for this target.",
-          "id": "target-1.storey",
-          "ifc_class": "IfcRelContainedInSpatialStructure"
-        }
+        [
+          -15.845,
+          15.919,
+          23.0
+        ]
       ],
-      "source_step_id": 6277,
-      "target": {
-        "OverallHeight_mm": 2110.0,
-        "OverallWidth_mm": 1010.0,
-        "bounds_world_m": [
-          [
-            8.991999999999026,
-            9.205000000000002
-          ],
-          [
-            10.900000000000002,
-            11.98
-          ],
-          [
-            0.0,
-            2.145
-          ]
-        ],
-        "class": "IfcDoor",
-        "geometry_status": "available",
-        "guid": "20qmL4_cXAqvLHe6WvA2on",
-        "name": "Doors_IntSgl:1010x2110mm:378688",
-        "project_unit_to_mm": 1.0
+      "section": {
+        "shape": "rectangle",
+        "width_mm": 200.0,
+        "depth_mm": 450.0,
+        "orientation": {
+          "x": -1.0,
+          "y": 0.0
+        }
       },
-      "target_guid": "20qmL4_cXAqvLHe6WvA2on",
-      "wall_guid": "20qmL4_cXAqvLHe6WvA2pE"
+      "bounds_world_m": [
+        [
+          -15.9454139652959,
+          -15.745413965295901
+        ],
+        [
+          15.6942212497682,
+          16.144221249768197
+        ],
+        [
+          0.0,
+          23.0
+        ]
+      ],
+      "storey_global_id_private": "3Zu5Bv0LOHrPC10026FoQQ",
+      "storey_world_elevation_m": 0.0,
+      "storey_attribute_elevation_m": 0.0,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "column_section_orientation_equivalence": "parallel axes, modulo 180 degrees",
+      "gold_is_evaluation_side_only": true
     }
-  ]
+  ],
+  "author_expectations": {
+    "target-1": {
+      "id": "target-1",
+      "kind": "column",
+      "ifc_class": "IfcColumn",
+      "source_name_private": "Columns_Rectangular:450 x450:384197",
+      "source_global_id_private": "0x6DwwA218Jw4vC5fvh0RS",
+      "operation_type": "add_column",
+      "axis_world_m": [
+        [
+          -15.845,
+          15.919,
+          0.0
+        ],
+        [
+          -15.845,
+          15.919,
+          23.0
+        ]
+      ],
+      "section": {
+        "shape": "rectangle",
+        "width_mm": 200.0,
+        "depth_mm": 450.0,
+        "orientation": {
+          "x": -1.0,
+          "y": 0.0
+        }
+      },
+      "bounds_world_m": [
+        [
+          -15.9454139652959,
+          -15.745413965295901
+        ],
+        [
+          15.6942212497682,
+          16.144221249768197
+        ],
+        [
+          0.0,
+          23.0
+        ]
+      ],
+      "storey_global_id_private": "3Zu5Bv0LOHrPC10026FoQQ",
+      "storey_world_elevation_m": 0.0,
+      "storey_attribute_elevation_m": 0.0,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "column_section_orientation_equivalence": "parallel axes, modulo 180 degrees",
+      "gold_is_evaluation_side_only": true
+    }
+  },
+  "reference_guids": [
+    "0x6DwwA218Jw4vC5fvh0RV"
+  ],
+  "clarification_required": true,
+  "clarification": {
+    "required_user_facts": [
+      "column_section_orientation"
+    ],
+    "facts": {
+      "column_section_orientation": {
+        "applies_to": "target-1",
+        "fact_kind": "rectangular_column_section_orientation",
+        "value": {
+          "edge_200_mm_parallel_to": "model_X",
+          "edge_450_mm_parallel_to": "model_Y"
+        },
+        "answer_text": "这根柱的200毫米短边平行于模型X方向，450毫米长边平行于模型Y方向。",
+        "necessary_because": "200×450是非正方形截面，初始请求未指定短边与长边的平面朝向。",
+        "source": "prewritten_from_preparation_geometry_check_before_experiment",
+        "private_identity_in_answer": false
+      }
+    },
+    "answer_policy": "Only send facts explicitly requested in the actual model question; no whole-card injection or model question invention.",
+    "answer_card": "private/answer-card.json",
+    "runtime_gold_lookup_allowed": false,
+    "initial_request_incomplete_for_requested_requirement": true
+  },
+  "budget": {
+    "status": "not_set_for_draft",
+    "provider_calls_allowed": false,
+    "requires_user_review": true,
+    "requires_current_stage_admission": true
+  },
+  "scoring": {
+    "status": "draft_not_admitted",
+    "policy_version": null,
+    "old_window_door_policy_not_applied": true
+  },
+  "property_runtime_full_chain_verified": false,
+  "allowed_alternatives": [
+    "new identities and equivalent STEP serialization",
+    "parallel rectangular orientation modulo 180 degrees"
+  ],
+  "preservation": {
+    "all_other_products_geometry_placement_properties_and_relationships": "required",
+    "source_is_immutable": true
+  },
+  "run_status": "not_started",
+  "review": {
+    "schema_version": "repair-comparison-human-review-draft/0.1",
+    "status": "pending_human_review",
+    "accepted": false,
+    "reviewer": null,
+    "human_viewed": false,
+    "reviewed_at": null,
+    "delegated_acceptance_inherited": false,
+    "technical_checks_passed": true,
+    "prepared_at": "2026-10-08T12:27:24.439784+00:00"
+  }
 }

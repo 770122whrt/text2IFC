@@ -1,39 +1,856 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
+  "counts": {
+    "after": {
+      "IfcBeam": 247,
+      "IfcBeamType": 26,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 7,
+      "IfcColumn": 120,
+      "IfcColumnType": 18,
+      "IfcDoor": 26,
+      "IfcOpeningElement": 26,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 41,
+      "IfcRelContainedInSpatialStructure": 7,
+      "IfcRelDefinesByType": 100,
+      "IfcRelFillsElement": 26,
+      "IfcRelVoidsElement": 26,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 5,
+      "IfcWindow": 0
+    },
+    "before": {
+      "IfcBeam": 249,
+      "IfcBeamType": 26,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 7,
+      "IfcColumn": 120,
+      "IfcColumnType": 18,
+      "IfcDoor": 26,
+      "IfcOpeningElement": 26,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 41,
+      "IfcRelContainedInSpatialStructure": 7,
+      "IfcRelDefinesByType": 100,
+      "IfcRelFillsElement": 26,
+      "IfcRelVoidsElement": 26,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 5,
+      "IfcWindow": 0
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "a14d794f04527906fd6ca8b2fb010b873e4e310a933a1eded491dd2a48591f29"
+  },
+  "mutation_type": "remove_structural_members",
+  "role_mapping": {
+    "beam-001": "2Gu4LA54T1iw_BohnrvlDL",
+    "beam-002": "2Gu4LA54T1iw_BohnrvlDN"
+  },
+  "schema_version": "text2ifc/ifc-repair-structural-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/.tmp/repair-comparison-formal-expansion/next-ten-packages/formal-012/private/reference.ifc",
+    "schema": "IFC2X3",
+    "sha256": "a0850aff01cdbefdfef5b14d282a48d7cd25c6acadf619651d4439c2751b61b2",
+    "size_bytes": 10717290
+  },
   "targets": [
     {
-      "kind": "window",
-      "opening_guid": "2NQl_TsGPDPuZAZfGcsKQB",
-      "preserve_opening": false,
-      "source_step_id": 17589,
-      "target_guid": "2NQl_TsGPDPuZAZeScsKQB",
-      "wall_guid": "3zC0_RcTX9P86epoParUZb"
+      "entity": {
+        "global_id": "2Gu4LA54T1iw_BohnrvlDL",
+        "ifc_class": "IfcBeam",
+        "name": "金柱中枋:金柱门头枋:940123",
+        "step_id": 201636
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 5900.0,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "status": "measured_current_ifc",
+          "storey_global_id": "3NCYgWTsv4QA_Llz6Y6mVX",
+          "storey_local_end_mm": [
+            -1098.7940606092097,
+            -4074.38724378933,
+            4219.8
+          ],
+          "storey_local_start_mm": [
+            -6998.79406060921,
+            -4074.38724378933,
+            4219.8
+          ],
+          "world_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "world_end_mm": [
+            -1098.7940606092097,
+            -4074.38724378933,
+            4219.8
+          ],
+          "world_start_mm": [
+            -6998.79406060921,
+            -4074.38724378933,
+            4219.8
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcExtrudedAreaSolid"
+              ],
+              "type": "SweptSolid"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 5900.0,
+          "profile_x_mm": 440.000000000001,
+          "profile_y_mm": 160.0,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "world_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        }
+      },
+      "role": "beam-001",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "松树_酱红色",
+              "step_id": 193851
+            },
+            "relationship": {
+              "global_id": "1GJWELwTDE4OPw2E8HntQt",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 362819
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "2sUolY9e59IOrjhKbgvl5C",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ProductRequirements",
+              "step_id": 201642
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Category",
+                "step_id": 201641,
+                "value": "Structural Framing",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "0Q3eMXXCv79BwHooz7SA1e",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201653
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BmLLrvlDL",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_BeamCommon",
+              "step_id": 201639
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 1666,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 193863,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "LoadBearing",
+                "step_id": 193864,
+                "value": true,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 201382,
+                "value": "金柱门头枋",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "0whsYVJ6D8tPqxsi0Eyp_L",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201649
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpAXrvlDL",
+              "ifc_class": "IfcPropertySet",
+              "name": "Constraints",
+              "step_id": 201666
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Level",
+                "step_id": 129039,
+                "value": "Level: Cloumn bottom",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Moves With Nearby Elements",
+                "step_id": 193890,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Host",
+                "step_id": 201662,
+                "value": "Level : Cloumn bottom",
+                "value_type": "IfcText"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Offset from Host",
+                "step_id": 201663,
+                "value": 3999.8,
+                "value_type": "IfcLengthMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpQXrvlDL",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201668
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpB5rvlDL",
+              "ifc_class": "IfcPropertySet",
+              "name": "Structural",
+              "step_id": 201686
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Rebar Cover - Other Faces",
+                "step_id": 1691,
+                "value": "Rebar Cover Settings: 钢筋保护层 1",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Rebar Cover - Top Face",
+                "step_id": 1692,
+                "value": "Rebar Cover Settings: 钢筋保护层 1",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Rebar Cover - Bottom Face",
+                "step_id": 193892,
+                "value": "Rebar Cover Settings: 钢筋保护层 1",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpR5rvlDL",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201688
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpBDrvlDL",
+              "ifc_class": "IfcPropertySet",
+              "name": "Phasing",
+              "step_id": 201681
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Phase Created",
+                "step_id": 1689,
+                "value": "新构造",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpRDrvlDL",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201683
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpBvrvlDL",
+              "ifc_class": "IfcPropertySet",
+              "name": "Dimensions",
+              "step_id": 201671
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Volume",
+                "step_id": 201664,
+                "value": 0.41536,
+                "value_type": "IfcVolumeMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "金柱中枋长",
+                "step_id": 201665,
+                "value": 5900.0,
+                "value_type": "IfcLengthMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpRvrvlDL",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201673
+            }
+          },
+          {
+            "definition": {
+              "global_id": "0BnEpBb1D1GxKtf8NOfrPE",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfBeam",
+              "step_id": 201647
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 201646,
+                "value": "金柱门头枋",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2L2mMMiPfADQ_SJDWXNgta",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201659
+            }
+          },
+          {
+            "definition": {
+              "global_id": "3xwr5_akP91uhqNV8v1MRm",
+              "ifc_class": "IfcPropertySet",
+              "name": "Other",
+              "step_id": 201676
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Category",
+                "step_id": 193894,
+                "value": "Structural Framing",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Family",
+                "step_id": 201410,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Family and Type",
+                "step_id": 201411,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Type",
+                "step_id": 201412,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Type Id",
+                "step_id": 201413,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2L6lpEK0z2kg6eA5GSu5dK",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201678
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1PxM4fky13hAvWnX3QPjLw",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 201644
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 201382,
+                "value": "金柱门头枋",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "3neQWfLlvDvvBjc3hR53Ea",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201656
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "3NCYgWTsv4QA_Llz6Y6mVX",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "Cloumn bottom",
+        "step_id": 144
+      },
+      "type": {
+        "global_id": "2Gu4LA54T1iw_BohnrvUnl",
+        "ifc_class": "IfcBeamType",
+        "name": "金柱中枋:金柱门头枋",
+        "step_id": 201381
+      }
     },
     {
-      "kind": "window",
-      "opening_guid": "2NQl_TsGPDPuZAZfGcsKRQ",
-      "preserve_opening": false,
-      "source_step_id": 17625,
-      "target_guid": "2NQl_TsGPDPuZAZeScsKRQ",
-      "wall_guid": "3zC0_RcTX9P86epoParUZb"
-    },
-    {
-      "kind": "window",
-      "opening_guid": "2NQl_TsGPDPuZAZfGcsKO_",
-      "preserve_opening": false,
-      "source_step_id": 17652,
-      "target_guid": "2NQl_TsGPDPuZAZeScsKO_",
-      "wall_guid": "3zC0_RcTX9P86epoParUZb"
+      "entity": {
+        "global_id": "2Gu4LA54T1iw_BohnrvlDN",
+        "ifc_class": "IfcBeam",
+        "name": "金柱中枋:金柱门头枋:940121",
+        "step_id": 201490
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 5899.999999999998,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "status": "measured_current_ifc",
+          "storey_global_id": "3NCYgWTsv4QA_Llz6Y6mVX",
+          "storey_local_end_mm": [
+            17061.2059393908,
+            -4074.38724378933,
+            4219.8
+          ],
+          "storey_local_start_mm": [
+            11161.2059393908,
+            -4074.38724378933,
+            4219.8
+          ],
+          "world_direction": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "world_end_mm": [
+            17061.2059393908,
+            -4074.38724378933,
+            4219.8
+          ],
+          "world_start_mm": [
+            11161.2059393908,
+            -4074.38724378933,
+            4219.8
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcExtrudedAreaSolid"
+              ],
+              "type": "SweptSolid"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 5900.0,
+          "profile_x_mm": 440.000000000001,
+          "profile_y_mm": 160.0,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "world_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        }
+      },
+      "role": "beam-002",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "松树_酱红色",
+              "step_id": 193851
+            },
+            "relationship": {
+              "global_id": "1GJWELwTDE4OPw2E8HntQt",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 362819
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "2oiKHFejHCzwKRqMeNxLbf",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ProductRequirements",
+              "step_id": 201496
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Category",
+                "step_id": 201495,
+                "value": "Structural Framing",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "0bSiIGWmLBjQog$Wrn_jmp",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201507
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1iv4V8SSPFyRjCIQUX0kw6",
+              "ifc_class": "IfcPropertySet",
+              "name": "Other",
+              "step_id": 201530
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Category",
+                "step_id": 193894,
+                "value": "Structural Framing",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Family",
+                "step_id": 201410,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Family and Type",
+                "step_id": 201411,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Type",
+                "step_id": 201412,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Type Id",
+                "step_id": 201413,
+                "value": "金柱中枋: 金柱门头枋",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "0sHmCFrS92awEnPgLlJ4E8",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201532
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpAXrvlDN",
+              "ifc_class": "IfcPropertySet",
+              "name": "Constraints",
+              "step_id": 201520
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Level",
+                "step_id": 129039,
+                "value": "Level: Cloumn bottom",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Moves With Nearby Elements",
+                "step_id": 193890,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Host",
+                "step_id": 201516,
+                "value": "Level : Cloumn bottom",
+                "value_type": "IfcText"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Offset from Host",
+                "step_id": 201517,
+                "value": 3999.8,
+                "value_type": "IfcLengthMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpQXrvlDN",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201522
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpB5rvlDN",
+              "ifc_class": "IfcPropertySet",
+              "name": "Structural",
+              "step_id": 201540
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Rebar Cover - Other Faces",
+                "step_id": 1691,
+                "value": "Rebar Cover Settings: 钢筋保护层 1",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Rebar Cover - Top Face",
+                "step_id": 1692,
+                "value": "Rebar Cover Settings: 钢筋保护层 1",
+                "value_type": "IfcLabel"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Rebar Cover - Bottom Face",
+                "step_id": 193892,
+                "value": "Rebar Cover Settings: 钢筋保护层 1",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpR5rvlDN",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201542
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpBDrvlDN",
+              "ifc_class": "IfcPropertySet",
+              "name": "Phasing",
+              "step_id": 201535
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Phase Created",
+                "step_id": 1689,
+                "value": "新构造",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpRDrvlDN",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201537
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BpBvrvlDN",
+              "ifc_class": "IfcPropertySet",
+              "name": "Dimensions",
+              "step_id": 201525
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Volume",
+                "step_id": 201518,
+                "value": 0.41536,
+                "value_type": "IfcVolumeMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "金柱中枋长",
+                "step_id": 201519,
+                "value": 5900.0,
+                "value_type": "IfcLengthMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "2Gu4LA54T1iw_BpRvrvlDN",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201527
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2NsedDa_z7SPD8Ma0nbgk1",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfBeam",
+              "step_id": 201501
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 201500,
+                "value": "金柱门头枋",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2ShrGbqH51Egt3xVLNZna2",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201513
+            }
+          },
+          {
+            "definition": {
+              "global_id": "0_IDusnO56o9gU1bhnqQCI",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 201498
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 201382,
+                "value": "金柱门头枋",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "2VwM4sLIzEQRAocfDzpyO3",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201510
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2Gu4LA54T1iw_BmLLrvlDN",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_BeamCommon",
+              "step_id": 201493
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 1666,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 193863,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "LoadBearing",
+                "step_id": 193864,
+                "value": true,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 201382,
+                "value": "金柱门头枋",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "2hsM5xlhb7xQXHtC8PQw5T",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 201503
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "3NCYgWTsv4QA_Llz6Y6mVX",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "Cloumn bottom",
+        "step_id": 144
+      },
+      "type": {
+        "global_id": "2Gu4LA54T1iw_BohnrvUnl",
+        "ifc_class": "IfcBeamType",
+        "name": "金柱中枋:金柱门头枋",
+        "step_id": 201381
+      }
     }
-  ],
-  "wall_closure": {
-    "3zC0_RcTX9P86epoParUZb": {
-      "actual_delta_m3": 0.7416870193549951,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.7416870193549951,
-      "volume_after_m3": 3.565660993548167,
-      "volume_before_m3": 2.823973974193172
-    }
-  }
+  ]
 }

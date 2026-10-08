@@ -1,0 +1,3169 @@
+{
+  "schema_version": "text2ifc/ifc-repair-evaluation/0.2",
+  "policy_version": "phase8.1",
+  "status": "passed",
+  "reason": "Application, preservation, and mandatory L1/L2 are strict gates.",
+  "evidence": [
+    {
+      "fact_id": "run.summary",
+      "source_kind": "evaluation_policy",
+      "source_ref": "phase8.1",
+      "expected_state": "available",
+      "actual_state": "available",
+      "expected_value": "all mandatory gates passed",
+      "actual_value": "passed",
+      "provenance": [
+        "evaluation_policy",
+        "phase8.1"
+      ]
+    }
+  ],
+  "application": {
+    "check_id": "application.valid",
+    "policy_id": "evaluation.phase8",
+    "applicability": "required",
+    "mandatory": true,
+    "status": "passed",
+    "reason": "The deterministic application must complete and publish its candidate.",
+    "evidence": [
+      {
+        "fact_id": "application.valid.evidence",
+        "source_kind": "application_result",
+        "source_ref": "application.valid",
+        "expected_state": "available",
+        "actual_state": "available",
+        "expected_value": "passed",
+        "actual_value": {
+          "published": true,
+          "valid": true
+        },
+        "provenance": [
+          "application_result",
+          "application.valid"
+        ]
+      }
+    ]
+  },
+  "preservation": {
+    "check_id": "preservation.valid",
+    "policy_id": "evaluation.phase8",
+    "applicability": "required",
+    "mandatory": true,
+    "status": "passed",
+    "reason": "Independent L1 evidence must authorize preservation and scope effects.",
+    "evidence": [
+      {
+        "fact_id": "preservation.valid.evidence",
+        "source_kind": "application_result",
+        "source_ref": "preservation.valid",
+        "expected_state": "available",
+        "actual_state": "available",
+        "expected_value": "passed",
+        "actual_value": {
+          "l1_status": "passed"
+        },
+        "provenance": [
+          "application_result",
+          "preservation.valid"
+        ]
+      }
+    ]
+  },
+  "operations": [
+    {
+      "operation_id": "01-window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "mandatory": true,
+      "policy_id": "window.add-with-opening.l2",
+      "policy_version": "0.2",
+      "status": "passed",
+      "reason": "Mandatory L1 and L2 jointly determine operation success.",
+      "evidence": [
+        {
+          "fact_id": "operation.01-window",
+          "source_kind": "operation_policy",
+          "source_ref": "window.add-with-opening.l2",
+          "expected_state": "available",
+          "actual_state": "available",
+          "expected_value": "L1 and L2 passed",
+          "actual_value": {
+            "l1": "passed",
+            "l2": "passed"
+          },
+          "provenance": [
+            "operation_policy",
+            "window.add-with-opening.l2"
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "level": "L1",
+          "status": "passed",
+          "reason": "Independent reopened IFC L1 authorization and measurement.",
+          "evidence": [
+            {
+              "fact_id": "l1.summary",
+              "source_kind": "ifc_actual_diff",
+              "source_ref": "reopened-ifc",
+              "expected_state": "available",
+              "actual_state": "available",
+              "expected_value": "readable policy-authorized physical repair",
+              "actual_value": {
+                "check_count": 21,
+                "readable": true
+              },
+              "provenance": [
+                "ifc_actual_diff",
+                "reopened-ifc"
+              ]
+            }
+          ],
+          "checks": [
+            {
+              "check_id": "l1.output.readable",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Both source and repaired IFC artifacts must reopen independently.",
+              "evidence": [
+                {
+                  "fact_id": "l1.output.readable.evidence",
+                  "source_kind": "ifc_reopen",
+                  "source_ref": "repaired-ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "after_readable": true,
+                    "before_readable": true
+                  },
+                  "actual_value": {
+                    "after_error": null,
+                    "after_readable": true,
+                    "before_error": null,
+                    "before_readable": true
+                  },
+                  "provenance": [
+                    "ifc_reopen",
+                    "repaired-ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.output.schema",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The repaired IFC schema must match the source IFC schema.",
+              "evidence": [
+                {
+                  "fact_id": "l1.output.schema.evidence",
+                  "source_kind": "ifc_schema",
+                  "source_ref": "repaired-ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "IFC2X3",
+                  "actual_value": "IFC2X3",
+                  "provenance": [
+                    "ifc_schema",
+                    "repaired-ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.output.validation",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The repaired IFC must not introduce IfcOpenShell validation diagnostics beyond the damaged baseline.",
+              "evidence": [
+                {
+                  "fact_id": "l1.output.validation.evidence",
+                  "source_kind": "ifcopenshell_validation",
+                  "source_ref": "damaged-to-repaired",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "new_diagnostic_count": 0
+                  },
+                  "actual_value": {
+                    "baseline_diagnostic_count": 0,
+                    "baseline_status": "passed",
+                    "cache": {
+                      "baseline": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:e2bb6a48f3cde3f1ddc0faad93394a1f95d798e558e6ed44fa5c344f2d23aab9",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      },
+                      "candidate": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:62c9ec32b5620cb5cdab753293449aec20d923a58c2021a6e410d6a7b33a1b08",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:794dcbdaf8fc728765e94ac634811d410f06c676d84af66fca1a5bc68df4cbf9",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      }
+                    },
+                    "candidate_diagnostic_count": 0,
+                    "execution": {
+                      "diff_phase_peak_rss_bytes": 550162432,
+                      "mode": "accelerated",
+                      "parent_current_rss_bytes": 550162432,
+                      "peak_rss_bytes": 829403136,
+                      "rss_limit_bytes": 4294967296,
+                      "stage_seconds": {
+                        "diff": 8.265999999988708,
+                        "validation": 29.35899999999674
+                      },
+                      "validation_phase_peak_rss_bytes": 829403136,
+                      "wall_seconds": 41.625,
+                      "worker_count": 2,
+                      "worker_peak_rss_bytes": {
+                        "baseline": 204972032,
+                        "candidate": 205275136
+                      }
+                    },
+                    "new_diagnostic_count": 0,
+                    "new_diagnostics": [],
+                    "new_diagnostics_truncated": false,
+                    "resolved_diagnostic_count": 0,
+                    "schema_version": "text2ifc/ifc-validation-delta/0.1",
+                    "status": "passed"
+                  },
+                  "provenance": [
+                    "ifcopenshell_validation",
+                    "damaged-to-repaired"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.created-roots",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.created-roots.0000",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:0B887RlN1JFgE6ezHxrqhk",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:81f4d270ac62d2aacdb910ff656d6df225bb04f05c251623dfaadc00871be6a8",
+                      "containers": [
+                        "3Zu5Bv0LOHrPC10026FoQQ"
+                      ],
+                      "geometry": {
+                        "available": true,
+                        "representation_sha256": "sha256:3b48eb60d4b360590990f0d522620abe97c6f6534c26271691d06b505face624"
+                      },
+                      "ifc_class": "IfcWindow",
+                      "name": "Text2IFC window 01-window",
+                      "placement": [
+                        [
+                          1.0,
+                          0.0,
+                          0.0,
+                          -33.568669
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0,
+                          26.920279
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          1.0,
+                          0.6
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      ],
+                      "snapshot_sha256": "sha256:aa2d9ab331e96798400bb1a0c87bbe21b2d41673f795625d8b58c120fed9525e",
+                      "types": [
+                        "14xJur$tAygZ8nD5oT1oMw"
+                      ]
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "0B887RlN1JFgE6ezHxrqhk",
+                    "ifc_class": "IfcWindow",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:0B887RlN1JFgE6ezHxrqhk"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.created-roots.0001",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1VuYatHuvKyvZaOJFHDORK",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:27b3d29bd0a6abe870db71646bf8c994b169f1eb2a8b5a71284eb3faaec82e82",
+                      "containers": [],
+                      "geometry": {
+                        "available": true,
+                        "representation_sha256": "sha256:6475d9f0ac97ca3ee63778be0851087b38a5021f7e12cc40d21fe278a2b5cb8e"
+                      },
+                      "ifc_class": "IfcOpeningElement",
+                      "name": "Text2IFC opening 01-window",
+                      "placement": [
+                        [
+                          -1.0,
+                          0.0,
+                          0.0,
+                          -31.758669
+                        ],
+                        [
+                          0.0,
+                          -1.0,
+                          0.0,
+                          27.076529
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          1.0,
+                          0.6
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      ],
+                      "snapshot_sha256": "sha256:ebce58dca2117fd466d19a6d534869c3e52ebca89856215956dc38a60527dbcb",
+                      "types": []
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1VuYatHuvKyvZaOJFHDORK",
+                    "ifc_class": "IfcOpeningElement",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1VuYatHuvKyvZaOJFHDORK"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.created-roots.0002",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1lPnLgvwnHhv90d4U61mxY",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:988b485c54f5508a257fcd852d831e9bd8f6e3baff69a51e6956c41fac075d65",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcPropertySet",
+                      "name": "Pset_WindowCommon",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:97e5e36d51f98bb9f49be738dcf06b0476c6ae067dc2e161070e32342d4a68aa",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1lPnLgvwnHhv90d4U61mxY",
+                    "ifc_class": "IfcPropertySet",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1lPnLgvwnHhv90d4U61mxY"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.created-roots.0003",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:2yrDl_m2DP_PZkH94cSXrV",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:be960e583b4b9d2d84071a52ba9e707cf47a5eb3572044eabee4858800c3b855",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcElementQuantity",
+                      "name": "BaseQuantities",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:2d5d36478d428c89dacf0f9b95483c73938a1b2509644e8592924033d55fa676",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "2yrDl_m2DP_PZkH94cSXrV",
+                    "ifc_class": "IfcElementQuantity",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:2yrDl_m2DP_PZkH94cSXrV"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.modified-roots",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.modified-roots.0000",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1fB3RLwjRhPVndBPzHDbNH",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:b36efe219bfcdc8395f22308f6d4ed3aef0696923907c94581aadfd3b6dc2946",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcPropertySet",
+                      "name": "Pset_DoorCommon",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:fdaa3c395b97b1a7b27b0dfc051cf36c3d46d2ee38aea3bfc010cf294a1a5fa2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:64981e5a1c3e60b7f15d059d6e2b9d753516c8aa2c05796d77bfee80206b6c80",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcPropertySet",
+                      "name": "Pset_DoorCommon",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:1d44ed0addf3754e0daeb113666cca9c76be73e8c03456dee02042a94989f495",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "1fB3RLwjRhPVndBPzHDbNH",
+                    "ifc_class": "IfcPropertySet",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1fB3RLwjRhPVndBPzHDbNH"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.relations",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.relations.0000",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:09ArRbwZ9Jh9ZKLRC1DDGt",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:cdc2e55e64c8ec2b0d6e48b1af7d66d0d5607047dd6c9b727157abea7c7eb5c1",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelAssociatesMaterial",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:b1669c611df679fbaba685582065ce91971a1053d11bc7ceb992dd908774089c",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "09ArRbwZ9Jh9ZKLRC1DDGt",
+                    "ifc_class": "IfcRelAssociatesMaterial",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:09ArRbwZ9Jh9ZKLRC1DDGt"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0001",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1qxEorXNXNpxsVbtHbTYVv",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:f6e0d458d24f9d61c29ede6999e50a2cc8481444bc078cdb64e8b0dbf6641f09",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByProperties",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:2607db8f77f87cb715bca183f69eb94d180200aa0c2bc16f7ef3fb860a961126",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1qxEorXNXNpxsVbtHbTYVv",
+                    "ifc_class": "IfcRelDefinesByProperties",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1qxEorXNXNpxsVbtHbTYVv"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0002",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1yDKjql5rMo9drM8$NJwmV",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:588f57585203a4336f176f1923aec0ae5335c2bf5402949ee8f3973b68ea3df9",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByProperties",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:432b231ad1de7218c3350c0503c0cf3dea47b5f2532411a5ca9a52b668712bd2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1yDKjql5rMo9drM8$NJwmV",
+                    "ifc_class": "IfcRelDefinesByProperties",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1yDKjql5rMo9drM8$NJwmV"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0003",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3YxXUn88rTpBS1UhBlxTP0",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:cf536f40532ed12e6ca1c039b049044c7cfdb4d001d4664fd9b091c56a4fcc5e",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelVoidsElement",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:63ec31674442cdb5e91acc73208b8c7db4e389b0705655eeaca997368980e61b",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "3YxXUn88rTpBS1UhBlxTP0",
+                    "ifc_class": "IfcRelVoidsElement",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3YxXUn88rTpBS1UhBlxTP0"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0004",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3j4iHKIkrHrfLTJWrIpdxF",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:065b8a46a60bd120122fe6c34a2e8b7211424b5e39c22bb14177c7f17e097ff9",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelFillsElement",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:cd8b86415430c3328f78e67fd18d7f09c09633dc1ae9dfcf9257e6574a68e280",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "3j4iHKIkrHrfLTJWrIpdxF",
+                    "ifc_class": "IfcRelFillsElement",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3j4iHKIkrHrfLTJWrIpdxF"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0005",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3Zu5Bv0LOHrPC10066FoQQ",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:8a98d165753f54b1e845a1650b2af5810bda3ca5b9a20572dc0fc94ccf2f15c4",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:723a8b757ea1f637d43f6f3b9ee0f60dad8e170419c275ab7c8d8efc95eb4212",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:7935b498f882d3bfc79e620adbfc57d590d5b91916e54adb424f6fdd88330d21",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:36f0a9d0cb878c79b0d6e0dc514ee9e8f0454169c0b01f49aaac5f72a2ba6fe3",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+                    "ifc_class": "IfcRelContainedInSpatialStructure",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3Zu5Bv0LOHrPC10066FoQQ"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0006",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3n8tkbqnFbIz8uPnjQl1aO",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:98402658a93d490259d9ed75714f8fa4aa1361946c08a8318c3d553b8153f81d",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByType",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:9c00b898a0d5f5835bcfc5f06ffd72e280a974e3858e76626ce0d21b691f8bd2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:8804c4d6597ad0135869a8edee1fd66dc7a9fd85a2296fdfd3216a2553430047",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByType",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:6df17fd474c94130c6f151dd71149d90d47b5f4d17dfe54700fe5226126f7466",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "3n8tkbqnFbIz8uPnjQl1aO",
+                    "ifc_class": "IfcRelDefinesByType",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3n8tkbqnFbIz8uPnjQl1aO"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.removed-roots",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.removed-roots.evidence",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "reopened-ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "no unexplained effects",
+                  "actual_value": {
+                    "changes": []
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "reopened-ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.source.immutable",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The source IFC must remain bound to the declared base fingerprint.",
+              "evidence": [
+                {
+                  "fact_id": "l1.source.immutable.evidence",
+                  "source_kind": "source_fingerprint",
+                  "source_ref": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next-ten-packages\\formal-020\\private\\offline-support\\window-property-after-answer\\damaged.ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+                  "actual_value": {
+                    "after": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+                    "before": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+                  },
+                  "provenance": [
+                    "source_fingerprint",
+                    "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next-ten-packages\\formal-020\\private\\offline-support\\window-property-after-answer\\damaged.ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.containment",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Window and Host must have identical spatial containment.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.containment.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "same non-empty storey set",
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.dimensions",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Opening dimensions must match the declared dimensions.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.dimensions.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "linear_tolerance_mm": 0.1
+                  },
+                  "actual_value": {
+                    "depth_error_mm": 0.0,
+                    "height_error_mm": 0.0,
+                    "width_error_mm": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.duplicate-chain",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Exactly one matching Opening chain must exist.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.duplicate-chain.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "matching_chain_count": 1
+                  },
+                  "actual_value": {
+                    "matching_chain_count": 1
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.filling-topology",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The generated Window must fill exactly the generated Opening.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.filling-topology.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": true,
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.geometry-fit",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Window geometry bounds must fit the Opening geometry bounds.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.geometry-fit.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": true,
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.host-topology",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The generated Opening must void exactly the declared Host Wall.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.host-topology.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": true,
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.placement",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Opening placement and orientation must match the declared placement.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.placement.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "linear_tolerance_mm": 0.1,
+                    "orientation_tolerance_degrees": 0.1
+                  },
+                  "actual_value": {
+                    "center_error_mm": 0.0,
+                    "orientation_error_degrees": 0.0,
+                    "sill_error_mm": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.tolerances",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "All linear, orientation, and volume measurements must be within policy tolerances.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.tolerances.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "linear_mm": 0.1,
+                    "orientation_degrees": 0.1,
+                    "volume_m3": 1e-05
+                  },
+                  "actual_value": {
+                    "center_error_mm": 0.0,
+                    "depth_error_mm": 0.0,
+                    "height_error_mm": 0.0,
+                    "orientation_error_degrees": 0.0,
+                    "sill_error_mm": 0.0,
+                    "volume_error_m3": 0.0,
+                    "width_error_mm": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.volume-preservation",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Host volume change must equal the requested Opening void volume.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.volume-preservation.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "absolute_tolerance_m3": 1e-05
+                  },
+                  "actual_value": {
+                    "volume_error_m3": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.identity-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.identity-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "2U8KEAXbL24xySlUNSWHKK",
+                  "actual_value": "2U8KEAXbL24xySlUNSWHKK",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.placement-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.placement-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "unchanged",
+                  "actual_value": "unchanged",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.relationships-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.relationships-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "type/containment/host unchanged",
+                  "actual_value": "unchanged",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.representation-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.representation-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "unchanged",
+                  "actual_value": "unchanged",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "L2",
+          "status": "passed",
+          "reason": "Policy-owned semantic facts are compared through authorized evidence.",
+          "evidence": [
+            {
+              "fact_id": "l2.summary",
+              "source_kind": "semantic_policy",
+              "source_ref": "window.add-with-opening.l2",
+              "expected_state": "available",
+              "actual_state": "available",
+              "expected_value": "all mandatory L2 checks passed",
+              "actual_value": {
+                "check_count": 15
+              },
+              "provenance": [
+                "semantic_policy",
+                "window.add-with-opening.l2"
+              ]
+            }
+          ],
+          "checks": [
+            {
+              "check_id": "window.type",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "relationship:type",
+                  "source_kind": "surviving_type",
+                  "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": true,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "14xJur$tAygZ8nD5oT1oMw",
+                    "value_type": "IfcWindowStyle"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "14xJur$tAygZ8nD5oT1oMw",
+                    "value_type": "IfcWindowStyle"
+                  },
+                  "provenance": [
+                    "user_authorization:explicit_request_reference",
+                    "operation:01-window",
+                    "repaired:application-role:window:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.host",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "relationship:host",
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "current-host-binding:3JZGeqq852COtfxExBeyvQ",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "3JZGeqq852COtfxExBeyvQ",
+                    "value_type": "IfcWallStandardCase"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "3JZGeqq852COtfxExBeyvQ",
+                    "value_type": "IfcWallStandardCase"
+                  },
+                  "provenance": [
+                    "resolved-host-target:3JZGeqq852COtfxExBeyvQ",
+                    "resolved-host:3JZGeqq852COtfxExBeyvQ",
+                    "operation:01-window",
+                    "repaired:application-role:window:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.storey",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "relationship:storey",
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "current-target-storey:3Zu5Bv0LOHrPC10026FoQQ",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "3Zu5Bv0LOHrPC10026FoQQ",
+                    "value_type": "IfcBuildingStorey"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "3Zu5Bv0LOHrPC10026FoQQ",
+                    "value_type": "IfcBuildingStorey"
+                  },
+                  "provenance": [
+                    "resolved-host-target:3JZGeqq852COtfxExBeyvQ",
+                    "operation:01-window",
+                    "repaired:application-role:window:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.width",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "attribute:OverallWidth",
+                  "source_kind": "explicit_request",
+                  "source_ref": "request:/text",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 1810.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 1810.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "provenance": [
+                    "request-source:user_request",
+                    "request-evidence:request:/text",
+                    "operation:01-window",
+                    "repaired:application-role:window:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.height",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "attribute:OverallHeight",
+                  "source_kind": "explicit_request",
+                  "source_ref": "request:/text",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 3000.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": 3000.0,
+                    "value_type": "IfcPositiveLengthMeasure"
+                  },
+                  "provenance": [
+                    "request-source:user_request",
+                    "request-evidence:request:/text",
+                    "operation:01-window",
+                    "repaired:application-role:window:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.is-external",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "pset:Pset_WindowCommon.IsExternal",
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "current-host:3JZGeqq852COtfxExBeyvQ",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": "Pset_WindowCommon.IsExternal",
+                    "unit": null,
+                    "value": true,
+                    "value_type": "IfcBoolean"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": "Pset_WindowCommon.IsExternal",
+                    "unit": null,
+                    "value": true,
+                    "value_type": "IfcBoolean"
+                  },
+                  "provenance": [
+                    "operation:01-window",
+                    "window-is-external-from-host",
+                    "host-wall-property:ifcopenshell.util.element.get_psets:direct",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_psets",
+                    "repaired:normalized-private-evaluator-key",
+                    "repaired:ifcopenshell.util.element.get_psets:direct"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.quantity.width",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "quantity:window-base.Width",
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "resolved:/operations/01-window/parameters/opening",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": "window-base.Width",
+                    "unit": null,
+                    "value": 1810.0,
+                    "value_type": "IfcQuantityLength"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": "BaseQuantities.Width",
+                    "unit": "m",
+                    "value": 1810.0,
+                    "value_type": "IfcQuantityLength"
+                  },
+                  "provenance": [
+                    "operation:01-window",
+                    "registered-window-parameter-policy:0.2",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_psets",
+                    "repaired:normalized-private-evaluator-key",
+                    "repaired:ifcopenshell.util.element.get_psets:direct",
+                    "repaired:source_fact_key:quantity:BaseQuantities.Width"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.quantity.height",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "quantity:window-base.Height",
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "resolved:/operations/01-window/parameters/opening",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": "window-base.Height",
+                    "unit": null,
+                    "value": 3000.0,
+                    "value_type": "IfcQuantityLength"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": "BaseQuantities.Height",
+                    "unit": "m",
+                    "value": 3000.0,
+                    "value_type": "IfcQuantityLength"
+                  },
+                  "provenance": [
+                    "operation:01-window",
+                    "registered-window-parameter-policy:0.2",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_psets",
+                    "repaired:normalized-private-evaluator-key",
+                    "repaired:ifcopenshell.util.element.get_psets:direct",
+                    "repaired:source_fact_key:quantity:BaseQuantities.Height"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.quantity.area",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "quantity:window-base.Area",
+                  "source_kind": "deterministic_policy",
+                  "source_ref": "resolved:/operations/01-window/parameters/opening",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": "window-base.Area",
+                    "unit": null,
+                    "value": 5430000.0,
+                    "value_type": "IfcQuantityArea"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": "BaseQuantities.Area",
+                    "unit": "m2",
+                    "value": 5430000.0,
+                    "value_type": "IfcQuantityArea"
+                  },
+                  "provenance": [
+                    "operation:01-window",
+                    "registered-window-parameter-policy:0.2",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_psets",
+                    "repaired:normalized-private-evaluator-key",
+                    "repaired:ifcopenshell.util.element.get_psets:direct",
+                    "repaired:source_fact_key:quantity:BaseQuantities.Area"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.quantity.sill-height",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "conditional",
+              "mandatory": false,
+              "status": "not_required",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "evidence": [
+                {
+                  "fact_id": "window.quantity.sill-height",
+                  "source_kind": "source_search",
+                  "source_ref": "window.add-with-opening.l2/window.quantity.sill-height",
+                  "expected_state": "unavailable",
+                  "actual_state": "not_applicable",
+                  "expected_value": null,
+                  "actual_value": null,
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:private_original",
+                    "searched:surviving_target",
+                    "searched:surviving_host",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:deterministic_policy",
+                    "searched:authorized_type_cohort"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.material:material:Glass",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "conditional",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "material:Glass",
+                  "source_kind": "authorized_type_cohort",
+                  "source_ref": "resource:step:3005",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "Glass",
+                    "value_type": "IfcMaterial"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "Glass",
+                    "value_type": "IfcMaterial"
+                  },
+                  "provenance": [
+                    "IfcMaterialList:#3005",
+                    "IfcRelAssociatesMaterial:#186168",
+                    "authority-source:type-cohort:14xJur$tAygZ8nD5oT1oMw",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM$h",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM_x",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMaF",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMq3",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMqr",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMsb",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMuh",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMvT",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMwx",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMyR",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+                    "cohort-record:ifc:2U8KEAXbL24xySlUNSWM9b",
+                    "cohort-record:ifc:3JZGeqq852COtfxExBeyv6",
+                    "cohort-record:ifc:3JZGeqq852COtfxExBeyvD",
+                    "cohort-type:14xJur$tAygZ8nD5oT1oMw",
+                    "current_ifc:#147920",
+                    "current_ifc:#147934",
+                    "current_ifc:#147948",
+                    "current_ifc:#147962",
+                    "current_ifc:#147976",
+                    "current_ifc:#147990",
+                    "current_ifc:#148004",
+                    "current_ifc:#148018",
+                    "current_ifc:#148032",
+                    "current_ifc:#148046",
+                    "current_ifc:#148060",
+                    "current_ifc:#148130",
+                    "current_ifc:#148994",
+                    "current_ifc:#149022",
+                    "current_ifc:#149078",
+                    "current_ifc:#149092",
+                    "current_ifc:#149190",
+                    "current_ifc:#149204",
+                    "current_ifc:#149218",
+                    "current_ifc:#149232",
+                    "current_ifc:#149260",
+                    "current_ifc:#149274",
+                    "current_ifc:#149288",
+                    "current_ifc:#149456",
+                    "current_ifc:#149708",
+                    "current_ifc:#149722",
+                    "current_ifc:#149736",
+                    "current_ifc:#149750",
+                    "current_ifc:#149764",
+                    "current_ifc:#149792",
+                    "current_ifc:#149806",
+                    "current_ifc:#149820",
+                    "current_ifc:#19417",
+                    "current_ifc:#3012",
+                    "current_ifc:#3800",
+                    "operation:01-window",
+                    "relationship:guid:3g1ttfzlxSmGJnK1yZb8jM",
+                    "resource:step:3005",
+                    "source_fact_key:material:Glass",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_materials"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.material:material:Window-Frame",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "conditional",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "material:Window-Frame",
+                  "source_kind": "authorized_type_cohort",
+                  "source_ref": "resource:step:3005",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "Window Frame",
+                    "value_type": "IfcMaterial"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": null,
+                    "unit": null,
+                    "value": "Window Frame",
+                    "value_type": "IfcMaterial"
+                  },
+                  "provenance": [
+                    "IfcMaterialList:#3005",
+                    "IfcRelAssociatesMaterial:#186168",
+                    "authority-source:type-cohort:14xJur$tAygZ8nD5oT1oMw",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM$h",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM_x",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMaF",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMq3",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMqr",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMsb",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMuh",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMvT",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMwx",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMyR",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+                    "cohort-record:ifc:2U8KEAXbL24xySlUNSWM9b",
+                    "cohort-record:ifc:3JZGeqq852COtfxExBeyv6",
+                    "cohort-record:ifc:3JZGeqq852COtfxExBeyvD",
+                    "cohort-type:14xJur$tAygZ8nD5oT1oMw",
+                    "current_ifc:#147920",
+                    "current_ifc:#147934",
+                    "current_ifc:#147948",
+                    "current_ifc:#147962",
+                    "current_ifc:#147976",
+                    "current_ifc:#147990",
+                    "current_ifc:#148004",
+                    "current_ifc:#148018",
+                    "current_ifc:#148032",
+                    "current_ifc:#148046",
+                    "current_ifc:#148060",
+                    "current_ifc:#148130",
+                    "current_ifc:#148994",
+                    "current_ifc:#149022",
+                    "current_ifc:#149078",
+                    "current_ifc:#149092",
+                    "current_ifc:#149190",
+                    "current_ifc:#149204",
+                    "current_ifc:#149218",
+                    "current_ifc:#149232",
+                    "current_ifc:#149260",
+                    "current_ifc:#149274",
+                    "current_ifc:#149288",
+                    "current_ifc:#149456",
+                    "current_ifc:#149708",
+                    "current_ifc:#149722",
+                    "current_ifc:#149736",
+                    "current_ifc:#149750",
+                    "current_ifc:#149764",
+                    "current_ifc:#149792",
+                    "current_ifc:#149806",
+                    "current_ifc:#149820",
+                    "current_ifc:#19417",
+                    "current_ifc:#3012",
+                    "current_ifc:#3800",
+                    "operation:01-window",
+                    "relationship:guid:3g1ttfzlxSmGJnK1yZb8jM",
+                    "resource:step:3005",
+                    "source_fact_key:material:Window-Frame",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_materials"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.classification",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "conditional",
+              "mandatory": false,
+              "status": "not_required",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "evidence": [
+                {
+                  "fact_id": "window.classification",
+                  "source_kind": "source_search",
+                  "source_ref": "window.add-with-opening.l2/window.classification",
+                  "expected_state": "unavailable",
+                  "actual_state": "not_applicable",
+                  "expected_value": null,
+                  "actual_value": null,
+                  "provenance": [
+                    "searched:explicit_request",
+                    "searched:private_original",
+                    "searched:surviving_target",
+                    "searched:surviving_host",
+                    "searched:surviving_type",
+                    "searched:approved_prototype",
+                    "searched:deterministic_policy",
+                    "searched:authorized_type_cohort"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.reference",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "conditional",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "pset:Pset_WindowCommon.Reference",
+                  "source_kind": "authorized_type_cohort",
+                  "source_ref": "type-cohort:14xJur$tAygZ8nD5oT1oMw",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": false,
+                    "pset_path": "Pset_WindowCommon.Reference",
+                    "unit": null,
+                    "value": "3.2x1.8m",
+                    "value_type": "IfcIdentifier"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": false,
+                    "pset_path": "Pset_WindowCommon.Reference",
+                    "unit": null,
+                    "value": "3.2x1.8m",
+                    "value_type": "IfcIdentifier"
+                  },
+                  "provenance": [
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM$h",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM_x",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMaF",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMq3",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMqr",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMsb",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMuh",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMvT",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMwx",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMyR",
+                    "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+                    "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+                    "cohort-record:ifc:2U8KEAXbL24xySlUNSWM9b",
+                    "cohort-record:ifc:3JZGeqq852COtfxExBeyv6",
+                    "cohort-record:ifc:3JZGeqq852COtfxExBeyvD",
+                    "cohort-type:14xJur$tAygZ8nD5oT1oMw",
+                    "ifcopenshell.util.element.get_psets:direct",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVM$h",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVM_x",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMaF",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMq3",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMqr",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMsb",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMuh",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMvT",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMwx",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMyR",
+                    "index:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+                    "index:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+                    "index:ifc:2U8KEAXbL24xySlUNSWM9b",
+                    "index:ifc:3JZGeqq852COtfxExBeyv6",
+                    "index:ifc:3JZGeqq852COtfxExBeyvD",
+                    "operation:01-window",
+                    "source_fact_key:pset:Pset_WindowCommon.Reference",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_psets",
+                    "repaired:normalized-private-evaluator-key",
+                    "repaired:ifcopenshell.util.element.get_psets:direct"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "window.thermal-transmittance",
+              "policy_id": "window.add-with-opening.l2",
+              "applicability": "conditional",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Authorized semantic fact is present and equivalent in repaired output",
+              "evidence": [
+                {
+                  "fact_id": "pset:Pset_WindowCommon.ThermalTransmittance",
+                  "source_kind": "surviving_type",
+                  "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "entity_source": "semantic-manifest:01-window",
+                    "inherited": true,
+                    "pset_path": "Pset_WindowCommon.ThermalTransmittance",
+                    "unit": null,
+                    "value": 5.5617,
+                    "value_type": "IfcThermalTransmittanceMeasure"
+                  },
+                  "actual_value": {
+                    "entity_source": "IfcWindow:0B887RlN1JFgE6ezHxrqhk",
+                    "inherited": true,
+                    "pset_path": "Pset_WindowCommon.ThermalTransmittance",
+                    "unit": null,
+                    "value": 5.5617,
+                    "value_type": "IfcThermalTransmittanceMeasure"
+                  },
+                  "provenance": [
+                    "type-index:type:14xJur$tAygZ8nD5oT1oMw",
+                    "ifcopenshell.util.element.get_psets:direct",
+                    "type_record:14xJur$tAygZ8nD5oT1oMw",
+                    "user_authorization:explicit_request_reference",
+                    "operation:01-window",
+                    "repaired:application-role:window:01-window",
+                    "repaired:ifcopenshell.util.element.get_psets",
+                    "repaired:normalized-private-evaluator-key",
+                    "repaired:ifcopenshell.util.element.get_psets:inherited"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "L3",
+          "status": "not_required",
+          "reason": "L3 authoring and identity exactness is not required in v1.1.",
+          "evidence": [
+            {
+              "fact_id": "l3.summary",
+              "source_kind": "policy_boundary",
+              "source_ref": "v1.1",
+              "expected_state": "available",
+              "actual_state": "available",
+              "expected_value": "not required",
+              "actual_value": "observed",
+              "provenance": [
+                "policy_boundary",
+                "v1.1"
+              ]
+            }
+          ],
+          "checks": [
+            {
+              "check_id": "l3.authoring-identity",
+              "policy_id": "l3.v1.1-observation",
+              "applicability": "informational",
+              "mandatory": false,
+              "status": "failed",
+              "reason": "Original identity is observational and never gates v1.1 repair success.",
+              "evidence": [
+                {
+                  "fact_id": "l3.authoring-identity",
+                  "source_kind": "identity_observation",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": null,
+                  "actual_value": "0B887RlN1JFgE6ezHxrqhk",
+                  "provenance": [
+                    "identity_observation",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "operation_id": "02-door-property",
+      "operation_type": "set_occurrence_properties",
+      "mandatory": true,
+      "policy_id": "occurrence.property.l2",
+      "policy_version": "0.1",
+      "status": "passed",
+      "reason": "Mandatory L1 and L2 jointly determine operation success.",
+      "evidence": [
+        {
+          "fact_id": "operation.02-door-property",
+          "source_kind": "operation_policy",
+          "source_ref": "occurrence.property.l2",
+          "expected_state": "available",
+          "actual_state": "available",
+          "expected_value": "L1 and L2 passed",
+          "actual_value": {
+            "l1": "passed",
+            "l2": "passed"
+          },
+          "provenance": [
+            "operation_policy",
+            "occurrence.property.l2"
+          ]
+        }
+      ],
+      "levels": [
+        {
+          "level": "L1",
+          "status": "passed",
+          "reason": "Independent reopened IFC L1 authorization and measurement.",
+          "evidence": [
+            {
+              "fact_id": "l1.summary",
+              "source_kind": "ifc_actual_diff",
+              "source_ref": "reopened-ifc",
+              "expected_state": "available",
+              "actual_state": "available",
+              "expected_value": "readable policy-authorized physical repair",
+              "actual_value": {
+                "check_count": 21,
+                "readable": true
+              },
+              "provenance": [
+                "ifc_actual_diff",
+                "reopened-ifc"
+              ]
+            }
+          ],
+          "checks": [
+            {
+              "check_id": "l1.output.readable",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Both source and repaired IFC artifacts must reopen independently.",
+              "evidence": [
+                {
+                  "fact_id": "l1.output.readable.evidence",
+                  "source_kind": "ifc_reopen",
+                  "source_ref": "repaired-ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "after_readable": true,
+                    "before_readable": true
+                  },
+                  "actual_value": {
+                    "after_error": null,
+                    "after_readable": true,
+                    "before_error": null,
+                    "before_readable": true
+                  },
+                  "provenance": [
+                    "ifc_reopen",
+                    "repaired-ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.output.schema",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The repaired IFC schema must match the source IFC schema.",
+              "evidence": [
+                {
+                  "fact_id": "l1.output.schema.evidence",
+                  "source_kind": "ifc_schema",
+                  "source_ref": "repaired-ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "IFC2X3",
+                  "actual_value": "IFC2X3",
+                  "provenance": [
+                    "ifc_schema",
+                    "repaired-ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.output.validation",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The repaired IFC must not introduce IfcOpenShell validation diagnostics beyond the damaged baseline.",
+              "evidence": [
+                {
+                  "fact_id": "l1.output.validation.evidence",
+                  "source_kind": "ifcopenshell_validation",
+                  "source_ref": "damaged-to-repaired",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "new_diagnostic_count": 0
+                  },
+                  "actual_value": {
+                    "baseline_diagnostic_count": 0,
+                    "baseline_status": "passed",
+                    "cache": {
+                      "baseline": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:e2bb6a48f3cde3f1ddc0faad93394a1f95d798e558e6ed44fa5c344f2d23aab9",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      },
+                      "candidate": {
+                        "key": {
+                          "diagnostic_normalization_version": "ifc-diagnostic-signature/0.1",
+                          "ifc_schema": "IFC2X3",
+                          "ifc_sha256": "sha256:62c9ec32b5620cb5cdab753293449aec20d923a58c2021a6e410d6a7b33a1b08",
+                          "ifcopenshell_version": "0.8.5",
+                          "validation_policy_version": "ifcopenshell-schema-no-express/0.1"
+                        },
+                        "key_digest": "sha256:794dcbdaf8fc728765e94ac634811d410f06c676d84af66fca1a5bc68df4cbf9",
+                        "mode": "read_write",
+                        "reason": "entry_missing",
+                        "schema_version": "text2ifc/ifc-validation-cache/0.1",
+                        "status": "miss"
+                      }
+                    },
+                    "candidate_diagnostic_count": 0,
+                    "execution": {
+                      "diff_phase_peak_rss_bytes": 550162432,
+                      "mode": "accelerated",
+                      "parent_current_rss_bytes": 550162432,
+                      "peak_rss_bytes": 829403136,
+                      "rss_limit_bytes": 4294967296,
+                      "stage_seconds": {
+                        "diff": 8.265999999988708,
+                        "validation": 29.35899999999674
+                      },
+                      "validation_phase_peak_rss_bytes": 829403136,
+                      "wall_seconds": 41.625,
+                      "worker_count": 2,
+                      "worker_peak_rss_bytes": {
+                        "baseline": 204972032,
+                        "candidate": 205275136
+                      }
+                    },
+                    "new_diagnostic_count": 0,
+                    "new_diagnostics": [],
+                    "new_diagnostics_truncated": false,
+                    "resolved_diagnostic_count": 0,
+                    "schema_version": "text2ifc/ifc-validation-delta/0.1",
+                    "status": "passed"
+                  },
+                  "provenance": [
+                    "ifcopenshell_validation",
+                    "damaged-to-repaired"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.created-roots",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.created-roots.0000",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:0B887RlN1JFgE6ezHxrqhk",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:81f4d270ac62d2aacdb910ff656d6df225bb04f05c251623dfaadc00871be6a8",
+                      "containers": [
+                        "3Zu5Bv0LOHrPC10026FoQQ"
+                      ],
+                      "geometry": {
+                        "available": true,
+                        "representation_sha256": "sha256:3b48eb60d4b360590990f0d522620abe97c6f6534c26271691d06b505face624"
+                      },
+                      "ifc_class": "IfcWindow",
+                      "name": "Text2IFC window 01-window",
+                      "placement": [
+                        [
+                          1.0,
+                          0.0,
+                          0.0,
+                          -33.568669
+                        ],
+                        [
+                          0.0,
+                          1.0,
+                          0.0,
+                          26.920279
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          1.0,
+                          0.6
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      ],
+                      "snapshot_sha256": "sha256:aa2d9ab331e96798400bb1a0c87bbe21b2d41673f795625d8b58c120fed9525e",
+                      "types": [
+                        "14xJur$tAygZ8nD5oT1oMw"
+                      ]
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "0B887RlN1JFgE6ezHxrqhk",
+                    "ifc_class": "IfcWindow",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:0B887RlN1JFgE6ezHxrqhk"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.created-roots.0001",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1VuYatHuvKyvZaOJFHDORK",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:27b3d29bd0a6abe870db71646bf8c994b169f1eb2a8b5a71284eb3faaec82e82",
+                      "containers": [],
+                      "geometry": {
+                        "available": true,
+                        "representation_sha256": "sha256:6475d9f0ac97ca3ee63778be0851087b38a5021f7e12cc40d21fe278a2b5cb8e"
+                      },
+                      "ifc_class": "IfcOpeningElement",
+                      "name": "Text2IFC opening 01-window",
+                      "placement": [
+                        [
+                          -1.0,
+                          0.0,
+                          0.0,
+                          -31.758669
+                        ],
+                        [
+                          0.0,
+                          -1.0,
+                          0.0,
+                          27.076529
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          1.0,
+                          0.6
+                        ],
+                        [
+                          0.0,
+                          0.0,
+                          0.0,
+                          1.0
+                        ]
+                      ],
+                      "snapshot_sha256": "sha256:ebce58dca2117fd466d19a6d534869c3e52ebca89856215956dc38a60527dbcb",
+                      "types": []
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1VuYatHuvKyvZaOJFHDORK",
+                    "ifc_class": "IfcOpeningElement",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1VuYatHuvKyvZaOJFHDORK"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.created-roots.0002",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1lPnLgvwnHhv90d4U61mxY",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:988b485c54f5508a257fcd852d831e9bd8f6e3baff69a51e6956c41fac075d65",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcPropertySet",
+                      "name": "Pset_WindowCommon",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:97e5e36d51f98bb9f49be738dcf06b0476c6ae067dc2e161070e32342d4a68aa",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1lPnLgvwnHhv90d4U61mxY",
+                    "ifc_class": "IfcPropertySet",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1lPnLgvwnHhv90d4U61mxY"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.created-roots.0003",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:2yrDl_m2DP_PZkH94cSXrV",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:be960e583b4b9d2d84071a52ba9e707cf47a5eb3572044eabee4858800c3b855",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcElementQuantity",
+                      "name": "BaseQuantities",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:2d5d36478d428c89dacf0f9b95483c73938a1b2509644e8592924033d55fa676",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "2yrDl_m2DP_PZkH94cSXrV",
+                    "ifc_class": "IfcElementQuantity",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:2yrDl_m2DP_PZkH94cSXrV"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.modified-roots",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.modified-roots.0000",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1fB3RLwjRhPVndBPzHDbNH",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:b36efe219bfcdc8395f22308f6d4ed3aef0696923907c94581aadfd3b6dc2946",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcPropertySet",
+                      "name": "Pset_DoorCommon",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:fdaa3c395b97b1a7b27b0dfc051cf36c3d46d2ee38aea3bfc010cf294a1a5fa2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized by Registry policy and ChangeSet operation scope",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:64981e5a1c3e60b7f15d059d6e2b9d753516c8aa2c05796d77bfee80206b6c80",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcPropertySet",
+                      "name": "Pset_DoorCommon",
+                      "placement": null,
+                      "snapshot_sha256": "sha256:1d44ed0addf3754e0daeb113666cca9c76be73e8c03456dee02042a94989f495",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "1fB3RLwjRhPVndBPzHDbNH",
+                    "ifc_class": "IfcPropertySet",
+                    "is_relationship": false
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1fB3RLwjRhPVndBPzHDbNH"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.relations",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.relations.0000",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:09ArRbwZ9Jh9ZKLRC1DDGt",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:cdc2e55e64c8ec2b0d6e48b1af7d66d0d5607047dd6c9b727157abea7c7eb5c1",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelAssociatesMaterial",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:b1669c611df679fbaba685582065ce91971a1053d11bc7ceb992dd908774089c",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "09ArRbwZ9Jh9ZKLRC1DDGt",
+                    "ifc_class": "IfcRelAssociatesMaterial",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:09ArRbwZ9Jh9ZKLRC1DDGt"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0001",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1qxEorXNXNpxsVbtHbTYVv",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:f6e0d458d24f9d61c29ede6999e50a2cc8481444bc078cdb64e8b0dbf6641f09",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByProperties",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:2607db8f77f87cb715bca183f69eb94d180200aa0c2bc16f7ef3fb860a961126",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1qxEorXNXNpxsVbtHbTYVv",
+                    "ifc_class": "IfcRelDefinesByProperties",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1qxEorXNXNpxsVbtHbTYVv"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0002",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:1yDKjql5rMo9drM8$NJwmV",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:588f57585203a4336f176f1923aec0ae5335c2bf5402949ee8f3973b68ea3df9",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByProperties",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:432b231ad1de7218c3350c0503c0cf3dea47b5f2532411a5ca9a52b668712bd2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "1yDKjql5rMo9drM8$NJwmV",
+                    "ifc_class": "IfcRelDefinesByProperties",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:1yDKjql5rMo9drM8$NJwmV"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0003",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3YxXUn88rTpBS1UhBlxTP0",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:cf536f40532ed12e6ca1c039b049044c7cfdb4d001d4664fd9b091c56a4fcc5e",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelVoidsElement",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:63ec31674442cdb5e91acc73208b8c7db4e389b0705655eeaca997368980e61b",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "3YxXUn88rTpBS1UhBlxTP0",
+                    "ifc_class": "IfcRelVoidsElement",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3YxXUn88rTpBS1UhBlxTP0"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0004",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3j4iHKIkrHrfLTJWrIpdxF",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:065b8a46a60bd120122fe6c34a2e8b7211424b5e39c22bb14177c7f17e097ff9",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelFillsElement",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:cd8b86415430c3328f78e67fd18d7f09c09633dc1ae9dfcf9257e6574a68e280",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": null,
+                    "change_kind": "created",
+                    "global_id": "3j4iHKIkrHrfLTJWrIpdxF",
+                    "ifc_class": "IfcRelFillsElement",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3j4iHKIkrHrfLTJWrIpdxF"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0005",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3Zu5Bv0LOHrPC10066FoQQ",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:8a98d165753f54b1e845a1650b2af5810bda3ca5b9a20572dc0fc94ccf2f15c4",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:723a8b757ea1f637d43f6f3b9ee0f60dad8e170419c275ab7c8d8efc95eb4212",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:7935b498f882d3bfc79e620adbfc57d590d5b91916e54adb424f6fdd88330d21",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelContainedInSpatialStructure",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:36f0a9d0cb878c79b0d6e0dc514ee9e8f0454169c0b01f49aaac5f72a2ba6fe3",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+                    "ifc_class": "IfcRelContainedInSpatialStructure",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3Zu5Bv0LOHrPC10066FoQQ"
+                  ]
+                },
+                {
+                  "fact_id": "l1.scope.relations.0006",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "ifc-guid:3n8tkbqnFbIz8uPnjQl1aO",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "policy-and-scope-authorized effect",
+                  "actual_value": {
+                    "after": {
+                      "attribute_sha256": "sha256:98402658a93d490259d9ed75714f8fa4aa1361946c08a8318c3d553b8153f81d",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByType",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:9c00b898a0d5f5835bcfc5f06ffd72e280a974e3858e76626ce0d21b691f8bd2",
+                      "types": null
+                    },
+                    "authorization_reason": "authorized relationship role and endpoints",
+                    "authorized": true,
+                    "before": {
+                      "attribute_sha256": "sha256:8804c4d6597ad0135869a8edee1fd66dc7a9fd85a2296fdfd3216a2553430047",
+                      "containers": null,
+                      "geometry": null,
+                      "ifc_class": "IfcRelDefinesByType",
+                      "name": null,
+                      "placement": null,
+                      "snapshot_sha256": "sha256:6df17fd474c94130c6f151dd71149d90d47b5f4d17dfe54700fe5226126f7466",
+                      "types": null
+                    },
+                    "change_kind": "modified",
+                    "global_id": "3n8tkbqnFbIz8uPnjQl1aO",
+                    "ifc_class": "IfcRelDefinesByType",
+                    "is_relationship": true
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "ifc-guid:3n8tkbqnFbIz8uPnjQl1aO"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.scope.removed-roots",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Every actual IFC effect must be authorized by policy and declared scope.",
+              "evidence": [
+                {
+                  "fact_id": "l1.scope.removed-roots.evidence",
+                  "source_kind": "ifc_actual_diff",
+                  "source_ref": "reopened-ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "no unexplained effects",
+                  "actual_value": {
+                    "changes": []
+                  },
+                  "provenance": [
+                    "ifc_actual_diff",
+                    "reopened-ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.source.immutable",
+              "policy_id": "l1.common",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The source IFC must remain bound to the declared base fingerprint.",
+              "evidence": [
+                {
+                  "fact_id": "l1.source.immutable.evidence",
+                  "source_kind": "source_fingerprint",
+                  "source_ref": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next-ten-packages\\formal-020\\private\\offline-support\\window-property-after-answer\\damaged.ifc",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+                  "actual_value": {
+                    "after": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+                    "before": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+                  },
+                  "provenance": [
+                    "source_fingerprint",
+                    "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next-ten-packages\\formal-020\\private\\offline-support\\window-property-after-answer\\damaged.ifc"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.containment",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Window and Host must have identical spatial containment.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.containment.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "same non-empty storey set",
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.dimensions",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Opening dimensions must match the declared dimensions.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.dimensions.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "linear_tolerance_mm": 0.1
+                  },
+                  "actual_value": {
+                    "depth_error_mm": 0.0,
+                    "height_error_mm": 0.0,
+                    "width_error_mm": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.duplicate-chain",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Exactly one matching Opening chain must exist.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.duplicate-chain.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "matching_chain_count": 1
+                  },
+                  "actual_value": {
+                    "matching_chain_count": 1
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.filling-topology",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The generated Window must fill exactly the generated Opening.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.filling-topology.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": true,
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.geometry-fit",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Window geometry bounds must fit the Opening geometry bounds.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.geometry-fit.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": true,
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.host-topology",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "The generated Opening must void exactly the declared Host Wall.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.host-topology.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": true,
+                  "actual_value": true,
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.placement",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Opening placement and orientation must match the declared placement.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.placement.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "linear_tolerance_mm": 0.1,
+                    "orientation_tolerance_degrees": 0.1
+                  },
+                  "actual_value": {
+                    "center_error_mm": 0.0,
+                    "orientation_error_degrees": 0.0,
+                    "sill_error_mm": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.tolerances",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "All linear, orientation, and volume measurements must be within policy tolerances.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.tolerances.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "linear_mm": 0.1,
+                    "orientation_degrees": 0.1,
+                    "volume_m3": 1e-05
+                  },
+                  "actual_value": {
+                    "center_error_mm": 0.0,
+                    "depth_error_mm": 0.0,
+                    "height_error_mm": 0.0,
+                    "orientation_error_degrees": 0.0,
+                    "sill_error_mm": 0.0,
+                    "volume_error_m3": 0.0,
+                    "width_error_mm": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "l1.window.volume-preservation",
+              "policy_id": "window.add-with-opening.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Host volume change must equal the requested Opening void volume.",
+              "evidence": [
+                {
+                  "fact_id": "l1.window.volume-preservation.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:01-window",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": {
+                    "absolute_tolerance_m3": 1e-05
+                  },
+                  "actual_value": {
+                    "volume_error_m3": 0.0
+                  },
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:01-window"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.identity-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.identity-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "2U8KEAXbL24xySlUNSWHKK",
+                  "actual_value": "2U8KEAXbL24xySlUNSWHKK",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.placement-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.placement-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "unchanged",
+                  "actual_value": "unchanged",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.relationships-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.relationships-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "type/containment/host unchanged",
+                  "actual_value": "unchanged",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            },
+            {
+              "check_id": "occurrence.representation-preserved",
+              "policy_id": "occurrence.property.l1",
+              "applicability": "required",
+              "mandatory": true,
+              "status": "passed",
+              "reason": "Occurrence property authoring preserves non-property state.",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.representation-preserved.evidence",
+                  "source_kind": "operation_measurement",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": "unchanged",
+                  "actual_value": "unchanged",
+                  "provenance": [
+                    "operation_measurement",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "L2",
+          "status": "passed",
+          "reason": "Policy-owned semantic facts are compared through authorized evidence.",
+          "evidence": [
+            {
+              "fact_id": "l2.summary",
+              "source_kind": "semantic_policy",
+              "source_ref": "occurrence.property.l2",
+              "expected_state": "available",
+              "actual_state": "available",
+              "expected_value": "all mandatory L2 checks passed",
+              "actual_value": {
+                "check_count": 1
+              },
+              "provenance": [
+                "semantic_policy",
+                "occurrence.property.l2"
+              ]
+            }
+          ],
+          "checks": [
+            {
+              "check_id": "occurrence.requested-property",
+              "policy_id": "occurrence.property.l2",
+              "applicability": "conditional",
+              "mandatory": false,
+              "status": "not_required",
+              "reason": "No authorized source establishes this conditional semantic fact",
+              "evidence": [
+                {
+                  "fact_id": "occurrence.requested-property",
+                  "source_kind": "source_search",
+                  "source_ref": "occurrence.property.l2/occurrence.requested-property",
+                  "expected_state": "unavailable",
+                  "actual_state": "not_applicable",
+                  "expected_value": null,
+                  "actual_value": null,
+                  "provenance": [
+                    "searched:explicit_request"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "level": "L3",
+          "status": "not_required",
+          "reason": "L3 authoring and identity exactness is not required in v1.1.",
+          "evidence": [
+            {
+              "fact_id": "l3.summary",
+              "source_kind": "policy_boundary",
+              "source_ref": "v1.1",
+              "expected_state": "available",
+              "actual_state": "available",
+              "expected_value": "not required",
+              "actual_value": "observed",
+              "provenance": [
+                "policy_boundary",
+                "v1.1"
+              ]
+            }
+          ],
+          "checks": [
+            {
+              "check_id": "l3.authoring-identity",
+              "policy_id": "l3.v1.1-observation",
+              "applicability": "informational",
+              "mandatory": false,
+              "status": "failed",
+              "reason": "Original identity is observational and never gates v1.1 repair success.",
+              "evidence": [
+                {
+                  "fact_id": "l3.authoring-identity",
+                  "source_kind": "identity_observation",
+                  "source_ref": "operation:02-door-property",
+                  "expected_state": "available",
+                  "actual_state": "available",
+                  "expected_value": null,
+                  "actual_value": "2U8KEAXbL24xySlUNSWHKK",
+                  "provenance": [
+                    "identity_observation",
+                    "operation:02-door-property"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "complete_repair_success": true,
+  "successful_artifact_publishable": true,
+  "diagnostic_artifact_retained": false
+}

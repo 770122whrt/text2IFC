@@ -1,0 +1,78 @@
+{
+  "schema_version": "repair-comparison-candidate-bound-probe/0.1",
+  "timestamp": "2026-10-08T12:12:37.177901+00:00",
+  "case": "011",
+  "status": "passed",
+  "operation_count": 1,
+  "source_asset": "gni-bim-dataset-model_203-da9fbdc27038",
+  "independent_gold_body_mesh_match": true,
+  "mesh_check": {
+    "rectangular_mesh_matches_authored_axis_section": true,
+    "bounds_max_error_mm": 2.0037305148434825e-12,
+    "vertices_surface_max_error_mm": 0.0,
+    "actual_volume_mm3": 500000000.0,
+    "expected_volume_mm3": 500000000.00000805,
+    "volume_relative_error": 1.609325408935521e-14,
+    "vertices": 8,
+    "triangles": 12,
+    "actual_bounds_in_request_frame_mm": [
+      [
+        0.0,
+        4000.0
+      ],
+      [
+        -125.0,
+        125.0
+      ],
+      [
+        -249.99999999999818,
+        250.00000000000182
+      ]
+    ],
+    "expected_bounds_in_request_frame_mm": [
+      [
+        0.0,
+        4000.0
+      ],
+      [
+        -125.000000000002,
+        125.000000000002
+      ],
+      [
+        -250.0,
+        250.0
+      ]
+    ],
+    "tolerances": {
+      "bounds_mm": 0.05,
+      "surface_mm": 0.05,
+      "relative_volume": 1e-05
+    },
+    "volume_is_supporting_check_only": true,
+    "independent_of_provider": true
+  },
+  "new_occurrence_unique_containment": true,
+  "new_occurrence_actual_storey": "13LV5dTeP3CAox54x56C1Z",
+  "source_unchanged": true,
+  "candidate_package_inputs_unchanged": true,
+  "original_baseline_evidence_unchanged": true,
+  "code_unchanged_since_family_validation": true,
+  "code_sha256": {
+    "src/text2ifc_ifc_repair/operations/beam.py": "684b46a8bbd07c92f89e66e7f320db9579aa415f3fccc94ae3ab19df961818ee",
+    "src/text2ifc_ifc_repair/operations/column.py": "e3bd73cc75f71c9bc7758a58a8bcbd0fb4473f852de898166fad78b7dd15df89"
+  },
+  "family_validation": ".tmp\\repair-comparison-formal-expansion\\b-multi-containment-validation.json",
+  "family_validation_sha256": "5d481f810f560541bcbbf7916eaf1ed7b63926a197f3aa9423ac20f510dc55cc",
+  "baseline_result": "STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS",
+  "baseline_path": ".tmp/repair-comparison-formal-expansion/next_ten_offline_structural_probe.json",
+  "input_damaged_sha256": "846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+  "candidate_task_damaged_sha256": "846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+  "evidence_class": "offline_bound_public_resolve_bind_apply_reopen_evaluate_publish_only",
+  "natural_language_stage_1_3_tested": false,
+  "full_B_experiment_adapter_tested": false,
+  "review_status": "pending_human_review",
+  "model_calls": 0,
+  "private_gold_supplied_to_runner": false,
+  "seconds": 44.578000000008615,
+  "passed": true
+}

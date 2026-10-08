@@ -1,0 +1,168 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {},
+          "global_id": "1UoK2w7n9ThubkXP7I5xis",
+          "ifc_class": "IfcBeamType",
+          "kind": "system_generated_type",
+          "operation_id": "beam-1",
+          "template": {
+            "name": "Text2IFC generated beam type beam-1",
+            "predefined_type": "NOTDEFINED",
+            "section": {
+              "height_mm": 500.0,
+              "shape": "rectangle",
+              "width_mm": 250.0
+            },
+            "section_digest": "sha256:bac569f2d600ce85748dc3cbaef53adeae48073672f143c013fc6b0c4f3e4789"
+          },
+          "template_digest": "sha256:57009a7af682a4f7d0b81fdff345290e98f754f93c4de097ead504ac7596dbb8",
+          "template_id": "text2ifc-rectangular-beam-type",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "13LV5dTeP3CAox54x56C1Z",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcBuildingStorey",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcBuildingStorey"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "EG",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": null,
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "structural_storey_target",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": 0.0,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 0.1,
+                  "value": 0.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": false
+            },
+            "geometry": {},
+            "geometry_capability": "structural_storey_target",
+            "ifc_class": "IfcBuildingStorey",
+            "ifc_global_id": "13LV5dTeP3CAox54x56C1Z",
+            "name": "EG",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": null,
+            "target_id": "ifc:13LV5dTeP3CAox54x56C1Z",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2047,
+          "estimated_tokens": 512,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "source_ifc_sha256": "sha256:846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+        "operation_hints": [
+          "add_beam"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:13LV5dTeP3CAox54x56C1Z",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": 12875.0,
+            "y_mm": 25000.0,
+            "z_mm": 2950.0
+          },
+          "start": {
+            "x_mm": 12875.0,
+            "y_mm": 29000.0,
+            "z_mm": 2950.0
+          }
+        },
+        "section": {
+          "height_mm": 500.0,
+          "shape": "rectangle",
+          "width_mm": 250.0
+        }
+      },
+      "scope_ids": [
+        "13LV5dTeP3CAox54x56C1Z"
+      ],
+      "target_global_id": "13LV5dTeP3CAox54x56C1Z"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+  "status": "resolved"
+}

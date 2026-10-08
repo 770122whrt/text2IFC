@@ -1,0 +1,116 @@
+{
+  "case": "012",
+  "asset": "htsm-historic-timber-v6-timber-demo",
+  "status": "passed",
+  "operation_count": 2,
+  "independent_gold_mesh_match": true,
+  "mesh_checks": [
+    {
+      "family": "beam",
+      "gold_name_private": "金柱中枋:金柱门头枋:940121",
+      "output_id": "1l37a66QjMr9GwN$PmXtDz",
+      "rectangular_mesh_matches_authored_axis_section": true,
+      "bounds_max_error_mm": 0.0002437893290334614,
+      "vertices_surface_max_error_mm": 5.115907697472721e-13,
+      "actual_volume_mm3": 415359999.99999994,
+      "expected_volume_mm3": 415360000.0000011,
+      "volume_relative_error": 2.7265221752995447e-15,
+      "vertices": 8,
+      "triangles": 12,
+      "actual_bounds_in_request_frame_mm": [
+        [
+          6.060919986339286e-05,
+          5900.000060609198
+        ],
+        [
+          -79.99975621067097,
+          80.00024378932903
+        ],
+        [
+          -220.0,
+          220.0
+        ]
+      ],
+      "expected_bounds_in_request_frame_mm": [
+        [
+          0.0,
+          5900.000000000002
+        ],
+        [
+          -80.0,
+          80.0
+        ],
+        [
+          -220.0000000000005,
+          220.0000000000005
+        ]
+      ],
+      "tolerances": {
+        "bounds_mm": 0.05,
+        "surface_mm": 0.05,
+        "relative_volume": 1e-05
+      },
+      "volume_is_supporting_check_only": true,
+      "independent_of_provider": true
+    },
+    {
+      "family": "beam",
+      "gold_name_private": "金柱中枋:金柱门头枋:940123",
+      "output_id": "0BIrXJbrbNtxs$UcTm4Vmu",
+      "rectangular_mesh_matches_authored_axis_section": true,
+      "bounds_max_error_mm": 0.0002437893290334614,
+      "vertices_surface_max_error_mm": 5.115907697472721e-13,
+      "actual_volume_mm3": 415360000.0,
+      "expected_volume_mm3": 415360000.000001,
+      "volume_relative_error": 2.439519841057488e-15,
+      "vertices": 8,
+      "triangles": 12,
+      "actual_bounds_in_request_frame_mm": [
+        [
+          6.060921077732928e-05,
+          5900.000060609211
+        ],
+        [
+          -79.99975621067097,
+          80.00024378932903
+        ],
+        [
+          -220.0,
+          220.0
+        ]
+      ],
+      "expected_bounds_in_request_frame_mm": [
+        [
+          0.0,
+          5900.000000000001
+        ],
+        [
+          -80.0,
+          80.0
+        ],
+        [
+          -220.0000000000005,
+          220.0000000000005
+        ]
+      ],
+      "tolerances": {
+        "bounds_mm": 0.05,
+        "surface_mm": 0.05,
+        "relative_volume": 1e-05
+      },
+      "volume_is_supporting_check_only": true,
+      "independent_of_provider": true
+    }
+  ],
+  "source_unchanged": true,
+  "damage_scope": {
+    "beam": 2,
+    "column": 0
+  },
+  "seconds": 103.23399999999674,
+  "artifact_directory": ".tmp/repair-comparison-formal-expansion/next_ten_offline_structural_probe/case-012",
+  "evidence_class": "offline_bound_geometry_and_publishability_only",
+  "natural_language_pipeline_tested": false,
+  "model_calls": 0,
+  "private_gold_supplied_to_public_runner": false
+}

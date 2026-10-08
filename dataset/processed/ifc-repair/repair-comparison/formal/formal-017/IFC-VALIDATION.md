@@ -1,17 +1,5 @@
-# 损坏 IFC 格式校验：PASS
+# formal-017 格式校验
 
-- 文件：[冻结 damaged.ifc](private/mutation/damaged.ifc)；公开副本与其字节一致。
-- 校验器：ifcopenshell.validate，IfcOpenShell 0.8.5。
-- Schema：IFC2X3；EXPRESS rules：已执行。
-- 诊断数量：0。
-- SHA-256：`2b80fafb5cedacdd17528c2c6af988bc2e1ffb07cbb7522bc5e3499e70893a06`。
-- [机器结果与全部诊断](private/damaged-ifc-validation.json)。
+IfcOpenShell 0.8.5，schema＋EXPRESS：G、D 均 0 诊断。
 
-PASS 表示该文件通过本地 IFC schema／EXPRESS 校验，构件缺失仍是待修任务。
-这不表示已经完成修复，也不代表 buildingSMART 在线验证服务已验证。
-
-可在仓库根目录独立复查：
-
-```powershell
-.\.venv\Scripts\python.exe -m ifcopenshell.validate --rules <本题 damaged.ifc 的完整路径>
-```
+这是本机格式检查；尚未声称 usBIM 导入和显示通过。

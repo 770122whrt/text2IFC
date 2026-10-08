@@ -1,23 +1,249 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
+  "counts": {
+    "after": {
+      "IfcBeam": 0,
+      "IfcBeamType": 0,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 10,
+      "IfcColumn": 24,
+      "IfcColumnType": 22,
+      "IfcDoor": 0,
+      "IfcOpeningElement": 18,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 42,
+      "IfcRelContainedInSpatialStructure": 10,
+      "IfcRelDefinesByType": 24,
+      "IfcRelFillsElement": 0,
+      "IfcRelVoidsElement": 18,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 33,
+      "IfcWindow": 0
+    },
+    "before": {
+      "IfcBeam": 0,
+      "IfcBeamType": 0,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 10,
+      "IfcColumn": 25,
+      "IfcColumnType": 22,
+      "IfcDoor": 0,
+      "IfcOpeningElement": 18,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 42,
+      "IfcRelContainedInSpatialStructure": 10,
+      "IfcRelDefinesByType": 24,
+      "IfcRelFillsElement": 0,
+      "IfcRelVoidsElement": 18,
+      "IfcSite": 1,
+      "IfcSpace": 0,
+      "IfcWall": 33,
+      "IfcWindow": 0
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "dde9304a7586f1c4a622624cdff77aa107b7d409d141dc14f5a7cd61a102c9e5"
+  },
+  "mutation_type": "remove_structural_members",
+  "role_mapping": {
+    "column": "2nSCJOFuLFiROH4YSfePHr"
+  },
+  "schema_version": "text2ifc/ifc-repair-structural-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/.tmp/repair-comparison-formal-expansion/next-ten-packages/formal-013/private/reference.ifc",
+    "schema": "IFC2X3",
+    "sha256": "9d10b82b25d3d20cd9edeab495a843b609b6913d50eecf29f2cd8d9cfb413f44",
+    "size_bytes": 250405
+  },
   "targets": [
     {
-      "kind": "window",
-      "opening_guid": "2ig3L5wLT8yxlGoDde4x4s",
-      "preserve_opening": false,
-      "source_step_id": 10802,
-      "target_guid": "2ig3L5wLT8yxlGoChe4x4s",
-      "wall_guid": "0bTylhuQH6wQb9rILQez2e"
+      "entity": {
+        "global_id": "2nSCJOFuLFiROH4YSfePHr",
+        "ifc_class": "IfcColumn",
+        "name": "Concrete-Rectangular-Column:350 x 350mm:438683",
+        "step_id": 408
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 2500.0,
+          "provenance": "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "status": "measured_current_ifc",
+          "storey_global_id": "1w2kgyXAD2C9c7QsT4npO9",
+          "storey_local_end_mm": [
+            -10198.8851884061,
+            4729.83127483521,
+            2500.0
+          ],
+          "storey_local_start_mm": [
+            -10198.8851884061,
+            4729.83127483521,
+            0.0
+          ],
+          "world_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_end_mm": [
+            -10198.8851884061,
+            4729.83127483521,
+            2500.0
+          ],
+          "world_start_mm": [
+            -10198.8851884061,
+            4729.83127483521,
+            0.0
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcMappedItem"
+              ],
+              "type": "MappedRepresentation"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 2500.0,
+          "profile_x_mm": 350.0,
+          "profile_y_mm": 350.0,
+          "provenance": "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "world_profile_x_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "role": "column",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "Concrete, Cast-in-Place gray",
+              "step_id": 396
+            },
+            "relationship": {
+              "global_id": "08eqA0kun_IrcO_RzIpEv2",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 4285
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "0VgKQ_m8ncQRRynPStx63U",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 411
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 409,
+                "value": "350 x 350mm",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "1CsSaoeWKThlp2Hx4Ecqy5",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 415
+            }
+          },
+          {
+            "definition": {
+              "global_id": "3D3JJLxoUUMuEnIk1wegcJ",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ColumnCommon",
+              "step_id": 410
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 126,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "LoadBearing",
+                "step_id": 127,
+                "value": true,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 409,
+                "value": "350 x 350mm",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "2RTcBZLUMhsi$fO1zcMSJs",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 414
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1rqz9lL2snLCX_$LD9KMdX",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfColumn",
+              "step_id": 413
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 412,
+                "value": "350 x 350mm",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "3j7EMRst9hGSRI3ym$hHvp",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 416
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "1w2kgyXAD2C9c7QsT4npO9",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "GF",
+        "step_id": 35
+      },
+      "type": {
+        "global_id": "2djUeTQR5AguA8FLCUrifF",
+        "ifc_class": "IfcColumnType",
+        "name": "Concrete-Rectangular-Column:350 x 350mm",
+        "step_id": 395
+      }
     }
-  ],
-  "wall_closure": {
-    "0bTylhuQH6wQb9rILQez2e": {
-      "actual_delta_m3": 0.353013509677523,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.353013509677523,
-      "volume_after_m3": 1.2645000000000173,
-      "volume_before_m3": 0.9114864903224943
-    }
-  }
+  ]
 }

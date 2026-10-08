@@ -1,660 +1,173 @@
 {
-  "damaged_sha256": "5b4b6cf972522d8bd602b1fd71bfd710c1d89882cc23ae7b203d693677aa7b7b",
-  "input_bindings": {
-    "D": "5b4b6cf972522d8bd602b1fd71bfd710c1d89882cc23ae7b203d693677aa7b7b",
-    "G": "e3e452604ce83836e395c57fe0f6eb2b2340e97d46a5e5057d27c612b0aa57f3",
-    "answer_card": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
-    "contract": "b6b0fa3949d8a6396c879a40b8154574a257c021e8932ed86065e4c28b30d727",
-    "public_ifc": "5b4b6cf972522d8bd602b1fd71bfd710c1d89882cc23ae7b203d693677aa7b7b",
-    "request": "496ba4dd2d68f1ef333e6493c313795c86ece1709dafd35abaef0d124c20cb09"
-  },
-  "notes": [
-    "尺寸来自实际单位和几何，不从 Name 猜测。名义宽高与带框网格外包尺寸分别记录。",
-    "技术审题按实际 G/D 重算；未声称人工打开 usBIM。"
-  ],
-  "passed": true,
-  "request": "请完成以下门窗补全。下面的位置均按模型世界坐标描述，X、Y 和楼层标高的单位是米，尺寸的单位是毫米。\n\n1．在标高 4.000 米的楼层，平面中心位于（X=3.659、Y=0.862 米）的墙面位置，补一扇窗，名义宽 1000 毫米、高 2200 毫米；墙洞宽 1000 毫米、高 2200 毫米，洞口下沿距该层标高 850 毫米（世界标高 4.850 米）。外观参照标高 4.000 米楼层、平面中心（X=10.424、Y=0.862 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n2．在标高 4.000 米的楼层，平面中心位于（X=5.849、Y=0.862 米）的墙面位置，补一扇窗，名义宽 1000 毫米、高 2200 毫米；墙洞宽 1000 毫米、高 2200 毫米，洞口下沿距该层标高 850 毫米（世界标高 4.850 米）。外观参照标高 4.000 米楼层、平面中心（X=10.424、Y=0.862 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n请保留其余墙体、门窗和其他构件及其位置；只在上述位置补全，使门窗、墙洞和所在墙体的关系完整。",
-  "source_sha256": "e3e452604ce83836e395c57fe0f6eb2b2340e97d46a5e5057d27c612b0aa57f3",
+  "schema_version": "repair-comparison-structural-numeric-review/0.1",
+  "status": "passed",
   "targets": [
     {
-      "errors": [],
-      "id": "target-1",
-      "measured": {
-        "bounds_world_m": [
-          [
-            3.1594014905554006,
-            4.159401490555401
-          ],
-          [
-            0.7750574080966001,
-            1.010057408096602
-          ],
-          [
-            4.85,
-            7.049999999999999
-          ]
+      "target_id": "target-1",
+      "family": "beam",
+      "target_name": "STB Träger - rechteckig:STB 250 x 500:2578656",
+      "source_global_id_private": "0fngfWeyj0Qwg_a6RxVlQC",
+      "actual_geometry_basis": "IfcOpenShell actual Body mesh, full storey placement and IFC length unit",
+      "actual_body_axis_world_m": [
+        [
+          12.875,
+          29.0,
+          2.9499999999999984
         ],
-        "height_mm": 2200.0,
-        "host_bounds_world_m": [
-          [
-            2.2934973154368024,
-            24.643497315436804
-          ],
-          [
-            0.8350574080965301,
-            1.33505740809653
-          ],
-          [
-            4.0,
-            7.50000000000007
-          ]
+        [
+          12.875,
+          25.0,
+          2.9499999999999984
+        ]
+      ],
+      "original_ifc_axis_world_m": [
+        [
+          12.875,
+          29.0,
+          3.2
         ],
-        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
-        "host_placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            24.643497315436804
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.08505740809653
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
+        [
+          12.875,
+          25.0,
+          3.2
+        ]
+      ],
+      "public_axis_world_m": [
+        [
+          12.875,
+          29.0,
+          2.95
         ],
-        "host_thickness_m": 0.5,
-        "ifc_class": "IfcWindow",
-        "kind": "window",
-        "mesh_center_world_m": [
-          3.6594014905554006,
-          0.892557408096601,
-          5.949999999999999
-        ],
-        "mesh_local_extents_mm": [
-          1000.0,
-          235.000000000002,
-          2199.999999999999
-        ],
-        "mesh_sha256": "99babee27f821e0e5ac652bfa5f99d9b83a81d9f7d25eedccc5f808883de6bc1",
-        "mesh_triangles": 344,
-        "opening_bottom_world_m": 4.85,
-        "opening_bounds_world_m": [
-          [
-            3.15940149055539,
-            4.1594014905553705
-          ],
-          [
-            0.23591051207062996,
-            1.48792684872211
-          ],
-          [
-            4.85,
-            7.050000000000001
-          ]
-        ],
-        "opening_center_world_m": [
-          3.65940149055538,
-          0.86191868039637,
-          5.95
-        ],
-        "opening_center_xy_m": [
-          3.65940149055538,
-          0.86191868039637
-        ],
-        "opening_guid": "0g_QdKP4DAmhTDvPV17q2d",
-        "opening_height_mm": 2200.000000000001,
-        "opening_width_mm": 999.9999999999804,
-        "operation_type": "NOTDEFINED",
-        "placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            4.4594014905554005
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.22028796747109
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.8500000000000005
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "sill_mm": 849.9999999999997,
-        "source_step_id": 4972,
-        "storey_attribute_elevation_m": 3.99999999999993,
-        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
-        "storey_world_elevation_m": 4.0,
-        "target_guid": "0g_QdKP4DAmhTDvOJ17q2d",
-        "type_guid": "0DSnIPK6nD8RXudXlarll1",
-        "unit_to_mm": 1.0,
-        "width_mm": 999.99999999998
+        [
+          12.875,
+          25.0,
+          2.95
+        ]
+      ],
+      "endpoint_rounding_errors_mm": [
+        1.7763568394002505e-12,
+        1.7763568394002505e-12
+      ],
+      "public_section_mm": {
+        "shape": "rectangle",
+        "width_mm": 250.0,
+        "height_mm": 500.0
       },
-      "mesh_local_extents_mm": [
-        1000.0,
-        235.000000000002,
-        2199.999999999999
-      ],
-      "nominal_dimensions_mm": [
-        999.99999999998,
-        2200.0
-      ],
-      "offset_witness": {
-        "actual_target_offset_world_m": [
-          2.042810365310288e-14,
-          0.030638727700231017,
-          -8.881784197001252e-16
-        ],
-        "basis": "retained_public_reference_geometry",
-        "matches_target_within_1mm": true,
-        "offset_m": [
-          -1.7763568394002505e-15,
-          0.030638727700231017,
-          -8.881784197001252e-16
-        ],
-        "reference_offset_world_m": [
-          -1.7763568394002505e-15,
-          0.030638727700231017,
-          -8.881784197001252e-16
-        ],
-        "target_validation_delta_m": 2.220446049250313e-14
+      "original_section_mm": {
+        "shape": "rectangle",
+        "width_mm": 250.000000000004,
+        "height_mm": 500.0
       },
-      "opening_dimensions_mm": [
-        999.9999999999804,
-        2200.000000000001
+      "actual_storey_world_translation_m": [
+        0.0,
+        0.0,
+        0.0
       ],
-      "opening_sill_mm": 849.9999999999997,
-      "reference_d": {
-        "bounds_world_m": [
-          [
-            9.924401490555399,
-            10.924401490555399
-          ],
-          [
-            0.7750574080965801,
-            1.010057408096582
-          ],
-          [
-            4.85,
-            7.049999999999999
-          ]
-        ],
-        "height_mm": 2200.0,
-        "host_bounds_world_m": [
-          [
-            2.2934973154368024,
-            24.643497315436804
-          ],
-          [
-            0.8350574080965301,
-            1.33505740809653
-          ],
-          [
-            4.0,
-            7.50000000000007
-          ]
-        ],
-        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
-        "host_placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            24.643497315436804
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.08505740809653
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "host_thickness_m": 0.5,
-        "ifc_class": "IfcWindow",
-        "kind": "window",
-        "mesh_center_world_m": [
-          10.424401490555399,
-          0.892557408096581,
-          5.949999999999999
-        ],
-        "mesh_local_extents_mm": [
-          1000.0,
-          235.000000000002,
-          2199.999999999999
-        ],
-        "mesh_sha256": "99babee27f821e0e5ac652bfa5f99d9b83a81d9f7d25eedccc5f808883de6bc1",
-        "mesh_triangles": 344,
-        "opening_bottom_world_m": 4.85,
-        "opening_bounds_world_m": [
-          [
-            9.92440149055541,
-            10.924401490555391
-          ],
-          [
-            0.23591051207060998,
-            1.48792684872209
-          ],
-          [
-            4.85,
-            7.050000000000001
-          ]
-        ],
-        "opening_center_world_m": [
-          10.4244014905554,
-          0.86191868039635,
-          5.95
-        ],
-        "opening_center_xy_m": [
-          10.4244014905554,
-          0.86191868039635
-        ],
-        "opening_guid": "0g_QdKP4DAmhTDvPV17qSK",
-        "opening_height_mm": 2200.000000000001,
-        "opening_width_mm": 999.9999999999823,
-        "operation_type": "NOTDEFINED",
-        "placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            11.2244014905554
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.22028796747107
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.8500000000000005
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "sill_mm": 849.9999999999997,
-        "source_step_id": 5637,
-        "storey_attribute_elevation_m": 3.99999999999993,
-        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
-        "storey_world_elevation_m": 4.0,
-        "target_guid": "0g_QdKP4DAmhTDvOJ17qSK",
-        "type_guid": "0DSnIPK6nD8RXudXlarll1",
-        "unit_to_mm": 1.0,
-        "width_mm": 999.999999999981
+      "storey_attribute_elevation_m": 0.0,
+      "parameters_storey_local_mm": {
+        "axis": {
+          "start": {
+            "x_mm": 12875.0,
+            "y_mm": 29000.0,
+            "z_mm": 2950.0
+          },
+          "end": {
+            "x_mm": 12875.0,
+            "y_mm": 25000.0,
+            "z_mm": 2950.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 250.0,
+          "height_mm": 500.0
+        }
       },
-      "reference_guid": "0g_QdKP4DAmhTDvOJ17qSK",
-      "reference_nominal_dimensions_mm": [
-        999.999999999981,
-        2200.0
-      ],
-      "requested_dimensions_mm": [
-        999.99999999998,
-        2200.0
-      ],
-      "step_id": 4972
-    },
-    {
-      "errors": [],
-      "id": "target-2",
-      "measured": {
-        "bounds_world_m": [
+      "world_local_roundtrip_error_mm": 0.0,
+      "source_mesh_rectangle_check": {
+        "rectangular_mesh_matches_authored_axis_section": true,
+        "bounds_max_error_mm": 1.8474111129762605e-13,
+        "vertices_surface_max_error_mm": 0.0,
+        "actual_volume_mm3": 500000000.0000072,
+        "expected_volume_mm3": 500000000.00000805,
+        "volume_relative_error": 1.6689300537109106e-15,
+        "vertices": 8,
+        "triangles": 12,
+        "actual_bounds_in_request_frame_mm": [
           [
-            5.349401490555401,
-            6.349401490555401
+            0.0,
+            4000.0
           ],
           [
-            0.7750574080965901,
-            1.010057408096592
+            -125.00000000000182,
+            125.00000000000182
           ],
           [
-            4.85,
-            7.049999999999999
+            -250.0,
+            250.0
           ]
         ],
-        "height_mm": 2200.0,
-        "host_bounds_world_m": [
+        "expected_bounds_in_request_frame_mm": [
           [
-            2.2934973154368024,
-            24.643497315436804
+            0.0,
+            4000.0
           ],
           [
-            0.8350574080965301,
-            1.33505740809653
+            -125.000000000002,
+            125.000000000002
           ],
           [
-            4.0,
-            7.50000000000007
+            -250.0,
+            250.0
           ]
         ],
-        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
-        "host_placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            24.643497315436804
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.08505740809653
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "host_thickness_m": 0.5,
-        "ifc_class": "IfcWindow",
-        "kind": "window",
-        "mesh_center_world_m": [
-          5.849401490555401,
-          0.892557408096591,
-          5.949999999999999
-        ],
-        "mesh_local_extents_mm": [
-          1000.0,
-          235.000000000002,
-          2199.999999999999
-        ],
-        "mesh_sha256": "99babee27f821e0e5ac652bfa5f99d9b83a81d9f7d25eedccc5f808883de6bc1",
-        "mesh_triangles": 344,
-        "opening_bottom_world_m": 4.85,
-        "opening_bounds_world_m": [
-          [
-            5.349401490555391,
-            6.349401490555371
-          ],
-          [
-            0.23591051207061997,
-            1.4879268487221
-          ],
-          [
-            4.85,
-            7.050000000000001
-          ]
-        ],
-        "opening_center_world_m": [
-          5.8494014905553815,
-          0.86191868039636,
-          5.95
-        ],
-        "opening_center_xy_m": [
-          5.8494014905553815,
-          0.86191868039636
-        ],
-        "opening_guid": "0g_QdKP4DAmhTDvPV17q2u",
-        "opening_height_mm": 2200.000000000001,
-        "opening_width_mm": 999.9999999999795,
-        "operation_type": "NOTDEFINED",
-        "placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            6.649401490555401
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.22028796747108
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.8500000000000005
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "sill_mm": 849.9999999999997,
-        "source_step_id": 5013,
-        "storey_attribute_elevation_m": 3.99999999999993,
-        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
-        "storey_world_elevation_m": 4.0,
-        "target_guid": "0g_QdKP4DAmhTDvOJ17q2u",
-        "type_guid": "0DSnIPK6nD8RXudXlarll1",
-        "unit_to_mm": 1.0,
-        "width_mm": 999.99999999998
+        "tolerances": {
+          "bounds_mm": 0.05,
+          "surface_mm": 0.05,
+          "relative_volume": 1e-05
+        },
+        "volume_is_supporting_check_only": true,
+        "independent_of_provider": true
       },
-      "mesh_local_extents_mm": [
-        1000.0,
-        235.000000000002,
-        2199.999999999999
-      ],
-      "nominal_dimensions_mm": [
-        999.99999999998,
-        2200.0
-      ],
-      "offset_witness": {
-        "actual_target_offset_world_m": [
-          1.9539925233402755e-14,
-          0.030638727700231017,
-          -8.881784197001252e-16
+      "requested_geometry_support_frame": {
+        "axis_start_mm": [
+          12875.0,
+          29000.0,
+          2950.0
         ],
-        "basis": "retained_public_reference_geometry",
-        "matches_target_within_1mm": true,
-        "offset_m": [
-          -1.7763568394002505e-15,
-          0.030638727700231017,
-          -8.881784197001252e-16
+        "axis_end_mm": [
+          12875.0,
+          25000.0,
+          2950.0
         ],
-        "reference_offset_world_m": [
-          -1.7763568394002505e-15,
-          0.030638727700231017,
-          -8.881784197001252e-16
+        "axis_direction": [
+          0.0,
+          -1.0,
+          0.0
         ],
-        "target_validation_delta_m": 2.1316282072803006e-14
+        "axis_extent_mm": 4000.0,
+        "profile_x_direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "profile_y_direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "orientation": null,
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 250.0,
+          "height_mm": 500.0
+        }
       },
-      "opening_dimensions_mm": [
-        999.9999999999795,
-        2200.000000000001
-      ],
-      "opening_sill_mm": 849.9999999999997,
-      "reference_d": {
-        "bounds_world_m": [
-          [
-            9.924401490555399,
-            10.924401490555399
-          ],
-          [
-            0.7750574080965801,
-            1.010057408096582
-          ],
-          [
-            4.85,
-            7.049999999999999
-          ]
-        ],
-        "height_mm": 2200.0,
-        "host_bounds_world_m": [
-          [
-            2.2934973154368024,
-            24.643497315436804
-          ],
-          [
-            0.8350574080965301,
-            1.33505740809653
-          ],
-          [
-            4.0,
-            7.50000000000007
-          ]
-        ],
-        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
-        "host_placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            24.643497315436804
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.08505740809653
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.0
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "host_thickness_m": 0.5,
-        "ifc_class": "IfcWindow",
-        "kind": "window",
-        "mesh_center_world_m": [
-          10.424401490555399,
-          0.892557408096581,
-          5.949999999999999
-        ],
-        "mesh_local_extents_mm": [
-          1000.0,
-          235.000000000002,
-          2199.999999999999
-        ],
-        "mesh_sha256": "99babee27f821e0e5ac652bfa5f99d9b83a81d9f7d25eedccc5f808883de6bc1",
-        "mesh_triangles": 344,
-        "opening_bottom_world_m": 4.85,
-        "opening_bounds_world_m": [
-          [
-            9.92440149055541,
-            10.924401490555391
-          ],
-          [
-            0.23591051207060998,
-            1.48792684872209
-          ],
-          [
-            4.85,
-            7.050000000000001
-          ]
-        ],
-        "opening_center_world_m": [
-          10.4244014905554,
-          0.86191868039635,
-          5.95
-        ],
-        "opening_center_xy_m": [
-          10.4244014905554,
-          0.86191868039635
-        ],
-        "opening_guid": "0g_QdKP4DAmhTDvPV17qSK",
-        "opening_height_mm": 2200.000000000001,
-        "opening_width_mm": 999.9999999999823,
-        "operation_type": "NOTDEFINED",
-        "placement_world_m": [
-          [
-            -1.0,
-            0.0,
-            0.0,
-            11.2244014905554
-          ],
-          [
-            0.0,
-            -1.0,
-            0.0,
-            1.22028796747107
-          ],
-          [
-            0.0,
-            0.0,
-            1.0,
-            4.8500000000000005
-          ],
-          [
-            0.0,
-            0.0,
-            0.0,
-            1.0
-          ]
-        ],
-        "sill_mm": 849.9999999999997,
-        "source_step_id": 5637,
-        "storey_attribute_elevation_m": 3.99999999999993,
-        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
-        "storey_world_elevation_m": 4.0,
-        "target_guid": "0g_QdKP4DAmhTDvOJ17qSK",
-        "type_guid": "0DSnIPK6nD8RXudXlarll1",
-        "unit_to_mm": 1.0,
-        "width_mm": 999.999999999981
-      },
-      "reference_guid": "0g_QdKP4DAmhTDvOJ17qSK",
-      "reference_nominal_dimensions_mm": [
-        999.999999999981,
-        2200.0
-      ],
-      "requested_dimensions_mm": [
-        999.99999999998,
-        2200.0
-      ],
-      "step_id": 5013
+      "coordinate_rounding_admission_mm": 1.0,
+      "dimensions_match_geometry": true,
+      "passed": true,
+      "check_not_experiment_scoring_tolerance": true
     }
-  ]
+  ],
+  "human_viewed": false
 }

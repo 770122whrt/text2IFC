@@ -1,39 +1,70 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
-  "targets": [
+  "schema_version": "repair-comparison-mutation/0.2",
+  "damages": [
     {
-      "kind": "door",
-      "opening_guid": "22uC72A3vRJogJMFekDIoQ",
-      "preserve_opening": false,
-      "source_step_id": 6250,
-      "target_guid": "0czr4CX$5BNOOrbw_mEmfe",
-      "wall_guid": "0czr4CX$5BNOOrbw_mEmfh"
-    },
-    {
-      "kind": "door",
-      "opening_guid": "1ayBaRcke7gMHqFV3VQ8XW",
-      "preserve_opening": false,
-      "source_step_id": 7936,
-      "target_guid": "0czr4CX$5BNOOrbw_mEmfk",
-      "wall_guid": "0czr4CX$5BNOOrbw_mEmff"
+      "kind": "property",
+      "target_guid": "0GPDis$EfEDBfMOcU9bDFh",
+      "target_name": "Glulam-Western Species:240 X 300 mm:468058",
+      "property_set": "Pset_BeamCommon",
+      "property": "LoadBearing",
+      "expected_value": true,
+      "damaged_value": false,
+      "value_type": "IfcBoolean",
+      "scope": "occurrence_direct",
+      "geometry": {
+        "guid": "0GPDis$EfEDBfMOcU9bDFh",
+        "name": "Glulam-Western Species:240 X 300 mm:468058",
+        "class": "IfcBeam",
+        "bounds_world_m": [
+          [
+            -7.18836603836015,
+            -3.01336603836015
+          ],
+          [
+            7.730658968455458,
+            7.970658968455462
+          ],
+          [
+            3.48,
+            3.78
+          ]
+        ],
+        "center_xy_m": [
+          -5.1008660383601505,
+          7.85065896845546
+        ],
+        "storey": {
+          "guid": "1qv6ynVKX7xf87anS8vN2n",
+          "name": "Level 1",
+          "world_elevation_m": 4.0
+        },
+        "geometry": {
+          "guid": "0GPDis$EfEDBfMOcU9bDFh",
+          "class": "IfcBeam",
+          "name": "Glulam-Western Species:240 X 300 mm:468058",
+          "project_unit_to_mm": 1.0,
+          "geometry_status": "available",
+          "bounds_world_m": [
+            [
+              -7.18836603836015,
+              -3.01336603836015
+            ],
+            [
+              7.730658968455458,
+              7.970658968455462
+            ],
+            [
+              3.48,
+              3.78
+            ]
+          ]
+        }
+      },
+      "original_value_basis": "genuine_preselected_source_direct_instance_property"
     }
   ],
-  "wall_closure": {
-    "0czr4CX$5BNOOrbw_mEmff": {
-      "actual_delta_m3": 0.17090999999999767,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.17090999999999767,
-      "volume_after_m3": 1.2787499999999856,
-      "volume_before_m3": 1.107839999999988
-    },
-    "0czr4CX$5BNOOrbw_mEmfh": {
-      "actual_delta_m3": 0.17090999999999817,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.17090999999999817,
-      "volume_after_m3": 0.6659999999999935,
-      "volume_before_m3": 0.4950899999999953
-    }
-  }
+  "source_unchanged": true,
+  "products_removed": [],
+  "wall_closure": {},
+  "model_calls": 0
 }

@@ -1,0 +1,79 @@
+{
+  "schema_version": "text2ifc/phase12-public-structural-request/0.1",
+  "case_id": "preparation-probe-012",
+  "request": "请补回模型中缺失的一根属于标高 0 米楼层的水平矩形梁，两个端面中心位于（11.161206，-4.074387，4.2198）米和（17.061206，-4.074387，4.2198）米，梁宽 160.000 毫米、竖向高 440.000 毫米；以及一根属于标高 0 米楼层的水平矩形梁，两个端面中心位于（-6.998794，-4.074387，4.2198）米和（-1.098794，-4.074387，4.2198）米，梁宽 160.000 毫米、竖向高 440.000 毫米。以上坐标均使用模型的全局坐标；保留其他构件及其现有属性。",
+  "operations": [
+    {
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "value": 0.0,
+            "tolerance_mm": 0.1
+          }
+        ]
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": 11161.206,
+            "y_mm": -4074.387,
+            "z_mm": 4219.8
+          },
+          "end": {
+            "x_mm": 17061.206,
+            "y_mm": -4074.387,
+            "z_mm": 4219.8
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 160.0,
+          "height_mm": 440.0
+        }
+      }
+    },
+    {
+      "operation_id": "beam-2",
+      "operation_type": "add_beam",
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "value": 0.0,
+            "tolerance_mm": 0.1
+          }
+        ]
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": -6998.794,
+            "y_mm": -4074.387,
+            "z_mm": 4219.8
+          },
+          "end": {
+            "x_mm": -1098.794,
+            "y_mm": -4074.387,
+            "z_mm": 4219.8
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 160.0,
+          "height_mm": 440.0
+        }
+      }
+    }
+  ]
+}

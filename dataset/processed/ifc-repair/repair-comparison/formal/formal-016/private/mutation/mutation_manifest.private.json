@@ -1,39 +1,70 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
-  "targets": [
+  "schema_version": "repair-comparison-mutation/0.2",
+  "damages": [
     {
-      "kind": "window",
-      "opening_guid": "3R7OTLih5Kknlu$3Z$4cao",
-      "preserve_opening": false,
-      "source_step_id": 583,
-      "target_guid": "01NjiQPsHCchAHm$NTrXVD",
-      "wall_guid": "01NjiQPsHCchAHm$NTrXVC"
-    },
-    {
-      "kind": "window",
-      "opening_guid": "06f2cz58Z9DvJQLO0xBcBw",
-      "preserve_opening": false,
-      "source_step_id": 1181,
-      "target_guid": "01NjiQPsHCchAHm$NTrXV1",
-      "wall_guid": "01NjiQPsHCchAHm$NTrXV0"
+      "kind": "property",
+      "target_guid": "1DcFG7Zuf8FxTHX6fz74x3",
+      "target_name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
+      "property_set": "Pset_ColumnCommon",
+      "property": "LoadBearing",
+      "expected_value": true,
+      "damaged_value": false,
+      "value_type": "IfcBoolean",
+      "scope": "occurrence_direct",
+      "geometry": {
+        "guid": "1DcFG7Zuf8FxTHX6fz74x3",
+        "name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
+        "class": "IfcColumn",
+        "bounds_world_m": [
+          [
+            17.905119139860002,
+            18.70511913986
+          ],
+          [
+            17.565,
+            18.065
+          ],
+          [
+            -0.09,
+            3.6100000000000403
+          ]
+        ],
+        "center_xy_m": [
+          18.30511913986,
+          17.815
+        ],
+        "storey": {
+          "guid": "02GkOQJZz4x9WAhoZkM67S",
+          "name": "00 begane grond",
+          "world_elevation_m": 0.0
+        },
+        "geometry": {
+          "guid": "1DcFG7Zuf8FxTHX6fz74x3",
+          "class": "IfcColumn",
+          "name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
+          "project_unit_to_mm": 1.0,
+          "geometry_status": "available",
+          "bounds_world_m": [
+            [
+              17.905119139860002,
+              18.70511913986
+            ],
+            [
+              17.565,
+              18.065
+            ],
+            [
+              -0.09,
+              3.6100000000000403
+            ]
+          ]
+        }
+      },
+      "original_value_basis": "genuine_preselected_source_direct_instance_property"
     }
   ],
-  "wall_closure": {
-    "01NjiQPsHCchAHm$NTrXV0": {
-      "actual_delta_m3": 0.35380399999999845,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.35380399999999845,
-      "volume_after_m3": 3.491202249999978,
-      "volume_before_m3": 3.1373982499999795
-    },
-    "01NjiQPsHCchAHm$NTrXVC": {
-      "actual_delta_m3": 0.3538039999999998,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.3538039999999998,
-      "volume_after_m3": 3.857261249999995,
-      "volume_before_m3": 3.5034572499999954
-    }
-  }
+  "source_unchanged": true,
+  "products_removed": [],
+  "wall_closure": {},
+  "model_calls": 0
 }

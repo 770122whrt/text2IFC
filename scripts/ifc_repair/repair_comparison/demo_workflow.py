@@ -341,6 +341,8 @@ def run_owned(root,run_id):
         remaining=state['limits']['active_seconds']-state['active_elapsed_s']
         if remaining<=0:return runner.ledger.finish(run_id,'budget_exhausted',detail='TIME_BUDGET_EXHAUSTED')
         cfg=IsolatedBConfig(root/'runtime/b',runner.workspace,route['volume'],config['network'],base+'/v1',
+                            image=config.get('b',{}).get('image','text2ifc/repair-tools:py312-ifc085-v2'),
+                            property_model_directory=config.get('b',{}).get('property_model_directory'),
                             container_name=route['container'],evidence_class='live' if config['mode']=='live' else 'deterministic_fake_http',
                             timeout_seconds=remaining,model=config['models']['B'],
                             scene_grounding=config.get('scene_grounding_version')==SCENE_GROUNDING_VERSION)

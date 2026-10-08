@@ -1,39 +1,70 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
-  "targets": [
+  "schema_version": "repair-comparison-mutation/0.2",
+  "damages": [
     {
-      "kind": "door",
-      "opening_guid": "00SiOyt0L5KkdMcqzK9zX_",
-      "preserve_opening": false,
-      "source_step_id": 6773,
-      "target_guid": "1Sn8zcQdX7OgiPddTxuNwD",
-      "wall_guid": "1Sn8zcQdX7OgiPddTxuNwE"
-    },
-    {
-      "kind": "door",
-      "opening_guid": "1mQPG7eV54cVD6Vxh$QLwI",
-      "preserve_opening": false,
-      "source_step_id": 8459,
-      "target_guid": "1Sn8zcQdX7OgiPddTxuNwp",
-      "wall_guid": "1Sn8zcQdX7OgiPddTxuNwC"
+      "kind": "property",
+      "target_guid": "2wzOKdIonF_w80ujRgstIS",
+      "target_name": "Basic Wall:Exterrior Wall - 200mm:366640",
+      "property_set": "Pset_WallCommon",
+      "property": "IsExternal",
+      "expected_value": true,
+      "damaged_value": false,
+      "value_type": "IfcBoolean",
+      "scope": "occurrence_direct",
+      "geometry": {
+        "guid": "2wzOKdIonF_w80ujRgstIS",
+        "name": "Basic Wall:Exterrior Wall - 200mm:366640",
+        "class": "IfcWallStandardCase",
+        "bounds_world_m": [
+          [
+            -10.818369944819901,
+            -10.6183699448199
+          ],
+          [
+            -18.735725829878902,
+            -15.410725829878913
+          ],
+          [
+            0.0,
+            4.00000000000071
+          ]
+        ],
+        "center_xy_m": [
+          -10.718369944819901,
+          -17.073225829878908
+        ],
+        "storey": {
+          "guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "name": "Level 1",
+          "world_elevation_m": 0.0
+        },
+        "geometry": {
+          "guid": "2wzOKdIonF_w80ujRgstIS",
+          "class": "IfcWallStandardCase",
+          "name": "Basic Wall:Exterrior Wall - 200mm:366640",
+          "project_unit_to_mm": 1.0,
+          "geometry_status": "available",
+          "bounds_world_m": [
+            [
+              -10.818369944819901,
+              -10.6183699448199
+            ],
+            [
+              -18.735725829878902,
+              -15.410725829878913
+            ],
+            [
+              0.0,
+              4.00000000000071
+            ]
+          ]
+        }
+      },
+      "original_value_basis": "genuine_preselected_source_direct_instance_property"
     }
   ],
-  "wall_closure": {
-    "1Sn8zcQdX7OgiPddTxuNwC": {
-      "actual_delta_m3": 0.17090999999999767,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.17090999999999767,
-      "volume_after_m3": 1.272524999999986,
-      "volume_before_m3": 1.1016149999999882
-    },
-    "1Sn8zcQdX7OgiPddTxuNwE": {
-      "actual_delta_m3": 0.1709099999999979,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.1709099999999979,
-      "volume_after_m3": 1.7612999999999805,
-      "volume_before_m3": 1.5903899999999827
-    }
-  }
+  "source_unchanged": true,
+  "products_removed": [],
+  "wall_closure": {},
+  "model_calls": 0
 }

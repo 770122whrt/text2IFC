@@ -1,0 +1,257 @@
+{
+  "audit": {
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "evidence": {},
+        "status": "passed"
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "evidence": {
+          "actual_fingerprint": "sha256:c49baf2aaff8f197d30c997ec930360f2453ca0ddaf5d8f3efc4075f97312a7e"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "evidence": {
+          "actual_request_hash": "sha256:818c47a354aadc9829d11c5e005ed7b19f16b3ed6726b58d223bb711f5374ea3"
+        },
+        "status": "passed"
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "evidence": {
+          "operation_type": "add_column"
+        },
+        "status": "passed"
+      }
+    ],
+    "issues": [],
+    "operation_audits": [
+      {
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "evidence": {
+              "storey_global_id": "3Zu5Bv0LOHrPC10026FoQQ"
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "evidence": {
+              "axis_extent_mm": 23000.0
+            },
+            "status": "passed"
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "evidence": {
+              "assignment_count": 1
+            },
+            "status": "passed"
+          }
+        ],
+        "evidence": {
+          "axis_extent_mm": 23000.0,
+          "storey_global_id": "3Zu5Bv0LOHrPC10026FoQQ"
+        },
+        "operation_id": "column-1",
+        "operation_type": "add_column",
+        "valid": true
+      }
+    ],
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true
+  },
+  "issues": [],
+  "operations": [
+    {
+      "changes": {
+        "created": [
+          {
+            "global_id": "2eSd$dIbfKYPyipGNhvbOj",
+            "ifc_class": "IfcColumn",
+            "role": "column"
+          },
+          {
+            "global_id": "0wHPRunRHLIA2iYh3izKY_",
+            "ifc_class": "IfcColumnType",
+            "role": "structural_type"
+          },
+          {
+            "global_id": "3OnakTlzTGuvmulhu9IGOu",
+            "ifc_class": "IfcRelDefinesByType",
+            "role": "structural_type_relationship"
+          }
+        ],
+        "modified": [
+          {
+            "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "role": "spatial_containment"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "containment_policy": "axis_base_storey_only",
+          "geometry": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              -15845.414,
+              15919.221,
+              23000.0
+            ],
+            "axis_extent_mm": 23000.0,
+            "axis_start_mm": [
+              -15845.414,
+              15919.221,
+              0.0
+            ],
+            "orientation": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 450.0,
+              "shape": "rectangle",
+              "width_mm": 200.0
+            }
+          },
+          "storey_global_id": "3Zu5Bv0LOHrPC10026FoQQ",
+          "type_global_id": "0wHPRunRHLIA2iYh3izKY_"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [],
+          "scopes": {
+            "column_occurrence": {
+              "created": [],
+              "modified": [],
+              "skipped": [
+                "relationship:type"
+              ],
+              "updated": []
+            }
+          },
+          "skipped": [
+            "relationship:type"
+          ],
+          "updated": []
+        }
+      },
+      "operation_id": "column-1",
+      "operation_type": "add_column"
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next_ten_offline_structural_probe\\case-014\\public-repair\\repaired.ifc",
+    "sha256": "9abd824d13063110c3485b2330013bc2b1904558200f6d83282e039d7f8de2f6"
+  },
+  "postconditions": [
+    {
+      "checks": [
+        {
+          "code": "COLUMN_GEOMETRY_MATCHES",
+          "evidence": {
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_end_mm": [
+              -15845.414,
+              15919.221,
+              23000.0
+            ],
+            "axis_extent_mm": 23000.0,
+            "axis_start_mm": [
+              -15845.414,
+              15919.221,
+              0.0
+            ],
+            "orientation": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid",
+            "section": {
+              "depth_mm": 450.0,
+              "shape": "rectangle",
+              "width_mm": 200.0
+            }
+          },
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_CONTAINED_IN_BASE_STOREY",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_TYPE_BOUND",
+          "evidence": {},
+          "status": "passed"
+        },
+        {
+          "code": "COLUMN_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "evidence": {},
+          "status": "passed"
+        }
+      ],
+      "evidence": {
+        "measurement": {
+          "axis_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "axis_end_mm": [
+            -15845.414,
+            15919.221,
+            23000.0
+          ],
+          "axis_extent_mm": 23000.0,
+          "axis_start_mm": [
+            -15845.414,
+            15919.221,
+            0.0
+          ],
+          "orientation": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid",
+          "section": {
+            "depth_mm": 450.0,
+            "shape": "rectangle",
+            "width_mm": 200.0
+          }
+        }
+      },
+      "issues": [],
+      "operation_id": "column-1",
+      "valid": true
+    }
+  ],
+  "published": true,
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true
+}

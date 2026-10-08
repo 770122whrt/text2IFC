@@ -14,6 +14,12 @@ progress:
 
 # Project State
 
+## 当前工作：后十题重制及B结构／属性检查（2026-10-08，无 Goal）
+
+011～020已在原formal目录重制为4道梁柱补建、4道实例属性修复、2道混合题，前十题保持原记录，共20个不同许可源IFC（CC-BY-4.0 16份、MIT 2份、GPL-3.0-or-later 2份）。新十题G/D schema＋EXPRESS均0，尺寸、坐标、损伤、关系、保全及确定性操作支持已核对；状态为pending_human_review、human_viewed=false、provider_calls_allowed=false，尚未冻结或调用新题模型。用户先检查usBIM显示和请求，技术数值由开发侧负责；保留014截面朝向、019两项承重值、020窗洞底标高三道必要澄清，预写答复卡不整卡注入。统一入口见[二十题材料](../dataset/processed/ifc-repair/repair-comparison/formal/README.md)。
+
+新增B共性修复仅限梁柱合法多containment误拒、共享Pset复制错误类名；46项／18项故障家族及62项／61项相关回归通过。用户批准的独立CPU属性镜像已构建，复用原有BGE/Qdrant Runtime；真实Linux＋假Provider的7条基本路径和1条共享属性路径通过，属性状态卷导出/导入尚未单独原生检查。019／020完整答后绑定操作、原生格式、保全和原子回滚通过，制题helper失败及已知跨层候选筛选负证据保留，未扩展生产跨层支持。这些是离线支持证据，不是新模型成绩或四组正式准入。用户审阅后还需扩展统一评分、当前阶段准入及冻结；旧plan.private.json/batch-checks.json只作历史，不恢复原80槽位。旧题由3fbae1d8与历史包保留，[当前真实表](../dataset/processed/experiments/repair-comparison/current/README.md)仍为原B001～010的9/10。详细证据见[开发检查](../dataset/processed/experiments/repair-comparison/development/structural-property-readiness/README.md)。原Phase、R1与已接受Proof状态不变。
+
 ## 当前工作：B 共性修复与原001～010开发复验（2026-10-08，无 Goal）
 
 本轮不开启Goal。B共性修复后的formal-001～010最新真实复测严格通过9/10，005已新会话真实通过，007跨层高度错误被检查拒绝并按用户意见保留失败。共48次真实调用、852,676已知token、未知用量0。唯一[当前实验表](../dataset/processed/experiments/repair-comparison/current/README.md)与[历史备份](../dataset/processed/experiments/repair-comparison/history/README.md)分开，原四组63个终态和旧005失败保留。评分器共享几何保全误报通过版本0.2最小修正，20项家族和13项评分回归通过，基线/当前同版重算、原报告不覆盖、无额外模型调用。所有服务停止，源和父账本保持。后十题按当前Pipeline支持范围重制损坏输入、请求和REVIEW，用户先在查看器检查，通过后再实验；不恢复旧批次剩余槽位。实现与边界见[B修复报告](../docs/validation/repair-comparison/b-common-repair.md)和[后十题设计](../docs/validation/repair-comparison/next-ten-design.md)。原Phase、R1和已接受Proof状态不变。

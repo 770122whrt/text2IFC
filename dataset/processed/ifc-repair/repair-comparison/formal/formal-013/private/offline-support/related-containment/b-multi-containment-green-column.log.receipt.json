@@ -1,0 +1,22 @@
+{
+  "command": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/ifc_repair/test_structural_multi_containment.py",
+    "-q",
+    "-k",
+    "column and not mixed_beam",
+    "--basetemp=.tmp/pytest/b-multi-containment-green-column"
+  ],
+  "started_at": "2026-10-08T11:53:04.238570+00:00",
+  "ended_at": "2026-10-08T11:55:26.862746+00:00",
+  "exit_code": 0,
+  "log_sha256": "70839a306ff471ef72aa382a226639ad01f43c9c980e1fa4c39c2220ef0df5e9",
+  "models_called": false,
+  "source_files": {
+    "src/text2ifc_ifc_repair/operations/beam.py": "684b46a8bbd07c92f89e66e7f320db9579aa415f3fccc94ae3ab19df961818ee",
+    "src/text2ifc_ifc_repair/operations/column.py": "e3bd73cc75f71c9bc7758a58a8bcbd0fb4473f852de898166fad78b7dd15df89",
+    "tests/ifc_repair/test_structural_multi_containment.py": "b0736897c9bb52280e784109707cba5ceaca3f98d03f75a4fe7a784e15023048"
+  }
+}

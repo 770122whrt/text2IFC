@@ -1,0 +1,144 @@
+{
+  "base_model_fingerprint": "sha256:dde9304a7586f1c4a622624cdff77aa107b7d409d141dc14f5a7cd61a102c9e5",
+  "binding_status": "bound",
+  "changeset_id": "phase12-public-changeset",
+  "evidence_refs": [
+    "resolved:/operations/column-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/column-1/context/candidate_targets/0"
+      ],
+      "operation_id": "column-1",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -10198.885,
+            "y_mm": 4729.831,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -10198.885,
+            "y_mm": 4729.831,
+            "z_mm": 2500.0
+          }
+        },
+        "section": {
+          "depth_mm": 350.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          },
+          "shape": "rectangle",
+          "width_mm": 350.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:1w2kgyXAD2C9c7QsT4npO9",
+            "resolved-host:1w2kgyXAD2C9c7QsT4npO9",
+            "operation:column-1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:1w2kgyXAD2C9c7QsT4npO9",
+          "unit": null,
+          "value": "1w2kgyXAD2C9c7QsT4npO9",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "column-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:column-1",
+            "registered-column-base-storey-policy:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/column-1/target",
+          "unit": null,
+          "value": "1w2kgyXAD2C9c7QsT4npO9",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcColumnType",
+            "template": {
+              "name": "Text2IFC generated column type column-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "depth_mm": 350.0,
+                "shape": "rectangle",
+                "width_mm": 350.0
+              },
+              "section_digest": "sha256:ed5a5df01043b7acdc47dcc3cd88910759cfbb4a5f2767bf28e7666c5c54fcff"
+            },
+            "template_digest": "sha256:abcb0f454bd0d97645d7f9804fbde46d1109de9442646fe8f6b27d5cef8d92e6",
+            "template_id": "text2ifc-rectangular-column-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "column-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:column-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:3WEEgOr7HVpQ52f0WAOc7D",
+          "unit": null,
+          "value": "3WEEgOr7HVpQ52f0WAOc7D",
+          "value_type": "IfcColumnType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-73c20cbbd067edd4728dbc04",
+        "policy_id": "column.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "1w2kgyXAD2C9c7QsT4npO9"
+      }
+    }
+  ],
+  "postconditions": [
+    "structural_geometry_matches",
+    "structural_containment_matches",
+    "structural_type_matches"
+  ],
+  "preconditions": [
+    "structural_targets_resolved",
+    "structural_geometry_authorized",
+    "structural_semantics_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "1w2kgyXAD2C9c7QsT4npO9"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifest.json",
+  "semantic_manifest_sha256": "sha256:013a0a125f3c2232a5106550d636b3d5932b15e49331984e283295d7754e1838",
+  "source_request_hash": "sha256:4fe1da34b8b16a606189012306462c47364baf86de8a0ad972cfa5c2b15a638b"
+}

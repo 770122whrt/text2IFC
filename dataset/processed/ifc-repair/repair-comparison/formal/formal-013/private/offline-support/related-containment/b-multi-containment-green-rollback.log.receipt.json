@@ -1,0 +1,23 @@
+{
+  "command": [
+    ".venv/Scripts/python.exe",
+    "-m",
+    "pytest",
+    "tests/ifc_repair/test_structural_multi_containment.py",
+    "-q",
+    "-k",
+    "mixed_structural_failure",
+    "--basetemp=.tmp/pytest/b-multi-containment-green-rollback"
+  ],
+  "started_at": "2026-10-08T11:56:08.294796+00:00",
+  "ended_at": "2026-10-08T11:56:12.968990+00:00",
+  "exit_code": 0,
+  "log_sha256": "6f01da1ea2990210fd522009a3fce7adbdbb093109a12a10a0ea6daf5f5b9a8a",
+  "models_called": false,
+  "network_transport_attempted": false,
+  "source_files": {
+    "src/text2ifc_ifc_repair/operations/beam.py": "684b46a8bbd07c92f89e66e7f320db9579aa415f3fccc94ae3ab19df961818ee",
+    "src/text2ifc_ifc_repair/operations/column.py": "e3bd73cc75f71c9bc7758a58a8bcbd0fb4473f852de898166fad78b7dd15df89",
+    "tests/ifc_repair/test_structural_multi_containment.py": "b0736897c9bb52280e784109707cba5ceaca3f98d03f75a4fe7a784e15023048"
+  }
+}

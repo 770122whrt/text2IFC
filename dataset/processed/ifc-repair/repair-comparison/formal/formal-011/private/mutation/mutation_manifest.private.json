@@ -1,31 +1,271 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
+  "counts": {
+    "after": {
+      "IfcBeam": 19,
+      "IfcBeamType": 5,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcColumn": 42,
+      "IfcColumnType": 42,
+      "IfcDoor": 41,
+      "IfcOpeningElement": 105,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 122,
+      "IfcRelContainedInSpatialStructure": 13,
+      "IfcRelDefinesByType": 139,
+      "IfcRelFillsElement": 97,
+      "IfcRelVoidsElement": 105,
+      "IfcSite": 1,
+      "IfcSpace": 10,
+      "IfcWall": 90,
+      "IfcWindow": 56
+    },
+    "before": {
+      "IfcBeam": 20,
+      "IfcBeamType": 5,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 4,
+      "IfcColumn": 42,
+      "IfcColumnType": 42,
+      "IfcDoor": 41,
+      "IfcOpeningElement": 105,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 122,
+      "IfcRelContainedInSpatialStructure": 13,
+      "IfcRelDefinesByType": 139,
+      "IfcRelFillsElement": 97,
+      "IfcRelVoidsElement": 105,
+      "IfcSite": 1,
+      "IfcSpace": 10,
+      "IfcWall": 90,
+      "IfcWindow": 56
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6"
+  },
+  "mutation_type": "remove_structural_members",
+  "role_mapping": {
+    "beam": "0fngfWeyj0Qwg_a6RxVlQC"
+  },
+  "schema_version": "text2ifc/ifc-repair-structural-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/.tmp/repair-comparison-formal-expansion/next-ten-packages/formal-011/private/reference.ifc",
+    "schema": "IFC2X3",
+    "sha256": "afb02417346a9bb68aa4bcce38ddc1a2246545b98dd3c2526643f44ecdafe4ca",
+    "size_bytes": 5250085
+  },
   "targets": [
     {
-      "kind": "window",
-      "opening_guid": "0g_QdKP4DAmhTDvPV17q2d",
-      "preserve_opening": false,
-      "source_step_id": 4972,
-      "target_guid": "0g_QdKP4DAmhTDvOJ17q2d",
-      "wall_guid": "0g_QdKP4DAmhTDvOJ17q23"
-    },
-    {
-      "kind": "window",
-      "opening_guid": "0g_QdKP4DAmhTDvPV17q2u",
-      "preserve_opening": false,
-      "source_step_id": 5013,
-      "target_guid": "0g_QdKP4DAmhTDvOJ17q2u",
-      "wall_guid": "0g_QdKP4DAmhTDvOJ17q23"
+      "entity": {
+        "global_id": "0fngfWeyj0Qwg_a6RxVlQC",
+        "ifc_class": "IfcBeam",
+        "name": "STB Träger - rechteckig:STB 250 x 500:2578656",
+        "step_id": 63590
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 4000.0,
+          "provenance": "IfcShapeRepresentation.Axis/IfcPolyline",
+          "status": "measured_current_ifc",
+          "storey_global_id": "13LV5dTeP3CAox54x56C1Z",
+          "storey_local_end_mm": [
+            12875.0,
+            25000.0,
+            3200.0
+          ],
+          "storey_local_start_mm": [
+            12875.0,
+            29000.0,
+            3200.0
+          ],
+          "world_direction": [
+            0.0,
+            -1.0,
+            0.0
+          ],
+          "world_end_mm": [
+            12875.0,
+            25000.0,
+            3200.0
+          ],
+          "world_start_mm": [
+            12875.0,
+            29000.0,
+            3200.0
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Axis",
+              "item_classes": [
+                "IfcPolyline"
+              ],
+              "type": "Curve2D"
+            },
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcExtrudedAreaSolid"
+              ],
+              "type": "SweptSolid"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid",
+            "IfcPolyline"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 4000.0,
+          "profile_x_mm": 500.0,
+          "profile_y_mm": 250.000000000004,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "world_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        }
+      },
+      "role": "beam",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "Ortbeton - bewehrt Verputzt",
+              "step_id": 444
+            },
+            "relationship": {
+              "global_id": "1WZ6XE$Pozb5qPADR0z0xL",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 88711
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "32QlNe1GfLwHB3PNg8pbyL",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfBeam",
+              "step_id": 63595
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 63594,
+                "value": "STB 250 x 500",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "2d07edjrJRhMleB_kVI2AU",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 63598
+            }
+          },
+          {
+            "definition": {
+              "global_id": "38EEkzZ4ylsbyFAy1t3$3G",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 63593
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 63565,
+                "value": "STB 250 x 500",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "3MZnEpNyNynHnkzfVNQHdP",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 63597
+            }
+          },
+          {
+            "definition": {
+              "global_id": "0lAsOm_4z8CvSimeJrbGZ8",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_BeamCommon",
+              "step_id": 63592
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 390,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "LoadBearing",
+                "step_id": 391,
+                "value": true,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 58314,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 63565,
+                "value": "STB 250 x 500",
+                "value_type": "IfcIdentifier"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Span",
+                "step_id": 63566,
+                "value": 4.0,
+                "value_type": "IfcPositiveLengthMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "3NKGOLsCP8DL8Mub8xeDuf",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 63596
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "13LV5dTeP3CAox54x56C1Z",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "EG",
+        "step_id": 37
+      },
+      "type": {
+        "global_id": "2SCp4O5u8Z$DZWtJU$8nZa",
+        "ifc_class": "IfcBeamType",
+        "name": "STB Träger - rechteckig:STB 250 x 500",
+        "step_id": 63591
+      }
     }
-  ],
-  "wall_closure": {
-    "0g_QdKP4DAmhTDvOJ17q23": {
-      "actual_delta_m3": 2.199999999999953,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 2.199999999999953,
-      "volume_after_m3": 31.412500000000925,
-      "volume_before_m3": 29.212500000000972
-    }
-  }
+  ]
 }

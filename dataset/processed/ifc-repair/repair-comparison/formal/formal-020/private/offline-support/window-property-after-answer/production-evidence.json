@@ -1,0 +1,605 @@
+{
+  "schema_version": "text2ifc/phase12-production-evidence/0.1",
+  "operation_types": {
+    "01-window": "add_window_with_opening_to_wall",
+    "02-door-property": "set_occurrence_properties"
+  },
+  "expected_facts_by_operation": {
+    "01-window": [
+      {
+        "fact_key": "attribute:OverallHeight",
+        "value": 3000.0,
+        "value_type": "IfcPositiveLengthMeasure",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "explicit_request",
+        "source_ref": "request:/text",
+        "provenance": [
+          "request-source:user_request",
+          "request-evidence:request:/text",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "attribute:OverallWidth",
+        "value": 1810.0,
+        "value_type": "IfcPositiveLengthMeasure",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "explicit_request",
+        "source_ref": "request:/text",
+        "provenance": [
+          "request-source:user_request",
+          "request-evidence:request:/text",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "label:Name",
+        "value": "Windows_Sgl_Plain:3.2x1.8m",
+        "value_type": "IfcLabel",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "approved_prototype",
+        "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+        "provenance": [
+          "type-index:type:14xJur$tAygZ8nD5oT1oMw",
+          "type_record:14xJur$tAygZ8nD5oT1oMw",
+          "user_authorization:explicit_request_reference",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "material:Glass",
+        "value": "Glass",
+        "value_type": "IfcMaterial",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "authorized_type_cohort",
+        "source_ref": "resource:step:3005",
+        "provenance": [
+          "IfcMaterialList:#3005",
+          "IfcRelAssociatesMaterial:#186168",
+          "authority-source:type-cohort:14xJur$tAygZ8nD5oT1oMw",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM$h",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM_x",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMaF",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMq3",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMqr",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMsb",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMuh",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMvT",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMwx",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMyR",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+          "cohort-record:ifc:2U8KEAXbL24xySlUNSWM9b",
+          "cohort-record:ifc:3JZGeqq852COtfxExBeyv6",
+          "cohort-record:ifc:3JZGeqq852COtfxExBeyvD",
+          "cohort-type:14xJur$tAygZ8nD5oT1oMw",
+          "current_ifc:#147920",
+          "current_ifc:#147934",
+          "current_ifc:#147948",
+          "current_ifc:#147962",
+          "current_ifc:#147976",
+          "current_ifc:#147990",
+          "current_ifc:#148004",
+          "current_ifc:#148018",
+          "current_ifc:#148032",
+          "current_ifc:#148046",
+          "current_ifc:#148060",
+          "current_ifc:#148130",
+          "current_ifc:#148994",
+          "current_ifc:#149022",
+          "current_ifc:#149078",
+          "current_ifc:#149092",
+          "current_ifc:#149190",
+          "current_ifc:#149204",
+          "current_ifc:#149218",
+          "current_ifc:#149232",
+          "current_ifc:#149260",
+          "current_ifc:#149274",
+          "current_ifc:#149288",
+          "current_ifc:#149456",
+          "current_ifc:#149708",
+          "current_ifc:#149722",
+          "current_ifc:#149736",
+          "current_ifc:#149750",
+          "current_ifc:#149764",
+          "current_ifc:#149792",
+          "current_ifc:#149806",
+          "current_ifc:#149820",
+          "current_ifc:#19417",
+          "current_ifc:#3012",
+          "current_ifc:#3800",
+          "operation:01-window",
+          "relationship:guid:3g1ttfzlxSmGJnK1yZb8jM",
+          "resource:step:3005",
+          "source_fact_key:material:Glass"
+        ]
+      },
+      {
+        "fact_key": "material:Window-Frame",
+        "value": "Window Frame",
+        "value_type": "IfcMaterial",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "authorized_type_cohort",
+        "source_ref": "resource:step:3005",
+        "provenance": [
+          "IfcMaterialList:#3005",
+          "IfcRelAssociatesMaterial:#186168",
+          "authority-source:type-cohort:14xJur$tAygZ8nD5oT1oMw",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM$h",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM_x",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMaF",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMq3",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMqr",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMsb",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMuh",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMvT",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMwx",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMyR",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+          "cohort-record:ifc:2U8KEAXbL24xySlUNSWM9b",
+          "cohort-record:ifc:3JZGeqq852COtfxExBeyv6",
+          "cohort-record:ifc:3JZGeqq852COtfxExBeyvD",
+          "cohort-type:14xJur$tAygZ8nD5oT1oMw",
+          "current_ifc:#147920",
+          "current_ifc:#147934",
+          "current_ifc:#147948",
+          "current_ifc:#147962",
+          "current_ifc:#147976",
+          "current_ifc:#147990",
+          "current_ifc:#148004",
+          "current_ifc:#148018",
+          "current_ifc:#148032",
+          "current_ifc:#148046",
+          "current_ifc:#148060",
+          "current_ifc:#148130",
+          "current_ifc:#148994",
+          "current_ifc:#149022",
+          "current_ifc:#149078",
+          "current_ifc:#149092",
+          "current_ifc:#149190",
+          "current_ifc:#149204",
+          "current_ifc:#149218",
+          "current_ifc:#149232",
+          "current_ifc:#149260",
+          "current_ifc:#149274",
+          "current_ifc:#149288",
+          "current_ifc:#149456",
+          "current_ifc:#149708",
+          "current_ifc:#149722",
+          "current_ifc:#149736",
+          "current_ifc:#149750",
+          "current_ifc:#149764",
+          "current_ifc:#149792",
+          "current_ifc:#149806",
+          "current_ifc:#149820",
+          "current_ifc:#19417",
+          "current_ifc:#3012",
+          "current_ifc:#3800",
+          "operation:01-window",
+          "relationship:guid:3g1ttfzlxSmGJnK1yZb8jM",
+          "resource:step:3005",
+          "source_fact_key:material:Window-Frame"
+        ]
+      },
+      {
+        "fact_key": "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+        "value": "Revit",
+        "value_type": "IfcLabel",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "approved_prototype",
+        "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+        "provenance": [
+          "type-index:type:14xJur$tAygZ8nD5oT1oMw",
+          "ifcopenshell.util.element.get_psets:direct",
+          "type_record:14xJur$tAygZ8nD5oT1oMw",
+          "user_authorization:explicit_request_reference",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "pset:Pset_ProductRequirements.Category",
+        "value": "Windows",
+        "value_type": "IfcLabel",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "approved_prototype",
+        "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+        "provenance": [
+          "type-index:type:14xJur$tAygZ8nD5oT1oMw",
+          "ifcopenshell.util.element.get_psets:direct",
+          "type_record:14xJur$tAygZ8nD5oT1oMw",
+          "user_authorization:explicit_request_reference",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "pset:Pset_WindowCommon.IsExternal",
+        "value": true,
+        "value_type": "IfcBoolean",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "surviving_host",
+        "source_ref": "current-host:3JZGeqq852COtfxExBeyvQ",
+        "provenance": [
+          "operation:01-window",
+          "window-is-external-from-host",
+          "host-wall-property:ifcopenshell.util.element.get_psets:direct"
+        ]
+      },
+      {
+        "fact_key": "pset:Pset_WindowCommon.Reference",
+        "value": "3.2x1.8m",
+        "value_type": "IfcIdentifier",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "authorized_type_cohort",
+        "source_ref": "type-cohort:14xJur$tAygZ8nD5oT1oMw",
+        "provenance": [
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM$h",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVM_x",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMaF",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMq3",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMqr",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMsb",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMuh",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMvT",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMwx",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMyR",
+          "cohort-record:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+          "cohort-record:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+          "cohort-record:ifc:2U8KEAXbL24xySlUNSWM9b",
+          "cohort-record:ifc:3JZGeqq852COtfxExBeyv6",
+          "cohort-record:ifc:3JZGeqq852COtfxExBeyvD",
+          "cohort-type:14xJur$tAygZ8nD5oT1oMw",
+          "ifcopenshell.util.element.get_psets:direct",
+          "index:ifc:1GjejW8Xn4SugeTM2GVM$h",
+          "index:ifc:1GjejW8Xn4SugeTM2GVM_x",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMaF",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMq3",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMqr",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMrZ",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMsb",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMuh",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMvT",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMwx",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMyR",
+          "index:ifc:1GjejW8Xn4SugeTM2GVMzZ",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QT8KH",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QT8q_",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QT8sQ",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QT8vC",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAJ6",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAMU",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTARC",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAbV",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAdv",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAgT",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAhX",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTAlm",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTE4$",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTESb",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTF8c",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTF9Y",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTFCc",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTFF0",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTFo4",
+          "index:ifc:2QcJCEEbz6n8$8xJ1QTFsq",
+          "index:ifc:2U8KEAXbL24xySlUNSWM9b",
+          "index:ifc:3JZGeqq852COtfxExBeyv6",
+          "index:ifc:3JZGeqq852COtfxExBeyvD",
+          "operation:01-window",
+          "source_fact_key:pset:Pset_WindowCommon.Reference"
+        ]
+      },
+      {
+        "fact_key": "pset:Pset_WindowCommon.ThermalTransmittance",
+        "value": 5.5617,
+        "value_type": "IfcThermalTransmittanceMeasure",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "approved_prototype",
+        "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+        "provenance": [
+          "type-index:type:14xJur$tAygZ8nD5oT1oMw",
+          "ifcopenshell.util.element.get_psets:direct",
+          "type_record:14xJur$tAygZ8nD5oT1oMw",
+          "user_authorization:explicit_request_reference",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "quantity:window-base.Area",
+        "value": 5430000.0,
+        "value_type": "IfcQuantityArea",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/01-window/parameters/opening",
+        "provenance": [
+          "operation:01-window",
+          "registered-window-parameter-policy:0.2"
+        ]
+      },
+      {
+        "fact_key": "quantity:window-base.Height",
+        "value": 3000.0,
+        "value_type": "IfcQuantityLength",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/01-window/parameters/opening",
+        "provenance": [
+          "operation:01-window",
+          "registered-window-parameter-policy:0.2"
+        ]
+      },
+      {
+        "fact_key": "quantity:window-base.Width",
+        "value": 1810.0,
+        "value_type": "IfcQuantityLength",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/01-window/parameters/opening",
+        "provenance": [
+          "operation:01-window",
+          "registered-window-parameter-policy:0.2"
+        ]
+      },
+      {
+        "fact_key": "relationship:host",
+        "value": "3JZGeqq852COtfxExBeyvQ",
+        "value_type": "IfcWallStandardCase",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:3JZGeqq852COtfxExBeyvQ",
+        "provenance": [
+          "resolved-host-target:3JZGeqq852COtfxExBeyvQ",
+          "resolved-host:3JZGeqq852COtfxExBeyvQ",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "relationship:storey",
+        "value": "3Zu5Bv0LOHrPC10026FoQQ",
+        "value_type": "IfcBuildingStorey",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "surviving_target",
+        "source_ref": "current-target-storey:3Zu5Bv0LOHrPC10026FoQQ",
+        "provenance": [
+          "resolved-host-target:3JZGeqq852COtfxExBeyvQ",
+          "operation:01-window"
+        ]
+      },
+      {
+        "fact_key": "relationship:type",
+        "value": "14xJur$tAygZ8nD5oT1oMw",
+        "value_type": "IfcWindowStyle",
+        "unit": null,
+        "inherited": true,
+        "source_kind": "approved_prototype",
+        "source_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+        "provenance": [
+          "user_authorization:explicit_request_reference",
+          "operation:01-window"
+        ]
+      }
+    ],
+    "02-door-property": [
+      {
+        "fact_key": "pset:Pset_DoorCommon.IsExternal",
+        "value": true,
+        "value_type": "IfcBoolean",
+        "unit": null,
+        "inherited": false,
+        "source_kind": "explicit_request",
+        "source_ref": "request:/text",
+        "provenance": [
+          "request-source:user_request",
+          "request-evidence:request:/text",
+          "operation:02-door-property",
+          "property-hash:sha256:9fafbe7d3b7ac766943e8731ee6bfdd9091352b00afca51c125e126af05e3790",
+          "source_fact_key:pset:Pset_DoorCommon.IsExternal"
+        ]
+      }
+    ]
+  },
+  "applicability_by_operation": {
+    "01-window": {
+      "window.type": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.type"
+      },
+      "window.host": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.host"
+      },
+      "window.storey": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.storey"
+      },
+      "window.width": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.width"
+      },
+      "window.height": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.height"
+      },
+      "window.is-external": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.is-external"
+      },
+      "window.quantity.width": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.quantity.width"
+      },
+      "window.quantity.height": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.quantity.height"
+      },
+      "window.quantity.area": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/01-window/window.quantity.area"
+      },
+      "window.quantity.sill-height": {
+        "applicability": "conditional",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true,
+        "evidence_pointer": "production-evidence:/01-window/window.quantity.sill-height"
+      },
+      "window.material": {
+        "applicability": "conditional",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true,
+        "evidence_pointer": "production-evidence:/01-window/window.material"
+      },
+      "window.classification": {
+        "applicability": "conditional",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true,
+        "evidence_pointer": "production-evidence:/01-window/window.classification"
+      },
+      "window.reference": {
+        "applicability": "conditional",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true,
+        "evidence_pointer": "production-evidence:/01-window/window.reference"
+      },
+      "window.thermal-transmittance": {
+        "applicability": "conditional",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true,
+        "evidence_pointer": "production-evidence:/01-window/window.thermal-transmittance"
+      }
+    },
+    "02-door-property": {
+      "occurrence.requested-property": {
+        "applicability": "conditional",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": true,
+        "evidence_pointer": "production-evidence:/02-door-property/occurrence.requested-property"
+      },
+      "explicit.pset-Pset_DoorCommon.IsExternal": {
+        "applicability": "required",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false,
+        "evidence_pointer": "production-evidence:/02-door-property/explicit.pset-Pset_DoorCommon.IsExternal"
+      }
+    }
+  },
+  "conflicts": [
+    {
+      "operation_id": "01-window",
+      "fact_key": "window_occurrence:pset:Pset_WindowCommon.IsExternal",
+      "selected_source": "surviving_host",
+      "rejected_source": "approved_prototype",
+      "selected_ref": "current-host:3JZGeqq852COtfxExBeyvQ",
+      "rejected_ref": "user-approved-prototype:14xJur$tAygZ8nD5oT1oMw",
+      "reason": "lower_authority_conflict"
+    }
+  ]
+}

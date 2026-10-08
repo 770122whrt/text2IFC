@@ -1,0 +1,445 @@
+....FFFFFFFF....FFFFFFFF....................FF                           [100%]
+================================== FAILURES ===================================
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-False-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity4')
+scene = 'd7n', count = 2, reverse = False, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-False-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity5')
+scene = 'vvo', count = 2, reverse = False, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-True-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity6')
+scene = 'd7n', count = 2, reverse = True, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-True-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity7')
+scene = 'vvo', count = 2, reverse = True, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-False-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity8')
+scene = 'd7n', count = 3, reverse = False, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-False-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity9')
+scene = 'vvo', count = 3, reverse = False, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-True-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity10')
+scene = 'd7n', count = 3, reverse = True, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-True-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity11')
+scene = 'vvo', count = 3, reverse = True, family = 'beam'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-False-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity16')
+scene = 'd7n', count = 2, reverse = False, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-False-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity17')
+scene = 'vvo', count = 2, reverse = False, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-True-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity18')
+scene = 'd7n', count = 2, reverse = True, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-True-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity19')
+scene = 'vvo', count = 2, reverse = True, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-False-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity20')
+scene = 'd7n', count = 3, reverse = False, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-False-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity21')
+scene = 'vvo', count = 3, reverse = False, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-True-d7n] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity22')
+scene = 'd7n', count = 3, reverse = True, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '0K_MqVdrL0JOCMi_GblRwJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-True-vvo] _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_legal_storey_multiplicity23')
+scene = 'vvo', count = 3, reverse = True, family = 'column'
+
+    @pytest.mark.parametrize("scene", SCENES)
+    @pytest.mark.parametrize("count,reverse", COUNTS_AND_ORDER)
+    @pytest.mark.parametrize("family", ("beam", "column"))
+    def test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership(
+        tmp_path: Path, scene: str, count: int, reverse: bool, family: str,
+    ) -> None:
+        source, storey_id = _scene(tmp_path, scene, count, reverse)
+        before = ifcopenshell.open(str(source))
+        old_relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        old_elements = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcElement")}
+        original_relation_ids = [str(item.GlobalId) for item in before.by_guid(storey_id).ContainsElements]
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, (family,)))
+    
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:170: AssertionError
+_ test_mixed_structural_failure_rolls_back_created_containment_and_entire_transaction _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_mixed_structural_failure_0')
+
+    def test_mixed_structural_failure_rolls_back_created_containment_and_entire_transaction(tmp_path: Path) -> None:
+        source, storey_id = _scene(tmp_path, "vvo", 3, True)
+        changeset = _changeset(source, storey_id, ("beam", "column"))
+        registry = OperationRegistry()
+        registry.register(beam_operation_definition())
+        registry.register(replace(column_operation_definition(), postcondition_checker=lambda **kwargs: {
+            "valid": False, "checks": [],
+            "issues": [{"code": "INJECTED_COLUMN_POSTCONDITION_FAILURE", "path": "/postconditions", "message": "injected"}],
+        }))
+        output = tmp_path / "must-not-exist.ifc"
+        result = _apply(source, output, changeset, registry)
+        assert not result["valid"] and not result["published"] and not output.exists()
+>       assert [item["code"] for item in result["issues"]] == ["INJECTED_COLUMN_POSTCONDITION_FAILURE"]
+E       AssertionError: assert ['STRUCTURAL_...NT_AMBIGUOUS'] == ['INJECTED_CO...TION_FAILURE']
+E         
+E         At index 0 diff: 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS' != 'INJECTED_COLUMN_POSTCONDITION_FAILURE'
+E         Left contains one more item: 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS'
+E         Use -v to get more diff
+
+tests\ifc_repair\test_structural_multi_containment.py:310: AssertionError
+_ test_mixed_beam_and_column_have_separate_single_ownership_without_rewriting_old_relations _
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest/b-multi-containment-red2/test_mixed_beam_and_column_hav0')
+
+    def test_mixed_beam_and_column_have_separate_single_ownership_without_rewriting_old_relations(tmp_path: Path) -> None:
+        source, storey_id = _scene(tmp_path, "vvo", 3, True)
+        before = ifcopenshell.open(str(source))
+        relations = {str(item.GlobalId): item.to_string() for item in before.by_type("IfcRelContainedInSpatialStructure")}
+        output = tmp_path / "repaired.ifc"
+        result = _apply(source, output, _changeset(source, storey_id, ("beam", "column")))
+>       assert result["valid"] and result["published"], result["issues"]
+E       AssertionError: [{'code': 'STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/0/targe...L_STOREY_CONTAINMENT_AMBIGUOUS', 'message': '1vTeahUkP60PdWqwCTjSGJ', 'path': '/operations/1/target/storey_global_id'}]
+E       assert (False)
+
+tests\ifc_repair\test_structural_multi_containment.py:319: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-False-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-False-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-True-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-2-True-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-False-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-False-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-True-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[beam-3-True-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-False-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-False-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-True-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-2-True-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-False-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-False-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-True-d7n]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_legal_storey_multiplicity_preserves_old_ownership_and_single_new_ownership[column-3-True-vvo]
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_mixed_structural_failure_rolls_back_created_containment_and_entire_transaction
+FAILED tests/ifc_repair/test_structural_multi_containment.py::test_mixed_beam_and_column_have_separate_single_ownership_without_rewriting_old_relations
+18 failed, 28 passed in 197.25s (0:03:17)

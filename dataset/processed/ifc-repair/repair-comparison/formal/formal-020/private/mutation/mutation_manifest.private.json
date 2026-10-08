@@ -1,47 +1,365 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
-  "targets": [
+  "schema_version": "repair-comparison-mutation/0.2",
+  "damages": [
     {
       "kind": "window",
-      "opening_guid": "2GxPPUnps9Wl5kLdpQ987N",
-      "preserve_opening": false,
-      "source_step_id": 709,
-      "target_guid": "37Ou$YNjL5BRWGeuublYMy",
-      "wall_guid": "37Ou$YNjL5BRWGeuublYM$"
+      "target_guid": "3JZGeqq852COtfxExBeyv2",
+      "target_name": "Windows_Sgl_Plain:3.2x1.8m:535383",
+      "opening_guid": "0heVk0tNLZUkX1JJ_24Zjn",
+      "opening_name": "Windows_Sgl_Plain:3.2x1.8m:535383:1",
+      "wall_guid": "3JZGeqq852COtfxExBeyvQ",
+      "wall_name": "Basic Wall:Exterior Load Bearing wall:535375",
+      "method": "remove_product_and_opening_restore_continuous_wall",
+      "numeric_spec": {
+        "source_step_id": 3786,
+        "target_guid": "3JZGeqq852COtfxExBeyv2",
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "host_guid": "3JZGeqq852COtfxExBeyvQ",
+        "opening_guid": "0heVk0tNLZUkX1JJ_24Zjn",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "storey_attribute_elevation_m": 0.0,
+        "width_mm": 1810.0,
+        "height_mm": 3000.0,
+        "opening_width_mm": 1810.0000000000023,
+        "opening_height_mm": 3000.0,
+        "opening_center_xy_m": [
+          -32.663669243249004,
+          27.076528519908955
+        ],
+        "opening_bottom_world_m": 0.6,
+        "sill_mm": 600.0,
+        "bounds_world_m": [
+          [
+            -33.593669243249,
+            -31.733669243249004
+          ],
+          [
+            26.895278519908956,
+            27.270278519909915
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "opening_bounds_world_m": [
+          [
+            -33.568669243249005,
+            -31.758669243249003
+          ],
+          [
+            26.920278519908955,
+            27.232778519908955
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "host_bounds_world_m": [
+          [
+            -34.53671872185208,
+            -16.117419243248982
+          ],
+          [
+            26.920278519908898,
+            27.232778519908898
+          ],
+          [
+            0.0,
+            18.4
+          ]
+        ],
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -16.117419243249
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            27.0765285199089
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "mesh_center_world_m": [
+          -32.663669243249004,
+          27.082778519909436,
+          2.1
+        ],
+        "opening_center_world_m": [
+          -32.663669243249004,
+          27.076528519908955,
+          2.1
+        ],
+        "mesh_local_extents_mm": [
+          1859.9999999999995,
+          375.00000000095923,
+          3000.0
+        ],
+        "mesh_sha256": "356b357b3288f14e3c25283a67eb1eae4dbbbdef7c155646e5aec577836b4d70",
+        "mesh_triangles": 208,
+        "operation_type": "SINGLE_PANEL",
+        "type_guid": "14xJur$tAygZ8nD5oT1oMw",
+        "unit_to_mm": 1000,
+        "placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -33.568669243249005
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            26.920278519908955
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.6
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      },
+      "reference_guid": "1GjejW8Xn4SugeTM2GVMaF",
+      "reference_name": "Windows_Sgl_Plain:3.2x1.8m:564746",
+      "reference_numeric_spec": {
+        "source_step_id": 148130,
+        "target_guid": "1GjejW8Xn4SugeTM2GVMaF",
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "host_guid": "3JZGeqq852COtfxExBeyvQ",
+        "opening_guid": "3_REz$QDrOHJb6bYoxdiUU",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "storey_attribute_elevation_m": 0.0,
+        "width_mm": 1810.0,
+        "height_mm": 3000.0,
+        "opening_width_mm": 1809.9999999999986,
+        "opening_height_mm": 3000.0,
+        "opening_center_xy_m": [
+          -20.1517280201735,
+          27.076528519908912
+        ],
+        "opening_bottom_world_m": 0.6,
+        "sill_mm": 600.0,
+        "bounds_world_m": [
+          [
+            -21.0817280201735,
+            -19.2217280201735
+          ],
+          [
+            26.895278519908913,
+            27.270278519909873
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "opening_bounds_world_m": [
+          [
+            -21.056728020173498,
+            -19.2467280201735
+          ],
+          [
+            26.920278519908912,
+            27.232778519908912
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "host_bounds_world_m": [
+          [
+            -34.53671872185208,
+            -16.117419243248982
+          ],
+          [
+            26.920278519908898,
+            27.232778519908898
+          ],
+          [
+            0.0,
+            18.4
+          ]
+        ],
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -16.117419243249
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            27.0765285199089
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "mesh_center_world_m": [
+          -20.1517280201735,
+          27.082778519909393,
+          2.1
+        ],
+        "opening_center_world_m": [
+          -20.1517280201735,
+          27.076528519908912,
+          2.1
+        ],
+        "mesh_local_extents_mm": [
+          1859.9999999999995,
+          375.00000000095923,
+          3000.0
+        ],
+        "mesh_sha256": "356b357b3288f14e3c25283a67eb1eae4dbbbdef7c155646e5aec577836b4d70",
+        "mesh_triangles": 208,
+        "operation_type": "SINGLE_PANEL",
+        "type_guid": "14xJur$tAygZ8nD5oT1oMw",
+        "unit_to_mm": 1000,
+        "placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -21.0567280201735
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            26.920278519908912
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.6
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ]
+      }
     },
     {
-      "kind": "window",
-      "opening_guid": "33$kTHpy4i$tX3XH3zN08T",
-      "preserve_opening": false,
-      "source_step_id": 1307,
-      "target_guid": "37Ou$YNjL5BRWGeuublYMm",
-      "wall_guid": "37Ou$YNjL5BRWGeuublYMp"
-    },
-    {
-      "kind": "door",
-      "opening_guid": "2trhBFOQrpPH01G$BY0XSd",
-      "preserve_opening": true,
-      "source_step_id": 6970,
-      "target_guid": "37Ou$YNjL5BRWGeuublYLZ",
-      "wall_guid": "37Ou$YNjL5BRWGeuublYLY"
+      "kind": "property",
+      "target_guid": "2U8KEAXbL24xySlUNSWHKK",
+      "target_name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+      "property_set": "Pset_DoorCommon",
+      "property": "IsExternal",
+      "expected_value": true,
+      "damaged_value": false,
+      "value_type": "IfcBoolean",
+      "scope": "occurrence_direct",
+      "geometry": {
+        "guid": "2U8KEAXbL24xySlUNSWHKK",
+        "name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+        "class": "IfcDoor",
+        "bounds_world_m": [
+          [
+            -16.018218721851138,
+            -15.819218721851131
+          ],
+          [
+            7.81044088208915,
+            9.670440882089144
+          ],
+          [
+            0.0,
+            2.79999999999999
+          ]
+        ],
+        "center_xy_m": [
+          -15.918718721851135,
+          8.740440882089146
+        ],
+        "storey": {
+          "guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "name": "Level 0",
+          "world_elevation_m": 0.0
+        },
+        "geometry": {
+          "guid": "2U8KEAXbL24xySlUNSWHKK",
+          "class": "IfcDoor",
+          "name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+          "project_unit_to_mm": 1000,
+          "OverallWidth_mm": 1810.0,
+          "OverallHeight_mm": 2800.0,
+          "geometry_status": "available",
+          "bounds_world_m": [
+            [
+              -16.018218721851138,
+              -15.819218721851131
+            ],
+            [
+              7.81044088208915,
+              9.670440882089144
+            ],
+            [
+              0.0,
+              2.79999999999999
+            ]
+          ]
+        }
+      },
+      "original_value_basis": "genuine_preselected_source_direct_instance_property"
     }
   ],
+  "source_unchanged": true,
+  "products_removed": [
+    "3JZGeqq852COtfxExBeyv2",
+    "0heVk0tNLZUkX1JJ_24Zjn"
+  ],
   "wall_closure": {
-    "37Ou$YNjL5BRWGeuublYM$": {
-      "actual_delta_m3": 0.4776589999999987,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.4776589999999987,
-      "volume_after_m3": 3.5495999999999883,
-      "volume_before_m3": 3.0719409999999896
-    },
-    "37Ou$YNjL5BRWGeuublYMp": {
-      "actual_delta_m3": 0.4776589999999996,
-      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
-      "closed": true,
-      "expected_delta_m3": 0.4776589999999996,
-      "volume_after_m3": 2.296799999999992,
-      "volume_before_m3": 1.8191409999999926
+    "3JZGeqq852COtfxExBeyvQ": {
+      "before_m3": 83.41191089211537,
+      "after_m3": 85.10878589211536,
+      "expected_delta_m3": 1.6968749999999915,
+      "actual_delta_m3": 1.6968749999999915,
+      "closed": true
     }
-  }
+  },
+  "model_calls": 0
 }

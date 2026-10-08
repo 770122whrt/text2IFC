@@ -1,0 +1,179 @@
+{
+  "manifests": [
+    {
+      "assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:3NCYgWTsv4QA_Llz6Y6mVX",
+            "resolved-host:3NCYgWTsv4QA_Llz6Y6mVX",
+            "operation:beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:3NCYgWTsv4QA_Llz6Y6mVX",
+          "unit": null,
+          "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/beam-1/target",
+          "unit": null,
+          "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type beam-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 440.0,
+                "shape": "rectangle",
+                "width_mm": 160.0
+              },
+              "section_digest": "sha256:aca61d0d7ef08079ef9403f4dec280625f66dd061dbe5dcccaf17187aab24d5b"
+            },
+            "template_digest": "sha256:9edfb1a0e225a34ae26676a47b95a9503a4dfdc56fee862a1b6c44dd9f06a2aa",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:beam-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:0VBdlvtqnTLe1hPWF8fYUI",
+          "unit": null,
+          "value": "0VBdlvtqnTLe1hPWF8fYUI",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "base_model_fingerprint": "sha256:a14d794f04527906fd6ca8b2fb010b873e4e310a933a1eded491dd2a48591f29",
+      "manifest_id": "semantic-manifest-d03adc307d4e8bf8ee8d57ea",
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "policy": {
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "schema_version": "text2ifc/ifc-repair-semantic-manifest/0.3"
+    },
+    {
+      "assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:3NCYgWTsv4QA_Llz6Y6mVX",
+            "resolved-host:3NCYgWTsv4QA_Llz6Y6mVX",
+            "operation:beam-2"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:3NCYgWTsv4QA_Llz6Y6mVX",
+          "unit": null,
+          "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "beam-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:beam-2",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/beam-2/target",
+          "unit": null,
+          "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type beam-2",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 440.0,
+                "shape": "rectangle",
+                "width_mm": 160.0
+              },
+              "section_digest": "sha256:aca61d0d7ef08079ef9403f4dec280625f66dd061dbe5dcccaf17187aab24d5b"
+            },
+            "template_digest": "sha256:db8ce055e6373ae3e561b5176edf1f22d7d74d5583bdd11fa4663a52633b8cd9",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "beam-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:beam-2",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:3bUtDFzi1UUR5jWNNfcd6l",
+          "unit": null,
+          "value": "3bUtDFzi1UUR5jWNNfcd6l",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "base_model_fingerprint": "sha256:a14d794f04527906fd6ca8b2fb010b873e4e310a933a1eded491dd2a48591f29",
+      "manifest_id": "semantic-manifest-de26dc64d234abd837350412",
+      "operation_id": "beam-2",
+      "operation_type": "add_beam",
+      "policy": {
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "schema_version": "text2ifc/ifc-repair-semantic-manifest/0.3"
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-semantic-manifest-bundle/0.1"
+}

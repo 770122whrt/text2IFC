@@ -1,0 +1,65 @@
+{
+  "schema_version": "text2ifc/ifc-repair-changeset-draft/0.2",
+  "draft_id": "draft-candidate-020-mixed",
+  "source_request_hash": "sha256:a4ea5bfd4c1e4f7a07f7a9ed831dbbc046de91555a1bf7d54388cc278be8f350",
+  "base_model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+  "semantic_manifest_ref": "semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:3654c37a62bb9260b2c2295b8d412acfbb2ac28668007ef92f9a6fe5422fd7d1",
+  "semantic_summary": {
+    "required": 17,
+    "conditional": 0,
+    "not_required": 0
+  },
+  "scope": {
+    "target_ids": [
+      "3JZGeqq852COtfxExBeyvQ",
+      "2U8KEAXbL24xySlUNSWHKK"
+    ],
+    "forbidden_ids": []
+  },
+  "evidence_refs": [
+    "resolved:/operations/01-window/context/candidate_targets/0",
+    "public-window-installation/0.1:1GjejW8Xn4SugeTM2GVMaF",
+    "resolved:/operations/02-door-property/context/candidate_targets/0"
+  ],
+  "preconditions": [],
+  "postconditions": [],
+  "operations": [
+    {
+      "operation_id": "01-window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target": {
+        "wall_global_id": "3JZGeqq852COtfxExBeyvQ"
+      },
+      "parameters": {
+        "opening": {
+          "height_mm": 3000.0,
+          "sill_height_mm": 600.0,
+          "width_mm": 1810.0
+        },
+        "position": {
+          "center_offset_mm": 16546.249756751,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "evidence_refs": [
+        "resolved:/operations/01-window/context/candidate_targets/0",
+        "public-window-installation/0.1:1GjejW8Xn4SugeTM2GVMaF"
+      ]
+    },
+    {
+      "operation_id": "02-door-property",
+      "operation_type": "set_occurrence_properties",
+      "target": {
+        "element_global_id": "2U8KEAXbL24xySlUNSWHKK"
+      },
+      "parameters": {},
+      "evidence_refs": [
+        "resolved:/operations/02-door-property/context/candidate_targets/0"
+      ]
+    }
+  ]
+}

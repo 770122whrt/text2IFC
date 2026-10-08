@@ -1,0 +1,93 @@
+{
+  "artifacts": {
+    "application.json": {
+      "bytes": 11938,
+      "path": "application.json",
+      "sha256": "sha256:b0005dca05390fc485541a96a8495dc2cafa844d8b7631f1b739442fc3a8c5eb"
+    },
+    "changeset.json": {
+      "bytes": 8947,
+      "path": "changeset.json",
+      "sha256": "sha256:174fd5cc7ababdfb2169e654135c52b83ed4b94134f6c3b6e0efb300aea6fb45"
+    },
+    "comparison.json": {
+      "bytes": 24966,
+      "path": "comparison.json",
+      "sha256": "sha256:76d6a02b058610c086e1186e3bae0ad1e1dbc43015473a093ada66210f5129d7"
+    },
+    "damaged.ifc": {
+      "bytes": 8571244,
+      "path": "damaged.ifc",
+      "sha256": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587"
+    },
+    "evaluation.json": {
+      "bytes": 107941,
+      "path": "evaluation.json",
+      "sha256": "sha256:9bef56219eb74543a989b257fcc0518ede2e697e2a0463a857e981e310b3e81b"
+    },
+    "production-boundary.json": {
+      "bytes": 744,
+      "path": "production-boundary.json",
+      "sha256": "sha256:d6a8d127531c8673c59db318604f959a74f34b070a34e0cb907e6a7801371350"
+    },
+    "production-evidence.json": {
+      "bytes": 4995,
+      "path": "production-evidence.json",
+      "sha256": "sha256:2eaf75c33e8c702446938a710d5814795aa41aaf7a7d41cf7fc53f7eb05b62d2"
+    },
+    "repair-intent.json": {
+      "bytes": 6650,
+      "path": "repair-intent.json",
+      "sha256": "sha256:dbcdd47553d68f6d44ac648ae63ee6a1f931658a07ece5f3c055c687e64a6618"
+    },
+    "repaired.ifc": {
+      "bytes": 8573638,
+      "path": "repaired.ifc",
+      "sha256": "sha256:c9d186a8fc8dae01e0b5cb682329f87aa36394758c1ca082bce6263b05821487"
+    },
+    "request.txt": {
+      "bytes": 579,
+      "path": "request.txt",
+      "sha256": "sha256:f29b15803a096848803c3a23be756d8cc4a05fefb13132d53f27382220df0f0a"
+    },
+    "semantic-manifests.json": {
+      "bytes": 6919,
+      "path": "semantic-manifests.json",
+      "sha256": "sha256:8b541cca9159b01c25dc1ffbe4052d3d451ec84340426295964b528bfd3e7d11"
+    },
+    "target-resolution.json": {
+      "bytes": 11589,
+      "path": "target-resolution.json",
+      "sha256": "sha256:ae42c24ab5fc26c10112a2d77aac2efecc1e3b5c506905820c65fdb4a8ad9d55"
+    }
+  },
+  "case_id": "preparation-probe-019",
+  "one_atomic_changeset": true,
+  "operation_count": 2,
+  "operation_families": {
+    "beam": 1,
+    "column": 1
+  },
+  "production_input_boundary": {
+    "damaged_ifc_sha256": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+    "deleted_object_ids_supplied": false,
+    "entrypoint": "run_phase12_public_structural_repair.py",
+    "ifc_inputs": [
+      "damaged_ifc_path"
+    ],
+    "mutation_manifest_supplied": false,
+    "original_ifc_supplied": false,
+    "private_comparator_available_during_repair": false,
+    "public_request_bundle_sha256": "sha256:433f8e8170501211d0cc7684b50a4c8beb85e69c59cb21daad29fb92f6ee28cf",
+    "request_inputs": [
+      "public_request_bundle"
+    ],
+    "request_sha256": "sha256:ade372460ecba7e8ca52c9fca9cf69a03aaad17779f6cf025ae33068a9412699",
+    "resolved_target_count": 2,
+    "schema_version": "text2ifc/production-input-boundary/0.2"
+  },
+  "provider_evidence_mode": "offline_bound_deterministic",
+  "schema_version": "text2ifc/phase12-public-structural-repair/0.1",
+  "status": "passed",
+  "synthetic_fallback_used": false
+}

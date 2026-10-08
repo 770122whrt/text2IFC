@@ -1,12 +1,42 @@
 {
-  "authorization": {
-    "at": "2026-10-07T17:50:13.926775+00:00",
-    "user_quote": "审题托付给你先 我后续再审 你先做实验吧 如果没问题我就不审题了"
+  "schema_version": "repair-comparison-draft-answer-card/0.1",
+  "status": "pending_human_review",
+  "required_user_facts": [
+    "beam_load_bearing",
+    "column_load_bearing"
+  ],
+  "facts": {
+    "beam_load_bearing": {
+      "applies_to": "target-1",
+      "fact_kind": "standard_occurrence_boolean",
+      "pset_name": "Pset_BeamCommon",
+      "property_name": "LoadBearing",
+      "value": true,
+      "value_type": "IfcBoolean",
+      "unit": null,
+      "answer_text": "这根梁的承重标记为“是”（true）。",
+      "necessary_because": "初始请求要求补齐梁的承重标记，但未给出其布尔值。",
+      "source": "prewritten_from_original_occurrence_property_check_before_experiment",
+      "private_identity_in_answer": false
+    },
+    "column_load_bearing": {
+      "applies_to": "target-2",
+      "fact_kind": "standard_occurrence_boolean",
+      "pset_name": "Pset_ColumnCommon",
+      "property_name": "LoadBearing",
+      "value": true,
+      "value_type": "IfcBoolean",
+      "unit": null,
+      "answer_text": "这根柱的承重标记为“是”（true）。",
+      "necessary_because": "初始请求要求补齐柱的承重标记，但未给出其布尔值。",
+      "source": "prewritten_from_original_occurrence_property_check_before_experiment",
+      "private_identity_in_answer": false
+    }
   },
-  "human_viewed": false,
-  "out_of_card_policy": "Ask the human; never retrieve an answer from G.",
-  "proposal": null,
-  "required_user_facts": [],
-  "reviewer": "Codex",
-  "status": "accepted_by_delegation"
+  "answer_policy": "Only send facts explicitly requested in the actual model question; no whole-card injection or model question invention.",
+  "card_outside_question_status": "pending_human_handling",
+  "public_request_available_for_restatement": true,
+  "private_identity_answers_not_authorized": true,
+  "runtime_gold_lookup_for_new_answers_allowed": false,
+  "accepted_task_and_answer_card_required_before_live_run": true
 }

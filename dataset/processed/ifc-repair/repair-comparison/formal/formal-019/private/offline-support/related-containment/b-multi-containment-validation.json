@@ -1,0 +1,179 @@
+{
+  "schema_version": "repair-comparison-scoped-fix-validation/0.1",
+  "role": "same-stage scoped offline applicator fix; not a Stage Admission or accepted Proof",
+  "created_at": "2026-10-08T12:01:21.932406+00:00",
+  "observed_failure": "Uniquely selected Storey with multiple legal containment relations was rejected as STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS after resolution/binding",
+  "contract_authority": {
+    ".planning/phases/12-beam-and-column-operations/12-SPEC.md": "requirement 5: each NEW occurrence exactly one allowed spatial containment",
+    "schemas/ifc/IFC2X3_TC1.exp": "Storey.ContainsElements SET[0:?], element.ContainedInStructure SET[0:1]"
+  },
+  "mechanism": "Keep exact single-relation reuse. For zero/multiple relations create a dedicated relation for the new occurrence; do not choose or change an old relation. Existing conflict/Type/target/GUID/atomicity guards unchanged.",
+  "production_scope": [
+    "src/text2ifc_ifc_repair/operations/beam.py",
+    "src/text2ifc_ifc_repair/operations/column.py"
+  ],
+  "test_scope": [
+    "tests/ifc_repair/test_structural_multi_containment.py"
+  ],
+  "candidate_files": {
+    "src/text2ifc_ifc_repair/operations/beam.py": "684b46a8bbd07c92f89e66e7f320db9579aa415f3fccc94ae3ab19df961818ee",
+    "src/text2ifc_ifc_repair/operations/column.py": "e3bd73cc75f71c9bc7758a58a8bcbd0fb4473f852de898166fad78b7dd15df89",
+    "tests/ifc_repair/test_structural_multi_containment.py": "b0736897c9bb52280e784109707cba5ceaca3f98d03f75a4fe7a784e15023048"
+  },
+  "baseline_source_files": {
+    "src/text2ifc_ifc_repair/operations/beam.py": "5aae127a1db5c6ca08ac38a79ee3ac2e2e4a63f59458245d3e7dddb79aae6156",
+    "src/text2ifc_ifc_repair/operations/column.py": "5ecdf007879735b007fefdf313359055bf2f49c7f53f8782c819e1fa9ce07e52"
+  },
+  "frozen_family_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-family-v2.json",
+  "frozen_family_sha256": "6ba1bba6cd6316fa72f3cb0422e00192a754be04efb446257bfb25c7cca41cae",
+  "baseline": {
+    "failed": 18,
+    "passed": 28,
+    "runtime_seconds": 197.25,
+    "unrelated_fixture_errors": false,
+    "first_fixture_error_run_retained": ".tmp/repair-comparison-formal-expansion/b-multi-containment-red.log"
+  },
+  "candidate_family": {
+    "passed": 46,
+    "failed": 0,
+    "shards": {
+      "beam": 23,
+      "column": 22,
+      "mixed_rollback": 1
+    }
+  },
+  "existing_direct_regressions": {
+    "passed": 62,
+    "failed": 0,
+    "application_atomicity_transaction": 20,
+    "type_geometry": 42
+  },
+  "checks": [
+    {
+      "log_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-red2.log",
+      "sha256": "88a55ade5b3796061d87cb6c2223d926354d8b227dfba7f387b19a3b2951ebea",
+      "receipt_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-red2.log.receipt.json",
+      "receipt_sha256": "4edcf948cb9d60ad76334dd07db1f01526e615d4032f9ce6080d098a6f2672db",
+      "exit_code": 1,
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/ifc_repair/test_structural_multi_containment.py",
+        "-q",
+        "--basetemp=.tmp/pytest/b-multi-containment-red2"
+      ]
+    },
+    {
+      "log_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-green-beam.log",
+      "sha256": "0b4f27cae32fc809f91643155038165675c024be708dd868600652f70d768435",
+      "receipt_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-green-beam.log.receipt.json",
+      "receipt_sha256": "623847aafbf4b91abf59333f0e544ecf124082aa05cf6e9bb5f753f88bbd65eb",
+      "exit_code": 0,
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/ifc_repair/test_structural_multi_containment.py",
+        "-q",
+        "-k",
+        "beam",
+        "--basetemp=.tmp/pytest/b-multi-containment-green-beam"
+      ]
+    },
+    {
+      "log_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-green-column.log",
+      "sha256": "70839a306ff471ef72aa382a226639ad01f43c9c980e1fa4c39c2220ef0df5e9",
+      "receipt_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-green-column.log.receipt.json",
+      "receipt_sha256": "2f394e41f7bd9302912a1fde87c93a938085c52847b4f76ad8165024f8046252",
+      "exit_code": 0,
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/ifc_repair/test_structural_multi_containment.py",
+        "-q",
+        "-k",
+        "column and not mixed_beam",
+        "--basetemp=.tmp/pytest/b-multi-containment-green-column"
+      ]
+    },
+    {
+      "log_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-green-rollback.log",
+      "sha256": "6f01da1ea2990210fd522009a3fce7adbdbb093109a12a10a0ea6daf5f5b9a8a",
+      "receipt_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-green-rollback.log.receipt.json",
+      "receipt_sha256": "24333760153ffe6bebeb613b7098ae626857825abcdc032cb7136175130cde1a",
+      "exit_code": 0,
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/ifc_repair/test_structural_multi_containment.py",
+        "-q",
+        "-k",
+        "mixed_structural_failure",
+        "--basetemp=.tmp/pytest/b-multi-containment-green-rollback"
+      ]
+    },
+    {
+      "log_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-regression-application-atomicity.log",
+      "sha256": "62269289c6a7c09120490ed70bdc1228a8d4734ebc09ace42809a0479ab5c167",
+      "receipt_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-regression-application-atomicity.log.receipt.json",
+      "receipt_sha256": "d1914de61ce3d8208ca3ff6f7e46ce0cb25638b53e24a4f129eefa8bd3a3d964",
+      "exit_code": 0,
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/ifc_repair/test_beam_application.py",
+        "tests/ifc_repair/test_column_application.py",
+        "tests/ifc_repair/test_structural_atomicity.py",
+        "tests/ifc_repair/test_apply_transaction.py",
+        "-q",
+        "--basetemp=.tmp/pytest/b-multi-containment-regression-application-atomicity"
+      ]
+    },
+    {
+      "log_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-regression-type-geometry.log",
+      "sha256": "6cadf78c960ebf49615034750bba97fa7239caa9c03ff9ff6b4e686879fd684d",
+      "receipt_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-regression-type-geometry.log.receipt.json",
+      "receipt_sha256": "25d6ef23506303f191f29699eadfef5454501da4c7aca05bd5c4de867c969706",
+      "exit_code": 0,
+      "command": [
+        ".venv/Scripts/python.exe",
+        "-m",
+        "pytest",
+        "tests/ifc_repair/test_structural_type_authoring.py",
+        "tests/ifc_repair/test_structural_type_reuse_authorization.py",
+        "tests/ifc_repair/test_structural_geometry.py",
+        "tests/ifc_repair/test_generated_type_authority.py",
+        "-q",
+        "--basetemp=.tmp/pytest/b-multi-containment-regression-type-geometry"
+      ]
+    }
+  ],
+  "source_IFCs_unchanged": true,
+  "compileall": {
+    "paths": [
+      "src/text2ifc_ifc_repair/operations/beam.py",
+      "src/text2ifc_ifc_repair/operations/column.py",
+      "tests/ifc_repair/test_structural_multi_containment.py"
+    ],
+    "exit_code": 0
+  },
+  "scoped_git_diff_check_exit_code": 0,
+  "new_test_UTF8_whitespace_check": true,
+  "diff_path": ".tmp/repair-comparison-formal-expansion/b-multi-containment-diff.patch",
+  "diff_sha256": "f1103b1c03e3590b67da2819ab196d45925dc9faa38e770892455841b0099b93",
+  "network_transport_attempted": false,
+  "models_called": false,
+  "software_installed": false,
+  "full_preflight_run": false,
+  "git_commit_or_push_by_this_agent": false,
+  "allowed_claim": "Deterministic applicator bug fixed with frozen regression family; not blind/system-level capability improvement.",
+  "limitations": [
+    "Two public BIMNet scenes are cross-scene regression evidence, not authoring-family-separated holdout.",
+    "The original external 011 request has not been candidate full-chain reprobed by this agent; source agent baseline is independently retained.",
+    "This receipt is scoped validation only; update live admission source hashes and relevant public seams before future Provider transport."
+  ]
+}

@@ -1,0 +1,300 @@
+{
+  "base_model_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+  "binding_status": "bound",
+  "changeset_id": "phase12-public-changeset",
+  "evidence_refs": [
+    "resolved:/operations/beam-1/context/candidate_targets/0",
+    "resolved:/operations/column-2/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -12249.0,
+            "y_mm": 5090.0,
+            "z_mm": -406.40000000000055
+          },
+          "start": {
+            "x_mm": -9449.0,
+            "y_mm": 5090.0,
+            "z_mm": -406.40000000000055
+          }
+        },
+        "section": {
+          "height_mm": 812.8,
+          "shape": "rectangle",
+          "width_mm": 300.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "operation_id": "beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/clarification/beam_load_bearing",
+            "operation:beam-1",
+            "property-hash:sha256:bf1899778436fcb6e45babfd1fffa722d863531277f8a709de5376870d61bae8",
+            "source_fact_key:pset:Pset_BeamCommon.LoadBearing"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/clarification/beam_load_bearing",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:15Z0v90RiHrPC20026FoKR",
+            "resolved-host:15Z0v90RiHrPC20026FoKR",
+            "operation:beam-1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:15Z0v90RiHrPC20026FoKR",
+          "unit": null,
+          "value": "15Z0v90RiHrPC20026FoKR",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:beam-1",
+            "registered-beam-storey-policy:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/beam-1/target",
+          "unit": null,
+          "value": "15Z0v90RiHrPC20026FoKR",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcBeamType",
+            "template": {
+              "name": "Text2IFC generated beam type beam-1",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "height_mm": 812.8,
+                "shape": "rectangle",
+                "width_mm": 300.0
+              },
+              "section_digest": "sha256:a62ff9b69122216f5fa30df90287d582a4daf4b2bfe6001b9e3ca244d433db1c"
+            },
+            "template_digest": "sha256:71fdab312d8223a85be99959d8c685b1258cd0c9a4b10a391e362e891f8a71af",
+            "template_id": "text2ifc-rectangular-beam-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "beam-1",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:beam-1",
+            "generated-type-template:0.1"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:2gLXIjk85IFQhXut1Q4HvC",
+          "unit": null,
+          "value": "2gLXIjk85IFQhXut1Q4HvC",
+          "value_type": "IfcBeamType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-7b2b1e6440e1034307ce9dcf",
+        "policy_id": "beam.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "15Z0v90RiHrPC20026FoKR"
+      }
+    },
+    {
+      "evidence_refs": [
+        "resolved:/operations/column-2/context/candidate_targets/0"
+      ],
+      "operation_id": "column-2",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -12549.0,
+            "y_mm": 5240.0,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -12549.0,
+            "y_mm": 5240.0,
+            "z_mm": 15100.0
+          }
+        },
+        "section": {
+          "depth_mm": 600.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          },
+          "shape": "rectangle",
+          "width_mm": 600.0
+        }
+      },
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+          "operation_id": "column-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/clarification/column_load_bearing",
+            "operation:column-2",
+            "property-hash:sha256:1cdfe6eba4212bf82fabbb2ebc7b6845007d3748acc604997306c775f46af7ac",
+            "source_fact_key:pset:Pset_ColumnCommon.LoadBearing"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/clarification/column_load_bearing",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:host",
+          "operation_id": "column-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "resolved-host-target:3mC5rj4wL5ZfT78mw_nj5F",
+            "resolved-host:3mC5rj4wL5ZfT78mw_nj5F",
+            "operation:column-2"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:host",
+          "source_kind": "deterministic_derived",
+          "source_ref": "current-host-binding:3mC5rj4wL5ZfT78mw_nj5F",
+          "unit": null,
+          "value": "3mC5rj4wL5ZfT78mw_nj5F",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "bind_relationship",
+          "derivation": null,
+          "fact_key": "relationship:storey",
+          "operation_id": "column-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "operation:column-2",
+            "registered-column-base-storey-policy:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:storey",
+          "source_kind": "deterministic_derived",
+          "source_ref": "resolved:/operations/column-2/target",
+          "unit": null,
+          "value": "3mC5rj4wL5ZfT78mw_nj5F",
+          "value_type": "IfcBuildingStorey"
+        },
+        {
+          "applicability": "required",
+          "authoring_action": "inherit_from_type",
+          "derivation": {
+            "formal_attributes": {},
+            "ifc_class": "IfcColumnType",
+            "template": {
+              "name": "Text2IFC generated column type column-2",
+              "predefined_type": "NOTDEFINED",
+              "section": {
+                "depth_mm": 600.0,
+                "shape": "rectangle",
+                "width_mm": 600.0
+              },
+              "section_digest": "sha256:ba7bec5fb78d78ac67ebcec7dee6902c5317c949e0864f3cfb4d17be96cc4f0e"
+            },
+            "template_digest": "sha256:fcc43ecd9382134300e9dc105f7cdfc0dcc72b82f3b34fde2e698d5cae2545c0",
+            "template_id": "text2ifc-rectangular-column-type",
+            "template_version": "0.1"
+          },
+          "fact_key": "relationship:type",
+          "operation_id": "column-2",
+          "ownership": "type_inherited",
+          "provenance": [
+            "operation:column-2",
+            "generated-type-template:0.1"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "relationship:type",
+          "source_kind": "deterministic_derived",
+          "source_ref": "generated-type:3fvLEmbVrGDfavPw_QK55D",
+          "unit": null,
+          "value": "3fvLEmbVrGDfavPw_QK55D",
+          "value_type": "IfcColumnType"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-a48b800ce0cdee12f311f017",
+        "policy_id": "column.add.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "storey_global_id": "3mC5rj4wL5ZfT78mw_nj5F"
+      }
+    }
+  ],
+  "postconditions": [
+    "structural_geometry_matches",
+    "structural_containment_matches",
+    "structural_type_matches"
+  ],
+  "preconditions": [
+    "structural_targets_resolved",
+    "structural_geometry_authorized",
+    "structural_semantics_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.4",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "15Z0v90RiHrPC20026FoKR",
+      "3mC5rj4wL5ZfT78mw_nj5F"
+    ]
+  },
+  "semantic_manifest_ref": "semantic-manifests.json",
+  "semantic_manifest_sha256": "sha256:ad7a38718cde0a800172d36b28bd874697d2efb07434954125eee98fc64e0f9e",
+  "source_request_hash": "sha256:2a04f4f0c916a9c3ad4e0aef0188c2178027cee83b9708c4ce82ce2da503e881"
+}

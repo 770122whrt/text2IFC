@@ -1,0 +1,68 @@
+{
+  "case": "014",
+  "asset": "gni-bim-dataset-model_123-c9b24fc7b2a4",
+  "status": "passed",
+  "operation_count": 1,
+  "independent_gold_mesh_match": true,
+  "mesh_checks": [
+    {
+      "family": "column",
+      "gold_name_private": "Columns_Rectangular:450 x450:384197",
+      "output_id": "2eSd$dIbfKYPyipGNhvbOj",
+      "rectangular_mesh_matches_authored_axis_section": true,
+      "bounds_max_error_mm": 0.0002497681985573763,
+      "vertices_surface_max_error_mm": 0.0,
+      "actual_volume_mm3": 2069999999.9999812,
+      "expected_volume_mm3": 2069999999.9999747,
+      "volume_relative_error": 3.1098075534986794e-15,
+      "vertices": 8,
+      "triangles": 12,
+      "actual_bounds_in_request_frame_mm": [
+        [
+          0.0,
+          23000.0
+        ],
+        [
+          -99.99996529589771,
+          100.00003470410047
+        ],
+        [
+          -224.99975023180195,
+          225.00024976819805
+        ]
+      ],
+      "expected_bounds_in_request_frame_mm": [
+        [
+          0.0,
+          23000.0
+        ],
+        [
+          -99.999999999999,
+          99.999999999999
+        ],
+        [
+          -224.9999999999995,
+          224.9999999999995
+        ]
+      ],
+      "tolerances": {
+        "bounds_mm": 0.05,
+        "surface_mm": 0.05,
+        "relative_volume": 1e-05
+      },
+      "volume_is_supporting_check_only": true,
+      "independent_of_provider": true
+    }
+  ],
+  "source_unchanged": true,
+  "damage_scope": {
+    "beam": 0,
+    "column": 1
+  },
+  "seconds": 62.64100000000326,
+  "artifact_directory": ".tmp/repair-comparison-formal-expansion/next_ten_offline_structural_probe/case-014",
+  "evidence_class": "offline_bound_geometry_and_publishability_only",
+  "natural_language_pipeline_tested": false,
+  "model_calls": 0,
+  "private_gold_supplied_to_public_runner": false
+}

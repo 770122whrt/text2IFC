@@ -1,0 +1,156 @@
+{
+  "applicability_by_operation": {
+    "beam-1": {
+      "beam.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/beam-1/beam.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/beam-1/beam.pset",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/beam-1/beam.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "beam.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/beam-1/beam.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    },
+    "beam-2": {
+      "beam.material": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/beam-2/beam.material",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.pset": {
+        "applicability": "conditional",
+        "evidence_pointer": "production-evidence:/beam-2/beam.pset",
+        "mandatory": false,
+        "outcome": "not_required",
+        "verified_absence": true
+      },
+      "beam.storey": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/beam-2/beam.storey",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      },
+      "beam.type": {
+        "applicability": "required",
+        "evidence_pointer": "production-evidence:/beam-2/beam.type",
+        "mandatory": true,
+        "outcome": "evaluable",
+        "verified_absence": false
+      }
+    }
+  },
+  "conflicts": [],
+  "expected_facts_by_operation": {
+    "beam-1": [
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:3NCYgWTsv4QA_Llz6Y6mVX",
+          "resolved-host:3NCYgWTsv4QA_Llz6Y6mVX",
+          "operation:beam-1"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:3NCYgWTsv4QA_Llz6Y6mVX",
+        "unit": null,
+        "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:beam-1",
+          "registered-beam-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/beam-1/target",
+        "unit": null,
+        "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:beam-1",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:0VBdlvtqnTLe1hPWF8fYUI",
+        "unit": null,
+        "value": "0VBdlvtqnTLe1hPWF8fYUI",
+        "value_type": "IfcBeamType"
+      }
+    ],
+    "beam-2": [
+      {
+        "fact_key": "relationship:host",
+        "inherited": false,
+        "provenance": [
+          "resolved-host-target:3NCYgWTsv4QA_Llz6Y6mVX",
+          "resolved-host:3NCYgWTsv4QA_Llz6Y6mVX",
+          "operation:beam-2"
+        ],
+        "source_kind": "surviving_target",
+        "source_ref": "current-host-binding:3NCYgWTsv4QA_Llz6Y6mVX",
+        "unit": null,
+        "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:storey",
+        "inherited": false,
+        "provenance": [
+          "operation:beam-2",
+          "registered-beam-storey-policy:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "resolved:/operations/beam-2/target",
+        "unit": null,
+        "value": "3NCYgWTsv4QA_Llz6Y6mVX",
+        "value_type": "IfcBuildingStorey"
+      },
+      {
+        "fact_key": "relationship:type",
+        "inherited": true,
+        "provenance": [
+          "operation:beam-2",
+          "generated-type-template:0.1"
+        ],
+        "source_kind": "deterministic_policy",
+        "source_ref": "generated-type:3bUtDFzi1UUR5jWNNfcd6l",
+        "unit": null,
+        "value": "3bUtDFzi1UUR5jWNNfcd6l",
+        "value_type": "IfcBeamType"
+      }
+    ]
+  },
+  "operation_types": {
+    "beam-1": "add_beam",
+    "beam-2": "add_beam"
+  },
+  "schema_version": "text2ifc/phase12-production-evidence/0.1"
+}

@@ -1,14 +1,460 @@
 {
-  "method": "IfcOpenShell root.remove_product; preserve owner history and canonical relationship sets",
+  "counts": {
+    "after": {
+      "IfcBeam": 44,
+      "IfcBeamType": 14,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 5,
+      "IfcColumn": 17,
+      "IfcColumnType": 18,
+      "IfcDoor": 32,
+      "IfcOpeningElement": 75,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 59,
+      "IfcRelContainedInSpatialStructure": 20,
+      "IfcRelDefinesByType": 98,
+      "IfcRelFillsElement": 73,
+      "IfcRelVoidsElement": 75,
+      "IfcSite": 1,
+      "IfcSpace": 23,
+      "IfcWall": 36,
+      "IfcWindow": 41
+    },
+    "before": {
+      "IfcBeam": 45,
+      "IfcBeamType": 14,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 5,
+      "IfcColumn": 18,
+      "IfcColumnType": 18,
+      "IfcDoor": 32,
+      "IfcOpeningElement": 75,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 59,
+      "IfcRelContainedInSpatialStructure": 20,
+      "IfcRelDefinesByType": 99,
+      "IfcRelFillsElement": 73,
+      "IfcRelVoidsElement": 75,
+      "IfcSite": 1,
+      "IfcSpace": 23,
+      "IfcWall": 36,
+      "IfcWindow": 41
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587"
+  },
+  "mutation_type": "remove_structural_members",
+  "role_mapping": {
+    "beam": "3dYhAmtj90CAuJMSpTXsSS",
+    "column": "3mC5rj4wL5ZfT78mw_nkxP"
+  },
+  "schema_version": "text2ifc/ifc-repair-structural-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/.tmp/repair-comparison-formal-expansion/next-ten-packages/formal-019/private/reference.ifc",
+    "schema": "IFC2X3",
+    "sha256": "4fbd73d3934ba642946e8894436d787e4dc01621a17f0032c0b30dd6ed30b031",
+    "size_bytes": 8573800
+  },
   "targets": [
     {
-      "kind": "door",
-      "opening_guid": "3msmBLBYTmTI$HuvU08DVT",
-      "preserve_opening": true,
-      "source_step_id": 6494,
-      "target_guid": "022n1k99j1S8$sUtLsDPZ6",
-      "wall_guid": "022n1k99j1S8$sUtLsDPZP"
+      "entity": {
+        "global_id": "3dYhAmtj90CAuJMSpTXsSS",
+        "ifc_class": "IfcBeam",
+        "name": "Concrete-Rectangular Beam:16 x 32:480440",
+        "step_id": 87780
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 2799.999999999998,
+          "provenance": "IfcShapeRepresentation.Axis/IfcPolyline",
+          "status": "measured_current_ifc",
+          "storey_global_id": "15Z0v90RiHrPC20026FoKR",
+          "storey_local_end_mm": [
+            -12249.218721852149,
+            5090.44088208915,
+            0.0
+          ],
+          "storey_local_start_mm": [
+            -9449.21872185215,
+            5090.44088208915,
+            0.0
+          ],
+          "world_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "world_end_mm": [
+            -12249.218721852149,
+            5090.44088208915,
+            4700.0
+          ],
+          "world_start_mm": [
+            -9449.21872185215,
+            5090.44088208915,
+            4700.0
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Axis",
+              "item_classes": [
+                "IfcPolyline"
+              ],
+              "type": "Curve2D"
+            },
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcExtrudedAreaSolid"
+              ],
+              "type": "SweptSolid"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid",
+            "IfcPolyline"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 2800.0,
+          "profile_x_mm": 812.7999999999989,
+          "profile_y_mm": 300.000000000002,
+          "provenance": "IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ],
+          "world_profile_x_direction": [
+            0.0,
+            0.0,
+            -1.0
+          ]
+        }
+      },
+      "role": "beam",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "Concrete, Cast-in-Place gray",
+              "step_id": 865
+            },
+            "relationship": {
+              "global_id": "2Zr3TOClX2HJ5s8PvaWITV",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 164427
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "0GA1gH4InNh1LHq6_2nDDp",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfBeam",
+              "step_id": 87784
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 87783,
+                "value": "16 x 32",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "0SlsNOLxWJIVMBN67Vr$$n",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 87787
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1_AUuVVxBa$R_S$pmhpQQd",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 87782
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 87575,
+                "value": "16 x 32",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "2QpGMFcbWtuTGqESBxWtyz",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 87786
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2y_el1_oZZi4feh$eBwjPg",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_BeamCommon",
+              "step_id": 87781
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 879,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "LoadBearing",
+                "step_id": 880,
+                "value": true,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Slope",
+                "step_id": 1089,
+                "value": 0.0,
+                "value_type": "IfcPlaneAngleMeasure"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 87575,
+                "value": "16 x 32",
+                "value_type": "IfcIdentifier"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Span",
+                "step_id": 87576,
+                "value": 2.8,
+                "value_type": "IfcPositiveLengthMeasure"
+              }
+            ],
+            "relationship": {
+              "global_id": "3niY7w8LD_$vwc$pO747LT",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 87785
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "15Z0v90RiHrPC20026FoKR",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "Level 1",
+        "step_id": 43
+      },
+      "type": {
+        "global_id": "3Gz6fGc9z7IAB4DrluYpnZ",
+        "ifc_class": "IfcBeamType",
+        "name": "Concrete-Rectangular Beam:16 x 32",
+        "step_id": 87574
+      }
+    },
+    {
+      "entity": {
+        "global_id": "3mC5rj4wL5ZfT78mw_nkxP",
+        "ifc_class": "IfcColumn",
+        "name": "Concrete-Rectangular-Column:24X24:320343",
+        "step_id": 1484
+      },
+      "geometry": {
+        "axis_capability": {
+          "authority": "diagnostic_only",
+          "length_mm": 15100.0,
+          "provenance": "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "status": "measured_current_ifc",
+          "storey_global_id": "3mC5rj4wL5ZfT78mw_nj5F",
+          "storey_local_end_mm": [
+            -12549.2187218521,
+            5240.44088208914,
+            15100.0
+          ],
+          "storey_local_start_mm": [
+            -12549.2187218521,
+            5240.44088208914,
+            0.0
+          ],
+          "world_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "world_end_mm": [
+            -12549.2187218521,
+            5240.44088208914,
+            14100.0
+          ],
+          "world_start_mm": [
+            -12549.2187218521,
+            5240.44088208914,
+            -1000.0
+          ]
+        },
+        "representation_summary": {
+          "authority": "diagnostic_only",
+          "provenance": "current_ifc_representation",
+          "representations": [
+            {
+              "identifier": "Body",
+              "item_classes": [
+                "IfcMappedItem"
+              ],
+              "type": "MappedRepresentation"
+            }
+          ],
+          "resolved_item_classes": [
+            "IfcExtrudedAreaSolid"
+          ]
+        },
+        "section_capability": {
+          "authority": "diagnostic_only",
+          "extrusion_depth_mm": 15100.0,
+          "profile_x_mm": 600.0,
+          "profile_y_mm": 600.0,
+          "provenance": "IfcMappedItem/IfcExtrudedAreaSolid/IfcRectangleProfileDef",
+          "shape": "rectangle",
+          "status": "measured_current_ifc",
+          "storey_local_profile_x_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "world_profile_x_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "role": "column",
+      "semantics": {
+        "material_associations": [
+          {
+            "material": {
+              "ifc_class": "IfcMaterial",
+              "name": "Concrete, Cast-in-Place gray",
+              "step_id": 865
+            },
+            "relationship": {
+              "global_id": "2Zr3TOClX2HJ5s8PvaWITV",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "step_id": 164427
+            }
+          }
+        ],
+        "property_sets": [
+          {
+            "definition": {
+              "global_id": "3SkEIhHrcdsIRdEpJ_6vFI",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_QuantityTakeOff",
+              "step_id": 1486
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 878,
+                "value": "24X24",
+                "value_type": "IfcIdentifier"
+              }
+            ],
+            "relationship": {
+              "global_id": "1NdBArb8Eky4koBHK4jSeV",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 1490
+            }
+          },
+          {
+            "definition": {
+              "global_id": "2vn40_36j1xRLsRAOgRW0A",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ColumnCommon",
+              "step_id": 1485
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 878,
+                "value": "24X24",
+                "value_type": "IfcIdentifier"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "IsExternal",
+                "step_id": 879,
+                "value": false,
+                "value_type": "IfcBoolean"
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "LoadBearing",
+                "step_id": 880,
+                "value": true,
+                "value_type": "IfcBoolean"
+              }
+            ],
+            "relationship": {
+              "global_id": "2LKiE1174CJQSMhJhOZ0qT",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 1489
+            }
+          },
+          {
+            "definition": {
+              "global_id": "1AdUid$HukjbAnR_AF76x_",
+              "ifc_class": "IfcPropertySet",
+              "name": "Pset_ReinforcementBarPitchOfColumn",
+              "step_id": 1488
+            },
+            "properties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "name": "Reference",
+                "step_id": 1487,
+                "value": "24X24",
+                "value_type": "IfcLabel"
+              }
+            ],
+            "relationship": {
+              "global_id": "3M0$G77w0uw7dvydUF2uRS",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "step_id": 1491
+            }
+          }
+        ]
+      },
+      "storey": {
+        "global_id": "3mC5rj4wL5ZfT78mw_nj5F",
+        "ifc_class": "IfcBuildingStorey",
+        "name": "Foundation level",
+        "step_id": 36
+      },
+      "type": {
+        "global_id": "3mC5rj4wL5ZfT7Amw_nkxP",
+        "ifc_class": "IfcColumnType",
+        "name": "Concrete-Rectangular-Column:24X24",
+        "step_id": 1477
+      }
     }
-  ],
-  "wall_closure": {}
+  ]
 }
