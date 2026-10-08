@@ -63,7 +63,7 @@ REVISION_SOURCES = {
     HERE+'demo_workflow.py': 'D',
     HERE+'isolated_dsh.py': 'D',
     **{'src/text2ifc_ifc_repair/'+name: 'B' for name in
-       ('door_geometry.py','operations/door.py','geometry.py','operations/hosted_opening.py',
+       ('door_geometry.py','door_resolution.py','operations/door.py','geometry.py','operations/hosted_opening.py',
         'window_geometry.py','operations/window.py','production_evidence.py','scene_grounding.py','api.py','resolution_flow.py')},
 }
 REVISION_TESTS = {
@@ -78,6 +78,7 @@ REVISION_TESTS = {
     'tests/ifc_repair/test_window_installation_anchor.py': {'B'},
     'tests/ifc_repair/test_public_semantic_and_base_authority.py': {'B'},
     'tests/ifc_repair/test_door_direct_body_reference.py': {'B'},
+    'tests/ifc_repair/test_door_resolution.py': {'B'},
     'tests/ifc_repair/test_hosted_opening_normal_origin.py': {'B'},
     TESTS+'test_b_common_installation_native_seam.py': {'B'},
 }

@@ -315,6 +315,54 @@ def test_notdefined_requires_explicit_acceptance_and_complex_generation_fails() 
     assert unsupported.reason_code == "DOOR_OPERATION_TYPE_UNSUPPORTED"
 
 
+@pytest.mark.parametrize("operation", ["add_door_with_opening_to_wall", "fill_existing_opening_with_door"])
+@pytest.mark.parametrize("door", [{}, {"operation_type": "NOTDEFINED"}])
+def test_exact_reused_undefined_style_preserves_unknown_operation(operation, door) -> None:
+    # Reuse preserves a public formal fact; it does not generate a default hand.
+    parameters = _complete_parameters() if operation.startswith("add_") else {"fit_existing_opening": True}
+    parameters["door"] = door
+    decision = canonicalize_door_intent(
+        operation_type=operation, parameters=parameters,
+        target_record=_wall() if operation.startswith("add_") else _opening(),
+        type_record=_style("NOTDEFINED", name="Misleading Right hand name"),
+    )
+    assert decision.status == "resolved", decision.to_dict()
+    assert decision.parameters["door"]["operation_type"] == "NOTDEFINED"
+    assert decision.parameters["door"]["operation_derivation"] == {
+        "source": "door_style:0STYLEAAAAAAAAAAAAAAAA",
+        "formal_attribute": "OperationType",
+    }
+    assert decision.authorized_semantics == ()
+
+
+@pytest.mark.parametrize("door", [
+    {"operation_type": "SINGLE_SWING_LEFT", "formal_enum_explicit": True},
+    {"operation_type": "SINGLE_SWING_RIGHT", "formal_enum_explicit": True},
+    {"hinge_side": "left"},
+    {"hinge_side": "right", "viewpoint": {"observation_side": "wall_positive", "destination": "Room"}},
+])
+def test_undefined_reused_style_cannot_satisfy_explicit_operation(door) -> None:
+    parameters = _complete_parameters()
+    parameters["door"] = door
+    decision = canonicalize_door_intent(
+        operation_type="add_door_with_opening_to_wall", parameters=parameters,
+        target_record=_wall(), type_record=_style("NOTDEFINED"),
+    )
+    assert decision.status == "clarification_required", decision.to_dict()
+    assert decision.reason_code == "DOOR_TYPE_OPERATION_CONFLICT"
+
+
+def test_missing_public_style_operation_does_not_default_to_notdefined() -> None:
+    parameters = _complete_parameters()
+    parameters["door"] = {}
+    decision = canonicalize_door_intent(
+        operation_type="add_door_with_opening_to_wall", parameters=parameters,
+        target_record=_wall(), type_record=replace(_style("NOTDEFINED"), formal_attributes={}),
+    )
+    assert decision.status == "clarification_required"
+    assert decision.reason_code == "DOOR_OPERATION_REQUIRED"
+
+
 def test_fill_exact_empty_opening_derives_dimensions_and_position() -> None:
     decision = canonicalize_door_intent(
         operation_type="fill_existing_opening_with_door",

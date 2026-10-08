@@ -91,6 +91,22 @@ class ClarifyingWindowProvider(PublicWindowProvider):
         return result
 
 
+class UndefinedStyleDoorProvider:
+    """Offered exact Type is authoritative even when its operation is unknown."""
+    def __init__(self):
+        from tests.ifc_repair.test_door_installation_anchor import PublicOnlyProvider
+        self.provider = PublicOnlyProvider()
+
+    def generate_candidate(self, **kwargs):
+        from text2ifc_agent.providers import ProviderOutput
+        result = self.provider.generate_candidate(**kwargs)
+        value = json.loads(result.text)
+        if value.get('kind') == 'intent':
+            for operation in value['intent']['operations']:
+                operation['parameters'].pop('door', None)
+        return ProviderOutput(text=json.dumps(value), metadata=result.metadata)
+
+
 class BInstallationTransport(_FormalHTTPTransport):
     def __call__(self, request):
         run_id = request.url.path.strip('/').split('/')[0]
@@ -100,7 +116,9 @@ class BInstallationTransport(_FormalHTTPTransport):
         if run_id not in self.providers:
             if case == 'door-direct':
                 provider = AddingBrepDoorProvider(read_json(self.root / 'fixture-bindings.json')[case])
-            elif case == 'door-direct-denied' or case == 'door-base':
+            elif case == 'door-base':
+                provider = UndefinedStyleDoorProvider()
+            elif case == 'door-direct-denied':
                 from tests.ifc_repair.test_door_installation_anchor import PublicOnlyProvider
                 provider = PublicOnlyProvider()
             elif case == 'window-cohort':
@@ -129,6 +147,30 @@ def b_installation_fixture_cli():
     from tests.ifc_repair.repair_comparison import test_formal_revision_seams as base
     base.RevisionTransport = BInstallationTransport
     base.revision_fixture_cli()
+
+
+@pytest.mark.parametrize('angle,millimetres', [(0., False), (90., False), (37., True), (180., True)])
+def test_public_api_reuses_unknown_door_operation_without_extra_preference(tmp_path, angle, millimetres):
+    from text2ifc_ifc_repair.api import RepairAPI
+    from tests.ifc_repair.test_door_installation_anchor import scene as door_scene
+    model, opening, reference, _, _ = door_scene(angle=angle, millimetres=millimetres)
+    style = next(r.RelatingType for r in reference.IsDefinedBy if r.is_a('IfcRelDefinesByType'))
+    style.OperationType = 'NOTDEFINED'
+    source = tmp_path / 'public.ifc'
+    model.write(str(source))
+    before = source.read_bytes()
+    assert native_validation(model)['passed']
+    result = RepairAPI(tmp_path / 'native', provider=UndefinedStyleDoorProvider(), scene_grounding=True).start(
+        source, 'Fill the empty 900 by 2100 mm opening using the retained complete door and frame; align the base.')
+    assert result.successful_artifact_publishable, result.to_dict()
+    root = tmp_path / 'native' / result.run_directory
+    output = ifcopenshell.open(str(root / result.artifacts['successful_ifc']))
+    added = next(d for d in output.by_type('IfcDoor') if d.GlobalId != reference.GlobalId)
+    reused = next(r.RelatingType for r in added.IsDefinedBy if r.is_a('IfcRelDefinesByType'))
+    assert reused.GlobalId == style.GlobalId and reused.OperationType == 'NOTDEFINED'
+    assert added.FillsVoids[0].RelatingOpeningElement.GlobalId == opening.GlobalId
+    assert native_validation(output)['passed']
+    assert source.read_bytes() == before
 
 
 def test_window_confirmation_fixture_resumes_public_api(tmp_path):
@@ -202,6 +244,7 @@ def test_b_common_installation_real_linux_public_cli(tmp_path):
             from tests.ifc_repair.test_door_installation_anchor import scene as door_scene
             model, opening, reference, _, unit = door_scene()
             style = next(r.RelatingType for r in reference.IsDefinedBy if r.is_a('IfcRelDefinesByType'))
+            style.OperationType = 'NOTDEFINED'
             for item in style.RepresentationMaps[0].MappedRepresentation.Items:
                 point = item.Position.Location
                 point.Coordinates = (*point.Coordinates[:2], point.Coordinates[2] + 100 * unit)
@@ -325,6 +368,10 @@ def test_b_common_installation_real_linux_public_cli(tmp_path):
                 if case == 'door-base' or case.startswith('door-direct'):
                     installation = measure_door_opening_alignment(new[0], new[0].FillsVoids[0].RelatingOpeningElement,
                                                                   installation_anchor=bindings[case]['anchor'])
+                    if case == 'door-base':
+                        style = next(r.RelatingType for r in new[0].IsDefinedBy if r.is_a('IfcRelDefinesByType'))
+                        assert style.OperationType == 'NOTDEFINED'
+                        row['exact_unknown_operation_preserved'] = True
                     assert installation['expected_base_offset_mm'] == pytest.approx(100. if case == 'door-base' else 0.)
                     if case == 'door-direct':
                         from tests.ifc_repair.test_door_direct_body_reference import assert_complete_public_reuse, assert_authored_installation

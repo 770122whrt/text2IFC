@@ -684,8 +684,14 @@ def _resolve_formal_operation(
         if type_record is None
         else type_record.formal_attributes.get("OperationType")
     )
-    if formal_type_operation and formal_type_operation != "NOTDEFINED":
-        if requested and str(requested) != str(formal_type_operation):
+    if formal_type_operation:
+        # An exact reused Style owns its formal enum, including NOTDEFINED.
+        # The explicit-acceptance rule below is for generated styles. Never
+        # turn a reused unknown enum into a left/right fact from its label.
+        conflicts = bool(requested and str(requested) != str(formal_type_operation))
+        if formal_type_operation == "NOTDEFINED":
+            conflicts |= bool(door.get("hinge_side") or door.get("viewpoint"))
+        if conflicts:
             return _clarify(
                 "DOOR_TYPE_OPERATION_CONFLICT",
                 ("/prototype_intent", "/parameters/door/operation_type"),
