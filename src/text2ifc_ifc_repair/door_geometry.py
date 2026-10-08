@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import hashlib
 import math
+import re
 from typing import Any, Mapping
 
+import ifcopenshell.geom
 import ifcopenshell.util.placement
 import ifcopenshell.util.unit
+import numpy as np
 
 from .geometry import (
     product_geometry_bounds_in_host_mm,
@@ -21,7 +25,9 @@ MAX_AXIS_DEVIATION_DEGREES = 0.1
 MAX_DIMENSION_DEVIATION_MM = 1.0
 
 
-def public_door_installation_anchor(reference: Any) -> dict[str, Any]:
+def public_door_installation_anchor(
+    reference: Any, *, allow_wall_face_adaptation: bool = False,
+) -> dict[str, Any]:
     """Derive an installation witness from one surviving public occurrence.
 
     This internal canonical parameter is not a model-authored intent field.
@@ -44,18 +50,20 @@ def public_door_installation_anchor(reference: Any) -> dict[str, Any]:
     bounds = product_geometry_bounds_in_host_mm(reference, opening)
     opening_bounds = product_geometry_bounds_in_host_mm(opening, opening)
     offset = _center(bounds["y"]) - _center(opening_bounds["y"])
-    # Keep the original overlap, width/height, X and base checks. Only the
-    # normal installation target comes from the retained reference, not zero.
+    # The nominal base must align with its opening. A Type map may have a
+    # different mesh origin (e.g. a frame above the unfinished floor datum).
+    # Preserve that signed public mesh offset, rather than moving the instance.
     diagnostics = measure_door_opening_alignment(reference, opening)
+    nominal_base_deviation = abs(diagnostics["nominal_door_bounds_mm"]["z"][0] - opening_bounds["z"][0])
     if (diagnostics["projected_overlap_ratio"] < MIN_PROJECTED_OVERLAP_RATIO
             or diagnostics["normal_axis_intersection_mm"] <= 0
             or diagnostics["geometry_center_deviation_by_axis_mm"]["x"] > MAX_CENTER_DEVIATION_MM
-            or diagnostics["geometry_base_deviation_mm"] > MAX_CENTER_DEVIATION_MM
+            or nominal_base_deviation > MAX_CENTER_DEVIATION_MM
             or diagnostics["width_deviation_mm"] > MAX_DIMENSION_DEVIATION_MM
             or diagnostics["height_deviation_mm"] > MAX_DIMENSION_DEVIATION_MM):
         raise ValueError("DOOR_INSTALLATION_REFERENCE_ALIGNMENT_UNSUPPORTED")
-    return {
-        "method": "public-door-opening-installation/0.1",
+    anchor = {
+        "method": "public-door-opening-installation/0.2",
         "reference_global_id": str(reference.GlobalId),
         "reference_opening_global_id": str(opening.GlobalId),
         "reference_wall_global_id": str(wall.GlobalId),
@@ -66,9 +74,134 @@ def public_door_installation_anchor(reference: Any) -> dict[str, Any]:
         "wall_thickness_mm": round(float(wall_dimensions_mm(wall)["thickness"]), 6),
         "opening_normal_offset_from_wall_mm": round(_opening_normal_offset_in_wall(opening, wall), 6),
         "normal_center_offset_mm": round(offset, 6),
+        "base_offset_from_opening_mm": round(float(bounds["z"][0]) - float(opening_bounds["z"][0]), 6),
         "axis_sign": 1.0 if relative[0, 0] > 0 else -1.0,
-        "mapped_body": _mapped_body_signature(reference, types[0]),
     }
+    if types[0].RepresentationMaps:
+        anchor["mapped_body"] = _mapped_body_signature(reference, types[0])
+        if allow_wall_face_adaptation:
+            raise ValueError("DOOR_INSTALLATION_THICKNESS_ADAPTATION_UNSUPPORTED")
+    else:
+        anchor["method"] = "public-door-occurrence-installation/0.1"
+        anchor["direct_body"] = _direct_body_reference(reference)
+        if allow_wall_face_adaptation:
+            anchor["wall_face_adaptation_authorized"] = True
+            anchor["wall_face"] = _public_frame_wall_face(reference, opening, wall)
+    return anchor
+
+
+def public_wall_face_adaptation_requested(text: str) -> bool:
+    """Recognize explicit installation permission in actual public request text.
+
+    This deliberately bounded internal permission is never read from a model
+    parameter or provenance excerpt. Unclear or negated language cannot unlock
+    cross-thickness installation; exact reuse remains available without it.
+    """
+    text = text.casefold()
+    if (re.search(r"(?:do\s+not|don't|never|without|\bnot\b)[^.!?;]{0,120}\badapt", text)
+            or re.search(r"(?:不|勿|禁止)[^。；;]{0,12}适配", text)):
+        return False
+    return (all(word in text for word in ("墙面", "适配", "墙厚"))
+            or bool(re.search(r"wall[\s-]+face", text) and "adapt" in text
+                    and re.search(r"wall[\s-]+thickness", text)))
+
+
+def supports_direct_door_body(reference: Any) -> bool:
+    bodies = _bodies(reference)
+    return (len(bodies) == 1 and bool(bodies[0].Items)
+            and all(item.is_a("IfcFacetedBrep") for item in bodies[0].Items))
+
+
+def has_direct_door_brep(reference: Any) -> bool:
+    """A partly unsupported Brep Body must not silently become a cuboid."""
+    return any(item.is_a("IfcFacetedBrep") for body in _bodies(reference) for item in body.Items)
+
+
+def _bodies(product: Any) -> list[Any]:
+    return [r for r in product.Representation.Representations
+            if r.RepresentationIdentifier == "Body"] if product.Representation else []
+
+
+def _direct_body_reference(reference: Any) -> dict[str, Any]:
+    if not supports_direct_door_body(reference):
+        raise ValueError("DOOR_INSTALLATION_DIRECT_BODY_UNSUPPORTED")
+    body = _bodies(reference)[0]
+    graph = {entity.id(): entity.to_string() for entity in reference.file.traverse(body)}
+    for item in body.Items:
+        for styled in item.StyledByItem:
+            graph.update((entity.id(), entity.to_string()) for entity in reference.file.traverse(styled))
+    return {"representation_id": body.id(), "item_ids": [item.id() for item in body.Items],
+            "geometry_and_styles_sha256": hashlib.sha256(
+                "\n".join(graph[key] for key in sorted(graph)).encode("utf8")).hexdigest()}
+
+
+def reuse_public_door_body(model: Any, reference: Any) -> list[Any]:
+    """Map the exact public Body, preserving its per-item geometry and styles.
+
+    A separate representation wrapper owns the new map; its Items share the
+    exact source geometry and styles. IFC2X3 forbids the original Body being
+    owned simultaneously by a product definition and a representation map.
+    The reference and its mapless Type stay unchanged.
+    """
+    _direct_body_reference(reference)
+    body = _bodies(reference)[0]
+    mapped_body = model.createIfcShapeRepresentation(
+        body.ContextOfItems, body.RepresentationIdentifier, body.RepresentationType, body.Items)
+    origin = model.createIfcCartesianPoint((0., 0., 0.))
+    source = model.createIfcRepresentationMap(model.createIfcAxis2Placement3D(origin), mapped_body)
+    transform = model.createIfcCartesianTransformationOperator3D(None, None, origin, 1., None)
+    item = model.createIfcMappedItem(source, transform)
+    return [model.createIfcShapeRepresentation(body.ContextOfItems, "Body", "MappedRepresentation", [item])]
+
+
+def _verify_direct_body(door: Any, reference: Any) -> None:
+    bodies = _bodies(door)
+    source = _bodies(reference)[0]
+    if len(bodies) != 1 or len(bodies[0].Items) != 1:
+        raise ValueError("DOOR_INSTALLATION_BODY_MISMATCH")
+    item = bodies[0].Items[0]
+    if not item.is_a("IfcMappedItem"):
+        raise ValueError("DOOR_INSTALLATION_BODY_MISMATCH")
+    mapped = item.MappingSource.MappedRepresentation
+    if (mapped == source or mapped.ContextOfItems != source.ContextOfItems
+            or mapped.RepresentationIdentifier != source.RepresentationIdentifier
+            or mapped.RepresentationType != source.RepresentationType
+            or mapped.Items != source.Items or mapped.OfProductRepresentation
+            or len(mapped.RepresentationMap) != 1
+            or not np.allclose(ifcopenshell.util.placement.get_mappeditem_transformation(item),
+                               np.eye(4), rtol=0., atol=1e-9)):
+        raise ValueError("DOOR_INSTALLATION_BODY_MISMATCH")
+
+
+def _public_frame_wall_face(reference: Any, opening: Any, wall: Any) -> dict[str, Any]:
+    """Identify a wall face from one full nominal-size frame Brep, not hardware."""
+    settings = ifcopenshell.geom.settings()
+    width = _millimetres(reference, float(reference.OverallWidth))
+    height = _millimetres(reference, float(reference.OverallHeight))
+    frames = []
+    relative = _relative_placement(reference, opening)
+    for item in _bodies(reference)[0].Items:
+        shape = ifcopenshell.geom.create_shape(settings, item)
+        vertices = np.asarray(shape.verts, dtype=float).reshape(-1, 3) * 1000.
+        if not len(vertices) or not np.isfinite(vertices).all():
+            raise ValueError("DOOR_INSTALLATION_FRAME_GEOMETRY_INVALID")
+        extents = np.ptp(vertices, axis=0)
+        if abs(extents[0] - width) <= MAX_DIMENSION_DEVIATION_MM and abs(extents[2] - height) <= MAX_DIMENSION_DEVIATION_MM:
+            points = vertices @ relative[:3, :3].T + relative[:3, 3] * _millimetres_per_project_unit(reference)
+            frames.append((item.id(), [float(points[:, 1].min()), float(points[:, 1].max())]))
+    if len(frames) != 1:
+        raise ValueError("DOOR_INSTALLATION_FRAME_WITNESS_AMBIGUOUS")
+    wall_y = product_geometry_bounds_in_host_mm(wall, opening)["y"]
+    item_id, frame_y = frames[0]
+    matches = [index for index, face in enumerate(wall_y)
+               if min(abs(face - edge) for edge in frame_y) <= MAX_DIMENSION_DEVIATION_MM]
+    if len(matches) != 1:
+        raise ValueError("DOOR_INSTALLATION_WALL_FACE_AMBIGUOUS")
+    face = float(wall_y[matches[0]])
+    body_y = product_geometry_bounds_in_host_mm(reference, opening)["y"]
+    return {"frame_item_id": item_id, "side": -1 if matches[0] == 0 else 1,
+            "body_center_offset_mm": round(_center(body_y) - face, 6),
+            "frame_bounds_from_face_mm": [round(value - face, 6) for value in frame_y]}
 
 
 def _unique_installation_host(opening: Any) -> Any:
@@ -101,9 +234,20 @@ def _mapped_body_signature(product: Any, style: Any) -> list[dict[str, Any]]:
 
 
 def validate_door_installation_target(opening: Any, anchor: Mapping[str, Any]) -> None:
-    """No implicit wall-face/thickness adaptation has been authorized here."""
+    """Validate exact installation or the explicitly authorized frame face."""
     wall = _unique_installation_host(opening)
     depth = _extent(product_geometry_bounds_in_host_mm(opening, opening)["y"])
+    if anchor.get("wall_face_adaptation_authorized"):
+        thickness = float(wall_dimensions_mm(wall)["thickness"])
+        wall_y = product_geometry_bounds_in_host_mm(wall, opening)["y"]
+        face = float(wall_y[0 if anchor["wall_face"]["side"] < 0 else 1])
+        frame_y = [face + value for value in anchor["wall_face"]["frame_bounds_from_face_mm"]]
+        if (not anchor.get("direct_body") or abs(depth - thickness) > MAX_DIMENSION_DEVIATION_MM
+                or abs(_opening_normal_offset_in_wall(opening, wall)) > MAX_DIMENSION_DEVIATION_MM
+                or frame_y[0] < wall_y[0] - MAX_DIMENSION_DEVIATION_MM
+                or frame_y[1] > wall_y[1] + MAX_DIMENSION_DEVIATION_MM):
+            raise ValueError("DOOR_INSTALLATION_WALL_FACE_ADAPTATION_UNSUPPORTED")
+        return
     if (abs(depth - float(anchor["opening_depth_mm"])) > MAX_DIMENSION_DEVIATION_MM
             or abs(float(wall_dimensions_mm(wall)["thickness"]) - float(anchor["wall_thickness_mm"])) > MAX_DIMENSION_DEVIATION_MM):
         raise ValueError("DOOR_INSTALLATION_THICKNESS_ADAPTATION_UNSUPPORTED")
@@ -121,12 +265,15 @@ def _verified_installation_anchor(door: Any, opening: Any,
                                   anchor: Mapping[str, Any]) -> Mapping[str, Any]:
     try:
         reference = door.file.by_guid(str(anchor["reference_global_id"]))
-        measured = public_door_installation_anchor(reference)
+        measured = public_door_installation_anchor(reference,
+            allow_wall_face_adaptation=anchor.get("wall_face_adaptation_authorized") is True)
         if dict(anchor) != measured:
             raise ValueError("DOOR_INSTALLATION_ANCHOR_MISMATCH")
         validate_door_installation_target(opening, measured)
         style = door.file.by_guid(str(measured["type_global_id"]))
-        if _mapped_body_signature(door, style) != measured["mapped_body"]:
+        if measured.get("direct_body"):
+            _verify_direct_body(door, reference)
+        elif _mapped_body_signature(door, style) != measured["mapped_body"]:
             raise ValueError("DOOR_INSTALLATION_MAPPING_MISMATCH")
         if any(abs(_millimetres(door, float(getattr(door, attr))) - measured[key])
                > MAX_DIMENSION_DEVIATION_MM
@@ -135,6 +282,18 @@ def _verified_installation_anchor(door: Any, opening: Any,
         return measured
     except (KeyError, RuntimeError, TypeError, AttributeError) as error:
         raise ValueError("DOOR_INSTALLATION_ANCHOR_UNAVAILABLE") from error
+
+
+def _expected_normal_offset(opening: Any, anchor: Mapping[str, Any] | None) -> float:
+    if anchor is None:
+        return 0.0
+    if anchor.get("wall_face_adaptation_authorized"):
+        wall = _unique_installation_host(opening)
+        wall_y = product_geometry_bounds_in_host_mm(wall, opening)["y"]
+        face = float(wall_y[0 if anchor["wall_face"]["side"] < 0 else 1])
+        opening_y = product_geometry_bounds_in_host_mm(opening, opening)["y"]
+        return face + float(anchor["wall_face"]["body_center_offset_mm"]) - _center(opening_y)
+    return float(anchor["normal_center_offset_mm"])
 
 
 def select_door_placement_in_opening(
@@ -156,12 +315,13 @@ def select_door_placement_in_opening(
     height_mm = _millimetres(door, float(door.OverallHeight))
     anchor = (_verified_installation_anchor(door, opening, installation_anchor)
               if installation_anchor is not None else None)
-    expected_normal_offset = float(anchor["normal_center_offset_mm"]) if anchor else 0.0
+    expected_normal_offset = _expected_normal_offset(opening, anchor)
+    expected_base_offset = float(anchor["base_offset_from_opening_mm"]) if anchor else 0.0
     candidates = []
     for sign in ((float(anchor["axis_sign"]),) if anchor else (1.0, -1.0)):
         rotated_center_y = sign * _center(local_bounds["y"])
         location_y = opening_center_y + expected_normal_offset - rotated_center_y
-        location_z = opening_bounds["z"][0] - local_bounds["z"][0]
+        location_z = opening_bounds["z"][0] + expected_base_offset - local_bounds["z"][0]
         nominal_edge_x = (
             opening_bounds["x"][0]
             if sign > 0
@@ -191,6 +351,7 @@ def select_door_placement_in_opening(
                 nominal_bounds=nominal_bounds,
                 axis_deviation_degrees=0.0,
                 expected_normal_offset_mm=expected_normal_offset,
+                expected_base_offset_mm=expected_base_offset,
             )
             candidates.append(
                 {
@@ -260,7 +421,8 @@ def measure_door_opening_alignment(
         opening_bounds=opening_bounds,
         nominal_bounds=nominal_bounds,
         axis_deviation_degrees=axis_deviation,
-        expected_normal_offset_mm=float(anchor["normal_center_offset_mm"]) if anchor else 0.0,
+        expected_normal_offset_mm=_expected_normal_offset(opening, anchor),
+        expected_base_offset_mm=float(anchor["base_offset_from_opening_mm"]) if anchor else 0.0,
     )
 
 
@@ -271,6 +433,7 @@ def _alignment_diagnostics(
     nominal_bounds: Mapping[str, list[float]],
     axis_deviation_degrees: float,
     expected_normal_offset_mm: float = 0.0,
+    expected_base_offset_mm: float = 0.0,
 ) -> dict[str, Any]:
     intersection_x = _intersection_length(
         door_bounds["x"], opening_bounds["x"]
@@ -319,11 +482,14 @@ def _alignment_diagnostics(
         _center(door_bounds["y"]) - _center(opening_bounds["y"])
         - expected_normal_offset_mm
     )
+    base_installation_deviation = abs(
+        float(door_bounds["z"][0]) - float(opening_bounds["z"][0]) - expected_base_offset_mm
+    )
     geometry_placement_excess = max(
         0.0,
         geometry_center_by_axis["x"] - MAX_CENTER_DEVIATION_MM,
         normal_installation_deviation - MAX_CENTER_DEVIATION_MM,
-        geometry_base_deviation - MAX_CENTER_DEVIATION_MM,
+        base_installation_deviation - MAX_CENTER_DEVIATION_MM,
     )
     width_deviation = abs(
         _extent(nominal_bounds["x"]) - _extent(opening_bounds["x"])
@@ -358,6 +524,8 @@ def _alignment_diagnostics(
         ),
         "expected_normal_offset_mm": round(expected_normal_offset_mm, 6),
         "normal_installation_deviation_mm": round(normal_installation_deviation, 6),
+        "expected_base_offset_mm": round(expected_base_offset_mm, 6),
+        "base_installation_deviation_mm": round(base_installation_deviation, 6),
         "geometry_placement_excess_mm": round(
             geometry_placement_excess, 6
         ),

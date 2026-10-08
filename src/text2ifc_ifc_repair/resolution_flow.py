@@ -304,37 +304,50 @@ def resolve_repair_intent(
         # this internal canonical field. Provider parameters cannot supply it.
         installation = (installation_references or {}).get(operation.operation_id)
         if installation is not None:
-            from .door_geometry import public_door_installation_anchor, validate_door_installation_target
+            from .door_geometry import (
+                public_door_installation_anchor, validate_door_installation_target, has_direct_door_brep,
+            )
+            from .window_geometry import public_window_installation_anchor
+            is_window = operation.operation_type == "add_window_with_opening_to_wall"
+            prefix = "WINDOW" if is_window else "DOOR"
             try:
-                if (operation.operation_type not in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall"}
+                if (operation.operation_type not in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall", "add_window_with_opening_to_wall"}
                         or installation["target_global_id"] != record.ifc_global_id
                         or source_ifc_path is None):
-                    raise ValueError("DOOR_INSTALLATION_BINDING_MISMATCH")
+                    raise ValueError(f"{prefix}_INSTALLATION_BINDING_MISMATCH")
                 source_bytes = Path(source_ifc_path).read_bytes()
                 if hashlib.sha256(source_bytes).hexdigest() != expected_source_sha256.removeprefix("sha256:"):
-                    raise ValueError("DOOR_INSTALLATION_SOURCE_MISMATCH")
+                    raise ValueError(f"{prefix}_INSTALLATION_SOURCE_MISMATCH")
                 public_model = ifcopenshell.file.from_string(source_bytes.decode("utf-8"))
                 reference = public_model.by_guid(str(installation["reference_global_id"]))
-                if not reference.is_a("IfcDoor"):
-                    raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
+                if not reference.is_a("IfcWindow" if is_window else "IfcDoor"):
+                    raise ValueError(f"{prefix}_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
                 reference_types = [relation.RelatingType for relation in reference.IsDefinedBy
                                    if relation.is_a("IfcRelDefinesByType")]
-                if len(reference_types) != 1 or not reference_types[0].is_a("IfcDoorStyle"):
-                    raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
+                if len(reference_types) != 1 or not reference_types[0].is_a("IfcWindowStyle" if is_window else "IfcDoorStyle"):
+                    raise ValueError(f"{prefix}_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
                 prototype = operation.to_dict().get("prototype_intent") or {}
                 if (prototype.get("reference_kind") != "global_id"
                         or prototype.get("reference") != str(reference_types[0].GlobalId)):
-                    raise ValueError("DOOR_INSTALLATION_REFERENCE_TYPE_MISMATCH")
-                # The installation witness applies only to geometry reused from
-                # Type maps. A mapless Type keeps the existing simple-geometry
-                # creator; it does not imply cloning the reference occurrence.
-                # A mapped Type must still pass every anchor check, without a
-                # catch-and-fallback for malformed or incompatible geometry.
-                if reference_types[0].RepresentationMaps:
-                    anchor = public_door_installation_anchor(reference)
+                    raise ValueError(f"{prefix}_INSTALLATION_REFERENCE_TYPE_MISMATCH")
+                # Exact direct Brep geometry can be reused from this offered
+                # Door occurrence even when its Type has no maps. Other legacy
+                # mapless representations retain the old rectangle creator.
+                # A mapped Type never falls back after an invalid witness.
+                if reference_types[0].RepresentationMaps or (not is_window and has_direct_door_brep(reference)):
+                    anchor = public_window_installation_anchor(reference) if is_window else public_door_installation_anchor(reference,
+                        allow_wall_face_adaptation=(not reference_types[0].RepresentationMaps
+                            and installation.get("wall_face_adaptation_authorized") is True))
                     if operation.operation_type == "fill_existing_opening_with_door":
                         validate_door_installation_target(public_model.by_guid(record.ifc_global_id), anchor)
-                    resolved_parameters = {**resolved_parameters, "door_installation_anchor": anchor}
+                    if is_window:
+                        # Keep the released Window intent/parameter schemas
+                        # unchanged. The exact reference is trusted canonical
+                        # evidence, echoed unchanged by the draft and binder.
+                        context = {**context, "window_installation_anchor": anchor}
+                        evidence = (*evidence, f"public-window-installation/0.1:{anchor['reference_global_id']}")
+                    else:
+                        resolved_parameters = {**resolved_parameters, "door_installation_anchor": anchor}
             except (ValueError, RuntimeError, KeyError, TypeError, AttributeError) as error:
                 return _failure(intent, str(error), operation_id=operation.operation_id,
                                 operations=completed, source_sha=expected_source_sha256)

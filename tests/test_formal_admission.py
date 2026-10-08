@@ -331,3 +331,32 @@ def test_revision_family_keeps_honest_capture_but_ignores_other_registered_owner
     sources[shared]='changed shared dependency'
     with pytest.raises(ValueError,match='REVISION_GREEN_SOURCE_STALE'):
         m.validate_revision_suite(path,phase='green')
+# A B-only installation seam must not admit unrelated A/C/D changes.
+def test_b_installation_seam_rejects_unrelated_families():
+    m=module()
+    with pytest.raises(ValueError, match='REVISION_B_INSTALLATION_SCOPE_REQUIRED'):
+        m.validate_revision_seams({'schema_version':'repair-comparison-b-installation-native-seams/0.1',
+            'real_models_called':False}, current_bindings={'images':{}}, families={'B','D'})
+
+
+def test_b_installation_seam_requires_current_sources(monkeypatch):
+    m=module()
+    monkeypatch.setattr(m,'capture_sources',lambda scope:{'source':'current'})
+    with pytest.raises(ValueError,match='REVISION_NATIVE_BINDING_STALE'):
+        m.validate_revision_seams({'schema_version':'repair-comparison-b-installation-native-seams/0.1',
+            'real_models_called':False,'source_bindings':{},'images':{}},
+            current_bindings={'images':{}},families={'B','admission'})
+
+
+@pytest.mark.parametrize('alteration',['missing','wrong_status','duplicate'])
+def test_b_installation_seam_requires_all_distinct_scenarios(alteration):
+    m=module()
+    rows=[('complete','submitted'),('confirmation','submitted'),('incompatible','no_output'),
+          ('cohort','submitted'),('door-base','submitted'),
+          ('door-direct','submitted'),('door-direct-denied','no_output')]
+    m.require_b_installation_scenarios(rows)
+    if alteration=='missing': rows.pop()
+    elif alteration=='wrong_status': rows[2]=('incompatible','submitted')
+    else: rows.append(rows[0])
+    with pytest.raises(ValueError,match='REVISION_B_INSTALLATION_SCENARIOS_REQUIRED'):
+        m.require_b_installation_scenarios(rows)

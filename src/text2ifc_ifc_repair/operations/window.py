@@ -22,6 +22,7 @@ from text2ifc_ifc_repair.geometry import (
     product_geometry_bounds_in_host_mm,
     straight_wall_axis,
     wall_dimensions_mm,
+    wall_normal_center_offset_mm,
 )
 from text2ifc_ifc_repair.evaluation_policy import (
     ComparisonRule,
@@ -36,6 +37,8 @@ from text2ifc_ifc_repair.type_templates import ensure_bound_type
 from text2ifc_presentation import apply_repair_appearance_on_occurrence
 from text2ifc_ifc_repair.window_geometry import (
     select_window_placement_in_opening,
+    public_window_installation_anchor,
+    measure_window_installation,
 )
 from text2ifc_ifc_repair.operations.hosted_opening import (
     body_context as hosted_body_context,
@@ -686,6 +689,54 @@ def _clean_numbers(values: Mapping[str, float]) -> dict[str, float]:
     return {key: round(float(value), 6) for key, value in values.items()}
 
 
+def _nominal_window_dimensions_mm(operation: Mapping[str, Any]) -> dict[str, float]:
+    """Nominal occurrence dimensions have their own bound semantic authority.
+
+    Legacy operations without assignments retain the historical opening-size
+    default. Dimension assignments are normalized to mm, including unit=None;
+    never infer them from the mapped body's frame/board bounding box.
+    """
+    opening = operation["parameters"]["opening"]
+    result = {"width": float(opening["width_mm"]), "height": float(opening["height_mm"])}
+    for key, attribute in (("width", "OverallWidth"), ("height", "OverallHeight")):
+        values = []
+        for assignment in operation.get("semantic_assignments", ()):
+            if (assignment.get("fact_key") != f"attribute:{attribute}"
+                    or assignment.get("authoring_action") != "set_attribute"
+                    or assignment.get("ownership") == "type_inherited"):
+                continue
+            unit = assignment.get("unit")
+            unit = None if unit is None else str(unit).strip().casefold()
+            factor = {None: 1., "mm": 1., "m": 1000., "cm": 10.}.get(unit)
+            if factor is None:
+                raise ValueError("WINDOW_NOMINAL_DIMENSION_UNIT_UNSUPPORTED")
+            value = float(assignment["value"]) * factor
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError("WINDOW_NOMINAL_DIMENSION_INVALID")
+            values.append(value)
+        if values:
+            if len(set(values)) != 1:
+                raise ValueError("WINDOW_NOMINAL_DIMENSION_AUTHORITY_AMBIGUOUS")
+            result[key] = values[0]
+    return result
+
+
+def _public_installation_anchor(operation: Mapping[str, Any], model: Any) -> Mapping[str, Any] | None:
+    """Read a bound evidence identity and remeasure it in the public model.
+
+    The scene/resolution stage alone adds this versioned evidence reference;
+    the Stage 2 draft cannot add, remove or change an authority evidence ref.
+    No new model-authored parameter or released schema field is introduced.
+    """
+    prefix = "public-window-installation/0.1:"
+    references = [ref[len(prefix):] for ref in operation.get("evidence_refs", ()) if ref.startswith(prefix)]
+    if not references:
+        return None
+    if len(references) != 1 or not references[0]:
+        raise ValueError("WINDOW_INSTALLATION_BINDING_AMBIGUOUS")
+    return public_window_installation_anchor(model.by_guid(references[0]))
+
+
 def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     """Create a deterministic Window-Opening-Wall chain incrementally."""
 
@@ -698,6 +749,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     center = float(parameters["position"]["center_offset_mm"])
     wall_dimensions = wall_dimensions_mm(wall)
     thickness = float(wall_dimensions["thickness"])
+    nominal = _nominal_window_dimensions_mm(operation)
     body_context = _body_context(model)
 
     ids = {
@@ -726,13 +778,14 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         ObjectType="Opening",
         Tag=str(operation["operation_id"]),
     )
+    normal_center = wall_normal_center_offset_mm(wall)
     opening_representation = ifcopenshell.api.geometry.add_wall_representation(
         model,
         context=body_context,
         length=width / 1000.0,
         height=height / 1000.0,
         thickness=thickness / 1000.0,
-        offset=-thickness / 2000.0,
+        offset=(normal_center - thickness / 2.0) / 1000.0,
     )
     opening.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=[opening_representation]
@@ -770,8 +823,8 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         Name=f"Text2IFC window {operation['operation_id']}",
         ObjectType=str(window_type.Name) if window_type is not None else "Text2IFC fixed window",
         Tag=str(operation["operation_id"]),
-        OverallHeight=millimetres_to_project_units(model, height),
-        OverallWidth=millimetres_to_project_units(model, width),
+        OverallHeight=millimetres_to_project_units(model, nominal["height"]),
+        OverallWidth=millimetres_to_project_units(model, nominal["width"]),
     )
     if window_type is not None and window_type.RepresentationMaps:
         mapped_representations = [
@@ -790,7 +843,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
             length=width / 1000.0,
             height=height / 1000.0,
             thickness=thickness / 1000.0,
-            offset=-thickness / 2000.0,
+            offset=(normal_center - thickness / 2.0) / 1000.0,
         )
         window.Representation = model.create_entity(
             "IfcProductDefinitionShape", Representations=[window_representation]
@@ -804,6 +857,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
             opening,
             window_type,
             host_wall=wall,
+            installation_anchor=_public_installation_anchor(operation, model),
         )
         window.ObjectPlacement = _local_placement(
             model,
@@ -945,6 +999,7 @@ def _postcondition_checker(
 
     parameters = operation["parameters"]
     requested_opening = parameters["opening"]
+    expected_nominal = _nominal_window_dimensions_mm(operation)
     dimensions = _clean_numbers(opening_dimensions_mm(opening))
     position = opening_position_in_wall_mm(opening, wall)
     voids_ok = (
@@ -976,15 +1031,15 @@ def _postcondition_checker(
             "/parameters/opening",
         ),
         (
-            "WINDOW_DIMENSIONS_MATCH_OPENING",
+            "WINDOW_NOMINAL_DIMENSIONS_MATCH_AUTHORITY",
             math.isclose(
                 project_units_to_millimetres(model, window.OverallWidth),
-                expected["width"],
+                expected_nominal["width"],
                 abs_tol=1e-4,
             )
             and math.isclose(
                 project_units_to_millimetres(model, window.OverallHeight),
-                expected["height"],
+                expected_nominal["height"],
                 abs_tol=1e-4,
             ),
             "/parameters/window",
@@ -1005,6 +1060,7 @@ def _postcondition_checker(
             "window_global_id": str(window.GlobalId),
             "measured": facts,
             "expected": expected,
+            "expected_nominal_dimensions_mm": expected_nominal,
         },
     }
 
@@ -1150,15 +1206,16 @@ def _measure_comparison_adapter(
         <= 2.0 * linear_tolerance
         for axis in ("x", "z")
     )
+    nominal_dimensions = _nominal_window_dimensions_mm(operation)
     window_nominal_dimensions_match = (
         math.isclose(
             project_units_to_millimetres(after_model, window.OverallWidth),
-            expected_width,
+            nominal_dimensions["width"],
             abs_tol=linear_tolerance,
         )
         and math.isclose(
             project_units_to_millimetres(after_model, window.OverallHeight),
-            expected_height,
+            nominal_dimensions["height"],
             abs_tol=linear_tolerance,
         )
     )
@@ -1167,6 +1224,22 @@ def _measure_comparison_adapter(
         == "MappedRepresentation"
         for representation in getattr(window.Representation, "Representations", ())
     )
+    installation_anchor = _public_installation_anchor(operation, before_model)
+    installation = None
+    if installation_anchor is not None:
+        # The witness comes from the immutable public before-model. Recheck
+        # the after-model's reference, Type, map and pose independently too.
+        installation = measure_window_installation(window, opening, installation_anchor)
+    if installation is not None:
+        window_geometry_fits = bool(installation["valid"]) and window_nominal_dimensions_match
+    else:
+        window_geometry_fits = (
+            window_geometry_contained and window_depth_aligned
+            and (window_geometry_matches_opening_edges or (
+                uses_mapped_representation and window_geometry_centered
+                and window_nominal_dimensions_match
+            ))
+        )
     wall_storeys = {
         str(relation.RelatingStructure.GlobalId)
         for relation in wall_after.ContainedInStructure
@@ -1196,18 +1269,7 @@ def _measure_comparison_adapter(
         "correct_host_wall": voids_correct,
         "opening_voids_wall": voids_correct,
         "window_fills_opening": fills_correct,
-        "window_geometry_fits_opening": (
-            window_geometry_contained
-            and window_depth_aligned
-            and (
-                window_geometry_matches_opening_edges
-                or (
-                    uses_mapped_representation
-                    and window_geometry_centered
-                    and window_nominal_dimensions_match
-                )
-            )
-        ),
+        "window_geometry_fits_opening": window_geometry_fits,
         "storey_consistent": bool(wall_storeys) and wall_storeys == window_storeys,
         "linear_geometry_within_tolerance": max(
             center_error, sill_error, width_error, height_error, depth_error
@@ -1225,6 +1287,7 @@ def _measure_comparison_adapter(
         "height_error_mm": round(height_error, 6),
         "depth_error_mm": round(depth_error, 6),
         "orientation_error_degrees": round(orientation_error, 6),
+        "window_installation": installation,
         "restored_void_volume_m3": round(restored_void_volume, 6),
         "expected_void_volume_m3": round(expected_void_volume, 6),
         "matching_chain_count": duplicate_count,

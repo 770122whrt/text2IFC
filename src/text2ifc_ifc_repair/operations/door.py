@@ -11,6 +11,7 @@ import ifcopenshell.api.geometry
 from text2ifc_ifc_repair.door_geometry import (
     measure_door_opening_alignment,
     select_door_placement_in_opening,
+    reuse_public_door_body,
 )
 from text2ifc_ifc_repair.door_resolution import (
     SUPPORTED_GENERATED_OPERATIONS,
@@ -539,7 +540,12 @@ def _create_door(
         OverallHeight=millimetres_to_project_units(model, height),
         OverallWidth=millimetres_to_project_units(model, width),
     )
-    if door_style is not None and door_style.RepresentationMaps:
+    installation_anchor = operation["parameters"].get("door_installation_anchor")
+    direct_body = bool(installation_anchor and installation_anchor.get("direct_body"))
+    if direct_body:
+        reference = require_guid(model, str(installation_anchor["reference_global_id"]), "IfcDoor")
+        representations = reuse_public_door_body(model, reference)
+    elif door_style is not None and door_style.RepresentationMaps:
         representations = [
             ifcopenshell.api.geometry.map_representation(
                 model,
@@ -561,7 +567,6 @@ def _create_door(
     door.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=representations
     )
-    installation_anchor = operation["parameters"].get("door_installation_anchor")
     if installation_anchor is not None and (
         door_style is None
         or str(door_style.GlobalId) != installation_anchor.get("type_global_id")
@@ -618,14 +623,17 @@ def _create_door(
             "global_id": str(containment.GlobalId),
         }
     )
-    appearance_result = apply_repair_appearance_on_occurrence(
-        model,
-        type_object=door_style,
-        occurrence=door,
-        explicit_appearance=(
-            None if operation.get("appearance") is None else dict(operation["appearance"])
-        ),
-    )
+    if direct_body and operation.get("appearance") is None:
+        appearance_result = {
+            "applied": False, "preserved": True, "source": "verified_public_occurrence_body",
+        }
+    else:
+        appearance_result = apply_repair_appearance_on_occurrence(
+            model, type_object=door_style, occurrence=door,
+            explicit_appearance=(
+                None if operation.get("appearance") is None else dict(operation["appearance"])
+            ),
+        )
     created = [
         *(
             [

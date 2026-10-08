@@ -130,17 +130,20 @@ def generate_scene_repair_intent(*, provider: Any, request_id: str, repair_reque
                 "schema_version": SCENE_GROUNDING_VERSION, "derivations": derivations,
                 "offered_ids": sorted(scene.offered_ids), "scene_question": question}))
             result["scene_grounding_version"] = SCENE_GROUNDING_VERSION
+            from .door_geometry import public_wall_face_adaptation_requested
+            wall_face_permission = public_wall_face_adaptation_requested(repair_request)
             # Trusted internal metadata, produced only after offered-identity
             # and reference/type verification. Never accept this from Stage 2.
             result["installation_references"] = {
                 item["operation_id"]: {
                     "reference_global_id": item["reference_occurrence_id"],
                     "target_global_id": item["target_id"],
+                    **({"wall_face_adaptation_authorized": True} if wall_face_permission else {}),
                 }
                 for item in derivations
                 if item.get("reference_occurrence_id") and any(
                     op.operation_id == item["operation_id"]
-                    and op.operation_type in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall"}
+                    and op.operation_type in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall", "add_window_with_opening_to_wall"}
                     for op in final_intent.operations
                 )
             }

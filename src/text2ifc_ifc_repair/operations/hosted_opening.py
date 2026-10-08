@@ -18,6 +18,7 @@ from text2ifc_ifc_repair.geometry import (
     opening_position_in_wall_mm,
     straight_wall_axis,
     wall_dimensions_mm,
+    wall_normal_center_offset_mm,
 )
 from text2ifc_ifc_repair.registry import OperationRegistryError
 from text2ifc_ifc_repair.spatial import resolve_opening_storey
@@ -226,6 +227,7 @@ def create_hosted_opening(
 ) -> dict[str, Any]:
     footprint = footprint_from_operation(operation)
     thickness = float(wall_dimensions_mm(wall)["thickness"])
+    normal_center = wall_normal_center_offset_mm(wall)
     prefix = f"{role_prefix}_" if role_prefix else ""
     opening_id = deterministic_global_id(operation, f"{prefix}opening")
     void_id = deterministic_global_id(operation, f"{prefix}voids_relationship")
@@ -244,7 +246,7 @@ def create_hosted_opening(
         length=footprint.width_mm / 1000.0,
         height=footprint.height_mm / 1000.0,
         thickness=thickness / 1000.0,
-        offset=-thickness / 2000.0,
+        offset=(normal_center - thickness / 2.0) / 1000.0,
     )
     opening.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=[representation]
