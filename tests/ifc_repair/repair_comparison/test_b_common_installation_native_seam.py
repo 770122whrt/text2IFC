@@ -253,6 +253,26 @@ def test_b_common_installation_real_linux_public_cli(tmp_path):
         direct_target = None
         if case == 'door-direct':
             direct_target = _direct_addition_binding(model, opening, unit)
+            # Legal authoring labels are free text. The host Body is bound to
+            # Design, while other unused 3D roots belong to Outline and Sketch.
+            # The fixture helper's convenience Body subcontext must not mask
+            # the production dependency on a global Model label.
+            host = model.by_guid(direct_target['target_wall'])
+            host_context = next(r.ContextOfItems for r in host.Representation.Representations
+                                if r.RepresentationIdentifier == 'Body')
+            host_context.ContextType = 'Design'
+            host_context.ContextIdentifier = 'Plan'
+            for sub in list(model.by_type('IfcGeometricRepresentationSubContext')):
+                for inverse in model.get_inverse(sub):
+                    if inverse.is_a('IfcShapeRepresentation'):
+                        inverse.ContextOfItems = sub.ParentContext
+                model.remove(sub)
+            project = model.by_type('IfcProject')[0]
+            extra = []
+            for label in ('Outline', 'Sketch'):
+                extra.append(model.createIfcGeometricRepresentationContext(
+                    'Plan', label, 3, host_context.Precision, host_context.WorldCoordinateSystem, None))
+            project.RepresentationContexts = [*project.RepresentationContexts, *extra]
         source = folder / 'model.ifc'
         model.write(str(source))
         validation = native_validation(model)
@@ -379,6 +399,15 @@ def test_b_common_installation_real_linux_public_cli(tmp_path):
                                                      bindings[case]['reference_signature'])
                         assert_authored_installation(new[0], new[0].FillsVoids[0].RelatingOpeningElement, sign=-1., thickness=100.)
                         new_opening = new[0].FillsVoids[0].RelatingOpeningElement
+                        host = new_opening.VoidsElements[0].RelatingBuildingElement
+                        opening_body = next(rep for rep in new_opening.Representation.Representations
+                                            if rep.RepresentationIdentifier == 'Body')
+                        host_body = next(rep for rep in host.Representation.Representations
+                                         if rep.RepresentationIdentifier == 'Body')
+                        assert opening_body.ContextOfItems == host_body.ContextOfItems
+                        assert opening_body.ContextOfItems.ContextType == 'Design'
+                        assert opening_body.ContextOfItems.CoordinateSpaceDimension == 3
+                        row['host_body_context_preserved'] = True
                         # Independent authored public world coordinates; no G.
                         settings = ifcopenshell.geom.settings()
                         settings.set(settings.USE_WORLD_COORDS, True)

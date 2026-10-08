@@ -228,6 +228,7 @@ def create_hosted_opening(
     footprint = footprint_from_operation(operation)
     thickness = float(wall_dimensions_mm(wall)["thickness"])
     normal_center = wall_normal_center_offset_mm(wall)
+    context = body_context(model, product=wall)
     prefix = f"{role_prefix}_" if role_prefix else ""
     opening_id = deterministic_global_id(operation, f"{prefix}opening")
     void_id = deterministic_global_id(operation, f"{prefix}voids_relationship")
@@ -242,12 +243,13 @@ def create_hosted_opening(
     )
     representation = ifcopenshell.api.geometry.add_wall_representation(
         model,
-        context=body_context(model),
+        context=context,
         length=footprint.width_mm / 1000.0,
         height=footprint.height_mm / 1000.0,
         thickness=thickness / 1000.0,
         offset=(normal_center - thickness / 2.0) / 1000.0,
     )
+    representation.RepresentationIdentifier = "Body"
     opening.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=[representation]
     )
@@ -299,7 +301,39 @@ def assert_ids_available(model: Any, global_ids: Any) -> None:
             )
 
 
-def body_context(model: Any) -> Any:
+def body_context(model: Any, *, product: Any = None) -> Any:
+    if product is not None:
+        # Context labels are author-defined. Hosted geometry belongs to the
+        # selected public host's actual Body context, not the first globally
+        # named Model/Body context in STEP order.
+        representation = getattr(product, "Representation", None)
+        bodies = [
+            body
+            for body in getattr(representation, "Representations", ()) or ()
+            if getattr(body, "RepresentationIdentifier", None) == "Body"
+        ]
+        contexts = {}
+        for body in bodies:
+            context = getattr(body, "ContextOfItems", None)
+            if (
+                context is None
+                or not context.is_a("IfcGeometricRepresentationContext")
+                or int(getattr(context, "CoordinateSpaceDimension", 0) or 0) != 3
+            ):
+                raise OperationRegistryError(
+                    "BODY_CONTEXT_NOT_FOUND", "Selected host Body requires a 3D context"
+                )
+            contexts[context.id()] = context
+        if not contexts:
+            raise OperationRegistryError(
+                "BODY_CONTEXT_NOT_FOUND", "Selected host has no 3D Body context"
+            )
+        if len(contexts) != 1:
+            raise OperationRegistryError(
+                "BODY_CONTEXT_AMBIGUOUS", "Selected host Body has distinct contexts"
+            )
+        return next(iter(contexts.values()))
+
     preferred = [
         context
         for context in model.by_type("IfcGeometricRepresentationSubContext")

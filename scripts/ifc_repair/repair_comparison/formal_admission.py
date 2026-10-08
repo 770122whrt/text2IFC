@@ -80,6 +80,7 @@ REVISION_TESTS = {
     'tests/ifc_repair/test_door_direct_body_reference.py': {'B'},
     'tests/ifc_repair/test_door_resolution.py': {'B'},
     'tests/ifc_repair/test_hosted_opening_normal_origin.py': {'B'},
+    'tests/ifc_repair/test_host_body_context.py': {'B'},
     TESTS+'test_b_common_installation_native_seam.py': {'B'},
 }
 REVISION_NATIVE_TEST = TESTS+'test_formal_revision_seams.py'
