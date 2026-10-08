@@ -1,0 +1,692 @@
+{
+  "case_id": "formal-012",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evaluation_authority": {
+    "current_scorer": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\formal_scoring_v2.py",
+      "sha256": "aba73b9416a9dba2d82c36c4c5855bdb380f54599fda453ca47a68acd4ed9b8c"
+    },
+    "original_report": {
+      "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-live\\evaluation\\formal-012-C.json",
+      "sha256": "4ff0a897043561e181259f90af02d30e280142c0318ef750fa2f0f5d119efdf0"
+    },
+    "projection": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\preservation_v2.py",
+      "sha256": "0f951f98ad2d8783a1e141dc77dc49e23ca134d40eda51dca34c532b29064e99"
+    },
+    "role": "offline_same_frozen_output_rescore_no_model_calls",
+    "unaffected_checks": "Hash-bound original matching/geometry/relations/native-validation reused."
+  },
+  "evaluator_revision": {
+    "legacy_schema": "repair-comparison-formal-score/0.1",
+    "preservation": "repair-comparison-preservation/0.2",
+    "unchanged": [
+      "input",
+      "target matching",
+      "quantity",
+      "component checks",
+      "relationships",
+      "IFC validator",
+      "policy tolerances",
+      "clarification"
+    ]
+  },
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "checks_sha256": "63ca6e3153c15bb4125d51661430559bf6c8a9101506819c5ed71b71afa29977",
+    "damaged_sha256": "b4a1b87ee5184b6f5c23f62f1149eeb19528ccd1e10c68bdbb6237baccbaa7d9",
+    "result_sha256": "7a939b0a22e484e4a9ae9531a0f936fd03092ea6844e9886bb59de5d1aa48d6d",
+    "source_sha256": "489bacef494bb3921b5837a3070114da6c8a52f3704d29ba1f0062c285d6ef99",
+    "task_sha256": "747ba213ba26336a799dbc36cf2c780fe531aba0eeacccb2843c06f56102c39b"
+  },
+  "interaction_success": false,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 0,
+      "affected_root_ids": [],
+      "extra_products": false,
+      "preservation_pass": true,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 3,
+      "numerator": 3,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": false
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": false
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcWindow": 3
+      },
+      "credited_by_class": {
+        "IfcWindow": 3
+      },
+      "denominator": 3,
+      "excess_by_class": {
+        "IfcWindow": 0
+      },
+      "numerator": 3,
+      "required_by_class": {
+        "IfcWindow": 3
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 9,
+      "numerator": 9,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": false
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 6,
+    "diagnostics": [
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#128493=IfcShapeRepresentation(#117,'Body','Brep',(#128492))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #128497=IfcProductDefinitionShape($,$,(#128493))\n      2. #144092=IfcProductDefinitionShape($,$,(#128493))\n      3. #144104=IfcProductDefinitionShape($,$,(#128493))\n      4. #144116=IfcProductDefinitionShape($,$,(#128493))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#17670=IfcShapeRepresentation(#117,'Body','MappedRepresentation',(#17669))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #17672=IfcProductDefinitionShape($,$,(#17670))\n      2. #144096=IfcProductDefinitionShape($,$,(#17670))\n      3. #144108=IfcProductDefinitionShape($,$,(#17670))\n      4. #144120=IfcProductDefinitionShape($,$,(#17670))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#17684=IfcPropertySet('37_Z11fhT4euBBnmW2PHa4',#42,'Pset_QuantityTakeOff',$,(#17594))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #17689=IfcRelDefinesByProperties('2Wusym4MD8cvjVYJhwLugy',#42,$,$,(#17679),#17684)\n      2. #144099=IfcRelDefinesByProperties('3vMXkwsh18geMffdS640Xo',#42,$,$,(#144097),#17684)\n      3. #144111=IfcRelDefinesByProperties('1Y$ntOC_50dRS40kpCKa1j',#42,$,$,(#144109),#17684)\n      4. #144123=IfcRelDefinesByProperties('3tF19Ari16f8zwQIJy$dFr',#42,$,$,(#144121),#17684)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#17687=IfcPropertySet('2NQl_TsGPDPuZAXNacsKOP',#42,'Pset_WindowCommon',$,(#290,#17594,#17686))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #17693=IfcRelDefinesByProperties('1LB6Fy89vALQU0N0Kp$O75',#42,$,$,(#17679),#17687)\n      2. #144100=IfcRelDefinesByProperties('3sKq0kRGz0Jx1PZg9zGYSI',#42,$,$,(#144097),#17687)\n      3. #144112=IfcRelDefinesByProperties('0ickLEF$jCH9$1tdpEGXoV',#42,$,$,(#144109),#17687)\n      4. #144124=IfcRelDefinesByProperties('3ChfDrMhjC2B__fF_wNrmu',#42,$,$,(#144121),#17687)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#17670=IfcShapeRepresentation(#117,'Body','MappedRepresentation',(#17669))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((4 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 4 = sizeof((#17672=IfcProductDefinitionShape($,$,(#17670)), #144096=IfcProductDefinitionShape($,$,(#17670)), #144108=IfcProductDefinitionShape($,$,(#17670)), #144120=IfcProductDefinitionShape($,$,(#17670))))\n     +    where (#17672=IfcProductDefinitionShape($,$,(#17670)), #144096=IfcProductDefinitionShape($,$,(#17670)), #144108=IfcProductDefinitionShape($,$,(#17670)), #144120=IfcProductDefinitionShape($,$,(#17670))) = #17670=IfcShapeRepresentation(#117,'Body','MappedRepresentation',(#17669)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #17670=IfcShapeRepresentation(#117,'Body','MappedRepresentation',(#17669)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #17670=IfcShapeRepresentation(#117,'Body','MappedRepresentation',(#17669))\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#128493=IfcShapeRepresentation(#117,'Body','Brep',(#128492))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((4 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 4 = sizeof((#128497=IfcProductDefinitionShape($,$,(#128493)), #144092=IfcProductDefinitionShape($,$,(#128493)), #144104=IfcProductDefinitionShape($,$,(#128493)), #144116=IfcProductDefinitionShape($,$,(#128493))))\n     +    where (#128497=IfcProductDefinitionShape($,$,(#128493)), #144092=IfcProductDefinitionShape($,$,(#128493)), #144104=IfcProductDefinitionShape($,$,(#128493)), #144116=IfcProductDefinitionShape($,$,(#128493))) = #128493=IfcShapeRepresentation(#117,'Body','Brep',(#128492)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #128493=IfcShapeRepresentation(#117,'Body','Brep',(#128492)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #128493=IfcShapeRepresentation(#117,'Body','Brep',(#128492))\n"
+      }
+    ],
+    "express_rules": true,
+    "passed": false,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 1429.99999999999,
+        "host_guid": "3zC0_RcTX9P86epoParUZb",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -5.009950818367322,
+          14.480611055192911,
+          1.4414867017717419
+        ],
+        "opening_bottom_world_m": 0.732973403543487,
+        "opening_center_xy_m": [
+          -5.009950818367322,
+          14.480611055192911
+        ],
+        "opening_height_mm": 1417.0265964565099,
+        "opening_width_mm": 1299.9999999999998,
+        "reference_guid": "2NQl_TsGPDPuZAZeScsKOP",
+        "storey_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "width_mm": 1300.0
+      },
+      "target-2": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 1429.99999999999,
+        "host_guid": "3zC0_RcTX9P86epoParUZb",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -3.209950818367313,
+          14.480611055192906,
+          1.4414867017717419
+        ],
+        "opening_bottom_world_m": 0.732973403543487,
+        "opening_center_xy_m": [
+          -3.209950818367313,
+          14.480611055192906
+        ],
+        "opening_height_mm": 1417.0265964565099,
+        "opening_width_mm": 1299.9999999999998,
+        "reference_guid": "2NQl_TsGPDPuZAZeScsKOP",
+        "storey_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "width_mm": 1300.0
+      },
+      "target-3": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 1429.99999999999,
+        "host_guid": "3zC0_RcTX9P86epoParUZb",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -1.3599508183673232,
+          14.4806110551929,
+          1.4414867017717419
+        ],
+        "opening_bottom_world_m": 0.732973403543487,
+        "opening_center_xy_m": [
+          -1.3599508183673232,
+          14.4806110551929
+        ],
+        "opening_height_mm": 1417.0265964565099,
+        "opening_width_mm": 1300.0,
+        "reference_guid": "2NQl_TsGPDPuZAZeScsKOP",
+        "storey_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "width_mm": 1300.0
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": true,
+    "projection_version": "repair-comparison-preservation/0.2",
+    "removed_roots": [],
+    "scope": "unchanged existing roots after shallow new-product/relationship projection; no host waiver; same occurrence-support rule; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 3,
+    "required": 3
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "2_bIEsb115Of$zOb$8D5lR",
+          "relation_guid": "3DDmgkatD2c8n8MRUSI8fq"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2_bIEsb115Of$zOb$8D5lR",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3zC0_RcTX9P86epoParUZb",
+          "relation_guid": "1dpi_R1Hb7ZuPPMS1OqhMa"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3zC0_RcTX9P86epoParUZb",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+          "relation_guid": "2Ps44h3395Peo5JgAi7kY5"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3u3Fe0DIP4uQXQ28_KU6Ue",
+          "relation_guid": "2v7m8g10L7fABLS$Hm9gp3"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3u3Fe0DIP4uQXQ28_KU6Ue",
+      "extra_invalid": [],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3zC0_RcTX9P86epoParUZb",
+          "relation_guid": "0bn0jZYz11LPhXBzLxyl90"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3zC0_RcTX9P86epoParUZb",
+      "extra_invalid": [],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+          "relation_guid": "2Ps44h3395Peo5JgAi7kY5"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+      "extra_invalid": [],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "07LbRzeif8awqiWyZdAnLz",
+          "relation_guid": "3PRohNyT1EzBgGzwnHW8Os"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "07LbRzeif8awqiWyZdAnLz",
+      "extra_invalid": [],
+      "id": "target-3.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-3"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3zC0_RcTX9P86epoParUZb",
+          "relation_guid": "3ilpU3yE9Cwggs7FzI1VnC"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3zC0_RcTX9P86epoParUZb",
+      "extra_invalid": [],
+      "id": "target-3.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-3"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+          "relation_guid": "2Ps44h3395Peo5JgAi7kY5"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+      "extra_invalid": [],
+      "id": "target-3.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-3"
+    }
+  ],
+  "relations": {
+    "correct": 9,
+    "required": 9
+  },
+  "repair_success": false,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.2",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 1429.99999999999,
+        "host_guid": "3zC0_RcTX9P86epoParUZb",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -5.009950818367322,
+          14.480611055192911,
+          1.4414867017717419
+        ],
+        "opening_bottom_world_m": 0.732973403543487,
+        "opening_center_xy_m": [
+          -5.009950818367322,
+          14.480611055192911
+        ],
+        "opening_height_mm": 1417.0265964565099,
+        "opening_width_mm": 1299.9999999999998,
+        "reference_guid": "2NQl_TsGPDPuZAZeScsKOP",
+        "storey_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "width_mm": 1300.0
+      },
+      "matching": {
+        "candidates": [
+          "1a_o2ZpwLA$g3drTmIDQSO"
+        ],
+        "distances_m": [
+          0.01639611587313161
+        ],
+        "guid": "1a_o2ZpwLA$g3drTmIDQSO",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "2_bIEsb115Of$zOb$8D5lR"
+        ],
+        "distances_m": [
+          0.006486701771740044
+        ],
+        "guid": "2_bIEsb115Of$zOb$8D5lR",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 1299.9999999999998,
+        "required_mm": 1299.9999999999998,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "allowed_offsets_world_m": [
+          [
+            0.0,
+            -0.009016964614950496,
+            0.01639611587313161
+          ]
+        ],
+        "max_axis_errors_m": [
+          0.0
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    },
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 1429.99999999999,
+        "host_guid": "3zC0_RcTX9P86epoParUZb",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -3.209950818367313,
+          14.480611055192906,
+          1.4414867017717419
+        ],
+        "opening_bottom_world_m": 0.732973403543487,
+        "opening_center_xy_m": [
+          -3.209950818367313,
+          14.480611055192906
+        ],
+        "opening_height_mm": 1417.0265964565099,
+        "opening_width_mm": 1299.9999999999998,
+        "reference_guid": "2NQl_TsGPDPuZAZeScsKOP",
+        "storey_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "width_mm": 1300.0
+      },
+      "matching": {
+        "candidates": [
+          "3jMG4Oz3nFu9JWARMLB5Tw"
+        ],
+        "distances_m": [
+          0.01639611587313161
+        ],
+        "guid": "3jMG4Oz3nFu9JWARMLB5Tw",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "3u3Fe0DIP4uQXQ28_KU6Ue"
+        ],
+        "distances_m": [
+          0.006486701771740044
+        ],
+        "guid": "3u3Fe0DIP4uQXQ28_KU6Ue",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 1299.9999999999998,
+        "required_mm": 1299.9999999999998,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "allowed_offsets_world_m": [
+          [
+            0.0,
+            -0.009016964614950496,
+            0.01639611587313161
+          ]
+        ],
+        "max_axis_errors_m": [
+          0.0
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-2"
+    },
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 1429.99999999999,
+        "host_guid": "3zC0_RcTX9P86epoParUZb",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -1.3599508183673232,
+          14.4806110551929,
+          1.4414867017717419
+        ],
+        "opening_bottom_world_m": 0.732973403543487,
+        "opening_center_xy_m": [
+          -1.3599508183673232,
+          14.4806110551929
+        ],
+        "opening_height_mm": 1417.0265964565099,
+        "opening_width_mm": 1300.0,
+        "reference_guid": "2NQl_TsGPDPuZAZeScsKOP",
+        "storey_guid": "2Cskvgu1zA8QoPJG7TqS3n",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "width_mm": 1300.0
+      },
+      "matching": {
+        "candidates": [
+          "2WQx9lbnn6RAiijUzvgfo4"
+        ],
+        "distances_m": [
+          0.01639611587313161
+        ],
+        "guid": "2WQx9lbnn6RAiijUzvgfo4",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "07LbRzeif8awqiWyZdAnLz"
+        ],
+        "distances_m": [
+          0.006486701771740044
+        ],
+        "guid": "07LbRzeif8awqiWyZdAnLz",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 1300.0,
+        "required_mm": 1300.0,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          0.0,
+          -0.009016964614950496,
+          0.01639611587313161
+        ],
+        "allowed_offsets_world_m": [
+          [
+            0.0,
+            -0.009016964614950496,
+            0.01639611587313161
+          ]
+        ],
+        "max_axis_errors_m": [
+          0.0
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-3"
+    }
+  ],
+  "terminal": "submitted"
+}

@@ -16,7 +16,7 @@ progress:
 
 ## 当前工作：B 共性修复与原001～010开发复验（2026-10-08，无 Goal）
 
-本轮不开启Goal，B Harness共性修复与原formal-001～010的两批独立开发复验已完成。原四组批次停在63/80终态，17项未开始，原服务停止；B原严格成绩5/16，已知累计42,751,820 token，另2次调用用量未知。首轮开发复验001～004严格通过，005上下文缺陷已最小修复并经原响应离线重放验证补全；原失败及评估侧共享几何保全误报分别保留，离线重放不计为真实通过。准入06、本地提交8ba6946c、25项上下文家族、88项相关回归及7项真实Docker假模型测试通过。下一批006、008、009、010严格通过；007跨层高度换算被重叠检查拒绝，未写入错误窗，按用户要求保留。该批23次真实调用、399,875已知token、未知用量0，服务停止且无活动任务或在途调用，两个父账本保持不变。旧尝试、请求、预算及评分条件不覆盖，具体证据与最终状态维护在[B修复报告](../docs/validation/repair-comparison/b-common-repair.md)。原Phase、R1和已接受Proof状态保持。
+本轮不开启Goal。B共性修复后的formal-001～010最新真实复测严格通过9/10，005已新会话真实通过，007跨层高度错误被检查拒绝并按用户意见保留失败。共48次真实调用、852,676已知token、未知用量0。唯一[当前实验表](../dataset/processed/experiments/repair-comparison/current/README.md)与[历史备份](../dataset/processed/experiments/repair-comparison/history/README.md)分开，原四组63个终态和旧005失败保留。评分器共享几何保全误报通过版本0.2最小修正，20项家族和13项评分回归通过，基线/当前同版重算、原报告不覆盖、无额外模型调用。所有服务停止，源和父账本保持。后十题按当前Pipeline支持范围重制损坏输入、请求和REVIEW，用户先在查看器检查，通过后再实验；不恢复旧批次剩余槽位。实现与边界见[B修复报告](../docs/validation/repair-comparison/b-common-repair.md)和[后十题设计](../docs/validation/repair-comparison/next-ten-design.md)。原Phase、R1和已接受Proof状态不变。
 
 ### 此前二十题四组批次的历史检查点
 

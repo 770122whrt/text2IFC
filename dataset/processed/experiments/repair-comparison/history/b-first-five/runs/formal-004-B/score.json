@@ -1,0 +1,302 @@
+{
+  "case_id": "formal-004",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "checks_sha256": "9ee087324df3d40b6dabaf4c4f80c344624aa9db88da11f71d272fe714bc7c8f",
+    "damaged_sha256": "3b77738f587625d270916493083d666cf39aaf07ba06c513e714b2eecc12e718",
+    "result_sha256": "cbbf2da78164307e55fb9c9a6b165e64c4686b059c8e37636209d96f88998747",
+    "source_sha256": "92fb11c05b1adae85a683b54a5de6d594af62ce8f4ff95d08c2f4d3f05b8df67",
+    "task_sha256": "c4e411cb72b6a93bfa3d18196a69233d3c4e9b2c2fbd053c72554b361cdc97c5"
+  },
+  "interaction_success": true,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 0,
+      "affected_root_ids": [],
+      "extra_products": false,
+      "preservation_pass": true,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 1,
+      "numerator": 1,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": true
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": true
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcWindow": 1
+      },
+      "credited_by_class": {
+        "IfcWindow": 1
+      },
+      "denominator": 1,
+      "excess_by_class": {
+        "IfcWindow": 0
+      },
+      "numerator": 1,
+      "required_by_class": {
+        "IfcWindow": 1
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 3,
+      "numerator": 3,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": true
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 1830.0,
+        "host_guid": "0ZBert7zf3GhThdO12NKAr",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -4.013778009882009,
+          0.123301084193077,
+          1.2199999999999993
+        ],
+        "opening_bottom_world_m": 0.304999999999999,
+        "opening_center_xy_m": [
+          -4.013778009882009,
+          0.123301084193077
+        ],
+        "opening_height_mm": 1830.0000000000005,
+        "opening_width_mm": 914.9999999999987,
+        "reference_guid": "0ZBert7zf3GhThbO52NKVB",
+        "storey_guid": "2nxdYR2RHCDBiKJuiQr1XP",
+        "target_center_offset_from_opening_m": [
+          9.048317650695026e-15,
+          1.3697376566312869e-14,
+          6.661338147750939e-16
+        ],
+        "width_mm": 914.9999999999991
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": true,
+    "removed_roots": [],
+    "scope": "unchanged existing roots after subtracting new products; no whole-host waiver; introduced roots must be occurrence support; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 1,
+    "required": 1
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "01hwNuOTbNkfL4DpINigWR",
+          "relation_guid": "1LKZlvRY5MZfltXbFocBq1"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "01hwNuOTbNkfL4DpINigWR",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0ZBert7zf3GhThdO12NKAr",
+          "relation_guid": "0nb6N6HlXQUOURc$lr97c5"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0ZBert7zf3GhThdO12NKAr",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2nxdYR2RHCDBiKJuiQr1XP",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2nxdYR2RHCDBiKJuiQr1XP",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    }
+  ],
+  "relations": {
+    "correct": 3,
+    "required": 3
+  },
+  "repair_success": true,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.1",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 1830.0,
+        "host_guid": "0ZBert7zf3GhThdO12NKAr",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -4.013778009882009,
+          0.123301084193077,
+          1.2199999999999993
+        ],
+        "opening_bottom_world_m": 0.304999999999999,
+        "opening_center_xy_m": [
+          -4.013778009882009,
+          0.123301084193077
+        ],
+        "opening_height_mm": 1830.0000000000005,
+        "opening_width_mm": 914.9999999999987,
+        "reference_guid": "0ZBert7zf3GhThbO52NKVB",
+        "storey_guid": "2nxdYR2RHCDBiKJuiQr1XP",
+        "target_center_offset_from_opening_m": [
+          9.048317650695026e-15,
+          1.3697376566312869e-14,
+          6.661338147750939e-16
+        ],
+        "width_mm": 914.9999999999991
+      },
+      "matching": {
+        "candidates": [
+          "17$$xIrZ5JHQgxxhfKakn5"
+        ],
+        "distances_m": [
+          0.00022198999999201163
+        ],
+        "guid": "17$$xIrZ5JHQgxxhfKakn5",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "01hwNuOTbNkfL4DpINigWR"
+        ],
+        "distances_m": [
+          0.00022199000000089342
+        ],
+        "guid": "01hwNuOTbNkfL4DpINigWR",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 915.0,
+        "required_mm": 914.9999999999987,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          8.881784197001252e-15,
+          1.3697376566312869e-14,
+          -4.440892098500626e-16
+        ],
+        "allowed_offsets_world_m": [
+          [
+            9.048317650695026e-15,
+            1.3697376566312869e-14,
+            6.661338147750939e-16
+          ]
+        ],
+        "max_axis_errors_m": [
+          1.1102230246251565e-15
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    }
+  ],
+  "terminal": "submitted"
+}

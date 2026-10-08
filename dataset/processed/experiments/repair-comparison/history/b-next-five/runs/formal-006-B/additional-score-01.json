@@ -1,0 +1,333 @@
+{
+  "case_id": "formal-006",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evaluation_authority": {
+    "current_scorer": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\formal_scoring_v2.py",
+      "sha256": "aba73b9416a9dba2d82c36c4c5855bdb380f54599fda453ca47a68acd4ed9b8c"
+    },
+    "original_report": {
+      "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-b-follow-up-revalidation\\evaluation\\formal-006-B.json",
+      "sha256": "259502331602a6ab3117ba8c3f51466d1b3895ef6a431a00a6294e5a300ae2ea"
+    },
+    "projection": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\preservation_v2.py",
+      "sha256": "0f951f98ad2d8783a1e141dc77dc49e23ca134d40eda51dca34c532b29064e99"
+    },
+    "role": "offline_same_frozen_output_rescore_no_model_calls",
+    "unaffected_checks": "Hash-bound original matching/geometry/relations/native-validation reused."
+  },
+  "evaluator_revision": {
+    "legacy_schema": "repair-comparison-formal-score/0.1",
+    "preservation": "repair-comparison-preservation/0.2",
+    "unchanged": [
+      "input",
+      "target matching",
+      "quantity",
+      "component checks",
+      "relationships",
+      "IFC validator",
+      "policy tolerances",
+      "clarification"
+    ]
+  },
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "checks_sha256": "756ebd1f900f83b547253c238645ea453f31d524936cb2cc77eb27c86b3fd1c6",
+    "damaged_sha256": "3859c6e7f3c004e043bd5625fb92871c9b8a25d041b0a03745185f229a8a85b3",
+    "result_sha256": "a9da7575280685a887e5b6351235df1a0933e5393d47b78008fad7fa6acc0c85",
+    "source_sha256": "1e03199ccaed384dcdbd4a5382b23c7a4cec235692cb8b478cba7108ef89fb2e",
+    "task_sha256": "4a65d629dfcb3d1e5571f263d8175095d7a5ac235483a8dbaf6bdc7fb0736155"
+  },
+  "interaction_success": true,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 0,
+      "affected_root_ids": [],
+      "extra_products": false,
+      "preservation_pass": true,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 1,
+      "numerator": 1,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": true
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": true
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcWindow": 1
+      },
+      "credited_by_class": {
+        "IfcWindow": 1
+      },
+      "denominator": 1,
+      "excess_by_class": {
+        "IfcWindow": 0
+      },
+      "numerator": 1,
+      "required_by_class": {
+        "IfcWindow": 1
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 3,
+      "numerator": 3,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": true
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 910.0000000000009,
+        "host_guid": "1liwxY5MLB$fPkp2_DFxnx",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          7.36,
+          15.760000000000002,
+          1.4050000000000007
+        ],
+        "opening_bottom_world_m": 0.9500000000000001,
+        "opening_center_xy_m": [
+          7.36,
+          15.760000000000002
+        ],
+        "opening_height_mm": 910.000000000001,
+        "opening_width_mm": 1360.0000000000011,
+        "reference_guid": "1liwxY5MLB$fPkp2_DFxn3",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "target_center_offset_from_opening_m": [
+          -1.7763568394002505e-15,
+          0.006250000000481037,
+          -4.440892098500626e-16
+        ],
+        "width_mm": 1360.0000000000005
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": true,
+    "projection_version": "repair-comparison-preservation/0.2",
+    "removed_roots": [],
+    "scope": "unchanged existing roots after shallow new-product/relationship projection; no host waiver; same occurrence-support rule; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 1,
+    "required": 1
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "3yNi$0bWvJKQqdHtZ9jYmJ",
+          "relation_guid": "33cUuycrzHRxrWhxq8C3my"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3yNi$0bWvJKQqdHtZ9jYmJ",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "1liwxY5MLB$fPkp2_DFxnx",
+          "relation_guid": "2nT78UZbnQfuc5BQ5Ckdmc"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "1liwxY5MLB$fPkp2_DFxnx",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    }
+  ],
+  "relations": {
+    "correct": 3,
+    "required": 3
+  },
+  "repair_success": true,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.2",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 910.0000000000009,
+        "host_guid": "1liwxY5MLB$fPkp2_DFxnx",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          7.36,
+          15.760000000000002,
+          1.4050000000000007
+        ],
+        "opening_bottom_world_m": 0.9500000000000001,
+        "opening_center_xy_m": [
+          7.36,
+          15.760000000000002
+        ],
+        "opening_height_mm": 910.000000000001,
+        "opening_width_mm": 1360.0000000000011,
+        "reference_guid": "1liwxY5MLB$fPkp2_DFxn3",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "target_center_offset_from_opening_m": [
+          -1.7763568394002505e-15,
+          0.006250000000481037,
+          -4.440892098500626e-16
+        ],
+        "width_mm": 1360.0000000000005
+      },
+      "matching": {
+        "candidates": [
+          "02ID0coF1IqxefAiv7J$1V"
+        ],
+        "distances_m": [
+          0.006249999825639563
+        ],
+        "guid": "02ID0coF1IqxefAiv7J$1V",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "3yNi$0bWvJKQqdHtZ9jYmJ"
+        ],
+        "distances_m": [
+          1.7763568394002505e-15
+        ],
+        "guid": "3yNi$0bWvJKQqdHtZ9jYmJ",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 1359.9999999999995,
+        "required_mm": 1360.0000000000011,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          0.0,
+          0.006249999825641339,
+          0.0
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -1.7763568394002505e-15,
+            0.006250000000481037,
+            -4.440892098500626e-16
+          ]
+        ],
+        "max_axis_errors_m": [
+          1.7483969827480905e-10
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    }
+  ],
+  "terminal": "submitted"
+}

@@ -1,7 +1,7 @@
 # IFC Repair 四组实验文档
 
 > 更新：2026-10-08｜专题版本：v0.2。
-> 当前：20个不同且许可明确的IFC题包已获委托完成技术审题并冻结。四组原批次63/80项终态，17项未开始。本轮未开启Goal，B共性修复与001～010的两批开发复验已完成：001～004、006、008～010真实严格通过；005原响应离线重放补全，007跨层高度被拒绝并按用户意见保留。两批服务均停止，原请求、预算、评分及旧尝试保持。修复与结果见[B共性修复报告](b-common-repair.md)。只维护本目录这一套正文，不另存版本副本。
+> 当前：B的001～010修复后真实复测严格通过9/10，005已新会话真实通过，007保留失败。[当前实验表](../../../dataset/processed/experiments/repair-comparison/current/README.md)只列最近获准的真实尝试，旧四组63个终态与旧失败独立归档；所有服务停止。本轮未开启Goal。后十题按[梁柱与属性设计](next-ten-design.md)先核对Pipeline、制作损坏材料，等用户检查通过后再实验。只维护本目录这一套正文，不另存版本副本。
 
 阶段3的[独立安装范围](deepseek-harness-integration.md#13-阶段3安装与隔离方案已批准的具体范围)已获准；固定完整DSH 0.2.0rc1原生工具、问答、子Agent、摘要和停止证据见[§6.9](development-readiness.md#69-阶段3dsh安装与首批原生离线验收)。本轮统一账本、容器公共CLI、准入及真实运行见[§6.11](development-readiness.md#611-goal-本轮首批五题与两个-demo-的四组接线2026-10-04)。用户已批准开发调用约20M token目标，超出不重复审批。
 
@@ -17,7 +17,9 @@
 | [Codex 启动提示词](development-start-prompt.md) | 直接读取仓库正文，只读核对并提出开发建议，不重复导入更新包 |
 | [代码核对与首批开发建议](development-readiness.md) | 实际复用入口、环境状态、DSH 固定版本证据及 M1.1–M1.4 文件与验收 |
 | [两道 demo 的真实联调](demo-results.md) | 八任务的实际状态、提交、格式检查、人工等待及失败用量 |
-| [B 共性问题与001～010复验](b-common-repair.md) | 当前缺陷归因、最小修复、离线证据和原题开发复验 |
+| [B 共性问题与001～010复验](b-common-repair.md) | 当前缺陷归因、最小修复与支持边界 |
+| [当前B实验表](../../../dataset/processed/experiments/repair-comparison/current/README.md) | 最新真实复测、正式IFC、用量与逐题证据 |
+| [后十题设计](next-ten-design.md) | 梁柱/属性范围、Pipeline缺口与用户审题顺序 |
 
 计划管范围与安排，指标文档管计分，DSH 文档管接入细节；提示词引用这些正文，不成为另一个实验规范。`development-readiness.md` 记录本次实际核对和开发建议，不替代三份正文，也不是 Stage Admission 或正式成绩。
 
