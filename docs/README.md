@@ -1,5 +1,7 @@
 # text2IFC 文档索引
 
+最新整理：[1200题数据集双表](reports/repair-dataset-1200-summary-20261015/README.md) · [A—G实验统计与校验证据](reports/repair-experiment-summary-20261015/README.md)。原题包和完整运行材料的本地保留范围在各入口说明。
+
 本页是 `docs/` 的稳定入口。具体文档按职责分区，避免把设计、实施 Prompt、
 验证方案和历史报告混放在根目录。
 
