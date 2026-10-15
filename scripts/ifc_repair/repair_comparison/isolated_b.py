@@ -25,6 +25,7 @@ from urllib.parse import urlsplit
 
 DUMMY_KEY = 'isolated-b-no-external-credential'
 MODEL = 'deepseek-v4-flash'
+MODEL_PROFILE_VERSION = 'isolated-harness-provider/0.1'
 SOURCE_ENTRIES = ('text2ifc_ifc_repair.api', 'text2ifc_agent.openai_compat',
                   'text2ifc_ifc_repair.validation_worker')
 SOURCE_PACKAGES = frozenset(('text2ifc_agent', 'text2ifc_contract', 'text2ifc_extractor',
@@ -145,6 +146,48 @@ def _gateway(url: str) -> str:
     return url.rstrip('/')
 
 
+def _validated_model_profile(model: str, profile: dict | None) -> dict | None:
+    """Opt in to model transport metadata; endpoints and keys stay host-owned."""
+    if profile is None:
+        if model != MODEL:
+            raise ValueError('FROZEN_B_MODEL_REQUIRED')
+        return None
+    fields = {'version', 'provider', 'label', 'model',
+              'max_input_tokens', 'max_completion_tokens'}
+    if type(profile) is not dict or set(profile) != fields:
+        raise ValueError('HARNESS_MODEL_PROFILE_FIELDS_INVALID')
+    if profile['version'] != MODEL_PROFILE_VERSION:
+        raise ValueError('HARNESS_MODEL_PROFILE_VERSION_UNSUPPORTED')
+    for name in ('provider', 'model', 'label'):
+        value = profile[name]
+        pattern = r'[\w][\w .()-]{0,100}' if name == 'label' else r'[a-zA-Z0-9][a-zA-Z0-9_.-]{0,100}'
+        if not isinstance(value, str) or value != value.strip() or not re.fullmatch(pattern, value):
+            raise ValueError('HARNESS_MODEL_PROFILE_STRING_INVALID')
+    for name in ('max_input_tokens', 'max_completion_tokens'):
+        if type(profile[name]) is not int or profile[name] <= 0:
+            raise ValueError('HARNESS_MODEL_PROFILE_TOKEN_LIMIT_INVALID')
+    if model != profile['model']:
+        raise ValueError('HARNESS_MODEL_PROFILE_MODEL_MISMATCH')
+    return dict(profile)
+
+
+def _bundle_scene_version(bundle: Path) -> str:
+    """Read the frozen runtime's literal method version without importing IFC.
+
+    The host may use a lean environment and may restore an older frozen bundle.
+    Executing source just to find its version would violate both boundaries.
+    """
+    path = _checked_file(Path(bundle), Path(bundle) / 'src/text2ifc_ifc_repair/scene_grounding.py')
+    module = ast.parse(path.read_text(encoding='utf-8'))
+    values = [node.value.value for node in module.body if isinstance(node, ast.Assign)
+              and any(isinstance(target, ast.Name) and target.id == 'SCENE_GROUNDING_VERSION'
+                      for target in node.targets)
+              and isinstance(node.value, ast.Constant) and isinstance(node.value.value, str)]
+    if len(values) != 1 or not re.fullmatch(r'text2ifc/ifc-scene-grounding/\d+\.\d+', values[0]):
+        raise ValueError('BUNDLE_SCENE_VERSION_INVALID')
+    return values[0]
+
+
 @dataclass(frozen=True)
 class IsolatedBConfig:
     bundle: Path
@@ -158,16 +201,19 @@ class IsolatedBConfig:
     timeout_seconds: float = 1800.0
     evidence_class: str = 'deterministic_fake_http'
     scene_grounding: bool = False
+    max_validation_corrections: int = 0
     property_model_directory: Path | None = None
+    model_profile: dict | None = None
 
     def __post_init__(self):
+        if type(self.max_validation_corrections) is not int or not 0 <= self.max_validation_corrections <= 2:
+            raise ValueError('VALIDATION_CORRECTION_LIMIT_INVALID')
         for value in (self.state_volume, self.network, self.container_name):
             _identifier(value)
         if self.network in {'host', 'bridge', 'none'}:
             raise ValueError('DEDICATED_INTERNAL_NETWORK_REQUIRED')
         _gateway(self.base_url)
-        if self.model != MODEL:
-            raise ValueError('FROZEN_B_MODEL_REQUIRED')
+        object.__setattr__(self, 'model_profile', _validated_model_profile(self.model, self.model_profile))
         if self.timeout_seconds <= 0:
             raise ValueError('POSITIVE_TIMEOUT_REQUIRED')
         if self.evidence_class not in {'deterministic_fake_http', 'live'}:
@@ -237,6 +283,9 @@ class IsolatedB:
     def execute(self, action: str, run_id: str, **answer_binding) -> dict:
         """One native command. A timeout kills this worker, never restarts a run."""
         c = self.config
+        if {'model', 'model_profile'} & answer_binding.keys():
+            raise ValueError('HARNESS_MODEL_PROFILE_OVERRIDE_FORBIDDEN')
+        profile = _validated_model_profile(c.model, c.model_profile)
         info = subprocess.run(['docker', 'network', 'inspect', c.network, '--format', '{{.Internal}}'],
                               capture_output=True, text=True, check=True)
         if info.stdout.strip() != 'true':
@@ -244,8 +293,12 @@ class IsolatedB:
         payload = {'action': action, 'run_id': _identifier(run_id), 'base_url': c.base_url,
                    'model': c.model, 'timeout_seconds': c.timeout_seconds,
                    'evidence_class': c.evidence_class, **answer_binding}
+        if profile is not None:
+            payload['model_profile'] = profile
         if c.scene_grounding:
-            payload['scene_grounding_version'] = 'text2ifc/ifc-scene-grounding/0.2'
+            payload['scene_grounding_version'] = _bundle_scene_version(c.bundle)
+        if c.max_validation_corrections:
+            payload['max_validation_corrections'] = c.max_validation_corrections
         if c.property_model_directory is not None:
             payload['property_runtime_version'] = PROPERTY_RUNTIME_VERSION
         try:
@@ -314,11 +367,14 @@ class IsolatedB:
         work = Path(self.config.workspace)
         expected = {'source_sha256': _sha(_checked_file(work, work / 'model.ifc')),
                     'request_sha256': _sha(_checked_file(work, work / 'task.txt')),
-                    'model': self.config.model, 'evidence_class': self.config.evidence_class}
+                    'model': self.config.model, 'evidence_class': self.config.evidence_class,
+                    'model_profile': _validated_model_profile(self.config.model, self.config.model_profile)}
         if any(binding.get(key) != value for key, value in expected.items()):
             raise ValueError('STATE_RESTORE_BINDING_MISMATCH')
         if binding.get('scene_grounding_version') != (
-                'text2ifc/ifc-scene-grounding/0.2' if self.config.scene_grounding else None):
+                _bundle_scene_version(self.config.bundle) if self.config.scene_grounding else None):
+            raise ValueError('STATE_RESTORE_METHOD_MISMATCH')
+        if binding.get('max_validation_corrections',0) != self.config.max_validation_corrections:
             raise ValueError('STATE_RESTORE_METHOD_MISMATCH')
         property_version = PROPERTY_RUNTIME_VERSION if self.config.property_model_directory is not None else None
         if binding.get('property_runtime_version') != property_version:
@@ -362,6 +418,7 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
     """
     from text2ifc_agent.openai_compat import OpenAICompatRuntimeConfig, OpenAICompatibleLiveProvider
     from text2ifc_ifc_repair.api import RepairAPI
+    from text2ifc_ifc_repair.scene_grounding import SCENE_GROUNDING_VERSION
     from text2ifc_knowledge import create_property_runtime_from_environment
     import jsonschema
 
@@ -371,8 +428,8 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
     run_id = _identifier(payload['run_id'])
     native_id = 'repair-' + uuid.uuid5(uuid.NAMESPACE_URL, run_id).hex
     gateway = _gateway(payload['base_url'])
-    if payload.get('model', MODEL) != MODEL:
-        raise ValueError('FROZEN_B_MODEL_REQUIRED')
+    model = payload.get('model', MODEL)
+    profile = _validated_model_profile(model, payload.get('model_profile'))
     evidence_class = payload.get('evidence_class', 'deterministic_fake_http')
     if evidence_class not in {'deterministic_fake_http', 'live'}:
         raise ValueError('INVALID_EVIDENCE_CLASS')
@@ -381,12 +438,19 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
     request = _checked_file(workspace, workspace / 'task.txt')
     source_hash = _sha(source)
     binding = {'run_id': run_id, 'source_sha256': source_hash, 'request_sha256': _sha(request),
-               'model': MODEL, 'evidence_class': evidence_class}
+               'model': model, 'evidence_class': evidence_class}
+    if profile is not None:
+        binding['model_profile'] = profile
     scene_version = payload.get('scene_grounding_version')
-    if scene_version not in (None, 'text2ifc/ifc-scene-grounding/0.2'):
+    if scene_version not in (None, SCENE_GROUNDING_VERSION):
         raise ValueError('SCENE_GROUNDING_VERSION_UNSUPPORTED')
     if scene_version:
         binding['scene_grounding_version'] = scene_version
+    correction_limit = payload.get('max_validation_corrections',0)
+    if type(correction_limit) is not int or not 0 <= correction_limit <= 2:
+        raise ValueError('VALIDATION_CORRECTION_LIMIT_INVALID')
+    if correction_limit:
+        binding['max_validation_corrections'] = correction_limit
     property_version = payload.get('property_runtime_version')
     if property_version not in (None, PROPERTY_RUNTIME_VERSION):
         raise ValueError('PROPERTY_RUNTIME_VERSION_UNSUPPORTED')
@@ -401,9 +465,12 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
             json.dump(binding, handle)
     elif json.loads(binding_path.read_text(encoding='utf-8')) != binding:
         raise ValueError('B_TASK_BINDING_MISMATCH')
-    config = OpenAICompatRuntimeConfig(provider='deepseek', provider_label='DeepSeek',
+    runtime_profile = profile or {'provider': 'deepseek', 'label': 'DeepSeek', 'model': MODEL,
+                                 'max_completion_tokens': 65536, 'max_input_tokens': 65536}
+    config = OpenAICompatRuntimeConfig(provider=runtime_profile['provider'], provider_label=runtime_profile['label'],
         api_key=DUMMY_KEY, api_key_env='ISOLATED_DUMMY', base_url=gateway, base_url_env='ISOLATED_GATEWAY',
-        model=MODEL, model_env='ISOLATED_MODEL', max_completion_tokens=65536, max_input_tokens=65536,
+        model=runtime_profile['model'], model_env='ISOLATED_MODEL',
+        max_completion_tokens=runtime_profile['max_completion_tokens'], max_input_tokens=runtime_profile['max_input_tokens'],
         timeout_seconds=float(payload.get('timeout_seconds', 1800)))
     provider = OpenAICompatibleLiveProvider(config=config)
     native_root = state_root / 'native'
@@ -425,7 +492,8 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
                     or not property_runtime.health.acceptance_eligible):
                 raise ValueError('PROPERTY_RUNTIME_NOT_READY:' + str(property_runtime.health.reason_code))
             options['property_knowledge_runtime'] = property_runtime
-        api = RepairAPI(native_root, provider=provider, scene_grounding=bool(scene_version), **options)
+        api = RepairAPI(native_root, provider=provider, scene_grounding=bool(scene_version),
+                        max_validation_corrections=correction_limit, **options)
         if action == 'start':
             result = api.start(source, request.read_text(encoding='utf-8'), run_id=native_id)
         elif action == 'answer':
@@ -457,6 +525,7 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
                     stream.write(published.read_bytes())
             artifact = 'output/native-result.ifc'
         return {'ok': True, 'task_run_id': run_id, 'result': result.to_dict(), 'artifact_relative': artifact,
+                'scene_diagnostics': _scene_diagnostics(api, result.run_id),
                 'source_unchanged': True, 'native_root': '/state/native', 'evidence_class': evidence_class}
     finally:
         try:
@@ -464,6 +533,11 @@ def worker_execute(payload: dict, *, workspace=Path('/workspace'), state_root=Pa
                 property_runtime.vector_index.close()
         finally:
             provider.client.close()
+
+
+def _scene_diagnostics(api, run_id):
+    from text2ifc_ifc_repair.scene_diagnostics import checked_scene_diagnostics
+    return checked_scene_diagnostics(api.read_scene_diagnostics(run_id))
 
 
 def main() -> int:

@@ -9,11 +9,16 @@ import tempfile
 import time
 
 
+def validate_argv(argv):
+    """Use the same argument contract before host launch and inside the worker."""
+    if not isinstance(argv,list) or not argv or any(not isinstance(v,str) or '\0' in v for v in argv):
+        raise ValueError('INVALID_ARGV')
+
+
 def main():
     request = json.load(sys.stdin)
     argv, timeout = request['argv'], request['timeout_s']
-    if not isinstance(argv,list) or not argv or any(not isinstance(v,str) or '\0' in v for v in argv):
-        raise ValueError('INVALID_ARGV')
+    validate_argv(argv)
     began=time.monotonic()
     with tempfile.TemporaryFile() as out, tempfile.TemporaryFile() as err:
         try:process=subprocess.Popen(argv,cwd='/workspace',stdout=out,stderr=err,start_new_session=True)

@@ -36,3 +36,20 @@ def test_dsh_container_preserves_native_runtime_and_exposes_only_this_task(tmp_p
     with pytest.raises(ValueError,match='INTERNAL'):
         NativeDSH(work,tmp_path/'bad',name='bad',state_volume='bad',network='bridge',
                   base_url='https://api.deepseek.com',model='deepseek-v4-flash',session_id='test')
+
+
+def test_knowledge_question_has_no_ifc_submission_instruction(tmp_path):
+    from scripts.ifc_repair.repair_comparison.dsh.native_worker import task_prompt
+    from scripts.ifc_repair.repair_comparison.isolated_dsh import NativeDSH
+    question = 'Search official sources and give the final answer.'
+    assert task_prompt({'task_kind': 'knowledge_qa'}, question) == question
+    repair = task_prompt({}, question)
+    assert 'model.ifc' in repair and 'submitted_ifc' in repair
+    with pytest.raises(ValueError, match='TASK_KIND'):
+        task_prompt({'task_kind': 'unknown'}, question)
+    work = tmp_path/'work'; work.mkdir()
+    worker = NativeDSH(work, tmp_path/'control', name='native-qa-test',
+        state_volume='native-qa-test-state', network='qa-internal',
+        base_url='http://repair-gateway:8000/'+'a'*32,
+        model='deepseek-v4-flash', session_id='native-qa', task_kind='knowledge_qa')
+    assert json.loads((worker.control/'runtime.json').read_text())['task_kind'] == 'knowledge_qa'

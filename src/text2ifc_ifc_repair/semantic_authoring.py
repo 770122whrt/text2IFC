@@ -23,7 +23,11 @@ from jsonschema import Draft202012Validator
 from .evaluation_policy import EvidenceSourceKind, SemanticApplicability
 from .production_evidence import ProductionEvidence
 from .registry import OperationRegistry
-from .semantic_facts import SemanticFact, apply_effective_material_precedence
+from .semantic_facts import (
+    SemanticFact,
+    apply_effective_material_precedence,
+    effective_property_unit_token,
+)
 
 
 SEMANTIC_MANIFEST_SCHEMA_VERSION = "text2ifc/ifc-repair-semantic-manifest/0.1"
@@ -271,6 +275,7 @@ def semantic_manifest_to_dict(manifest: SemanticManifest) -> dict[str, Any]:
 
 def semantic_manifest_expected_facts(
     manifest: SemanticManifest,
+    *, primary_scope: str | None = None,
 ) -> tuple[SemanticFact, ...]:
     """Rehydrate public L2 authority for offline/private benchmark comparison."""
 
@@ -290,7 +295,9 @@ def semantic_manifest_expected_facts(
             source_kind=_legacy_source_kind(assignment.source_kind),
             source_ref=assignment.source_ref,
             provenance=assignment.provenance,
-            occurrence_scope=assignment.scope,
+            occurrence_scope=(primary_scope if primary_scope is not None
+                and manifest.schema_version == 'text2ifc/ifc-repair-semantic-manifest/0.1'
+                else assignment.scope),
             canonical_source_kind=(
                 assignment.source_kind.value
                 if isinstance(assignment.source_kind, CanonicalSemanticSource)
@@ -519,7 +526,7 @@ def apply_semantic_assignments(
         if plan["skip"]
         for fact_key in plan["fact_keys"]
     )
-    _preflight_direct_psets(target, assignments)
+    psets = _preflight_direct_psets(target, assignments)
 
     for item in assignments:
         if item["ownership"] == SemanticOwnership.TYPE_INHERITED.value:
@@ -540,16 +547,12 @@ def apply_semantic_assignments(
             )
         setattr(target, attribute, value)
 
-    psets: dict[str, list[Mapping[str, Any]]] = {}
     quantities: dict[str, dict[str, Mapping[str, Any]]] = {}
     for item in assignments:
         if item["ownership"] == SemanticOwnership.TYPE_INHERITED.value:
             continue
         category, path = str(item["fact_key"]).split(":", 1)
-        if category == "pset":
-            set_name, _ = _assignment_pset_path(item)
-            psets.setdefault(set_name, []).append(item)
-        elif category == "quantity":
+        if category == "quantity":
             set_name, _ = path.rsplit(".", 1)
             canonical_set_name = (
                 "BaseQuantities"
@@ -577,13 +580,24 @@ def apply_semantic_assignments(
     if requires_owner_history and owner_history is None:
         raise SemanticManifestError("SEMANTIC_OWNER_HISTORY_MISSING", target_id)
     pset_role_count = 0
-    for set_name, members in sorted(psets.items()):
-        direct = _direct_psets(target, set_name)
-        if direct:
-            pset = direct[0]
-            relations = _direct_pset_relations(target, set_name)
-            relation = relations[0]
-            if len(relation.RelatedObjects) > 1:
+    existing_pset_role_counts: dict[str, int] = {}
+    def existing_pset_role(role: str) -> str:
+        # Every effect has its own role binding. Keep legacy single-Pset roles
+        # while distinguishing subsequent Psets without relaxing L1/L2 checks.
+        count = existing_pset_role_counts.get(role, 0) + 1
+        existing_pset_role_counts[role] = count
+        return scoped_role(role if count == 1 else f"{role}_{count}")
+    for (set_name, relation_id), members in sorted(psets.items()):
+        if relation_id:
+            relation = model.by_id(relation_id)
+            pset = relation.RelatingPropertyDefinition
+            shared_relation = len(relation.RelatedObjects) > 1
+            if shared_relation or any(owner != relation for owner in model.get_inverse(pset)):
+                copy_key = (
+                    f"{set_name}:{pset.GlobalId}"
+                    if len(_direct_psets(target, set_name)) > 1
+                    else set_name
+                )
                 pset = ifcopenshell.util.element.copy_deep(
                     model,
                     pset,
@@ -591,53 +605,55 @@ def apply_semantic_assignments(
                 )
                 pset.GlobalId = _semantic_global_id(
                     operation,
-                    f"semantic_pset_copy_on_write:{set_name}",
+                    f"semantic_pset_copy_on_write:{copy_key}",
                 )
                 pset.OwnerHistory = owner_history
-                relation.RelatedObjects = [
-                    item for item in relation.RelatedObjects if item != target
-                ]
+                if shared_relation:
+                    relation.RelatedObjects = [
+                        item for item in relation.RelatedObjects if item != target
+                    ]
+                else:
+                    relation.RelatingPropertyDefinition = pset
                 modified.append(
                     {
-                        "role": scoped_role(
+                        "role": existing_pset_role(
                             "semantic_shared_pset_relationship"
                         ),
                         "ifc_class": relation.is_a(),
                         "global_id": str(relation.GlobalId),
                     }
                 )
-                copied_relation = model.create_entity(
-                    "IfcRelDefinesByProperties",
-                    GlobalId=_semantic_global_id(
-                        operation,
-                        f"semantic_pset_relationship_copy_on_write:{set_name}",
-                    ),
-                    OwnerHistory=owner_history,
-                    RelatedObjects=[target],
-                    RelatingPropertyDefinition=pset,
+                created.append(
+                    {
+                        "role": existing_pset_role("semantic_pset_copy_on_write"),
+                        "ifc_class": pset.is_a(),
+                        "global_id": str(pset.GlobalId),
+                    }
                 )
-                created.extend(
-                    (
+                if shared_relation:
+                    copied_relation = model.create_entity(
+                        "IfcRelDefinesByProperties",
+                        GlobalId=_semantic_global_id(
+                            operation,
+                            f"semantic_pset_relationship_copy_on_write:{copy_key}",
+                        ),
+                        OwnerHistory=owner_history,
+                        RelatedObjects=[target],
+                        RelatingPropertyDefinition=pset,
+                    )
+                    created.append(
                         {
-                            "role": scoped_role(
-                                "semantic_pset_copy_on_write"
-                            ),
-                            "ifc_class": pset.is_a(),
-                            "global_id": str(pset.GlobalId),
-                        },
-                        {
-                            "role": scoped_role(
+                            "role": existing_pset_role(
                                 "semantic_pset_relationship_copy_on_write"
                             ),
                             "ifc_class": copied_relation.is_a(),
                             "global_id": str(copied_relation.GlobalId),
-                        },
+                        }
                     )
-                )
             else:
                 modified.append(
                     {
-                        "role": scoped_role("semantic_pset_updated"),
+                        "role": existing_pset_role("semantic_pset_updated"),
                         "ifc_class": pset.is_a(),
                         "global_id": str(pset.GlobalId),
                     }
@@ -670,7 +686,7 @@ def apply_semantic_assignments(
                     )
                 else:
                     nominal_value = _ifc_typed_value(model, item)
-                    unit = _ifc_assignment_unit(model, item)
+                    unit = _ifc_assignment_unit(model, item, existing_property=existing)
                     if _pset_property_has_other_owner(
                         model=model,
                         pset=pset,
@@ -860,27 +876,46 @@ def apply_semantic_assignments(
 
 def _preflight_direct_psets(
     target: Any, assignments: Sequence[Mapping[str, Any]]
-) -> None:
-    set_names = {
-        _assignment_pset_path(item)[0]
-        for item in assignments
-        if item["ownership"] == SemanticOwnership.OCCURRENCE_DIRECT.value
-        and str(item["fact_key"]).startswith("pset:")
-    }
-    for set_name in sorted(set_names):
-        direct = _direct_psets(target, set_name)
-        if len(direct) > 1:
+) -> dict[tuple[str, int], list[Mapping[str, Any]]]:
+    """Resolve exact property owners before any assignment can mutate the target."""
+    plans: dict[tuple[str, int], list[Mapping[str, Any]]] = {}
+    for item in assignments:
+        if (
+            item["ownership"] != SemanticOwnership.OCCURRENCE_DIRECT.value
+            or not str(item["fact_key"]).startswith("pset:")
+        ):
+            continue
+        set_name, property_name = _assignment_pset_path(item)
+        relations = _direct_pset_relations(target, set_name)
+        matches = [
+            relation
+            for relation in relations
+            for prop in relation.RelatingPropertyDefinition.HasProperties
+            if str(prop.Name) == property_name
+        ]
+        if len(matches) > 1:
+            raise SemanticManifestError(
+                "DUPLICATE_DIRECT_PROPERTY", f"{set_name}.{property_name}"
+            )
+        if not matches and len(relations) > 1:
             raise SemanticManifestError(
                 "DUPLICATE_DIRECT_PROPERTY_SET", set_name
             )
-        if not direct:
+        relation = matches[0] if matches else (relations[0] if relations else None)
+        relation_id = relation.id() if relation is not None else 0
+        plans.setdefault((set_name, relation_id), []).append(item)
+        if relation is None:
             continue
-        names = [str(prop.Name) for prop in direct[0].HasProperties]
+        names = [
+            str(prop.Name)
+            for prop in relation.RelatingPropertyDefinition.HasProperties
+        ]
         duplicates = sorted({name for name in names if names.count(name) > 1})
         if duplicates:
             raise SemanticManifestError(
                 "DUPLICATE_DIRECT_PROPERTY", f"{set_name}.{duplicates[0]}"
             )
+    return plans
 
 
 def _preflight_material_assignments(
@@ -1154,13 +1189,25 @@ def _quantity_assignment_priority(item: Mapping[str, Any]) -> int:
 def _ifc_assignment_unit(
     model: Any,
     assignment: Mapping[str, Any],
+    *,
+    existing_property: Any = None,
 ) -> Any | None:
-    """Materialize an explicit SI unit for authored scalar Pset values."""
+    """Retain matching existing units, otherwise materialize an explicit SI unit."""
 
     raw = assignment.get("unit")
     if raw is None:
         return None
     token = str(raw).strip().casefold().replace("²", "2").replace("³", "3")
+    existing_unit_matches = (
+        existing_property is not None
+        and existing_property.NominalValue is not None
+        and existing_property.NominalValue.is_a() == assignment.get("value_type")
+        and (effective_property_unit_token(existing_property) or "").casefold() == token
+    )
+    if token == "foot" and existing_unit_matches:
+        # Only retain a source-validated FOOT definition for this exact existing
+        # property. There is deliberately no constructor for new FOOT properties.
+        return existing_property.Unit
     definitions = {
         "m": ("LENGTHUNIT", None, "METRE"),
         "mm": ("LENGTHUNIT", "MILLI", "METRE"),
@@ -1177,6 +1224,10 @@ def _ifc_assignment_unit(
         raise SemanticManifestError(
             "SEMANTIC_PROPERTY_UNIT_UNSUPPORTED", str(raw)
         )
+    if existing_unit_matches:
+        # Unit=None remains valid when the unchanged NominalValue type resolves
+        # to this project unit. Preserve an explicit unit entity as well.
+        return existing_property.Unit
     unit_type, prefix, name = definition
     for unit in model.by_type("IfcSIUnit"):
         if (

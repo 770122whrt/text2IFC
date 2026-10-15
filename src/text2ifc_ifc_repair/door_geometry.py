@@ -386,6 +386,7 @@ def measure_door_opening_alignment(
     door: Any,
     opening: Any,
     *, installation_anchor: Mapping[str, Any] | None = None,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Measure actual and nominal Door envelopes in Opening-local axes."""
 
@@ -411,6 +412,23 @@ def measure_door_opening_alignment(
         ]
         for axis, axis_name in enumerate(("x", "y", "z"))
     }
+    if public_geometry_requirement:
+        from .public_geometry import measure_public_installation, _frame, _transformed_bounds
+        expected_pose = _frame(public_geometry_requirement['placement_world_mm'])
+        opening_pose = ifcopenshell.util.placement.get_local_placement(opening.ObjectPlacement).copy()
+        opening_pose[:3, 3] *= _millimetres_per_project_unit(door)
+        reference = door.file.by_guid(public_geometry_requirement['reference_id'])
+        local = product_local_geometry_bounds_mm(reference)
+        expected = _transformed_bounds(np.array([local[a] for a in 'xyz']).T,
+                                       np.linalg.inv(opening_pose) @ expected_pose)
+        result = _alignment_diagnostics(door_bounds=door_bounds, opening_bounds=opening_bounds,
+            nominal_bounds=nominal_bounds, axis_deviation_degrees=_axis_deviation_degrees(relative),
+            expected_normal_offset_mm=_center(expected['y']) - _center(opening_bounds['y']),
+            expected_base_offset_mm=expected['z'][0] - opening_bounds['z'][0])
+        exact = measure_public_installation(door, opening, public_geometry_requirement)
+        result['public_installation'] = exact
+        result['valid'] = result['valid'] and exact['valid']
+        return result
     anchor = (_verified_installation_anchor(door, opening, installation_anchor)
               if installation_anchor is not None else None)
     axis_deviation = _axis_deviation_degrees(relative)

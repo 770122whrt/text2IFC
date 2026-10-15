@@ -68,7 +68,11 @@ def response(prompt,mode,records):
         return {'schema_version':'text2ifc/ifc-property-rerank-decision/0.1','decision':'confirmed',
             'selected_candidate_id':selected['candidate_id'],'conflicting_candidate_ids':[],
             'clarification_question':None}
-    pages=section(prompt,'Read-only query results so far')
+    # This file is mounted alone into the Linux runtime, without test helpers.
+    snapshot=section(prompt,'Read-only query results so far')
+    offered={record['id']:record for record in snapshot['records']}
+    pages=[{**query,'records':[offered[identity] for identity in query['record_ids']]}
+           for query in snapshot['queries']]
     if not pages:
         records.append({'stage':'query'})
         return {'kind':'query','query':{'ifc_classes':['IfcBeam','IfcWall','IfcWindow']}}
@@ -166,7 +170,7 @@ def native(mode):
     thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
     os.environ['NO_PROXY']='127.0.0.1,localhost'
     payload={'action':'start','run_id':f'property-{mode}','base_url':f'http://127.0.0.1:{server.server_port}/v1',
-        'evidence_class':'deterministic_fake_http','scene_grounding_version':'text2ifc/ifc-scene-grounding/0.2',
+        'evidence_class':'deterministic_fake_http','scene_grounding_version':'text2ifc/ifc-scene-grounding/0.3',
         'property_runtime_version':VERSION,'timeout_seconds':600}
     def call(action,**extra):
         args=[sys.executable,'/runtime/isolated_b.py','worker']

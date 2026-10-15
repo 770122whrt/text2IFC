@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
+import re
 import uuid
+from dataclasses import replace
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
@@ -29,12 +32,14 @@ from .repair_intent import REPAIR_INTENT_SCHEMA_VERSION_0_10
 from .request_stage import generate_repair_intent
 from .scene_context import PublicScene, SceneError
 from .scene_grounding import generate_scene_repair_intent, SCENE_GROUNDING_VERSION
+from .scene_diagnostics import checked_scene_diagnostics
 from .run_models import (
     Clarification,
     ClarificationCandidate,
     RunResult,
     RunStage,
     RunStoreError,
+    thaw_json,
 )
 from .run_store import RunStore
 from .run_artifacts import publish_terminal_artifacts
@@ -77,12 +82,16 @@ class RepairAPI:
         orchestrator_options: Mapping[str, Any] | None = None,
         intent_schema_version: str = REPAIR_INTENT_SCHEMA_VERSION_0_10,
         scene_grounding: bool = False,
+        max_validation_corrections: int = 2,
         property_knowledge_resolver: Any | None = None,
         property_knowledge_runtime: Any | None = None,
         property_resolution_stage: Callable[..., Mapping[str, Any]] = (
             generate_property_resolution_decision
         ),
     ) -> None:
+        if type(max_validation_corrections) is not int or not 0 <= max_validation_corrections <= 2:
+            raise ValueError("VALIDATION_CORRECTION_LIMIT_INVALID")
+        self.max_validation_corrections = max_validation_corrections
         self.store = RunStore(output_root)
         self.provider = provider
         self.registry = registry or create_default_registry()
@@ -119,6 +128,7 @@ class RepairAPI:
     def from_environment(
         cls, output_root: Path | str, environment: Mapping[str, str] | None = None,
         *, scene_grounding: bool = False,
+        max_validation_corrections: int = 2,
     ) -> "RepairAPI":
         """Build the public facade from the established redacted Provider config."""
 
@@ -138,6 +148,7 @@ class RepairAPI:
             provider=OpenAICompatibleLiveProvider(config=config),
             intent_schema_version=intent_schema_version,
             scene_grounding=scene_grounding,
+            max_validation_corrections=max_validation_corrections,
             property_knowledge_runtime=create_property_runtime_from_environment(
                 dict(os.environ) if environment is None else dict(environment)
             ),
@@ -169,7 +180,8 @@ class RepairAPI:
             state.run_id,
             to_stage=RunStage.SOURCE_VALIDATED,
             expected_state_version=state.state_version,
-            stage_payload={"ifc_schema": "IFC2X3", "source_sha256": state.source.sha256},
+            stage_payload={"ifc_schema": "IFC2X3", "source_sha256": state.source.sha256,
+                           "max_validation_corrections": self.max_validation_corrections},
         )
         index_dir = self.store.prepare_stage_directory(state.run_id, "index")
         index_path = index_dir / "targets.sqlite"
@@ -196,7 +208,9 @@ class RepairAPI:
             output_dir=intent_dir,
         )
         if not intent_result.get("valid") or intent_result.get("intent") is None:
-            return self._fail(state.run_id, RunStage.PROVIDER_FAILED, str(intent_result.get("error_code") or "INTENT_STAGE_FAILED"))
+            return self._fail(state.run_id, RunStage.PROVIDER_FAILED,
+                              str(intent_result.get("error_code") or "INTENT_STAGE_FAILED"),
+                              scene_diagnostics=intent_result.get("scene_diagnostics"))
         intent = intent_result["intent"]
         intent_path = intent_dir / "repair-intent.json"
         if not intent_path.exists():
@@ -206,7 +220,8 @@ class RepairAPI:
             )
         context_ref = self._write_context(run_dir, repair_text=repair_text, intent=intent,
                                           scene_mode=self._scene_grounding,
-                                          installation_references=intent_result.get("installation_references"))
+                                          installation_references=intent_result.get("installation_references"),
+                                          public_geometry_requirements=intent_result.get("public_geometry_requirements"))
         if intent_result.get("classification") == "unsupported":
             reason_code = str(
                 intent_result.get("reason_code") or "OPERATION_UNSUPPORTED"
@@ -216,6 +231,7 @@ class RepairAPI:
                 to_stage=RunStage.INTENT_READY,
                 expected_state_version=state.state_version,
                 stage_payload={
+                    **_scene_payload(intent_result),
                     "intent": self.store.artifact_binding(
                         state.run_id,
                         "intent/repair-intent.json",
@@ -255,6 +271,7 @@ class RepairAPI:
                 clarification=clarification,
                 reason_code=clarification.reason_code,
                 stage_payload={
+                    **_scene_payload(intent_result),
                     "intent": self.store.artifact_binding(
                         state.run_id,
                         "intent/repair-intent.json",
@@ -274,6 +291,7 @@ class RepairAPI:
             to_stage=RunStage.INTENT_READY,
             expected_state_version=state.state_version,
             stage_payload={
+                **_scene_payload(intent_result),
                 "intent": self.store.artifact_binding(
                     state.run_id, "intent/repair-intent.json", self._intent_schema_version
                 ),
@@ -373,7 +391,9 @@ class RepairAPI:
                 output_dir=resume_dir,
             )
             if not generated.get("valid") or generated.get("intent") is None:
-                return self._fail(run_id, RunStage.PROVIDER_FAILED, "INTENT_RESUME_FAILED")
+                return self._fail(run_id, RunStage.PROVIDER_FAILED,
+                                  str(generated.get("error_code") or "INTENT_RESUME_FAILED"),
+                                  scene_diagnostics=generated.get("scene_diagnostics"))
             intent_document = generated["intent"].to_dict()
             missing_parameters = list(generated.get("missing_parameters") or ())
             scene_question = generated.get("scene_question")
@@ -400,8 +420,11 @@ class RepairAPI:
             scene_mode=scene_mode,
             installation_references=(generated.get("installation_references", {})
                 if kind == "add_detail" else context.get("installation_references", {})),
+            public_geometry_requirements=(generated.get("public_geometry_requirements", {})
+                if kind == "add_detail" else context.get("public_geometry_requirements", {})),
         )
         resume_payload: dict[str, Any] = {
+            **_scene_payload(generated),
             "api_context": self.store.artifact_binding(
                 run_id, context_ref, _context_version(scene_mode)
             )
@@ -483,6 +506,14 @@ class RepairAPI:
     def read_result(self, run_id: str) -> RunResult:
         return self.store.read_result(run_id)
 
+    def read_scene_diagnostics(self, run_id: str) -> dict | None:
+        """Read the latest observation from the validated transition chain."""
+        state = self.store.load(run_id)
+        for transition in reversed(state.transitions):
+            if "scene_diagnostics" in transition.stage_payload:
+                return checked_scene_diagnostics(thaw_json(transition.stage_payload["scene_diagnostics"]))
+        return None
+
     def _generate_intent(self, *, state: Any, run_dir: Path, scene_mode: bool,
                          request_id: str, repair_request: str, output_dir: Path) -> Mapping[str, Any]:
         arguments = dict(provider=self.provider, request_id=request_id, repair_request=repair_request,
@@ -503,6 +534,21 @@ class RepairAPI:
         state = self.store.load(run_id)
         if state.stage is RunStage.CLARIFICATION_REQUIRED:
             return self.store.read_result(run_id)
+        if state.stage is RunStage.CHANGESET_READY:
+            # A process interruption cannot reset an observed Provider budget or
+            # replay uncertain side effects. Retain its candidates and terminate.
+            run_dir = self.store.runs_root / run_id
+            retained = []
+            for path in sorted(run_dir.glob("validation-attempt-*.json")):
+                document = json.loads(path.read_text(encoding="utf-8"))
+                bindings = dict(document["artifacts"])
+                for binding in bindings.values():
+                    if self.store.artifact_binding(run_id, binding["path"], binding["schema_version"]) != binding:
+                        raise RunStoreError("RUN_TAMPER_DETECTED", "validation attempt artifact changed")
+                bindings["attempt"] = self.store.artifact_binding(run_id, path.name, "text2ifc/ifc-repair-validation-attempt/0.1")
+                retained.append(bindings)
+            return self._fail(run_id, RunStage.NOT_PUBLISHABLE, "VALIDATION_EXECUTION_INTERRUPTED",
+                              validation_attempts=retained)
         if state.stage is not RunStage.INTENT_READY:
             raise RunStoreError(
                 "RUN_STATE_CONFLICT",
@@ -532,6 +578,10 @@ class RepairAPI:
     ) -> RunResult:
         state = self.store.load(run_id)
         run_dir = self.store.runs_root / run_id
+        correction_limit = next((transition.stage_payload["max_validation_corrections"]
+                                 for transition in state.transitions
+                                 if "max_validation_corrections" in transition.stage_payload),
+                                self.max_validation_corrections)
         with SQLiteIndexRepository.open(
             run_dir / "index" / "targets.sqlite",
             expected_source_ifc_sha256=state.source.sha256,
@@ -549,8 +599,13 @@ class RepairAPI:
             policy_facts: dict[str, tuple[Any, ...]] = {}
             verified_absence: dict[str, tuple[str, ...]] = {}
 
-            def stage2(resolution: Any) -> Mapping[str, Any]:
-                changeset_dir = self.store.prepare_stage_directory(run_id, "changeset")
+            def stage2(
+                resolution: Any, *, validation_feedback: list[dict[str, str]] | None = None,
+                correction_index: int = 0,
+            ) -> Mapping[str, Any]:
+                directory = "changeset" if not correction_index else f"validation-correction-{correction_index:03d}"
+                changeset_dir = self.store.prepare_stage_directory(run_id, directory)
+                feedback_arguments = {} if validation_feedback is None else {"validation_feedback": validation_feedback}
                 if self._changeset_stage is not generate_bound_changeset:
                     generated = self._changeset_stage(
                         provider=self.provider,
@@ -562,6 +617,7 @@ class RepairAPI:
                         base_model_fingerprint=resolution.source_ifc_sha256,
                         registry=self.registry,
                         output_dir=changeset_dir,
+                        **feedback_arguments,
                     )
                     if not generated.get("valid") or generated.get("changeset") is None:
                         raise ValueError("CHANGESET_STAGE_FAILED")
@@ -631,7 +687,7 @@ class RepairAPI:
                 if len(manifests) == 1:
                     only = manifests[0]
                     semantic_manifest_ref = (
-                        f"changeset/semantic-manifest-{only.operation_id}.json"
+                        f"{directory}/semantic-manifest-{only.operation_id}.json"
                     )
                     semantic_manifest_hash = (
                         "sha256:"
@@ -662,7 +718,7 @@ class RepairAPI:
                         changeset_dir / "semantic-manifests.json",
                         bundle_payload,
                     )
-                    semantic_manifest_ref = "changeset/semantic-manifests.json"
+                    semantic_manifest_ref = f"{directory}/semantic-manifests.json"
                     semantic_manifest_hash = (
                         "sha256:"
                         + hashlib.sha256(bundle_payload.encode("utf-8")).hexdigest()
@@ -686,6 +742,7 @@ class RepairAPI:
                     semantic_manifests=manifests,
                     semantic_manifest_hashes=manifest_hashes,
                     semantic_manifest_ref=semantic_manifest_ref,
+                    **feedback_arguments,
                 )
                 if not generated.get("valid") or generated.get("changeset") is None:
                     raise ValueError("CHANGESET_STAGE_FAILED")
@@ -837,10 +894,10 @@ class RepairAPI:
                 expected_state_version=state.state_version,
                 stage_payload={"changeset": self.store.artifact_binding(
                     run_id, changeset_ref, "text2ifc/ifc-repair-changeset/0.1"
-                )},
+                ), "max_validation_corrections": correction_limit},
             )
             self.store.prepare_stage_directory(run_id, "staging")
-            final = orchestrator.apply_and_evaluate(
+            application_arguments = dict(
                 source_ifc_path=Path(state.source.reference),
                 repair_request=repair_text,
                 intent=intent,
@@ -852,6 +909,49 @@ class RepairAPI:
                 deterministic_policy_facts_by_operation=policy_facts,
                 verified_absent_categories_by_operation=verified_absence,
             )
+            if public_context.get("public_geometry_requirements"):
+                application_arguments["public_geometry_requirements"] = public_context["public_geometry_requirements"]
+            seen_changesets = {_executable_changeset_hash(outcome.changeset)}
+            validation_attempts: list[dict[str, Any]] = []
+            validation_corrections: list[dict[str, Any]] = []
+            for candidate_index in range(correction_limit + 1):
+                # Validate immutable source and previously committed boundaries
+                # immediately before each candidate. Never apply to a prior IFC.
+                self.store.load(run_id)
+                final = orchestrator.apply_and_evaluate(
+                    **application_arguments,
+                    **({} if candidate_index == 0 else {"candidate_name": f"validation-candidate-{candidate_index + 1:03d}.ifc"}),
+                )
+                attempt = self._save_validation_attempt(run_id, candidate_index + 1, final, application_arguments["changeset"])
+                validation_attempts.append(attempt)
+                feedback = _public_validation_feedback(final, bound_changeset=application_arguments["changeset"])
+                if not feedback:
+                    break
+                if candidate_index >= correction_limit:
+                    final = replace(final, reason_code="VALIDATION_CORRECTION_EXHAUSTED")
+                    break
+                # The just-failed bundle and candidate are retained before any
+                # feedback or additional Provider transport. One Provider object
+                # carries the existing cumulative observer across all attempts.
+                self.store.load(run_id)
+                try:
+                    outcome = orchestrator.regenerate_changeset(
+                        validation_feedback=feedback, correction_index=candidate_index + 1,
+                    )
+                except Exception as error:
+                    return self._fail(run_id, RunStage.PROVIDER_FAILED,
+                                      _safe_code(error, "CHANGESET_STAGE_FAILED"),
+                                      validation_attempts=validation_attempts)
+                validation_corrections.append(self.store.artifact_binding(
+                    run_id, f"changeset-correction-{candidate_index + 1:03d}.json",
+                    str(outcome.changeset.get("schema_version", "text2ifc/ifc-repair-changeset/0.1")),
+                ))
+                digest = _executable_changeset_hash(outcome.changeset)
+                if digest in seen_changesets:
+                    final = replace(final, reason_code="VALIDATION_CHANGESET_REPEATED")
+                    break
+                seen_changesets.add(digest)
+                application_arguments["changeset"] = outcome.changeset
         terminal = {
             "succeeded": RunStage.SUCCEEDED,
             "audit_failed": RunStage.AUDIT_FAILED,
@@ -866,7 +966,9 @@ class RepairAPI:
             to_stage=terminal,
             expected_state_version=state.state_version,
             reason_code=final.reason_code,
-            stage_payload={"status": final.status},
+            stage_payload={"status": final.status,
+                           "validation_attempts": _committed_attempt_bindings(validation_attempts, final.prepared_root),
+                           "validation_corrections": validation_corrections},
             result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
@@ -912,10 +1014,37 @@ class RepairAPI:
             vector_min_margin=resolver.vector_min_margin,
         )
 
-    def _fail(self, run_id: str, stage: RunStage, reason: str) -> RunResult:
+    def _save_validation_attempt(
+        self, run_id: str, index: int, result: OrchestrationResult, changeset: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        run_dir = self.store.runs_root / run_id
+        name = f"validation-attempt-{index:03d}.json"
+        path = run_dir / name
+        if path.exists():
+            raise RunStoreError("RUN_STATE_CONFLICT", "validation attempt already exists")
+        bindings = {}
+        for key, value in _artifact_references(run_dir, result).items():
+            bindings[key] = self.store.artifact_binding(run_id, value, "text2ifc/ifc-repair-validation-artifact/0.1")
+        if result.manifest:
+            evidence = Path(result.manifest).parent / "terminal/evidence.json"
+            bindings["evidence"] = self.store.artifact_binding(run_id, evidence.relative_to(run_dir).as_posix(), "text2ifc/ifc-repair-validation-artifact/0.1")
+        changeset_path = "changeset.json" if index == 1 else f"changeset-correction-{index - 1:03d}.json"
+        bindings["changeset"] = self.store.artifact_binding(run_id, changeset_path, str(changeset.get("schema_version", "text2ifc/ifc-repair-changeset/0.1")))
+        document = {"schema_version": "text2ifc/ifc-repair-validation-attempt/0.1",
+                    "candidate_index": index, "status": result.status,
+                    "reason_code": result.reason_code, "evaluation": result.evaluation,
+                    "artifacts": bindings}
+        atomic_write_text(path, json.dumps(document, ensure_ascii=False, sort_keys=True, allow_nan=False) + "\n")
+        bindings["attempt"] = self.store.artifact_binding(run_id, name, "text2ifc/ifc-repair-validation-attempt/0.1")
+        return bindings
+
+    def _fail(self, run_id: str, stage: RunStage, reason: str,
+              *, validation_attempts: list[dict[str, Any]] | None = None,
+              scene_diagnostics: dict | None = None) -> RunResult:
         state = self.store.load(run_id)
+        diagnostics = checked_scene_diagnostics(scene_diagnostics) if scene_diagnostics is not None else self.read_scene_diagnostics(run_id)
         artifacts, prepared_root = self._publish_failure_bundle(
-            run_id, stage, reason[:128], state.stage.value
+            run_id, stage, reason[:128], state.stage.value, scene_diagnostics=diagnostics
         )
         self.store.commit_terminal_publication(
             run_id,
@@ -923,19 +1052,23 @@ class RepairAPI:
             to_stage=stage,
             expected_state_version=state.state_version,
             reason_code=reason[:128],
-            stage_payload={"reason_code": reason[:128]},
+            stage_payload={"reason_code": reason[:128],
+                           **({"scene_diagnostics": diagnostics} if diagnostics is not None else {}),
+                           **({"validation_attempts": validation_attempts} if validation_attempts else {})},
             result_artifacts=artifacts,
         )
         return self.store.read_result(run_id)
 
     def _publish_failure_bundle(
         self, run_id: str, stage: RunStage, reason: str, from_stage: str,
+        *, scene_diagnostics: dict | None = None,
     ) -> tuple[dict[str, str], str]:
         run_dir = self.store.runs_root / run_id
         published = publish_terminal_artifacts(
             run_directory=run_dir, terminal_status=stage.value,
             evaluation=_terminal_failure_evaluation(reason), candidate_ifc_path=None,
-            evidence={"reason_code": reason, "stage": from_stage},
+            evidence={"reason_code": reason, "stage": from_stage,
+                      **({"scene_diagnostics": scene_diagnostics} if scene_diagnostics is not None else {})},
             promote=False,
         )
         if published.prepared_root is None:
@@ -953,12 +1086,14 @@ class RepairAPI:
         name: str = "api-context.json",
         scene_mode: bool = False,
         installation_references: Mapping[str, Any] | None = None,
+        public_geometry_requirements: Mapping[str, Any] | None = None,
     ) -> str:
         payload = (
             json.dumps(
                 {"schema_version": _context_version(scene_mode), "repair_text": repair_text, "intent": intent.to_dict(),
                  **({"scene_grounding_version": SCENE_GROUNDING_VERSION,
-                     "installation_references": dict(installation_references or {})} if scene_mode else {})},
+                     "installation_references": dict(installation_references or {}),
+                     "public_geometry_requirements": dict(public_geometry_requirements or {})} if scene_mode else {})},
                 ensure_ascii=False,
                 sort_keys=True,
                 separators=(",", ":"),
@@ -968,12 +1103,35 @@ class RepairAPI:
         return name
 
 
+def _scene_payload(result: Mapping[str, Any]) -> dict:
+    value = checked_scene_diagnostics(result.get("scene_diagnostics"))
+    return {"scene_diagnostics": value} if value is not None else {}
+
+
+def _required_parameter_slot(item: Any) -> str | None:
+    if not isinstance(item, Mapping):
+        return None
+    if item.get("slot"):
+        return str(item["slot"])
+    path = item.get("path")
+    if (
+        isinstance(path, str)
+        and path.startswith("/parameters/")
+        and isinstance(item.get("fact"), str)
+        and item["fact"]
+        and not any(key in item for key in ("token", "public_id", "ifc_class"))
+    ):
+        # Structural hooks describe missing facts with paths, not identities.
+        return path
+    return None
+
+
 def _clarification(run_id: str, version: int, resolution: Any) -> Clarification:
     raw_candidates = tuple(resolution.candidates)
     slots = tuple(
-        str(item["slot"])
+        slot
         for item in raw_candidates
-        if isinstance(item, Mapping) and item.get("slot")
+        if (slot := _required_parameter_slot(item)) is not None
     )
     candidates = tuple(
         ClarificationCandidate(
@@ -1157,7 +1315,7 @@ def _parameter_clarification(
 
 
 def _context_version(scene_mode: bool) -> str:
-    return "text2ifc/ifc-repair-api-context/0.3" if scene_mode else "text2ifc/ifc-repair-api-context/0.1"
+    return "text2ifc/ifc-repair-api-context/0.4" if scene_mode else "text2ifc/ifc-repair-api-context/0.1"
 
 
 def _context_scene_mode(context: Mapping[str, Any]) -> bool:
@@ -1184,6 +1342,121 @@ def _artifact_references(run_dir: Path, result: OrchestrationResult) -> dict[str
     if evaluation.is_file():
         references["evaluation"] = evaluation.relative_to(run_dir).as_posix()
     return references
+
+
+def _executable_changeset_hash(changeset: Mapping[str, Any]) -> str:
+    """Ignore labels and relocated authority refs; retain executable content."""
+    document = json.loads(json.dumps(changeset, ensure_ascii=False, allow_nan=False))
+    for key in ("changeset_id", "draft_id", "semantic_manifest_ref"):
+        document.pop(key, None)
+    for key in ("preconditions", "postconditions", "evidence_refs"):
+        if key in document:
+            document[key] = sorted(set(document[key]))
+    if isinstance(document.get("scope"), Mapping):
+        document["scope"] = {key: sorted(set(value)) for key, value in document["scope"].items()}
+    for operation in document.get("operations", ()):
+        if "evidence_refs" in operation:
+            operation["evidence_refs"] = sorted(set(operation["evidence_refs"]))
+    rendered = json.dumps(document, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
+    return hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+
+
+def _public_validation_feedback(
+    result: OrchestrationResult, *, bound_changeset: Mapping[str, Any] | None = None,
+) -> list[dict[str, str]]:
+    """Describe public checks and their already-bound operation/location.
+
+    Missing authority, preservation, path/source/identity/scope, reopen/schema,
+    or unmeasurable gates stop. Exception reports are not correction facts.
+    """
+    report = result.evaluation
+    if result.reason_code or result.status not in {"l1_failed", "l2_failed", "l2_partial"} or not isinstance(report, Mapping):
+        return []
+    if report.get("successful_artifact_publishable") is not False or report.get("complete_repair_success") is not False:
+        return []
+    if any((report.get(key) or {}).get("status") != "passed" for key in ("application", "preservation")):
+        return []
+    changeset = result.changeset if bound_changeset is None else bound_changeset
+    if not isinstance(changeset, Mapping):
+        return []
+    bound = {item["operation_id"]: item for item in changeset.get("operations", ())}
+    feedback = []
+    unsafe = ("source", "preservation", "scope", "authority", "reopen", "schema", "private", "identity", "fingerprint", "unauthor", "unoffered", "conflict")
+    for operation_index, operation in enumerate(report.get("operations", ())):
+        public_operation = bound.get(operation.get("operation_id"))
+        if (public_operation is None
+                or public_operation.get("operation_type") != operation.get("operation_type")):
+            return []
+        for level_index, level in enumerate(operation.get("levels", ())):
+            if level.get("status") == "not_evaluable":
+                return []
+            for check_index, check in enumerate(level.get("checks", ())):
+                if check.get("mandatory") is not True:
+                    continue
+                status = check.get("status")
+                if status == "not_evaluable":
+                    return []
+                if status not in {"failed", "partial"}:
+                    continue
+                identifier = str(check.get("check_id", ""))
+                if not re.fullmatch(r"[A-Za-z0-9_.-]{1,128}", identifier) or any(token in identifier.casefold() for token in unsafe):
+                    return []
+                descriptions = {
+                    "dimension": "The required dimensions were not satisfied",
+                    "type": "The required IFC type assignment was not satisfied",
+                    "material": "The required material assignment was not satisfied",
+                    "classification": "The required classification was not satisfied",
+                    "quantity": "The required quantity assignment was not satisfied",
+                    "pset": "The required property-set assignment was not satisfied",
+                    "label": "The required label assignment was not satisfied",
+                    "host": "The required host relationship was not satisfied",
+                    "storey": "The required storey relationship was not satisfied",
+                    "is_external": "The required exterior/interior property was not satisfied",
+                    "physical": "The required physical/output checks were not satisfied",
+                }
+                description = descriptions.get(check.get("difference_category"), "A mandatory production check was not satisfied")
+                if identifier == "l2.public-request-geometry":
+                    description = "The output's world geometry differs from the original public placement requirement"
+                message = (f"Error: {description} ({identifier}, {status}). "
+                           f"Location: {_validation_location(public_operation)}. "
+                           "Regenerate this ChangeSet within the unchanged public bindings.")
+                feedback.append({"code": "PRODUCTION_CHECK_FAILED",
+                                 "path": f"/operations/{operation_index}/levels/{level_index}/checks/{check_index}",
+                                 "message": message[:512]})
+    return feedback if 0 < len(feedback) <= 32 else []
+
+
+def _validation_location(operation: Mapping[str, Any]) -> str:
+    """Only public bound targets/position facts; no evaluator free text/values."""
+    target = operation.get("target", {})
+    identities = [f"{key}={value}" for key, value in target.items()
+                  if key.endswith("_global_id") and isinstance(value, str)
+                  and re.fullmatch(r"[0-9A-Za-z_$]{22}", value)]
+    parameters = operation.get("parameters", {})
+    position = parameters.get("position", {})
+    facts = {}
+    if position.get("reference") in {"wall_local_start", "world", "global"}:
+        facts["reference"] = position["reference"]
+    for key in ("center_offset_mm", "x_mm", "y_mm", "z_mm", "elevation_mm"):
+        value = position.get(key)
+        if type(value) in {int, float} and math.isfinite(value):
+            facts[key] = value
+    sill = parameters.get("opening", {}).get("sill_height_mm")
+    if type(sill) in {int, float} and math.isfinite(sill):
+        facts["sill_height_mm"] = sill
+    context = ", ".join(identities[:2]) or "the already-bound target"
+    if facts:
+        context += "; " + json.dumps(facts, ensure_ascii=False, separators=(",", ":"))
+    return f"operation {operation['operation_id']} ({operation['operation_type']}), {context}"[:280]
+
+
+def _committed_attempt_bindings(attempts: list[dict[str, Any]], prepared_root: str | None) -> list[dict[str, Any]]:
+    # The winning/final prepared root moves through RunStore's journal. Its
+    # canonical manifest binds the relocated bytes; prior failed bundles stay.
+    name = Path(prepared_root).name if prepared_root else None
+    return [{key: binding for key, binding in attempt.items()
+             if name is None or not str(binding["path"]).startswith(name + "/")}
+            for attempt in attempts]
 
 
 def _safe_code(error: Exception, fallback: str) -> str:

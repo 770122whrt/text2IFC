@@ -456,6 +456,8 @@ def evaluate_repair_application(
                     before_model=before_model,
                     after_model=after_model,
                     application=application.get("changes", {}),
+                    batch_operations=tuple(changeset["operations"]),
+                    batch_applications=operation_results_by_id,
                 ),
             }
         )

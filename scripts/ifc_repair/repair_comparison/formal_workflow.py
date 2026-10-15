@@ -11,6 +11,7 @@ from copy import deepcopy
 import csv
 from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -19,8 +20,15 @@ from .contracts import read_json, write_json, sha256, safe_path
 from .formal_batch import check_candidate
 from .formal_scoring import score, DEFAULT_POLICY
 from .ledger import Ledger, TERMINAL
+from .budget import FIXED_BUDGET_POLICY_VERSION, fixed_budget_profile, validate_fixed_budget_policy
+from .dsh_search import search_configuration
 
 SCHEMA = 'repair-comparison-formal-plan/0.1'
+LEGACY_EXECUTION_SCHEMA = 'repair-comparison-execution-plan/0.1'
+EXECUTION_SCHEMA = 'repair-comparison-execution-plan/0.2'
+EXECUTION_SEAL_FILES = ('public/model.ifc','public/request.txt','private/task.json',
+                      'private/answer-card.json','private/checks.json','private/reference.ifc',
+                      'private/mutation/damaged.ifc')
 TARGET_FIELDS = {
     'basis','ifc_class','width_mm','height_mm','opening_center_xy_m','opening_bottom_world_m',
     'match_center_world_m','coarse_match_m','host_guid','storey_guid','reference_guid',
@@ -28,11 +36,27 @@ TARGET_FIELDS = {
 }
 REQUIRED_TARGET = {'basis','ifc_class','width_mm','height_mm','opening_center_xy_m',
                    'opening_bottom_world_m','match_center_world_m','host_guid','reference_guid'}
-BUDGETS = {
-    'S1': {'tokens':1_250_000,'calls':48,'active_seconds':1800,'tool_seconds':120,'extensions':[]},
-    'S2': {'tokens':1_750_000,'calls':64,'active_seconds':2400,'tool_seconds':120,'extensions':[]},
-    'S3': {'tokens':2_500_000,'calls':80,'active_seconds':3000,'tool_seconds':120,'extensions':[]},
-}
+BUDGETS = {level:fixed_budget_profile(level) for level in ('S1','S2','S3')}
+
+
+def task_budget_level(task):
+    """Use the reviewed task scale, including property and mixed repairs."""
+    level = task.get('damage_profile',{}).get('level') or task.get('damage_scale')
+    fixed_budget_profile(level)  # Explicitly reject missing/unknown task scale.
+    return level
+
+
+def fixed_case_budgets(cases_root, case_ids):
+    return {name:fixed_budget_profile(task_budget_level(read_json(Path(cases_root)/name/'private/task.json')))
+            for name in case_ids}
+
+
+def _validate_fixed_case_budgets(cases_root, case_ids, budgets):
+    if not isinstance(budgets,dict) or set(budgets)!=set(case_ids):
+        raise ValueError('ONE_BUDGET_PER_CASE_REQUIRED')
+    for name in case_ids:
+        level=task_budget_level(read_json(Path(cases_root)/name/'private/task.json'))
+        validate_fixed_budget_policy(budgets[name],primary_target_count={'S1':1,'S2':2,'S3':3}[level])
 SEAL_FILES = ('public/model.ifc','public/request.txt','private/task.json',
               'private/answer-card.json','private/technical-review.json',
               'private/checks.json','private/reference.ifc','private/mutation/damaged.ifc')
@@ -61,7 +85,7 @@ def target_policy(task):
             'frozen':True,'targets':targets}
 
 
-def freeze(cases_root, output, *, expected_count=20, budgets=None, models=None):
+def freeze(cases_root, output, *, expected_count=20, budgets=None, models=None,d_web_access=None):
     cases_root, output = safe_path(Path(cases_root)), safe_path(Path(output))
     if output.exists():
         raise ValueError('PLAN_EXISTS_USE_VERIFY_NO_OVERWRITE')
@@ -81,10 +105,13 @@ def freeze(cases_root, output, *, expected_count=20, budgets=None, models=None):
             raise ValueError('DIFFERENT_SOURCE_IFC_REQUIRED')
         sources.add(task['source_sha256'])
         policy = target_policy(task)
-        profiles[case.name] = deepcopy((budgets or {}).get(case.name,BUDGETS[task['damage_profile']['level']]))
+        level=task_budget_level(task)
+        profiles[case.name] = deepcopy((budgets or {}).get(case.name,fixed_budget_profile(level)))
+        validate_fixed_budget_policy(profiles[case.name],primary_target_count={'S1':1,'S2':2,'S3':3}[level])
         staged.append((case,task,policy))
     configuration = carrier.batch_configuration(cases_root=cases_root, case_ids=[p.name for p in paths],
-        budgets=profiles,stage=carrier.FORMAL_STAGE,models=models,scene_grounding=True)
+        budgets=profiles,stage=carrier.FORMAL_STAGE,models=models,scene_grounding=True,
+        b_validation_corrections=2,d_web_access=d_web_access)
     rows = []
     for case,task,policy in staged:
         task['metrics'] = {'status':'frozen','formal_scoring_frozen':True,
@@ -97,8 +124,10 @@ def freeze(cases_root, output, *, expected_count=20, budgets=None, models=None):
                      'files':{name:sha256(case/name) for name in SEAL_FILES}})
     plan = {'schema_version':SCHEMA,'stage':carrier.FORMAL_STAGE,
             'created_at':datetime.now(timezone.utc).isoformat(), 'configuration':configuration,'cases':rows,
-            'budget_basis':'Pre-run scale limits from two-demo evidence (B 55k/310k, C 147k/186k, D 1.09M partial and A 2.19M exhausted); same limit for four arms of a case, no outcome-driven extension.',
-            'authorization':{'model_token_target':20_000_000,'over_target_requires_new_approval':False,
+            'budget_policy_version':FIXED_BUDGET_POLICY_VERSION,
+            'budget_basis':'Fixed reviewed primary-target scale; same limit for four arms; no outcome-driven extension.',
+            'authorization':{'model_token_target':20_000_000,'total_api_token_limit':20_000_000,
+                             'over_target_requires_new_approval':True,
                              'review':'Delegated technical review; human_viewed is recorded per case.'},
             'limitations':['Twenty different source IFCs are not twenty independent building families.',
                 'IFC native validation and world-coordinate mesh checks do not prove usBIM display compatibility.',
@@ -111,6 +140,8 @@ def freeze(cases_root, output, *, expected_count=20, budgets=None, models=None):
 
 def verify_plan(path):
     plan = read_json(safe_path(Path(path)))
+    if plan.get('schema_version') in {EXECUTION_SCHEMA,LEGACY_EXECUTION_SCHEMA}:
+        return verify_execution_plan(path, plan=plan)
     if plan.get('schema_version') != SCHEMA or plan.get('stage') != carrier.FORMAL_STAGE:
         raise ValueError('FORMAL_PLAN_REQUIRED')
     configuration = plan['configuration']
@@ -128,12 +159,89 @@ def verify_plan(path):
     return plan
 
 
+def freeze_execution(cases_root, output, *, case_ids, total_token_limit, budgets=None, b=None,
+                     models=None,d_web_search=None,b_validation_corrections=2,d_web_access=None):
+    """Freeze public runs and evidence while leaving comparative scores deferred."""
+    cases_root,output=safe_path(Path(cases_root)),safe_path(Path(output))
+    if output.exists():raise ValueError('PLAN_EXISTS_USE_VERIFY_NO_OVERWRITE')
+    budgets=fixed_case_budgets(cases_root,case_ids) if budgets is None else deepcopy(budgets)
+    _validate_fixed_case_budgets(cases_root,case_ids,budgets)
+    configuration=carrier.batch_configuration(cases_root=cases_root,case_ids=case_ids,budgets=budgets,
+        stage=carrier.FORMAL_STAGE,models=models,scene_grounding=True,b=b,d_web_search=d_web_search,
+        b_validation_corrections=b_validation_corrections,d_web_access=d_web_access)
+    if (type(total_token_limit) is not int or total_token_limit<=0
+            or max(profile['tokens'] for profile in budgets.values())>total_token_limit):
+        raise ValueError('TOTAL_TOKEN_LIMIT_TOO_SMALL')
+    staged=[];sources=set()
+    for case_id in configuration['case_ids']:
+        case=cases_root/case_id;task=read_json(case/'private/task.json')
+        if task['case_id']!=case_id or not _review_ok(task.get('review',{})):
+            raise ValueError('TASK_REVIEW_REQUIRED:'+case_id)
+        checks=read_json(case/'private/checks.json')
+        if not checks.get('checks') or not all(value is True for value in checks['checks'].values()):
+            raise ValueError('PREPARATION_CHECKS_REQUIRED:'+case_id)
+        if (sha256(case/'private/reference.ifc')!=task['source_sha256']
+                or sha256(case/'public/model.ifc')!=task['damaged_sha256']
+                or sha256(case/'private/mutation/damaged.ifc')!=task['damaged_sha256']
+                or (case/'public/request.txt').read_text(encoding='utf8').strip()!=task['request'].strip()):
+            raise ValueError('TASK_BINDING_CHANGED:'+case_id)
+        card=read_json(case/'private/answer-card.json')
+        if (card.get('status')!='accepted_by_delegation'
+                or card.get('required_user_facts')!=task['clarification']['required_user_facts']):
+            raise ValueError('ANSWER_CARD_REVIEW_REQUIRED:'+case_id)
+        if task['source_sha256'] in sources:raise ValueError('DIFFERENT_SOURCE_IFC_REQUIRED')
+        sources.add(task['source_sha256']);staged.append((case,task))
+    rows=[]
+    for case,task in staged:
+        rows.append({'case_id':case.name,'source':task['source'],'source_sha256':task['source_sha256'],
+                     'review':task['review'],'files':{name:sha256(case/name) for name in EXECUTION_SEAL_FILES}})
+    maximum_task_caps=4*sum(p['tokens'] for p in budgets.values())
+    plan={'schema_version':EXECUTION_SCHEMA,'stage':carrier.FORMAL_STAGE,
+          'created_at':datetime.now(timezone.utc).isoformat(),'configuration':configuration,'cases':rows,
+          'metrics':{'status':'deferred','repair_success_not_inferred_from_submission':True},
+          'budget_policy_version':FIXED_BUDGET_POLICY_VERSION,
+          'maximum_task_caps_tokens':maximum_task_caps,
+          'authorization':{'total_api_token_limit':total_token_limit,'goal_created':False,
+                           'scope':'Reviewed cases, four arms; shared fixed limits; preserve every attempt'},
+          'reserved_for_exceptions_tokens':max(0,total_token_limit-maximum_task_caps)}
+    output.parent.mkdir(parents=True,exist_ok=True)
+    write_json(output,plan)
+    return plan
+
+
+def verify_execution_plan(path, *, plan=None):
+    plan=read_json(safe_path(Path(path))) if plan is None else plan
+    config=plan['configuration']
+    normalized=carrier.batch_configuration(cases_root=config['cases_root'],case_ids=config['case_ids'],
+        budgets=config['budgets'],stage=config['stage'],models=config['models'],scene_grounding=True,b=config.get('b'),
+        d_web_search=config.get('d_web_search'),b_validation_corrections=config.get('b_validation_corrections'),d_web_access=config.get('d_web_access'))
+    if normalized!=config or [r['case_id'] for r in plan['cases']]!=config['case_ids']:
+        raise ValueError('FROZEN_CONFIGURATION_CHANGED')
+    if plan.get('schema_version')==EXECUTION_SCHEMA:
+        if plan.get('budget_policy_version')!=FIXED_BUDGET_POLICY_VERSION:
+            raise ValueError('FIXED_BUDGET_POLICY_MISMATCH')
+        if plan.get('metrics',{}).get('status')!='deferred':
+            raise ValueError('FROZEN_REVIEW_OR_METRICS_CHANGED')
+        _validate_fixed_case_budgets(config['cases_root'],config['case_ids'],config['budgets'])
+    for row in plan['cases']:
+        case=Path(config['cases_root'])/row['case_id']
+        if set(row['files'])!=set(EXECUTION_SEAL_FILES) or any(sha256(case/name)!=v for name,v in row['files'].items()):
+            raise ValueError('FROZEN_TASK_CHANGED:'+row['case_id'])
+        task=read_json(case/'private/task.json')
+        if (not _review_ok(task['review'])
+                or (plan.get('schema_version')==LEGACY_EXECUTION_SCHEMA
+                    and task['metrics']['status']!='deferred')):
+            raise ValueError('FROZEN_REVIEW_OR_METRICS_CHANGED')
+    return plan
+
+
 def initialize(root, plan_path, *, admission, mode='live'):
     plan = verify_plan(plan_path)
     config = plan['configuration']
     result = carrier.initialize(root,mode=mode,admission=admission,
         cases_root=config['cases_root'],case_ids=config['case_ids'],budgets=config['budgets'],
-        models=config['models'],stage=config['stage'],scene_grounding=True)
+        models=config['models'],stage=config['stage'],scene_grounding=True,b=config.get('b'),
+        d_web_search=config.get('d_web_search'),b_validation_corrections=config.get('b_validation_corrections'),d_web_access=config.get('d_web_access'))
     write_json(Path(root)/'formal-plan-binding.json',{'path':str(Path(plan_path).resolve()),'sha256':sha256(Path(plan_path))})
     return result
 
@@ -175,7 +283,9 @@ def card_answer(question, card):
              and any(str(word).casefold() in text for word in fact.get('question_keywords',fact.get('keywords',[])))]
     if not found:
         return None
-    return {'text':'\n'.join(f['answer'] for f in found),
+    if any(not (f.get('answer') or f.get('answer_text')) for f in found):
+        return None
+    return {'text':'\n'.join(f.get('answer') or f['answer_text'] for f in found),
             'requested_fact_ids':[f['fact_id'] for f in found],
             'answered_fact_ids':[f['fact_id'] for f in found],
             'source':'delegated_preapproved_card'}
@@ -240,6 +350,8 @@ def summarize(rows):
 def evaluate(root, *, output=None):
     root = safe_path(Path(root))
     plan = experiment_plan(root)
+    if plan.get('schema_version') in {EXECUTION_SCHEMA,LEGACY_EXECUTION_SCHEMA}:
+        raise ValueError('EXECUTION_METRICS_DEFERRED_USE_BATCH_OPERATOR')
     ledger = Ledger(root/'control.sqlite')
     policies = {r['case_id']:r['policy'] for r in plan['cases']}
     output = safe_path(Path(output)) if output else root/'evaluation'
@@ -318,6 +430,11 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     sub=parser.add_subparsers(dest='action',required=True)
     p=sub.add_parser('freeze');p.add_argument('--cases',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p=sub.add_parser('freeze-execution');p.add_argument('--cases',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--case-ids',nargs='+',required=True);p.add_argument('--total-token-limit',type=int,required=True)
+    p.add_argument('--d-web-search',action='store_true');p.add_argument('--b',type=Path)
+    p.add_argument('--d-web-access',choices=['proxy'])
+    p.add_argument('--b-validation-corrections',type=int,choices=(0,1,2),default=2)
     p=sub.add_parser('verify');p.add_argument('--plan',type=Path,required=True)
     p=sub.add_parser('initialize');p.add_argument('--root',type=Path,required=True);p.add_argument('--plan',type=Path,required=True);p.add_argument('--admission',type=Path)
     p.add_argument('--mode',choices=('offline','live'),default='live')
@@ -325,6 +442,10 @@ def main():
     p=sub.add_parser('evaluate');p.add_argument('--root',type=Path,required=True);p.add_argument('--output',type=Path)
     args=parser.parse_args()
     if args.action=='freeze':value=freeze(args.cases,args.output)
+    elif args.action=='freeze-execution':value=freeze_execution(args.cases,args.output,case_ids=args.case_ids,
+        total_token_limit=args.total_token_limit,b=read_json(args.b) if args.b else None,
+        d_web_search=search_configuration(os.environ) if args.d_web_search else None,d_web_access=args.d_web_access,
+        b_validation_corrections=args.b_validation_corrections)
     elif args.action=='verify':value=verify_plan(args.plan)
     elif args.action=='initialize':value=initialize(args.root,args.plan,admission=args.admission,mode=args.mode)
     elif args.action=='next':value=run_next(args.root,answer_from_card=args.answer_from_card)

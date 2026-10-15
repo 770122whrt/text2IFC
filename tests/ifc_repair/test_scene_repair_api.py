@@ -1,6 +1,7 @@
 """Actual public API chain with keyless Provider fixtures, development D only."""
 import hashlib
 import json
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -11,6 +12,27 @@ from scripts.ifc_repair.repair_comparison.ours_adapter import _draft, _section, 
 
 ROOT = Path(__file__).resolve().parents[2]
 DEVELOPMENT = ROOT / "dataset/processed/ifc-repair/repair-comparison/development"
+
+
+def scene_query_pages(prompt):
+    """Reconstruct fixture views from the actual v0.3 deduplicated snapshot.
+
+    Occurrence and Type rows remain separate in production prompts. Legacy
+    deterministic fixtures use this test-only joined view for their decisions.
+    """
+    snapshot = _section(prompt, "Read-only query results so far")
+    assert isinstance(snapshot, dict), "Scene fixtures require the v0.3 snapshot"
+    records = {record["id"]: record for record in snapshot["records"]}
+    pages = []
+    for query in snapshot["queries"]:
+        page = deepcopy(query)
+        page["records"] = []
+        for identity in query["record_ids"]:
+            record = deepcopy(records[identity])
+            record["type_summary"] = deepcopy(snapshot["types"].get(record.get("type_id")))
+            page["records"].append(record)
+        pages.append(page)
+    return pages
 
 
 class SceneDemoProvider:
@@ -25,7 +47,7 @@ class SceneDemoProvider:
         if "## Immutable bindings" in prompt:
             value = _draft(prompt, kw.get("schema") or _section(prompt, "Draft schema"))
         else:
-            pages = _section(prompt, "Read-only query results so far")
+            pages = scene_query_pages(prompt)
             if self.kind == "door":
                 value = self.door(pages)
             else:
@@ -73,7 +95,9 @@ class SceneDemoProvider:
             body["operations"][0]["target_query"]["global_id"] = target_id
             body["operations"][0]["parameters"]["opening"].pop("width_mm")
             return {"kind": "clarification", "intent": body, "reason": "missing_user_fact",
-                    "question": "要补的窗宽度是多少毫米？", "candidate_ids": []}
+                    "question": "要补的窗宽度是多少毫米？", "candidate_ids": [],
+                    "missing_facts": [{"operation_id": "offline-repair", "path": "/opening/width_mm",
+                                       "source": "user_design", "description": "用户未指定新窗宽度。"}]}
         reference = windows[1]
         _reuse_type(body, reference)
         return {"kind": "intent", "intent": body, "bindings": [{"operation_id": "offline-repair", "target_id": target_id,
@@ -85,6 +109,82 @@ class SceneDemoProvider:
 def _reuse_type(body, reference):
     body["operations"][0]["prototype_intent"] = {"reference_kind": "global_id", "reference": reference["type_id"],
         "source": body["operations"][0]["provenance"][0]}
+
+
+class SelectedNeighboursProvider(SceneDemoProvider):
+    """Public fixture selects two ranked neighbours without requesting the cohort."""
+
+    def __init__(self):
+        super().__init__("window")
+
+    def window(self, pages):
+        if not pages:
+            return {"kind": "query", "query": {"ifc_classes": ["IfcWall"],
+                "world_bounds_mm": {"x": [-14800, -14550], "z": [0, 1]}, "detail": "summary"}}
+        walls = [r for r in pages[0]["records"]
+                 if r.get("wall_axis") and r["wall_axis"]["length_mm"] > 10000]
+        host = min(walls, key=lambda r: r["center_world_mm"][0])
+        if len(pages) == 1:
+            return {"kind": "query", "query": {"ifc_classes": ["IfcWindow"],
+                "host_id": host["id"], "detail": "geometry",
+                "select": {"order_by": "world_y", "descending": True, "ranks": [2, 3]}}}
+        neighbours = pages[1]["records"]
+        assert len(neighbours) == 2
+        body = fixture_intent("window", {"allowed_ifc_classes": ["IfcWall"]},
+            {"opening": {"width_mm": 915., "height_mm": 1830., "sill_height_mm": 305.},
+             "window": {"fit_opening": True}})
+        _reuse_type(body, neighbours[0])
+        return {"kind": "intent", "intent": body, "bindings": [{"operation_id": "offline-repair",
+            "target_id": host["id"], "reference_id": neighbours[0]["id"],
+            "position": {"kind": "between_ranked", "ifc_class": "IfcWindow", "order_by": "world_y",
+                "descending": True, "ranks": [2, 3], "reference_ids": [r["id"] for r in neighbours]}}]}
+
+
+def test_public_api_summary_and_rank_selection_publish_without_disclosing_all_windows(tmp_path):
+    """Real development IFC, deterministic fake Provider; no localization score."""
+    import ifcopenshell
+
+    public = DEVELOPMENT / "case-001/public"
+    source = public / "model.ifc"
+    before = hashlib.sha256(source.read_bytes()).hexdigest()
+    provider = SelectedNeighboursProvider()
+    result = RepairAPI(tmp_path, provider=provider, scene_grounding=True).start(
+        source, (public / "request.txt").read_text(encoding="utf-8"))
+    assert result.status == "succeeded", result.to_dict()
+    assert result.successful_artifact_publishable
+    assert len(provider.calls) == 4  # two scene queries, Intent, then bound ChangeSet
+    scene_calls = [c for c in provider.calls if c["state"]["stage"] == "ifc_repair_scene_grounding"]
+    snapshot = _section(scene_calls[-1]["prompt"], "Read-only query results so far")
+    assert isinstance(snapshot, dict)
+    assert snapshot["source_role"] == "current_public_ifc"
+    assert len(snapshot["queries"]) == 2
+    summary, selected = snapshot["queries"]
+    assert summary["query"]["detail"] == "summary"
+    assert selected["query"]["select"]["ranks"] == [2, 3]
+    assert selected["selection"]["scope"] == "complete_filtered_set"
+    assert selected["total_matches"] > 2 and not selected["complete"]
+    assert selected["selection_complete"]
+    disclosed_windows = [r for r in snapshot["records"] if r["ifc_class"] == "IfcWindow"]
+    assert len(disclosed_windows) == 2
+    assert selected["record_ids"] == [r["id"] for r in disclosed_windows]
+    assert all("type_summary" not in record for record in snapshot["records"])
+    assert all(record["type_id"] in snapshot["types"] for record in disclosed_windows)
+
+    run = tmp_path / result.run_directory
+    evidence = json.loads((run / "intent/grounding-evidence.json").read_text(encoding="utf-8"))
+    assert evidence["derivations"][0]["center_offset_mm"] == pytest.approx(12227.5, abs=.01)
+    selected_ids = {r["id"] for r in disclosed_windows}
+    source_model = ifcopenshell.open(str(source))
+    source_ids = {p.GlobalId for p in source_model.by_type("IfcProduct")}
+    source_windows = {p.GlobalId for p in source_model.by_type("IfcWindow")}
+    assert set(evidence["offered_ids"]) & source_windows == selected_ids
+    repaired = ifcopenshell.open(str(run / result.artifacts["successful_ifc"]))
+    assert repaired.schema == "IFC2X3"
+    added = [p for p in repaired.by_type("IfcWindow") if p.GlobalId not in source_ids]
+    assert len(added) == 1
+    assert added[0].FillsVoids
+    assert any(r.is_a("IfcRelDefinesByType") for r in added[0].IsDefinedBy)
+    assert hashlib.sha256(source.read_bytes()).hexdigest() == before
 
 
 @pytest.mark.parametrize("case,kind,mixed_queries", [("case-001", "window", False),

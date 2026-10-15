@@ -8,6 +8,7 @@ import uuid
 
 from .neutral_tools import NeutralTools
 from .budget import positive
+from .container_command import validate_argv
 
 IMAGE='text2ifc/repair-tools:py312-ifc085-v2'
 
@@ -27,6 +28,7 @@ class ContainerTools(NeutralTools):
         self.quiescent=True
 
     def execute(self,argv,timeout_s=None):
+        validate_argv(argv)
         timeout=self.tool_seconds if timeout_s is None else timeout_s
         if not positive(timeout):
             raise ValueError('INVALID_TOOL_TIMEOUT')

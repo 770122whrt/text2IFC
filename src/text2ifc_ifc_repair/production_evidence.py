@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
+import json
 import math
 from types import MappingProxyType
 from typing import Any, Mapping
@@ -25,7 +26,11 @@ from .run_models import hash_json
 from .index_models import ElementRecord, TypeRecord
 from .registry import OperationRegistry
 from .repair_intent import AttributeIntent, RepairIntent
-from .property_intent import ExactPropertyIntent, NaturalLanguagePropertyIntent
+from .property_intent import (
+    ExactPropertyIntent,
+    NaturalLanguagePropertyIntent,
+    validate_authorized_property_fact,
+)
 from .resolution_flow import ResolutionBatch, ResolvedOperation
 from .semantic_facts import (
     SemanticFact,
@@ -168,6 +173,7 @@ def build_production_evidence(
             policy=policy,
             request_hash=intent.source_request_hash,
             model_fingerprint=intent.model_fingerprint,
+            property_target_class=registry.require(operation_type).editable_occurrence_ifc_class,
         )
         if (
             registry.require(operation_type).capability_constraints.get(
@@ -223,6 +229,7 @@ def _operation_candidates(
     policy: Any,
     request_hash: str,
     model_fingerprint: str,
+    property_target_class: str | None = None,
 ) -> tuple[SemanticFact, ...]:
     facts: list[SemanticFact] = [
         _request_fact(operation_id, item) for item in operation_intent.attribute_intents
@@ -363,6 +370,7 @@ def _operation_candidates(
                     resolved_operation=resolved_operation,
                     request_hash=request_hash,
                     model_fingerprint=model_fingerprint,
+                    target_ifc_class=property_target_class or target.ifc_class,
                 )
             )
             continue
@@ -574,19 +582,18 @@ def _authorized_property_fact(
     resolved_operation: ResolvedOperation,
     request_hash: str,
     model_fingerprint: str,
+    target_ifc_class: str | None = None,
 ) -> SemanticFact:
     supplied_hash = str(authority.get("property_hash", ""))
-    expected_hash = hash_json(
-        {
-            str(key): value
-            for key, value in authority.items()
-            if key != "property_hash"
-        }
-    )
-    if supplied_hash != expected_hash:
-        raise ProductionEvidenceError(
-            "AUTHORIZED_PROPERTY_HASH_MISMATCH", operation_id
-        )
+    if target_ifc_class is None:
+        allowed_classes = operation_intent.target_query.allowed_ifc_classes
+        if len(allowed_classes) != 1:
+            raise ProductionEvidenceError("AUTHORIZED_PROPERTY_BINDING_MISMATCH", operation_id)
+        target_ifc_class = allowed_classes[0]
+    try:
+        validate_authorized_property_fact(authority, target_ifc_class=target_ifc_class)
+    except ValueError as exc:
+        raise ProductionEvidenceError(str(exc), operation_id) from exc
     if (
         authority.get("operation_id") != operation_id
         or authority.get("target_global_id") != resolved_operation.target_global_id
@@ -624,6 +631,9 @@ def _authorized_property_fact(
             f"operation:{operation_id}",
             f"property-hash:{supplied_hash}",
             f"source_fact_key:pset:{exact_path}",
+            "property-authority:" + json.dumps(
+                dict(authority), ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ),
             *(
                 (f"confirmation:{authority['confirmation_ref']}",)
                 if authority.get("confirmation_ref")
@@ -731,6 +741,8 @@ def _property_claim_matches_authority(
         claim.set_name == authority.get("set_name")
         and claim.property_name == authority.get("property_name")
         and claim.value == authority.get("value")
+        and (claim.requested_value_type is None or claim.requested_value_type == authority.get("value_type"))
+        and (claim.requested_unit is None or claim.requested_unit == authority.get("unit"))
     )
 
 

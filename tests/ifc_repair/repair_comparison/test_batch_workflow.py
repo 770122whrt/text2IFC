@@ -354,7 +354,7 @@ def _formal_public_inputs(root):
 
 
 class _FormalSceneProvider:
-    """Echo synthetic public geometry/explicit fixture facts through real scene 0.2."""
+    """Echo synthetic public geometry/explicit fixture facts through scene v0.3."""
     def __init__(self, case):
         self.case, self.asked = case, False
 
@@ -365,7 +365,8 @@ class _FormalSceneProvider:
         if '## Immutable bindings' in prompt:
             value = _draft(prompt, kwargs.get('schema') or _section(prompt, 'Draft schema'))
         else:
-            pages = _section(prompt, 'Read-only query results so far')
+            from tests.ifc_repair.test_scene_repair_api import scene_query_pages
+            pages = scene_query_pages(prompt)
             if not pages:
                 value = {'kind': 'query', 'query': {'ifc_classes': ['IfcWall']}}
             else:
@@ -380,7 +381,10 @@ class _FormalSceneProvider:
                     self.asked = True
                     for op in intent['operations']: op['parameters']['opening'].pop('width_mm')
                     value = {'kind': 'clarification', 'intent': intent, 'reason': 'missing_user_fact',
-                             'question': '两个窗的宽度分别是多少毫米？', 'candidate_ids': []}
+                             'question': '两个窗的宽度分别是多少毫米？', 'candidate_ids': [],
+                             'missing_facts': [{'operation_id': op['operation_id'], 'path': '/opening/width_mm',
+                                'source': 'user_design', 'description': '用户未指定新窗宽度。'}
+                                for op in intent['operations']]}
                 else:
                     points = (2000., 6000.) if self.case == 'synthetic-002' else (1500., 4500.)
                     value = {'kind': 'intent', 'intent': intent, 'bindings': [

@@ -5,15 +5,24 @@ from copy import deepcopy
 import math
 
 from .scene_context import PublicScene, SceneError, ORDER_AXES, class_matches
+from .scene_query import SceneQueryError, apply_constraints
+from .public_geometry import (
+    PublicGeometryError, calibrate_request_geometry, validate_geometry_coverage,
+)
 
 
 class GroundingError(ValueError):
-    pass
+    def __init__(self, message: str, *, path: str | None = None):
+        super().__init__(message)
+        if path is not None:
+            self.path = path
 
 
-def bind_spatial_intent(body: dict, bindings: list[dict], scene: PublicScene) -> tuple[dict, list[dict]]:
+def bind_spatial_intent(body: dict, bindings: list[dict], scene: PublicScene, *,
+                        repair_request: str = "") -> tuple[dict, list[dict]]:
     document = deepcopy(body)
     by_operation = {b["operation_id"]: b for b in bindings}
+    binding_indices = {b["operation_id"]: index for index, b in enumerate(bindings)}
     if len(by_operation) != len(bindings) or set(by_operation) != {o["operation_id"] for o in document["operations"]}:
         raise GroundingError("SCENE_OPERATION_BINDING_MISMATCH")
     evidence = []
@@ -32,11 +41,24 @@ def bind_spatial_intent(body: dict, bindings: list[dict], scene: PublicScene) ->
         op["target_query"]["global_id"] = target["id"]
         item = {"operation_id": op["operation_id"], "target_id": target["id"],
                 "source_role": "current_public_ifc", "derivation": "offered_identity"}
+        for role in ("target", "reference"):
+            query_id = b.get(f"{role}_query_id")
+            identity = b.get(f"{role}_id")
+            if query_id:
+                try:
+                    scene.verify_query_binding(query_id, identity)
+                except SceneError as error:
+                    raise GroundingError(str(error),
+                        path=f"/bindings/{binding_indices[op['operation_id']]}/{role}_query_id") from error
+                item[f"{role}_query_id"] = query_id
         if b.get("reference_id"):
             reference = _offered(scene, b["reference_id"])
             item["reference_occurrence_id"] = reference["id"]
             if b.get("reference_point_world_mm"):
                 _validate_locator(reference, b["reference_point_world_mm"], scene)
+            if b.get("reference_locator"):
+                _validate_typed_locator(reference, b["reference_locator"], scene, query_id=b.get("reference_query_id"))
+                item["reference_locator"] = deepcopy(b["reference_locator"])
             prototype = op.get("prototype_intent")
             if prototype and (prototype["reference_kind"] != "global_id" or
                               prototype["reference"] != reference.get("type_id")):
@@ -44,7 +66,29 @@ def bind_spatial_intent(body: dict, bindings: list[dict], scene: PublicScene) ->
         if "target_point_world_mm" in b:
             _validate_locator(target, b["target_point_world_mm"], scene)
             item["target_point_world_mm"] = b["target_point_world_mm"]
-        if b.get("position"):
+        if b.get("target_locator"):
+            _validate_typed_locator(target, b["target_locator"], scene, query_id=b.get("target_query_id"))
+            item["target_locator"] = deepcopy(b["target_locator"])
+        try:
+            requirement = calibrate_request_geometry(op, b, scene, repair_request)
+        except PublicGeometryError as error:
+            raise GroundingError(str(error)) from error
+        if requirement is not None:
+            item.update(derivation="original_public_placement_compiled", public_geometry_requirement=requirement)
+            if (op['operation_type'] in {'add_door_with_opening_to_wall', 'fill_existing_opening_with_door'}
+                    and requirement.get('reference_id') and op.get('prototype_intent') is None):
+                # Exact-copy authority was compiled from the original request
+                # and this offered occurrence. Bind its public Type before
+                # Door canonicalization asks for new-design swing facts.
+                reference = _offered(scene, requirement['reference_id'])
+                if not reference.get('type_id'):
+                    raise GroundingError('SCENE_REFERENCE_TYPE_UNAVAILABLE')
+                op['prototype_intent'] = {
+                    'reference_kind': 'global_id', 'reference': reference['type_id'],
+                    'source': {'source_kind': 'user_request', 'reference': 'request:/text',
+                               'excerpt': requirement['source_excerpt']},
+                }
+        elif b.get("position"):
             position = b["position"]
             if position["kind"] == "between_ranked":
                 point, refs = _ranked_midpoint(target, position, scene)
@@ -69,6 +113,10 @@ def bind_spatial_intent(body: dict, bindings: list[dict], scene: PublicScene) ->
         # reuse and the type identity attached to an offered occurrence.
         _verify_identity_references(op, scene)
         evidence.append(item)
+    try:
+        validate_geometry_coverage(document, evidence, repair_request)
+    except PublicGeometryError as error:
+        raise GroundingError(str(error)) from error
     return document, evidence
 
 
@@ -84,7 +132,14 @@ def _ranked_midpoint(target: dict, position: dict, scene: PublicScene) -> tuple[
          "order_by": position["order_by"], "descending": position["descending"]}
     records = scene.complete_records(q)
     if records is None:
-        raise GroundingError("SCENE_ORDER_INCOMPLETE")
+        # A verified program selection establishes full-cohort ordering without
+        # disclosing every member. Only the selected reference IDs are offered.
+        selected = scene.verified_selection(q, position["ranks"], position["reference_ids"])
+        ranks = position["ranks"]
+        if (selected is None or len(ranks) != 2 or ranks[1] != ranks[0]+1):
+            raise GroundingError("SCENE_ORDER_INCOMPLETE")
+        return [(selected[0]["center_world_mm"][i]+selected[1]["center_world_mm"][i])/2
+                for i in range(3)], [r["id"] for r in selected]
     ranks = position["ranks"]
     if len(ranks) != 2 or any(type(r) is not int or r < 1 or r > len(records) for r in ranks) or ranks[1] != ranks[0]+1:
         raise GroundingError("SCENE_RANK_INVALID")
@@ -92,7 +147,9 @@ def _ranked_midpoint(target: dict, position: dict, scene: PublicScene) -> tuple[
     if axis is None:
         raise GroundingError("SCENE_ORDINAL_GEOMETRY_REQUIRED")
     coordinates = [r["center_world_mm"][axis] for r in records]
-    if any(abs(a-b) < 1e-3 for a, b in zip(coordinates, coordinates[1:])):
+    if any(abs(coordinates[index]-coordinates[neighbor]) < 1e-3
+           for index in (rank-1 for rank in ranks)
+           for neighbor in (index-1, index+1) if 0 <= neighbor < len(coordinates)):
         raise GroundingError("SCENE_ORDER_AMBIGUOUS")
     refs = [records[i-1] for i in ranks]
     if [r["id"] for r in refs] != position["reference_ids"]:
@@ -130,6 +187,25 @@ def _validate_locator(target: dict, point: list[float], scene: PublicScene) -> N
         raise GroundingError("SCENE_LOCATOR_AMBIGUOUS")
     if any(r["ifc_class"] == target["ifc_class"] and not r.get("bounds_world_mm") for r in scene.records):
         raise GroundingError("SCENE_LOCATOR_GEOMETRY_INCOMPLETE")
+
+
+def _validate_typed_locator(target: dict, locator: dict, scene: PublicScene,
+                            *, query_id: str | None = None) -> None:
+    """Compare like-for-like points; a placement may be outside its Body."""
+    query = {"predicates": [{"kind": "point", **locator}]}
+    try:
+        records = scene.verified_query_records(query_id, target["id"]) if query_id else scene.records
+        target_class = "IfcWall" if target["ifc_class"] == "IfcWallStandardCase" else target["ifc_class"]
+        scope = [record for record in records if class_matches(record["ifc_class"], target_class)]
+        matches, unknown = apply_constraints(scope, query, {})
+    except (SceneError, SceneQueryError) as error:
+        raise GroundingError("SCENE_LOCATOR_INVALID: " + str(error)) from error
+    if unknown:
+        raise GroundingError("SCENE_LOCATOR_GEOMETRY_INCOMPLETE")
+    if target["id"] not in {record["id"] for record in matches}:
+        raise GroundingError("SCENE_LOCATOR_MISMATCH")
+    if len(matches) != 1:
+        raise GroundingError("SCENE_LOCATOR_AMBIGUOUS")
 
 
 def _verify_identity_references(value: object, scene: PublicScene) -> None:

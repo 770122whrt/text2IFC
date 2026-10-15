@@ -126,6 +126,23 @@ class RepairOrchestrator:
         self._write("changeset.json", changeset)
         return OrchestrationResult(status="changeset_ready", changeset=changeset)
 
+    def regenerate_changeset(
+        self, *, validation_feedback: list[dict[str, str]], correction_index: int,
+    ) -> OrchestrationResult:
+        """Generate a new candidate without replacing any committed ChangeSet."""
+        if self._resolution is None or self._resolution.status != "resolved":
+            raise ValueError("REPAIR_RESOLUTION_NOT_EXACT")
+        name = f"changeset-correction-{correction_index:03d}.json"
+        if (self.run_directory / name).exists():
+            raise ValueError("CHANGESET_STAGE_ALREADY_COMMITTED")
+        changeset = self._changeset_stage(
+            self._resolution,
+            validation_feedback=validation_feedback,
+            correction_index=correction_index,
+        )
+        self._write(name, changeset)
+        return OrchestrationResult(status="changeset_ready", changeset=changeset)
+
     def _write(self, name: str, value: Any) -> None:
         rendered = json.dumps(_public_json(value), ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False)
         (self.run_directory / name).write_text(rendered + "\n", encoding="utf-8")
@@ -163,7 +180,9 @@ class RepairOrchestrator:
         type_records_by_global_id: Mapping[str, Any],
         deterministic_policy_facts_by_operation: Mapping[str, tuple[Any, ...]] | None = None,
         verified_absent_categories_by_operation: Mapping[str, tuple[str, ...]] | None = None,
+        public_geometry_requirements: Mapping[str, Any] | None = None,
         private_canaries: tuple[str, ...] = (),
+        candidate_name: str = "application-candidate.ifc",
     ) -> OrchestrationResult:
         """Apply all operations once, reopen, evaluate, then atomically promote."""
 
@@ -221,7 +240,10 @@ class RepairOrchestrator:
                     built,
                     expected_facts_by_operation={
                         manifest.operation_id:
-                        semantic_manifest_expected_facts(manifest)
+                        semantic_manifest_expected_facts(manifest,
+                            primary_scope=registry.require(manifest.operation_type).semantic_scope_roles.get(
+                                registry.require_evaluation_policy(manifest.operation_type).semantic_role,
+                                'window_occurrence'))
                         for manifest in manifests
                     },
                 )
@@ -255,7 +277,9 @@ class RepairOrchestrator:
                     changeset, {"source_hash": source_hash, "not_evaluable": missing},
                     private_canaries=private_canaries,
                 )
-        candidate = self.run_directory / "staging" / "application-candidate.ifc"
+        if Path(candidate_name).name != candidate_name or not candidate_name.endswith(".ifc"):
+            raise ValueError("APPLICATION_CANDIDATE_NAME_INVALID")
+        candidate = self.run_directory / "staging" / candidate_name
         candidate.parent.mkdir(parents=True, exist_ok=True)
         if candidate.exists():
             return self._terminal_failure("application_failed", "OUTPUT_ALREADY_EXISTS", changeset, {}, private_canaries=private_canaries)
@@ -266,6 +290,8 @@ class RepairOrchestrator:
                 changeset=changeset,
                 output_path=candidate,
                 registry=registry,
+                **({'public_geometry_requirements': public_geometry_requirements}
+                   if public_geometry_requirements else {}),
             )
         except Exception as error:
             return self._terminal_failure("application_failed", "APPLICATION_STAGE_EXCEPTION", changeset, {"error_type": type(error).__name__}, private_canaries=private_canaries)
@@ -313,6 +339,8 @@ class RepairOrchestrator:
                     application_result=application,
                     registry=registry,
                     expected_facts_by_operation=production_evidence.expected_facts_by_operation,
+                    repair_request=repair_request,
+                    public_geometry_requirements=public_geometry_requirements or {},
                 )
             )
             public_evaluation = _public_evaluation(evaluation)

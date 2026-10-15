@@ -786,6 +786,8 @@ def _property_unit_token(
     if isinstance(entity_id, int):
         try:
             entity = element.file.by_id(entity_id)
+            if entity.is_a("IfcPropertySingleValue"):
+                return effective_property_unit_token(entity)
             explicit = _ifc_unit_token(getattr(entity, "Unit", None))
             if explicit is not None:
                 return explicit
@@ -805,6 +807,71 @@ def _property_unit_token(
         if dimension is None
         else _project_length_unit_token(element, dimension)
     )
+
+
+def effective_property_unit_token(prop: Any) -> str | None:
+    """Read a scalar property's explicit unit or unambiguous project default.
+
+    IFC chooses the default by NominalValue's measure type, not the property's
+    container class. Do not use calculate_unit_scale here: its default scale of
+    one also covers absent units, and get_project_unit selects the first match
+    even when the public source contains conflicting assignments.
+    """
+
+    nominal = getattr(prop, "NominalValue", None)
+    unit_type = (
+        ifcopenshell.util.unit.get_measure_unit_type(nominal.is_a())
+        if nominal is not None and nominal.is_a().endswith("Measure") else None
+    )
+    explicit = getattr(prop, "Unit", None)
+    if explicit is not None:
+        if unit_type is not None and getattr(explicit, "UnitType", None) != unit_type:
+            return None
+        return _scalar_property_unit_token(explicit, unit_type)
+    # Newly inferred defaults are limited to the scalar dimensions supported by
+    # the existing authoring path. Other measures keep their prior None default;
+    # exposing a generic IfcDerivedUnit token would falsely expand copy authoring.
+    if unit_type not in {"LENGTHUNIT", "AREAUNIT", "VOLUMEUNIT"}:
+        return None
+    projects = prop.file.by_type("IfcProject")
+    if len(projects) != 1:
+        return None
+    assignment = projects[0].UnitsInContext
+    if assignment is None:
+        return None
+    candidates = [
+        unit for unit in assignment.Units or ()
+        if getattr(unit, "UnitType", None) == unit_type
+    ]
+    return _scalar_property_unit_token(candidates[0], unit_type) if len(candidates) == 1 else None
+
+
+def _scalar_property_unit_token(unit: Any, unit_type: str | None) -> str | None:
+    token = _ifc_unit_token(unit)
+    if token is None or token.casefold() != "foot":
+        return token
+    # A name alone is not a conversion definition. The existing-only FOOT
+    # authoring path may preserve this graph, but never invent or repair it.
+    if (
+        unit_type != "LENGTHUNIT"
+        or not unit.is_a("IfcConversionBasedUnit")
+        or getattr(unit, "UnitType", None) != "LENGTHUNIT"
+    ):
+        return None
+    dimensions = unit.Dimensions
+    factor = unit.ConversionFactor
+    if dimensions is None or tuple(dimensions) != (1, 0, 0, 0, 0, 0, 0) or factor is None:
+        return None
+    value = getattr(factor.ValueComponent, "wrappedValue", None)
+    base = factor.UnitComponent
+    if (
+        type(value) not in (int, float) or value != 0.3048
+        or base is None or not base.is_a("IfcSIUnit")
+        or base.UnitType != "LENGTHUNIT" or base.Name != "METRE"
+        or base.Prefix is not None
+    ):
+        return None
+    return "FOOT"
 
 
 def _project_length_unit_token(element: Any, dimension: int) -> str | None:

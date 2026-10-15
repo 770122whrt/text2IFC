@@ -29,7 +29,7 @@ class FakeDemoTransport:
                 events=chunks(tool=('bash',{'command':command,'description':'Deterministic public-only offline fixture','timeoutMs':120000},'offline-repair'))
             else:events=chunks(text='{"submitted_ifc":"output/repaired.ifc"}')
             return httpx.Response(200,headers={'Content-Type':'text/event-stream'},content=''.join('event: '+e['type']+'\ndata: '+json.dumps(e)+'\n\n' for e in events).encode())
-        if arm=='B':
+        if arm=='B' or (self.config.get('stage')=='repair-comparison-scalable-live' and arm in {'E','F'}):
             from scripts.ifc_repair.repair_comparison.ours_adapter import _draft,_section
             prompt=body['messages'][0]['content']
             if self.config.get('scene_grounding_version'):

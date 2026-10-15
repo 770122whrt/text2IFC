@@ -104,7 +104,8 @@ class ChatExecutor(DirectRunner):
 
     def _run_owned(self):
         state=self.ledger.snapshot(self.run_id)
-        if state['arm'] not in {'A','C'}:raise ValueError('DIRECT_REQUIRES_A_OR_C')
+        scalable=state.get('metadata',{}).get('runtime',{}).get('stage')=='repair-comparison-scalable-live'
+        if state['arm'] not in ({'A','C','G'} if scalable else {'A','C'}):raise ValueError('DIRECT_REQUIRES_A_OR_C')
         if state['status']=='ready':self.ledger.start(self.run_id)
         while self.ledger.snapshot(self.run_id)['status']=='running':
             current=self.ledger.snapshot(self.run_id)
@@ -116,8 +117,10 @@ class ChatExecutor(DirectRunner):
                 body={'model':self.model,'messages':self.messages(),'tools':TOOLS,'stream':False}
                 if state['arm']=='A':
                     body.update(max_tokens=self.max_output_tokens,thinking={'type':'enabled'})
-                else:
+                elif state['arm']=='C':
                     body.update(max_completion_tokens=self.max_output_tokens,reasoning_effort='high',store=False)
+                else:
+                    body.update(max_completion_tokens=self.max_output_tokens)
                 with httpx.Client(timeout=self.request_timeout_s,trust_env=False) as client:
                     response=client.post(self.gateway_url+'/chat/completions',json=body)
                 if response.status_code == 403:

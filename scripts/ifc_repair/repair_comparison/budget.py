@@ -1,7 +1,63 @@
-"""Explicit offline budgets; no prices, live quotas, or invented default limits."""
+"""Explicit budgets and the versioned policy for new real repair experiments.
+
+Historical frozen budgets remain unchanged. Offline fixtures may still supply
+their own limits through validate_budget; they do not establish policy compliance.
+"""
 from __future__ import annotations
 
+from copy import deepcopy
 import math
+
+
+LEGACY_BUDGET_POLICY_VERSION = 'repair-comparison-fixed-budget-policy/0.1'
+FIXED_BUDGET_POLICY_VERSION = 'repair-comparison-fixed-budget-policy/0.2'
+_LEGACY_BUDGET_PROFILES = {
+    'S1': {'tokens': 1_500_000, 'calls': 48, 'active_seconds': 1800,
+           'tool_seconds': 120, 'extensions': []},
+    'S2': {'tokens': 2_000_000, 'calls': 64, 'active_seconds': 2400,
+           'tool_seconds': 120, 'extensions': []},
+    'S3': {'tokens': 2_500_000, 'calls': 80, 'active_seconds': 3000,
+           'tool_seconds': 120, 'extensions': []},
+}
+_FIXED_BUDGET_PROFILES = {level: {**deepcopy(profile), 'tokens': profile['tokens']//2}
+                          for level, profile in _LEGACY_BUDGET_PROFILES.items()}
+_BUDGET_POLICIES = {LEGACY_BUDGET_POLICY_VERSION: _LEGACY_BUDGET_PROFILES,
+                    FIXED_BUDGET_POLICY_VERSION: _FIXED_BUDGET_PROFILES}
+
+
+def fixed_budget_profile(level: str, *, policy_version: str = FIXED_BUDGET_POLICY_VERSION) -> dict:
+    """Return independent limits for one policy level, shared across case arms."""
+    if policy_version not in _BUDGET_POLICIES:
+        raise ValueError('UNKNOWN_FIXED_BUDGET_POLICY_VERSION')
+    profiles = _BUDGET_POLICIES[policy_version]
+    if not isinstance(level, str) or level not in profiles:
+        raise ValueError('UNKNOWN_FIXED_BUDGET_LEVEL')
+    return deepcopy(profiles[level])
+
+
+def budget_level_for_primary_targets(primary_target_count: int) -> str:
+    """Select by major requested repair targets, never IFC relationship count.
+
+    The task author supplies this count; this helper does not infer it from IFC
+    entities or mutation operations. One target is S1, two S2, three or more S3.
+    """
+    if type(primary_target_count) is not int or primary_target_count < 1:
+        raise ValueError('INVALID_PRIMARY_TARGET_COUNT')
+    return 'S1' if primary_target_count == 1 else 'S2' if primary_target_count == 2 else 'S3'
+
+
+def validate_fixed_budget_policy(profile: dict, *, primary_target_count: int,
+                                 policy_version: str = FIXED_BUDGET_POLICY_VERSION) -> None:
+    """Fail closed for new real experiments; generic/offline limits use validate_budget."""
+    expected = fixed_budget_profile(budget_level_for_primary_targets(primary_target_count),
+                                    policy_version=policy_version)
+    if not isinstance(profile, dict) or not isinstance(profile.get('extensions'), list):
+        raise ValueError('INVALID_BUDGET_FIELDS')
+    if profile['extensions']:
+        raise ValueError('FIXED_BUDGET_POLICY_MISMATCH')
+    validate_budget(profile)
+    if profile != expected:
+        raise ValueError('FIXED_BUDGET_POLICY_MISMATCH')
 
 
 def positive(value, *, integer=False):

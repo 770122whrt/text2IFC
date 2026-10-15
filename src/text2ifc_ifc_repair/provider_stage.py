@@ -75,6 +75,7 @@ def generate_bound_changeset(
     semantic_manifests: Any = (),
     semantic_manifest_hashes: Mapping[str, str] | None = None,
     semantic_manifest_ref: str = "semantic-manifest.json",
+    validation_feedback: Any = (),
 ) -> dict[str, Any]:
     """Generate one ChangeSet from complete operation-scoped public authority."""
 
@@ -181,7 +182,20 @@ def generate_bound_changeset(
             if assignment.source_kind.value in {"explicit_request", "explicit_value"}
         }
     )
+    # The API supplies only bounded public production-check issues. Keep this
+    # initial feedback in the existing prompt slot without changing templates.
     feedback: list[dict[str, str]] = []
+    if not isinstance(validation_feedback, (list, tuple)) or len(validation_feedback) > 32:
+        raise ValueError("VALIDATION_FEEDBACK_INVALID")
+    for issue in validation_feedback:
+        if not isinstance(issue, Mapping) or set(issue) != {"code", "path", "message"}:
+            raise ValueError("VALIDATION_FEEDBACK_INVALID")
+        if any(not isinstance(value, str) or len(value) > 512 for value in issue.values()):
+            raise ValueError("VALIDATION_FEEDBACK_INVALID")
+        if _contains_private_or_step(issue):
+            raise ValueError("VALIDATION_FEEDBACK_FORBIDDEN")
+        feedback.append(dict(issue))
+    production_feedback = list(feedback)
     last_result = _invalid_result([])
     for attempt_index in range(1, max_attempts + 1):
         attempt_dir = output / f"attempt-{attempt_index:03d}"
@@ -222,7 +236,7 @@ def generate_bound_changeset(
                 attempt_dir / "diagnostics.json",
                 _json({"schema_version": "text2ifc/ifc-repair-provider-stage/0.2", "valid": False, "parse_status": "rejected", "issues": issues}),
             )
-            feedback = issues
+            feedback = [*production_feedback, *issues]
             last_result = _invalid_result(issues, prompt=_prompt_identity(rendered))
             continue
         atomic_write_text(attempt_dir / "raw-response.txt", provider_output.text)
@@ -331,7 +345,7 @@ def generate_bound_changeset(
                 "prompt": _prompt_identity(rendered),
                 "issues": [],
             }
-        feedback = issues
+        feedback = [*production_feedback, *issues]
         last_result = _invalid_result(issues, prompt=_prompt_identity(rendered))
     return last_result
 

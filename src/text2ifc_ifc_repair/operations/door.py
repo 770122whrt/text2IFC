@@ -446,12 +446,14 @@ def _add_door_applicator(
     *,
     operation: Mapping[str, Any],
     model: Any,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     wall = require_guid(
         model, str(operation["target"]["wall_global_id"]), "IfcWall"
     )
     hosted = create_hosted_opening(
-        model=model, operation=operation, wall=wall
+        model=model, operation=operation, wall=wall,
+        public_geometry_requirement=public_geometry_requirement,
     )
     return _create_door(
         model=model,
@@ -460,6 +462,7 @@ def _add_door_applicator(
         opening=hosted["opening"],
         opening_depth_mm=float(hosted["opening_depth_mm"]),
         created_opening=hosted,
+        public_geometry_requirement=public_geometry_requirement,
     )
 
 
@@ -467,6 +470,7 @@ def _fill_door_applicator(
     *,
     operation: Mapping[str, Any],
     model: Any,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     opening = require_guid(
         model,
@@ -486,6 +490,7 @@ def _fill_door_applicator(
         opening=opening,
         opening_depth_mm=float(dimensions["depth"]),
         created_opening=None,
+        public_geometry_requirement=public_geometry_requirement,
     )
 
 
@@ -497,6 +502,7 @@ def _create_door(
     opening: Any,
     opening_depth_mm: float,
     created_opening: Mapping[str, Any] | None,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     door_id = deterministic_global_id(operation, "door")
     fill_id = deterministic_global_id(operation, "fills_relationship")
@@ -572,16 +578,27 @@ def _create_door(
         or str(door_style.GlobalId) != installation_anchor.get("type_global_id")
     ):
         raise ValueError("DOOR_INSTALLATION_TYPE_MISMATCH")
-    selected_placement = select_door_placement_in_opening(
-        door, opening, **({"installation_anchor": installation_anchor}
-                         if installation_anchor is not None else {}),
-    )
-    door.ObjectPlacement = local_placement(
-        model,
-        relative_to=opening.ObjectPlacement,
-        location=selected_placement["location"],
-        ref_direction=selected_placement["ref_direction"],
-    )
+    if public_geometry_requirement:
+        if not direct_body and not (door_style is not None and door_style.RepresentationMaps):
+            raise ValueError('PUBLIC_GEOMETRY_DOOR_REPRESENTATION_UNSUPPORTED')
+        from ..public_geometry import place_public_product
+        place_public_product(door, opening, public_geometry_requirement['placement_world_mm'])
+        selected_placement = {
+            'location': door.ObjectPlacement.RelativePlacement.Location.Coordinates,
+            'ref_direction': door.ObjectPlacement.RelativePlacement.RefDirection.DirectionRatios,
+            'diagnostics': {'orientation_source': 'original_public_request'},
+        }
+    else:
+        selected_placement = select_door_placement_in_opening(
+            door, opening, **({"installation_anchor": installation_anchor}
+                             if installation_anchor is not None else {}),
+        )
+        door.ObjectPlacement = local_placement(
+            model,
+            relative_to=opening.ObjectPlacement,
+            location=selected_placement["location"],
+            ref_direction=selected_placement["ref_direction"],
+        )
     fill = model.create_entity(
         "IfcRelFillsElement",
         GlobalId=fill_id,
@@ -890,6 +907,7 @@ def _postconditions(
         alignment = measure_door_opening_alignment(
             door, opening, **({"installation_anchor": installation_anchor}
                              if installation_anchor is not None else {}),
+            public_geometry_requirement=application.get('public_geometry_requirement'),
         )
     except Exception as error:
         alignment = {

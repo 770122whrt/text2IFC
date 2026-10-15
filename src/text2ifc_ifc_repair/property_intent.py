@@ -11,6 +11,7 @@ from text2ifc_knowledge.registry import (
     IfcKnowledgeRegistry,
     RegistryDriftError,
     check_registry_files,
+    load_ifc2x3_registry,
 )
 from .run_models import hash_json
 
@@ -445,6 +446,78 @@ class AuthorizedPropertyFact:
         return payload
 
 
+def validate_authorized_property_fact(
+    authority: Mapping[str, Any], *, target_ifc_class: str
+) -> None:
+    """Recheck the existing authority and its exact confirmation tuple.
+
+    This validates a Binder-owned fact, not a Provider claim or a new source
+    of user consent. The run's clarification transaction owns that consent.
+    """
+
+    if authority.get("property_hash") != hash_json(
+        {key: value for key, value in authority.items() if key != "property_hash"}
+    ):
+        raise ValueError("AUTHORIZED_PROPERTY_HASH_MISMATCH")
+    classification = authority.get("classification")
+    if classification not in {"standard", "custom_confirmed"}:
+        raise ValueError("AUTHORIZED_PROPERTY_CLASSIFICATION_INVALID")
+    if authority.get("kind") != "authorized_property_fact" or (
+        authority.get("ownership") != "occurrence_direct"
+    ):
+        raise ValueError("AUTHORIZED_PROPERTY_BINDING_MISMATCH")
+    from .repair_intent import PublicProvenance
+
+    try:
+        source = PublicProvenance.from_dict(authority["source"])
+        intent = ExactPropertyIntent(
+            set_name=str(authority["set_name"]),
+            property_name=str(authority["property_name"]),
+            value=authority["value"],
+            requested_value_type=str(authority["value_type"]),
+            requested_unit=authority["unit"],
+            scope=str(authority["ownership"]),
+            source=source,
+        )
+    except (KeyError, TypeError, AttributeError) as exc:
+        raise ValueError("AUTHORIZED_PROPERTY_BINDING_MISMATCH") from exc
+    if source.source_kind not in {
+        "user_request", "public_capability", "public_clarification"
+    } or not source.reference:
+        raise ValueError("AUTHORIZED_PROPERTY_CLAIM_MISMATCH")
+    resolution = resolve_exact_property_intent(
+        intent, target_ifc_class=target_ifc_class,
+        existing_facts=(), registry=load_ifc2x3_registry(),
+    )
+    expected_status = (
+        PropertyResolutionStatus.STANDARD_RESOLVED
+        if classification == "standard"
+        else PropertyResolutionStatus.CUSTOM_CONFIRMATION_REQUIRED
+    )
+    if resolution.status is not expected_status:
+        raise ValueError("AUTHORIZED_PROPERTY_CLASSIFICATION_MISMATCH")
+    if classification == "custom_confirmed":
+        if not authority.get("confirmation_ref") or not authority.get("confirmation_hash"):
+            raise ValueError("AUTHORIZED_PROPERTY_CONFIRMATION_REQUIRED")
+        preview = {
+            key: authority[key] for key in (
+                "operation_id", "target_global_id", "request_hash", "model_fingerprint",
+                "set_name", "property_name", "value", "value_type", "unit", "source",
+            )
+        }
+        preview.update(
+            scope=authority["ownership"], preview_hash=authority["confirmation_hash"]
+        )
+        try:
+            PropertyConfirmationPreview.from_dict(preview)
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError("AUTHORIZED_PROPERTY_CONFIRMATION_HASH_MISMATCH") from exc
+    elif authority.get("confirmation_ref") is not None or (
+        authority.get("confirmation_hash") is not None
+    ):
+        raise ValueError("AUTHORIZED_PROPERTY_CLASSIFICATION_MISMATCH")
+
+
 def authorize_custom_property(
     preview: PropertyConfirmationPreview,
     *,
@@ -632,22 +705,37 @@ def _resolve_custom(
     *,
     reason_code: str = "UNKNOWN_EXACT_PROPERTY",
 ) -> PropertyResolution:
-    value_type = intent.requested_value_type or _safe_primitive_ifc_type(intent.value)
     matching_facts = tuple(
         fact
         for fact in existing_facts
-        if fact.set_name == intent.set_name and fact.property_name == intent.property_name
+        if fact.set_kind == "pset"
+        and not fact.inherited
+        and fact.set_name == intent.set_name
+        and fact.property_name == intent.property_name
     )
     fact_types = {fact.value_type for fact in matching_facts if fact.value_type}
-    fact_units = {fact.unit for fact in matching_facts if fact.unit}
-    if value_type is None and len(fact_types) == 1:
-        value_type = next(iter(fact_types))
-    unit = intent.requested_unit
-    if unit is None and len(fact_units) == 1:
-        unit = next(iter(fact_units))
+    # Missing units are unresolved evidence, not agreement with another fact.
+    fact_units = {fact.unit for fact in matching_facts}
     fact_evidence = tuple(
         f"existing-fact:{fact.provenance}" for fact in matching_facts
     )
+    value_type = intent.requested_value_type
+    if value_type is None:
+        if len(fact_types) > 1:
+            return _clarification(
+                intent,
+                "CUSTOM_VALUE_TYPE_CONFLICT",
+                classification="custom",
+                evidence=evidence + fact_evidence,
+            )
+        value_type = (
+            next(iter(fact_types))
+            if fact_types
+            else _safe_primitive_ifc_type(intent.value)
+        )
+    unit = intent.requested_unit
+    if unit is None and len(fact_units) == 1:
+        unit = next(iter(fact_units))
 
     if value_type is None:
         return _clarification(

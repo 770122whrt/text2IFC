@@ -12,6 +12,7 @@ import uuid
 import httpx
 
 from .contracts import write_json
+from .dsh_search import validate_search_configuration, validate_search_request
 
 
 def wire_usage(raw: bytes, content_type: str, protocol: str):
@@ -61,12 +62,15 @@ class Route:
     run_id: str
     token: str
     model: str
-    api_key: str
+    api_key: str | None
     endpoints: dict
     evidence_class: str
     max_output_tokens: int
     question_events: dict = field(default_factory=dict)
     quiescent: object = None
+    web_search: dict | None = None
+    search_api_key: str | None = None
+    request_options: dict = field(default_factory=dict)
 
 
 class WireGateway:
@@ -99,11 +103,20 @@ class WireGateway:
         if self.thread:
             self.thread.join(timeout=5)
 
-    def register(self, run_id, *, model, api_key, endpoints, evidence_class, max_output_tokens=65536, token=None, quiescent=None):
+    def register(self, run_id, *, model, api_key, endpoints, evidence_class, max_output_tokens=65536,
+                 token=None, quiescent=None, web_search=None, search_api_key=None,request_options=None):
         token = token or uuid.uuid4().hex
         if token in self.routes:
             raise ValueError('ROUTE_ALREADY_REGISTERED')
-        self.routes[token] = Route(run_id, token, model, api_key, endpoints, evidence_class, max_output_tokens, quiescent=quiescent)
+        if web_search is not None:
+            web_search = validate_search_configuration(web_search)
+            if not search_api_key or web_search['model'] != model:
+                raise ValueError('SEARCH_ROUTE_CONFIGURATION_REQUIRED')
+        from .group_config import validate_request_options
+        options=validate_request_options({} if request_options is None else request_options)
+        self.routes[token] = Route(run_id, token, model, api_key, endpoints, evidence_class,
+            max_output_tokens, quiescent=quiescent, web_search=web_search, search_api_key=search_api_key,
+            request_options=options)
         return token
 
     @staticmethod
@@ -131,8 +144,11 @@ class WireGateway:
         if route is None:
             return self.reply(handler, 404, {'error':'unoffered route'})
         path = parts[1]
-        protocol = {'v1/chat/completions':'chat', 'v1/messages':'messages'}.get(path)
-        if path != 'questions' and protocol not in route.endpoints:
+        is_search = path == 'v1/search/messages'
+        protocol = {'v1/chat/completions':'chat', 'v1/messages':'messages',
+                    'v1/search/messages':'messages'}.get(path)
+        if ((is_search and route.web_search is None)
+                or (not is_search and path != 'questions' and protocol not in route.endpoints)):
             return self.reply(handler, 404, {'error':'unoffered endpoint'})
         try:
             length = int(handler.headers.get('Content-Length', '0'))
@@ -144,10 +160,16 @@ class WireGateway:
                 raise ValueError('OBJECT_REQUIRED')
             if path == 'questions':
                 return self.question(handler, route, body)
+            if is_search:
+                validate_search_request(body, route.web_search)
             if body.get('model') != route.model:
                 raise ValueError('MODEL_NOT_OFFERED')
+            if route.request_options and not is_search:
+                body.update(route.request_options)
+                raw_request=json.dumps(body,ensure_ascii=False).encode('utf-8')
             cap = body.get('max_tokens', body.get('max_completion_tokens'))
-            if type(cap) is not int or not 0 < cap <= route.max_output_tokens:
+            output_limit = route.web_search['max_tokens'] if is_search else route.max_output_tokens
+            if type(cap) is not int or not 0 < cap <= output_limit:
                 raise ValueError('OUTPUT_LIMIT_NOT_OFFERED')
             if self.ledger.snapshot(route.run_id)['status'] != 'running':
                 raise ValueError('TASK_NOT_ACTIVE')
@@ -157,7 +179,8 @@ class WireGateway:
                 'evidence_class': route.evidence_class, 'wire_protocol': protocol,
                 'model_requested': route.model,
                 'native_session_id': handler.headers.get('x-deepseek-harness-session-id'),
-                'stage': 'compaction' if handler.headers.get('x-deepseek-harness-compact') == '1' else 'model'})
+                'stage': 'web_search' if is_search else
+                    'compaction' if handler.headers.get('x-deepseek-harness-compact') == '1' else 'model'})
         except (ValueError, KeyError, UnicodeError) as error:
             rejection = {'error': str(error), 'origin': 'repair-controller', 'wire_protocol': protocol}
             self.ledger.record(route.run_id, 'controller_request_rejected', rejection)
@@ -168,16 +191,21 @@ class WireGateway:
             'x-deepseek-harness-session-id', 'x-deepseek-harness-compact'}
         headers = {k:v for k,v in handler.headers.items() if k.lower() in allowed_headers}
         headers['Accept-Encoding'] = 'identity'
+        upstream_key = route.search_api_key if is_search else route.api_key
+        endpoint = route.web_search['endpoint'] if is_search else route.endpoints[protocol]
         if protocol == 'messages':
-            headers['x-api-key'] = route.api_key
-        else:
-            headers['Authorization'] = 'Bearer ' + route.api_key
+            headers['x-api-key'] = upstream_key
+            if is_search:
+                headers['Authorization'] = 'Bearer ' + upstream_key
+        elif upstream_key:
+            headers['Authorization'] = 'Bearer ' + upstream_key
         raw = bytearray()
         status, content_type, error_type = 0, '', None
         began = time.time()
         try:
-            with httpx.Client(transport=self.transport, timeout=self.timeout_seconds, follow_redirects=False) as client:
-                with client.stream('POST', route.endpoints[protocol], content=raw_request, headers=headers) as response:
+            with httpx.Client(transport=self.transport, timeout=self.timeout_seconds, follow_redirects=False,
+                              trust_env=self.transport is None) as client:
+                with client.stream('POST', endpoint, content=raw_request, headers=headers) as response:
                     status = response.status_code
                     content_type = response.headers.get('content-type', 'application/json')
                     handler.send_response(status)
@@ -202,7 +230,8 @@ class WireGateway:
                 'request': body, 'response': response_record, 'usage': usage,
                 'evidence_class': route.evidence_class, 'duration_s': time.time()-began,
                 'auth_headers': 'omitted', 'native_session_id': handler.headers.get('x-deepseek-harness-session-id')})
-            (wire_dir / (request_id + '.response.txt')).write_bytes(bytes(raw).replace(route.api_key.encode(), b'[REDACTED]'))
+            safe_raw=bytes(raw).replace(upstream_key.encode(), b'[REDACTED]') if upstream_key else bytes(raw)
+            (wire_dir / (request_id + '.response.txt')).write_bytes(safe_raw)
             self.ledger.settle(route.run_id, request_id, usage=usage, response=response_record, failed=failed)
             if not status:self.reply(handler,502,{'error':error_type})
             handler.close_connection = True

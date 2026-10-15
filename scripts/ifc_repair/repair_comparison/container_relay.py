@@ -1,16 +1,21 @@
-"""Network relay: fixed host controller, no keys, arbitrary URLs or GET proxy."""
+"""Fixed keyless controller relay, with explicitly enabled public-page proxy."""
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import http.client
 import os
 import re
 
+if __package__:
+    from .dsh.web_proxy import WebProxyMixin
+else:
+    from web_proxy import WebProxyMixin
+
 HOST_PORT = int(os.environ['REPAIR_CONTROLLER_PORT'])
 
 
-class Handler(BaseHTTPRequestHandler):
+class Handler(WebProxyMixin, BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
     def do_POST(self):
-        if not re.fullmatch(r'/[a-f0-9]{32}/(?:v1/(?:messages|chat/completions)|questions)', self.path):
+        if not re.fullmatch(r'/[a-f0-9]{32}/(?:v1/(?:messages|chat/completions|search/messages)|questions)', self.path):
             self.send_error(404)
             return
         length = int(self.headers.get('Content-Length', '0'))

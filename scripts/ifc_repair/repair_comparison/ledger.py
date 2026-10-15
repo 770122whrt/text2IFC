@@ -12,6 +12,7 @@ from .budget import normalize_usage, positive, usage_summary, validate_budget
 from .contracts import safe_path
 
 TERMINAL = {'submitted', 'no_output', 'budget_exhausted', 'cancelled', 'runtime_error', 'unsupported'}
+SCALABLE_STAGE = 'repair-comparison-scalable-live'
 
 
 def encode(value):
@@ -33,6 +34,10 @@ class Ledger:
                 CREATE TABLE IF NOT EXISTS runs(run_id TEXT PRIMARY KEY, state TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS events(seq INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL, event_id TEXT NOT NULL, kind TEXT NOT NULL, payload TEXT NOT NULL, at REAL NOT NULL, UNIQUE(run_id,event_id));
                 CREATE TABLE IF NOT EXISTS calls(run_id TEXT NOT NULL, request_id TEXT NOT NULL, reservation INTEGER NOT NULL, metadata TEXT NOT NULL, state TEXT NOT NULL, usage TEXT, response TEXT, failed INTEGER NOT NULL DEFAULT 0, UNIQUE(run_id,request_id));
+                CREATE TABLE IF NOT EXISTS concurrency_policy(singleton INTEGER PRIMARY KEY CHECK(singleton=1), capacity INTEGER NOT NULL CHECK(typeof(capacity)='integer' AND capacity>0), stage TEXT NOT NULL);
+                CREATE TRIGGER IF NOT EXISTS concurrency_policy_no_update BEFORE UPDATE ON concurrency_policy BEGIN SELECT RAISE(ABORT,'CONCURRENCY_POLICY_FROZEN'); END;
+                CREATE TRIGGER IF NOT EXISTS concurrency_policy_no_delete BEFORE DELETE ON concurrency_policy BEGIN SELECT RAISE(ABORT,'CONCURRENCY_POLICY_FROZEN'); END;
+                CREATE TRIGGER IF NOT EXISTS concurrency_policy_no_replace BEFORE INSERT ON concurrency_policy WHEN EXISTS(SELECT 1 FROM concurrency_policy) BEGIN SELECT RAISE(ABORT,'CONCURRENCY_POLICY_FROZEN'); END;
             ''')
 
     def _connect(self):
@@ -97,8 +102,64 @@ class Ledger:
             raise ValueError('RUN_NOT_ACTIVE')
 
     @staticmethod
+    def _concurrency_policy(db):
+        row = db.execute('SELECT capacity,stage FROM concurrency_policy WHERE singleton=1').fetchone()
+        if row is None:
+            return None
+        policy = dict(row)
+        if not positive(policy['capacity'], integer=True):
+            raise ValueError('INVALID_CONCURRENCY_CAPACITY')
+        if policy['capacity'] > 1 and policy['stage'] != SCALABLE_STAGE:
+            raise ValueError('CONCURRENCY_STAGE_NOT_ALLOWED')
+        return policy
+
+    @staticmethod
+    def _check_concurrency_stage(state, policy):
+        if policy is not None and policy['capacity'] > 1:
+            metadata = state.get('metadata', {})
+            runtime = metadata.get('runtime', {}) if isinstance(metadata, dict) else None
+            if not isinstance(runtime, dict) or runtime.get('stage') != policy['stage']:
+                raise ValueError('CONCURRENCY_STAGE_MISMATCH')
+
+    def configure_concurrency(self, capacity, *, stage=SCALABLE_STAGE):
+        """Freeze opt-in slots before a new batch starts; repeat safely on resume.
+
+        No policy row retains the historical single-running-task rule. An explicit
+        policy reserves slots for both running and awaiting-user tasks. Budgets
+        and reservations continue to belong to individual runs.
+        """
+        if not positive(capacity, integer=True):
+            raise ValueError('INVALID_CONCURRENCY_CAPACITY')
+        if not isinstance(stage, str) or not stage.strip():
+            raise ValueError('CONCURRENCY_STAGE_NOT_ALLOWED')
+        policy = {'capacity': capacity, 'stage': stage}
+        with self.transaction() as db:
+            existing = self._concurrency_policy(db)
+            if existing is not None:
+                if existing != policy:
+                    raise ValueError('CONCURRENCY_POLICY_FROZEN')
+                for row in db.execute('SELECT state FROM runs'):
+                    self._check_concurrency_stage(json.loads(row['state']), policy)
+                return existing
+            if capacity > 1 and stage != SCALABLE_STAGE:
+                raise ValueError('CONCURRENCY_STAGE_NOT_ALLOWED')
+            states = [json.loads(row['state']) for row in db.execute('SELECT state FROM runs')]
+            if not states or any(state['status'] != 'ready' for state in states):
+                raise ValueError('CONCURRENCY_REQUIRES_READY_BATCH')
+            for state in states:
+                self._check_concurrency_stage(state, policy)
+            db.execute('INSERT INTO concurrency_policy VALUES(1,?,?)', (capacity, stage))
+        return policy
+
+    @staticmethod
     def _other_active(db, run_id):
-        if any(json.loads(row['state'])['status'] == 'running' for row in db.execute('SELECT state FROM runs WHERE run_id<>?', (run_id,))):
+        policy = Ledger._concurrency_policy(db)
+        capacity = policy['capacity'] if policy is not None else 1
+        active_statuses = {'running', 'awaiting_user'} if policy is not None else {'running'}
+        states = [json.loads(row['state']) for row in db.execute('SELECT state FROM runs')]
+        for state in states:
+            Ledger._check_concurrency_stage(state, policy)
+        if sum(state['run_id'] != run_id and state['status'] in active_statuses for state in states) >= capacity:
             raise ValueError('OTHER_ACTIVE_TASK')
 
     @staticmethod
@@ -110,12 +171,13 @@ class Ledger:
     def create(self, run_id, *, case_id, arm, budget, metadata=None, mode='offline_development'):
         identifier(run_id)
         identifier(case_id)
-        if arm not in {'A', 'B', 'C', 'D'}:
+        if arm not in {'A', 'B', 'C', 'D', 'E', 'F', 'G'}:
             raise ValueError('INVALID_ARM')
         if mode not in {'offline_development','real_runtime_fake_model','live_development','live_formal'}:
             raise ValueError('INVALID_EVIDENCE_MODE')
         validate_budget(budget)
         with self.transaction() as db:
+            self._check_concurrency_stage({'metadata': metadata or {}}, self._concurrency_policy(db))
             for row in db.execute('SELECT state FROM runs'):
                 other = json.loads(row['state'])
                 if other['case_id'] == case_id:

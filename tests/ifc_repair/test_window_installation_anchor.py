@@ -95,7 +95,8 @@ class PublicWindowProvider:
             if self.tamper:
                 value['operations'][0]['evidence_refs'].append('public-window-installation/0.1:unoffered')
         else:
-            pages=_section(prompt,'Read-only query results so far')
+            from tests.ifc_repair.test_scene_repair_api import scene_query_pages
+            pages=scene_query_pages(prompt)
             if not pages:
                 value={'kind':'query','query':{'ifc_classes':['IfcWall','IfcWindow']}}
             else:

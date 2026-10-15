@@ -39,7 +39,8 @@ class AddingBrepDoorProvider:
         if '## Immutable bindings' in prompt:
             value = _draft(prompt, _section(prompt, 'Draft schema'))
         else:
-            pages = _section(prompt, 'Read-only query results so far')
+            from tests.ifc_repair.test_scene_repair_api import scene_query_pages
+            pages = scene_query_pages(prompt)
             if not pages:
                 value = {'kind': 'query', 'query': {'ifc_classes': ['IfcWall', 'IfcDoor']}}
             else:
@@ -84,7 +85,9 @@ class ClarifyingWindowProvider(PublicWindowProvider):
                                                  if a['name'] != 'OverallHeight']
                 value = {'kind': 'clarification', 'intent': value['intent'], 'reason': 'missing_user_fact',
                          'question': 'What are the opening height and nominal window height, in millimetres?',
-                         'candidate_ids': [value['bindings'][0]['target_id']]}
+                         'candidate_ids': [value['bindings'][0]['target_id']],
+                         'missing_facts': [{'operation_id': operation['operation_id'], 'path': '/opening/height_mm',
+                            'source': 'user_design', 'description': 'The user has not supplied the new opening height.'}]}
             else:
                 assert ANSWER in kwargs['prompt']
             return ProviderOutput(text=json.dumps(value), metadata=result.metadata)

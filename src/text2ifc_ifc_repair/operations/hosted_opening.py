@@ -224,6 +224,7 @@ def create_hosted_opening(
     operation: Mapping[str, Any],
     wall: Any,
     role_prefix: str = "",
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     footprint = footprint_from_operation(operation)
     thickness = float(wall_dimensions_mm(wall)["thickness"])
@@ -241,25 +242,36 @@ def create_hosted_opening(
         ObjectType="Opening",
         Tag=str(operation["operation_id"]),
     )
-    representation = ifcopenshell.api.geometry.add_wall_representation(
-        model,
-        context=context,
-        length=footprint.width_mm / 1000.0,
-        height=footprint.height_mm / 1000.0,
-        thickness=thickness / 1000.0,
-        offset=(normal_center - thickness / 2.0) / 1000.0,
-    )
-    representation.RepresentationIdentifier = "Body"
-    opening.Representation = model.create_entity(
-        "IfcProductDefinitionShape", Representations=[representation]
-    )
-    opening.ObjectPlacement = opening_placement(
-        model,
-        wall=wall,
-        center_mm=footprint.center_offset_mm,
-        width_mm=footprint.width_mm,
-        sill_mm=footprint.sill_height_mm,
-    )
+    if public_geometry_requirement:
+        from ifcopenshell.util.element import copy_deep
+        from ..public_geometry import place_public_product
+        reference = require_guid(model, str(public_geometry_requirement['reference_opening_id']),
+                                 'IfcOpeningElement')
+        opening.Representation = copy_deep(model, reference.Representation,
+            exclude=('IfcGeometricRepresentationContext', 'IfcGeometricRepresentationSubContext'))
+        place_public_product(opening, wall, public_geometry_requirement['opening_placement_world_mm'])
+        depth = opening_dimensions_mm(opening)['depth']
+    else:
+        representation = ifcopenshell.api.geometry.add_wall_representation(
+            model,
+            context=context,
+            length=footprint.width_mm / 1000.0,
+            height=footprint.height_mm / 1000.0,
+            thickness=thickness / 1000.0,
+            offset=(normal_center - thickness / 2.0) / 1000.0,
+        )
+        representation.RepresentationIdentifier = "Body"
+        opening.Representation = model.create_entity(
+            "IfcProductDefinitionShape", Representations=[representation]
+        )
+        opening.ObjectPlacement = opening_placement(
+            model,
+            wall=wall,
+            center_mm=footprint.center_offset_mm,
+            width_mm=footprint.width_mm,
+            sill_mm=footprint.sill_height_mm,
+        )
+        depth = thickness
     void = model.create_entity(
         "IfcRelVoidsElement",
         GlobalId=void_id,
@@ -270,7 +282,7 @@ def create_hosted_opening(
     return {
         "opening": opening,
         "voids_relationship": void,
-        "opening_depth_mm": thickness,
+        "opening_depth_mm": depth,
         "footprint": footprint,
     }
 

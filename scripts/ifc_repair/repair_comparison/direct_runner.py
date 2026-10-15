@@ -61,15 +61,17 @@ class DirectRunner:
 
     @classmethod
     def create(cls, public: Path, root: Path, *, case_id, arm, budget, mode='offline_development', runtime_metadata=None, submission_profile='auto'):
-        if arm not in {'A', 'C', 'B', 'D'}:
+        scalable=(runtime_metadata or {}).get('stage')=='repair-comparison-scalable-live'
+        direct_arms={'A','C','G'} if scalable else {'A','C'}
+        if arm not in ({'A','B','C','D','E','F','G'} if scalable else {'A','B','C','D'}):
             raise ValueError('ARM_NOT_IMPLEMENTED')
         if submission_profile == 'auto':
-            formal = mode == 'live_formal' or (runtime_metadata or {}).get('stage') == 'repair-comparison-formal-live'
-            submission_profile = SUBMISSION_PROFILE if formal and arm in {'A', 'C'} else None
+            formal = scalable or mode == 'live_formal' or (runtime_metadata or {}).get('stage') == 'repair-comparison-formal-live'
+            submission_profile = SUBMISSION_PROFILE if formal and arm in direct_arms else None
         if submission_profile is not None:
             if submission_profile not in SUBMISSION_PROFILES:
                 raise ValueError('UNKNOWN_SUBMISSION_PROFILE')
-            if arm not in {'A', 'C'}:
+            if arm not in direct_arms:
                 raise ValueError('SUBMISSION_PROTOCOL_REQUIRES_A_OR_C')
         identifier(case_id)
         public, root = safe_path(Path(public)), safe_path(Path(root))
@@ -118,7 +120,8 @@ class DirectRunner:
         # start/reserve. No initial message, prior event, or source is rewritten.
         with self.ledger.transaction() as db:
             state = self.ledger._load(db, self.run_id)
-            if state['arm'] not in {'A', 'C'}:
+            scalable=state.get('metadata',{}).get('runtime',{}).get('stage')=='repair-comparison-scalable-live'
+            if state['arm'] not in ({'A','C','G'} if scalable else {'A','C'}):
                 raise ValueError('SUBMISSION_PROTOCOL_REQUIRES_A_OR_C')
             rows = db.execute('SELECT kind,payload FROM events WHERE run_id=? ORDER BY seq', (self.run_id,)).fetchall()
             events = [{'kind':row['kind'],'payload':json.loads(row['payload'])} for row in rows]
@@ -243,7 +246,8 @@ class DirectRunner:
         if not isinstance(provider, ReplayProvider):
             raise ValueError('OFFLINE_REPLAY_ONLY')
         state = self.ledger.snapshot(self.run_id)
-        if state['arm'] not in {'A', 'C'}:
+        scalable=state.get('metadata',{}).get('runtime',{}).get('stage')=='repair-comparison-scalable-live'
+        if state['arm'] not in ({'A','C','G'} if scalable else {'A','C'}):
             raise ValueError('DIRECT_RUNNER_REQUIRES_A_OR_C')
         if state['status'] == 'ready':
             self.ledger.start(self.run_id)

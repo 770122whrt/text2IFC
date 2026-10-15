@@ -253,8 +253,9 @@ def test_accelerated_rss_peak_respects_nonoverlapping_phases(
             return ({"valid": True}, {"status": "miss"}, worker_peak)
 
     class ImmediateExecutor:
-        def __init__(self, max_workers):
+        def __init__(self, max_workers, mp_context):
             assert max_workers == 2
+            assert mp_context.get_start_method() == "spawn"
 
         def submit(self, *_args, **_kwargs):
             return ImmediateFuture()

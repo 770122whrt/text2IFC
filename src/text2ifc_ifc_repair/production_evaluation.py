@@ -78,9 +78,16 @@ class ProductionEvaluationInputs:
         default_factory=EvaluationExecutionPolicy
     )
     validation_cache_dir: Path | str | None = None
+    repair_request: str = ""
+    public_geometry_requirements: Mapping[str, Mapping[str, Any]] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         _validate_production_expected_facts(self.expected_facts_by_operation)
+        from .run_models import freeze_json
+        for operation_id, requirement in self.public_geometry_requirements.items():
+            if requirement.get("operation_id") != operation_id:
+                raise ValueError("PUBLIC_GEOMETRY_OPERATION_BINDING_MISMATCH")
+        object.__setattr__(self, "public_geometry_requirements", freeze_json(dict(self.public_geometry_requirements)))
         object.__setattr__(
             self,
             "expected_facts_by_operation",
@@ -359,6 +366,12 @@ def _evaluate(
                 repaired_facts=repaired_facts,
             )
         )
+        requirement = inputs.public_geometry_requirements.get(operation_id)
+        from .public_geometry import public_geometry_check, public_geometry_required
+        if requirement is not None or public_geometry_required(operation_type, inputs.repair_request):
+            l2_checks.append(public_geometry_check(requirement=requirement or {},
+                repair_request=inputs.repair_request, damaged_model=reopened_models[0][0],
+                repaired_model=repaired_model, roles=applied_roles))
         if (
             operation_type == "add_window_with_opening_to_wall"
             and inputs.changeset.get("schema_version")

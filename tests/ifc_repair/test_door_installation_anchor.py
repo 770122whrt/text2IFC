@@ -159,7 +159,8 @@ class PublicOnlyProvider:
             if self.tamper_anchor:
                 value['operations'][0]['parameters']['door_installation_anchor']['reference_global_id']='unoffered'
         else:
-            pages=_section(prompt,'Read-only query results so far')
+            from tests.ifc_repair.test_scene_repair_api import scene_query_pages
+            pages=scene_query_pages(prompt)
             if not pages:
                 value={'kind':'query','query':{'ifc_classes':['IfcOpeningElement','IfcDoor']}}
             else:
@@ -217,7 +218,7 @@ def test_anchor_and_offered_identity_persist_across_public_api_restart(tmp_path)
         CrashAfterIntent(tmp_path/'run',provider=provider,scene_grounding=True).start(source,'Use the retained door to fill the empty opening.')
     run=next((tmp_path/'run/runs').iterdir())
     context=json.loads((run/'api-context.json').read_text(encoding='utf8'))
-    assert context['schema_version']=='text2ifc/ifc-repair-api-context/0.3'
+    assert context['schema_version']=='text2ifc/ifc-repair-api-context/0.4'
     assert context['installation_references']['offline-repair-0']['reference_global_id']==reference.GlobalId
     result=RepairAPI(tmp_path/'run',provider=provider).resume(run.name)
     assert result.status=='succeeded',result.to_dict()

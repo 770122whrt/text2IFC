@@ -42,7 +42,8 @@ class ClarifyingDoorProvider(PublicOnlyProvider):
         value = json.loads(result.text)
         if value.get('kind') == 'intent':
             from scripts.ifc_repair.repair_comparison.ours_adapter import _section
-            records = _section(kwargs['prompt'],'Read-only query results so far')[0]['records']
+            from tests.ifc_repair.test_scene_repair_api import scene_query_pages
+            records = scene_query_pages(kwargs['prompt'])[0]['records']
             candidates = [r for r in records if r['ifc_class']=='IfcOpeningElement' and not r['filling_ids']]
             assert len(candidates)==2
             if not self.asked:

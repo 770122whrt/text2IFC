@@ -9,9 +9,16 @@ import time
 from urllib.parse import urlsplit
 
 from .container_tools import docker
-from .contracts import relative_path, safe_path, write_json
+from .contracts import read_json, relative_path, safe_path, write_json
 
 IMAGE='text2ifc/repair-dsh:0.2.0rc1'
+CLARIFICATION_FAILURE='UNANSWERED_CLARIFICATION_COMPLETE_INPUT_POLICY'
+
+
+def validate_web_access(value):
+    if value not in (None, 'proxy'):
+        raise ValueError('INVALID_D_WEB_ACCESS')
+    return value
 
 
 def submitted_path(text):
@@ -89,7 +96,11 @@ print(json.dumps({'quiescent':not extra and not children,'extra_pids':extra,'act
 
 
 class NativeDSH:
-    def __init__(self,workspace,control,*,name,state_volume,network,base_url,model,session_id,image=IMAGE):
+    def __init__(self,workspace,control,*,name,state_volume,network,base_url,model,session_id,
+                 image=IMAGE,web_search=None,task_kind='ifc_repair',web_access=None):
+        validate_web_access(web_access)
+        if task_kind not in {'ifc_repair','knowledge_qa'}:
+            raise ValueError('INVALID_NATIVE_TASK_KIND')
         for value in (name,state_volume,network,session_id):
             if not re.fullmatch('[A-Za-z0-9][A-Za-z0-9_.-]{0,100}',value):
                 raise ValueError('INVALID_NATIVE_IDENTIFIER')
@@ -101,7 +112,15 @@ class NativeDSH:
         self.control.mkdir(parents=True,exist_ok=True)
         for filename in ('native_worker.py','question-bridge.mjs'):
             shutil.copyfile(Path(__file__).parent/'dsh'/filename,self.control/filename)
-        write_json(self.control/'runtime.json',{'base_url':base_url,'model':model,'session_id':session_id})
+        config={'base_url':base_url,'model':model,'session_id':session_id}
+        if web_access is not None:
+            config['web_access']=web_access
+        if task_kind != 'ifc_repair':
+            config['task_kind']=task_kind
+        if web_search is not None:
+            from .dsh_search import validate_search_configuration
+            config['web_search']=validate_search_configuration(web_search)
+        write_json(self.control/'runtime.json',config)
 
     def docker_argv(self):
         return ['docker','create','--name',self.name,'--pull=never','--network='+self.network,
@@ -114,9 +133,13 @@ class NativeDSH:
             '--mount',f'type=volume,source={self.volume},target=/state,volume-nocopy',
             self.image,'python','/opt/carrier/native_worker.py']
 
-    def quiescent(self):
+    def quiescent(self, packet=None):
         try:
-            row=json.loads(docker('exec',self.name,'python','-c',QUIESCENT_SCRIPT,timeout=10))
+            script=QUIESCENT_SCRIPT
+            if packet and packet.get('sessionId'):
+                script=script.replace("children=json.loads(activity.read_text()).get('active_child_sessions',[])",
+                    "children=[s for s in json.loads(activity.read_text()).get('active_child_sessions',[]) if s != "+repr(packet['sessionId'])+"]")
+            row=json.loads(docker('exec',self.name,'python','-c',script,timeout=10))
             write_json(self.control/'quiescence.json',row)
             return row['quiescent']
         except (RuntimeError,subprocess.TimeoutExpired,ValueError):
@@ -129,6 +152,20 @@ class NativeDSH:
         if info['State']['Running'] or info['State']['Pid']!=0:
             raise RuntimeError('NATIVE_PROCESS_STOP_NOT_CONFIRMED')
 
+    def _clarification_stop(self, ledger, run_id, state):
+        marker = safe_path(self.control/'stop-clarification.json')
+        if not marker.is_file():
+            return None
+        request = read_json(marker)
+        question = state.get('question') or {}
+        if (request != {'run_id': run_id, 'question_id': question.get('question_id'),
+                        'reason': CLARIFICATION_FAILURE} or state['status'] != 'awaiting_user'):
+            raise ValueError('CLARIFICATION_STOP_QUESTION_BINDING_CHANGED')
+        if (state['activities'] or any(c['state'] == 'inflight' for c in ledger.calls(run_id))
+                or not self.quiescent(question.get('binding', {}).get('native_packet'))):
+            return None
+        return request
+
     def run(self,*,ledger,run_id):
         if docker('network','inspect',self.network,'--format','{{.Internal}}')!='true':
             raise ValueError('NETWORK_NOT_INTERNAL')
@@ -140,11 +177,16 @@ class NativeDSH:
             'python','-c','import os; os.chown("/state",10001,10001)')
         created=subprocess.run(self.docker_argv(),capture_output=True,text=True,encoding='utf8',check=True)
         timeout=False
+        clarification_stop=None
         with (self.control/'console.txt').open('wb') as console:
             process=subprocess.Popen(['docker','start','--attach',self.name],stdout=console,stderr=subprocess.STDOUT)
             try:
                 while process.poll() is None:
                     state=ledger.snapshot(run_id)
+                    clarification_stop=self._clarification_stop(ledger,run_id,state)
+                    if clarification_stop is not None:
+                        self.stop()
+                        break
                     if state['status']=='running' and state['active_elapsed_s']>=state['limits']['active_seconds']:
                         timeout=True
                         self.stop()
@@ -158,6 +200,9 @@ class NativeDSH:
         # Whole native persistence, including child sessions and summaries.
         docker('cp',f'{self.name}:/state/sessions',str(self.control/'sessions'),timeout=60)
         docker('rm',self.name)
+        if clarification_stop is not None:
+            return {'ok':False,'error':CLARIFICATION_FAILURE,
+                    'question_id':clarification_stop['question_id'],'container_stopped':True}
         if timeout:
             return {'ok':False,'error':'ACTIVE_TIME_BUDGET_EXHAUSTED','container_stopped':True}
         result_path=self.control/'result.json'

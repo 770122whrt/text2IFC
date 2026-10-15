@@ -653,7 +653,11 @@ def resolve_repair_intent(
                 property_resolution = resolve_exact_property_intent(
                     exact_intent,
                     target_ifc_class=property_target_class,
-                    existing_facts=(),
+                    existing_facts=(
+                        record.properties
+                        if record.ifc_class == property_target_class
+                        else ()
+                    ),
                     registry=knowledge,
                 )
                 if semantic_source is not None and prototype is not None and prototype.reference_kind in {"global_id", "type_name"}:
