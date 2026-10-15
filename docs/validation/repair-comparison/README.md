@@ -1,5 +1,7 @@
 # IFC Repair 四组实验文档
 
+当前汇总：[A—G已结束任务、IFC产出与格式校验](../../reports/repair-experiment-summary-20261015/README.md) · [1200题数据集组成与来源许可](../../reports/repair-dataset-1200-summary-20261015/README.md)。下文的开发过程与旧批次记录保留各自历史范围。
+
 > 更新：2026-10-08｜专题版本：v0.2。
 > 当前：B的001～010修复后真实复测严格通过9/10，005已新会话真实通过，007保留失败。[当前实验表](../../../dataset/processed/experiments/repair-comparison/current/README.md)只列最近获准的真实尝试，旧四组63个终态与旧失败独立归档；所有服务停止。本轮未开启Goal。后十题按[梁柱与属性设计](next-ten-design.md)先核对Pipeline、制作损坏材料，等用户检查通过后再实验。只维护本目录这一套正文，不另存版本副本。
 
