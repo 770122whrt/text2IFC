@@ -1,0 +1,64 @@
+{
+  "scope": "local live integration, not a model-quality benchmark",
+  "cases": [
+    {
+      "label": "door-1",
+      "task_id": "task-cedac0b51aab43f581af74dac10ebb07",
+      "run_id": "repair-943c71e49ff04a8ab5e9e47996de74e9",
+      "native_status": "succeeded",
+      "provider_calls": 4,
+      "returned_total_tokens": 60223,
+      "missing_usage_calls": 0,
+      "independent_full_check_passed": true,
+      "output_diagnostics": 0,
+      "source_diagnostics": null,
+      "introduced_diagnostics": null,
+      "added_objects": 1,
+      "task_url": "http://127.0.0.1:4178/ifc-viewer/?task=task-cedac0b51aab43f581af74dac10ebb07"
+    },
+    {
+      "label": "window-2",
+      "task_id": "task-5a8badf4e4774a799d8800b9636c17ab",
+      "run_id": "repair-edef454f4f3147a498d0296b1aae5774",
+      "native_status": "succeeded",
+      "provider_calls": 10,
+      "returned_total_tokens": 330133,
+      "missing_usage_calls": 0,
+      "independent_full_check_passed": true,
+      "output_diagnostics": 0,
+      "source_diagnostics": null,
+      "introduced_diagnostics": null,
+      "added_objects": 1,
+      "task_url": "http://127.0.0.1:4178/ifc-viewer/?task=task-5a8badf4e4774a799d8800b9636c17ab"
+    },
+    {
+      "label": "multi-3",
+      "task_id": "task-3a961fe89e784f4388ae5fda1725272a",
+      "run_id": "repair-0e5e65beabbb43b583be90116e6d03f9",
+      "native_status": "succeeded",
+      "provider_calls": 4,
+      "returned_total_tokens": 101311,
+      "missing_usage_calls": 0,
+      "independent_full_check_passed": false,
+      "output_diagnostics": 3,
+      "source_diagnostics": 3,
+      "introduced_diagnostics": 0,
+      "added_objects": 2,
+      "task_url": "http://127.0.0.1:4178/ifc-viewer/?task=task-3a961fe89e784f4388ae5fda1725272a"
+    }
+  ],
+  "actual_model_calls": 18,
+  "actual_returned_tokens": 491667,
+  "limits": {
+    "max_calls": 20,
+    "max_tokens": 1000000,
+    "max_active_seconds": 3600
+  },
+  "active_provider_seconds": 401.4189999999653,
+  "unsettled_calls": 0,
+  "all_cost_records_match": true,
+  "new_live_tasks": 3,
+  "task_limit": 3,
+  "fully_verified_cases": 2,
+  "multi_case_note": "Two test walls reused a generated public-input fixture. Its three pre-existing IFC rule errors are retained in the live result. Fixture builder repaired and checked offline; this live run was not repeated or relabelled."
+}

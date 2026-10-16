@@ -43,8 +43,8 @@ node --test ui/ifc-viewer/tests/*.test.mjs ui/prototype/tests/*.test.mjs
 .\.venv\Scripts\python.exe -m pytest tests/web tests/ifc_repair/test_orchestrator_terminal_matrix.py tests/ifc_repair/test_clarification_state.py ui/ifc-viewer/tests/native_geometry_test.py -q --tb=short --basetemp=.tmp/rebuild-check
 ```
 
-## 私有资源和恢复边界
+## GitHub 交接与本地资源边界
 
-网页与默认 API 不需要旧目录的私有 174 样例、Provider 密钥、历史任务和实验数据。复看旧真实案例、截图及调试材料时，从用户私有备份恢复。向量检索模型和数据库需要另行配置，本次没有准备或验收；LFS 指针也不是实际 IFC 文件。
+完整的代码入口、三个真实联调案例、原始运行记录、截图、依赖版本和检查结果统一见 [GitHub 交接入口](ui-delivery-20261016/README.md)。无需依赖整树本地备份继续开发或重建网页。
 
-旧 UI 工作树现存普通文件另有私有归档、逐文件 SHA-256 清单和独立解压校验；Git 历史、本机持有且当前 UI 提交引用的 LFS 对象、对话快照及移交说明独立保存。本机未持有的 LFS 对象列入缺失清单，没有为备份下载整套数据。私有备份包含凭据和研究资产，不上传公共仓库。
+`.env` 密钥、私有 174 样例、浏览器配置、缓存、虚拟环境、聊天导出和活动任务数据库不上传。删除旧目录与本地备份会失去这些本机状态；旧真实联调的输入、输出、全部原生轮次和结果仍保存在上述静态交付中。真实模型配置需重新准备；向量检索模型与数据库另行配置，本次未验收。新克隆使用 Git LFS 取回具体发布对象，而不是将指针当成 IFC。

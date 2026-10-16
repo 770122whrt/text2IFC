@@ -2,6 +2,10 @@
 
 > 更新：2026-10-16。三维工作台已接入现有 RepairAPI；支持上传、请求预览、异步进度、澄清续答、刷新恢复、结果下载和前后对照。默认启动只准备请求，真实执行另需有效准入、本机配置与任务预算。
 
+## GitHub 交接入口
+
+以 `codex/ui-development` 远程分支为保留入口；[统一交接页](docs/reports/ui-delivery-20261016/README.md)包含三项真实联调的实际输入/输出、截图、原始记录与预算账本，以及独立重建的检查结果和环境版本。网页与默认 API 不依赖旧目录或本地整树备份。密钥、私有样例和活动数据库的删除边界也写在该页。
+
 ## 当前入口
 
 [主计划](docs/plans/repair-ui-plan.md)是唯一范围依据；[真实查看器说明](ui/ifc-viewer/README.md)负责启动与操作；[12份IFC2X3实测](docs/validation/ifc-viewer-ifc2x3-smoke.md)负责实际结果，不能将其当作全库或完整几何认证。
@@ -34,7 +38,7 @@ node ui/ifc-viewer/launcher.mjs status
 
 剩余工作是合规双目标复验、部分模型显示诊断与澄清体验完善；Generation、最终检查失败后的自动返工、公网部署、协作及剖切/测量/视图管理未纳入当前完成范围。本次代码发布不新增Provider调用或重开Repair实验。
 
-## 工作树信息
+## 历史工作树信息（新克隆可使用任意独立目录）
 
 - UI 目录：`E:\code for project\bimnet-ui`
 - UI 分支：`codex/ui-development`
