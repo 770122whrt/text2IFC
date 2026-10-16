@@ -65,7 +65,11 @@ def main(action):
         from text2ifc_web.app import create_app
         from text2ifc_web.live_runtime import local_live_factory
         factory,status=local_live_factory(ROOT)
-        app=create_app(RUNTIME/'data',api_factory=factory,examples_root=ROOT/'ui/ifc-viewer/.artifacts/local-examples')
+        viewer_port=int(os.environ.get('IFC_VIEWER_PORT','4178'))
+        if not 1024<=viewer_port<=65535:
+            raise ValueError('Invalid viewer port')
+        allowed_origins=tuple(f'http://{host}:{port}' for host in ('127.0.0.1','localhost') for port in (viewer_port,PORT))
+        app=create_app(RUNTIME/'data',api_factory=factory,examples_root=ROOT/'ui/ifc-viewer/.artifacts/local-examples',allowed_origins=allowed_origins)
         app.state.repair_service.runtime_status=status
         uvicorn.run(app,host='127.0.0.1',port=PORT,log_level='warning',workers=1)
         return

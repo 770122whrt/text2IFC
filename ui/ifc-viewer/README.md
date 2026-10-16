@@ -19,6 +19,10 @@ node --test ui/ifc-viewer/tests/*.test.mjs ui/prototype/tests/*.test.mjs
 
 本次 Python 实际使用已有的 3.12.4 解释器，JUnit 留在本机 `.tmp/ui-publish-20261016-01.xml`。原生集成测试需恢复上述公开案例中各自使用的具体 LFS 输入；仅打开网页不需要这些测试数据。
 
+## 独立远程重建（2026-10-16）
+
+仅使用远程源码、全新虚拟环境和声明依赖，已验证公共 IFC 渲染、上传与请求准备；100 项 Node 和 91 项相关 Python 检查通过，未调用真实模型。重建补齐 lxml 依赖并修正自定义端口的来源校验。复现步骤与资源边界见[远程重建记录](../../docs/reports/ui-clean-rebuild-20261016.md)。
+
 ## 新检出环境与启动
 
 推荐 Node.js 24（此前验证版本为 24.11.0）及 Python 3.12 或更新版本。在当前工作树根目录创建独立环境并安装声明依赖，例如 Windows PowerShell：
