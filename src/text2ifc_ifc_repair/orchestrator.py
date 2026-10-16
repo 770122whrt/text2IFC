@@ -63,6 +63,7 @@ class RepairOrchestrator:
         defer_changeset: bool = False,
         operation_registry: Any | None = None,
         resolver_options: Mapping[str, Any] | None = None,
+        observer: Callable[[Mapping[str, Any]], None] | None = None,
     ) -> None:
         self.run_directory = Path(run_directory)
         self.run_directory.mkdir(parents=True, exist_ok=True)
@@ -82,6 +83,15 @@ class RepairOrchestrator:
         self._operation_registry = operation_registry
         self._resolver_options = dict(resolver_options or {})
         self._resolution: Any = None
+        self._observer = observer
+
+    def _emit(self, stage: str, action: str, **data: Any) -> None:
+        if self._observer is not None:
+            try:
+                self._observer({"stage": stage, "action": action, **data})
+            except Exception:
+                # Observation must not turn an IFC transaction into a second execution.
+                pass
 
     def start(self, *, intent: Any, repository: Any, expected_source_sha256: str) -> OrchestrationResult:
         self._write("intent.json", intent)
@@ -260,6 +270,7 @@ class RepairOrchestrator:
         if candidate.exists():
             return self._terminal_failure("application_failed", "OUTPUT_ALREADY_EXISTS", changeset, {}, private_canaries=private_canaries)
         try:
+            self._emit("application", "started")
             application = self._apply_stage(
                 damaged_ifc_path=source,
                 repair_request=repair_request,
@@ -287,6 +298,8 @@ class RepairOrchestrator:
         candidate_hash = _path_sha256(candidate)
         if candidate_hash != _normalize_sha256(str(output.get("sha256", ""))) or not _is_ifc2x3(candidate):
             return self._terminal_failure("application_failed", "CANDIDATE_REOPEN_OR_HASH_FAILED", changeset, evidence, candidate=candidate, private_canaries=private_canaries)
+        self._emit("application", "completed", candidate_written=True)
+        self._emit("reopen", "completed", schema="IFC2X3")
         if production_evidence is None:
             try:
                 production_evidence, late_manifest_evidence = construct_authority()
@@ -305,6 +318,7 @@ class RepairOrchestrator:
                     private_canaries=private_canaries,
                 )
         try:
+            self._emit("evaluation", "started")
             evaluation = self._evaluation_stage(
                 ProductionEvaluationInputs(
                     damaged_ifc_path=source,
@@ -316,6 +330,7 @@ class RepairOrchestrator:
                 )
             )
             public_evaluation = _public_evaluation(evaluation)
+            self._emit("evaluation", "completed", publishable=public_evaluation["successful_artifact_publishable"])
         except Exception as error:
             return self._terminal_failure("l2_not_evaluable", "PRODUCTION_EVALUATION_FAILED", changeset, {**evidence, "error_type": type(error).__name__}, candidate=candidate, private_canaries=private_canaries)
         terminal_status = "succeeded" if public_evaluation["successful_artifact_publishable"] else _evaluation_terminal_status(public_evaluation)

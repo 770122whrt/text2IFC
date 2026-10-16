@@ -114,6 +114,21 @@ class RepairAPI:
             )
             requested_options["resolver_options"] = resolver_options
         self._orchestrator_options = requested_options
+        self._before_apply = None
+
+    def configure_integration(self, *, before_apply=None, observer=None) -> None:
+        """Attach Python-only caller identity checks and passive observation.
+
+        Default CLI/Python callers retain the existing behavior. Hooks are never
+        executable data supplied by an HTTP request or a Provider response.
+        """
+        if before_apply is not None and not callable(before_apply):
+            raise TypeError("before_apply must be callable or None")
+        if observer is not None and not callable(observer):
+            raise TypeError("observer must be callable or None")
+        self._before_apply = before_apply
+        if observer is not None:
+            self._orchestrator_options["observer"] = observer
 
     @classmethod
     def from_environment(
@@ -839,6 +854,22 @@ class RepairAPI:
                     run_id, changeset_ref, "text2ifc/ifc-repair-changeset/0.1"
                 )},
             )
+            if self._before_apply is not None:
+                try:
+                    check = self._before_apply({
+                        "run_directory": str(run_dir),
+                        "source_ifc_path": state.source.reference,
+                        "intent": intent.to_dict(),
+                        "resolution": json.loads((run_dir / resolution_ref).read_text(encoding="utf-8")),
+                        "installation_references": public_context.get("installation_references", {}),
+                    })
+                    atomic_write_text(run_dir / "selection-check.json", json.dumps(check, ensure_ascii=False, allow_nan=False))
+                    if not isinstance(check, Mapping) or check.get("valid") is not True:
+                        issues = check.get("issues", []) if isinstance(check, Mapping) else []
+                        reason = str(issues[0].get("code", "SELECTION_CHECK_FAILED")) if issues else "SELECTION_CHECK_FAILED"
+                        return self._fail(run_id, RunStage.AUDIT_FAILED, reason)
+                except Exception:
+                    return self._fail(run_id, RunStage.AUDIT_FAILED, "SELECTION_CHECK_ERROR")
             self.store.prepare_stage_directory(run_id, "staging")
             final = orchestrator.apply_and_evaluate(
                 source_ifc_path=Path(state.source.reference),

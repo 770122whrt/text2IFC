@@ -11,6 +11,17 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+web = [
+  "fastapi>=0.117.1,<1",
+  "uvicorn>=0.29,<1",
+  "pydantic>=2.11,<3",
+  "python-multipart>=0.0.22,<1",
+  "ifcopenshell>=0.8.5,<0.9",
+  "numpy>=1.26,<3",
+  "python-dotenv>=1,<2",
+  "openai==2.43.0",
+]
+web-test = ["httpx>=0.28,<1", "pytest>=8,<10"]
 knowledge-live = [
   "qdrant-client>=1.12,<2",
   "sentence-transformers>=3.3,<6",

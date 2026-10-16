@@ -1,0 +1,5 @@
+/** Version-bound comparison helpers, independent of camera/UI implementation. */
+export function pairOffset(beforeOffset){if(!Array.isArray(beforeOffset)||beforeOffset.length!==3||!beforeOffset.every(Number.isFinite))throw Error('INVALID_COMPARISON_FRAME');return beforeOffset.slice();}
+export function findByGuid(records,guid){if(!guid)return null;const matches=[...records.values()].filter(r=>r.guid===guid);return matches.length===1?matches[0].id:null;}
+export function validateResultRole(artifact,task){if(artifact.role==='archived_successful_ifc'&&task.evidence_class==='archived_live'&&task.archived_success===true)return 'history';if(artifact.role==='successful_ifc'&&task.successful_artifact_publishable===true)return 'success';if(artifact.role==='diagnostic_candidate')return 'diagnostic';throw Error('RESULT_NOT_PUBLISHABLE');}
+export function newVisibleObjects(before,after){const old=new Set([...before.records.values()].map(r=>r.guid));return [...after.records.values()].filter(r=>r.guid&&!old.has(r.guid)&&after.groups.has(r.id));}
