@@ -12,33 +12,37 @@ progress:
   percent: 96
 ---
 
+## 当前整理：未提交内容与临时文件（2026-10-17）
+
+用户授权整理整个仓库、提交并普通推送已有改动，并允许现有有效源码、测试和报告纳入Git，本轮不新建文件。开始检查点为 `codex/repair-experiment` / `069c2c266b7969465563a2712a702fe0925274be`，原暂存区为空。已有842项删除的物理状态和固定Git恢复依据已核实，三个Proof人读入口已修正；另清理580个可重建缓存文件。88项相关离线检查通过，范围与证据限制见[现有清理入口](../docs/reports/workspace-cleanup-20261017/README.md#仓库提交与收尾2026-10-17)。账号本周剩余额度约19%时已报告并继续授权工作；当前真实运行、失败、账本、源数据和冻结Proof保留，不把版本后缀或旧日期当作删除依据。
+
+## 当前执行：新数据集批量接入与检查点续跑（2026-10-11）
+
+用户授权接入formal-40-pairs-25-20261010，并于本轮批准“修复共性缺陷→原题回测→另抽两题→均通过后七组批量”。门与新洞口复制及查询绑定反馈已完成离线修复，场景方法升为0.6；原失败保留。持久化协调脚本负责阶段准入、两题并发、独立检查与条件推进；唯一阶段状态和结果见[当前结果入口](../.tmp/repair-formal-1200-20261011/cycle/README.md)，没有满足新两题独立通过条件就不启动全量。CSV原序和第500条部分组完成后的续跑已接入，源文件与隔离合同保留。Qwen使用正确SGLang非思考参数；通用工具非法argv反馈给模型，不误报Docker故障。脚本负责等待、查验和汇总，Codex只看摘要并诊断阻塞，不逐题读取模型产物、不另开Goal。
+
+本轮单位与澄清约定：用户确认属性数值沿用对应 IFC 有效单位。新公开任务副本追加 `existing-ifc-property-units/1.0`，源数据和历史失败保留；显式单位优先，仅长度／面积／体积补齐对应项目单位及合法 FOOT。实验先处理已委托的明确属性确认，其余未答澄清用 `fail` 策略记为无输出，产品默认交互仍可等待。已修复公共请求中有序分段原文的确认、唯一属性路径在同名属性集中的写回及调试导出换行绑定。此次用户要求完成冻结，协调器使用 `--retry-property-only --freeze-only`，旧成功几何例明确保留为旧版本证据；全部通过后才写入 `full/admission/harness-freeze.json`，不启动全量。阶段失败保存检查点；具体进展仍见上方唯一入口，不在此复制统计。
+
+当前开发已冻结（2026-10-12）：精确公开参照梁复制和多既有属性集辅助角色冲突已完成最小机制修复。梁与多属性集失败题真实回归通过，最后两道预选新题也通过；当前代码的原生、属性运行时、澄清恢复及批量控制准入均通过，冻结绑定和精简导出已核对。唯一当前结果仍见上方入口，原失败与复用旧证据明确保留，不能当作整体能力提升指标。冻结清单位于 `full/admission/harness-freeze.json`；用户现已授权启动，七组全量脚本已在后台启动，正式结果由脚本更新至 `full/results/README.md`。两次限时窗口内未另开 Goal、未新增安装、未做全仓 Preflight；后续由现有脚本从冻结批次执行并保存续跑检查点。此次只更新了批量调度：最高七项并发、Qwen优先并限制其共享端点同时运行数；调度范围检查与重新准入通过，Harness／模型／Prompt／单题预算未变，具体设置与时间目标见唯一当前入口。
+
+## 此前接入：Qwen 恢复与两道新题并发（2026-10-11）
+
+两道新题×B/E/F真实并发及有界Qwen配置校准已结束；B/E通过独立检查，F接口可达但仍无输出，输出截断和定位协议错误保留。A～F六槽位原生离线验收通过，七组映射及G组保留。Qwen服务窗口已核实，客户端新配置与剩余兼容性限制见[专题入口](../docs/validation/repair-comparison/README.md)，唯一当前结果表也由该入口链接。脚本负责执行与汇总，未另开Goal，未扩大到正式大批次。下方为此前回归记录。
+
+## 当前调试：混合题与 reserve-005（2026-10-11）
+
+用户授权保留详细证据并复测。批次 `.tmp/repair-be-debug-20261011` 选定两题 × B/E、并发 4，逐题 2M token，无批次总上限；F 未恢复。新增 `prepare --retain-debug`，28 项相关测试通过，复用已通过的原生运行时准入。四项真实任务完成：reserve-005 两组均独立通过；external-020 两组均生成候选但终检体积/保全失败；已确认是复杂参照洞口被包围盒体积公式误拒，现改为不可变源墙与公开参照洞口的独立交集。相关回归和最终原生准入通过，`followup` 内真实复测 B 独立通过，E 定位阶段误判精确参照窗洞复制为未注册能力。已补齐模型可见的已实现能力契约：方法/Prompt 0.5、响应 Schema 0.4；旧版本保留。相关离线与原生准入通过后，`prompt-followup` 同版四项真实并发回归已完成：两题 × B/E 全部提交并独立通过；原失败、拒绝、实际响应及快照保留。四份原生状态已导出；首个导出脚本模型 profile 错误已通过冻结配置补导出，无新增调用。[结果主入口](../docs/validation/repair-comparison/README.md)。
+
 # Project State
 
-## 当前工作：后十题重制及B结构／属性检查（2026-10-08，无 Goal）
+## 当前工作：Repair 定位反馈与 B/E 并发试验（2026-10-11，无 Goal）
 
-011～020已在原formal目录重制为4道梁柱补建、4道实例属性修复、2道混合题，前十题保持原记录，共20个不同许可源IFC（CC-BY-4.0 16份、MIT 2份、GPL-3.0-or-later 2份）。新十题G/D schema＋EXPRESS均0，尺寸、坐标、损伤、关系、保全及确定性操作支持已核对；状态为pending_human_review、human_viewed=false、provider_calls_allowed=false，尚未冻结或调用新题模型。用户先检查usBIM显示和请求，技术数值由开发侧负责；保留014截面朝向、019两项承重值、020窗洞底标高三道必要澄清，预写答复卡不整卡注入。统一入口见[二十题材料](../dataset/processed/ifc-repair/repair-comparison/formal/README.md)。
+目录配对、七组展开和有限并发已接入现有调度器；操作方式、数据集交付格式与离线验收统一见[专题入口](../docs/validation/repair-comparison/README.md#批量脚本)。Codex只启动批量脚本并接收摘要，脚本负责等待、查验与精简导出。此前Qwen接口关闭期间已完成定位反馈修复及B/E四项并发开发试验；最新Qwen接入状态见本页顶部。进度与最终结果只维护在专题入口，不静默替换旧配置。
 
-新增B共性修复仅限梁柱合法多containment误拒、共享Pset复制错误类名；46项／18项故障家族及62项／61项相关回归通过。用户批准的独立CPU属性镜像已构建，复用原有BGE/Qdrant Runtime；真实Linux＋假Provider的7条基本路径和1条共享属性路径通过，属性状态卷导出/导入尚未单独原生检查。019／020完整答后绑定操作、原生格式、保全和原子回滚通过，制题helper失败及已知跨层候选筛选负证据保留，未扩展生产跨层支持。这些是离线支持证据，不是新模型成绩或四组正式准入。用户审阅后还需扩展统一评分、当前阶段准入及冻结；旧plan.private.json/batch-checks.json只作历史，不恢复原80槽位。旧题由3fbae1d8与历史包保留，[当前真实表](../dataset/processed/experiments/repair-comparison/current/README.md)仍为原B001～010的9/10。详细证据见[开发检查](../dataset/processed/experiments/repair-comparison/development/structural-property-readiness/README.md)。原Phase、R1与已接受Proof状态不变。
+前批系统的唯一[四组实验表](../dataset/processed/experiments/repair-comparison/current/README.md)负责80行最新来源、提交、评分／待评、最终IFC、问答、实际返回推理和累计预算；[20题入口](../dataset/processed/ifc-repair/repair-comparison/formal/README.md)负责题意与技术接受状态（accepted_by_delegation、human_viewed=false）。前十题已有分数，后十题提交不等于评分通过。过期开发文档与未提交日志已精简；已提交旧证据因自动审批限制暂留原位，9个旧临时目录仍受文件权限限制；真实总消耗及unknown保留，不因精简归零。
 
-## 当前工作：B 共性修复与原001～010开发复验（2026-10-08，无 Goal）
+当前合同见[专题入口](../docs/validation/repair-comparison/README.md)。B使用仓库RepairAPI；最终检验最多2次回到ChangeSet，冻结Intent不变，安全／保全失败停止；旧配置仍0次。D使用官方完整DSH0.2.0rc1，最新搜索→5次HTTP200网页正文→最终作答真实走通，关键型号与日期一致，3次官网403及未全面核验细节限制仍在[D配置](../docs/validation/repair-comparison/deepseek-harness-integration.md)。该问答不计为IFC能力成绩。
 
-本轮不开启Goal。B共性修复后的formal-001～010最新真实复测严格通过9/10，005已新会话真实通过，007跨层高度错误被检查拒绝并按用户意见保留失败。共48次真实调用、852,676已知token、未知用量0。唯一[当前实验表](../dataset/processed/experiments/repair-comparison/current/README.md)与[历史备份](../dataset/processed/experiments/repair-comparison/history/README.md)分开，原四组63个终态和旧005失败保留。评分器共享几何保全误报通过版本0.2最小修正，20项家族和13项评分回归通过，基线/当前同版重算、原报告不覆盖、无额外模型调用。所有服务停止，源和父账本保持。后十题按当前Pipeline支持范围重制损坏输入、请求和REVIEW，用户先在查看器检查，通过后再实验；不恢复旧批次剩余槽位。实现与边界见[B修复报告](../docs/validation/repair-comparison/b-common-repair.md)和[后十题设计](../docs/validation/repair-comparison/next-ten-design.md)。原Phase、R1和已接受Proof状态不变。
-
-### 此前二十题四组批次的历史检查点
-
-用户授权替换usBIM显示失败的formal-004，补齐20个不同IFC并运行ABCD共80任务；审题明确委托Codex先完成，后续人工查看可选，实际记录`accepted_by_delegation`与`human_viewed=false`。允许B必要的最小修复和失败族测试；约20M模型token目标，超出无需再次费用审批。004已换为MIT许可的TallBuilding，20题共38个门窗目标的损坏输入、数值、参照、保全和必要澄清均已核验，全部技术接受并冻结。真实Docker的四组假模型提交、问答恢复和DSH预算停止，加上正式20题／80工作区的编排、独立评分及异常路径，已经形成正式阶段父准入。首6项真实尝试终态及失败保留，暴露的B门框安装、D预算分类和A/C提交说明经聚焦红／绿与原生容器假模型检查修正为`98bad0ee`及同阶段修订准入；37项未启动A/C迁移协议，74项未启动任务绑定修订版本，03:32左右继续单任务冻结顺序。当前成绩以实验账本为准，离线结果不计为模型成绩，表格明确运行版本差异。最新实际证据维护在[就绪报告§6.15](../docs/validation/repair-comparison/development-readiness.md#615-二十题与四组评测-goal2026-10-08进行中)。原Phase、R1和已接受Proof状态不变。
-
-第二次修订在19项终态／61项未启动时安全停止。B无映射门类型的旧路径兼容性仅改`resolution_flow.py`，45项家族回归、32项准入检查与3项真实容器假模型测试（6条路径）通过，修订准入02及`d8e5d388`封存。旧B包与暂停证据保存后，只为61项追加新版本事件，19项原始记录不变；北京时间05:27左右恢复005-D。输入、评分、预算、顺序和模型仍冻结。当前用量、澄清和终态以实验账本为准。
-
-第三次修订在30项终态／50项未启动时正常停止。D008已在最终说明末尾声明唯一IFC，旧实验接收器漏识别；原no_output、候选和全部记录保留。接收器的121项相关回归、39项准入检查及真实DSH假模型三个独立提交场景通过，形成修订准入03与`3a621c62`。50项只追加版本事件，30项原账本字节不变，B包及A/C协议不迁移；北京时间07:01左右恢复008-B。实际已运行版本为初始6项、修订01的13项、修订02的11项，其余50项绑定修订03；这批混合版本结果用于描述运行表现，不作为盲测改善证据。累计已知用量已超过20M，按原授权继续且保留实际数值。
-
-40项检查点已保存：前10题四组均有终态及独立评分，已知27,679,639 token，另2次调用用量未知；011-C继续运行。D009、D010取得正式提交且统一评分通过，不能据两例推广能力结论。B010仅进深位置未满足冻结判据，公开请求未显式要求参照安装进深，语义局限与只读诊断单列；C010的HTTP502保留为调用故障。运行中对照见[PROGRESS](../.tmp/repair-comparison-formal-live/operator/PROGRESS.md)。归档工具23项自检通过；含本任务路由凭据的精确错误事件只作私有账本引用，不改原字节。最终汇总将另核验已有评分的输入与产物绑定，尚未生成最终80项交付包。
-
-## 当前规划：Repair 四组实验开发联调（2026-10-04）
-
-本轮Goal的首批五题已在固定 `dataset/processed/ifc-repair/repair-comparison/formal/` 生成完整待审材料，五个不同且许可明确的IFC，含S1/S2同类与混合损伤，schema＋EXPRESS全部通过。用户明确仅审题和离线检查，保留正式测试用途，未代写人审通过、未向模型发送。两个demo的A/C通用容器、原生B API/SDK、官方完整DSH及统一HTTP账本接线已通过开发阶段准入；真实八任务均已请求，六项终态、两项B等待人答。两个C提交均格式不通过，A为非法JSON／预算停止，D为原生流截断；原失败未补跑。Messages计账与实验预算停止分类经红测修复，47项相关回归通过；原始事件及追加诊断保留。用户批准约20M token开发目标，超出不重复审批。指标之后确定，不能据此宣称修复成功、模型能力提升或正式80任务通过。最新证据见[真实联调结果](../docs/validation/repair-comparison/demo-results.md)及[就绪报告§6.11](../docs/validation/repair-comparison/development-readiness.md#611-goal-本轮首批五题与两个-demo-的四组接线2026-10-04)。以下段落保留9月29日实施快照，正式20题／指标／预算仍待人审和冻结；原Phase、R1及Proof状态不变。
-
-当前分支 `codex/repair-experiment`；[Repair 四组实验专题](../docs/validation/repair-comparison/README.md)维持原路径v0.2。两道许可明确的S1开发题在固定 `development/` 原位维护，损坏IFC的schema＋EXPRESS通过；公开请求无GUID／构件名／方法提示。用户认可题包形式后已推进阶段2：持久账本、A/C通用工具、B原生薄适配、独立开发评分和离线CLI。两题×A/C的手写公共输入脚本闭环通过，属于离线夹具证据。B可自然语言检索和候选澄清；原门题完整链路发现通用语义写回的米／毫米错误，原始失败证据已保留；另经用户批准修复该单点后，原米制D通过原生API发布，回读尺寸正确，源D不变。实现、测试及待办以[当前就绪报告](../docs/validation/repair-comparison/development-readiness.md#65-按确认的形式继续离线实验基础2026-09-29)为准，不把阶段2说成四组准入。整体约20个不同IFC，开发族排除于正式未见样本，正式材料每批5题审阅。DSH安装与假模型验收范围已另获批准；固定0.2.0rc1完整SDK/runtime已构建并安装，真实文件／Shell、同进程问答、子Agent、摘要、失败记录与容器停止已有离线证据，见就绪报告§6.9。统一账本接线和四组隔离仍待完成，不能算阶段3整体通过；正式首批5个许可明确的源候选已筛选，尚未生成完整人审题包。未调用真实模型，无正式评分冻结或费用批准；生产修改仅上述获准单位单点，既有Phase、R1与Proof状态不变。
+新批次沿用固定单题预算，同题各组一致；按最新授权不设总API预算，历史消耗及unknown仍保留，Codex账号额度另行管理。源IFC不原地修改，私有Gold与损伤信息不进入被测侧；新调用仍须绑定适用阶段准入及唯一发布合同。安装授权继续有效，本轮不新增安装；真实调用以专题入口中的阶段准入和结果为准。现有四组表和已退役账本保留各自历史含义；不重新评分、不另开Goal或做全仓Preflight，原Phase、R1和已接受Proof状态保持原义。
 
 ## 当前开发：参数化门窗与 IFC2Text 往返（2026-09-28 整理）
 
@@ -182,7 +186,7 @@ Requirements: OPS-03 Beam and OPS-04 Column remain pending implementation
 Canonical specification:
   .planning/phases/12-beam-and-column-operations/12-SPEC.md
 Planning evidence:
-  .planning/phases/12-beam-and-column-operations/12-RESEARCH.md
+  [历史研究（Git）](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-RESEARCH.md)
   .planning/phases/12-beam-and-column-operations/12-PATTERNS.md
   .planning/phases/12-beam-and-column-operations/12-VALIDATION.md
 Plans: 12-01 through 12-16 in sixteen sequential waves

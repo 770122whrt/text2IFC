@@ -1,5 +1,7 @@
 # BIMNet 上游数据结构与当前仓库位置
 
+text2IFC 当前整个 dataset 的目录、用途、来源库存和清理记录请先看 [dataset 总入口](README.md)。本页仅解释 BIMNet 上游资料。
+
 本页下方说明 BIMNet 上游发布结构，不代表 text2IFC 当前磁盘目录。当前 25 份 BIMNet Source IFC 位于 `dataset/external/bimnet/`；实验划分继续由 `dataset/splits/bimnet-scene-splits.json` 管理，物理位置不表达训练划分。
 
 当前入口：[external](external/README.md)、[manifest](manifests/README.md)、[processed/Proof](processed/README.md)。

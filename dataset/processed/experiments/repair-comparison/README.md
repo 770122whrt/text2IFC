@@ -1,5 +1,5 @@
 # Repair 实验记录
 
-[当前 B 复测表](current/README.md)是共性缺陷修复后，001～010每题最近一次获准真实尝试的记录。旧四组批次、原005失败与离线诊断保存在[历史备份](history/README.md)，不混入当前表。
+[当前正式实验表](current/README.md)汇总20个IFC的四组最新真实结果。产物、逐题比较、问答、用量和DeepSeek实际返回推理集中在当前目录；未提交冗余日志已按用户授权精简，已提交旧机器证据受保护而暂留。
 
-本目录属于实验记录，不是 accepted Proof。输入题包仍在[原 formal 目录](../../ifc-repair/repair-comparison/formal/README.md)；后十题将按当前 Pipeline 支持范围重制，待用户检查后再实验。
+[题包与源材料](../../ifc-repair/repair-comparison/formal/README.md)保持原位；[系统与执行合同](../../../../docs/validation/repair-comparison/README.md)只维护一套。后十题评分仍待定，本目录不是accepted Proof。

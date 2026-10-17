@@ -1,0 +1,20 @@
+flowchart TB
+    I[自然语言要求与当前 IFC] --> A[Part A 确定目标、位置与公开参照]
+    A --> Q{必要事实是否明确}
+    Q -->|否| U[向用户澄清缺失事实]
+    U --> A
+    Q -->|是| B[Part B 在副本上完成整组局部修改]
+    B --> C[Part C 重开 IFC 并核验实际结果]
+    C --> V{几何、关系、语义与保全是否满足}
+    V -->|是| O[发布正式结果与核验说明]
+    V -->|否| F[记录失败原因并保留原模型]
+    O --> R[用户审阅并提出下一轮要求]
+    R --> I
+    classDef input fill:#e8f1fa,stroke:#467394,color:#19384c
+    classDef part fill:#e4f4ef,stroke:#278878,color:#164f46
+    classDef decision fill:#fff2d5,stroke:#c09540,color:#5b461e
+    classDef failure fill:#fae9e5,stroke:#bd6d57,color:#653a2e
+    class I,U,R input
+    class A,B,C,O part
+    class Q,V decision
+    class F failure

@@ -12,19 +12,23 @@
     4.2936,
     300.0,
     812.8,
-    -12.549,
-    5.24,
     -1.0,
     14.1,
     600.0,
     600.0,
     -1.0
   ],
-  "check_basis": "actual author_request output versus independently measured geometry-review rows",
+  "check_basis": "revised public request retains independently measured beam endpoints, section and column height; only column XY intentionally withheld and prewritten in answer card",
   "required_clarification_facts": [
-    "beam_load_bearing",
-    "column_load_bearing"
+    "column_position_x",
+    "column_position_y"
   ],
   "public_request_complete_without_clarification": false,
-  "passed": true
+  "passed": true,
+  "intentionally_withheld_geometry": [
+    "column_world_center_x",
+    "column_world_center_y"
+  ],
+  "source_geometry_checks_reused": true,
+  "public_loadbearing_values_explicit": true
 }

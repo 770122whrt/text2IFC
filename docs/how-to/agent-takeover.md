@@ -20,16 +20,17 @@ handoff 的提交号、预算或阻断描述直接续跑。
 
 ### 第一步：确认仓库和工作树
 
-在任何编辑、清理、运行实验或 Git 操作前执行：
+首次接管、切换工作树或 Git 状态可能变化时，先确认：
 
 ```powershell
 git rev-parse --show-toplevel
 git branch --show-current
 git status --short --branch
-git diff --cached --stat
-git log --oneline --decorate -5
-git worktree list
 ```
+
+暂存前再核对 `git diff --cached --stat`；只有需要追溯提交或选择隔离工作树时才读取
+`git log`、`git worktree list`。同一任务中仍有效的检查可复用，不在每个工具调用前
+重复执行整套命令。
 
 确认当前目录确实属于 text2IFC Git 根目录。工作树已有修改时，默认它们属于用户或
 其他并行任务；不要使用 `git reset --hard`、`git clean`、`git restore` 或
@@ -38,18 +39,19 @@ git worktree list
 
 ### 第二步：建立权威阅读顺序
 
-按以下顺序阅读：
+按需建立上下文，不把接管清单当成每轮全文阅读要求：
 
 1. [`AGENTS.md`](../../AGENTS.md)：仓库级行为、安全和证据合同。
 2. [`docs/README.md`](../README.md)：文档总入口和放置规则。
-3. [`.planning/STATE.md`](../../.planning/STATE.md)：当前执行位置和最近闭合状态。
-4. [`.planning/ROADMAP.md`](../../.planning/ROADMAP.md)：milestone、phase 和依赖关系。
-5. [`.planning/PROJECT.md`](../../.planning/PROJECT.md)：长期目标与稳定约束。
-6. 当前任务所属 Phase 的 SPEC、active PLAN 和 VALIDATION。
+3. [`.planning/STATE.md`](../../.planning/STATE.md) 的当前入口和当前任务所属的 SPEC、active PLAN、VALIDATION。
+4. 涉及阶段依赖时读取 [`.planning/ROADMAP.md`](../../.planning/ROADMAP.md) 的对应段落；涉及长期约束时读取 [`.planning/PROJECT.md`](../../.planning/PROJECT.md) 的对应段落。
 
 `STATE.md` 回答“现在做到哪里”，`ROADMAP.md` 回答“阶段如何组织”，
 `PROJECT.md` 回答“项目长期坚持什么”。历史报告、旧 handoff 和已完成计划可以
 解释过去，但不能覆盖当前状态与适用合同。
+
+同一会话已读且未变的材料不反复全文加载。新阶段、文件变化、证据不足或权威不清时，
+补读对应范围；长历史先找当前入口和相关标题。
 
 ### 第三步：给任务分类
 
@@ -273,7 +275,7 @@ experiments 和各 Proof 集合的 manifest 查找，不改写冻结报告中的
 | 发布 GitHub | [`publish-to-github.md`](publish-to-github.md) |
 
 Phase 12/12.1 或 Plan 07 的专项维护还可阅读
-[`Phase 12 Plan 07 技术 handover`](../handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)。
+[`Phase 12 Plan 07 技术 handover`](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)。
 它是专项接续材料，不是整个项目当前状态的替代品。
 
 ## 4. 必须分开的状态与证据
@@ -322,6 +324,54 @@ evidence/README.md  # 回链机器权威
 搜索优先使用 `rg` 和 `rg --files`，并从相关包、测试或文档开始。只有现有证据
 不足时才扩大范围。
 
+### 5.1 连续执行与上下文
+
+批量任务、测试等待、轮询和日志汇总交给持久化脚本或现有调度器。脚本保存会话、
+累计预算、日志位置和终态，并在内部等待或轮询；对 Codex 只输出状态变化、完成、
+异常或需要人工处理的摘要。正常未变化的等待不触发新的模型判断。
+
+Codex 在阶段启动、完成、异常、澄清回复和决策边界介入。没有自动唤醒能力时，
+让脚本持久运行并留下完成／异常回执，后续读取回执；不要以频繁模型轮询代替通知。
+脚本故障仍保留原失败，恢复方式遵守本阶段的幂等、预算和安全停止合同。
+
+大型日志先由脚本筛出错误、变化、计数和相关文件行号，再按需读取原文。摘要不覆盖
+原始证据。子 Agent 仅用于收益明确、职责独立的工作，接收最小背景和文件范围；
+无必要不继承整段历史，也不为等状态额外派 Agent。
+
+### 5.2 推理档位的实际控制
+
+常规状态检查、整理和简单修改优先 low／medium；复杂定位才提高，定位完成后回到
+常规档位。先减少无关上下文和无变化的调用，而不是靠设置名称声称已节省额度。
+
+当前主任务没有工具可直接切换自身模型或推理档位，需要用户在 Codex 界面调整。
+子 Agent 的 `reasoning_effort` 可在非完整历史继承时指定；创建或获准消息发送到其他
+任务的 `thinking` 只控制那个任务，不能据此声称本任务已切换，也不为换档另建任务。
+工具枚举包含 low、medium、high、xhigh、max，部分模型支持 ultra；其他任务的
+`thinking` 还枚举 none／minimal，但实际组合须经对应模型验证。
+完整历史继承的子 Agent 沿用父任务设置。写入规则不等于设置生效，未经授权不改全局配置。
+
+可用档位随模型和客户端变化，参见 [官方配置参考](https://developers.openai.com/codex/config-reference)。
+
+### 5.3 三种预算与低额度检查点
+
+| 预算 | 计数与用途 |
+|---|---|
+| Codex 账号额度 | 用账号工具返回的适用额度窗口判断；剩余为 `100 - usedPercent`，空值表示未知。不是实验 API token，也不是 credits 余额 |
+| Codex Goal 预算（如启用） | 由 Goal 工具报告的线程目标使用量／剩余量；不是账号剩余百分比。开启长 Goal 前说明实际返回口径；未确认的输入、缓存、推理或子 Agent 计入方式明确标为未知，不虚构换算 |
+| 实验 API 预算 | 按实验账本累计被测模型可获取的用量，未知用量另记；保留现有费用和超额授权，不转填 Codex Goal 的 `token_budget` |
+
+长任务分阶段执行；阶段开始、完成或真实额度异常时核对账号额度，不在状态轮询中
+查询。需要新的 Goal 预算值时再问用户；普通任务不自动开启 Goal。账号消耗还受
+模型、上下文和工具使用影响，不能从实验 token 推算，见 [官方额度说明](https://developers.openai.com/codex/pricing)。
+
+任一已知适用账号窗口剩余 ≤20% 时，保存检查点，并向用户汇报剩余额度和当前进度。
+用户继续对话后，继续交流并推进已授权工作，无需另行确认恢复；不能仅因低额度
+阻止后续对话或执行。检查点沿用当前状态入口，记录任务／会话 ID、当前步骤、
+产物与日志、累计实验用量、未处理问题和恢复命令；不另造同义报告。
+如果平台实际限额导致无法继续，保留状态并说明具体限制。后台任务仍遵守既有
+协作停止与持久化合同；低额度本身不触发暂停，不直接杀进程、重开挑结果或丢记录。
+此阈值不是实验预算变化或新的费用审批。
+
 ## 6. 验证强度如何选择
 
 验证应匹配本次变更可能引入的真实失败：
@@ -331,8 +381,8 @@ evidence/README.md  # 回链机器权威
 | README、报告或链接 | 路径、链接、声明和格式检查 |
 | 新增人读 Proof 视图 | 必需文件、角色、authority link、IFC reopen、repair/no-output 互斥 |
 | 普通行为修复 | 先写聚焦失败测试，再运行相关回归 |
-| Agent/Prompt/Schema 行为 | failure family、stage seam、完整离线链路和适用协议 |
-| 新 genuine Provider run | 所有适用 preflight 通过后才允许 live；保留每次真实 attempt |
+| Agent/Prompt/Schema 行为 | failure family 与 changed scope；首次进入阶段或 admission 失效时才重建适用 seam／完整离线链路 |
+| 新 genuine Provider run | 复用仍有效的阶段准入，所有适用检查通过后才允许 live；保留每次真实 attempt |
 | accepted collection 或 evidence semantics | 对应 Proof validator；只有合同要求时运行 curator |
 
 不要用 curator 代替定位，也不要因为只改导航就普遍重跑 curator。反过来，
@@ -340,9 +390,12 @@ source mutation、unoffered identity、inadmissible property、missing repaired 
 no-output 案出现 repaired IFC、broken authority link 或适用 Proof gate 失败仍必须
 fail closed。
 
+已经充分通过的检查不因交接、整理报告或等待结束重复运行；仅在新修改、失败或
+实际风险增加时补充验证。缺失／失效准入仍阻断真实调用，不自动升级为全仓 Preflight。
+
 ## 7. Agent 与确定性代码的边界
 
-Agent 可以理解请求、提出澄清、在有界候选中给出语义建议，但不能：
+生产 Repair Harness 中，Agent 可以理解请求、提出澄清、在有界候选中给出语义建议，但不能：
 
 - 直接生成或修改 IFC STEP；
 - 越过当前 offered candidate set 绑定目标；
@@ -354,6 +407,9 @@ Agent 可以理解请求、提出澄清、在有界候选中给出语义建议�
 确定性代码负责 identity binding、scope、transaction、IFC apply、reopen、L0/L1/L2、
 preservation 和 publish gate。涉及真实 LLM 前，完整要求见
 [`agent-capability-evaluation.md`](../validation/agent-capability-evaluation.md)。
+
+四组实验按其既定执行合同运行：A/C 可自行选择脚本或直接编辑 IFC，D 保留官方
+原生工具，通用执行器不额外引导方法。这不改变源 IFC 不变、私有隔离和统一独立评分要求。
 
 ## 8. 常用验证入口
 
@@ -398,27 +454,10 @@ Windows 下 pytest 临时目录权限异常时，使用仓库内明确的 `--bas
 
 ## 10. 完成任务时如何交接
 
-最终报告至少说明：
+按任务规模简述结论、修改、实际验证、证据等级和剩余问题；适用时附 live run ID、
+产物、Git 状态及恢复入口。记录 skip／timeout 或范围限制，不把局部通过说成全仓
+或 live 成功。详细命令和机器证据留在现有权威，交接链接过去，不再全文复制。
 
-1. 结论和实际证据等级；
-2. 根因或实现选择；
-3. 修改过的 production、test、schema、prompt、docs 或 dataset 文件；
-4. 精确运行的验证及结果，包括任何 skip、timeout 或未运行项；
-5. live run ID、Provider calls 和关键产物路径（如果适用）；
-6. Git commit、push、PR 或未提交状态；
-7. 未解决问题、数据边界和需要用户决策的事项；
-8. 保留下来的无关工作树修改。
-
-不要只写“测试通过”或“已经完成”。让下一位接管者可以从报告中的路径和命令继续
-验证，而不必重新猜测本轮做了什么。
-
-## 11. 开始工作前检查表
-
-- [ ] 已确认 Git root、branch 和工作树状态；
-- [ ] 已阅读 `AGENTS.md`、`docs/README.md`、`STATE.md` 和 `ROADMAP.md`；
-- [ ] 已定位适用 SPEC、PLAN、VALIDATION；
-- [ ] 已区分当前状态与历史报告；
-- [ ] 已识别 production input 与 private evaluator-only 数据边界；
-- [ ] 已确定最小复现和最小必要验证；
-- [ ] 已说明可支持的完成声明；
-- [ ] 已避免覆盖或吸收无关用户修改。
+当前实验结果保持一个人读主入口，历史记录独立保留；其他索引与 `STATE.md` 只链接
+并说明执行位置。变动数字只在其负责的结果表／账本更新，不同步抄写到多份报告，
+也不为同一批充分保存的证据重复生成归档。

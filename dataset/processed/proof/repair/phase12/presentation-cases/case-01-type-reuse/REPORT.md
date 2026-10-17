@@ -19,7 +19,7 @@
 | Provider 语义 | genuine Stage 1 / Stage 2；选择见 repair-intent、resolution 和 bound-changeset |
 | 确定性执行 | application passed；successful_artifact_publishable=true |
 | 产物 | succeeded、complete_repair_success=true；不是 staging candidate |
-| 证据合同 | proof-check passed；冻结四份根文件哈希。完整失败历史仍在源工作目录，不属于本包覆盖范围 |
+| 证据合同 | proof-check passed；冻结四份根文件哈希。已保存的源运行历史可按[固定 Git 修订恢复](https://github.com/770122whrt/text2IFC/tree/11f29030f3f3b5967535d16c4c4b31085e21ff64/dataset/processed/experiments/restoration-20260904/case-01-type-reuse)，不属于本包覆盖范围 |
 | L0 / L1 / L2 | public-evaluation 记录强制 L1/L2 通过；L0 未单独汇总，写未知，不从输出存在推断 |
 | atomicity / preservation | 原报告记录原子应用；public-evaluation preservation passed；失败回滚不是此单个成功案例的验证范围 |
 | reopen | 来源报告已有重开检查；本次额外验证三份 IFC2X3 均可打开 |

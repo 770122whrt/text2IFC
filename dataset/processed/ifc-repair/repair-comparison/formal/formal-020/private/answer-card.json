@@ -1,16 +1,26 @@
 {
-  "status": "pending_human_review",
+  "facts": {
+    "window_opening_bottom": {
+      "answer_text": "窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。",
+      "basis": "pre-run authored placement intent, independently measured before review",
+      "height_above_storey_mm": 600.0,
+      "question_keywords": [
+        "窗洞下沿",
+        "窗台标高",
+        "窗台高度",
+        "窗底",
+        "sill",
+        "window opening bottom",
+        "opening bottom",
+        "window bottom"
+      ],
+      "world_elevation_m": 0.6
+    }
+  },
+  "out_of_card_policy": "Ask user; never inspect G for new run-time answers.",
+  "reply_policy": "Reply only to the fact actually asked; do not send the full card.",
   "required_user_facts": [
     "window_opening_bottom"
   ],
-  "facts": {
-    "window_opening_bottom": {
-      "world_elevation_m": 0.6,
-      "height_above_storey_mm": 600.0,
-      "answer_text": "窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。",
-      "basis": "pre-run authored placement intent, independently measured before review"
-    }
-  },
-  "reply_policy": "Reply only to the fact actually asked; do not send the full card.",
-  "out_of_card_policy": "Ask user; never inspect G for new run-time answers."
+  "status": "accepted_by_delegation"
 }

@@ -1,6 +1,8 @@
 # IFC-SemRepair：三份主文档导航
 
-更新：2026-09-23。给老师汇报先读技术文档，再按需要查 Claim 和文献；三份主文档继续分别维护，不新增平行主稿。本轮补齐 Type、材料、外观和真实证据边界，不启动新实验。IFC-SemRepair 是 Repair 论文暂定名，项目仍为 text2IFC。
+更新：2026-09-29。给老师汇报先读技术文档，再按需要查 Claim 和文献；三份主文档继续分别维护，不新增平行主稿。原路径 v0.2 已完成代码／环境只读核对与 DSH 官方调研，首批离线开发待批准，尚未安装 Harness 或启动新实验。IFC-SemRepair 是 Repair 论文暂定名，项目仍为 text2IFC。
+
+[20 IFC／四组实验专题](../../validation/repair-comparison/README.md)分别维护实施计划、指标和 DeepSeek Harness 接入隔离规范；当前运行方式与支持边界见专题入口。这是技术执行附件，不是第四份研究主稿。批准状态与真实结果继续回写 [Claim 与实验登记](claims-and-experiments.md)，不再复制一套指标或带版本号的正文。
 
 ### 三份持续维护文档
 
@@ -34,7 +36,7 @@
 
 [SGSS 全文阅读快照](sgss-fulltext-review-20260921.md)保留前作阅读证据；新原文核查统一在 literature 更新，不作为第四份现行综述。Generation 的计划与历史材料保持其原有职责。
 
-### 本轮执行记录
+### 历史执行记录（2026-09-23）
 
 技术主文档重写为汇报正文，补齐材料／Type／外观，核对 R1 和三个 presentation 案例；相关三份聚焦测试文件 29 passed，仅离线回归。历史草案归档并修复引用，未删除文档、修改生产代码或运行新 Provider 实验。全体文档分类见[分类与归档目录](../../document-catalog.md)。
 

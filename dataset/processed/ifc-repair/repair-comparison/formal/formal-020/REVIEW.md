@@ -1,6 +1,6 @@
 # formal-020：补回一扇窗并恢复一扇门的外门属性
 
-**待你查看和审题：pending_human_review。尚未接受、冻结或请求模型。**
+**用户总体认可后的技术复核已通过；尚未冻结或请求模型。不宣称逐题usBIM验收。**
 
 [完整原件 G](private/reference.ifc) · [损坏 IFC D](public/model.ifc) · [请求](public/request.txt) · [三维对照](VIEW.html)
 
@@ -42,4 +42,4 @@ G 和 D schema＋EXPRESS 均 0 诊断；已逐个比较 728 个保留对象的�
 [组合执行检查](PIPELINE-CHECK.md) · [自包含执行证据](private/offline-support/window-property-after-answer/README.md)。
 [详细制题检查](private/checks.json) · [数值和保全](private/geometry-review.json) · [来源许可](private/SOURCE-LICENSE.md)
 
-你确认后再冻结并实验；private、REVIEW、VIEW 仅供审阅和评价，公开输入只含两个 public 文件。
+委托技术复核已通过；完成新阶段准入与冻结后才实验。private、REVIEW、VIEW 仅供审阅和评价，公开输入只含两个 public 文件。

@@ -1,5 +1,3 @@
 # formal-015 格式校验
 
-IfcOpenShell 0.8.5，schema＋EXPRESS：G、D 均 0 诊断。
-
-这是本机格式检查；尚未声称 usBIM 导入和显示通过。
+原G保持不变，复用既有schema＋EXPRESS零诊断；当前新D重新验证，零诊断。详情见[检查](private/checks.json)。不代替usBIM显示验收。

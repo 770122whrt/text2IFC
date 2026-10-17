@@ -1,0 +1,38 @@
+{
+  "deepseek": {
+    "chat_endpoint": "https://api.deepseek.com/chat/completions",
+    "key_env": "DEEPSEEK_API_KEY",
+    "label": "DeepSeek",
+    "max_input_tokens": 65536,
+    "max_output_tokens": 65536,
+    "messages_endpoint": "https://api.deepseek.com/anthropic/v1/messages",
+    "model": "deepseek-v4-flash",
+    "request_options": {}
+  },
+  "gpt": {
+    "chat_endpoint": "http://179.255.159.53:8080/v1/chat/completions",
+    "key_env": "OPENAI_API_KEY",
+    "label": "GPT",
+    "max_input_tokens": 65536,
+    "max_output_tokens": 65536,
+    "model": "gpt-6-sol",
+    "request_options": {
+      "store": false
+    }
+  },
+  "qwen": {
+    "chat_endpoint": "https://ms-gmk85rth-100034032793-sw.gw.ap-zhongwei.ti.tencentcs.com/ms-gmk85rth/v1/chat/completions",
+    "key_env": null,
+    "label": "Qwen3.5-35B-A3B",
+    "max_input_tokens": 128000,
+    "max_output_tokens": 32768,
+    "model": "ms-gmk85rth",
+    "request_options": {
+      "chat_template_kwargs": {
+        "enable_thinking": false
+      },
+      "temperature": 0.6,
+      "top_p": 0.95
+    }
+  }
+}

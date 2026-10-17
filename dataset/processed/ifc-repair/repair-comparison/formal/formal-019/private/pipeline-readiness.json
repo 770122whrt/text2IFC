@@ -8,19 +8,19 @@
   "public_request_wording_exactly_exercised": false,
   "initial_request_requires_clarification": true,
   "required_clarification_facts": [
-    "beam_load_bearing",
-    "column_load_bearing"
+    "column_position_x",
+    "column_position_y"
   ],
   "bound_probe_uses_complete_geometry_facts": true,
-  "bound_probe_role": "feasibility of apply with explicit complete geometry facts, as after receiving prewritten answers; not a simulated natural clarification dialogue",
+  "bound_probe_role": "same D and final geometry/properties; historical complete-input operation feasibility, not current position clarification/resume",
   "initial_clarification_or_resume_exercised": false,
-  "property_clarification_answer_application_exercised": true,
+  "property_clarification_answer_application_exercised": false,
   "property_runtime_full_chain_verified": false,
   "natural_language_stage_1_3_exercised": false,
   "full_B_experiment_adapter_exercised": false,
   "provider_calls": 0,
   "budget_provider_calls_allowed": false,
-  "human_review_status": "pending_human_review",
+  "human_review_status": "accepted_by_delegation",
   "review_acceptance_inherited": false,
   "not_stage_or_formal_admission": true,
   "negative_evidence_policy": "Earlier deterministic probes retained; not repeated merely because single-relation behavior is unchanged.",
@@ -28,5 +28,7 @@
   "geometry_evidence": "private/offline-support/geometry-bound/result.json",
   "evidence_links_are_package_relative": true,
   "bound_geometry_and_property_after_answers_passed": true,
-  "property_execution_scope": "exact canonical standard intent -> resolver -> semantic manifest/binder -> atomic apply/reopen/evaluate, with prewritten answers"
+  "property_execution_scope": "historical exact intents through resolver, manifest/binder and atomic apply; current LoadBearing=true is explicit in request",
+  "historical_property_answer_application_exercised": true,
+  "revised_position_clarification_resume_exercised": false
 }

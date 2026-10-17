@@ -1,35 +1,27 @@
 {
-  "schema_version": "repair-comparison-task-candidate/0.2",
-  "purpose": "formal_candidate",
-  "case_id": "formal-016",
-  "title": "恢复一根柱的承重属性",
-  "source": {
-    "asset_id": "ifc-bench-str-79f294c64343",
-    "source_path": "dataset/external/repairs/v8/ifc-bench-str-79f294c64343/str.ifc",
-    "source_role": "preselected_registered_format_repair_copy",
-    "license": "CC-BY-4.0",
-    "source_id": "ifc-bench",
-    "source_sha256": "f49b5fa1b614f4df67ee4dfbf6877ae7b40634a9d6f428572952386954f6f755",
-    "rights_registry": "dataset/external/ifc-asset-register.jsonl"
+  "budget": {
+    "limits": {
+      "active_seconds": 2400,
+      "calls": 48,
+      "extensions": [],
+      "tokens": 450000,
+      "tool_seconds": 120
+    },
+    "provider_calls_allowed": true,
+    "requires_current_stage_admission": true,
+    "status": "frozen"
   },
-  "source_sha256": "f49b5fa1b614f4df67ee4dfbf6877ae7b40634a9d6f428572952386954f6f755",
-  "damaged_sha256": "474d677bcd08722f0adf4a6ffb62182ce268e5900519438192f662fccb2eddab",
-  "request": "以下位置按模型世界坐标描述，单位为米。标高 0 米的楼层，平面中心约在（X=18.305119、Y=17.815 米）、实体竖向范围为 Z=-0.09 至 3.61 米的这根柱的承重标记被误改了，请恢复为承重构件。只修正这一构件的属性，保留全部构件及其几何、位置、尺寸和其他属性。",
+  "case_id": "formal-016",
+  "clarification": {
+    "facts": {},
+    "required_user_facts": []
+  },
+  "clarification_required": false,
   "damage": [
     {
-      "kind": "property",
-      "target_guid": "1DcFG7Zuf8FxTHX6fz74x3",
-      "target_name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
-      "property_set": "Pset_ColumnCommon",
-      "property": "LoadBearing",
-      "expected_value": true,
-      "damaged_value": false,
-      "value_type": "IfcBoolean",
-      "scope": "occurrence_direct",
+      "damaged_value": "60",
+      "expected_value": "120",
       "geometry": {
-        "guid": "1DcFG7Zuf8FxTHX6fz74x3",
-        "name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
-        "class": "IfcColumn",
         "bounds_world_m": [
           [
             17.905119139860002,
@@ -48,17 +40,8 @@
           18.30511913986,
           17.815
         ],
-        "storey": {
-          "guid": "02GkOQJZz4x9WAhoZkM67S",
-          "name": "00 begane grond",
-          "world_elevation_m": 0.0
-        },
+        "class": "IfcColumn",
         "geometry": {
-          "guid": "1DcFG7Zuf8FxTHX6fz74x3",
-          "class": "IfcColumn",
-          "name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
-          "project_unit_to_mm": 1.0,
-          "geometry_status": "available",
           "bounds_world_m": [
             [
               17.905119139860002,
@@ -72,62 +55,97 @@
               -0.09,
               3.6100000000000403
             ]
-          ]
+          ],
+          "class": "IfcColumn",
+          "geometry_status": "available",
+          "guid": "1DcFG7Zuf8FxTHX6fz74x3",
+          "name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
+          "project_unit_to_mm": 1.0
+        },
+        "guid": "1DcFG7Zuf8FxTHX6fz74x3",
+        "name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
+        "storey": {
+          "guid": "02GkOQJZz4x9WAhoZkM67S",
+          "name": "00 begane grond",
+          "world_elevation_m": 0.0
         }
       },
-      "original_value_basis": "genuine_preselected_source_direct_instance_property"
+      "kind": "property",
+      "original_value_basis": "genuine_preselected_source_direct_instance_property",
+      "property": "FireRating",
+      "property_set": "Pset_ColumnCommon",
+      "scope": "occurrence_direct",
+      "target_guid": "1DcFG7Zuf8FxTHX6fz74x3",
+      "target_name": "28_SC_AT_kolom vierkant beton:kolom vierkant_gen_lxb 500x800 (C35/45):590292",
+      "value_type": "IfcLabel"
     }
   ],
+  "damage_scale": "S1",
+  "damaged_sha256": "2c85af538eddaa0d15da1f2b481017d1444e74216922aac2688a32d78eeb69d7",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred"
+  },
+  "pipeline_readiness": {
+    "bound_instance_apply": {
+      "case_id": "formal-016",
+      "checks": {
+        "all_geometry_unchanged": true,
+        "exact_typed_value_restored": true,
+        "only_target_properties_changed": true,
+        "published": true,
+        "source_unchanged": true,
+        "valid": true
+      },
+      "evidence_class": "offline_bound_instance_property_apply_reopen_and_preservation",
+      "natural_language_pipeline_tested": false,
+      "passed": true,
+      "property_runtime_retrieval_tested": false,
+      "provider_calls": 0,
+      "schema_version": "next-ten-property-bound-support/0.1",
+      "whole_mixed_task_tested": null
+    },
+    "current_bound_evidence": "private/offline-support/property-review/README.md",
+    "four_arm_admission": "not_frozen_not_admitted",
+    "human_acceptance": false,
+    "natural_language_complete_path": "general_runtime_fake_provider_paths_passed; exact_case_not_model_tested",
+    "product_operation_supported": true,
+    "runtime_evidence": "dataset/processed/experiments/repair-comparison/development/structural-property-readiness/README.md",
+    "technical_review_accepted": true
+  },
+  "preservation": [
+    "All existing geometry and all unrelated properties/relations unchanged.",
+    "Only mixed window target host gains the required opening."
+  ],
+  "purpose": "formal_candidate",
+  "request": "以下位置按模型世界坐标描述，单位为米。标高 0 米的楼层，平面中心约在（X=18.305119、Y=17.815 米）、实体竖向范围为 Z=-0.09 至 3.61 米的这根柱的耐火等级记录被误改了，请把这项记录的文字恢复为“120”。只修正这一构件的属性，保留全部构件及其几何、位置、尺寸和其他属性。",
   "required_product_count": 0,
   "required_products": {},
   "required_property_count": 1,
   "required_relation_count": 0,
-  "damage_scale": "S1",
   "review": {
-    "status": "pending_human_review",
-    "reviewer": null,
-    "reviewed_at": null,
-    "human_viewed": false,
-    "prior_case_acceptance_inherited": false
-  },
-  "budget": {
-    "provider_calls_allowed": false,
-    "status": "not_frozen"
-  },
-  "metrics": {
-    "status": "not_frozen",
-    "pure_property_product_score": "not_applicable"
-  },
-  "clarification": {
-    "required_user_facts": [],
-    "facts": {}
-  },
-  "preservation": [
-    "All existing geometry and unrelated properties/relations unchanged."
-  ],
-  "pipeline_readiness": {
-    "product_operation_supported": true,
-    "bound_instance_apply": {
-      "schema_version": "next-ten-property-bound-support/0.1",
-      "case_id": "formal-016",
-      "evidence_class": "offline_bound_instance_property_apply_reopen_and_preservation",
-      "checks": {
-        "valid": true,
-        "published": true,
-        "source_unchanged": true,
-        "exact_typed_value_restored": true,
-        "all_geometry_unchanged": true,
-        "only_target_properties_changed": true
-      },
-      "passed": true,
-      "natural_language_pipeline_tested": false,
-      "property_runtime_retrieval_tested": false,
-      "provider_calls": 0,
-      "whole_mixed_task_tested": null
+    "authorization": {
+      "property_revision_authorized": true,
+      "user_quote": "其他看起来没有问题 大体上没有问题 你再稍微过一遍即可。"
     },
-    "natural_language_complete_path": "general_runtime_fake_provider_paths_passed; exact_case_not_model_tested",
-    "four_arm_admission": "not_frozen_not_admitted",
-    "human_acceptance": false,
-    "runtime_evidence": "dataset/processed/experiments/repair-comparison/development/structural-property-readiness/README.md"
-  }
+    "human_viewed": false,
+    "kind": "delegated_technical",
+    "reviewed_at": "2026-10-09T04:02:21.373506+00:00",
+    "reviewer": "Codex technical review following user general approval",
+    "scope_note": "User generally approved the other cases and delegated this recheck; no per-case usBIM pass is attributed to the user.",
+    "status": "accepted_by_delegation",
+    "technical_review_passed": true
+  },
+  "schema_version": "repair-comparison-task-candidate/0.2",
+  "source": {
+    "asset_id": "ifc-bench-str-79f294c64343",
+    "license": "CC-BY-4.0",
+    "rights_registry": "dataset/external/ifc-asset-register.jsonl",
+    "source_id": "ifc-bench",
+    "source_path": "dataset/external/repairs/v8/ifc-bench-str-79f294c64343/str.ifc",
+    "source_role": "preselected_registered_format_repair_copy",
+    "source_sha256": "f49b5fa1b614f4df67ee4dfbf6877ae7b40634a9d6f428572952386954f6f755"
+  },
+  "source_sha256": "f49b5fa1b614f4df67ee4dfbf6877ae7b40634a9d6f428572952386954f6f755",
+  "title": "恢复一根柱的耐火等级记录"
 }

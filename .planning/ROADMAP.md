@@ -37,7 +37,7 @@ deterministic, explainable evidence rather than relying on `Name` alone.
    zero-match, ambiguous or conflicting selectors.
 4. Compact top-K context remains deterministic and token-budgeted.
 
-**Evidence:** [Phase 7 validation report](../docs/validation/ifc2x3-changeset/phase7-validation-report.md)
+**Evidence:** [Phase 7 validation report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase7-validation-report.md)
 
 ### Phase 8: L1/L2 Evaluation Contract
 
@@ -61,7 +61,7 @@ semantic fidelity, while explicitly deferring L3 exactness.
    use request, surviving model facts and prototypes without gold leakage.
 5. L3 remains documented and `not_required` for v1.1.
 
-**Evidence:** [Phase 8 validation report](../docs/validation/ifc2x3-changeset/phase8-validation-report.md), [goal verification](phases/08-l1-l2-evaluation-contract/08-VERIFICATION.md), and [security audit](phases/08-l1-l2-evaluation-contract/08-SECURITY.md)
+**Evidence:** [Phase 8 validation report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase8-validation-report.md), [goal verification](phases/08-l1-l2-evaluation-contract/08-VERIFICATION.md), and [security audit](phases/08-l1-l2-evaluation-contract/08-SECURITY.md)
 
 ### Phase 9: General IFC + Text Repair Orchestrator
 
@@ -102,7 +102,7 @@ ChangeSet + IFC + evidence.
 4. Successful runs publish ChangeSet, repaired/modified IFC, L1/L2 reports,
    provider trace and hash manifest.
 
-**Evidence:** [Phase 9 validation report](../docs/validation/ifc2x3-changeset/phase9-validation-report.md), [goal verification](phases/09-general-ifc-text-repair-orchestrator/09-VERIFICATION.md), [security audit](phases/09-general-ifc-text-repair-orchestrator/09-SECURITY.md), and [clean code review](phases/09-general-ifc-text-repair-orchestrator/09-REVIEW.md)
+**Evidence:** [Phase 9 validation report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase9-validation-report.md), [goal verification](phases/09-general-ifc-text-repair-orchestrator/09-VERIFICATION.md), [security audit](phases/09-general-ifc-text-repair-orchestrator/09-SECURITY.md), and [clean code review](phases/09-general-ifc-text-repair-orchestrator/09-REVIEW.md)
 
 ### Phase 09.1: IFC Type Evidence and Prototype Resolution Correction (INSERTED)
 
@@ -176,7 +176,7 @@ Plans:
    allowlist in offline and real-Provider UAT.
 3. Historical v0.1 L1 evidence remains versioned rather than relabelled.
 
-**Evidence:** [Phase 10 validation report](../docs/validation/ifc2x3-changeset/phase10-validation-report.md) and [goal verification](phases/10-window-l2-semantic-fidelity-closure/10-VERIFICATION.md)
+**Evidence:** [Phase 10 validation report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10-validation-report.md) and [goal verification](phases/10-window-l2-semantic-fidelity-closure/10-VERIFICATION.md)
 
 ### Phase 10.1: Explicit IFC Property Authoring and Validation (INSERTED)
 
@@ -344,7 +344,7 @@ publication semantics.
 5. The saved real DeepSeek ChangeSet is reapplied in a new directory and
    reaches an honest publication decision.
 
-**Evidence:** [Phase 10.4 validation report](../docs/validation/ifc2x3-changeset/phase10.4-comparator-0.2-validation-report.md)
+**Evidence:** [Phase 10.4 validation report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.4-comparator-0.2-validation-report.md)
 
 ### Phase 10.5: Window Occurrence Fidelity and Validation Acceleration (INSERTED)
 
@@ -405,7 +405,7 @@ seconds.
    seconds and 4 GiB without reducing checks, and one real DeepSeek run records
    honest success or failure with no fallback.
 
-**Evidence:** [Phase 10.5 validation report](../docs/validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)
+**Evidence:** [Phase 10.5 validation report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)
 
 ### Phase 11: Wall Opening and Door Operations
 
@@ -512,7 +512,7 @@ elements.
 
 **Specification:** [Phase 12 SPEC](phases/12-beam-and-column-operations/12-SPEC.md)
 
-**Implementation research:** [Phase 12 RESEARCH](phases/12-beam-and-column-operations/12-RESEARCH.md)
+**Implementation research:** [Phase 12 RESEARCH](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-RESEARCH.md)
 
 **Pattern map:** [Phase 12 PATTERNS](phases/12-beam-and-column-operations/12-PATTERNS.md)
 
@@ -521,26 +521,26 @@ elements.
 **Plans:** 16/16 primary plans complete; corrective 12-15A/B/C lineages closed
 by the final Phase 12/12.1 validation report
 
-- [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](phases/12-beam-and-column-operations/12-01-PLAN.md)
-- [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](phases/12-beam-and-column-operations/12-02-PLAN.md)
-- [x] **Wave 3** *(blocked on Wave 2)*: [12-03 - Structural occurrence property and RAG authority integration](phases/12-beam-and-column-operations/12-03-PLAN.md)
-- [x] **Wave 4** *(blocked on Wave 3)*: [12-04 - Deterministic structural Type factories](phases/12-beam-and-column-operations/12-04-PLAN.md)
-- [x] **Wave 5** *(blocked on Wave 4)*: [12-05 - Repair-local straight rectangular member geometry](phases/12-beam-and-column-operations/12-05-PLAN.md)
-- [x] **Wave 6** *(blocked on Wave 5)*: [12-06 - Exact-Type and optional material/Pset preservation](phases/12-beam-and-column-operations/12-06-PLAN.md)
-- [x] **Wave 7** *(blocked on Wave 6)*: [12-07 - Registered add_beam resolution and application](phases/12-beam-and-column-operations/12-07-PLAN.md)
-- [x] **Wave 8** *(blocked on Wave 7)*: [12-08 - Registered add_column resolution and application](phases/12-beam-and-column-operations/12-08-PLAN.md)
-- [x] **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](phases/12-beam-and-column-operations/12-09-PLAN.md)
-- [x] **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](phases/12-beam-and-column-operations/12-10-PLAN.md)
-- [x] **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](phases/12-beam-and-column-operations/12-11-PLAN.md)
-- [x] **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](phases/12-beam-and-column-operations/12-12-PLAN.md)
-- [x] **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](phases/12-beam-and-column-operations/12-13-PLAN.md)
-- [x] **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](phases/12-beam-and-column-operations/12-14-PLAN.md)
+- [x] **Wave 1:** [12-01 - Structural prompt profiles and selected routing](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-01-PLAN.md)
+- [x] **Wave 2** *(blocked on Wave 1)*: [12-02 - Structural occurrence and Type index](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-02-PLAN.md)
+- [x] **Wave 3** *(blocked on Wave 2)*: [12-03 - Structural occurrence property and RAG authority integration](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-03-PLAN.md)
+- [x] **Wave 4** *(blocked on Wave 3)*: [12-04 - Deterministic structural Type factories](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-04-PLAN.md)
+- [x] **Wave 5** *(blocked on Wave 4)*: [12-05 - Repair-local straight rectangular member geometry](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-05-PLAN.md)
+- [x] **Wave 6** *(blocked on Wave 5)*: [12-06 - Exact-Type and optional material/Pset preservation](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-06-PLAN.md)
+- [x] **Wave 7** *(blocked on Wave 6)*: [12-07 - Registered add_beam resolution and application](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-07-PLAN.md)
+- [x] **Wave 8** *(blocked on Wave 7)*: [12-08 - Registered add_column resolution and application](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-08-PLAN.md)
+- [x] **Wave 9** *(blocked on Wave 8)*: [12-09 - Strict structural evaluation and mixed atomicity](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-09-PLAN.md)
+- [x] **Wave 10** *(blocked on Wave 9)*: [12-10 - Structural mutation and private-Gold isolation](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-10-PLAN.md)
+- [x] **Wave 11** *(blocked on Wave 10)*: [12-11 - Family-neutral strict independent Proof validator](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-11-PLAN.md)
+- [x] **Wave 12** *(blocked on Wave 11)*: [12-12 - d7n/vvo offline runner and curated strict Proof contract](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-12-PLAN.md)
+- [x] **Wave 13** *(blocked on Wave 12)*: [12-13 - Live transcript, preflight and no-fallback contract](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-13-PLAN.md)
+- [x] **Wave 14** *(blocked on Wave 13)*: [12-14 - Live Proof curation acceptance contract](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-14-PLAN.md)
 - [x] **Wave 15:** [12-15 - Execute and independently curate real DeepSeek structural UAT](phases/12-beam-and-column-operations/12-15-PLAN.md) — accepted through the Phase 12.1 R1 successor run and Proof; failed historical attempts remain unchanged.
 - [x] **Wave 16:** [12-16 - Regress, report and conditionally close Phase 12](phases/12-beam-and-column-operations/12-16-PLAN.md) — final regressions, IFCCompare boundary and closure report complete.
 
 Corrective subplans [12-15A](phases/12-beam-and-column-operations/12-15A-PLAN.md),
-[12-15B](phases/12-beam-and-column-operations/12-15B-PLAN.md) and
-[12-15C](phases/12-beam-and-column-operations/12-15C-PLAN.md) produced the
+[12-15B](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-15B-PLAN.md) and
+[12-15C](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12-beam-and-column-operations/12-15C-PLAN.md) produced the
 current Stage 1 scope, structural Type-intent and transaction-clause baseline.
 They are prerequisite implementation history, not accepted Wave 15 live Proof.
 
@@ -592,18 +592,18 @@ knowledge/vector baseline, Phase 12 Plans 12-01 through 12-14 and the current
 
 **Specification:** [Phase 12.1 SPEC](phases/12.1-property-resolution-rag-reranker/12.1-SPEC.md)
 
-**Implementation research:** [Phase 12.1 RESEARCH](phases/12.1-property-resolution-rag-reranker/12.1-RESEARCH.md)
+**Implementation research:** [Phase 12.1 RESEARCH](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-RESEARCH.md)
 
 **Validation strategy:** [Phase 12.1 VALIDATION](phases/12.1-property-resolution-rag-reranker/12.1-VALIDATION.md)
 
 **Plans:** 7/7 plans executed
 
-- [x] **Wave 1:** [12.1-01 - Additive Stage 1.5 schemas, policy contract and Prompt](phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md)
-- [x] **Wave 2:** [12.1-02 - Alias-free multilingual vector runtime](phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md)
-- [x] **Wave 3:** [12.1-03 - Bounded Property Resolution Provider stage](phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
-- [x] **Wave 4:** [12.1-04 - Admissibility gate and ExactPropertyIntent construction](phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
-- [x] **Wave 5:** [12.1-05 - Durable public API integration and clarification resume](phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
-- [x] **Wave 6:** [12.1-06 - Frozen retrieval evaluation, Stage 1.5 offline contract, five-family regression and zero-network preflight](phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md) — real local BGE-M3/Qdrant retrieval, five-family/offline full-chain and preflight 0.4 passed; Stage 1.5 semantic capability is explicitly not evaluated here. See [summary](phases/12.1-property-resolution-rag-reranker/12.1-06-SUMMARY.md).
+- [x] **Wave 1:** [12.1-01 - Additive Stage 1.5 schemas, policy contract and Prompt](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-01-PLAN.md)
+- [x] **Wave 2:** [12.1-02 - Alias-free multilingual vector runtime](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-02-PLAN.md)
+- [x] **Wave 3:** [12.1-03 - Bounded Property Resolution Provider stage](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-03-PLAN.md)
+- [x] **Wave 4:** [12.1-04 - Admissibility gate and ExactPropertyIntent construction](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-04-PLAN.md)
+- [x] **Wave 5:** [12.1-05 - Durable public API integration and clarification resume](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-05-PLAN.md)
+- [x] **Wave 6:** [12.1-06 - Frozen retrieval evaluation, Stage 1.5 offline contract, five-family regression and zero-network preflight](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/.planning/phases/12.1-property-resolution-rag-reranker/12.1-06-PLAN.md) — real local BGE-M3/Qdrant retrieval, five-family/offline full-chain and preflight 0.4 passed; Stage 1.5 semantic capability is explicitly not evaluated here. See [summary](phases/12.1-property-resolution-rag-reranker/12.1-06-SUMMARY.md).
 - [x] **Wave 7:** [12.1-07 - Genuine 60-case Stage 1.5 semantic evaluation, four-case DeepSeek UAT, independent Proof, IFCCompare and closeout](phases/12.1-property-resolution-rag-reranker/12.1-07-PLAN.md) — final R1 run `r1-20260902T152701658266Z` passed 12/12 with 40 genuine calls; curated Proof 0.3 and final IFCCompare/collection validation passed. Final-code Plan 07 compatibility run `uat-20260902T180900748385Z` passed 4/4 with 11 genuine calls. Its changed-scope curator packaging limitation is documented and is not represented as a second curated Proof. Historical Plan 07 false/pending fields remain immutable and are superseded only by additive closure evidence. See the [summary](phases/12.1-property-resolution-rag-reranker/12.1-07-SUMMARY.md) and [final Proof matrix](../docs/validation/repair-milestone-r1/repair-proof-matrix-2026-09-03.md).
 
 **Cross-cutting constraints:**

@@ -14,7 +14,7 @@
 | 功能 | 当前正文入口 | 证据与补充 |
 |---|---|---|
 | **已有 IFC 修复（本次汇报）** | [Repair Demo Method：问题、方法和案例](architecture/ifc-repair-pipeline-status-and-roadmap.md) | [三份主文档](reports/repair-demo/README.md)、[Repair Proof](../dataset/processed/proof/repair/) |
-| Repair 四组对比实验（开发联调中） | [约 20 IFC 实验专题](validation/repair-comparison/README.md) | [首批五题审阅](../dataset/processed/ifc-repair/repair-comparison/formal/README.md)、[两 demo 真实结果](validation/repair-comparison/demo-results.md)、[开发建议](validation/repair-comparison/development-readiness.md)、[实验计划](validation/repair-comparison/plan.md)、[指标](validation/repair-comparison/metrics.md)、[DSH 接入](validation/repair-comparison/deepseek-harness-integration.md)；六项终止、两项 B 待答，五题保留作正式候选 |
+| Repair 四组对比实验（当前系统汇报） | [约 20 IFC 实验专题](validation/repair-comparison/README.md) | [当前实验表](../dataset/processed/experiments/repair-comparison/current/README.md)、[20题审阅](../dataset/processed/ifc-repair/repair-comparison/formal/README.md)、[实验计划](validation/repair-comparison/plan.md)；当前系统、B链路与D配置从专题索引进入，不在本页重复维护成绩与用量 |
 | 从文字生成新 IFC | [Generation 研究与文献](reports/generation-demo/README.md)、[生成工作流](architecture/current-workflow-and-data-flow.md) | [语义与外观范围](architecture/semantic-appearance-plan.md)、[Generation Proof](../dataset/processed/proof/generation/) |
 | IFC2Text 与往返重建 | [当前入口：结果、维护与研究](validation/ifc2text/README.md) | [门窗部件扩展计划 v1.0](architecture/text2ifc-component-plan-v1.0.md)、[结果与证据](validation/ifc2text/component-v26/README.md) |
 
@@ -30,7 +30,7 @@
 | 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
 | 规范 Agent Debug、能力提升声明和真实 LLM 前测试 | [Agent 能力评测与真实 LLM 准入协议](validation/agent-capability-evaluation.md) |
-| 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) |
+| 接手 Phase 12 Repair Pipeline 与 Plan 07 收尾 | [Phase 12 Plan 07 技术 handover](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) |
 | 人工检查 Plan 07 IFC 与证据矩阵 | [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md) |
 | 查找验证、评估和 UAT 方案 | [Validation Index](validation/README.md) |
 | 查找 BIM JSON、IFC2X3 和 Provider 参考 | [Reference Index](reference/README.md) |
@@ -61,7 +61,7 @@
   - 一次真实 Audit 配对已完成并记录实际 token；[C与实验归档](../dataset/processed/experiments/README.md)已整理，后续优化按独立计划小步推进。
 - [首次接管 text2IFC 项目](how-to/agent-takeover.md)
   - 先确认 Git 与当前状态，再按任务类型选择架构、Phase、验证和证据入口。
-- [Phase 12 Plan 07 技术 handover](handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)
+- [Phase 12 Plan 07 技术 handover](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)
   - 面向后续接手者说明项目分层、Repair Pipeline、关键代码、证据入口、已知风险和接续顺序。
 - [Plan 07 人工 Proof 入口](../dataset/processed/proof/repair/phase12/plan07-v2/REPORT.md)
   - 直接查看 9 份 repaired IFC、1 个正确无输出 guard，以及各案例的人读报告。
@@ -136,7 +136,7 @@ Schema、EXPRESS Schema 和数据 manifest 仍保留在其机器可读目录。
 - [Dataset Organization](../dataset/data_organization.md)
 - [External Data Source Catalog](../dataset/sources/CATALOG.md)
 - [外部 IFC 候选池、筛选状态与准入边界](../dataset/manifests/candidates/README.md)
-- [Type／材质／属性／外观当前范围](architecture/semantic-appearance-plan.md)；[早期实现边界](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)用于历史定位
+- [Type／材质／属性／外观当前范围](architecture/semantic-appearance-plan.md)；[早期实现边界](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md#10-2026-09-07-git-接续状态)用于历史定位
 - [Processed Dataset 与 Proof 分层](../dataset/processed/README.md)
 - [Dataset Manifest Format](../dataset/manifests/README.md)
 - [Authorized BIMNet IFC2X3 Manifest](../dataset/manifests/bimnet-ifc2x3.jsonl)

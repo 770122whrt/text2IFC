@@ -1,9 +1,9 @@
 # 文档分类、归档与保留目录
 
-更新：2026-09-23。覆盖 `docs/` 下 194 份 Markdown 文件（不含本目录自身）。
+分类快照：2026-09-23。2026-10-10 已退役的 Repair 材料改为固定 Git 链接；不再用旧文件总数表示当前仓库。
 按功能和用途整理导航；逐文件分类依据路径、标题及各分区索引，不表示已逐句审计全部历史正文。
 事实核对包括 Repair、材料／Type／外观、R1、presentation 案例，以及 Generation 旧综述覆盖与重复 Prompt 快照。
-`.planning/`、源数据、Prompt／Schema、accepted Proof 与运行产物保留原有权威位置，未纳入删除。
+源数据、仍在使用的 Prompt／Schema、accepted Proof 和现行实验结果保留原位。已完成且无现行依赖的 Repair 计划、报告和旧运行目录按[Git 恢复入口](../dataset/processed/experiments/README.md#repair-旧材料按需从-git-恢复2026-10-10)退役。
 
 ## 日常只从这些入口开始
 
@@ -112,7 +112,7 @@
 
 | 组别 | 已删除来源的历史原文 | 保留文件与已完成的合并 | 需要保留的区别 |
 |---|---|---|---|
-| M1：R1 交接，2→1 | D23 [9 月 1 日未完成检查点](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md) | [9 月 3 日收尾交接](handoffs/repair/repair-milestone-r1-closure-2026-09-03.md#2026-09-23-整合补记9-月-1-日检查点如何到达收尾)追加历史表：检查点、9 案通过／H3 停止／2 案未运行、33 次调用，以及后续独立 12 案／40 次调用 | 不合并调用分母，不把早期 H3 故障继续列为今天的待办；816 行 final-acceptance 是原始任务规格，不能因名称像总结而一并删掉 |
+| M1：R1 交接，2→1 | D23 [9 月 1 日未完成检查点](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/handoffs/repair-milestone-r1-checkpoint-2026-09-01.md) | [9 月 3 日收尾交接](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md#2026-09-23-整合补记9-月-1-日检查点如何到达收尾)追加历史表：检查点、9 案通过／H3 停止／2 案未运行、33 次调用，以及后续独立 12 案／40 次调用 | 不合并调用分母，不把早期 H3 故障继续列为今天的待办；816 行 final-acceptance 是原始任务规格，不能因名称像总结而一并删掉 |
 | M2：早期 Repair 设计，3→1 | D24 [实施 Prompt](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/ifc2x3-changeset/implementation-prompt.md)；D25 [复用说明](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/ifc2x3-changeset/reuse-map.md) | [设计 §18](validation/ifc2x3-changeset/design.md#18-早期实施边界与复用依据2026-09-23-整合)收拢实施章节对照，并保留复用说明中的七个测试边界、复用／不复用选择及依赖快照 | 清楚标为 7 月首个 Window 阶段；不把门／梁／柱“尚未支持”等旧限制覆盖到当前系统。implementation-findings 的独立发现 F001–F006 原件保留 |
 | M3：Generation 扩展索引，2→1 | D26 [方法扩展矩阵](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/reports/generation-demo/novelty-literature-addendum.md) | [现行完整综述](reports/generation-demo/literature-review-full.md)已覆盖全部 41 个卡片编号，补齐 41 卡／40 篇、ExpeL 双版本合并计数、AIDL 正式版缺口和未知分母说明 | 四组原始阅读卡继续保留；DepthBenchCAD 仍为 P，不恢复 N01／N06 的旧优先级，不增加 134 条总数 |
 | M4：Composite 阶段总结，2→1 | D27 [WORK-SUMMARY](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/validation/repair-composite-milestone/WORK-SUMMARY.md) | [SESSION-SUMMARY 新增整合补记](validation/repair-composite-milestone/SESSION-SUMMARY.md#2026-09-23-整合补记早期工作会话总结与最终验收的关系)统一早期增量改造、vvo R1–R3、非 vvo C1–C5、严格审计和 9 月 4 日正式完成的阅读顺序 | 保留不同时点的错误和修正；旧“原位对齐”不能覆盖后来发现的楼层偏差。COMPOSITE-EVIDENCE-REPORT、DEFECT-RECORD、完成记录及机器证据均保留 |
@@ -137,8 +137,8 @@
 | [Repair 历史交接目录](handoffs/repair/README.md) | 历史规格与验收交接，按阶段阅读 |
 | [用户指定的 8 月技术原稿](reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md) | 历史来源：原字节归档保留，现行内容在技术主文档维护 |
 | [text2IFC Repair：面向已有 IFC 的自然语言局部修复](architecture/ifc-repair-pipeline-status-and-roadmap.md) | 现行正文：维护 |
-| [Phase 12 Plan 07 收尾与 IFC Repair 技术 Handover](handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) | 历史／专项：归档保留 |
-| [Repair Milestone R1 / Phase 12.1 Closure Handoff — 2026-09-03](handoffs/repair/repair-milestone-r1-closure-2026-09-03.md) | 历史／专项：归档保留 |
+| [Phase 12 Plan 07 收尾与 IFC Repair 技术 Handover](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md) | 历史／专项：本地已退役，原文留 Git |
+| [Repair Milestone R1 / Phase 12.1 Closure Handoff — 2026-09-03](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/repair-milestone-r1-closure-2026-09-03.md) | 历史／专项：本地已退役，原文留 Git |
 | [Text2IFC Repair Milestone R1 — Final Acceptance Handoff](handoffs/repair-milestone-r1-final-acceptance.md) | 历史／专项：归档保留 |
 | [Phase 11 Live Closure Design](plans/2026-07-31-phase11-live-closure-design.md) | 历史／专项：归档保留 |
 | [LLM Generation / IFC Repair 下一阶段执行计划（Discussion Draft）](plans/2026-09-03-llm-generation-repair-next-step-discussion.md) | 历史／专项：归档保留 |
@@ -150,31 +150,31 @@
 | [SGSS / text2IDS：全文 Overview 与 Repair 后作边界](reports/repair-demo/sgss-fulltext-review-20260921.md) | 协议／来源／验证证据：保留 |
 | [IFC Repair Proof 人类可读收纳规范](validation/ifc-repair-proof-format.md) | 协议／来源／验证证据：保留 |
 | [Text2IFC IFC2X3 局部 ChangeSet 评估设计](validation/ifc2x3-changeset/design.md) | 协议／来源／验证证据：保留 |
-| [LargeBuilding Window Repair：Pipeline 与 Ground Truth 对比](validation/ifc2x3-changeset/ground-truth-comparison.md) | 协议／来源／验证证据：保留 |
-| [IFC Presentation Development Boundary](validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md) | 协议／来源／验证证据：保留 |
+| [LargeBuilding Window Repair：Pipeline 与 Ground Truth 对比](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/ground-truth-comparison.md) | 历史验证记录：原文留 Git |
+| [IFC Presentation Development Boundary](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md) | 历史验证记录：原文留 Git |
 | [IFC2X3 ChangeSet implementation findings](validation/ifc2x3-changeset/implementation-findings.md) | 协议／来源／验证证据：保留 |
-| [从 damaged IFC 和文本到重新生成 IFC：单链路输入输出说明](validation/ifc2x3-changeset/phase10-single-pipeline-input-output.md) | 协议／来源／验证证据：保留 |
-| [Phase 10 Window L2 语义闭环验证报告](validation/ifc2x3-changeset/phase10-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 10.1 Window 有效属性完整复刻与 IfcDiff 报告](validation/ifc2x3-changeset/phase10.1-full-window-replication-and-ifcdiff-report.md) | 协议／来源／验证证据：保留 |
-| [LargeBuilding 真实修复 Window 属性对比](validation/ifc2x3-changeset/phase10.1-largebuilding-window-property-comparison.md) | 协议／来源／验证证据：保留 |
-| [Phase 10.1 显式 IFC 属性写入与验证报告](validation/ifc2x3-changeset/phase10.1-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 10.2 属性知识检索与完整链路验证报告](validation/ifc2x3-changeset/phase10.2-property-knowledge-validation-report.md) | 协议／来源／验证证据：保留 |
+| [从 damaged IFC 和文本到重新生成 IFC：单链路输入输出说明](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10-single-pipeline-input-output.md) | 历史验证记录：原文留 Git |
+| [Phase 10 Window L2 语义闭环验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10-validation-report.md) | 历史验证记录：原文留 Git |
+| [Phase 10.1 Window 有效属性完整复刻与 IfcDiff 报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.1-full-window-replication-and-ifcdiff-report.md) | 历史验证记录：原文留 Git |
+| [LargeBuilding 真实修复 Window 属性对比](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.1-largebuilding-window-property-comparison.md) | 历史验证记录：原文留 Git |
+| [Phase 10.1 显式 IFC 属性写入与验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.1-validation-report.md) | 历史验证记录：原文留 Git |
+| [Phase 10.2 属性知识检索与完整链路验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.2-property-knowledge-validation-report.md) | 历史验证记录：原文留 Git |
 | [Phase 10.3 五窗批量修复与大型 IFC 验证报告](validation/ifc2x3-changeset/phase10.3-five-window-batch-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 10.4 Comparator 0.2 Validation Report](validation/ifc2x3-changeset/phase10.4-comparator-0.2-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 10.5 Window Occurrence Fidelity 与验证加速报告](validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md) | 协议／来源／验证证据：保留 |
+| [Phase 10.4 Comparator 0.2 Validation Report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.4-comparator-0.2-validation-report.md) | 历史验证记录：原文留 Git |
+| [Phase 10.5 Window Occurrence Fidelity 与验证加速报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md) | 历史验证记录：原文留 Git |
 | [Phase 11 Door Storey Policy Erratum](validation/ifc2x3-changeset/phase11-door-storey-policy-erratum.md) | 协议／来源／验证证据：保留 |
 | [Phase 11 Door / Opening 验证报告](validation/ifc2x3-changeset/phase11-door-validation-report.md) | 协议／来源／验证证据：保留 |
 | [Phase 12 / 12.1 Beam、Column 与 Property Resolution 最终验证报告](validation/ifc2x3-changeset/phase12-beam-column-validation-report.md) | 协议／来源／验证证据：保留 |
 | [Phase 12 Plan 07 结构恢复证据勘误与重新准入要求](validation/ifc2x3-changeset/phase12-plan07-structural-restoration-erratum-2026-09-03.md) | 协议／来源／验证证据：保留 |
 | [Phase 12 Structural Type Visual Fidelity 修复计划](validation/ifc2x3-changeset/phase12-structural-type-visual-fidelity-plan-2026-09-03.md) | 协议／来源／验证证据：保留 |
-| [Phase 7 Validation Report](validation/ifc2x3-changeset/phase7-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 8 L1/L2 Evaluation Contract 验证报告](validation/ifc2x3-changeset/phase8-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 9 Stage 1 合同修复与双路径 UAT 报告](validation/ifc2x3-changeset/phase9-stage1-contract-repair-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 9 IFC + 文本修复编排验证报告](validation/ifc2x3-changeset/phase9-validation-report.md) | 协议／来源／验证证据：保留 |
-| [Phase 09.1 IFC Type 证据与 Prototype 解析验证报告](validation/ifc2x3-changeset/phase9.1-validation-report.md) | 协议／来源／验证证据：保留 |
+| [Phase 7 Validation Report](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase7-validation-report.md) | 历史验证记录：原文留 Git |
+| [Phase 8 L1/L2 Evaluation Contract 验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase8-validation-report.md) | 历史验证记录：原文留 Git |
+| [Phase 9 Stage 1 合同修复与双路径 UAT 报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase9-stage1-contract-repair-report.md) | 历史验证记录：原文留 Git |
+| [Phase 9 IFC + 文本修复编排验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase9-validation-report.md) | 历史验证记录：原文留 Git |
+| [Phase 09.1 IFC Type 证据与 Prototype 解析验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase9.1-validation-report.md) | 历史验证记录：原文留 Git |
 | [IFC2X3 Local ChangeSet 验证索引](validation/ifc2x3-changeset/README.md) | 导航：保留 |
-| [Repair Mixed Validation Boundary — 2026-09-05](validation/ifc2x3-changeset/repair-mixed-validation-boundary-2026-09-05.md) | 协议／来源／验证证据：保留 |
-| [IFC2X3 Restoration Validation Boundary — 2026-09-04](validation/ifc2x3-changeset/restoration-validation-boundary-2026-09-04.md) | 协议／来源／验证证据：保留 |
+| [Repair Mixed Validation Boundary — 2026-09-05](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/repair-mixed-validation-boundary-2026-09-05.md) | 历史验证记录：原文留 Git |
+| [IFC2X3 Restoration Validation Boundary — 2026-09-04](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/restoration-validation-boundary-2026-09-04.md) | 历史验证记录：原文留 Git |
 | [IFC Target Retrieval and Context Design](validation/ifc2x3-changeset/target-retrieval-design.md) | 协议／来源／验证证据：保留 |
 | [Composite Bound Test Cases — Text2IFC Composite Repair Milestone](validation/repair-composite-milestone/composite-bound-testcases.md) | 协议／来源／验证证据：保留 |
 | [Composite Capability Feasibility — Text2IFC Composite Repair Milestone](validation/repair-composite-milestone/composite-capability-feasibility.md) | 协议／来源／验证证据：保留 |

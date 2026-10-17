@@ -2,7 +2,7 @@
 
 Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-status-and-roadmap.md)，
 历史正式验收见[R1 最终矩阵（2026-09-03）](repair-milestone-r1/repair-proof-matrix-2026-09-03.md)。
-[Phase 10.5 Window 验证与加速](ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)
+[Phase 10.5 Window 验证与加速](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10.5-window-fidelity-validation-report.md)
 是早期专项报告，不再标为全项目最新结果。
 
 用于汇报和人工检查的 original/damaged/repaired IFC、Agent 输出和验证报告见
@@ -19,8 +19,8 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 | [实验计划](repair-comparison/plan.md) | 四组中性输入、任务准备与人审、实施顺序和动态预算 |
 | [指标规范](repair-comparison/metrics.md) | 数量、构件、关系、整任务、IFC 校验、保全、交互和成本 |
 | [DeepSeek Harness 接入与隔离](repair-comparison/deepseek-harness-integration.md) | 渐进调研、完整运行时隔离、同题澄清继续与推理记录 |
-| [Codex 开发启动提示词](repair-comparison/development-start-prompt.md) | 直接读取仓库文档，核对代码和环境，提出首批开发建议 |
-| [首批交付与开发建议](repair-comparison/development-readiness.md) | 两道开发题、准备／检查工具与验证，环境／DSH 证据和后续范围 |
+| [Codex 开发启动提示词](repair-comparison/README.md) | 直接读取仓库文档，核对代码和环境，提出首批开发建议 |
+| [首批交付与开发建议](repair-comparison/README.md) | 两道开发题、准备／检查工具与验证，环境／DSH 证据和后续范围 |
 
 ## Repair Milestone R1 最终验收冻结包
 
@@ -53,9 +53,9 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
   - 原实施 Prompt 和复用说明已整合于设计 §18；保留首个 Window 阶段的测试边界。
 - [实施发现记录](ifc2x3-changeset/implementation-findings.md)
   - 保存实现证据、待审设计冲突及其最终处理决定。
-- [Phase 10 Window L2 验证报告](ifc2x3-changeset/phase10-validation-report.md)
+- [Phase 10 Window L2 验证报告](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10-validation-report.md)
   - LargeBuilding 离线与真实 DeepSeek 四路径、Production/private L1/L2、发布证据，以及 10.1 精确属性写入/10.2 检索 RAG 的拆分边界。
-- [Phase 10 单链路输入输出说明](ifc2x3-changeset/phase10-single-pipeline-input-output.md)
+- [Phase 10 单链路输入输出说明](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/phase10-single-pipeline-input-output.md)
   - 用一个真实 `complete-request` 案例逐段说明 damaged IFC、Agent、Bound ChangeSet、IFC 写回、L1/L2 和最终发布产物。
 
 ## 相关验证资料

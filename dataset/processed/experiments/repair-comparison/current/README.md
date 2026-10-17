@@ -1,28 +1,43 @@
-# B 共性问题修复后的当前实验表
+# Repair 当前正式实验结果
 
-001～010 当前严格通过 **9/10**；005已完成新会话真实复測并通过，007按用户意见保留失败。9个正式IFC均通过schema＋EXPRESS及保全检查。共 **48 次真实调用、852,676 已知token、未知用量0次**。原四组63个终态及首轮005等旧记录只保存在[历史备份](../history/README.md)，不混入下表。
+更新：2026-10-10。20个源IFC、四组80项，采用每题每组最新获准的真实尝试。旧首轮不纳入本表，当前最终失败仍计入。
 
-选择规则是每题最近一次获准的真实尝试，按时间选取，没有按分数挑最好答案。001保留同一任务的修复前调用和等待记录；005使用新会话，其旧失败与离线重放另存。此表为开发复测，不是公平的同版本四组盲测比较。
+001～010沿用冻结评分0.2；011～020指标待定，提交仅表示已有正式IFC。不同任务仍包含历史运行版本和预算，后加的B检验回环与D网页代理没有在这80项上重跑；本表不能作为同版本盲测优势证据。
 
-|题目|严格结果|完整构件|必要关系|IFC格式／保全|真实调用|已知token|活动秒数|
-|---|---|---|---|---|---|---|---|
-|[formal-001](cases/formal-001/REPORT.md)|通过|1/1|2/2|通过／通过|6|87,484|183.8|
-|[formal-002](cases/formal-002/REPORT.md)|通过|2/2|6/6|通过／通过|4|59,812|188.4|
-|[formal-003](cases/formal-003/REPORT.md)|通过|2/2|6/6|通过／通过|7|174,850|316.0|
-|[formal-004](cases/formal-004/REPORT.md)|通过|1/1|3/3|通过／通过|3|41,480|89.1|
-|[formal-005](cases/formal-005/REPORT.md)|通过|2/2|6/6|通过／通过|5|89,175|206.5|
-|[formal-006](cases/formal-006/REPORT.md)|通过|1/1|3/3|通过／通过|4|77,028|148.0|
-|[formal-007](cases/formal-007/REPORT.md)|未通过|0/1|0/3|无输出／不可评|6|103,293|177.9|
-|[formal-008](cases/formal-008/REPORT.md)|通过|2/2|4/4|通过／通过|4|61,862|155.1|
-|[formal-009](cases/formal-009/REPORT.md)|通过|3/3|6/6|通过／通过|3|63,671|136.7|
-|[formal-010](cases/formal-010/REPORT.md)|通过|3/3|9/9|通过／通过|6|94,021|208.9|
+|组别|被测方法|
+|---|---|
+|A|DeepSeek v4 Flash＋中性通用执行器|
+|B|DeepSeek v4 Flash＋仓库Repair Harness|
+|C|GPT-6 Sol API＋与A相同的通用执行器|
+|D|DeepSeek v4 Flash＋官方完整DSH 0.2.0rc1|
 
-[可下载表格](runs.csv) · [完整机器记录](records.json) · [共性问题与修复](../../../../../docs/validation/repair-comparison/b-common-repair.md)
+[CSV表](latest-results.csv) · [结果、逐题比较、配置及真实用量](latest-records.json) · [DeepSeek实际返回推理](reasoning.jsonl.gz) · [当前系统说明](../../../../../docs/validation/repair-comparison/README.md)
 
-007的目标墙归属首层，但修复位置在第三层；楼层相对高度被错误地套用到首层，检查拒绝并回滚，没有正式产物。此个例保留，不补跑选答案。
+|题目|任务|A|B|C|D|
+|---|---|---|---|---|---|
+|[formal-001](../../../ifc-repair/repair-comparison/formal/formal-001/REVIEW.md)|保留洞口补1扇门|[通过（已评）](outputs/formal-001/A.ifc)|[通过（已评）](outputs/formal-001/B.ifc)|无输出|运行失败|
+|[formal-002](../../../ifc-repair/repair-comparison/formal/formal-002/REVIEW.md)|补2扇窗及洞口|预算停止|[通过（已评）](outputs/formal-002/B.ifc)|[已提交／未通过（已评）](outputs/formal-002/C.ifc)|预算停止|
+|[formal-003](../../../ifc-repair/repair-comparison/formal/formal-003/REVIEW.md)|补1窗＋1门|预算停止|[通过（已评）](outputs/formal-003/B.ifc)|[通过（已评）](outputs/formal-003/C.ifc)|预算停止|
+|[formal-004](../../../ifc-repair/repair-comparison/formal/formal-004/REVIEW.md)|补1扇窗及洞口|预算停止|[通过（已评）](outputs/formal-004/B.ifc)|[已提交／未通过（已评）](outputs/formal-004/C.ifc)|预算停止|
+|[formal-005](../../../ifc-repair/repair-comparison/formal/formal-005/REVIEW.md)|补2扇门及洞口|预算停止|[通过（已评）](outputs/formal-005/B.ifc)|[已提交／未通过（已评）](outputs/formal-005/C.ifc)|预算停止|
+|[formal-006](../../../ifc-repair/repair-comparison/formal/formal-006/REVIEW.md)|补1扇窗及洞口|预算停止|[通过（已评）](outputs/formal-006/B.ifc)|[通过（已评）](outputs/formal-006/C.ifc)|预算停止|
+|[formal-007](../../../ifc-repair/repair-comparison/formal/formal-007/REVIEW.md)|跨层墙补1扇窗|预算停止|无输出|[已提交／未通过（已评）](outputs/formal-007/C.ifc)|预算停止|
+|[formal-008](../../../ifc-repair/repair-comparison/formal/formal-008/REVIEW.md)|保留洞口补2扇门|[通过（已评）](outputs/formal-008/A.ifc)|[通过（已评）](outputs/formal-008/B.ifc)|[已提交／未通过（已评）](outputs/formal-008/C.ifc)|无输出|
+|[formal-009](../../../ifc-repair/repair-comparison/formal/formal-009/REVIEW.md)|保留洞口补3扇门|运行失败|[通过（已评）](outputs/formal-009/B.ifc)|[已提交／未通过（已评）](outputs/formal-009/C.ifc)|[通过（已评）](outputs/formal-009/D.ifc)|
+|[formal-010](../../../ifc-repair/repair-comparison/formal/formal-010/REVIEW.md)|补3扇窗及洞口|预算停止|[通过（已评）](outputs/formal-010/B.ifc)|运行失败|[通过（已评）](outputs/formal-010/D.ifc)|
+|[formal-011](../../../ifc-repair/repair-comparison/formal/formal-011/REVIEW.md)|补1根梁|预算停止|[已提交／待评](outputs/formal-011/B.ifc)|[已提交／待评](outputs/formal-011/C.ifc)|预算停止|
+|[formal-012](../../../ifc-repair/repair-comparison/formal/formal-012/REVIEW.md)|补2根梁|预算停止|[已提交／待评](outputs/formal-012/B.ifc)|[已提交／待评](outputs/formal-012/C.ifc)|预算停止|
+|[formal-013](../../../ifc-repair/repair-comparison/formal/formal-013/REVIEW.md)|补1根柱|预算停止|[已提交／待评](outputs/formal-013/B.ifc)|[已提交／待评](outputs/formal-013/C.ifc)|预算停止|
+|[formal-014](../../../ifc-repair/repair-comparison/formal/formal-014/REVIEW.md)|补矩形柱，需澄清朝向|预算停止|[已提交／待评](outputs/formal-014/B.ifc)|[已提交／待评](outputs/formal-014/C.ifc)|预算停止|
+|[formal-015](../../../ifc-repair/repair-comparison/formal/formal-015/REVIEW.md)|恢复梁规格标记|预算停止|[已提交／待评](outputs/formal-015/B.ifc)|[已提交／待评](outputs/formal-015/C.ifc)|预算停止|
+|[formal-016](../../../ifc-repair/repair-comparison/formal/formal-016/REVIEW.md)|恢复柱耐火记录|预算停止|[已提交／待评](outputs/formal-016/B.ifc)|[已提交／待评](outputs/formal-016/C.ifc)|预算停止|
+|[formal-017](../../../ifc-repair/repair-comparison/formal/formal-017/REVIEW.md)|恢复门规格标记|预算停止|[已提交／待评](outputs/formal-017/B.ifc)|[已提交／待评](outputs/formal-017/C.ifc)|无输出|
+|[formal-018](../../../ifc-repair/repair-comparison/formal/formal-018/REVIEW.md)|恢复墙外墙标记|预算停止|[已提交／待评](outputs/formal-018/B.ifc)|[已提交／待评](outputs/formal-018/C.ifc)|预算停止|
+|[formal-019](../../../ifc-repair/repair-comparison/formal/formal-019/REVIEW.md)|补梁＋柱及承重标记|预算停止|[已提交／待评](outputs/formal-019/B.ifc)|[已提交／待评](outputs/formal-019/C.ifc)|预算停止|
+|[formal-020](../../../ifc-repair/repair-comparison/formal/formal-020/REVIEW.md)|补窗＋恢复门外门标记|预算停止|[已提交／待评](outputs/formal-020/B.ifc)|预算停止|预算停止|
 
-005的旧评估器在副本中递归删除新增门时误删共享几何，导致公开参照Door-035的保全误报。新版仅浅层移除新构件与新增关系成员；真实源几何、属性、位置和关系漂移仍拒绝。红／绿家族20项及完整评分13项通过，基线与当前冻结产物均另存同版评分，原报告不覆盖。
+40项有正式IFC，40项无正式产物；每项终态、无输出原因、问答和已有评分均保存在结果记录。005-B最新已评通过，007-B保留无输出。没有重新调用模型或重算评分。
 
-记录包保留模型实际返回的推理字段与工具轨迹。没有返回的内部思维链不推测补写。所有服务已停止，没有活动任务或在途调用；本次整理、重评分与归档没有额外模型调用。
+A／D预算停止主要发生在下一次请求预留检查：完整对话、工具返回和最大输出预留累加，实际消耗尚未达上限时也可能停止。A018执行目录文本搜索返回了大量构件/关系行；D的压缩功能保留，但旧小预算可能在触发压缩前停止。后续预算固定为1.5M／2M／2.5M，同题四组一致；本表保留运行时原预算。
 
-下一步是按当前Pipeline支持范围重制011～020的损坏输入、请求和REVIEW，交由用户在查看器检查，通过后才运行新实验。
+正式题包的源IFC、冻结损伤、请求、私有条件与许可材料保持原位。推理文件保存API实际返回字段；没有返回的推理不会补造。总费用包含已退役尝试，未知用量不会算作零。已提交旧机器证据暂留原位，不参与当前表的选取。
