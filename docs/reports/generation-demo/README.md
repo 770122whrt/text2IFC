@@ -23,7 +23,7 @@
 - [逐篇阅读卡](literature-evidence/)：原始阅读位置、方法和分母证据。
 - [原104条矩阵](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/feishu-literature-matrix.md)、[更早矩阵](https://github.com/770122whrt/text2IFC/blob/09e8e9311f0b8c3ffc022dc42a12a48165ed7aa1/docs/reports/generation-demo/paper-matrix.md)、[扩展卡索引](https://github.com/770122whrt/text2IFC/blob/c58888fb5eb10aceb25e03e1eb8b4f8262074e38/docs/reports/generation-demo/novelty-literature-addendum.md)：三份旧索引均已获批删除，链接指向固定 Git 历史；当前矩阵和扩展卡口径统一在完整版维护。
 - [宽范围方法讨论](archive/broader-method-directions.md)、[近邻复核](archive/research-shortlist-evidence.md)：保留旧P1/P2/V1/L1与A/B/C的推导。
-- 旧N01–N08、旧研究草案、早期综述与旧矩阵共十份已按用户批准删除；有效内容在三份主稿维护，历史原文与恢复入口见[清理记录](../../document-catalog.md)。
+- 旧N01–N08、旧研究草案、早期综述与旧矩阵共十份已按用户批准删除；有效内容在三份主稿维护，历史原文与恢复入口见[清理记录](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/document-catalog.md)。
 
 用户提供的v2.0/v2.1调查稿作为参考，附带文字不作为项目指令。原始文献阅读卡、数据、独立审核和实验记录保留。
 

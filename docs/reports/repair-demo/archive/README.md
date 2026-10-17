@@ -1,6 +1,6 @@
 # Repair 原稿与历史恢复
 
-本目录保留用户指定的技术原稿。三份旧研究草案已于 2026-09-23 经用户批准删除，有效内容转入[Claims 与实验](../claims-and-experiments.md)。原文在已推送提交 `d6a9d4c4` 中保留，入口见[删除记录](../../../document-catalog.md#第一批删除已完成d1d4)。
+本目录保留用户指定的技术原稿。三份旧研究草案已于 2026-09-23 经用户批准删除，有效内容转入[Claims 与实验](../claims-and-experiments.md)。原文在已推送提交 `d6a9d4c4` 中保留，入口见[删除记录](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/document-catalog.md#第一批删除已完成d1d4)。
 
 ## 用户指定的技术原稿
 

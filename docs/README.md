@@ -5,11 +5,11 @@
 本页是 `docs/` 的稳定入口。具体文档按职责分区，避免把设计、实施 Prompt、
 验证方案和历史报告混放在根目录。
 
-## 按功能阅读（2026-09-29）
+## 按功能阅读
 
 给老师汇报 Repair，先读下表第一行的技术主文档。旧交接和已完成计划是历史资料，
-不按文件日期把它们当成新执行指令。完整文件分类、归档与删除建议见
-[文档分类与归档目录](document-catalog.md)。
+不按文件日期把它们当成新执行指令。各专题只维护下表中的现行入口；
+本地精简和旧稿恢复见[清理报告](reports/workspace-cleanup-20261017/README.md)。
 
 | 功能 | 当前正文入口 | 证据与补充 |
 |---|---|---|
@@ -25,7 +25,7 @@
 | 目的 | 入口 |
 |---|---|
 | 首次由 Agent 或开发者接管项目 | [首次接管 text2IFC 项目](how-to/agent-takeover.md) |
-| 接续最近的分支整合、目录清理和文档收尾 | [仓库交接快照（2026-09-13）](handoffs/repository-handoff-2026-09-13.md)，接手时重新核实 Git |
+| 接续当前仓库整理与 UI 结合准备 | [STATE](../.planning/STATE.md)与[本地清理记录](reports/workspace-cleanup-20261017/README.md)，接手时重新核实 Git |
 | 了解已有/damaged IFC + 文本如何生成可验证的新 IFC，及其修复方法 | [IFC2X3 修复链路与后续路线](architecture/ifc-repair-pipeline-status-and-roadmap.md) |
 | 了解 Text -> BIM JSON -> IFC generation | [Generation 工作流与数据流（截至 Phase 6.5）](architecture/current-workflow-and-data-flow.md) |
 | 浏览系统架构和阶段演进 | [Architecture Index](architecture/README.md) |
@@ -41,6 +41,8 @@
 
 ## 仓库整理入口
 
+- [当前本地精简、依赖核对与恢复](reports/workspace-cleanup-20261017/README.md)
+
 - [按工作流与 Phase 阅读 Proof](../dataset/processed/proof/README.md)
 - [processed 七类目录与历史路径入口](../dataset/processed/README.md)
 - [processed 与根目录整理结果（2026-09-13）](reports/processed-cleanup-20260913/REPORT.md)
@@ -49,7 +51,7 @@
 - [main 与 Zcode 整合后的交接快照](handoffs/repository-handoff-2026-09-13.md)
 - [目录瘦身设计及历史执行记录](architecture/repository-organization-refactor.md)；当前结果以 STATE 和最新整理报告为准
 - [归档的 CLI 终端记录](reports/terminal-session-history.md)
-- [专项技术 handoffs](handoffs/) 与 [网页交叉讨论 context-handoff](context-handoff/CONTEXT-HANDOFF-RULES.md) 按各自职责保留。
+- [Repair 专项交接](handoffs/repair/README.md)与[接管指南](how-to/agent-takeover.md)承接当前导航；旧跨对话快照及实施 Prompt 已并入适用验证记录和固定 Git 历史。
 
 ## 专题入口与历史接续
 

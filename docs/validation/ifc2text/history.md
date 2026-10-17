@@ -23,6 +23,8 @@
 | [IFC2Text 两项修复：v0.7 执行边界](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/validation/ifc2text/wall-recovery-v07-2026-09-21.md) | wall-recovery-v07-2026-09-21.md |
 | [修复后的 hxp 整栋单次重跑](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/validation/ifc2text/whole-building-rerun-v10-2026-09-22.md) | whole-building-rerun-v10-2026-09-22.md |
 
+16 份只保留跳转的旧本地文件已在 2026-10-17 删除；上表固定 Git 原稿继续承接历史检索，当前结果与维护只从本专题索引进入。
+
 ## 部件阶段与准入
 
 - [S0–S6 完整时间线、每轮失败与预算记录](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/validation/ifc2text/component-v26/README.md)。

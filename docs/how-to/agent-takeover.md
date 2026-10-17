@@ -12,9 +12,8 @@ manifest 语境中另指数据来源，也不代表本项目名称。
 [`AGENTS.md`](../../AGENTS.md)、适用的 Phase SPEC/PLAN/VALIDATION 和验证协议
 为准。
 
-最新仓库整理与分支交接见 [2026-09-13 快照](../handoffs/repository-handoff-2026-09-13.md)。
-快照保存当时事实；实际执行位置仍先读 `STATE.md` 顶部并重新核实 Git，不从旧
-handoff 的提交号、预算或阻断描述直接续跑。
+当前仓库整理与 UI 结合准备见 [STATE](../../.planning/STATE.md) 和[本地清理记录](../reports/workspace-cleanup-20261017/README.md)。
+历史交接保存当时事实；不从旧 handoff 的提交号、预算或阻断描述直接续跑。跨对话上下文复用本指南与当前专题，不另维护平行的项目状态快照。
 
 ## 1. 十分钟接管流程
 

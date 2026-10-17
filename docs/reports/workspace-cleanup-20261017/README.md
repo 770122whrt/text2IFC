@@ -1,4 +1,68 @@
-# 从实验运行转入数据分析
+# text2IFC 本地精简与实验分析
+
+## 为 UI 结合准备的本地精简（2026-10-17）
+
+用户本轮要求实际删除过时内容，归并重复文档与 Prompt 开发说明，保留当前入口和必要实验依据，不新增文件。起点为 `codex/repair-experiment` / `48f32bba4c1976178a97267a98e569080f44063e`；下面只统计本轮增量，不重复计入此前 4.486 GiB 清理和 842 项既有删除。
+
+**已实际从本地删除 279 份已跟踪旧文件、1,464,707 字节；另删除两份旧浏览器日志、10,669 字节。** 合计 281 份旧文件、1,475,376 字节（约 1.41 MiB）。这轮主要减少重复任务说明和死代码，不以释放真实实验数据的空间为目标。105 棵只含空目录的旧工作树共 624 个目录已移除，包含 100 个 `.tmp` 测试目录、三个根目录 `pytest-correction-*` 和两个已清空文档目录；浏览器日志目录也已移除。
+
+| 实际删除范围 | 文件数 | 字节 | 删除原因与承接位置 |
+|---|---:|---:|---|
+| Generation Phase 01–06.7 已完成任务的 PLAN/SUMMARY/RESEARCH/CONTEXT 与 Goal Prompt | 218 | 973,430 | 交付已完成，无生产/测试/Prompt/已查 Proof 元数据消费者；保留 SPEC、VALIDATION、VERIFICATION、验收和问题登记，历史来源见 [MILESTONES](../../../.planning/MILESTONES.md) |
+| `docs/context-handoff/` 四份旧上下文与 `parallel-goal-prompts-audit-*` 八份开发说明 | 12 | 261,702 | 状态和流程由[接管指南](../../how-to/agent-takeover.md)与 STATE 承接；Stage 1.5 两版失败、六例差异、94,984 token 及原始恢复索引并入[Phase 12 报告](../../validation/ifc2x3-changeset/phase12-beam-column-validation-report.md)，Composite 任务规格改为固定 Git 链接 |
+| IFC2Text 的 16 份跳转文件 | 16 | 7,790 | 没有独立正文；[历史索引](../../validation/ifc2text/history.md)已有全部固定 Git 原稿入口，修复活动引用后不再留本地占位 |
+| 六个已完成清理报告目录内的一次性 `.py`/`.ps1` | 26 | 121,656 | 只执行旧清理、打包和复核；正式报告、删除/保全收据与实际恢复工具保留，各 REPORT 标明固定 Git 原文 |
+| Repair 停止/首批审计与旧 Composite 一次性脚本 | 5 | 30,887 | 无当前调用者，固定旧批次或已退役 Proof 布局；准确文件与用途见[Repair 维护入口](../../../scripts/ifc_repair/README.md#ui-接入与版本维护) |
+| 旧文档分类总表及 Feedback Routing 实施 Prompt | 2 | 69,242 | 总表与[文档入口](../../README.md)重复；实施 Prompt 与[同目录设计](../../architecture/feedback-routing/design.md)重复，有效的复用要求与阶段验收边界已并入设计正文 |
+
+上述 279 份原文均保留于整理前已推送固定修订 `48f32bba4c1976178a97267a98e569080f44063e`，可按[该修订目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e)与 Git 删除记录找回；不新建压缩包或平行归档。删除前逐文件核实仓库内绝对路径、非链接、大小和 SHA-256，删除后复核 279 个路径全部不存在。冻结实验的大文件恢复仍遵循原来的 Git/LFS 映射，不将本段当作 LFS 下载可用性复验。
+
+保留三份承担独立合同/边界的规划文件：`05.5-04-SUMMARY.md`（唯一阶段总结）、`06.4-09-PLAN.md`（SPEC 绑定的六项 datum/stair 合同）和 `06.2-SDK-RESEARCH.md`（SDK 采纳/拒绝条件）。已注册 Repair 的 19 份模板、21 个 profile 与 58 个 few-shot 均有引用；149 项全注册表仍可加载。dataset `prompts_v3`→`prompts_v2`→基础 `prompts` 和 `dataset_deliver_v4` 的前序依赖保留，25 个兼容入口仍有命令/导入或冻结依赖，不能按文件名删成孤立的“最新版”。
+
+导航已收口：STATE 从 608 行历史叠加缩为 42 行当前入口，旧检查点由固定 Git 承接；旧“当前/下一步”不再冒充现状。文件量为 `docs` **587→531**、`.planning` **373→155**、`scripts` **347→342**，`prompts` 保持 222；没有新增仓库文件。产品入口继续是 [RepairAPI](../../../src/text2ifc_ifc_repair/api.py) 和 [CLI](../../../src/text2ifc_ifc_repair/cli.py)，UI 不应直接调用历史实验脚本。
+
+验证：35 项 Prompt 注册表、operation profile 与 Repair CLI 离线测试通过；因刻意禁用 pytest 缓存有一条 `cache_dir` 配置警告。最初使用系统临时目录的一项注册表测试要求路径属于仓库，改用受控仓库内临时目录后同范围通过；随后删除本轮产生的 29 个测试文件及两处测试目录。删除后公共 `--help` 正常，149 项 Prompt 注册表加载成功，585 份现存 Python 通过 AST 解析。全仓已读 1,654 份受跟踪 Markdown、最终扫描 6,232 个本地链接；据此补修数据来源说明和 Zcode 历史入口的两处引用，指向本轮已删文件的断链为零，变更文档的 493 个本地链接均核实。没有改产品行为、Prompt/Schema 版本或冻结 Proof，没有调用 Provider、安装 accepted Proof 或执行全仓 Preflight；这些检查不代表修复能力提升。
+
+### 尚未删除的权限受限目录
+
+正常用户权限下只读复核仍有以下 30 处一级目录返回 `UnauthorizedAccessException`，连 ACL 也不可读取；这不是当前实验进程占用的证据。其内部文件量、大小和依赖无法核实，未把它们当作空目录，未接管所有权、改 ACL 或强行递归删除。`.pytest-tmp` 等更深层目录仍以此前枚举记录为准，不声称已穷尽所有权限异常。
+
+```text
+.tmp/component-budget-recovery-red-20260926
+.tmp/component-budget-red-20260925
+.tmp/component-campaign-red
+.tmp/component-campaign-regression-01
+.tmp/component-cli-red
+.tmp/component-continuation-red
+.tmp/component-extraction-red
+.tmp/component-hosted-red-20260925
+.tmp/component-s2-equivalence-red
+.tmp/component-s2-projection-02
+.tmp/component-s2-projection-red
+.tmp/courtyard-cache
+.tmp/courtyard-open-court-cache
+.tmp/description-v11-red
+.tmp/filling-compare-red
+.tmp/hygiene-autoclean-green
+.tmp/live-repair-property-admission-20260908-01
+.tmp/repair-comparison-tests
+.tmp/repair-direct-tests
+.tmp/repair-ledger-red
+.tmp/repair-offline-validation
+.tmp/repair-runtime-green
+.tmp/repair-score-final
+.tmp/repair-units-verified
+.tmp/repair-wire-tests
+.tmp/space-v13-red
+.tmp/test-isolated-red
+.tmp/wall-outline-axis-red
+.tmp/wall-outline-red
+.pytest_cache
+```
+
+源 IFC、私有配置、环境/模型、真实运行、失败、预算和冻结 Proof 按既有必要依据保留；第三方子模块的原有本地删除不纳入本次提交。账号周额度在收尾复核约剩 16%，检查点已写入 STATE，继续完成已授权整理与普通推送。
+
+## 此前清理与提交记录
 
 本轮开始时（2026-10-17）已实时核对：`codex/repair-experiment` 的本地 HEAD 与 GitHub 远端均为 `7bd24be83182ab949253a3cf8632afb3b8b84015`。10月15日的数据集双表、A–G结果证据和当前代码三批提交均已推送。工作区其余历史改动仍未提交，不能将分支一致理解为整个文件夹都已备份。本轮仅追加本页、审计快照及清理核验收据。
 

@@ -29,8 +29,7 @@
   - A/B/C 与光庭第二版已有人工验收记录；保留各阶段实施历史。项目内 Type 按需组织，不补写缺省材料/性能属性；Repair 保留未请求修改的几何，不实现跨 IFC 参照。
 - [Token 效率与质量保全计划](token-efficiency-plan.md)
   - 一次有界 Audit 真实配对已完成；其他研究后置，主线回到 C 型教学楼。
-- [Feedback Routing Design](feedback-routing/design.md)
-- [Feedback Routing Implementation Prompt](feedback-routing/implementation-prompt.md)
+- [Feedback Routing：Phase 6.4 设计与历史验收](feedback-routing/design.md)：Issue／RouteDecision、失败路由与有界反馈的设计来源；旧实施 Prompt 已收拢，后续 Scoped ChangeSet 按 Generation 工作流与阶段合同理解。
 - [Text-to-JSON RAG、Fine-tune 与 Agent 决策](text2json-rag-finetune-decision.md)
 - [Phase 6 Model Decision](phase-6-model-decision.md)
 - [Phase 6 Multi-agent Design](phase-6-multiagent-design.md)

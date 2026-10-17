@@ -11,4 +11,4 @@
 | [Coding Agent 与知识供给](coding-agent-knowledge-direction.md) | 方法讨论与真实成本记录 |
 | [Text2IDS Demo 写作参考](text2ids-www2026-demo-overview-and-writing-reference.md) | 来源论文的结构与写作分析 |
 
-逐篇阅读卡继续保存在 [literature-evidence](../literature-evidence/)。已删除旧稿的固定历史版本见[分类与清理记录](../../../document-catalog.md)。归档不改变历史结论，也不把旧优先级恢复为当前计划。
+逐篇阅读卡继续保存在 [literature-evidence](../literature-evidence/)。已删除旧稿的固定历史版本见[分类与清理记录](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/document-catalog.md)。归档不改变历史结论，也不把旧优先级恢复为当前计划。

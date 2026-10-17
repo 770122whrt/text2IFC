@@ -1,5 +1,7 @@
 # 06 Acceptance and Trace Report
 
+2026-10-17 导航：本记录保留当时的结论、限制和检查结果；其中已完成的计划/总结/上下文已从本地退役，原文从[整理前固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/.planning/phases/06-multiagent-prompt-reliability-data-expansion-and-deployment)按需读取，不作为当前实施指令。
+
 **中文名:** Phase 6 验收与追踪报告  
 **日期:** 2026-06-20  
 **分支:** `multiagent-design`  

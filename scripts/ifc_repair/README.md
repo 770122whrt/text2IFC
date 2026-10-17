@@ -43,3 +43,11 @@ Proof 集合校验、Door 独立审计和 transcript 审计实现在 [`src/text2
 ```
 
 该命令仅在完成准入、实际初始化且本批已有费用授权后使用。源IFC、私有隔离、唯一发布和失败证据合同保持。
+
+## UI 接入与版本维护
+
+UI 调用 [RepairAPI](../../src/text2ifc_ifc_repair/api.py)；CLI 使用上方产品入口。`repair_comparison`、dataset 制作、历史 UAT 和 curator 是实验/维护工具，不是 UI 业务入口。
+
+Prompt 版本由 [registry.json](../../prompts/agent/registry.json)和 [operation profiles](../../src/text2ifc_ifc_repair/prompt_profiles.py)加载。现有 19 份 Repair 模板、21 个 profile 与 58 个 few-shot 均有注册/引用，保留冻结重放和回归兼容所需的旧版本。dataset 的 `prompts_v3` 依赖 `prompts_v2` 与基础 `prompts`，不能只留下后缀最大的文件。当前选用版本以运行配置、默认代码和冻结记录为准。
+
+2026-10-17 实际退役五个无当前调用者的一次性脚本：`checkpoint_stopped_batch.py`、`prepare_initial_audit.py`、`report_initial_dataset_audit.py`、`composite_evidence/curate_damage_restoration.py`、`composite_evidence/finalize_proof_pack.py`。前三者固化已完成批次的停止/首批审计，后两者操作已退役的旧 Proof 目录；既有报告、生成器哈希和冻结证据保留。原始代码从[固定 Git 版本](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/scripts/ifc_repair)恢复，不能作为新的产品入口。

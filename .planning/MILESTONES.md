@@ -46,3 +46,7 @@ technical debt
 - [Audit](milestones/v1.0-MILESTONE-AUDIT.md)
 
 **Git tag:** `v1.0`
+
+## 已完成任务说明的本地退役（2026-10-17）
+
+已交付 Generation Phase 01–06.7 的重复 PLAN/SUMMARY/RESEARCH/CONTEXT 和旧 Goal Prompt 合计 218 份已从本地退役，阶段 SPEC、VALIDATION、VERIFICATION、验收记录、问题登记及真实实验依据保留。`05.5-04-SUMMARY.md` 是该阶段唯一总结，`06.4-09-PLAN.md` 承担 SPEC 绑定合同，`06.2-SDK-RESEARCH.md` 承担 SDK 采纳/拒绝条件，三者继续保留。原文按[固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/.planning/phases)恢复；此项只精简本地任务说明，不改变上方交付、测试或债务结论。
