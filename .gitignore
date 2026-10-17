@@ -42,3 +42,24 @@ __pycache__/
 .env
 .env.*
 !.env.example
+
+# Local connector state and generated outputs; curated sources/reports stay tracked.
+/.ai-bridge/
+/outputs/
+
+# Downloaded corpora stay local. Their registries and the RVT tooling are tracked.
+/dataset/external/*/
+!/dataset/external/RVT/
+/dataset/external/RVT/*/
+/dataset/external/**/*.ifc
+/dataset/external/**/*.rvt
+/dataset/external/**/*.zip
+/dataset/external/**/*.pdf
+
+# Raw run workspaces remain local; compact evidence is curated separately.
+/dataset/processed/experiments/component-v26-*/
+/dataset/processed/experiments/harness-ablation-deepseek-20261011/
+/dataset/processed/experiments/fg-ablation-balance-20261017/
+/dataset/processed/experiments/ifc2text-geometry-debug-20260922/
+/dataset/processed/experiments/ifc2text-rerun-20260922/
+/dataset/processed/experiments/repair-comparison/development/dsh-integration/
