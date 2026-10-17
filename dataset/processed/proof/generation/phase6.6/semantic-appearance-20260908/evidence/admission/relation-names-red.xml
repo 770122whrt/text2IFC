@@ -1,0 +1,537 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="8" time="12.048" timestamp="2026-09-08T19:22:48.333505+08:00" hostname="what-do-matter"><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[\u5357\u5899\u95e8\u6d1e\u5173\u8054-bim-json/2.0]" time="0.401"><failure message="KeyError: '南墙门洞关联'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-relation-names-red-01/test_relationship_name_is_lite0')
+version = 'bim-json/2.0', name = '南墙门洞关联'
+
+    @pytest.mark.parametrize('version', ['bim-json/2.0', 'bim-json/2.1'])
+    @pytest.mark.parametrize('name', ['南墙门洞关联', 'wall-1', ''])
+    def test_relationship_name_is_literal_not_entity_reference(tmp_path, version, name):
+        payload = document()
+        payload['schema_version'] = version
+        for relation in payload['relationships']:
+            relation['attributes']['Name'] = name
+        output = tmp_path / 'named-relations.ifc'
+&gt;       result = compile_document(payload, output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\compiler\test_v2_relationships.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_compiler\compiler.py:59: in compile_document
+    bootstrap = builder(document)
+                ^^^^^^^^^^^^^^^^^
+src\text2ifc_compiler\bootstrap.py:395: in build_ifc_v2
+    add_v2_relationships(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ifc_file = &lt;ifcopenshell.file.file object at 0x0000027CC0ECC740&gt;
+relationships = [{'attributes': {'Name': '南墙门洞关联', 'RelatedOpeningElement': 'opening-1', 'RelatingBuildingElement': 'wall-1'}, 'id': '...ingOpeningElement': 'opening-1'}, 'id': 'fill-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'test'}}]
+entities = {'beam-1': #53=IfcBeam('1JeoBivE5IzfqYfbpQ6Hn3',#52,'Beam',$,$,#563,#288,$), 'building-1': #20=IfcBuilding('1tGKi99WjS...umn',$,$,#558,#276,$), 'covering-1': #123=IfcCovering('0RQGkW0sHGrhE57BMFDAN0',#122,'Covering',$,$,#622,#414,$,$), ...}
+
+    def add_v2_relationships(
+        ifc_file: Any,
+        relationships: list[Mapping[str, Any]],
+        entities: Mapping[str, Any],
+    ) -&gt; None:
+        for record in relationships:
+            ifc_class = record["ifc_class"]
+            if ifc_class == "IfcRelAggregates":
+                attributes = record["attributes"]
+                relating_object = entities[attributes["RelatingObject"]]
+                related_objects = [
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ]
+                if _aggregate_already_assigned(relating_object, related_objects):
+                    continue
+            if ifc_class == "IfcRelDefinesByType":
+                attributes = record["attributes"]
+                assign_type(
+                    ifc_file,
+                    related_objects=[
+                        entities[entity_id]
+                        for entity_id in attributes["RelatedObjects"]
+                    ],
+                    relating_type=entities[attributes["RelatingType"]],
+                    should_map_representations=False,
+                )
+                continue
+            if ifc_class == "IfcRelConnectsPathElements":
+                attributes = record["attributes"]
+                ifc_file.create_entity(
+                    ifc_class,
+                    GlobalId=record.get("global_id")
+                    or global_id_for(
+                        "bim-json/2.0", ifc_class, record["id"]
+                    ),
+                    OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                    Name=None,
+                    Description=None,
+                    ConnectionGeometry=None,
+                    RelatingElement=entities[attributes["RelatingElement"]],
+                    RelatedElement=entities[attributes["RelatedElement"]],
+                    RelatingPriorities=attributes["RelatingPriorities"],
+                    RelatedPriorities=attributes["RelatedPriorities"],
+                    RelatedConnectionType=attributes["RelatedConnectionType"],
+                    RelatingConnectionType=attributes["RelatingConnectionType"],
+                )
+                continue
+            attributes = {
+                name: (
+                    [entities[item_id] for item_id in entity_id]
+                    if isinstance(entity_id, list)
+&gt;                   else entities[entity_id]
+                         ^^^^^^^^^^^^^^^^^^^
+                )
+                for name, entity_id in record["attributes"].items()
+            }
+E           KeyError: '南墙门洞关联'
+
+src\text2ifc_compiler\relationships.py:65: KeyError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[\u5357\u5899\u95e8\u6d1e\u5173\u8054-bim-json/2.1]" time="0.426"><failure message="KeyError: '南墙门洞关联'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-relation-names-red-01/test_relationship_name_is_lite1')
+version = 'bim-json/2.1', name = '南墙门洞关联'
+
+    @pytest.mark.parametrize('version', ['bim-json/2.0', 'bim-json/2.1'])
+    @pytest.mark.parametrize('name', ['南墙门洞关联', 'wall-1', ''])
+    def test_relationship_name_is_literal_not_entity_reference(tmp_path, version, name):
+        payload = document()
+        payload['schema_version'] = version
+        for relation in payload['relationships']:
+            relation['attributes']['Name'] = name
+        output = tmp_path / 'named-relations.ifc'
+&gt;       result = compile_document(payload, output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\compiler\test_v2_relationships.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_compiler\compiler.py:59: in compile_document
+    bootstrap = builder(document)
+                ^^^^^^^^^^^^^^^^^
+src\text2ifc_compiler\bootstrap.py:395: in build_ifc_v2
+    add_v2_relationships(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ifc_file = &lt;ifcopenshell.file.file object at 0x0000027CC183DA30&gt;
+relationships = [{'attributes': {'Name': '南墙门洞关联', 'RelatedOpeningElement': 'opening-1', 'RelatingBuildingElement': 'wall-1'}, 'id': '...ingOpeningElement': 'opening-1'}, 'id': 'fill-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'test'}}]
+entities = {'beam-1': #53=IfcBeam('3ni9zu4OLUweK_JUTpJXRQ',#52,'Beam',$,$,#563,#288,$), 'building-1': #20=IfcBuilding('3uHgz3MVbH...umn',$,$,#558,#276,$), 'covering-1': #123=IfcCovering('2tn_uXOgnPdOU53$RoI6o3',#122,'Covering',$,$,#622,#414,$,$), ...}
+
+    def add_v2_relationships(
+        ifc_file: Any,
+        relationships: list[Mapping[str, Any]],
+        entities: Mapping[str, Any],
+    ) -&gt; None:
+        for record in relationships:
+            ifc_class = record["ifc_class"]
+            if ifc_class == "IfcRelAggregates":
+                attributes = record["attributes"]
+                relating_object = entities[attributes["RelatingObject"]]
+                related_objects = [
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ]
+                if _aggregate_already_assigned(relating_object, related_objects):
+                    continue
+            if ifc_class == "IfcRelDefinesByType":
+                attributes = record["attributes"]
+                assign_type(
+                    ifc_file,
+                    related_objects=[
+                        entities[entity_id]
+                        for entity_id in attributes["RelatedObjects"]
+                    ],
+                    relating_type=entities[attributes["RelatingType"]],
+                    should_map_representations=False,
+                )
+                continue
+            if ifc_class == "IfcRelConnectsPathElements":
+                attributes = record["attributes"]
+                ifc_file.create_entity(
+                    ifc_class,
+                    GlobalId=record.get("global_id")
+                    or global_id_for(
+                        "bim-json/2.0", ifc_class, record["id"]
+                    ),
+                    OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                    Name=None,
+                    Description=None,
+                    ConnectionGeometry=None,
+                    RelatingElement=entities[attributes["RelatingElement"]],
+                    RelatedElement=entities[attributes["RelatedElement"]],
+                    RelatingPriorities=attributes["RelatingPriorities"],
+                    RelatedPriorities=attributes["RelatedPriorities"],
+                    RelatedConnectionType=attributes["RelatedConnectionType"],
+                    RelatingConnectionType=attributes["RelatingConnectionType"],
+                )
+                continue
+            attributes = {
+                name: (
+                    [entities[item_id] for item_id in entity_id]
+                    if isinstance(entity_id, list)
+&gt;                   else entities[entity_id]
+                         ^^^^^^^^^^^^^^^^^^^
+                )
+                for name, entity_id in record["attributes"].items()
+            }
+E           KeyError: '南墙门洞关联'
+
+src\text2ifc_compiler\relationships.py:65: KeyError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[wall-1-bim-json/2.0]" time="0.827"><failure message="TypeError: ifcopenshell.file.file.create_entity() got multiple values for keyword argument 'Name'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-relation-names-red-01/test_relationship_name_is_lite2')
+version = 'bim-json/2.0', name = 'wall-1'
+
+    @pytest.mark.parametrize('version', ['bim-json/2.0', 'bim-json/2.1'])
+    @pytest.mark.parametrize('name', ['南墙门洞关联', 'wall-1', ''])
+    def test_relationship_name_is_literal_not_entity_reference(tmp_path, version, name):
+        payload = document()
+        payload['schema_version'] = version
+        for relation in payload['relationships']:
+            relation['attributes']['Name'] = name
+        output = tmp_path / 'named-relations.ifc'
+&gt;       result = compile_document(payload, output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\compiler\test_v2_relationships.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_compiler\compiler.py:59: in compile_document
+    bootstrap = builder(document)
+                ^^^^^^^^^^^^^^^^^
+src\text2ifc_compiler\bootstrap.py:395: in build_ifc_v2
+    add_v2_relationships(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ifc_file = &lt;ifcopenshell.file.file object at 0x0000027CC1A58800&gt;
+relationships = [{'attributes': {'Name': 'wall-1', 'RelatedOpeningElement': 'opening-1', 'RelatingBuildingElement': 'wall-1'}, 'id': '...ingOpeningElement': 'opening-1'}, 'id': 'fill-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'test'}}]
+entities = {'beam-1': #53=IfcBeam('1JeoBivE5IzfqYfbpQ6Hn3',#52,'Beam',$,$,#563,#288,$), 'building-1': #20=IfcBuilding('1tGKi99WjS...umn',$,$,#558,#276,$), 'covering-1': #123=IfcCovering('0RQGkW0sHGrhE57BMFDAN0',#122,'Covering',$,$,#622,#414,$,$), ...}
+
+    def add_v2_relationships(
+        ifc_file: Any,
+        relationships: list[Mapping[str, Any]],
+        entities: Mapping[str, Any],
+    ) -&gt; None:
+        for record in relationships:
+            ifc_class = record["ifc_class"]
+            if ifc_class == "IfcRelAggregates":
+                attributes = record["attributes"]
+                relating_object = entities[attributes["RelatingObject"]]
+                related_objects = [
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ]
+                if _aggregate_already_assigned(relating_object, related_objects):
+                    continue
+            if ifc_class == "IfcRelDefinesByType":
+                attributes = record["attributes"]
+                assign_type(
+                    ifc_file,
+                    related_objects=[
+                        entities[entity_id]
+                        for entity_id in attributes["RelatedObjects"]
+                    ],
+                    relating_type=entities[attributes["RelatingType"]],
+                    should_map_representations=False,
+                )
+                continue
+            if ifc_class == "IfcRelConnectsPathElements":
+                attributes = record["attributes"]
+                ifc_file.create_entity(
+                    ifc_class,
+                    GlobalId=record.get("global_id")
+                    or global_id_for(
+                        "bim-json/2.0", ifc_class, record["id"]
+                    ),
+                    OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                    Name=None,
+                    Description=None,
+                    ConnectionGeometry=None,
+                    RelatingElement=entities[attributes["RelatingElement"]],
+                    RelatedElement=entities[attributes["RelatedElement"]],
+                    RelatingPriorities=attributes["RelatingPriorities"],
+                    RelatedPriorities=attributes["RelatedPriorities"],
+                    RelatedConnectionType=attributes["RelatedConnectionType"],
+                    RelatingConnectionType=attributes["RelatingConnectionType"],
+                )
+                continue
+            attributes = {
+                name: (
+                    [entities[item_id] for item_id in entity_id]
+                    if isinstance(entity_id, list)
+                    else entities[entity_id]
+                )
+                for name, entity_id in record["attributes"].items()
+            }
+&gt;           ifc_file.create_entity(
+                ifc_class,
+                GlobalId=record.get("global_id")
+                or global_id_for(
+                    "bim-json/2.0", ifc_class, record["id"]
+                ),
+                OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                Name=None,
+                Description=None,
+                **attributes,
+            )
+E           TypeError: ifcopenshell.file.file.create_entity() got multiple values for keyword argument 'Name'
+
+src\text2ifc_compiler\relationships.py:69: TypeError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[wall-1-bim-json/2.1]" time="0.867"><failure message="TypeError: ifcopenshell.file.file.create_entity() got multiple values for keyword argument 'Name'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-relation-names-red-01/test_relationship_name_is_lite3')
+version = 'bim-json/2.1', name = 'wall-1'
+
+    @pytest.mark.parametrize('version', ['bim-json/2.0', 'bim-json/2.1'])
+    @pytest.mark.parametrize('name', ['南墙门洞关联', 'wall-1', ''])
+    def test_relationship_name_is_literal_not_entity_reference(tmp_path, version, name):
+        payload = document()
+        payload['schema_version'] = version
+        for relation in payload['relationships']:
+            relation['attributes']['Name'] = name
+        output = tmp_path / 'named-relations.ifc'
+&gt;       result = compile_document(payload, output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\compiler\test_v2_relationships.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_compiler\compiler.py:59: in compile_document
+    bootstrap = builder(document)
+                ^^^^^^^^^^^^^^^^^
+src\text2ifc_compiler\bootstrap.py:395: in build_ifc_v2
+    add_v2_relationships(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ifc_file = &lt;ifcopenshell.file.file object at 0x0000027CC1984080&gt;
+relationships = [{'attributes': {'Name': 'wall-1', 'RelatedOpeningElement': 'opening-1', 'RelatingBuildingElement': 'wall-1'}, 'id': '...ingOpeningElement': 'opening-1'}, 'id': 'fill-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'test'}}]
+entities = {'beam-1': #53=IfcBeam('3ni9zu4OLUweK_JUTpJXRQ',#52,'Beam',$,$,#563,#288,$), 'building-1': #20=IfcBuilding('3uHgz3MVbH...umn',$,$,#558,#276,$), 'covering-1': #123=IfcCovering('2tn_uXOgnPdOU53$RoI6o3',#122,'Covering',$,$,#622,#414,$,$), ...}
+
+    def add_v2_relationships(
+        ifc_file: Any,
+        relationships: list[Mapping[str, Any]],
+        entities: Mapping[str, Any],
+    ) -&gt; None:
+        for record in relationships:
+            ifc_class = record["ifc_class"]
+            if ifc_class == "IfcRelAggregates":
+                attributes = record["attributes"]
+                relating_object = entities[attributes["RelatingObject"]]
+                related_objects = [
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ]
+                if _aggregate_already_assigned(relating_object, related_objects):
+                    continue
+            if ifc_class == "IfcRelDefinesByType":
+                attributes = record["attributes"]
+                assign_type(
+                    ifc_file,
+                    related_objects=[
+                        entities[entity_id]
+                        for entity_id in attributes["RelatedObjects"]
+                    ],
+                    relating_type=entities[attributes["RelatingType"]],
+                    should_map_representations=False,
+                )
+                continue
+            if ifc_class == "IfcRelConnectsPathElements":
+                attributes = record["attributes"]
+                ifc_file.create_entity(
+                    ifc_class,
+                    GlobalId=record.get("global_id")
+                    or global_id_for(
+                        "bim-json/2.0", ifc_class, record["id"]
+                    ),
+                    OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                    Name=None,
+                    Description=None,
+                    ConnectionGeometry=None,
+                    RelatingElement=entities[attributes["RelatingElement"]],
+                    RelatedElement=entities[attributes["RelatedElement"]],
+                    RelatingPriorities=attributes["RelatingPriorities"],
+                    RelatedPriorities=attributes["RelatedPriorities"],
+                    RelatedConnectionType=attributes["RelatedConnectionType"],
+                    RelatingConnectionType=attributes["RelatingConnectionType"],
+                )
+                continue
+            attributes = {
+                name: (
+                    [entities[item_id] for item_id in entity_id]
+                    if isinstance(entity_id, list)
+                    else entities[entity_id]
+                )
+                for name, entity_id in record["attributes"].items()
+            }
+&gt;           ifc_file.create_entity(
+                ifc_class,
+                GlobalId=record.get("global_id")
+                or global_id_for(
+                    "bim-json/2.0", ifc_class, record["id"]
+                ),
+                OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                Name=None,
+                Description=None,
+                **attributes,
+            )
+E           TypeError: ifcopenshell.file.file.create_entity() got multiple values for keyword argument 'Name'
+
+src\text2ifc_compiler\relationships.py:69: TypeError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[-bim-json/2.0]" time="0.905"><failure message="KeyError: ''">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-relation-names-red-01/test_relationship_name_is_lite4')
+version = 'bim-json/2.0', name = ''
+
+    @pytest.mark.parametrize('version', ['bim-json/2.0', 'bim-json/2.1'])
+    @pytest.mark.parametrize('name', ['南墙门洞关联', 'wall-1', ''])
+    def test_relationship_name_is_literal_not_entity_reference(tmp_path, version, name):
+        payload = document()
+        payload['schema_version'] = version
+        for relation in payload['relationships']:
+            relation['attributes']['Name'] = name
+        output = tmp_path / 'named-relations.ifc'
+&gt;       result = compile_document(payload, output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\compiler\test_v2_relationships.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_compiler\compiler.py:59: in compile_document
+    bootstrap = builder(document)
+                ^^^^^^^^^^^^^^^^^
+src\text2ifc_compiler\bootstrap.py:395: in build_ifc_v2
+    add_v2_relationships(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ifc_file = &lt;ifcopenshell.file.file object at 0x0000027CC0A04B60&gt;
+relationships = [{'attributes': {'Name': '', 'RelatedOpeningElement': 'opening-1', 'RelatingBuildingElement': 'wall-1'}, 'id': 'void-1...ingOpeningElement': 'opening-1'}, 'id': 'fill-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'test'}}]
+entities = {'beam-1': #53=IfcBeam('1JeoBivE5IzfqYfbpQ6Hn3',#52,'Beam',$,$,#563,#288,$), 'building-1': #20=IfcBuilding('1tGKi99WjS...umn',$,$,#558,#276,$), 'covering-1': #123=IfcCovering('0RQGkW0sHGrhE57BMFDAN0',#122,'Covering',$,$,#622,#414,$,$), ...}
+
+    def add_v2_relationships(
+        ifc_file: Any,
+        relationships: list[Mapping[str, Any]],
+        entities: Mapping[str, Any],
+    ) -&gt; None:
+        for record in relationships:
+            ifc_class = record["ifc_class"]
+            if ifc_class == "IfcRelAggregates":
+                attributes = record["attributes"]
+                relating_object = entities[attributes["RelatingObject"]]
+                related_objects = [
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ]
+                if _aggregate_already_assigned(relating_object, related_objects):
+                    continue
+            if ifc_class == "IfcRelDefinesByType":
+                attributes = record["attributes"]
+                assign_type(
+                    ifc_file,
+                    related_objects=[
+                        entities[entity_id]
+                        for entity_id in attributes["RelatedObjects"]
+                    ],
+                    relating_type=entities[attributes["RelatingType"]],
+                    should_map_representations=False,
+                )
+                continue
+            if ifc_class == "IfcRelConnectsPathElements":
+                attributes = record["attributes"]
+                ifc_file.create_entity(
+                    ifc_class,
+                    GlobalId=record.get("global_id")
+                    or global_id_for(
+                        "bim-json/2.0", ifc_class, record["id"]
+                    ),
+                    OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                    Name=None,
+                    Description=None,
+                    ConnectionGeometry=None,
+                    RelatingElement=entities[attributes["RelatingElement"]],
+                    RelatedElement=entities[attributes["RelatedElement"]],
+                    RelatingPriorities=attributes["RelatingPriorities"],
+                    RelatedPriorities=attributes["RelatedPriorities"],
+                    RelatedConnectionType=attributes["RelatedConnectionType"],
+                    RelatingConnectionType=attributes["RelatingConnectionType"],
+                )
+                continue
+            attributes = {
+                name: (
+                    [entities[item_id] for item_id in entity_id]
+                    if isinstance(entity_id, list)
+&gt;                   else entities[entity_id]
+                         ^^^^^^^^^^^^^^^^^^^
+                )
+                for name, entity_id in record["attributes"].items()
+            }
+E           KeyError: ''
+
+src\text2ifc_compiler\relationships.py:65: KeyError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[-bim-json/2.1]" time="0.895"><failure message="KeyError: ''">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-relation-names-red-01/test_relationship_name_is_lite5')
+version = 'bim-json/2.1', name = ''
+
+    @pytest.mark.parametrize('version', ['bim-json/2.0', 'bim-json/2.1'])
+    @pytest.mark.parametrize('name', ['南墙门洞关联', 'wall-1', ''])
+    def test_relationship_name_is_literal_not_entity_reference(tmp_path, version, name):
+        payload = document()
+        payload['schema_version'] = version
+        for relation in payload['relationships']:
+            relation['attributes']['Name'] = name
+        output = tmp_path / 'named-relations.ifc'
+&gt;       result = compile_document(payload, output)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\compiler\test_v2_relationships.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_compiler\compiler.py:59: in compile_document
+    bootstrap = builder(document)
+                ^^^^^^^^^^^^^^^^^
+src\text2ifc_compiler\bootstrap.py:395: in build_ifc_v2
+    add_v2_relationships(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+ifc_file = &lt;ifcopenshell.file.file object at 0x0000027CC06FADE0&gt;
+relationships = [{'attributes': {'Name': '', 'RelatedOpeningElement': 'opening-1', 'RelatingBuildingElement': 'wall-1'}, 'id': 'void-1...ingOpeningElement': 'opening-1'}, 'id': 'fill-1', 'ifc_class': 'IfcRelFillsElement', 'provenance': {'source': 'test'}}]
+entities = {'beam-1': #53=IfcBeam('3ni9zu4OLUweK_JUTpJXRQ',#52,'Beam',$,$,#563,#288,$), 'building-1': #20=IfcBuilding('3uHgz3MVbH...umn',$,$,#558,#276,$), 'covering-1': #123=IfcCovering('2tn_uXOgnPdOU53$RoI6o3',#122,'Covering',$,$,#622,#414,$,$), ...}
+
+    def add_v2_relationships(
+        ifc_file: Any,
+        relationships: list[Mapping[str, Any]],
+        entities: Mapping[str, Any],
+    ) -&gt; None:
+        for record in relationships:
+            ifc_class = record["ifc_class"]
+            if ifc_class == "IfcRelAggregates":
+                attributes = record["attributes"]
+                relating_object = entities[attributes["RelatingObject"]]
+                related_objects = [
+                    entities[entity_id]
+                    for entity_id in attributes["RelatedObjects"]
+                ]
+                if _aggregate_already_assigned(relating_object, related_objects):
+                    continue
+            if ifc_class == "IfcRelDefinesByType":
+                attributes = record["attributes"]
+                assign_type(
+                    ifc_file,
+                    related_objects=[
+                        entities[entity_id]
+                        for entity_id in attributes["RelatedObjects"]
+                    ],
+                    relating_type=entities[attributes["RelatingType"]],
+                    should_map_representations=False,
+                )
+                continue
+            if ifc_class == "IfcRelConnectsPathElements":
+                attributes = record["attributes"]
+                ifc_file.create_entity(
+                    ifc_class,
+                    GlobalId=record.get("global_id")
+                    or global_id_for(
+                        "bim-json/2.0", ifc_class, record["id"]
+                    ),
+                    OwnerHistory=ifcopenshell.api.owner.create_owner_history(ifc_file),
+                    Name=None,
+                    Description=None,
+                    ConnectionGeometry=None,
+                    RelatingElement=entities[attributes["RelatingElement"]],
+                    RelatedElement=entities[attributes["RelatedElement"]],
+                    RelatingPriorities=attributes["RelatingPriorities"],
+                    RelatedPriorities=attributes["RelatedPriorities"],
+                    RelatedConnectionType=attributes["RelatedConnectionType"],
+                    RelatingConnectionType=attributes["RelatingConnectionType"],
+                )
+                continue
+            attributes = {
+                name: (
+                    [entities[item_id] for item_id in entity_id]
+                    if isinstance(entity_id, list)
+&gt;                   else entities[entity_id]
+                         ^^^^^^^^^^^^^^^^^^^
+                )
+                for name, entity_id in record["attributes"].items()
+            }
+E           KeyError: ''
+
+src\text2ifc_compiler\relationships.py:65: KeyError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_v2_generates_bookkeeping_and_explicit_void_fill_relations" time="3.066" /><testcase classname="tests.compiler.test_v2_relationships" name="test_v2_deduplicates_explicit_spatial_aggregates_already_derived_from_placement" time="2.973" /></testsuite></testsuites>

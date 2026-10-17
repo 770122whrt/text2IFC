@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="7" skipped="0" tests="33" time="27.226" timestamp="2026-09-08T19:47:54.197831+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[60-wall-1]" time="2.021" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[60-wall-storey-1-wall-1]" time="3.040" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[30-wall-1]" time="2.945" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[30-wall-storey-1-wall-1]" time="2.828" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[canonical]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[legacy]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[both]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[duplicate-storeys]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[wrong-family]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[unoffered]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[False-IfcWall]" time="0.011" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[False-IfcWallStandardCase]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[False-IfcSlab]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[True-IfcWall]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[True-IfcWallStandardCase]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[True-IfcSlab]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[False-False]" time="2.904" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[False-True]" time="2.982" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[True-False]" time="2.939" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[True-True]" time="3.060" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target[both-ids]" time="0.002"><failure message="AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None">scenario = 'both-ids'
+
+    @pytest.mark.parametrize('scenario', ['both-ids', 'wrong-class', 'duplicate-contract', 'wrong-storey'])
+    def test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target(scenario):
+        from text2ifc_agent.dynamic_gates import _CandidateGraph, _resolve_expected_entity
+        from tests.agent.test_phase6_3_dynamic_gates import _entity
+        entries = [{'brief_id': 'room', 'entity_id': 'space-level-a-room', 'storey': 'level-a'}]
+        entities = [_entity('level-a', 'IfcBuildingStorey', None),
+                    _entity('space-level-a-room', 'IfcSpace', 'level-a')]
+        if scenario == 'both-ids':
+            entities.append(_entity('room', 'IfcSpace', 'level-a'))
+        elif scenario == 'wrong-class':
+            entities[1]['ifc_class'] = 'IfcSlab'
+        elif scenario == 'duplicate-contract':
+            entries.append({'brief_id': 'room', 'entity_id': 'other-space', 'storey': 'level-a'})
+        elif scenario == 'wrong-storey':
+            entities[1]['attributes']['ObjectPlacement']['relative_to'] = 'level-b'
+        match = _resolve_expected_entity(graph=_CandidateGraph({'entities': entities, 'relationships': []}),
+                                         expected_facts={'entity_id_contract': {'spaces': entries}},
+                                         collection='spaces', record={'id': 'room', 'storey': 'level-a'})
+&gt;       assert match is None
+E       AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None
+
+tests\agent\test_semantic_identity_binding.py:128: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target[wrong-class]" time="0.002"><failure message="AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None">scenario = 'wrong-class'
+
+    @pytest.mark.parametrize('scenario', ['both-ids', 'wrong-class', 'duplicate-contract', 'wrong-storey'])
+    def test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target(scenario):
+        from text2ifc_agent.dynamic_gates import _CandidateGraph, _resolve_expected_entity
+        from tests.agent.test_phase6_3_dynamic_gates import _entity
+        entries = [{'brief_id': 'room', 'entity_id': 'space-level-a-room', 'storey': 'level-a'}]
+        entities = [_entity('level-a', 'IfcBuildingStorey', None),
+                    _entity('space-level-a-room', 'IfcSpace', 'level-a')]
+        if scenario == 'both-ids':
+            entities.append(_entity('room', 'IfcSpace', 'level-a'))
+        elif scenario == 'wrong-class':
+            entities[1]['ifc_class'] = 'IfcSlab'
+        elif scenario == 'duplicate-contract':
+            entries.append({'brief_id': 'room', 'entity_id': 'other-space', 'storey': 'level-a'})
+        elif scenario == 'wrong-storey':
+            entities[1]['attributes']['ObjectPlacement']['relative_to'] = 'level-b'
+        match = _resolve_expected_entity(graph=_CandidateGraph({'entities': entities, 'relationships': []}),
+                                         expected_facts={'entity_id_contract': {'spaces': entries}},
+                                         collection='spaces', record={'id': 'room', 'storey': 'level-a'})
+&gt;       assert match is None
+E       AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None
+
+tests\agent\test_semantic_identity_binding.py:128: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target[duplicate-contract]" time="0.002"><failure message="AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None">scenario = 'duplicate-contract'
+
+    @pytest.mark.parametrize('scenario', ['both-ids', 'wrong-class', 'duplicate-contract', 'wrong-storey'])
+    def test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target(scenario):
+        from text2ifc_agent.dynamic_gates import _CandidateGraph, _resolve_expected_entity
+        from tests.agent.test_phase6_3_dynamic_gates import _entity
+        entries = [{'brief_id': 'room', 'entity_id': 'space-level-a-room', 'storey': 'level-a'}]
+        entities = [_entity('level-a', 'IfcBuildingStorey', None),
+                    _entity('space-level-a-room', 'IfcSpace', 'level-a')]
+        if scenario == 'both-ids':
+            entities.append(_entity('room', 'IfcSpace', 'level-a'))
+        elif scenario == 'wrong-class':
+            entities[1]['ifc_class'] = 'IfcSlab'
+        elif scenario == 'duplicate-contract':
+            entries.append({'brief_id': 'room', 'entity_id': 'other-space', 'storey': 'level-a'})
+        elif scenario == 'wrong-storey':
+            entities[1]['attributes']['ObjectPlacement']['relative_to'] = 'level-b'
+        match = _resolve_expected_entity(graph=_CandidateGraph({'entities': entities, 'relationships': []}),
+                                         expected_facts={'entity_id_contract': {'spaces': entries}},
+                                         collection='spaces', record={'id': 'room', 'storey': 'level-a'})
+&gt;       assert match is None
+E       AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None
+
+tests\agent\test_semantic_identity_binding.py:128: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target[wrong-storey]" time="0.002"><failure message="AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None">scenario = 'wrong-storey'
+
+    @pytest.mark.parametrize('scenario', ['both-ids', 'wrong-class', 'duplicate-contract', 'wrong-storey'])
+    def test_dynamic_identity_contract_cannot_select_ambiguous_or_wrong_target(scenario):
+        from text2ifc_agent.dynamic_gates import _CandidateGraph, _resolve_expected_entity
+        from tests.agent.test_phase6_3_dynamic_gates import _entity
+        entries = [{'brief_id': 'room', 'entity_id': 'space-level-a-room', 'storey': 'level-a'}]
+        entities = [_entity('level-a', 'IfcBuildingStorey', None),
+                    _entity('space-level-a-room', 'IfcSpace', 'level-a')]
+        if scenario == 'both-ids':
+            entities.append(_entity('room', 'IfcSpace', 'level-a'))
+        elif scenario == 'wrong-class':
+            entities[1]['ifc_class'] = 'IfcSlab'
+        elif scenario == 'duplicate-contract':
+            entries.append({'brief_id': 'room', 'entity_id': 'other-space', 'storey': 'level-a'})
+        elif scenario == 'wrong-storey':
+            entities[1]['attributes']['ObjectPlacement']['relative_to'] = 'level-b'
+        match = _resolve_expected_entity(graph=_CandidateGraph({'entities': entities, 'relationships': []}),
+                                         expected_facts={'entity_id_contract': {'spaces': entries}},
+                                         collection='spaces', record={'id': 'room', 'storey': 'level-a'})
+&gt;       assert match is None
+E       AssertionError: assert {'candidate_id': 'space-level-a-room', 'collection': 'spaces', 'expected_id': 'room', 'match_basis': 'canonical_entity_id'} is None
+
+tests\agent\test_semantic_identity_binding.py:128: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_repeated_brief_id_resolves_by_explicit_storey" time="0.001" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[non_json]" time="0.422" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[truncated]" time="0.314" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[empty]" time="0.333" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[auth]" time="0.284" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_failed_design_transport_retains_attempt_without_publishing[timeout]" time="0.352" /><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[response.raw.json]" time="0.015"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible config is incomplete">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-general-boundaries-red-01/test_repeated_call_index_canno0')
+existing = 'response.raw.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+&gt;       config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+
+tests\agent\test_design_brief_attempt_preservation.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+environ = {'API_KEY': 'test', 'TEXT2IFC_DEEPSEEK_MODEL': 'fake', 'TEXT2IFC_PROVIDER': 'deepseek'}
+
+    def load_openai_compatible_runtime_config(
+        environ: dict[str, str] | None = None,
+    ) -&gt; OpenAICompatRuntimeConfig:
+        """Load the secret-bearing runtime config without exposing it in repr."""
+    
+        env = {} if environ is None else environ
+        status = load_openai_compatible_config(env)
+        if not status["configured"]:
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible config is incomplete",
+                evidence={
+                    "provider": status["provider"],
+                    "parse_eligible": False,
+                    "failure_class": "missing_config",
+                    "missing": list(status["missing"]),
+                },
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible config is incomplete
+
+src\text2ifc_agent\openai_compat.py:140: OpenAICompatError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[request.redacted.json]" time="0.014"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible config is incomplete">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-general-boundaries-red-01/test_repeated_call_index_canno1')
+existing = 'request.redacted.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+&gt;       config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+
+tests\agent\test_design_brief_attempt_preservation.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+environ = {'API_KEY': 'test', 'TEXT2IFC_DEEPSEEK_MODEL': 'fake', 'TEXT2IFC_PROVIDER': 'deepseek'}
+
+    def load_openai_compatible_runtime_config(
+        environ: dict[str, str] | None = None,
+    ) -&gt; OpenAICompatRuntimeConfig:
+        """Load the secret-bearing runtime config without exposing it in repr."""
+    
+        env = {} if environ is None else environ
+        status = load_openai_compatible_config(env)
+        if not status["configured"]:
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible config is incomplete",
+                evidence={
+                    "provider": status["provider"],
+                    "parse_eligible": False,
+                    "failure_class": "missing_config",
+                    "missing": list(status["missing"]),
+                },
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible config is incomplete
+
+src\text2ifc_agent\openai_compat.py:140: OpenAICompatError</failure></testcase><testcase classname="tests.agent.test_design_brief_attempt_preservation" name="test_repeated_call_index_cannot_overwrite_any_existing_attempt[transport-failure.json]" time="0.018"><failure message="text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible config is incomplete">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-general-boundaries-red-01/test_repeated_call_index_canno2')
+existing = 'transport-failure.json'
+
+    @pytest.mark.parametrize('existing', ['response.raw.json', 'request.redacted.json', 'transport-failure.json'])
+    def test_repeated_call_index_cannot_overwrite_any_existing_attempt(tmp_path, existing):
+        root = tmp_path / 'calls/01-design-brief'
+        root.mkdir(parents=True)
+        (root / existing).write_bytes(b'original attempt bytes')
+        calls = []
+        def create(**kwargs):
+            calls.append(kwargs)
+            raise TimeoutError('second transport must not happen')
+&gt;       config = load_openai_compatible_runtime_config({'TEXT2IFC_PROVIDER': 'deepseek', 'API_KEY': 'test',
+                                                        'TEXT2IFC_DEEPSEEK_MODEL': 'fake'})
+
+tests\agent\test_design_brief_attempt_preservation.py:45: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+environ = {'API_KEY': 'test', 'TEXT2IFC_DEEPSEEK_MODEL': 'fake', 'TEXT2IFC_PROVIDER': 'deepseek'}
+
+    def load_openai_compatible_runtime_config(
+        environ: dict[str, str] | None = None,
+    ) -&gt; OpenAICompatRuntimeConfig:
+        """Load the secret-bearing runtime config without exposing it in repr."""
+    
+        env = {} if environ is None else environ
+        status = load_openai_compatible_config(env)
+        if not status["configured"]:
+&gt;           raise OpenAICompatError(
+                "OpenAI-compatible config is incomplete",
+                evidence={
+                    "provider": status["provider"],
+                    "parse_eligible": False,
+                    "failure_class": "missing_config",
+                    "missing": list(status["missing"]),
+                },
+            )
+E           text2ifc_agent.openai_compat.OpenAICompatError: OpenAI-compatible config is incomplete
+
+src\text2ifc_agent\openai_compat.py:140: OpenAICompatError</failure></testcase></testsuite></testsuites>

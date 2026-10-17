@@ -1,0 +1,275 @@
+{
+  "ambiguities": [],
+  "clarification_questions": [],
+  "fact_sources": [
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:root"
+      ],
+      "path": "/known_facts/appearance",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:representation",
+        "capability:IFC2X3:IfcSpace",
+        "capability:IFC2X3:IfcWall"
+      ],
+      "path": "/known_facts/storeys/0",
+      "source_turns": [
+        "turn-user-001",
+        "turn-user-003"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcSlab",
+        "schema:bim-json-v2:entity"
+      ],
+      "path": "/known_facts/floor_slabs",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcDoor",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/storeys/0/doors",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "capability:IFC2X3:IfcWindow",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/storeys/0/windows",
+      "source_turns": [
+        "turn-user-001"
+      ]
+    },
+    {
+      "evidence_refs": [
+        "schema:bim-json-v2:entity",
+        "schema:bim-json-v2:representation"
+      ],
+      "path": "/known_facts/semantic_requirements",
+      "source_turns": [
+        "turn-user-001",
+        "turn-user-003"
+      ]
+    }
+  ],
+  "known_facts": {
+    "appearance": {
+      "profile": "warm-residential"
+    },
+    "floor_slabs": [
+      {
+        "bounds": {
+          "x": [
+            -3200,
+            3200
+          ],
+          "y": [
+            -2200,
+            2200
+          ]
+        },
+        "id": "slab-ground",
+        "storey": "storey-1",
+        "thickness_mm": 150,
+        "top_elevation_mm": 0
+      }
+    ],
+    "semantic_requirements": [
+      {
+        "entity_id": "wall-south",
+        "material": {
+          "kind": "single_material",
+          "name": "砖"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "wall-north",
+        "material": {
+          "kind": "single_material",
+          "name": "砖"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "wall-west",
+        "material": {
+          "kind": "single_material",
+          "name": "砖"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "wall-east",
+        "material": {
+          "kind": "single_material",
+          "name": "砖"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "slab-ground",
+        "material": {
+          "kind": "single_material",
+          "name": "混凝土"
+        },
+        "scope": "direct",
+        "source": "user"
+      },
+      {
+        "entity_id": "door-south",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "parameters": {},
+          "template_id": "door-left",
+          "template_version": "text2ifc/basic-filling/1.0"
+        }
+      },
+      {
+        "entity_id": "window-east",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "parameters": {},
+          "template_id": "window-double-vertical",
+          "template_version": "text2ifc/basic-filling/1.0"
+        }
+      },
+      {
+        "entity_id": "window-west",
+        "scope": "direct",
+        "source": "user",
+        "template": {
+          "parameters": {},
+          "template_id": "window-single",
+          "template_version": "text2ifc/basic-filling/1.0"
+        }
+      }
+    ],
+    "storeys": [
+      {
+        "doors": [
+          {
+            "alignment": "host_centerline",
+            "height_mm": 2100,
+            "host_wall": "wall-south",
+            "id": "door-south",
+            "sill_height_mm": 0,
+            "width_mm": 1000
+          }
+        ],
+        "elevation_mm": 0,
+        "id": "storey-1",
+        "net_height_mm": 3000,
+        "spaces": [
+          {
+            "bounds": {
+              "x": [
+                -3000,
+                3000
+              ],
+              "y": [
+                -2000,
+                2000
+              ]
+            },
+            "id": "space-room",
+            "shape": "rectangle"
+          }
+        ],
+        "walls": {
+          "exterior": [
+            {
+              "height_mm": 3000,
+              "id": "wall-south",
+              "side": "south",
+              "thickness_mm": 200
+            },
+            {
+              "height_mm": 3000,
+              "id": "wall-north",
+              "side": "north",
+              "thickness_mm": 200
+            },
+            {
+              "height_mm": 3000,
+              "id": "wall-west",
+              "side": "west",
+              "thickness_mm": 200
+            },
+            {
+              "height_mm": 3000,
+              "id": "wall-east",
+              "side": "east",
+              "thickness_mm": 200
+            }
+          ],
+          "interior": []
+        },
+        "windows": [
+          {
+            "alignment": "host_centerline",
+            "height_mm": 1200,
+            "host_wall": "wall-east",
+            "id": "window-east",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          },
+          {
+            "alignment": "host_centerline",
+            "height_mm": 1200,
+            "host_wall": "wall-west",
+            "id": "window-west",
+            "sill_height_mm": 900,
+            "width_mm": 1600
+          }
+        ]
+      }
+    ]
+  },
+  "language": "zh-CN",
+  "missing_facts": [],
+  "original_request": "请生成一个单层矩形接待室的完整 IFC2X3 文件，单位为毫米。室内净长 6000、净宽 4000，墙高 3000、墙厚 200，四面墙闭合。地坪顶面标高 0，厚 150，覆盖整个房间及墙底。为便于检查室内，本次明确不建屋顶或吊顶。设一个室内空间。\n正南面墙正中设置一樘左单开门，宽 1000、高 2100，门底与地坪齐平。正东面墙正中设置一樘双竖面板窗，正西面墙正中设置一樘单面板窗；两窗均宽 1600、高 1200、窗台标高 900。开口与各自门窗名义宽高一致并穿透墙厚；门窗居中安装，保留窗框、玻璃、门框和门扇细节，不加外伸门套或复杂五金。\n四面墙材料明确为砖，地坪材料明确为混凝土；其他构件不指定物理材料。采用 warm-residential 协调风格，窗玻璃透明、窗框与门扇有协调的部件分色。没有提供任何耐火、承重、强度、热工性能或普通属性，请不要自动添加这些属性。没有共享 Type 要求。不改变上述尺寸和位置；模型原点取室内地坪中心，X 向东、Y 向北、Z 向上。",
+  "provenance": {
+    "few_shot_ids": [],
+    "selected_evidence_ids": [
+      "schema:bim-json-v2:entity",
+      "schema:bim-json-v2:representation",
+      "schema:bim-json-v2:object-placement",
+      "capability:IFC2X3:IfcSpace",
+      "capability:IFC2X3:IfcWall",
+      "capability:IFC2X3:IfcDoor",
+      "capability:IFC2X3:IfcWindow",
+      "capability:IFC2X3:IfcSlab",
+      "capability:IFC2X3:IfcOpeningElement",
+      "capability:IFC2X3:IfcRelVoidsElement",
+      "capability:IFC2X3:IfcRelFillsElement"
+    ],
+    "source_turns": [
+      "turn-user-001",
+      "turn-user-003"
+    ]
+  },
+  "schema_version": "text2ifc/design-brief/2.1",
+  "status": "ready",
+  "unsupported_requests": [],
+  "user_corrections": []
+}

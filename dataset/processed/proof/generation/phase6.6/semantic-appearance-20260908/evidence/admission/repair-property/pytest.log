@@ -1,0 +1,49 @@
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+........................................................................ [ 56%]
+.............................................................F.......... [ 75%]
+........................................................................ [ 94%]
+....................                                                     [100%]
+================================== FAILURES ===================================
+________ test_large_building_indexes_initial_scope_and_source_identity ________
+
+tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-repair-property-admission-20260908-01/test_large_building_indexes_in0')
+
+    def test_large_building_indexes_initial_scope_and_source_identity(tmp_path: Path) -> None:
+        build_ifc_index = _api()["build_ifc_index"]
+        database = tmp_path / "large.sqlite"
+        build_ifc_index(LARGE_BUILDING, database)
+    
+        with SQLiteIndexRepository.open(database) as repository:
+            records = list(repository.iter_records())
+            counts = Counter(record.ifc_class for record in records)
+            assert sum(counts[name] for name in ("IfcWall", "IfcWallStandardCase")) == 18
+            assert counts["IfcDoor"] == 18
+            assert counts["IfcWindow"] == 42
+            assert counts["IfcSpace"] == 8
+            assert repository.metadata.ifc_schema == "IFC2X3"
+            assert repository.metadata.source_ifc_sha256.startswith("sha256:")
+            assert len(repository.metadata.source_ifc_sha256) == 71
+>           assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.6"
+E           AssertionError: assert 'text2ifc/ifc-indexer/0.7' == 'text2ifc/ifc-indexer/0.6'
+E             
+E             - text2ifc/ifc-indexer/0.6
+E             ?                        ^
+E             + text2ifc/ifc-indexer/0.7
+E             ?                        ^
+
+tests\ifc_repair\test_indexer.py:58: AssertionError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\_pytest\cacheprovider.py:475
+  E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\cacheprovider.py:475: PytestCacheWarning: could not create cache path E:\code for project\bimnet\.pytest_cache\v\cache\nodeids: [WinError 5] ¾Ü¾ø·ÃÎÊ¡£: 'E:\\code for project\\bimnet\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/nodeids", sorted(self.cached_nodeids))
+
+.venv\Lib\site-packages\_pytest\cacheprovider.py:429
+  E:\code for project\bimnet\.venv\Lib\site-packages\_pytest\cacheprovider.py:429: PytestCacheWarning: could not create cache path E:\code for project\bimnet\.pytest_cache\v\cache\lastfailed: [WinError 5] ¾Ü¾ø·ÃÎÊ¡£: 'E:\\code for project\\bimnet\\.pytest_cache\\v\\cache'
+    config.cache.set("cache/lastfailed", self.lastfailed)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+- generated xml file: E:\code for project\bimnet\dataset\processed\ifc-presentation-validation\live-semantic-20260908-01\admission\repair-property\pytest.xml -
+=========================== short test summary info ===========================
+FAILED tests/ifc_repair/test_indexer.py::test_large_building_indexes_initial_scope_and_source_identity
+1 failed, 379 passed, 2 warnings in 298.80s (0:04:58)

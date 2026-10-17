@@ -1,0 +1,953 @@
+{
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
+  "collection_id": "semantic-appearance-20260908",
+  "workflow": "repair",
+  "status": "pending_human_review",
+  "registration_status": "unregistered",
+  "accepted_proof_installed": false,
+  "phase_assignment": "Organization only; phase status unchanged",
+  "cases": [
+    {
+      "case_id": "vvo-instance-properties",
+      "path": "vvo-instance-properties",
+      "status": "pending_human_review",
+      "outcome": "repaired",
+      "evidence_mode": "live",
+      "provider_calls": 2,
+      "total_provider_calls_including_failed_attempts": 4,
+      "authority": "vvo-instance-properties/evidence/frozen/result-live-04.json",
+      "artifacts": {
+        "request.txt": {
+          "sha256": "bf2af41057909205bfb4fde7c7bc8127fde86be78d3f6d452c6dd0df42f3b040",
+          "size_bytes": 543,
+          "source": "vvo-instance-properties/request.txt"
+        },
+        "01-original.ifc": {
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268,
+          "source": "vvo-instance-properties/01-original.ifc"
+        },
+        "02-damaged.ifc": {
+          "sha256": "7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6",
+          "size_bytes": 2437399,
+          "source": "vvo-instance-properties/02-damaged.ifc"
+        },
+        "03-repaired.ifc": {
+          "sha256": "6a94e68fe349673d9aa67ceaf724f2a8dbcb706daeddedca1235930e2305c3e7",
+          "size_bytes": 2437862,
+          "source": "vvo-instance-properties/03-repaired.ifc"
+        }
+      },
+      "ifccompare": "Independent frozen request / IFC readback; full IFCCompare benchmark not run",
+      "original_role": "private_ground_truth"
+    }
+  ],
+  "legacy_bundles": [
+    {
+      "id": "frozen",
+      "old_root": "dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/repair",
+      "entries": [
+        {
+          "legacy_path": "01-original.ifc",
+          "path": "vvo-instance-properties/01-original.ifc",
+          "sha256": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc",
+          "size_bytes": 2409268
+        },
+        {
+          "legacy_path": "02-damaged.ifc",
+          "path": "vvo-instance-properties/02-damaged.ifc",
+          "sha256": "7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6",
+          "size_bytes": 2437399
+        },
+        {
+          "legacy_path": "03-repaired.ifc",
+          "path": "vvo-instance-properties/03-repaired.ifc",
+          "sha256": "6a94e68fe349673d9aa67ceaf724f2a8dbcb706daeddedca1235930e2305c3e7",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "api-02.log",
+          "path": "vvo-instance-properties/evidence/frozen/api-02.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "api-live-04.log",
+          "path": "vvo-instance-properties/evidence/frozen/api-live-04.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "api-offline-03.log",
+          "path": "vvo-instance-properties/evidence/frozen/api-offline-03.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "api.log",
+          "path": "vvo-instance-properties/evidence/frozen/api.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "damaged-view.html",
+          "path": "vvo-instance-properties/evidence/frozen/damaged-view.html",
+          "sha256": "7c1786c99e7f7182db45d758d9c4abf918b670631745d1936bbc9b72c1ceef13",
+          "size_bytes": 1242150
+        },
+        {
+          "legacy_path": "evaluator-private/frozen-expectations.json",
+          "path": "vvo-instance-properties/evidence/frozen/evaluator-private/frozen-expectations.json",
+          "sha256": "62d844e121fbf9cf7bbec1958acf11f5409f70537aa069a0264c133aad39a674",
+          "size_bytes": 974
+        },
+        {
+          "legacy_path": "evaluator-private/mutation.json",
+          "path": "vvo-instance-properties/evidence/frozen/evaluator-private/mutation.json",
+          "sha256": "094a7e063212c99e6915999bf8ba87180828360dd75d5cbc8596682019d69fd8",
+          "size_bytes": 995
+        },
+        {
+          "legacy_path": "execution-02.json",
+          "path": "vvo-instance-properties/evidence/frozen/execution-02.json",
+          "sha256": "9fe830c144ecca4b133cd313f04d682c263980960bba47b5752911e8c858c4f7",
+          "size_bytes": 688
+        },
+        {
+          "legacy_path": "execution-live-04.json",
+          "path": "vvo-instance-properties/evidence/frozen/execution-live-04.json",
+          "sha256": "48ecd1d38fc6492374a90a2e753f96f2067183cd49f53f4f01753f8aeb9d7070",
+          "size_bytes": 673
+        },
+        {
+          "legacy_path": "execution-offline-03.json",
+          "path": "vvo-instance-properties/evidence/frozen/execution-offline-03.json",
+          "sha256": "704ea2e78c2dd42b9dd35fb0aaf0fdbd334f54c2a2d3094facf6d0d23cdc49df",
+          "size_bytes": 677
+        },
+        {
+          "legacy_path": "execution.json",
+          "path": "vvo-instance-properties/evidence/frozen/execution.json",
+          "sha256": "5ed731059f558cf0eaa3853f621aa41042cfe5e13911459c824b8f53a66b29ff",
+          "size_bytes": 634
+        },
+        {
+          "legacy_path": "independent-review.json",
+          "path": "vvo-instance-properties/evidence/frozen/independent-review.json",
+          "sha256": "12f1402ebf3a844e08e28034450aad496a85ffae0aba370091efd4e2b984af4d",
+          "size_bytes": 2753
+        },
+        {
+          "legacy_path": "original-view.html",
+          "path": "vvo-instance-properties/evidence/frozen/original-view.html",
+          "sha256": "ade5a21baa2a77a17ee8b694a4d427e8bcad535e6fc6003cd51f7c0e508ae5e3",
+          "size_bytes": 1242151
+        },
+        {
+          "legacy_path": "overall-depth.png",
+          "path": "vvo-instance-properties/evidence/views/overall-depth.png",
+          "sha256": "b46062eb33fdf11d3752c09f3a2c2ca5b2283ebb99df4d718aa5181484fffe4e",
+          "size_bytes": 29748
+        },
+        {
+          "legacy_path": "overall.png",
+          "path": "vvo-instance-properties/evidence/frozen/overall.png",
+          "sha256": "879c34a9f4afca6b2888cd2eb49fe6ae297b3ce17f229e0ec2c58c72d37e72f2",
+          "size_bytes": 35221
+        },
+        {
+          "legacy_path": "public-input-facts.json",
+          "path": "vvo-instance-properties/evidence/frozen/public-input-facts.json",
+          "sha256": "c061a579b9c1290dcb5be8e5e112bcaf74334b5b13bfb7530e3da6afcd08ee47",
+          "size_bytes": 421
+        },
+        {
+          "legacy_path": "repaired-view.html",
+          "path": "vvo-instance-properties/evidence/frozen/repaired-view.html",
+          "sha256": "83353eb297407bfaaf2655b0bc0e47556a5ef628c6e94dfe50c8f0fc781ba00e",
+          "size_bytes": 1242151
+        },
+        {
+          "legacy_path": "REPORT.md",
+          "path": "vvo-instance-properties/evidence/prior-REPORT.md",
+          "sha256": "dd60ed27ce3d6d62e45339cf964e858d0e152b8c8e4f058f4a7db50496d94aa3",
+          "size_bytes": 3808
+        },
+        {
+          "legacy_path": "request.txt",
+          "path": "vvo-instance-properties/request.txt",
+          "sha256": "bf2af41057909205bfb4fde7c7bc8127fde86be78d3f6d452c6dd0df42f3b040",
+          "size_bytes": 543
+        },
+        {
+          "legacy_path": "result-live-04.json",
+          "path": "vvo-instance-properties/evidence/frozen/result-live-04.json",
+          "sha256": "b09393da040580b7d8b3828b34d194c6f279d3fa842bec8074245bd3afb3518e",
+          "size_bytes": 673
+        },
+        {
+          "legacy_path": "result-offline-03.json",
+          "path": "vvo-instance-properties/evidence/frozen/result-offline-03.json",
+          "sha256": "755eba1969996d461d97bf06f641d36d826ed7e9cd28abee9d9e678f9bcfcdbb",
+          "size_bytes": 679
+        },
+        {
+          "legacy_path": "result.json",
+          "path": "vvo-instance-properties/evidence/frozen/result.json",
+          "sha256": "c21ee6dd94b6407dff390a48f1ed4eb28176fd9b1742dc2a2553196e078f6bd9",
+          "size_bytes": 715
+        },
+        {
+          "legacy_path": "review-damaged.html",
+          "path": "vvo-instance-properties/review-damaged.html",
+          "sha256": "9ddc4bd82e7615c9c59d9ccd0b6a6514531b292bb4ade6d833b664d0c3b68c8c",
+          "size_bytes": 1336938
+        },
+        {
+          "legacy_path": "review-original.html",
+          "path": "vvo-instance-properties/review-original.html",
+          "sha256": "cc96ac304ed366b6c735ac6d8313e0e518da7d538f9c22c75db519014bed98a8",
+          "size_bytes": 1337110
+        },
+        {
+          "legacy_path": "review-repaired.html",
+          "path": "vvo-instance-properties/review-repaired.html",
+          "sha256": "a9c356b4fc130765f5aa7a4194188cc062b31df90a2f117561d795b0b8023ebf",
+          "size_bytes": 1337114
+        },
+        {
+          "legacy_path": "runner-attempt-02.py.txt",
+          "path": "vvo-instance-properties/evidence/frozen/runner-attempt-02.py.txt",
+          "sha256": "edc5fd97a679bc9f35d5eb6f8518d4e25d047f1bb0106d913397636ee4b28511",
+          "size_bytes": 2211
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/diagnostic/repaired-candidate.ifc",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/diagnostic/repaired-candidate.ifc",
+          "sha256": "7d27940d5070d7a08dd5023afb2fd9464a885cde76806cbb5030ccd55e965fdd",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/evaluation/public-evaluation.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/evaluation/public-evaluation.json",
+          "sha256": "e7df59626a42cf3b678baaa625a6d91db9d065a162222026adaa848b2d635063",
+          "size_bytes": 4476
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/manifest.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/manifest.json",
+          "sha256": "fb61d2e455a359fd00060f23177515eea0e8c2fb5dabf4532b1457e38fc61795",
+          "size_bytes": 722
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/terminal/evidence.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.terminal-bundles/eb84a0c8ad364e7f8865dd2a4ff790f9/terminal/evidence.json",
+          "sha256": "8b85462c1e5d6270e85a9835e0e4d9decb5e0b2b776e3bc8acbdbaca9ae2f38c",
+          "size_bytes": 6228
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.transition.lock",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/.transition.lock",
+          "sha256": "15a5b32b3a15649e2afd8e13de610fd2ec5663e109fd799ab233a3394248df13",
+          "size_bytes": 51
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/api-context.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/api-context.json",
+          "sha256": "c01e9a4441ecfe0e40e5e558964db95e74643638bd20a4e26dfd0556c46ba309",
+          "size_bytes": 3275
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/diagnostics.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/diagnostics.json",
+          "sha256": "0e9233444afc87630093dc8387ee4369dd675563dbbbe89c8916207e84879d2e",
+          "size_bytes": 122
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-events.jsonl",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-events.jsonl",
+          "sha256": "2876f1468e5144adf95ac02b718c6fbf3aa13f9533aa79af6a34325ffba5a5c2",
+          "size_bytes": 7301
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-request.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-request.json",
+          "sha256": "c3b827271c5e15c5976799e2e9a7d82b16606e59813d5c9c3b5c21b7cd720d7f",
+          "size_bytes": 8034
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-response.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/live-response.json",
+          "sha256": "3dcdb070d1f720b5e923f64c9a5024d4da01a7c608a1fe4bc3d03bf2c27d3a2a",
+          "size_bytes": 7170
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/provider-metadata.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/provider-metadata.json",
+          "sha256": "68793d684c5c4ded8eea8ddfa3e7b2506dd6f0659198c7e16274b26da87d66e7",
+          "size_bytes": 805
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/raw-response.txt",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/raw-response.txt",
+          "sha256": "a725c5877024b75e39673ad5901b14e221c1de20613034b975b85f30fa284adc",
+          "size_bytes": 1148
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/rendered-prompt.md",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/rendered-prompt.md",
+          "sha256": "32193566ed97dede07ef34ba1a9ffa92907baeceda4c2f7b808cecf3dd21f159",
+          "size_bytes": 7147
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/renderer-input.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/attempt-001/renderer-input.json",
+          "sha256": "61842e060ff6bef20134b066922745d1553f48aad55bbfb183d7c2dafd1d5274",
+          "size_bytes": 8823
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/bound-changeset.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/bound-changeset.json",
+          "sha256": "ba8ab6ec7fc26fff67f858e74af5a9cd4c6f30c5f7478e0691ac47aae0d7993c",
+          "size_bytes": 4936
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/prompt-profile-selection.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/prompt-profile-selection.json",
+          "sha256": "35e5fd94ab9f753ec1e548bd10104c778370bd8b52d208aaa3d8d518dd7b0825",
+          "size_bytes": 1914
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/provider-draft.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/provider-draft.json",
+          "sha256": "c894a71efc90b7185ec18008c9d91299249698ed9a4953bd7e32dc444e2af9be",
+          "size_bytes": 1376
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/semantic-manifest-set-wall-properties-1.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset/semantic-manifest-set-wall-properties-1.json",
+          "sha256": "b6c186c22e878205a3a99733fd6c4e441aca1af4032abe6b095609cc9bb9186d",
+          "size_bytes": 2835
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset-v005.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset-v005.json",
+          "sha256": "3b7840d828fd6326ca99e9041f287b28a82cf1682d4e54a93e9dd77e72901a40",
+          "size_bytes": 3718
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/changeset.json",
+          "sha256": "ffc1ebec8daf0df7e603bbd1d43806a3797aee55a804441955c1f2ea723ad715",
+          "size_bytes": 3719
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/index/targets.sqlite",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/index/targets.sqlite",
+          "sha256": "e81d97ade19ca782597ca83caf28b1845491a3dfec5ad808219f3411a5812e4d",
+          "size_bytes": 1101824
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/attempt-001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/attempt-001.json",
+          "sha256": "a28e397f956e0a5e70e1435291b0530a404142254cded3a079892086f272424e",
+          "size_bytes": 3657
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/live-attempt-001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/live-attempt-001.json",
+          "sha256": "78dcfaed256f9bf31c9d8d77647e666787473f71e58b663550890885794d99a6",
+          "size_bytes": 127168
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/rendered-prompt.md",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/rendered-prompt.md",
+          "sha256": "beea29c553fb3c3a23432785e60bbb24c350bdcbafe7e87d7abfe7123e1ee06c",
+          "size_bytes": 45965
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/renderer-input.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/renderer-input.json",
+          "sha256": "852f506d0593e6bdc532c8df71e96fae969915b49269088be118edb32d335f93",
+          "size_bytes": 54373
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/repair-intent-completeness.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/repair-intent-completeness.json",
+          "sha256": "94e8b83114556012bb15fbf4697bcaefab1c4f2a72bda07e9383f9f04e1bc8be",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/repair-intent.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent/repair-intent.json",
+          "sha256": "093e46c684a25210d63dd2ffeb76623e893569c06faa9a9dd79d0b88b6dc1c9e",
+          "size_bytes": 3734
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/intent.json",
+          "sha256": "8af05845d995b7e8153c84f6e8f061ae3bfad900757df96c81494ec8d93e1412",
+          "size_bytes": 2648
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/resolution-v004.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/resolution-v004.json",
+          "sha256": "2fef4dedae612b6b234ba3fa013166e273bd5552da93ae9ab9b0099eb6b456fc",
+          "size_bytes": 6283
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/resolution.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/resolution.json",
+          "sha256": "85f63b48f2e7ad54c7d04a02f33f4a25d5e77efba2f249a1ca9942c55c615113",
+          "size_bytes": 6284
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/semantic-manifest.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/semantic-manifest.json",
+          "sha256": "1fb0c9b938ce8a1fd7f519d3a9ba821c5071bb4a18a7ad6e4dccfdd73b431ddd",
+          "size_bytes": 2836
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/staging/application-candidate.ifc",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/staging/application-candidate.ifc",
+          "sha256": "7d27940d5070d7a08dd5023afb2fd9464a885cde76806cbb5030ccd55e965fdd",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/state.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/state.json",
+          "sha256": "ce306b087b1bcc6ef72e439435881e77731b70ab99cfe2b5690605b958de7d83",
+          "size_bytes": 7970
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000000.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000000.json",
+          "sha256": "241f879f290000668c74e7361581678bd46c13b52a68898819c9e6ea14563908",
+          "size_bytes": 720
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000001.json",
+          "sha256": "3003465d9f4340a98bbef2466296effa6fc7139ac5b95b9d8f87b2d0d18a6900",
+          "size_bytes": 736
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000002.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000002.json",
+          "sha256": "19456ce03851fc05dda35b84484f1d4a16efd9d120b55c4e3a6db6a808172a2e",
+          "size_bytes": 912
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000003.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000003.json",
+          "sha256": "7add5879ad4d5242f5ee99f70158ec515620c4576e8a27152819c1fa1e476b84",
+          "size_bytes": 1042
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000004.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000004.json",
+          "sha256": "3f545a3cb7102f9e5db4e2575d09a39d5a61a89f6e73440a4aea855072cb4261",
+          "size_bytes": 832
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000005.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000005.json",
+          "sha256": "45783cdf16781ee27634c67f1a1a82fb96b0a06cf11286615df5b9d53e337a32",
+          "size_bytes": 834
+        },
+        {
+          "legacy_path": "runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000006.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-02/runs/repair-live-vvo-property-relation-20260908-02/transitions/000006.json",
+          "sha256": "e5fb0b82541cdd08d3e4a99aa32c9d71749bee689580200a657a7cb73deb82f2",
+          "size_bytes": 1220
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/evaluation/public-evaluation.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/evaluation/public-evaluation.json",
+          "sha256": "ac477ac8952d3088a66ad28b9905e7c6348af10d9e7604fe0076d497650e8ada",
+          "size_bytes": 5693
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/manifest.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/manifest.json",
+          "sha256": "b535a2b8c72e8a5e28c9602080ef794dd482afe3fe38e908abfb6ef5fb0c9ca1",
+          "size_bytes": 706
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/successful/repaired.ifc",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/successful/repaired.ifc",
+          "sha256": "6a94e68fe349673d9aa67ceaf724f2a8dbcb706daeddedca1235930e2305c3e7",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/terminal/evidence.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/.terminal-bundles/6395e2e7aa4c4e3c86e42a9146133e42/terminal/evidence.json",
+          "sha256": "acaea5f41ba9b29eb59ac074102e81ff9d2b646ce11bfd693037481345bb2005",
+          "size_bytes": 6164
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/.transition.lock",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/.transition.lock",
+          "sha256": "88365d4db621442f51d96e7c7102d880cf3b50e7933793c2f24c84fcc416f97d",
+          "size_bytes": 50
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/api-context.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/api-context.json",
+          "sha256": "3c5b70134070e9a36e5a09e321d7f7b25f3a9ccd444a7cad3a0d250aa70ac893",
+          "size_bytes": 4108
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/diagnostics.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/diagnostics.json",
+          "sha256": "0e9233444afc87630093dc8387ee4369dd675563dbbbe89c8916207e84879d2e",
+          "size_bytes": 122
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-events.jsonl",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-events.jsonl",
+          "sha256": "1c0d5d1999c6f1a5e6efcb9de8157248b362a5f264243aea846dcfe16582b299",
+          "size_bytes": 6455
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-request.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-request.json",
+          "sha256": "97ac00eb0cae5c5aac3532ff219e1fc3ce27c71f0eb99bfc5579695f29b9b3bf",
+          "size_bytes": 8010
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-response.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/live-response.json",
+          "sha256": "06d3e2744be158da6855f842a9fb9e608641552d318cd8eca0bbb569b9a2340f",
+          "size_bytes": 6324
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/provider-metadata.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/provider-metadata.json",
+          "sha256": "851ae094c38a1232f177fcf50c5c77fb3ff0a0d78f3c508537c2e0d89125613b",
+          "size_bytes": 796
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/raw-response.txt",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/raw-response.txt",
+          "sha256": "cc42acaeecf7a16ff484c39df60a9b1659403ee86f157189d9210599f40e3bf2",
+          "size_bytes": 1291
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/rendered-prompt.md",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/rendered-prompt.md",
+          "sha256": "4170552f9099f4a216799d984436775b5ed864128bf05ec3e76d35a6502db0ca",
+          "size_bytes": 7123
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/renderer-input.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/attempt-001/renderer-input.json",
+          "sha256": "1ed5f452e2d37e6dd557c2de1d627388d1aecbec79641b25abcb6439850962ae",
+          "size_bytes": 8799
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/bound-changeset.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/bound-changeset.json",
+          "sha256": "e40f1863bbed73505ff1b290f8455293a7eb88b11f5b0fbd5f900396a999ca01",
+          "size_bytes": 4872
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/prompt-profile-selection.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/prompt-profile-selection.json",
+          "sha256": "35e5fd94ab9f753ec1e548bd10104c778370bd8b52d208aaa3d8d518dd7b0825",
+          "size_bytes": 1914
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/provider-draft.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/provider-draft.json",
+          "sha256": "f4bb2abc0b28840d5e8eea258a08847d9d78ca6ae8c4507cc9bea4be938a639b",
+          "size_bytes": 1360
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/semantic-manifest-set-wall-pset-1.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset/semantic-manifest-set-wall-pset-1.json",
+          "sha256": "656e8cc305e2ad149049434affe80146b66f44dd96491b277137aa5d570cf203",
+          "size_bytes": 2781
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset-v005.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset-v005.json",
+          "sha256": "6dbe6d0c2704e20f4e136daa7460eaa74663581ae3372911d8463168ecded925",
+          "size_bytes": 3654
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/changeset.json",
+          "sha256": "869b93002fd821fd8e99be7b372da0cd2585a4caec798bcd3621c0841a62eec7",
+          "size_bytes": 3655
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/index/targets.sqlite",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/index/targets.sqlite",
+          "sha256": "44bd0709a5399a5ed5fb3814bdd317974523f4bc71975ae0e620b9065d0a91a6",
+          "size_bytes": 1101824
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/attempt-001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/attempt-001.json",
+          "sha256": "10cc3281b6c3e89ff089592853c711ba39f603c6d3fa004578a1eea03b8a26d9",
+          "size_bytes": 4503
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/live-attempt-001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/live-attempt-001.json",
+          "sha256": "970c5cef95eeddec9140a9bb341fb52c151eea439c376c4f9a34cb43aa7dd5a4",
+          "size_bytes": 224062
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/rendered-prompt.md",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/rendered-prompt.md",
+          "sha256": "beea29c553fb3c3a23432785e60bbb24c350bdcbafe7e87d7abfe7123e1ee06c",
+          "size_bytes": 45965
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/renderer-input.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/renderer-input.json",
+          "sha256": "852f506d0593e6bdc532c8df71e96fae969915b49269088be118edb32d335f93",
+          "size_bytes": 54373
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/repair-intent-completeness.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/repair-intent-completeness.json",
+          "sha256": "94e8b83114556012bb15fbf4697bcaefab1c4f2a72bda07e9383f9f04e1bc8be",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/repair-intent.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent/repair-intent.json",
+          "sha256": "60a20ff68996a0659e725533a28aa9f68b76cdcbd7e7b7bc4358c4ed638b0547",
+          "size_bytes": 4567
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/intent.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/intent.json",
+          "sha256": "bb389fb7fd2bf4331412ec199b1242917141a2bf53efa89f027b69b863c03bf7",
+          "size_bytes": 3481
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/resolution-v004.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/resolution-v004.json",
+          "sha256": "f80b855b4a6e49c76fafef259962a4f14c0a14851d4624fe3cba93d9d4fc2ab3",
+          "size_bytes": 6247
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/resolution.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/resolution.json",
+          "sha256": "e5674132f8f85d8770b1b886eeba057becff71c70a4c41c14a83fa015a63c756",
+          "size_bytes": 6248
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/semantic-manifest.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/semantic-manifest.json",
+          "sha256": "91a726a2e7c78083cb32590bb123985c9f16b061c579def379a7a9884cd6ce97",
+          "size_bytes": 2782
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/staging/.validation-cache/29f74e2d2ea25f2c53379bc3e47c93151fc9c9bd7807b2703a619070311cf4fd.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/staging/.validation-cache/29f74e2d2ea25f2c53379bc3e47c93151fc9c9bd7807b2703a619070311cf4fd.json",
+          "sha256": "3fbae9d1bc0b35821e8e51167e406f12e7b4b7e06db9df09051db9e29d2ff924",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/staging/.validation-cache/ddce5f221fa9754f766e0ae80d7e71eefb7745cc1bf558247d55cb0bd268beea.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/staging/.validation-cache/ddce5f221fa9754f766e0ae80d7e71eefb7745cc1bf558247d55cb0bd268beea.json",
+          "sha256": "3607b987a9c47af8bfe928643e5e1fb0827e10ad5062f9214db57bf767bff2d9",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/staging/application-candidate.ifc",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/staging/application-candidate.ifc",
+          "sha256": "6a94e68fe349673d9aa67ceaf724f2a8dbcb706daeddedca1235930e2305c3e7",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/state.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/state.json",
+          "sha256": "1b1d6d3171dd6527d996df6e2c114bb7dcb8016b2ab65d040a44e487950126df",
+          "size_bytes": 7917
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000000.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000000.json",
+          "sha256": "6f430961b0352ec55edb1a1215a7b6858ba2118e236b4e58636559016b31cd2e",
+          "size_bytes": 720
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000001.json",
+          "sha256": "78e96e31fb3fb678bbe941d9cf16134967ba85532a3a11e9f36ff5b2eab20f14",
+          "size_bytes": 736
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000002.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000002.json",
+          "sha256": "4b57bff0f2cd242201a7c02effe9defb1bd9b7eb35407edf9e7a9c844f91428b",
+          "size_bytes": 912
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000003.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000003.json",
+          "sha256": "d8b4753d97fe5fdac8ae5e6474d1e4d8b5a20fc04229b93a7aebec336cab6393",
+          "size_bytes": 1042
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000004.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000004.json",
+          "sha256": "05f3455b72e2f81fce9ee6328b8e9f5a7a548f49cb631d811c9c941a58e12e08",
+          "size_bytes": 832
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000005.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000005.json",
+          "sha256": "16d35c77f6b739c52a7cc5a5a03769a17568e49547917a6c8bd293970d68d09b",
+          "size_bytes": 834
+        },
+        {
+          "legacy_path": "runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000006.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-live-04/runs/repair-vvo-property-relation-live-04/transitions/000006.json",
+          "sha256": "4953d45732c6efc251856f2b85d9358a8795618364744f282b3f46dca2358e3b",
+          "size_bytes": 1198
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/evaluation/public-evaluation.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/evaluation/public-evaluation.json",
+          "sha256": "d2b0e40ef61b6d15dd8f3220c1ea6f0744da2624819bb91887337b41e3af0d1c",
+          "size_bytes": 5701
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/manifest.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/manifest.json",
+          "sha256": "ada26e77db814d64f409ef9050a9003e54b0a62fc8be16a6a24b52bd30d34774",
+          "size_bytes": 706
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/successful/repaired.ifc",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/successful/repaired.ifc",
+          "sha256": "8ba15b2149229d3ccdecb9b9b94d48a54d33161ea31dfa5c71b4fd1bbb26ea38",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/terminal/evidence.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.terminal-bundles/929e3ff5ae8645ecb13837de95e71f78/terminal/evidence.json",
+          "sha256": "231c94a875d03e92287c7417f8a4cf47944835cdf58bf61e77affb2682bfa0b1",
+          "size_bytes": 6250
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.transition.lock",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/.transition.lock",
+          "sha256": "d9d796c01bd3fabb1dc5a4bfc788a76eabf8cd3dbee18fac7e966e3f2600f1cc",
+          "size_bytes": 51
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/api-context.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/api-context.json",
+          "sha256": "6367c3c1b4cf3dfa1c55bbf8e3ea4e5c59a47a01c9fd7661a7c63e4aa4733c02",
+          "size_bytes": 6778
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/diagnostics.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/diagnostics.json",
+          "sha256": "0e9233444afc87630093dc8387ee4369dd675563dbbbe89c8916207e84879d2e",
+          "size_bytes": 122
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/provider-metadata.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/provider-metadata.json",
+          "sha256": "17f8a0ff382d44bf6a3eda15077655400ab61e66d6ff7c4544a3e0b149899724",
+          "size_bytes": 111
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/raw-response.txt",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/raw-response.txt",
+          "sha256": "524933fde02cc7423d96e28bc8fa0b5c50faa18fe1cd1adb0927cf3c076eb0b8",
+          "size_bytes": 1052
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/rendered-prompt.md",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/rendered-prompt.md",
+          "sha256": "f7f164ea89f8119889ad5e046cfae756b83487f26edcf6174864c711531c4188",
+          "size_bytes": 7155
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/renderer-input.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/attempt-001/renderer-input.json",
+          "sha256": "03dba0c6fd9ce9bfeb6686f61083a28d6cf029e783fe965235d5c4f756ef6be2",
+          "size_bytes": 8831
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/bound-changeset.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/bound-changeset.json",
+          "sha256": "70ea4b430b735612daaa5cb24324574d8aaae771292e26f1c00352f2a94dcadd",
+          "size_bytes": 4779
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/prompt-profile-selection.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/prompt-profile-selection.json",
+          "sha256": "35e5fd94ab9f753ec1e548bd10104c778370bd8b52d208aaa3d8d518dd7b0825",
+          "size_bytes": 1914
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/provider-draft.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/provider-draft.json",
+          "sha256": "9af7c1e8a041e2b6d6520f1da75c83d1658f7a92784e0f9337857ae04e4448d9",
+          "size_bytes": 1203
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/semantic-manifest-restore-wall-properties.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset/semantic-manifest-restore-wall-properties.json",
+          "sha256": "809ddb4373dfcce29cdeb0d72ad5e89755bfe0f471f8228ff5745335682c2710",
+          "size_bytes": 2853
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset-v005.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset-v005.json",
+          "sha256": "cf3f568222c7b1e1754d179cf0b37ba68a597c3b5e6e03d289318d43d28cdc04",
+          "size_bytes": 3597
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/changeset.json",
+          "sha256": "36f03a814a73607347c4fe8ed52669e57d34bcdecdfa592c436e33d26e358e50",
+          "size_bytes": 3598
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/index/targets.sqlite",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/index/targets.sqlite",
+          "sha256": "92491866a6c70451971ee3fd54a4fc5d17fdeb0586c7a10406c80f5daa81dac1",
+          "size_bytes": 1101824
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/attempt-001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/attempt-001.json",
+          "sha256": "bbb224a0e6e2b35ba8ae44346b1267bf2222c17a1f37e5d7d253f04c1ac6e4a9",
+          "size_bytes": 4994
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/rendered-prompt.md",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/rendered-prompt.md",
+          "sha256": "beea29c553fb3c3a23432785e60bbb24c350bdcbafe7e87d7abfe7123e1ee06c",
+          "size_bytes": 45965
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/renderer-input.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/renderer-input.json",
+          "sha256": "852f506d0593e6bdc532c8df71e96fae969915b49269088be118edb32d335f93",
+          "size_bytes": 54373
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/repair-intent-completeness.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/repair-intent-completeness.json",
+          "sha256": "94e8b83114556012bb15fbf4697bcaefab1c4f2a72bda07e9383f9f04e1bc8be",
+          "size_bytes": 187
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/repair-intent.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent/repair-intent.json",
+          "sha256": "e92bf200a083f3195ce240513e4cfc22f69c02d5380271b49e785ed5f24c8de7",
+          "size_bytes": 7226
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/intent.json",
+          "sha256": "3a4d44bad94c0cc9325de33aa93e95e4497692858c5e429108c17046b3e5b112",
+          "size_bytes": 6151
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/resolution-v004.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/resolution-v004.json",
+          "sha256": "1f89d6ad653d7c3c6c81fb624df2e10f721be8f63d06dc662bf795b6f4abfbba",
+          "size_bytes": 8350
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/resolution.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/resolution.json",
+          "sha256": "77cf890aee0151696687adf452001beeba1adcfeb03df71d37da2fc7c0abeb6d",
+          "size_bytes": 8351
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/semantic-manifest.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/semantic-manifest.json",
+          "sha256": "2ebec0497afaa956eec968c6a1a560ed315b808d14b8b1e48d4db30a086f50a7",
+          "size_bytes": 2854
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/staging/.validation-cache/29f74e2d2ea25f2c53379bc3e47c93151fc9c9bd7807b2703a619070311cf4fd.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/staging/.validation-cache/29f74e2d2ea25f2c53379bc3e47c93151fc9c9bd7807b2703a619070311cf4fd.json",
+          "sha256": "3fbae9d1bc0b35821e8e51167e406f12e7b4b7e06db9df09051db9e29d2ff924",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/staging/.validation-cache/cbeddaed97597a959da04fe611cde8b63ac2b35abd804273d27eb9fef259d89b.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/staging/.validation-cache/cbeddaed97597a959da04fe611cde8b63ac2b35abd804273d27eb9fef259d89b.json",
+          "sha256": "ba8eb0a3df71430195318cb7467e30b0b3d5cbbf82425530375560af53b3889c",
+          "size_bytes": 619
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/staging/application-candidate.ifc",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/staging/application-candidate.ifc",
+          "sha256": "8ba15b2149229d3ccdecb9b9b94d48a54d33161ea31dfa5c71b4fd1bbb26ea38",
+          "size_bytes": 2437862
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/state.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/state.json",
+          "sha256": "f13494674999584dd945255729afbed58a491c39ad04fbcb2ea7296230a76a83",
+          "size_bytes": 7920
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000000.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000000.json",
+          "sha256": "128e5724ff84541a5db3684fe42cd27843bbebca2da78176f1ad34332e0554f0",
+          "size_bytes": 720
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000001.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000001.json",
+          "sha256": "bc7471ee7c533375a14616808d5b02ff977f1be09743df5604c78d7dc69d30c6",
+          "size_bytes": 736
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000002.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000002.json",
+          "sha256": "d746d4692930539458def60c89989a23e568b88ffb1239f72e492aaeef5f6893",
+          "size_bytes": 912
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000003.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000003.json",
+          "sha256": "2cb3f0503584d286799136fcb66e90c58eca4cf03e6a05469f3a28a50d330b05",
+          "size_bytes": 1042
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000004.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000004.json",
+          "sha256": "aa318bdcfec7a850fb603d4b901fc33686ccc2e0503f18aff356cac51cd36d9f",
+          "size_bytes": 832
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000005.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000005.json",
+          "sha256": "46bb353389d1b988bf0ccc6c3c046cd1e13e9e381031e2d7fef4de2137dff785",
+          "size_bytes": 834
+        },
+        {
+          "legacy_path": "runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000006.json",
+          "path": "vvo-instance-properties/evidence/frozen/runtime-offline-03/runs/repair-vvo-property-relation-offline-03/transitions/000006.json",
+          "sha256": "74aa91479d75c818b072a3a42f058c1e891193248fddc8f925d5faa1fcb9b99b",
+          "size_bytes": 1198
+        },
+        {
+          "legacy_path": "startup-01-correction.json",
+          "path": "vvo-instance-properties/evidence/frozen/startup-01-correction.json",
+          "sha256": "92734a3bafc01a7e735bf261ea9b1521ae0adce10cd4eed52dd9c52a10e8e8bf",
+          "size_bytes": 395
+        }
+      ]
+    }
+  ]
+}

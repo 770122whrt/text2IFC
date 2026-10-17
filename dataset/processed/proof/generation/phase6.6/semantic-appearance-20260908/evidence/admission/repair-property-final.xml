@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="22" time="106.362" timestamp="2026-09-08T18:00:07.906437+08:00" hostname="what-do-matter"><testcase classname="tests.ifc_repair.test_indexer" name="test_large_building_indexes_initial_scope_and_source_identity" time="4.598"><failure message="AssertionError: assert 'text2ifc/ifc-indexer/0.7' == 'text2ifc/ifc-indexer/0.6'&#10;  &#10;  - text2ifc/ifc-indexer/0.6&#10;  ?                        ^&#10;  + text2ifc/ifc-indexer/0.7&#10;  ?                        ^">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-repair-property-final-20260908-01/test_large_building_indexes_in0')
+
+    def test_large_building_indexes_initial_scope_and_source_identity(tmp_path: Path) -&gt; None:
+        build_ifc_index = _api()["build_ifc_index"]
+        database = tmp_path / "large.sqlite"
+        build_ifc_index(LARGE_BUILDING, database)
+    
+        with SQLiteIndexRepository.open(database) as repository:
+            records = list(repository.iter_records())
+            counts = Counter(record.ifc_class for record in records)
+            assert sum(counts[name] for name in ("IfcWall", "IfcWallStandardCase")) == 18
+            assert counts["IfcDoor"] == 18
+            assert counts["IfcWindow"] == 42
+            assert counts["IfcSpace"] == 8
+            assert repository.metadata.ifc_schema == "IFC2X3"
+            assert repository.metadata.source_ifc_sha256.startswith("sha256:")
+            assert len(repository.metadata.source_ifc_sha256) == 71
+            assert repository.metadata.extractor_version == "text2ifc/ifc-indexer/0.7"
+&gt;       assert _api()["EXTRACTOR_VERSION"] == "text2ifc/ifc-indexer/0.6"
+E       AssertionError: assert 'text2ifc/ifc-indexer/0.7' == 'text2ifc/ifc-indexer/0.6'
+E         
+E         - text2ifc/ifc-indexer/0.6
+E         ?                        ^
+E         + text2ifc/ifc-indexer/0.7
+E         ?                        ^
+
+tests\ifc_repair\test_indexer.py:59: AssertionError</failure></testcase><testcase classname="tests.ifc_repair.test_indexer" name="test_indexer_retains_direct_and_type_owned_association_provenance" time="0.596" /><testcase classname="tests.ifc_repair.test_indexer" name="test_damaged_large_building_indexes_one_shared_type_with_correct_provenance" time="6.295" /><testcase classname="tests.ifc_repair.test_indexer" name="test_large_building_retains_engineering_relationship_and_property_evidence" time="4.663" /><testcase classname="tests.ifc_repair.test_indexer" name="test_duplicate_global_ids_are_diagnostic_and_never_reliable" time="0.266" /><testcase classname="tests.ifc_repair.test_indexer" name="test_duplicate_type_global_ids_are_diagnostic_and_never_authoritative" time="0.256" /><testcase classname="tests.ifc_repair.test_indexer" name="test_non_ifc2x3_source_does_not_publish_database" time="0.025" /><testcase classname="tests.ifc_repair.test_indexer" name="test_registry_adds_a_new_family_without_changing_common_index_loop" time="0.225" /><testcase classname="tests.ifc_repair.test_indexer" name="test_repeat_build_is_deterministic_except_for_build_timestamp" time="10.011" /><testcase classname="tests.ifc_repair.test_index_store" name="test_repository_round_trips_versioned_element_records" time="0.501" /><testcase classname="tests.ifc_repair.test_index_store" name="test_repository_round_trips_first_class_association_facts" time="0.492" /><testcase classname="tests.ifc_repair.test_index_store" name="test_repository_round_trips_type_records_in_dedicated_tables" time="0.545" /><testcase classname="tests.ifc_repair.test_index_store" name="test_repository_orders_type_records_and_denies_unreliable_lookup" time="0.508" /><testcase classname="tests.ifc_repair.test_index_store" name="test_repository_orders_records_independent_of_insert_order" time="0.545" /><testcase classname="tests.ifc_repair.test_index_store" name="test_repository_rejects_duplicate_reliable_global_ids" time="0.505" /><testcase classname="tests.ifc_repair.test_index_store" name="test_unreliable_identity_is_diagnostic_only" time="0.539" /><testcase classname="tests.ifc_repair.test_index_store" name="test_failed_build_does_not_replace_published_database" time="0.865" /><testcase classname="tests.ifc_repair.test_index_store" name="test_open_rejects_source_and_schema_version_mismatch" time="0.257" /><testcase classname="tests.ifc_repair.test_index_store" name="test_open_rejects_stale_v01_index_with_exact_failure_code" time="0.212" /><testcase classname="tests.ifc_repair.test_relation_damage_public_path" name="test_dataset_relation_damage_restores_properties_through_public_api[complete]" time="23.878" /><testcase classname="tests.ifc_repair.test_relation_damage_public_path" name="test_dataset_relation_damage_restores_properties_through_public_api[malformed_then_corrected]" time="22.902" /><testcase classname="tests.ifc_repair.test_relation_damage_public_path" name="test_dataset_relation_damage_restores_properties_through_public_api[clarification_resume]" time="25.157" /></testsuite></testsuites>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="13" time="37.326" timestamp="2026-09-08T19:51:57.900625+08:00" hostname="what-do-matter"><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[\u5357\u5899\u95e8\u6d1e\u5173\u8054-bim-json/2.0]" time="1.859" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[\u5357\u5899\u95e8\u6d1e\u5173\u8054-bim-json/2.1]" time="3.032" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[wall-1-bim-json/2.0]" time="2.950" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[wall-1-bim-json/2.1]" time="3.135" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[-bim-json/2.0]" time="2.964" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_name_is_literal_not_entity_reference[-bim-json/2.1]" time="3.059" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_literal_metadata_survives_all_compiler_routes[IfcRelVoidsElement]" time="2.953" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_literal_metadata_survives_all_compiler_routes[IfcRelFillsElement]" time="3.005" /><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_literal_metadata_survives_all_compiler_routes[IfcRelAggregates]" time="2.931"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-all-relation-metadata-red-02/test_relationship_literal_meta2')
+kind = 'IfcRelAggregates'
+
+    @pytest.mark.parametrize('kind', ['IfcRelVoidsElement', 'IfcRelFillsElement', 'IfcRelAggregates', 'IfcRelDefinesByType', 'IfcRelConnectsPathElements'])
+    def test_relationship_literal_metadata_survives_all_compiler_routes(tmp_path, kind):
+        payload = document()
+        metadata = {'Name': '关系名称', 'Description': 'wall-1 is text here'}
+        if kind in {'IfcRelVoidsElement', 'IfcRelFillsElement'}:
+            relation = next(r for r in payload['relationships'] if r['ifc_class'] == kind)
+        elif kind == 'IfcRelAggregates':
+            relation = {'id': 'aggregate-labelled', 'ifc_class': kind,
+                        'attributes': {'RelatingObject': 'building-1', 'RelatedObjects': ['storey-1']}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        elif kind == 'IfcRelDefinesByType':
+            payload['entities'].append({'id': 'beam-type', 'ifc_class': 'IfcBeamType',
+                                        'attributes': {'Name': 'Beam type', 'PredefinedType': 'BEAM'},
+                                        'property_sets': {}, 'provenance': {'source': 'test'}})
+            relation = {'id': 'type-labelled', 'ifc_class': kind,
+                        'attributes': {'RelatingType': 'beam-type', 'RelatedObjects': ['beam-1']}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        else:
+            wall = json.loads(json.dumps(next(e for e in payload['entities'] if e['id'] == 'wall-1')))
+            wall['id'] = 'wall-second'
+            payload['entities'].append(wall)
+            relation = {'id': 'connect-labelled', 'ifc_class': kind, 'attributes': {
+                'RelatingElement': 'wall-1', 'RelatedElement': 'wall-second',
+                'RelatingPriorities': [], 'RelatedPriorities': [],
+                'RelatedConnectionType': 'ATSTART', 'RelatingConnectionType': 'ATEND'}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        relation['attributes'].update(metadata)
+        output = tmp_path / 'metadata.ifc'
+        result = compile_document(payload, output)
+        assert result.success, result
+        found = [r for r in open_ifc(output).by_type(kind) if r.Name == metadata['Name']]
+&gt;       assert len(found) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\compiler\test_v2_relationships.py:66: AssertionError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_literal_metadata_survives_all_compiler_routes[IfcRelDefinesByType]" time="0.619"><failure message="AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_IFC_CLASS', path='/entities/20/ifc_class', message=&quot;'IfcBeamType' capability is unsupported.&quot;),), ifc_issues=())&#10;assert False&#10; +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_IFC_CLASS', path='/entities/20/ifc_class', message=&quot;'IfcBeamType' capability is unsupported.&quot;),), ifc_issues=()).success">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-all-relation-metadata-red-02/test_relationship_literal_meta3')
+kind = 'IfcRelDefinesByType'
+
+    @pytest.mark.parametrize('kind', ['IfcRelVoidsElement', 'IfcRelFillsElement', 'IfcRelAggregates', 'IfcRelDefinesByType', 'IfcRelConnectsPathElements'])
+    def test_relationship_literal_metadata_survives_all_compiler_routes(tmp_path, kind):
+        payload = document()
+        metadata = {'Name': '关系名称', 'Description': 'wall-1 is text here'}
+        if kind in {'IfcRelVoidsElement', 'IfcRelFillsElement'}:
+            relation = next(r for r in payload['relationships'] if r['ifc_class'] == kind)
+        elif kind == 'IfcRelAggregates':
+            relation = {'id': 'aggregate-labelled', 'ifc_class': kind,
+                        'attributes': {'RelatingObject': 'building-1', 'RelatedObjects': ['storey-1']}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        elif kind == 'IfcRelDefinesByType':
+            payload['entities'].append({'id': 'beam-type', 'ifc_class': 'IfcBeamType',
+                                        'attributes': {'Name': 'Beam type', 'PredefinedType': 'BEAM'},
+                                        'property_sets': {}, 'provenance': {'source': 'test'}})
+            relation = {'id': 'type-labelled', 'ifc_class': kind,
+                        'attributes': {'RelatingType': 'beam-type', 'RelatedObjects': ['beam-1']}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        else:
+            wall = json.loads(json.dumps(next(e for e in payload['entities'] if e['id'] == 'wall-1')))
+            wall['id'] = 'wall-second'
+            payload['entities'].append(wall)
+            relation = {'id': 'connect-labelled', 'ifc_class': kind, 'attributes': {
+                'RelatingElement': 'wall-1', 'RelatedElement': 'wall-second',
+                'RelatingPriorities': [], 'RelatedPriorities': [],
+                'RelatedConnectionType': 'ATSTART', 'RelatingConnectionType': 'ATEND'}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        relation['attributes'].update(metadata)
+        output = tmp_path / 'metadata.ifc'
+        result = compile_document(payload, output)
+&gt;       assert result.success, result
+E       AssertionError: CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_IFC_CLASS', path='/entities/20/ifc_class', message="'IfcBeamType' capability is unsupported."),), ifc_issues=())
+E       assert False
+E        +  where False = CompilationResult(output_path=None, input_issues=(ValidationIssue(code='UNSUPPORTED_IFC_CLASS', path='/entities/20/ifc_class', message="'IfcBeamType' capability is unsupported."),), ifc_issues=()).success
+
+tests\compiler\test_v2_relationships.py:64: AssertionError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_relationship_literal_metadata_survives_all_compiler_routes[IfcRelConnectsPathElements]" time="2.954"><failure message="assert 0 == 1&#10; +  where 0 = len([])">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-all-relation-metadata-red-02/test_relationship_literal_meta4')
+kind = 'IfcRelConnectsPathElements'
+
+    @pytest.mark.parametrize('kind', ['IfcRelVoidsElement', 'IfcRelFillsElement', 'IfcRelAggregates', 'IfcRelDefinesByType', 'IfcRelConnectsPathElements'])
+    def test_relationship_literal_metadata_survives_all_compiler_routes(tmp_path, kind):
+        payload = document()
+        metadata = {'Name': '关系名称', 'Description': 'wall-1 is text here'}
+        if kind in {'IfcRelVoidsElement', 'IfcRelFillsElement'}:
+            relation = next(r for r in payload['relationships'] if r['ifc_class'] == kind)
+        elif kind == 'IfcRelAggregates':
+            relation = {'id': 'aggregate-labelled', 'ifc_class': kind,
+                        'attributes': {'RelatingObject': 'building-1', 'RelatedObjects': ['storey-1']}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        elif kind == 'IfcRelDefinesByType':
+            payload['entities'].append({'id': 'beam-type', 'ifc_class': 'IfcBeamType',
+                                        'attributes': {'Name': 'Beam type', 'PredefinedType': 'BEAM'},
+                                        'property_sets': {}, 'provenance': {'source': 'test'}})
+            relation = {'id': 'type-labelled', 'ifc_class': kind,
+                        'attributes': {'RelatingType': 'beam-type', 'RelatedObjects': ['beam-1']}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        else:
+            wall = json.loads(json.dumps(next(e for e in payload['entities'] if e['id'] == 'wall-1')))
+            wall['id'] = 'wall-second'
+            payload['entities'].append(wall)
+            relation = {'id': 'connect-labelled', 'ifc_class': kind, 'attributes': {
+                'RelatingElement': 'wall-1', 'RelatedElement': 'wall-second',
+                'RelatingPriorities': [], 'RelatedPriorities': [],
+                'RelatedConnectionType': 'ATSTART', 'RelatingConnectionType': 'ATEND'}, 'provenance': {'source': 'test'}}
+            payload['relationships'].append(relation)
+        relation['attributes'].update(metadata)
+        output = tmp_path / 'metadata.ifc'
+        result = compile_document(payload, output)
+        assert result.success, result
+        found = [r for r in open_ifc(output).by_type(kind) if r.Name == metadata['Name']]
+&gt;       assert len(found) == 1
+E       assert 0 == 1
+E        +  where 0 = len([])
+
+tests\compiler\test_v2_relationships.py:66: AssertionError</failure></testcase><testcase classname="tests.compiler.test_v2_relationships" name="test_v2_generates_bookkeeping_and_explicit_void_fill_relations" time="2.688" /><testcase classname="tests.compiler.test_v2_relationships" name="test_v2_deduplicates_explicit_spatial_aggregates_already_derived_from_placement" time="2.766" /></testsuite></testsuites>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="2" time="2.537" timestamp="2026-09-08T17:55:49.564738+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_clarification_resume_preservation" name="test_resume_preserves_first_call_and_uses_next_index[answers0]" time="0.349"><failure message="FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'E:\\code for project\\bimnet\\.tmp\\live-clarify-resume-red-01\\test_resume_preserves_first_ca0\\runs\\13edbad5ee226e21\\calls\\01-design-brief'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-clarify-resume-red-01/test_resume_preserves_first_ca0')
+answers = []
+
+    @pytest.mark.parametrize('answers', [[], ['200']])
+    def test_resume_preserves_first_call_and_uses_next_index(tmp_path, answers):
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input='生成房间')
+        calls=[]
+        def invoke(transcript,index):
+            calls.append(index)
+            directory=session.run_dir/'calls'/f'{index:02d}-design-brief'
+            directory.mkdir(parents=True,exist_ok=False)
+            brief=_brief(original_request='生成房间',status='needs_clarification' if index==1 else 'ready',source_turns=['turn-user-001'] if index==1 else ['turn-user-001','turn-user-003'])
+            (directory/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+            (directory/'context-selection.json').write_text(json.dumps({'evidence':EVIDENCE}),encoding='utf-8')
+            return ClarificationCall(index,f'response-{index}','design-brief.v2.2','sha256:test',str(directory),brief,EVIDENCE)
+        first=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoke,user_answers=[])
+        original=(session.run_dir/'calls/01-design-brief/design-brief.json').read_bytes()
+        store.close()
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+&gt;       result=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoke,user_answers=answers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_clarification_resume_preservation.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:357: in run_design_brief_clarification_loop
+    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_clarification_resume_preservation.py:17: in invoke
+    directory.mkdir(parents=True,exist_ok=False)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/live-clarify-resume-red-01/test_resume_preserves_first_ca0/runs/13edbad5ee226e21/calls/01-design-brief')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'E:\\code for project\\bimnet\\.tmp\\live-clarify-resume-red-01\\test_resume_preserves_first_ca0\\runs\\13edbad5ee226e21\\calls\\01-design-brief'
+
+E:\anaconda\Lib\pathlib.py:1311: FileExistsError</failure></testcase><testcase classname="tests.agent.test_clarification_resume_preservation" name="test_resume_preserves_first_call_and_uses_next_index[answers1]" time="0.357"><failure message="FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'E:\\code for project\\bimnet\\.tmp\\live-clarify-resume-red-01\\test_resume_preserves_first_ca1\\runs\\0195610aa2065ec4\\calls\\01-design-brief'">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-clarify-resume-red-01/test_resume_preserves_first_ca1')
+answers = ['200']
+
+    @pytest.mark.parametrize('answers', [[], ['200']])
+    def test_resume_preserves_first_call_and_uses_next_index(tmp_path, answers):
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+        session=store.create_session(original_input='生成房间')
+        calls=[]
+        def invoke(transcript,index):
+            calls.append(index)
+            directory=session.run_dir/'calls'/f'{index:02d}-design-brief'
+            directory.mkdir(parents=True,exist_ok=False)
+            brief=_brief(original_request='生成房间',status='needs_clarification' if index==1 else 'ready',source_turns=['turn-user-001'] if index==1 else ['turn-user-001','turn-user-003'])
+            (directory/'design-brief.json').write_text(json.dumps(brief),encoding='utf-8')
+            (directory/'context-selection.json').write_text(json.dumps({'evidence':EVIDENCE}),encoding='utf-8')
+            return ClarificationCall(index,f'response-{index}','design-brief.v2.2','sha256:test',str(directory),brief,EVIDENCE)
+        first=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoke,user_answers=[])
+        original=(session.run_dir/'calls/01-design-brief/design-brief.json').read_bytes()
+        store.close()
+        store=SessionStore.open(tmp_path/'sessions.sqlite',artifact_root=tmp_path)
+&gt;       result=run_design_brief_clarification_loop(store=store,session=session.session_hash,invoke_design_brief=invoke,user_answers=answers)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\agent\test_clarification_resume_preservation.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+src\text2ifc_agent\interactive_cli_flow.py:357: in run_design_brief_clarification_loop
+    first_call = invoke_design_brief(controller.transcript_dicts(), 1)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\agent\test_clarification_resume_preservation.py:17: in invoke
+    directory.mkdir(parents=True,exist_ok=False)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = WindowsPath('E:/code for project/bimnet/.tmp/live-clarify-resume-red-01/test_resume_preserves_first_ca1/runs/0195610aa2065ec4/calls/01-design-brief')
+mode = 511, parents = True, exist_ok = False
+
+    def mkdir(self, mode=0o777, parents=False, exist_ok=False):
+        """
+        Create a new directory at this given path.
+        """
+        try:
+&gt;           os.mkdir(self, mode)
+E           FileExistsError: [WinError 183] 当文件已存在时，无法创建该文件。: 'E:\\code for project\\bimnet\\.tmp\\live-clarify-resume-red-01\\test_resume_preserves_first_ca1\\runs\\0195610aa2065ec4\\calls\\01-design-brief'
+
+E:\anaconda\Lib\pathlib.py:1311: FileExistsError</failure></testcase></testsuite></testsuites>

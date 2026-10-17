@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "24d49597-b3c6-487f-89ce-a290952174a3",
+    "session_id": "ifc-repair-intent-request-78b31c7a44102d2d",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 18758,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 12774,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 31532
+    }
+  },
+  "response_excerpt": "{\"schema_version\":\"text2ifc/ifc-repair-intent-body/0.10\",\"operations\":[{\"operation_id\":\"set-wall-pset-1\",\"operation_type\":\"set_occurrence_properties\",\"routing_intent\":{\"component_family\":\"occurrence\",\"action\":\"set_properties\",\"operation_profile\":\"occurrence.set-properties\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"请按下述明确要求写入实例 Pset_WallCommon：Reference 为字符串 \\\"240\\\"，IsExternal 为布尔 true，ExtendToStructure 为布尔 false，LoadBearing 为布尔 false。\"}},\"target_query\":{\"schema_version\":\"text2ifc/ifc-target-query/0.1\",\"allowed_ifc_classes\":[\"IfcWall\",\"IfcWallStandardCase\"],\"global_id\":\"2CsmzAChHF6O6maGXlo6PS\"},\"parameters\":{},\"attribute_intents\":[],\"property_intents\":[{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"Reference\",\"raw_value\":\"240\",\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"Reference 为字符串 \\\"240\\\"\"}},{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"IsExternal\",\"raw_value\":true,\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"IsExternal 为布尔 true\"}},{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"ExtendToStructure\",\"raw_value\":false,\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"ExtendToStructure 为布尔 false\"}},{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"LoadBearing\",\"raw_value\":false,\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"LoadBearing 为布尔 false\"}}],\"semantic_bundle_refs\":[],\"quantity_intents\":[],\"occurrence_reuse_intent\":null,\"prototype_intent\":null,\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"请修复这个 IFC2X3 文件中墙体 2CsmzAChHF6O6maGXlo6PS 的实例属性关联。该墙的几何、Type、材料、颜色和其他对象均须保留。请按下述明确要求写入实例 Pset_WallCommon：Reference 为字符串 \\\"240\\\"，IsExternal 为布尔 true，ExtendToStructure 为布尔 false，LoadBearing 为布尔 false。\"}],\"appearance_intent\":null}],\"unsupported_requests\":[],\"semantic_bundles\":[],\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"请修复这个 IFC2X3 文件中墙体 2CsmzAChHF6O6maGXlo6PS 的实例属性关联。该墙的几何、Type、材料、颜色和其他对象均须保留。请按下述明确要求写入实例 Pset_WallCommon：Reference 为字符串 \\\"240\\\"，IsExternal 为布尔 true，ExtendToStructure 为布尔 false，LoadBearing 为布尔 false。上述属性值也可在输入 IFC 尚存的独立 Pset_WallCommon 属性集中核对；不要修改共享 Type，不要增加其他属性，也不要更改任何几何。请输出修复后的完整 IFC。\"}]}",
+  "response_sha256": "sha256:164773e7d2abd74d3d332415d836b65fa047a4272aaf6b614d708b7506800d31",
+  "status": "valid"
+}
