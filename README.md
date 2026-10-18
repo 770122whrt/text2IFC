@@ -19,6 +19,15 @@ python scripts/ifc_repair/repair.py --help
 python scripts/ifc2text/run_baseline.py --help
 ```
 
+网页工作台见 [UI 启动入口](UI-START-HERE.md)。安装网页依赖后，双击 `Open-IFC-Viewer.cmd`，或运行：
+
+```sh
+python -m pip install -e ".[web]"
+node ui/ifc-viewer/launcher.mjs start
+```
+
+打开 `http://127.0.0.1:4178/ifc-viewer/`。默认允许查看 IFC、上传与准备请求；真实执行仍需当前阶段准入、本机配置及任务预算。
+
 本项目以源码 checkout 运行；`schemas/`、`prompts/` 和所需数据必须可访问。
 IFC、大型档案等使用 Git LFS，按任务获取相应对象；LFS 指针文本不是真实 IFC。
 真实 Provider 和向量检索还需对应配置；见 `.env.example`、[验证协议](docs/validation/agent-capability-evaluation.md)。

@@ -16,13 +16,15 @@ progress:
 
 ## 当前整合：Repair 并入 main，再接入 UI（2026-10-18）
 
-用户已授权创建 Repair → main 的 PR、处理冲突并合入此前已推送的 UI 分支，随后执行小范围测试。[Repair PR #8](https://github.com/770122whrt/text2IFC/pull/8) 的本地冲突已解决，Prompt／CLI、原生纠错／澄清／终态发布的限定离线回归通过；合并结果与验证范围以 PR 为准。保留 main 的公共 Schema／原子写入重构、精简导航和历史退役；保留当前 Repair 的必要回归与传递依赖，缺失测试不视为通过准入。UI 随后另行接入。当前阶段不新增 Provider 调用或 Full Preflight。
+[Repair PR #8](https://github.com/770122whrt/text2IFC/pull/8) 已合入 main，保留公共 Schema／原子写入重构、精简导航、历史退役及当前 Repair 必需的回归依赖。UI 从原远端 `codex/ui-development` / `553b33e1` 合入 `codex/ui-repair-integration`，更新统一入口并修复与当前有界纠错的接入：每轮发布前检查、纠错记录投影和旧准入失效。原始 UI 交付证据保持原样。
 
-## 当前整理：UI 结合前的本地精简（2026-10-18）
+本轮限定 Python／Node 回归与真实本机 HTTP 检查已覆盖通过，命令、重试与范围由 [UI 主计划更新记录](../docs/plans/repair-ui-plan.md#9-更新记录)维护。当前界面的启动入口是 [UI-START-HERE](../UI-START-HERE.md)。浏览器连接受工具限制，本轮没有新的可视验收；也未调用真实 Provider、生成新的 live 准入或运行 Full Preflight。旧准入不授权当前代码的真实执行。
+
+## 整合前的本地精简（2026-10-18）
 
 用户授权检查整个仓库的引用与依赖，将重复说明合入现有正文，实际删除确认停用的代码、Prompt 开发说明、旧交接及临时文件；保留当前入口和必要实验依据。不新增文件，不以忽略规则代替删除。本轮起点为 `codex/repair-experiment` / `48f32bba4c1976178a97267a98e569080f44063e`。上轮已确认范围完成实际删除与合并，35 项聚焦离线检查通过。2026-10-18 用户进一步授权处理清单中的权限遗留目录；管理员只读盘点和依赖核对完成后，准确的 30 处目录已全部实际清理，必要实验/Proof 记录保全哈希一致。具体清单、权限处理方式和验证见[现有清理报告](../docs/reports/workspace-cleanup-20261017/README.md#权限受限目录续清理2026-10-18)，本页不复制统计。
 
-下一步是 UI 与当前系统结合；这轮只处理准备工作。产品 Repair 入口为 [CLI](../src/text2ifc_ifc_repair/cli.py) 和 [RepairAPI](../src/text2ifc_ifc_repair/api.py)，专项实验脚本从[运行与维护索引](../scripts/ifc_repair/README.md)进入。版本保留按注册表、生产调用、回归与冻结依赖判断，不把版本后缀当作删除依据。
+这轮精简已作为 UI 结合准备完成，当前整合位置见上方。产品 Repair 入口为 [CLI](../src/text2ifc_ifc_repair/cli.py) 和 [RepairAPI](../src/text2ifc_ifc_repair/api.py)，专项实验脚本从[运行与维护索引](../scripts/ifc_repair/README.md)进入。版本保留按注册表、生产调用、回归与冻结依赖判断，不把版本后缀当作删除依据。
 
 此前约剩 16% 是 10 月 17 日的历史快照；10 月 18 日已重新核对，当前普通用量可用。外部子模块原有本地删除、私有配置、环境、模型、源数据及冻结 Proof 保留各自状态。
 

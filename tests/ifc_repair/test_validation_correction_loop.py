@@ -85,7 +85,7 @@ class CorrectionProvider(PublicWindowProvider):
 
 
 def run_case(tmp_path, *, failures=1, fault='check', repeat=False, budget_fail=False,
-             corrections=2, crash=False):
+             corrections=2, crash=False, before_apply=None):
     model, *_ = scene()
     source = tmp_path / 'damaged.ifc'
     model.write(str(source))
@@ -126,6 +126,8 @@ def run_case(tmp_path, *, failures=1, fault='check', repeat=False, budget_fail=F
     api = RepairAPI(tmp_path / 'runs', provider=provider, scene_grounding=True,
                     max_validation_corrections=corrections,
                     orchestrator_options={'evaluation_stage': evaluator})
+    if before_apply is not None:
+        api.configure_integration(before_apply=before_apply)
     if crash:
         with pytest.raises(KeyboardInterrupt):
             api.start(source, 'Add one window using the retained public reference.', run_id='repair-offline-correction')

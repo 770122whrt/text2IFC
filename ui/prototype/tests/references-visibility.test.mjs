@@ -1,0 +1,18 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import * as c from '../core.mjs';
+
+function pair(){const s=c.createState();c.setMode(s,'select');c.inspect(s,'wall');c.armAuxReference(s);c.inspect(s,'windows');return s;}
+
+test('auxiliary reference is picked without replacing main reference',()=>{const s=pair();assert.equal(s.reference.id,'wall');assert.equal(s.auxReference.id,'windows');assert.equal(s.pickRole,'primary');assert.equal(c.selectionRole(s),'auxiliary');});
+test('auxiliary picking is explicit, one shot and unavailable in view',()=>{const s=c.createState();assert.throws(()=>c.armAuxReference(s));c.setMode(s,'select');c.armAuxReference(s);c.armAuxReference(s);assert.equal(s.pickRole,'primary');});
+test('view mode preserves both references and cancels an armed pick',()=>{const s=pair();s.draft='在这里添加和参考窗一样的窗';c.armAuxReference(s);c.setMode(s,'view');c.inspect(s,'roof');assert.equal(s.reference.id,'wall');assert.equal(s.auxReference.id,'windows');assert.equal(s.pickRole,'primary');assert.match(s.draft,/参考窗/);});
+test('same object cannot silently serve two different reference slots',()=>{const s=c.createState();c.setMode(s,'select');c.inspect(s,'wall');c.armAuxReference(s);assert.throws(()=>c.inspect(s,'wall'));assert.equal(s.reference.id,'wall');assert.equal(s.auxReference,null);});
+test('removal of either reference preserves the other',()=>{const s=pair();c.clearReference(s);assert.equal(s.auxReference.id,'windows');c.clearAuxReference(s);assert.equal(s.auxReference,null);});
+test('submission freezes both references independently',()=>{const s=pair();s.draft='复制参考窗的尺寸';const r=c.submitDraft(s);c.clearAuxReference(s);c.inspect(s,'column');assert.equal(r.reference.id,'wall');assert.equal(r.auxReference.id,'windows');assert.equal(r.status,'pending_backend');});
+test('auxiliary-only and text-only requests remain valid',()=>{const s=pair();c.clearReference(s);s.draft='在东墙使用参考窗尺寸';assert.equal(c.submitDraft(s).reference,null);c.clearAuxReference(s);s.draft='一层东墙加窗';assert.equal(c.submitDraft(s).auxReference,null);});
+test('view hide affects one id, not references, draft or source version',()=>{const s=pair();s.draft='保留草稿';c.setMode(s,'view');c.hideElement(s,'wall');assert.deepEqual(c.hiddenIds(s),['wall']);assert.equal(s.reference.id,'wall');assert.equal(s.auxReference.id,'windows');assert.equal(s.draft,'保留草稿');assert.equal(s.baseVersion,'before');});
+test('selection mode cannot hide and duplicate hiding does not duplicate history',()=>{const s=c.createState();c.setMode(s,'select');assert.throws(()=>c.hideElement(s,'roof'));c.setMode(s,'view');c.hideElement(s,'roof');c.hideElement(s,'roof');assert.deepEqual(c.hiddenIds(s),['roof']);c.undoHide(s);assert.deepEqual(c.hiddenIds(s),[]);});
+test('visibility belongs to displayed version and show-all does not discard refs',()=>{const s=pair();c.setMode(s,'view');c.hideElement(s,'wall');c.setViewVersion(s,'after',true);assert.deepEqual(c.hiddenIds(s),[]);c.hideElement(s,'roof');c.showAll(s);c.setViewVersion(s,'before',true);assert.deepEqual(c.hiddenIds(s),['wall']);assert.equal(s.reference.id,'wall');});
+test('undo hide restores most recent item in current version only',()=>{const s=c.createState();c.hideElement(s,'wall');c.hideElement(s,'roof');c.undoHide(s);assert.deepEqual(c.hiddenIds(s),['wall']);c.showAll(s);assert.deepEqual(c.hiddenIds(s),[]);});
+test('workspace and demo do not share visibility state',()=>{const s=c.createState(),d=c.createDemo('window');c.hideElement(s,'roof');assert.deepEqual(c.hiddenIds(d),[]);c.hideElement(d,'wall');assert.deepEqual(c.hiddenIds(s),['roof']);});

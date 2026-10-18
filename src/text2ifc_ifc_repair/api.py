@@ -123,6 +123,21 @@ class RepairAPI:
             )
             requested_options["resolver_options"] = resolver_options
         self._orchestrator_options = requested_options
+        self._before_apply = None
+
+    def configure_integration(self, *, before_apply=None, observer=None) -> None:
+        """Attach Python-only caller identity checks and passive observation.
+
+        Default CLI/Python callers retain the existing behavior. Hooks are never
+        executable data supplied by an HTTP request or a Provider response.
+        """
+        if before_apply is not None and not callable(before_apply):
+            raise TypeError("before_apply must be callable or None")
+        if observer is not None and not callable(observer):
+            raise TypeError("observer must be callable or None")
+        self._before_apply = before_apply
+        if observer is not None:
+            self._orchestrator_options["observer"] = observer
 
     @classmethod
     def from_environment(
@@ -918,6 +933,24 @@ class RepairAPI:
                 # Validate immutable source and previously committed boundaries
                 # immediately before each candidate. Never apply to a prior IFC.
                 self.store.load(run_id)
+                if self._before_apply is not None:
+                    try:
+                        check = self._before_apply({
+                            "run_directory": str(run_dir),
+                            "source_ifc_path": state.source.reference,
+                            "intent": intent.to_dict(),
+                            "resolution": json.loads((run_dir / resolution_ref).read_text(encoding="utf-8")),
+                            "installation_references": public_context.get("installation_references", {}),
+                        })
+                        atomic_write_text(run_dir / "selection-check.json", json.dumps(check, ensure_ascii=False, allow_nan=False))
+                        if not isinstance(check, Mapping) or check.get("valid") is not True:
+                            issues = check.get("issues", []) if isinstance(check, Mapping) else []
+                            reason = str(issues[0].get("code", "SELECTION_CHECK_FAILED")) if issues else "SELECTION_CHECK_FAILED"
+                            return self._fail(run_id, RunStage.AUDIT_FAILED, reason,
+                                              validation_attempts=validation_attempts)
+                    except Exception:
+                        return self._fail(run_id, RunStage.AUDIT_FAILED, "SELECTION_CHECK_ERROR",
+                                          validation_attempts=validation_attempts)
                 final = orchestrator.apply_and_evaluate(
                     **application_arguments,
                     **({} if candidate_index == 0 else {"candidate_name": f"validation-candidate-{candidate_index + 1:03d}.ifc"}),

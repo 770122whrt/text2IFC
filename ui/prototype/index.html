@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>text2IFC · Repair 工作台</title><link rel="icon" href="data:,"><link rel="stylesheet" href="./styles.css"></head>
+<body>
+<svg aria-hidden="true" style="position:absolute;width:0;height:0"><defs>
+<symbol id="i-cube" viewBox="0 0 24 24"><path d="m12 2 9 5v10l-9 5-9-5V7zM3 7l9 5 9-5M12 12v10"/></symbol>
+<symbol id="i-view" viewBox="0 0 24 24"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
+<symbol id="i-pick" viewBox="0 0 24 24"><path d="m5 3 14 10-7 1-3 7zM13 14l5 6"/></symbol>
+<symbol id="i-fit" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5M8 8h8v8H8z"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 3 6 6 3-6 3-3 6-3-6-6-3 6-3z"/></symbol>
+</defs></svg>
+<div class="shell">
+<nav class="rail" aria-label="工作台标识"><svg><use href="#i-cube"/></svg><span>REPAIR WORKSPACE</span><button id="help" aria-label="关于预览">?</button></nav>
+<header class="top"><div class="brand"><b>text2IFC.</b><span>Repair 工作台</span></div><div class="top-actions"><span class="tag">交互预览 · 未接真实 IFC</span><button class="btn" id="openExamples">演示案例</button></div></header>
+<main class="workspace"><section class="main">
+<div class="modelbar"><div><div class="model-name">庭院住宅 · 两层示意建筑</div><div class="caption" id="modelCaption">当前查看：输入模型　/　工作台</div></div><div class="segments" aria-label="前后模型切换"><button id="before" aria-pressed="true">修复前</button><button id="after" aria-pressed="false" disabled title="尚无修复结果">修复后</button></div></div>
+<div class="modebar" id="modebar"><div class="segments" aria-label="构件交互模式"><button id="modeView" aria-pressed="true"><svg><use href="#i-view"/></svg>查看</button><button id="modeSelect" aria-pressed="false"><svg><use href="#i-pick"/></svg>选中提交</button></div><span class="mode-hint" id="modeHint">只浏览构件，不改变请求参照。</span></div>
+<div class="demo-bar" id="demoBar" hidden><span id="demoTitle"></span><button class="btn small" id="exitDemo">返回工作台</button></div>
+<div class="viewer" id="viewport"><div id="plot" class="plot"></div>
+<div class="viewtools"><span class="caption" id="hiddenCount">隐藏 0 项</span><button class="btn small" id="undoHide" disabled>撤销隐藏</button><button class="btn small" id="showAll" disabled>显示全部</button><button class="btn small" id="fit"><svg><use href="#i-fit"/></svg>适应视图</button><button class="btn small" id="highlight" aria-pressed="true" hidden>变化高亮</button></div>
+<div class="help-hint" id="canvasHint">拖动旋转 · 滚轮缩放<br>点击查看名称 · 查看模式右键隐藏。</div>
+<div class="selection" id="selectionCard" hidden><div class="kicker" id="selectionKind">正在查看</div><header><strong id="selectedName"></strong><button class="close" id="clearInspection" aria-label="取消浏览高亮">×</button></header><div class="caption" id="selectedMeta"></div><div class="row"><button class="btn small" id="propertiesBtn">查看属性</button><button class="btn small" id="sourceBtn">查看源码</button></div></div>
+<div class="prop-panel" id="properties" hidden><h3>构件属性 <button class="close" id="closeProperties" aria-label="关闭属性">×</button></h3><div class="caption">来自示意场景，不是 IFC Property</div><div id="propertyRows"></div></div>
+<div class="object-menu" id="objectMenu" role="dialog" aria-label="构件查看操作" hidden><div id="contextName" class="caption"></div><button class="btn small" id="hideContext">隐藏此构件</button><span>仅影响视图，不删除 IFC</span></div><div class="preview-label" id="placementLabel" hidden></div><div class="legend"><span><i></i><span id="selectionLegend">浏览高亮</span></span><span id="changeLegend" hidden><i class="add"></i>本次新增</span><span>示意几何</span></div><div class="error" id="loadError" hidden></div>
+</div>
+<section class="process"><div class="process-header"><div><strong>过程与产物</strong><small id="progressLabel">暂无执行记录</small></div><button class="text-btn" id="toggleDetails" aria-expanded="false">查看详情</button></div><div class="steps" id="stages"></div><div class="detail" id="processDetail" hidden><div class="detail-top"><h3 id="detailTitle">尚无执行过程</h3><label>高度 <input id="detailHeight" aria-label="过程面板高度" type="range" min="165" max="340" value="210"></label></div><p id="detailText"></p><details class="raw" id="rawDetails"><summary>查看原始数据（只读）</summary><div class="file-head"><span id="filename"></span><button class="text-btn" id="copyCode">复制</button></div><pre id="code" tabindex="0"></pre></details></div></section>
+</section>
+<aside class="aside"><header class="aside-head"><span class="ai-icon"><svg><use href="#i-spark"/></svg></span><div><strong id="asideTitle">模型查看</strong><div class="caption" id="asideCaption">查看构件；修改前请切换模式</div></div></header>
+<div class="chat" id="chat"><div class="empty" id="emptyState"><div class="kicker">从模型出发</div><h2 id="emptyTitle">自由查看，<br>不会改变请求。</h2><p id="emptyCopy">点击构件只显示名称和高亮。需要修改时，再切换到选中提交。</p><div class="howto"><b>不用先选“加窗”或“补柱”</b>操作由你的自然语言决定。<br>点选只帮助系统理解“这面墙”“这根柱”。</div></div><div id="messages"></div>
+<div class="question" id="question" hidden><b>新柱放在哪个方向，相距多远？</b><p>沿正立面方向描述中心间距。可自行输入，不必选下面的建议。</p><div class="row"><button class="btn small" data-answer="向左 1.5 米">向左 1.5 米</button><button class="btn small" data-answer="向右 1.8 米">向右 1.8 米</button></div><p class="caption">建议只填写答案，不自动继续。位置预览不写入模型。</p></div>
+<div class="result" id="result" hidden><div class="kicker">演示结果</div><h3 id="resultTitle"></h3><div class="result-row"><span>位置</span><b id="resultPosition"></b></div><div class="result-row"><span>尺寸</span><b id="resultSize"></b></div><div class="row"><button class="btn small primary" id="locateChange">定位变化</button><button class="btn small" id="compareResult">查看修复前</button></div><p class="caption">示意结果；未运行 IFC 校验。</p></div>
+</div>
+<div class="composer"><div class="base" id="baseLabel">下一条需求基于：输入模型</div><div class="reference" id="reference" hidden><span id="referencePrefix">参照：</span><b id="referenceName"></b><button class="close" id="removeReference" aria-label="移除请求参照">×</button></div><div class="reference auxiliary" id="auxReference" hidden><span>参考构件：</span><b id="auxReferenceName"></b><button class="close" id="removeAuxReference" aria-label="移除辅助参照">×</button></div><div class="aux-actions" id="auxActions"><button class="text-btn" id="addAuxReference" aria-pressed="false">添加参考构件</button><span class="caption" id="auxHint">尺寸、样式等用途请在文字中说明。</span></div><div class="draft-summary" id="demoRequestSummary" hidden></div><div class="input-shell" id="inputShell"><textarea id="request" aria-label="自然语言需求" placeholder="切换到选中提交，描述你想做的修改。" readonly></textarea><div class="input-actions"><span class="caption" id="inputHint">可先浏览模型</span><button class="btn primary" id="submit">切换到选中提交</button></div></div><div class="row" id="demoActions" hidden><button class="btn primary" id="playDemo">播放这个案例</button><button class="btn" id="previewPlacement" hidden>预览位置</button></div><p class="composer-note" id="composerNote">执行接口尚未接入；提交仅保存在本页，不产生修复结果。</p></div>
+</aside></main>
+<footer class="statusbar"><span id="statusText" role="status">查看模式 · 点击不会改变请求参照</span><span class="secondary">原型 1.2　/　2026.10.09</span></footer>
+</div>
+<dialog class="modal" id="examples"><div class="modal-box"><header><h2>演示案例</h2><button class="close" id="closeExamples" aria-label="关闭演示案例">×</button></header><p>独立的设计预演。打开案例不会覆盖工作台的草稿、参照或消息，也不执行你的自定义请求。</p><button class="demo-choice" data-case="window"><b>01　墙体新增窗户</b><span>查看过程、定位新增窗、同视角比较前后。</span></button><button class="demo-choice" data-case="column"><b>02　参照柱补建与澄清</b><span>输入方向和自定义距离，预览位置，再发送回答。</span></button></div></dialog>
+<dialog class="modal" id="about"><div class="modal-box"><header><h2>当前交付范围</h2><button class="close" id="closeAbout" aria-label="关闭说明">×</button></header><p>两个模式只控制点选用途，不决定修复动作。主工作台保存需求但尚未执行；演示入口有自己的预设场景，退出会回到原草稿。</p><p>所有建筑、阶段和属性均为示意。补柱例仅用本地规则识别“向左/向右＋0.3–2.5米”，也接受毫米，不是模型理解任意文字。没有真实 IFC、Provider 或 Validator 调用。</p><p>沿用 Plotly.js 3.3.1 与原型兼容显示；真实 IFC 阶段再接 That Open。</p></div></dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+<script src="./vendor/plotly.min.js"></script><script type="module" src="./app.mjs"></script>
+</body></html>
