@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <title data-i18n="app.title">text2IFC · 真实 IFC 查看</title><link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="repair-api.css">
+</head>
+<body>
+<header>
+ <div class="brand">text2IFC<span data-i18n="app.subtitle">真实 IFC · 样例验证</span></div>
+ <div class="row header-actions">
+  <div class="language-switch" role="group" data-i18n-aria-label="language.label" aria-label="界面语言">
+   <button id="langZh" type="button" lang="zh-CN" aria-pressed="true" data-i18n-aria-label="language.zh" aria-label="使用中文界面">中文</button>
+   <button id="langEn" type="button" lang="en" aria-pressed="false" data-i18n-aria-label="language.en" aria-label="使用英文界面">EN</button>
+  </div>
+  <span class="tag" id="sourceTag" data-i18n="display.waiting">等待文件</span>
+  <button id="examplesButton" data-i18n="demo.title">本机案例</button><button id="sampleButton" data-i18n="action.sample">打开当前样例</button>
+  <label class="button primary"><span data-i18n="action.open">打开 IFC</span><input id="file" type="file" accept=".ifc" data-i18n-aria-label="action.open" aria-label="打开 IFC" hidden></label>
+  <button id="saveSource" data-i18n="action.download" disabled>下载当前源 IFC</button>
+ </div>
+</header>
+<main>
+ <section class="left">
+  <div class="modelbar">
+   <div><strong id="modelName" data-i18n="display.choose">选择一份 IFC 文件</strong><div class="muted" id="modelInfo" data-i18n="display.local">文件在本地浏览器解析，不上传到外部服务</div></div>
+   <div class="row"><button id="treeToggle" aria-expanded="true" aria-controls="modelTree" data-i18n="tree.title">模型树</button><button id="viewMode" aria-pressed="true" data-i18n="mode.view">查看</button><button id="selectMode" aria-pressed="false" data-i18n="mode.select">选中提交</button></div>
+  </div>
+  <p class="load-notice" id="loadNotice" role="status" hidden></p>
+  <div class="example-banner"><span id="exampleBanner" hidden></span><button id="resetExample" data-i18n="demo.reset" hidden>重新开始本案例</button></div>
+  <dialog id="examplesDialog" aria-label="Local examples"></dialog>
+  <div id="resultBar" class="result-bar" hidden><div class="row"><button id="viewBefore" data-i18n="repair.before">修复前</button><button id="viewAfter" data-i18n="repair.after">修复后</button><select id="newObjectPicker" data-i18n-aria-label="result.allNew" aria-label="Choose new object"></select><button id="locateChange" data-i18n="repair.locateChange">定位新增构件</button><button id="useResult" data-i18n="repair.useResult">以此结果继续修改</button><span id="pairSummary"></span></div><small data-i18n="repair.pairNote">前后同坐标、同一解析配置；查看不改变下一请求的输入。</small></div>
+  <div class="model-area">
+   <nav class="model-tree" id="modelTree" data-i18n-aria-label="tree.label" aria-label="IFC 模型树">
+    <div class="tree-heading"><strong data-i18n="tree.title">模型树</strong><button id="closeTree" data-i18n-aria-label="tree.close" aria-label="收起模型树">×</button></div>
+    <input id="treeSearch" type="search" data-i18n-placeholder="tree.search" placeholder="搜索名称、类别或 GUID" data-i18n-aria-label="tree.searchLabel" aria-label="搜索 IFC 对象">
+    <div class="muted" id="treeCount" data-i18n="tree.empty">打开 IFC 后显示结构</div><div class="tree-content" id="treeContent"></div>
+   </nav>
+   <div class="viewport" id="viewport">
+    <div class="tools">
+     <div class="row"><button data-camera="front" data-i18n="action.front">正面</button><button data-camera="side" data-i18n="action.side">侧面</button><button data-camera="top" data-i18n="action.top">俯视</button><button id="fit" data-i18n="action.fit" data-i18n-title="action.fitHint" title="保持当前朝向，完整显示所有可见构件">适应视图</button></div>
+     <div class="row"><button id="undoHide" data-i18n="action.undoHide" disabled>撤销隐藏</button><button id="showAll" data-i18n="action.showAll" disabled>显示全部</button><span class="muted" id="hiddenCount">隐藏 0</span></div>
+    </div>
+    <div id="canvas"></div><div class="loading" id="loading" data-i18n="loading.prepare">正在准备 IFC 解析器与三维显示……</div>
+    <div class="selection" id="selection" hidden><div class="kicker" id="selectionRole">正在查看</div><strong id="elementName"></strong><div class="muted" id="elementType"></div><div class="muted" id="throughNote" data-i18n="selection.throughNote">淡色＝被遮挡部分 · 仅辅助定位</div><div class="row"><button id="focusSelected" data-i18n="action.focus">定位</button><button id="propertiesBtn" data-i18n="action.properties">查看属性</button><button id="clearInspection" data-i18n="action.dismiss">收起信息</button></div></div>
+    <div class="property" id="property" hidden><div class="row between"><strong data-i18n="property.title">源 IFC 属性</strong><button id="closeProperty" data-i18n="action.close">关闭</button></div><div id="properties"></div></div>
+    <div id="context" hidden><div class="muted" id="contextName"></div><button id="hide" data-i18n="action.hide">隐藏此构件</button><small data-i18n="display.hideNote">仅改变显示，不删除 IFC</small></div>
+    <div class="canvas-foot"><span data-i18n="display.controls">左键拖动旋转 · 滚轮缩放 · 查看模式右键隐藏</span><div class="row"><button id="throughHighlight" aria-pressed="true" data-i18n="selection.through" data-i18n-title="selection.throughHint">穿透高亮</button><button id="edges" aria-pressed="true" data-i18n="action.edges">轮廓线</button><button id="unlit" aria-pressed="false">切换原色显示</button></div></div>
+   </div>
+  </div>
+  <div class="summary"><div class="row between"><strong data-i18n="display.reportTitle">解析与显示记录</strong><button id="reportButton">展开记录</button></div><p id="stats" data-i18n="display.notLoaded">尚未解析 IFC。不会用示意房屋代替文件。</p><div id="reportPanel" hidden><p id="diagnosticSummary"></p><button id="downloadReport" data-i18n="action.downloadReport">保存解析报告</button><pre id="report"></pre></div></div>
+ </section>
+ <aside>
+  <div class="aside-head"><strong data-i18n="guide.requestTitle">围绕真实构件提出修改</strong><div class="muted" id="modeHint">查看模式不更换请求参照</div></div>
+  <div class="conversation" id="conversation"><div class="guide"><h2 data-i18n="guide.title">打开 IFC，直接查看建筑。</h2><p data-i18n="guide.view">查看：拖动旋转，滚轮缩放；右键构件可隐藏，点选后按需查看属性。</p><p data-i18n="guide.select">选中提交：可先点定位对象，再用文字描述修改；参考构件可选。</p><p class="muted" id="executionHint" data-i18n="guide.scope">当前核查范围：IFC2X3。修复尚未接入。</p></div><div id="messages"></div><section id="repairPanel" class="repair-api-panel" aria-live="polite" hidden></section></div>
+  <div class="composer">
+    <button id="multiSelect" aria-pressed="false" data-i18n="multi.toggle" hidden>多选对象</button>
+    <details id="targetGroup" hidden open><summary id="targetCount"></summary><p class="muted" data-i18n="multi.hint">点击加入，再点移除；动作仍由文字说明。</p><div id="targetList"></div><button id="clearTargets" data-i18n="multi.clear">清空操作对象</button></details>
+   <div class="muted" id="baseVersion" data-i18n="guide.base">下一条需求基于当前源 IFC</div>
+   <div class="reference" id="primaryRef" hidden><span data-i18n="selection.primaryShort">定位</span><b id="primaryName"></b><button id="removePrimary" data-i18n-aria-label="selection.removePrimary" aria-label="移除定位参照">×</button></div>
+   <div class="reference auxiliary" id="auxRef" hidden><span data-i18n="selection.auxShort">参考</span><b id="auxName"></b><button id="removeAux" data-i18n-aria-label="selection.removeAux" aria-label="移除参考构件">×</button></div>
+   <button id="addAux" class="text" hidden>添加参考构件</button>
+   <textarea id="request" data-i18n-aria-label="input.label" aria-label="自然语言修改需求" readonly placeholder="切换到选中提交后，描述修改要求。"></textarea>
+   <button id="submit" class="primary">切换到选中提交</button><p class="muted" id="resultHint" data-i18n="guide.noResult">只有当前源文件，没有制造“修复后”结果。</p>
+  </div>
+ </aside>
+</main>
+<footer><span id="status" role="status" data-i18n="loading.init">正在初始化</span><span data-i18n="display.footer">同源 IFC 几何 · Three.js 显示 · 当前内核见顶部标识</span></footer><div id="toast" hidden role="status"></div>
+<script src="vendor/web-ifc-api-iife.js"></script><script type="module" src="viewer.mjs"></script>
+</body>
+</html>
