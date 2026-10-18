@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: IFC ChangeSet Repair Pipeline
 status: Phase 12 and 12.1 closed; Repair Milestone R1 accepted 12/12 with Proof 0.3
-last_updated: "2026-10-17T00:00:00Z"
+last_updated: "2026-10-18"
 progress:
   total_phases: 13
   completed_phases: 12
@@ -14,13 +14,13 @@ progress:
 
 # 当前工作状态
 
-## 当前整理：UI 结合前的本地精简（2026-10-17）
+## 当前整理：UI 结合前的本地精简（2026-10-18）
 
-用户授权检查整个仓库的引用与依赖，将重复说明合入现有正文，实际删除确认停用的代码、Prompt 开发说明、旧交接及临时文件；保留当前入口和必要实验依据。不新增文件，不以忽略规则代替删除。本轮起点为 `codex/repair-experiment` / `48f32bba4c1976178a97267a98e569080f44063e`。已确认范围完成实际删除与合并，35 项聚焦离线检查通过；权限受限的遗留目录及其待核实范围详列于[现有清理报告](../docs/reports/workspace-cleanup-20261017/README.md)，本页不复制删除清单和统计。
+用户授权检查整个仓库的引用与依赖，将重复说明合入现有正文，实际删除确认停用的代码、Prompt 开发说明、旧交接及临时文件；保留当前入口和必要实验依据。不新增文件，不以忽略规则代替删除。本轮起点为 `codex/repair-experiment` / `48f32bba4c1976178a97267a98e569080f44063e`。上轮已确认范围完成实际删除与合并，35 项聚焦离线检查通过。2026-10-18 用户进一步授权处理清单中的权限遗留目录；管理员只读盘点和依赖核对完成后，准确的 30 处目录已全部实际清理，必要实验/Proof 记录保全哈希一致。具体清单、权限处理方式和验证见[现有清理报告](../docs/reports/workspace-cleanup-20261017/README.md#权限受限目录续清理2026-10-18)，本页不复制统计。
 
 下一步是 UI 与当前系统结合；这轮只处理准备工作。产品 Repair 入口为 [CLI](../src/text2ifc_ifc_repair/cli.py) 和 [RepairAPI](../src/text2ifc_ifc_repair/api.py)，专项实验脚本从[运行与维护索引](../scripts/ifc_repair/README.md)进入。版本保留按注册表、生产调用、回归与冻结依赖判断，不把版本后缀当作删除依据。
 
-账号周额度约剩 18% 时已报告并保存检查点；收尾时复核约剩 16%，按用户既有授权继续。外部子模块原有本地删除、私有配置、环境、模型、源数据及冻结 Proof 保留各自状态。
+此前约剩 16% 是 10 月 17 日的历史快照；10 月 18 日已重新核对，当前普通用量可用。外部子模块原有本地删除、私有配置、环境、模型、源数据及冻结 Proof 保留各自状态。
 
 ## Repair 实验与数据分析
 

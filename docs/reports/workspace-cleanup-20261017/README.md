@@ -1,5 +1,7 @@
 # text2IFC 本地精简与实验分析
 
+最新进展（2026-10-18）：上轮 30 处权限遗留目录已核实并实际删除，详见[本轮回执](#权限受限目录续清理2026-10-18)。
+
 ## 为 UI 结合准备的本地精简（2026-10-17）
 
 用户本轮要求实际删除过时内容，归并重复文档与 Prompt 开发说明，保留当前入口和必要实验依据，不新增文件。起点为 `codex/repair-experiment` / `48f32bba4c1976178a97267a98e569080f44063e`；下面只统计本轮增量，不重复计入此前 4.486 GiB 清理和 842 项既有删除。
@@ -23,44 +25,54 @@
 
 验证：35 项 Prompt 注册表、operation profile 与 Repair CLI 离线测试通过；因刻意禁用 pytest 缓存有一条 `cache_dir` 配置警告。最初使用系统临时目录的一项注册表测试要求路径属于仓库，改用受控仓库内临时目录后同范围通过；随后删除本轮产生的 29 个测试文件及两处测试目录。删除后公共 `--help` 正常，149 项 Prompt 注册表加载成功，585 份现存 Python 通过 AST 解析。全仓已读 1,654 份受跟踪 Markdown、最终扫描 6,232 个本地链接；据此补修数据来源说明和 Zcode 历史入口的两处引用，指向本轮已删文件的断链为零，变更文档的 493 个本地链接均核实。没有改产品行为、Prompt/Schema 版本或冻结 Proof，没有调用 Provider、安装 accepted Proof 或执行全仓 Preflight；这些检查不代表修复能力提升。
 
-### 尚未删除的权限受限目录
+### 权限受限目录续清理（2026-10-18）
 
-正常用户权限下只读复核仍有以下 30 处一级目录返回 `UnauthorizedAccessException`，连 ACL 也不可读取；这不是当前实验进程占用的证据。其内部文件量、大小和依赖无法核实，未把它们当作空目录，未接管所有权、改 ACL 或强行递归删除。`.pytest-tmp` 等更深层目录仍以此前枚举记录为准，不声称已穷尽所有权限异常。
+用户明确授权继续处理上轮准确列出的 30 处目录，检查引用和依赖，实际删除过时内容并提交推送。本轮起点为 `codex/repair-experiment` / `6ae996a3780f6eac69424558ed42945100479646`，其余目录不扩入这份白名单。
 
-```text
-.tmp/component-budget-recovery-red-20260926
-.tmp/component-budget-red-20260925
-.tmp/component-campaign-red
-.tmp/component-campaign-regression-01
-.tmp/component-cli-red
-.tmp/component-continuation-red
-.tmp/component-extraction-red
-.tmp/component-hosted-red-20260925
-.tmp/component-s2-equivalence-red
-.tmp/component-s2-projection-02
-.tmp/component-s2-projection-red
-.tmp/courtyard-cache
-.tmp/courtyard-open-court-cache
-.tmp/description-v11-red
-.tmp/filling-compare-red
-.tmp/hygiene-autoclean-green
-.tmp/live-repair-property-admission-20260908-01
-.tmp/repair-comparison-tests
-.tmp/repair-direct-tests
-.tmp/repair-ledger-red
-.tmp/repair-offline-validation
-.tmp/repair-runtime-green
-.tmp/repair-score-final
-.tmp/repair-units-verified
-.tmp/repair-wire-tests
-.tmp/space-v13-red
-.tmp/test-isolated-red
-.tmp/wall-outline-axis-red
-.tmp/wall-outline-red
-.pytest_cache
-```
+普通进程读取目录和 ACL 均被拒绝；管理员只读盘点则全部可读。30 处根目录的三项授权身份类别均为一个其他账户、SYSTEM、Administrators，说明是旧测试目录访问控制与普通运行身份不匹配；未发现当前批量实验使用它们。最初“未核实子项即递归接管所有权并授予 FullControl”的方案被自动审批拒绝，未执行；后续采用管理员只读盘点、核对依赖，再按精确白名单删除。**实际没有修改 ACL 或所有权。**
 
-源 IFC、私有配置、环境/模型、真实运行、失败、预算和冻结 Proof 按既有必要依据保留；第三方子模块的原有本地删除不纳入本次提交。账号周额度在收尾复核约剩 16%，检查点已写入 STATE，继续完成已授权整理与普通推送。
+**30 处根目录已全部不存在：实际删除 1,608 个文件、296,655,967 字节（逻辑大小约 282.91 MiB）、1,356 个普通目录，另移除 4 个测试联接点，零错误。** 这些是旧 pytest 工作副本、空测试树和可重建缓存，没有 Git 跟踪文件。最新文件写入也早于本轮，但删除依据是测试来源与无当前消费者，不能仅凭日期判断。
+
+| 已删除目录（相对仓库根） | 文件 | 逻辑字节 | 普通目录 | 联接点 | 依据 |
+|---|---:|---:|---:|---:|---|
+| `.tmp/component-budget-recovery-red-20260926` | 0 | 0 | 9 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-budget-red-20260925` | 0 | 0 | 6 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-campaign-red` | 0 | 0 | 2 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-campaign-regression-01` | 1 | 3 | 3 | 0 | pytest 离线工作副本 |
+| `.tmp/component-cli-red` | 0 | 0 | 2 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-continuation-red` | 0 | 0 | 7 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-extraction-red` | 0 | 0 | 3 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-hosted-red-20260925` | 0 | 0 | 4 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-s2-equivalence-red` | 0 | 0 | 5 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-s2-projection-02` | 0 | 0 | 5 | 0 | 已无文件的旧测试树 |
+| `.tmp/component-s2-projection-red` | 0 | 0 | 5 | 0 | 已无文件的旧测试树 |
+| `.tmp/courtyard-cache` | 5 | 54,736 | 3 | 0 | pytest 缓存 |
+| `.tmp/courtyard-open-court-cache` | 5 | 71,415 | 3 | 0 | pytest 缓存 |
+| `.tmp/description-v11-red` | 6 | 89,270 | 4 | 0 | IFC2Text 离线夹具与 factory 输出 |
+| `.tmp/filling-compare-red` | 0 | 0 | 11 | 0 | 已无文件的旧测试树 |
+| `.tmp/hygiene-autoclean-green` | 6 | 70 | 21 | 0 | pytest 离线工作副本 |
+| `.tmp/live-repair-property-admission-20260908-01` | 0 | 0 | 8 | 2 | 路径安全测试副本；链接只断开 |
+| `.tmp/repair-comparison-tests` | 33 | 119,492 | 18 | 0 | pytest 离线工作副本 |
+| `.tmp/repair-direct-tests` | 42 | 167,124 | 47 | 0 | pytest 离线工作副本 |
+| `.tmp/repair-ledger-red` | 0 | 0 | 14 | 0 | 已无文件的旧测试树 |
+| `.tmp/repair-offline-validation` | 946 | 138,879,007 | 660 | 2 | 路径安全测试副本；链接只断开 |
+| `.tmp/repair-runtime-green` | 2 | 311 | 11 | 0 | pytest 离线工作副本 |
+| `.tmp/repair-score-final` | 28 | 32,245,606 | 35 | 0 | pytest 离线工作副本 |
+| `.tmp/repair-units-verified` | 332 | 123,651,841 | 211 | 0 | pytest 离线工作副本 |
+| `.tmp/repair-wire-tests` | 197 | 1,362,860 | 238 | 0 | pytest 离线工作副本 |
+| `.tmp/space-v13-red` | 0 | 0 | 2 | 0 | 已无文件的旧测试树 |
+| `.tmp/test-isolated-red` | 0 | 0 | 3 | 0 | 已无文件的旧测试树 |
+| `.tmp/wall-outline-axis-red` | 0 | 0 | 2 | 0 | 已无文件的旧测试树 |
+| `.tmp/wall-outline-red` | 0 | 0 | 11 | 0 | 已无文件的旧测试树 |
+| `.pytest_cache` | 5 | 14,232 | 3 | 0 | pytest 缓存 |
+
+来源核对：155 种含文件的 pytest 用例目录名中，154 个名称可定位到现存测试函数；旧 `test_native_real_door_unit_fai0` 对应修复前的离线门单位失败，现存测试明确保留其独立[负面证据夹具](../../../tests/ifc_repair/repair_comparison/fixtures/door-metre-before-fix.json)，该文件本轮哈希未变。`floor-name-family0` 由 `tests/ifc2text/test_component_description_v11.py` 的 `tmp_path_factory.mktemp('floor-name-family')` 创建；三份缓存均只含 pytest 标记、nodeids 和 lastfailed。其余未发现非测试、非缓存的松散文件。
+
+引用与依赖核对覆盖受跟踪代码、测试、文档、规划、Prompt/Schema 与 Proof 元数据，并检查当前正式批次 freeze/结果入口和已链接摘要。只发现历史清理清单、pytest `cache_dir`/`--basetemp` 命令和旧 traceback 路径，不是当前执行输入、导入或冻结证据消费者。旧 admission 的 pytest.log、pytest.xml、execution.json 及冻结命令在范围外保留，不能因删除可重建副本而抹去成功、失败或原用量；历史 JSON 中当时的 `permission_blocked_paths` 不回写成新状态。
+
+执行前重新枚举完整节点集合，逐文件核对绝对路径边界、类型、大小、UTC 写入时间与 SHA-256，拒绝新增/变化节点。盘点清单 SHA-256 为 `8be600641e7e5284abeabdd28d02f775e6776a5f366029229d72c29d9481d5f7`。4 个联接点位于两个 `test_link_run_escape_is_reject0` 和两个 `test_stage_directory_rejects_r0` 用例，单独非递归移除；没有跟随链接删除目标，普通目录仅在已空时非递归删除。没有触碰其他未列目录或第三方子模块。
+
+九项必要记录删除前后 SHA-256 完全一致：正式 cycle 入口、A–E 结果、Harness 冻结绑定、F/G 结果、门单位错误负面夹具、R1 manifest、Proof 总入口及两份现行数据/实验报告。本轮复用上轮已通过的 35 项相关离线检查；产品实现与注册版本未改，不为清理再生成整批实验或测试产物，不启动 Provider、Full Preflight 或 accepted Proof 安装。新增核验集中在物理缺席、依赖、保全哈希、注册表加载与本轮文档链接/格式。管理员辅助脚本及逐文件盘点只在系统临时目录使用，收尾删除；没有新增仓库文件。
 
 ## 此前清理与提交记录
 
