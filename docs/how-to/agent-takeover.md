@@ -1,315 +1,60 @@
-# 首次接管 text2IFC 项目
+# 接管 text2IFC
 
-本指南面向第一次进入仓库的 AI Agent 和开发者。目标是在 10–15 分钟内确认
-当前项目状态、找到正确代码与证据入口，并在不覆盖他人工作、不夸大验证结论的
-前提下开始任务。
+产品名为 `text2IFC`；`bimnet` 可能只是本地目录名，`BIMNet` 是数据来源。当前 Repair 实验、仓库整理与 UI 结合准备从 [STATE](../../.planning/STATE.md)和[现有清理记录](../reports/workspace-cleanup-20261017/README.md)进入。本文提供操作入口，适用合同仍以 AGENTS、Phase SPEC／VALIDATION 和验证协议为准。
 
-项目和产品名称是 `text2IFC`。本地 checkout 目录可能被命名为 `bimnet`，但这个
-目录名不应出现在项目标题、报告或对外说明中。`BIMNet` 在 dataset、source 或
-manifest 语境中另指数据来源，也不代表本项目名称。
+## 1. 先做四件事
 
-本文是操作指南，不是新的架构或验收权威。具体约束仍以仓库根目录的
-[`AGENTS.md`](../../AGENTS.md)、适用的 Phase SPEC/PLAN/VALIDATION 和验证协议
-为准。
+1. 阅读根目录 [AGENTS.md](../../AGENTS.md)，确认 Git 根、分支、工作树和暂存区，保留他人的修改。
+2. 阅读 [STATE](../../.planning/STATE.md)、[PROJECT](../../.planning/PROJECT.md)，按 [文档索引](../README.md)进入所需功能。
+3. 为当前问题确定调用入口、受影响模块和验证范围。历史报告和完成计划不再充当当前任务指令。
+4. 行为修改先保存可复现输入和失败边界，再执行针对性验证。测试恢复方式见[精简记录](../reports/lean-branch-20261007/REPORT.md)。
 
-当前仓库整理与 UI 结合准备见 [STATE](../../.planning/STATE.md) 和[本地清理记录](../reports/workspace-cleanup-20261017/README.md)。
-历史交接保存当时事实；不从旧 handoff 的提交号、预算或阻断描述直接续跑。跨对话上下文复用本指南与当前专题，不另维护平行的项目状态快照。
-
-## 1. 十分钟接管流程
-
-### 第一步：确认仓库和工作树
-
-首次接管、切换工作树或 Git 状态可能变化时，先确认：
-
-```powershell
+```sh
 git rev-parse --show-toplevel
 git branch --show-current
 git status --short --branch
+git diff --cached --stat
 ```
 
-暂存前再核对 `git diff --cached --stat`；只有需要追溯提交或选择隔离工作树时才读取
-`git log`、`git worktree list`。同一任务中仍有效的检查可复用，不在每个工具调用前
-重复执行整套命令。
+## 2. 代码地图
 
-确认当前目录确实属于 text2IFC Git 根目录。工作树已有修改时，默认它们属于用户或
-其他并行任务；不要使用 `git reset --hard`、`git clean`、`git restore` 或
-`git add -A` 处理它们。只读取和暂存本任务明确涉及的路径。若目标文件已经被修改，
-先判断能否绕开；不能安全绕开时再向用户说明真实冲突。
-
-### 第二步：建立权威阅读顺序
-
-按需建立上下文，不把接管清单当成每轮全文阅读要求：
-
-1. [`AGENTS.md`](../../AGENTS.md)：仓库级行为、安全和证据合同。
-2. [`docs/README.md`](../README.md)：文档总入口和放置规则。
-3. [`.planning/STATE.md`](../../.planning/STATE.md) 的当前入口和当前任务所属的 SPEC、active PLAN、VALIDATION。
-4. 涉及阶段依赖时读取 [`.planning/ROADMAP.md`](../../.planning/ROADMAP.md) 的对应段落；涉及长期约束时读取 [`.planning/PROJECT.md`](../../.planning/PROJECT.md) 的对应段落。
-
-`STATE.md` 回答“现在做到哪里”，`ROADMAP.md` 回答“阶段如何组织”，
-`PROJECT.md` 回答“项目长期坚持什么”。历史报告、旧 handoff 和已完成计划可以
-解释过去，但不能覆盖当前状态与适用合同。
-
-同一会话已读且未变的材料不反复全文加载。新阶段、文件变化、证据不足或权威不清时，
-补读对应范围；长历史先找当前入口和相关标题。
-
-### 第三步：给任务分类
-
-先判断任务属于哪一种：
-
-- 新模型生成（Text → BIM JSON → IFC）；
-- 已有或 damaged IFC 的 repair；
-- Agent/Prompt/Schema/Provider 行为；
-- Dataset、manifest 或 provenance；
-- Proof、验收或能力评估；
-- 文档、发布或纯导航维护。
-
-只加载该类别最小必要的代码和文档。不要为了熟悉仓库而默认扫描全部 dataset、
-Proof、历史运行或 1000+ 测试。
-
-## 2. 项目地图
-
-text2IFC 的主产品目标是从自然语言生成新 IFC；仓库还包含一条对已有 IFC 做局部
-修改的 repair 链路。二者共享部分证据原则，但输入、状态机和代码入口不同。
-
-### 2.1 新模型生成链路
-
-```text
-自然语言 + 对话记录
-  -> Design Brief Agent
-  -> Draft 时定向澄清 / Ready 时继续
-  -> 确定性 Expected Facts + stable entity IDs + Package Manifest
-  -> generation strategy
-       legacy_full（CLI 当前默认）: 一次生成完整 BIM JSON
-       staged（显式选择）: Skeleton + 楼层包/跨楼层 ChangeSet
-  -> Formal/Draft 分类 + 本次所选 BIM JSON 合同验证
-  -> Semantic Coverage
-  -> Candidate Gates: compile + reopen + relationship/geometry checks
-  -> Audit Agent
-  -> 必要时 Issue routing + 有界 BIM JSON ChangeSet 返工
-  -> Final Acceptance: 重新 Gate + secret scan
-  -> accepted output.ifc/report.md，或保留证据后阻断
-```
-
-#### 当前运行入口和策略
-
-公开交互入口是
-[`scripts/agent/run_text2ifc_chat.py`](../../scripts/agent/run_text2ifc_chat.py)，随后进入
-[`repl_chat.py`](../../src/text2ifc_agent/repl_chat.py) 和
-[`run_ready_session_to_ifc`](../../src/text2ifc_agent/interactive_cli_flow.py)。会话、
-消息、Provider 调用和产物引用由 SQLite `SessionStore` 持久化；Design Brief 未达到
-`ready` 时不得进入 IFC generation。
-
-当前实现保留两种明确策略：
-
-| 策略 | 当前行为 | 适用理解 |
-|---|---|---|
-| `legacy_full` | CLI 默认；Generator 一次输出所选版本的完整 Formal BIM JSON 或 Draft | 完整文档与既有兼容路径 |
-| `staged` | 需传 `--generation-strategy staged`；先建确定性 Skeleton，再逐包生成 | 复杂、多楼层、需要清楚 ownership 的请求 |
-
-`staged` 不是当前自动默认，也不存在按建筑复杂度自动切换。接管者不得只根据架构
-图假设实际运行已经走分包生成；应检查命令、`generation-strategy.json` 和对应
-run 的 `generator/`、`generator-staged/` 证据。
-
-脚本化输入、恢复和显式 Brief 版本选择另见
-[`run_phase6_2_cli.py`](../../scripts/agent/run_phase6_2_cli.py)。它与 REPL 的参数并不
-完全相同，先查看各自 `--help`。版本以调用参数、session 和产物中的
-`schema_version` 为准，不能从最新 schema 目录名推断默认值。
-
-#### 为什么先有 Design Brief 和 Expected Facts
-
-Design Brief 保存用户已经表达的事实、缺失项、歧义和问题来源；它只允许进入
-Ready 或 Draft，不直接创建 BIM 实体。Ready Brief 随后由确定性代码投影为
-Expected Facts。Expected Facts 不是第二套 BIM 模型，而是：
-
-- Gate 用来核对用户需求是否被覆盖的验收投影；
-- Generator 必须遵守的稳定实体 ID 合同；
-- staged 路径划分 Skeleton、楼层本地包和跨楼层包的依据。
-
-缺少阻断事实时，Package Manifest 必须保持 `draft_required`，不能让 Generator
-猜测楼层、宿主、尺寸或跨层关系。
-
-#### 两种 BIM JSON 生成方式
-
-`legacy_full` 由 Generator Agent 在一次调用中生成完整文档。输出会按本次所选
-合同严格区分为 Formal、Draft 或非法输出；只有结构、语义和严格 Provider 输出
-合同都通过的 Formal 文档才是 Candidate。`bim-json/2.0` 与 Draft 1.0 是仍需兼容的
-历史合同；材料、门窗模板和部件配色等增量使用适用的新版本，不能改写旧版含义。
-
-`staged` 先确定性创建 `IfcProject`、`IfcSite`、`IfcBuilding` 和全部
-`IfcBuildingStorey` 的 Skeleton，再根据 Expected Facts 生成：
-
-1. 每层自己的空间、墙、门、窗、洞口和 containment 包；
-2. 楼梯、层间楼板、屋面等跨楼层包；
-3. 每包绑定 owned IDs、允许引用和当前 revision 的 ChangeSet。
-
-每个 package 最多尝试三次，并在合入 workspace 前检查 ChangeSet 合同、包 ownership、
-引用、几何表示、完整 BIM JSON Schema，以及已经接受的冻结构件是否发生漂移。中间
-workspace 只是 `partial_not_formal`，不能提前编译或当作最终模型；所有包通过后才会
-产生一个 Formal Candidate。
-
-#### Candidate Gate、Audit 与返工
-
-Formal Candidate 先做 fact-level Semantic Coverage，再由确定性 Gate 编译 IFC、用
-IfcOpenShell 重开，并检查 Schema、关系、楼层归属、void/fill、数量和几何。Audit
-Agent 只判断结果是否忠实表达用户意图；它不能修改 BIM JSON，也不能覆盖确定性
-失败。
-
-失败会规范化为带 owner、evidence 和 route 的 Issue。允许返工时，Change Scope
-先限定实体、依赖和 JSON 路径，再让 Provider 生成绑定 base revision、candidate
-hash、Expected Facts hash 和来源 Issue 的 ChangeSet；Applicator 在副本上原子应用，
-并验证范围外构件未漂移。随后重新执行 coverage、Gate、Audit 和 Final Acceptance。
-
-这里的 `run_repair_stage` 修的是“本轮生成的 BIM JSON Candidate/Draft”，不是
-2.2 节的“对已有 damaged IFC 做 repair”。两类 repair 不得共用状态或把证据互相
-替代。
-
-Candidate Gate 为检查目的可能已经在 run 目录写出 `output.ifc`。只有最终 session
-状态为 `compiled`，且 Final Acceptance 确认此前 Audit 为 non-blocking accept、
-strict output contract 有效，并重跑 Candidate Gates 与 secret scan 后仍为 valid，
-这个 IFC 才能称为 accepted；存在文件不等于已经放行。
-
-#### 关键代码和合同入口
-
-| 职责 | 入口 |
+| 功能 | 实现 |
 |---|---|
-| 人机 REPL 与会话入口 | [`scripts/agent/run_text2ifc_chat.py`](../../scripts/agent/run_text2ifc_chat.py)、[`repl_chat.py`](../../src/text2ifc_agent/repl_chat.py) |
-| 总编排与持久化 | [`interactive_cli_flow.py`](../../src/text2ifc_agent/interactive_cli_flow.py)、[`session_store.py`](../../src/text2ifc_agent/session_store.py) |
-| Design Brief 与澄清 | [`clarification.py`](../../src/text2ifc_agent/clarification.py)、[`design_brief.py`](../../src/text2ifc_agent/design_brief.py)、[各版 Brief Schema](../../schemas/agent/design-brief/) |
-| Expected Facts 与分包 | [`expected_facts.py`](../../src/text2ifc_agent/expected_facts.py)、[`generation_packages.py`](../../src/text2ifc_agent/generation_packages.py) |
-| 完整文档与 staged generation | [`generator.py`](../../src/text2ifc_agent/generator.py)、[`staged_generation.py`](../../src/text2ifc_agent/staged_generation.py)、[`changeset_stage.py`](../../src/text2ifc_agent/changeset_stage.py) |
-| Package、coverage 和 revision Gates | [`package_gates.py`](../../src/text2ifc_agent/package_gates.py)、[`semantic_coverage.py`](../../src/text2ifc_agent/semantic_coverage.py)、[`dynamic_gates.py`](../../src/text2ifc_agent/dynamic_gates.py)、[`revision_gates.py`](../../src/text2ifc_agent/revision_gates.py) |
-| Issue 路由与局部返工 | [`route_decision.py`](../../src/text2ifc_agent/route_decision.py)、[`scoped_loop.py`](../../src/text2ifc_agent/scoped_loop.py)、[`changeset_apply.py`](../../src/text2ifc_agent/changeset_apply.py) |
-| Provider stages、Audit 与最终验收 | [`live_pipeline.py`](../../src/text2ifc_agent/live_pipeline.py)、[`audit.py`](../../src/text2ifc_agent/audit.py)、[`run_report.py`](../../src/text2ifc_agent/run_report.py) |
-| BIM JSON Schema 与确定性合同实现 | [各版 Formal／Draft Schema](../../schemas/bim-json/)、[`src/text2ifc_contract/`](../../src/text2ifc_contract/) |
-| IFC2X3 编译与重开 | [`src/text2ifc_compiler/`](../../src/text2ifc_compiler/)、[`src/text2ifc_quality/`](../../src/text2ifc_quality/) |
-| Prompt 与版本注册 | [`prompts/agent/`](../../prompts/agent/)、[`prompts/agent/registry.json`](../../prompts/agent/registry.json) |
+| Generation 交互与总编排 | `src/text2ifc_agent/repl_chat.py`、`interactive_cli_flow.py` |
+| Brief、Expected Facts、分包 | `clarification.py`、`expected_facts.py`、`generation_packages.py`、`staged_generation.py` |
+| Generation Gate／Audit／返工 | `dynamic_gates.py`、`live_pipeline.py`、`changeset_apply.py` |
+| IFC Repair API／CLI | `src/text2ifc_ifc_repair/api.py`、`cli.py` |
+| Repair 解析、绑定、应用和评估 | `target_query.py`、`property_resolution_coordinator.py`、`changesets.py`、`apply.py`、`production_evaluation.py` |
+| IFC2Text 与往返比较 | `src/text2ifc_ifc2text/` |
+| BIM JSON 合同、IFC 编译 | `src/text2ifc_contract/`、`src/text2ifc_compiler/` |
+| 几何质量、材料／外观 | `src/text2ifc_quality/`、`src/text2ifc_presentation/` |
+| 属性知识和数据 | `src/text2ifc_knowledge/`、`text2ifc_dataset/`、`text2ifc_text/` |
+| 独立 Proof 校验 | `src/text2ifc_proof/`，不加载 Repair runner |
 
-进一步阅读：
+具体命令见 [scripts](../../scripts/README.md)。深入说明按[生成工作流](../architecture/current-workflow-and-data-flow.md)、[Repair 链路](../architecture/ifc-repair-pipeline-status-and-roadmap.md)和[IFC2Text 当前入口](../validation/ifc2text/README.md)进入。保留的旧版本入口仍可能被调用，不根据名称删除。
 
-- [`text2IFC Generation 工作流与数据流（截至 Phase 6.5）`](../architecture/current-workflow-and-data-flow.md)：完整对象和失败路由；
-- [`主工作流代码审计快照（2026-07-16）`](../architecture/main-workflow-code-audit-2026-07-16.md)：历史基线的代码核对，不能替代当前代码或 `STATE.md`；
-- [`BIM JSON 2.0 Contract`](../reference/bim-json-2.0.md)：正式中间表示。
+## 3. 必须知道的行为
 
-该链路中，模型不能直接编写 IFC STEP。BIM JSON、Gate、Compiler 和 Final
-Acceptance 的职责不能被 Prompt 或 Audit 自我报告替代。
+- Generation 由 Ready Brief 开始；默认 `legacy_full`，显式选择 `staged` 才分包。模型不直接写 IFC STEP。
+- Generation 的 BIM JSON 返工与对已有 damaged IFC 的 Repair 是两条独立流程。
+- Repair 在副本上原子应用，重开后通过 L0/L1/L2 和 preservation 才发布。失败不产生成功结果。
+- 检索仅提供候选；确定性 binding／admissibility 决定是否可执行。私有 Gold 和损坏真值仅供评估。
+- IFC2Text 的坐标精度、支持范围与往返误差以[当前合同和结果](../validation/ifc2text/README.md)为准。
+- Phase 状态、Proof 集合状态、单次 run 状态分别报告；存在 IFC 文件不等于通过验收。
 
-### 2.2 IFC repair 链路
+## 4. 验证与资料
 
-```text
-public request + damaged IFC
-  -> source fingerprint / IFC index
-  -> Stage 1 RepairIntent
-  -> target/type resolution 或 clarification
-  -> property retrieval / Stage 1.5 / admissibility
-  -> Stage 2 ChangeSet Draft
-  -> deterministic bind and audit
-  -> atomic staging apply
-  -> reopen + L0/L1/L2 + preservation
-  -> publish repaired IFC 或 fail closed
-```
+使用 Python ≥3.12 和 `.venv`。普通修改执行受影响路径的 scoped validation；真实 Provider 前遵循
+[阶段准入协议](../validation/agent-capability-evaluation.md)。全仓 Full Preflight 仍需说明范围并获得用户明确授权。
+2026-10-07 精简提交曾按授权退役测试，验证检查点和按需恢复方式见[精简记录](../reports/lean-branch-20261007/REPORT.md)。当前测试以实际保留及恢复的相关集合为准，不从历史退役记录推断整个 tests 目录仍为空。需要的测试缺失或准入无效时阻断真实调用；静态编译和旧检查点不能替代针对当前代码的阶段准入。
 
-主要入口：
+`dataset/processed/proof/` 是冻结证据；`experiments/` 是历史实验；`agent-demo/`、`ifc-repair/`、`ifc-repair-runs/`
+仍有运行时或验证消费者。数据来源和许可证查 `dataset/sources/`、`dataset/manifests/`。
+不要默认扫描整个数据集。仅对明确、已解析、处于授权范围内的路径执行删除。
 
-- [`src/text2ifc_ifc_repair/api.py`](../../src/text2ifc_ifc_repair/api.py)：公共 start/continue/resume；
-- [`src/text2ifc_ifc_repair/cli.py`](../../src/text2ifc_ifc_repair/cli.py)：公共命令适配器；专项 UAT runner 不是通用 CLI 的替代品；
-- [`src/text2ifc_ifc_repair/indexer.py`](../../src/text2ifc_ifc_repair/indexer.py)：damaged IFC 索引；
-- [`src/text2ifc_ifc_repair/target_query.py`](../../src/text2ifc_ifc_repair/target_query.py)：目标解析和 offered candidate set；
-- [`src/text2ifc_ifc_repair/property_resolution_coordinator.py`](../../src/text2ifc_ifc_repair/property_resolution_coordinator.py)：属性检索与 Stage 1.5；
-- [`src/text2ifc_ifc_repair/property_admissibility.py`](../../src/text2ifc_ifc_repair/property_admissibility.py)：属性身份、类型、单位与 scope 门；
-- [`src/text2ifc_ifc_repair/changesets.py`](../../src/text2ifc_ifc_repair/changesets.py)：Draft 到 Bound ChangeSet；
-- [`src/text2ifc_ifc_repair/apply.py`](../../src/text2ifc_ifc_repair/apply.py)：原子应用和 staging；
-- [`src/text2ifc_ifc_repair/evaluation.py`](../../src/text2ifc_ifc_repair/evaluation.py)：reopen、L1/L2 和 preservation；
-- [`production_evaluation.py`](../../src/text2ifc_ifc_repair/production_evaluation.py)：公开生产评估与共享计算；[`benchmark_evaluation.py`](../../src/text2ifc_ifc_repair/benchmark_evaluation.py)：评估器侧私有比较，单向依赖生产评估；
-- [`src/text2ifc_ifc_repair/operations/`](../../src/text2ifc_ifc_repair/operations/)：Window、Door、Opening、Beam、Column 等 operation；
-- [`scripts/ifc_repair/README.md`](../../scripts/ifc_repair/README.md)：uat／offline／curators／audits 分类和旧入口兼容；
-- [`src/text2ifc_proof/`](../../src/text2ifc_proof/)：独立 Proof 校验与 transcript 审计，不加载 Repair runner。
+提交前检查 diff 和验证结果，使用授权分支。交接说明修改内容、命令／结果、失败／未测项、commit 与远端状态。
 
-完整解释见
-[`IFC Repair Pipeline 与 Roadmap`](../architecture/ifc-repair-pipeline-status-and-roadmap.md)。
-
-### 2.3 目录、相关测试与数据入口
-
-| 需要修改或查找的内容 | 实现／权威位置 | 相关回归或工具 |
-|---|---|---|
-| Generation 编排、澄清、Audit、loop | [`src/text2ifc_agent/`](../../src/text2ifc_agent/) | [`tests/agent/`](../../tests/agent/)、[`scripts/agent/`](../../scripts/agent/) |
-| 已有 IFC Repair、事务与保全 | [`src/text2ifc_ifc_repair/`](../../src/text2ifc_ifc_repair/) | [`tests/ifc_repair/`](../../tests/ifc_repair/)、[`scripts/ifc_repair/`](../../scripts/ifc_repair/) |
-| BIM JSON 合同／IFC 编译 | [`src/text2ifc_contract/`](../../src/text2ifc_contract/)、[`src/text2ifc_compiler/`](../../src/text2ifc_compiler/) | [`tests/contract/`](../../tests/contract/)、[`tests/contract_v2/`](../../tests/contract_v2/)、[`tests/compiler/`](../../tests/compiler/) |
-| IFC 质量、材料与外观 | [`src/text2ifc_quality/`](../../src/text2ifc_quality/)、[`src/text2ifc_presentation/`](../../src/text2ifc_presentation/) | [`tests/ifc_quality/`](../../tests/ifc_quality/)、[`tests/presentation/`](../../tests/presentation/)；也检查编译器和 Agent 调用路径 |
-| 属性知识和检索 | [`src/text2ifc_knowledge/`](../../src/text2ifc_knowledge/)、[IFC Schema](../../schemas/ifc/) | [`tests/knowledge/`](../../tests/knowledge/) |
-| 数据提取、清单、文本配对 | [`src/text2ifc_extractor/`](../../src/text2ifc_extractor/)、[`src/text2ifc_dataset/`](../../src/text2ifc_dataset/)、[`src/text2ifc_text/`](../../src/text2ifc_text/) | [`tests/extractor/`](../../tests/extractor/)、[`tests/dataset/`](../../tests/dataset/)、[`tests/text2json/`](../../tests/text2json/) |
-| Prompt／Schema 版本 | [`prompts/agent/registry.json`](../../prompts/agent/registry.json)、[`schemas/`](../../schemas/) | 按本次所选版本查对应测试，新增版本不覆盖旧内容 |
-| Proof 布局与冻结证据 | [Proof 入口](../../dataset/processed/proof/README.md)、[`src/text2ifc_proof/`](../../src/text2ifc_proof/) | [`scripts/proof/`](../../scripts/proof/)、[`tests/proof/`](../../tests/proof/)、Repair 的 Proof 回归 |
-
-这张表用于定位，不是要求每次运行整列测试。`src/` 中其余 service、fidelity、
-jsonfix 等模块按任务进入；目录存在不等于当前任务要重构它。
-
-数据按 [processed 索引](../../dataset/processed/README.md)分为七类：`proof` 成品与
-冻结证据、`experiments` 实验历史、`derived` 派生数据、`text2json` 训练／评估、
-`agent-demo` Generation 夹具和工作区、`ifc-repair` Repair 案例和离线输入、
-`ifc-repair-runs` 当前 Plan07 源基线。后三者仍有消费者，不能因包含旧 Phase 名就删除。
-
-原始数据和授权查 [来源目录](../../dataset/sources/CATALOG.md)及
-[manifests](../../dataset/manifests/README.md)；旧 processed 路径查
-[2026-09-13 映射](../../dataset/manifests/processed-layout-20260913.json)，更早归档从
-experiments 和各 Proof 集合的 manifest 查找，不改写冻结报告中的原始路径。
-
-`.planning/` 保存状态和 Phase 合同，`docs/` 保存跨阶段说明。原根 `archive/` 已退役，
-从 [Zcode 历史入口](../../dataset/processed/experiments/zcode-history-20260913/README.md)
-查找轻量参考和固定 Git/LFS 修订，不能根据旧报告再恢复一套活动镜像。
-根目录的 `.venv`、`.deps`、`.cache`、`.env` 是运行环境或本地配置；不输出
-凭据，也不把 `.tmp` 中的活动 Git 工作树当作测试垃圾。
-
-## 3. 按任务选择必读材料
-
-| 任务 | 额外必读内容 |
-|---|---|
-| 修改生成链路或 BIM JSON | 当前 Phase SPEC/PLAN/VALIDATION、适用版本 Schema／reference、Generation 工作流、实际 strategy 入口 |
-| Type、材料、属性、配色和门窗模板 | [语义／外观主计划](../architecture/semantic-appearance-plan.md)；[光庭设计](../architecture/courtyard-library-design.md)是专项设计与运行记录 |
-| Token 成本和分包实验 | [Token 效率独立计划](../architecture/token-efficiency-plan.md)、[实验索引](../../dataset/processed/experiments/README.md)；不将已见 A/B/C 当作未见能力集 |
-| 修改 IFC repair 行为 | Repair Pipeline 架构、适用 Phase 合同、对应 operation 与测试 |
-| 修改 Agent、Prompt 或 Schema | [`Agent 能力评测与真实 LLM 准入协议`](../validation/agent-capability-evaluation.md)，以及版本 registry |
-| 运行真实 Provider | 同上；核实本次载荷／预算授权与阶段准入，不能沿用旧 handoff 的许可；Full Preflight 是单独升级 |
-| 检查或发布 Proof | [`IFC Repair Proof 人类可读收纳规范`](../validation/ifc-repair-proof-format.md) 和具体集合报告 |
-| 修改 Dataset 或 manifest | [`dataset/data_organization.md`](../../dataset/data_organization.md)、[`dataset/manifests/README.md`](../../dataset/manifests/README.md) 和来源 catalog |
-| 发布 GitHub | [`publish-to-github.md`](publish-to-github.md) |
-
-Phase 12/12.1 或 Plan 07 的专项维护还可阅读
-[`Phase 12 Plan 07 技术 handover`](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/handoffs/repair/phase12-plan07-closeout-handover-2026-09-03.md)。
-它是专项接续材料，不是整个项目当前状态的替代品。
-
-## 4. 必须分开的状态与证据
-
-接管者最容易把以下概念混在一起：
-
-| 概念 | 回答的问题 |
-|---|---|
-| Phase status | 计划阶段是否按其冻结合同闭合 |
-| Collection status | 某个 Proof 集合是 accepted、pending review 还是 historical |
-| Run status | 某一次运行是 succeeded、clarification、unsupported 还是 failed |
-| Human view | 人工查看 request、IFC、报告和结论的入口 |
-| Machine authority | Provider attempts、runtime、ChangeSet、terminal 和独立复算的完整权威 |
-
-一个 Phase 可以由某份 accepted Proof 闭合，同时另一个展示集合仍是
-`pending_human_review`。一次 genuine Provider 运行成功也不自动等于能力提升；
-离线、fake、replay、live、accepted 和 capability evidence 必须按实际等级报告。
-
-IFC repair Proof 的人读入口通常直接展示：
-
-```text
-REPORT.md
-request.txt
-01-original.ifc     # 仅角色合法时
-02-damaged.ifc
-03-repaired.ifc     # 成功案
-NO-REPAIR.md        # 正确无输出案，与 03-repaired.ifc 互斥
-evidence/README.md  # 回链机器权威
-```
-
-`original.ifc`、private Gold、mutation/deletion truth 不得进入 Provider 输入。没有
-运行前冻结的 case-specific private truth 时，IFCCompare 应明确为 N/A，不能事后
-挑选文件补造 Ground Truth。
-
-## 5. 修改前的最小调查
+## 5. 最小调查、执行节奏与额度
 
 开始编码前应能回答：
 
@@ -407,7 +152,7 @@ fail closed。
 preservation 和 publish gate。涉及真实 LLM 前，完整要求见
 [`agent-capability-evaluation.md`](../validation/agent-capability-evaluation.md)。
 
-四组实验按其既定执行合同运行：A/C 可自行选择脚本或直接编辑 IFC，D 保留官方
+对比实验按其既定执行合同运行：A/C 可自行选择脚本或直接编辑 IFC，D 保留官方
 原生工具，通用执行器不额外引导方法。这不改变源 IFC 不变、私有隔离和统一独立评分要求。
 
 ## 8. 常用验证入口

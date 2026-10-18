@@ -10,7 +10,9 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 
 本目录集中保存可执行的验证设计、评估协议、样例冻结规则和配套实施指令。
 
-## 当前规划：Repair 四组对比实验（2026-09-29）
+## Repair 对比实验与历史准备
+
+当前运行合同、七组映射与恢复方式见[实验专题](repair-comparison/README.md)，结果与证据见[A–G 汇报入口](../reports/repair-experiment-summary-20261015/README.md)。以下段落保留 2026-09-29 的准备快照，其中“未启动”只描述当时状态。
 
 [专题入口](repair-comparison/README.md)维持原路径v0.2：约20个不同IFC的四组实验，正式方案暂按20题，包含2–4个必要信息澄清案例、全量人审与按题预算。两道开发题使用方位／几何坐标、明确尺寸和唯一参照，公开请求无GUID／构件名／方法提示，撤销普通门开向必答项。固定目录原位更新；37项测试及两份损坏IFC的schema＋EXPRESS和独立CLI通过。同步网格查看器已生成，浏览器视觉验收尚未完成。未安装Harness、修改生产代码或启动真实实验。
 
@@ -60,8 +62,8 @@ Repair 当前说明见[技术主文档](../architecture/ifc-repair-pipeline-stat
 
 ## 相关验证资料
 
-- [Generated IFC Gate](../architecture/history/phase-4-wave-0-generated-ifc-gate.md)
-- [Phase 6 Acceptance and Trace Report](../architecture/history/phase-6-acceptance-and-trace-report.md)
+- [Generated IFC Gate](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-4-wave-0-generated-ifc-gate.md)
+- [Phase 6 Acceptance and Trace Report](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/architecture/history/phase-6-acceptance-and-trace-report.md)
 - [Phase 1 Validation](../../.planning/phases/01-bim-json-1-0-contract-and-validator/01-VALIDATION.md)
 - [Phase 2 Verification](../../.planning/phases/02-minimum-bim-json-to-ifc2x3-compiler/02-VERIFICATION.md)
 

@@ -1,0 +1,231 @@
+{
+  "date": "2026-10-07",
+  "base_commit": "d8ee81607c3c1239256c40c4b6dfff1761f40db3",
+  "validation_checkpoint": "67bf97ad615b9f9ce3df9aae0e412e701d8d4ed8",
+  "python": "Python 3.12.14",
+  "scope": "Focused offline regression of changed shared helpers and their direct compiler/Generation/Repair/IFC2Text consumers; not Full Preflight or live acceptance.",
+  "runs": [
+    {
+      "run": "baseline-tests",
+      "command": "python -m pytest tests/contract tests/contract_v2/test_schema.py tests/agent/test_phase6_5_changeset_contract.py tests/ifc_repair/test_changesets.py tests/text2json/test_split_manifest.py tests/text2json/test_gold_set.py -q",
+      "exit_code": 0,
+      "tests": 151,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 8.834,
+      "failed_cases": []
+    },
+    {
+      "run": "functional-tests",
+      "command": "python -m pytest tests/compiler tests/ifc_repair/test_apply_transaction.py tests/agent/test_interactive_cli_generation.py tests/ifc2text/test_baseline.py tests/ifc2text/test_offline_public_bridge.py tests/agent/test_phase6_5_changeset_apply.py tests/ifc_repair/test_phase12_live_uat.py::test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3 tests/ifc_repair/test_phase12_live_uat.py::test_clarification_transport_drives_real_api_resume_and_publication tests/ifc_repair/test_phase12_live_uat.py::test_program_guard_transport_stops_real_api_before_stage2_or_mutation -q",
+      "exit_code": 1,
+      "tests": 323,
+      "failures": 11,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 270.851,
+      "failed_cases": [
+        "tests.compiler.test_coordinated_appearance::test_theme_only_changes_styles_and_explicit_color_wins",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[window-single]",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[window-double-vertical]",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[door-left]",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[door-right]",
+        "tests.compiler.test_transparency_only_appearance::test_only_transparency_preserves_default_part_colours_and_mesh[2.1-window-double-vertical]",
+        "tests.ifc_repair.test_apply_transaction::test_transaction_publishes_only_after_reopen_and_postconditions",
+        "tests.ifc_repair.test_apply_transaction::test_transaction_failure_leaves_no_repaired_artifact",
+        "tests.ifc_repair.test_phase12_live_uat::test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3",
+        "tests.ifc_repair.test_phase12_live_uat::test_clarification_transport_drives_real_api_resume_and_publication",
+        "tests.ifc_repair.test_phase12_live_uat::test_program_guard_transport_stops_real_api_before_stage2_or_mutation"
+      ]
+    },
+    {
+      "run": "original-appearance",
+      "command": "python -m pytest tests/compiler/test_coordinated_appearance.py::test_theme_only_changes_styles_and_explicit_color_wins tests/compiler/test_part_appearance.py::test_part_override_reopens_with_identical_mesh_and_materials tests/compiler/test_transparency_only_appearance.py::test_only_transparency_preserves_default_part_colours_and_mesh[2.1-window-double-vertical] -q",
+      "exit_code": 1,
+      "tests": 6,
+      "failures": 5,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 15.075,
+      "failed_cases": [
+        "tests.compiler.test_coordinated_appearance::test_theme_only_changes_styles_and_explicit_color_wins",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[window-single]",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[window-double-vertical]",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[door-left]",
+        "tests.compiler.test_part_appearance::test_part_override_reopens_with_identical_mesh_and_materials[door-right]"
+      ]
+    },
+    {
+      "run": "repair-recheck",
+      "command": "python -m pytest tests/ifc_repair/test_apply_transaction.py tests/ifc_repair/test_phase12_live_uat.py::test_complete_transport_drives_the_real_repair_api_and_reopens_ifc2x3 tests/ifc_repair/test_phase12_live_uat.py::test_clarification_transport_drives_real_api_resume_and_publication tests/ifc_repair/test_phase12_live_uat.py::test_program_guard_transport_stops_real_api_before_stage2_or_mutation -q",
+      "exit_code": 0,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 18.288,
+      "failed_cases": []
+    },
+    {
+      "run": "appearance-recheck",
+      "command": "python -m pytest tests/compiler/test_coordinated_appearance.py::test_theme_only_changes_styles_and_explicit_color_wins tests/compiler/test_part_appearance.py::test_part_override_reopens_with_identical_mesh_and_materials tests/compiler/test_transparency_only_appearance.py::test_only_transparency_preserves_default_part_colours_and_mesh -q",
+      "exit_code": 0,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 33.176,
+      "failed_cases": []
+    },
+    {
+      "run": "refactor-tests",
+      "command": "python -m pytest tests/contract tests/contract_v2/test_schema.py tests/agent/test_phase6_5_changeset_contract.py tests/ifc_repair/test_changesets.py tests/text2json/test_split_manifest.py tests/text2json/test_gold_set.py -q",
+      "exit_code": 0,
+      "tests": 151,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "seconds": 8.338,
+      "failed_cases": []
+    }
+  ],
+  "unique_final_cases": 474,
+  "unique_final_passed": 474,
+  "static_compile": {
+    "argv": [
+      "python",
+      "-m",
+      "compileall",
+      "-q",
+      "src",
+      "scripts"
+    ],
+    "exit_code": 0,
+    "performed_before_and_after_deletion": true
+  },
+  "wheel_build": {
+    "argv": [
+      "python",
+      "-m",
+      "build",
+      "--wheel",
+      "--no-isolation"
+    ],
+    "exit_code": 0,
+    "scope": "Build succeeds; runtime remains source-checkout based. Wheel-only resource installation not validated."
+  },
+  "post_delete": {
+    "production_modules_imported": 268,
+    "test_imports_blocked": true,
+    "commands": [
+      {
+        "argv": [
+          "python",
+          "scripts/agent/run_text2ifc_chat.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.474
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/agent/run_phase6_2_cli.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.488
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/agent/query_phase6_2_sessions.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.048
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/ifc_repair/repair.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.554
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/ifc2text/run_baseline.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.396
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/ifc2text/prepare_hierarchical.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.469
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/ifc2text/component_campaign.py",
+          "--help"
+        ],
+        "exit_code": 0,
+        "seconds": 0.511
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/bim_json_v2/validate.py",
+          "formal",
+          "/workspace/scratch/b350d5e8824a/post-delete-smoke/input.json"
+        ],
+        "exit_code": 0,
+        "seconds": 0.321
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/bim_json/compile_ifc.py",
+          "/workspace/scratch/b350d5e8824a/post-delete-smoke/input.json",
+          "/workspace/scratch/b350d5e8824a/post-delete-smoke/output.ifc"
+        ],
+        "exit_code": 0,
+        "seconds": 1.683
+      },
+      {
+        "argv": [
+          "python",
+          "scripts/ifc2text/run_baseline.py",
+          "/workspace/scratch/b350d5e8824a/post-delete-smoke/output.ifc",
+          "--output-dir",
+          "/workspace/scratch/b350d5e8824a/post-delete-smoke/description",
+          "--reconstructed",
+          "/workspace/scratch/b350d5e8824a/post-delete-smoke/output.ifc"
+        ],
+        "exit_code": 0,
+        "seconds": 0.598
+      }
+    ],
+    "ifc_schema": "IFC2X3",
+    "source_tree_test_files_present": false,
+    "live_provider_calls": 0
+  },
+  "live_provider_calls": 0,
+  "limitations": [
+    "No BGE/Qdrant live retrieval validation",
+    "No paid/live Provider calls",
+    "No repository-wide Full Preflight",
+    "Test/preflight commands require restoring the validation checkpoint",
+    "Remote GitHub writes blocked by integration permissions; CLI has no credentials"
+  ]
+}

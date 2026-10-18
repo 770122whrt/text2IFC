@@ -1,8 +1,8 @@
-import json
 from pathlib import Path
 from typing import Any
 
-from jsonschema import Draft202012Validator
+from .schema_io import assert_local_references as _assert_local_references
+from .schema_io import load_local_schema as _load_schema_path
 
 
 SCHEMA_PATH = (
@@ -29,31 +29,8 @@ DRAFT_SCHEMA_PATH = (
 )
 
 
-def _assert_local_references(value: Any) -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            if key == "$ref" and (
-                not isinstance(child, str) or not child.startswith("#")
-            ):
-                raise ValueError(f"Remote schema references are forbidden: {child!r}")
-            _assert_local_references(child)
-    elif isinstance(value, list):
-        for child in value:
-            _assert_local_references(child)
-
-
 def load_schema() -> dict[str, Any]:
-    schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
-    _assert_local_references(schema)
-    Draft202012Validator.check_schema(schema)
-    return schema
-
-
-def _load_schema_path(path: Path) -> dict[str, Any]:
-    schema = json.loads(path.read_text(encoding="utf-8"))
-    _assert_local_references(schema)
-    Draft202012Validator.check_schema(schema)
-    return schema
+    return _load_schema_path(SCHEMA_PATH)
 
 
 def load_schema_v2() -> dict[str, Any]:

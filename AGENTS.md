@@ -19,6 +19,7 @@
 
 ## Change and verification contracts
 
+- The 2026-10-07 lean cleanup retired historical test sources after validation; its checkpoint and recovery procedure remain in `docs/reports/lean-branch-20261007/REPORT.md`. The integrated Repair/UI paths retain their necessary regression tests and dependencies. Missing tests never count as a passed preflight; restore the applicable targets before stage admission.
 - Use Python compatible with `pyproject.toml`, preferably the repository `.venv`. Behavioral changes are test-first with the narrowest relevant tests, then any broader gates required by the applicable contract. Offline, focused, skipped or timed-out checks do not establish live or repository-wide success.
 - Scoped validation is the default. Reuse sufficient passed checks unless a new change, failure or actual risk requires more. A stage preflight is required at first entry or when admission becomes stale; Full / repository-wide Preflight requires a separate explanation of reason and scope and explicit user approval. Missing or stale admission fails closed and does not automatically trigger Full Preflight.
 - Do not rewrite registered or released schema, prompt, or prompt-profile versions; add a new version and update the appropriate registry or hash references and focused tests. Treat accepted, committed proof and run evidence as append-only: do not relabel or silently replace it. Active ignored experiment or UAT workspaces are outside this rule until curated and committed.

@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import copy
 import json
-import os
-import tempfile
 from collections import Counter
 from concurrent.futures import ProcessPoolExecutor
 from pathlib import Path
@@ -14,6 +12,7 @@ from typing import Any, Callable
 from text2ifc_contract.draft import validate_draft
 from text2ifc_contract.validation_v2 import validate_v2_document
 
+from .io import atomic_write_text
 from .projection import ProjectionError, project_supported_scope_target
 from .splits import (
     DEFAULT_MANIFEST_PATH,
@@ -482,30 +481,6 @@ def build_gold_set(
     for path, content in outputs.items():
         atomic_write_text(path, content)
     return manifest
-
-
-def atomic_write_text(path: Path, content: str) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    temporary_path: Path | None = None
-    try:
-        with tempfile.NamedTemporaryFile(
-            mode="w",
-            encoding="utf-8",
-            newline="\n",
-            prefix=f".{path.name}.",
-            suffix=".tmp",
-            dir=path.parent,
-            delete=False,
-        ) as temporary:
-            temporary_path = Path(temporary.name)
-            temporary.write(content)
-            temporary.flush()
-            os.fsync(temporary.fileno())
-        os.replace(temporary_path, path)
-        temporary_path = None
-    finally:
-        if temporary_path is not None:
-            temporary_path.unlink(missing_ok=True)
 
 
 def build_all_artifacts(

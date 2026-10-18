@@ -35,7 +35,7 @@
 
 |范围|实际依据|设计结论|
 |---|---|---|
-|水平直线栏板|[编译测试](../../tests/compiler/test_v2_railing.py)采用矩形截面拉伸，核对两段不同朝向栏杆的世界坐标和二层归属|可作为四边回廊栏板的起点；整圈组合仍需一次定向核对|
+|水平直线栏板|[编译测试](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/tests/compiler/test_v2_railing.py)采用矩形截面拉伸，核对两段不同朝向栏杆的世界坐标和二层归属|可作为四边回廊栏板的起点；整圈组合仍需一次定向核对|
 |需求／预期传递|[expected_facts.py](../../src/text2ifc_agent/expected_facts.py)登记 railings → IfcRailing／linear_segment|明确记录每段的位置、长度、高度、厚度、所属楼层|
 |分包|[generation_packages.py](../../src/text2ifc_agent/generation_packages.py)接受水平且沿X或Y轴的非零直线段|斜向、曲线和高低端点不能算作现有 staged 支持|
 |几何表达|[geometry.py](../../src/text2ifc_compiler/geometry.py)对普通拉伸创建一个 solid；现有栏杆测试外形是整片板|并非已具备立柱＋扶手＋玻璃的参数化栏杆模板|

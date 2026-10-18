@@ -2,7 +2,7 @@
 
 本目录是 `Repair Milestone R1 — IFC2X3 Bounded Semantic Repair Closed Loop`
 的执行前冻结包。权威任务边界来自
-[`repair-milestone-r1-final-acceptance.md`](../../handoffs/repair-milestone-r1-final-acceptance.md)。
+[`repair-milestone-r1-final-acceptance.md`](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/handoffs/repair-milestone-r1-final-acceptance.md)。
 
 本冻结包建立时只声明当前实现、选择公开 IFC2X3 模型、绑定测试请求并规划未来
 Proof；该段是冻结时的历史边界。2026-09-01 的 partial genuine 状态继续保留在下方。

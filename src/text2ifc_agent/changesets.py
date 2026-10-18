@@ -10,6 +10,8 @@ from typing import Any, Iterable
 
 from jsonschema import Draft202012Validator
 
+from text2ifc_contract.schema_io import assert_local_references as _assert_local_references
+from text2ifc_contract.schema_io import load_local_schema
 from text2ifc_contract.validation import ValidationIssue
 
 
@@ -26,10 +28,7 @@ def _cached_changeset_schema(version=CHANGESET_SCHEMA_VERSION) -> dict[str, Any]
              'text2ifc/bim-json-changeset/1.1': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.1.schema.json'),
              'text2ifc/bim-json-changeset/1.2': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.2.schema.json'),
              'text2ifc/bim-json-changeset/1.3': CHANGESET_SCHEMA_PATH.with_name('bim-json-changeset-1.3.schema.json')}
-    schema = json.loads(paths[version].read_text(encoding="utf-8"))
-    _assert_local_references(schema)
-    Draft202012Validator.check_schema(schema)
-    return schema
+    return load_local_schema(paths[version])
 
 
 def load_changeset_schema(version=CHANGESET_SCHEMA_VERSION) -> dict[str, Any]:
@@ -132,19 +131,6 @@ def _semantic_issues(document: dict[str, Any]) -> list[ValidationIssue]:
                     )
                 )
     return issues
-
-
-def _assert_local_references(value: Any) -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            if key == "$ref" and (
-                not isinstance(child, str) or not child.startswith("#")
-            ):
-                raise ValueError(f"Remote schema references are forbidden: {child!r}")
-            _assert_local_references(child)
-    elif isinstance(value, list):
-        for child in value:
-            _assert_local_references(child)
 
 
 def _pointer(parts: Iterable[Any]) -> str:

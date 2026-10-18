@@ -15,6 +15,8 @@ from enum import Enum
 
 from jsonschema import Draft202012Validator
 
+from text2ifc_contract.schema_io import assert_local_references as _assert_local_references
+from text2ifc_contract.schema_io import load_local_schema
 from text2ifc_contract.validation import ValidationIssue
 
 
@@ -43,10 +45,7 @@ DRAFT_CHANGESET_SCHEMA_PATH_0_4 = PROJECT_ROOT / "schemas" / "agent" / "ifc-repa
 
 @lru_cache(maxsize=1)
 def _cached_changeset_schema() -> dict[str, Any]:
-    schema = json.loads(CHANGESET_SCHEMA_PATH.read_text(encoding="utf-8"))
-    _assert_local_references(schema)
-    Draft202012Validator.check_schema(schema)
-    return schema
+    return load_local_schema(CHANGESET_SCHEMA_PATH)
 
 
 def load_changeset_schema() -> dict[str, Any]:
@@ -57,10 +56,7 @@ def load_changeset_schema() -> dict[str, Any]:
 
 @lru_cache(maxsize=5)
 def _cached_schema(path: str) -> dict[str, Any]:
-    schema = json.loads(Path(path).read_text(encoding="utf-8"))
-    _assert_local_references(schema)
-    Draft202012Validator.check_schema(schema)
-    return schema
+    return load_local_schema(Path(path))
 
 
 def load_changeset_draft_schema(
@@ -440,19 +436,6 @@ def _non_finite_number_issues(
                 )
             ]
     return []
-
-
-def _assert_local_references(value: Any) -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            if key == "$ref" and (
-                not isinstance(child, str) or not child.startswith("#")
-            ):
-                raise ValueError(f"Remote schema references are forbidden: {child!r}")
-            _assert_local_references(child)
-    elif isinstance(value, list):
-        for child in value:
-            _assert_local_references(child)
 
 
 def _pointer(parts: Iterable[Any]) -> str:

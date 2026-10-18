@@ -22,7 +22,7 @@
 这些是阶段证据，不替代当前代码的准入或最新成绩。
 
 - [Phase 10.3 五窗验证](phase10.3-five-window-batch-validation-report.md)
-- [Phase 11 Door / Opening 验证](phase11-door-validation-report.md)
+- [Phase 11 Door / Opening 验证](phase11-door-validation-report.md)；审计前的假阳性保留于[历史 known-failure fixture](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/tests/fixtures/ifc_repair/phase11-door-known-failure/README.md)，不属于成功证据
 - [Phase 12 / 12.1 梁柱与属性验证](phase12-beam-column-validation-report.md)
 - [R1 最终验收入口](../repair-milestone-r1/README.md)
 - [工作流 Proof](../../../dataset/processed/proof/README.md)

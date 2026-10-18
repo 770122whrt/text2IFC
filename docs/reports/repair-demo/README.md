@@ -2,7 +2,7 @@
 
 更新：2026-10-17。给老师汇报先读技术文档，再按需要查 Claim 和文献；三份主文档继续分别维护，不新增平行主稿。当前 Harness 接入、已执行批次及失败边界见[实验专题](../../validation/repair-comparison/README.md)，不沿用早期“待安装”的开发状态。IFC-SemRepair 是 Repair 论文暂定名，项目仍为 text2IFC。
 
-[20 IFC／四组实验专题](../../validation/repair-comparison/README.md)分别维护实施计划、指标和 DeepSeek Harness 接入隔离规范；当前运行方式与支持边界见专题入口。这是技术执行附件，不是第四份研究主稿。批准状态与真实结果继续回写 [Claim 与实验登记](claims-and-experiments.md)，不再复制一套指标或带版本号的正文。
+[Repair 对比实验专题](../../validation/repair-comparison/README.md)分别维护实施计划、指标和 DeepSeek Harness 接入隔离规范；当前运行方式与支持边界见专题入口。这是技术执行附件，不是第四份研究主稿。批准状态与真实结果继续回写 [Claim 与实验登记](claims-and-experiments.md)，不再复制一套指标或带版本号的正文。
 
 ### 三份持续维护文档
 
@@ -22,7 +22,7 @@
 - 展示版 Method 沿用上传原稿的“总体路线图—分 Part 解释—贯穿案例”风格，采用研究者向老师汇报的叙述方式；用图说明澄清、有限纠正、核验与下一轮请求，过时状态按当前证据更新；不写函数、代码路径、内部数据结构清单或调试交接流程；必要术语用其方法作用解释，不保留助理对话措辞。
 - Claims 与实验设计区分候选主张、已有证据、待验证问题和实验批准状态；文档更新不等于用户审阅通过或同意执行实验。
 
-技术原稿已确认为 [Text2IFC-Pipeline-Feishu-2026-08-29.md](archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)，不是 9 月 3 日 Plan 07 handover。它按原字节保存为历史来源，当前技术说明仍在原固定路径维护。飞书[Repair 技术文档](https://xcnn3ovwdml4.feishu.cn/wiki/LGB0wgMkliWUr7kBRvGchADgn7b)是技术正文的汇报副本，不另立第四份主稿。
+技术原稿已确认为 [Text2IFC-Pipeline-Feishu-2026-08-29.md](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)，不是 9 月 3 日 Plan 07 handover。它按原字节保存为历史来源，当前技术说明仍在原固定路径维护。飞书[Repair 技术文档](https://xcnn3ovwdml4.feishu.cn/wiki/LGB0wgMkliWUr7kBRvGchADgn7b)是技术正文的汇报副本，不另立第四份主稿。
 
 ### 更新分工
 

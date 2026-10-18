@@ -180,4 +180,4 @@ flowchart LR
 
 局部变更可以减少交给语言模型的无关信息，但系统仍需保存完整 IFC 并执行检查。因此，整体速度、token 和内存优势需要对照实验，不能仅凭变更范围小就得出结论。现有案例支持方法演示，尚不足以建立普遍优越性或独立创新结论。
 
-文献依据继续维护在 [Repair 文献矩阵](../reports/repair-demo/repair-literature-matrix-20260921.md)，候选贡献与实验设计继续维护在 [Claims 与实验设计](../reports/repair-demo/claims-and-experiments.md)。本文作为三份主文档中的展示版 Method，保持原路径更新；沿用[上传原稿](../reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)的路线图、分 Part 和贯穿案例风格，内容按当前方法与证据整理。
+文献依据继续维护在 [Repair 文献矩阵](../reports/repair-demo/repair-literature-matrix-20260921.md)，候选贡献与实验设计继续维护在 [Claims 与实验设计](../reports/repair-demo/claims-and-experiments.md)。本文作为三份主文档中的展示版 Method，保持原路径更新；沿用[上传原稿](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/reports/repair-demo/archive/Text2IFC-Pipeline-Feishu-2026-08-29.md)的路线图、分 Part 和贯穿案例风格，内容按当前方法与证据整理。
