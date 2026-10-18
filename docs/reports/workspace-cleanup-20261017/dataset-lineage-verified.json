@@ -1,0 +1,3728 @@
+{
+  "schema_version": "repair-dataset-lineage-audit/0.1",
+  "checked_at_utc": "2026-10-17T07:04:01.074668+00:00",
+  "scope": {
+    "pinned_ssh_read_only": true,
+    "server_ledger_writes": 0,
+    "model_calls": 0,
+    "experiment_reruns": 0,
+    "input_ifc_rehashes": 0,
+    "hash_basis": "frozen manifest input bindings; current input IFC bytes were not rehashed"
+  },
+  "source_dataset": {
+    "path": "dataset/processed/ifc-repair/formal-40-pairs-25-20261010/public/inputs.csv",
+    "sha256": "c7226ac39868cb0e56a4e68b3bb527d3ab1e4ef28126e247361fdded0c3658ca",
+    "cases": 1200,
+    "unique_case_ids": 1200
+  },
+  "cohorts": {
+    "local_f": {
+      "cases": 200,
+      "selection": "L",
+      "manifest": {
+        "path": ".tmp/qwen-fg-ms95-20261012/endpoint45-200-pairs/batch.json",
+        "sha256": "cd055404167dc3e6423510b9635cd6335592a90aa41dc6896c655fac372fe320"
+      }
+    },
+    "local_g": {
+      "cases": 200,
+      "selection": "L",
+      "same_batch_as_local_f": true,
+      "execution_status": "historically paused; not inspected or resumed by this audit"
+    },
+    "server_f": {
+      "cases": 200,
+      "selection": "S",
+      "subset_of_server_g": true
+    },
+    "server_g": {
+      "cases": 400,
+      "selection": "T"
+    },
+    "ablation_each_variant": {
+      "cases": 400,
+      "selection": "T",
+      "variants": [
+        "no_a",
+        "direct_b",
+        "no_c_loop"
+      ],
+      "source_run": "/mnt/dataY/wanghaoyu/repair-qwen-fg-20261013/app/runs/G"
+    }
+  },
+  "relationships": {
+    "L_intersect_T": 0,
+    "S_intersect_T": 200,
+    "S_subset_T": true,
+    "ablation_equal_T": true,
+    "combined_f_cases": 400,
+    "combined_f_overlap_ablation": 200,
+    "combined_f_only": 200,
+    "ablation_only": 200
+  },
+  "selection_receipt": {
+    "path": ".tmp/repair-fg-server/server-selection.json",
+    "sha256": "b6cafbf72bc342904e55a88de4a8fd7b2a2f4213e3e38ab53267922d603ebaaa",
+    "seed": 20261013,
+    "excluded_local_matches_L": true
+  },
+  "input_and_budget_comparisons": [
+    {
+      "left": "server_f",
+      "right": "ablation_each_variant",
+      "common_cases": 200,
+      "same_frozen_model_ifc_sha256": 200,
+      "same_frozen_effective_request_sha256": 200,
+      "same_per_case_budget": 200
+    },
+    {
+      "left": "server_g",
+      "right": "ablation_each_variant",
+      "common_cases": 400,
+      "same_frozen_model_ifc_sha256": 400,
+      "same_frozen_effective_request_sha256": 400,
+      "same_per_case_budget": 400
+    }
+  ],
+  "server_manifests": {
+    "server_f": {
+      "remote": "/mnt/dataY/wanghaoyu/repair-qwen-fg-20261013/app/runs/F/batch.json",
+      "bytes": 417939,
+      "file_sha256": "9b119b621d7ef6155e57f0046b4337d045c01c4943c6a52eeaba5b431dec0abd",
+      "manifest_sha256_field": "c97ac18c2f42edde16292b801d174b0a83bfaad771b9aa17197911f30bcd1af7",
+      "source_run": null,
+      "source_batch_sha256": null
+    },
+    "server_g": {
+      "remote": "/mnt/dataY/wanghaoyu/repair-qwen-fg-20261013/app/runs/G/batch.json",
+      "bytes": 832530,
+      "file_sha256": "4c8e76c9a55da0ef4a0afd1082b1fd4b892592f86895a6518ae1140cb9b665fa",
+      "manifest_sha256_field": "197db9a75cb4d679279fa0b70e69512e49a46fbd2243e8ba7fdc83a51de28cf2",
+      "source_run": null,
+      "source_batch_sha256": null
+    },
+    "ablation_preparation": {
+      "remote": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/server-preparation.json",
+      "bytes": 252668,
+      "file_sha256": "6047ae6a188a4421e65bcaa816abf96379e5d2f75446f03b6cea1a29c5c185da",
+      "manifest_sha256_field": "2e0177328a0ea07246d37241da550d72525531e09993dd5e02f06ac31f8af25a",
+      "source_run": "/mnt/dataY/wanghaoyu/repair-qwen-fg-20261013/app/runs/G",
+      "source_batch_sha256": "4c8e76c9a55da0ef4a0afd1082b1fd4b892592f86895a6518ae1140cb9b665fa"
+    },
+    "ablation_execution": {
+      "remote": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/qwen-execution.json",
+      "bytes": 252297,
+      "file_sha256": "fe12499f3233b323e7fa4ffb4787f48b155b87263137a9715188f82c1dab382c",
+      "manifest_sha256_field": "46515c47348131b6ed510a70636d83d0ed98d14147e69e83e64e63b2efabae9f",
+      "source_run": null,
+      "source_batch_sha256": "4c8e76c9a55da0ef4a0afd1082b1fd4b892592f86895a6518ae1140cb9b665fa"
+    }
+  },
+  "case_membership": [
+    {
+      "case_id": "formal-001-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-001-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-001-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-001-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-001-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-001-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-001-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-002-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d008-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-002-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-002-d011-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-002-d013-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-002-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-002-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d019-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d021-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-003-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-003-d025-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d027-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d028-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-d029-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-003-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-003-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-s1-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-003-s1-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-004-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-004-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-004-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-004-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-004-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-004-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-004-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-005-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-005-d015-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-005-d017-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d018-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d019-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-005-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-005-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-005-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-006-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-006-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-006-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-006-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-006-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-006-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d014-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-d022-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-007-d029-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-007-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-e2-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-007-s1-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-007-s1-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-007-s1-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-007-s1-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-008-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-008-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-008-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-008-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-008-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-008-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-009-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-009-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-009-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-009-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d013-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-d014-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-009-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-009-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-010-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-010-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-010-d013-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d014-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-d015-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-010-e2-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-010-e2-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-011-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-011-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-011-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-011-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-011-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-d014-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-011-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-011-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-012-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-012-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-012-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-012-d014-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d015-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-012-d017-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d019-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-012-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-013-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d017-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-013-d020-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-013-d021-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-013-d022-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-013-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-013-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-014-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-014-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-014-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d019-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d022-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d025-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d028-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-d030-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-014-e2-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-014-e2-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-014-s1-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-015-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d015-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-d022-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-015-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-015-d024-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-015-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-015-e2-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-016-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-016-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-d025-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-016-s1-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-016-s1-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-016-s1-d015-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-016-s1-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d018-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-016-s1-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d008-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-017-d011-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d014-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-017-d015-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-d016-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-017-d019-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-017-d022-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-017-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-017-e2-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-018-d008-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-018-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-018-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-d015-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-018-d017-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-018-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-018-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-019-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d008-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-019-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d015-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-019-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d017-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d022-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-d024-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-019-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-019-e2-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-020-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-020-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-020-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d014-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d017-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-020-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-d021-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-020-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-020-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-020-e2-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-021-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-021-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-021-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-021-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-021-s1-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-s1-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-s1-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-021-s1-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-022-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-022-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-022-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-022-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-022-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-022-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-023-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-023-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-023-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-023-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-023-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-d013-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-023-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-024-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-024-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-024-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-024-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d011-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-024-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-024-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-025-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-025-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-025-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-025-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-025-s1-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-s1-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-s1-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-025-s1-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-026-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-026-d007-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-026-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-026-d012-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-026-d013-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-026-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-027-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-027-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-027-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d011-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d018-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d020-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-027-d022-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-027-d024-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d026-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d028-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-d030-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-027-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-029-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-029-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-029-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-029-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-029-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-030-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-030-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-030-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-030-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-030-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-030-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-030-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-031-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-031-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d016-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-031-d017-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d019-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d021-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d022-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-031-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-031-e2-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-032-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-032-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-d019-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-d029-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-e2-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-032-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-e2-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-032-e2-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-s1-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-032-s1-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-032-s1-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-s1-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-s1-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-032-s1-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-033-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-033-d008-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-033-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d010-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-033-d012-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-d013-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-033-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-034-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-034-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-034-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-034-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-034-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-034-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-035-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-035-d003-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-035-d009-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-035-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-035-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-d018-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-035-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-035-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d005-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-036-d008-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-036-d010-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-036-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-036-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-d013-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-036-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-037-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d006-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-037-d007-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-037-d011-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d014-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d015-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d016-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d017-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d018-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-d021-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-037-d022-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-037-d025-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-037-e2-d003-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-037-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-038-d004-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-038-d008-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-038-d009-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-038-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-038-d015-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d017-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d018-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d020-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d024-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-d025-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-038-e2-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d001-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-039-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d006-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d007-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-039-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d009-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d010-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d011-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d012-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-d013-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-039-d014-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-039-d015-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-039-e2-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-040-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-d002-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-d005-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-d006-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-040-d014-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-040-d018-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-d020-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-040-d022-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-040-d023-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-d025-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-e2-d001-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-e2-d002-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-040-e2-d003-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-040-e2-d004-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d002-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d005-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-041-e2-d008-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d011-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-041-e2-d014-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d017-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d020-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d023-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-041-e2-d025-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d026-world",
+      "local_f_and_g": false,
+      "server_f": true,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d027-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d028-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-041-e2-d029-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    },
+    {
+      "case_id": "formal-041-e2-d030-world",
+      "local_f_and_g": true,
+      "server_f": false,
+      "server_g_and_ablation": false
+    },
+    {
+      "case_id": "formal-041-p3-d001-world",
+      "local_f_and_g": false,
+      "server_f": false,
+      "server_g_and_ablation": true
+    }
+  ],
+  "limits": [
+    "A shared 1200-case source dataset does not imply the same selected cases.",
+    "Matching frozen inputs and per-case budgets do not establish a matched runtime/configuration baseline.",
+    "No private Gold, repair outputs, or model response bodies were used to establish input lineage."
+  ]
+}

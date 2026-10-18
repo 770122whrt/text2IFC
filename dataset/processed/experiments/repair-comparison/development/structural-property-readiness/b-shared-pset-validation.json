@@ -1,0 +1,168 @@
+{
+  "schema_version": "repair-comparison-scoped-fix-validation/0.1",
+  "role": "same-stage scoped offline copy-on-write bug fix; not Stage Admission, accepted Proof or model result",
+  "created_at": "2026-10-08T12:53:01.881890+00:00",
+  "observed_failure": "After shared-Pset occurrence upsert, orphan copied owner/application graph introduces IfcApplication.UR1/UR2 while property postconditions pass",
+  "contract": ".planning/phases/10.2-ifc2x3-property-knowledge-retrieval-and-resolution/10.2-SPEC.md safe occurrence upsert; metadata/Type/non-target/source unchanged and reopened IFC valid",
+  "failing_stage": "semantic authoring at shared-Pset copy_deep; native EXPRESS subsequently rejects candidate",
+  "candidate_mechanism": "Exclude IfcOwnerHistory by IFC class selector rather than OwnerHistory attribute name; retain original owner and application graph",
+  "production_scope": [
+    "src/text2ifc_ifc_repair/semantic_authoring.py"
+  ],
+  "baseline_source_sha256": "0de53503533ffaa0f6d9d7958c1808bd84728da799cdf25270ace6320e79626a",
+  "candidate_source_sha256": "0ed53e114eca79f9b3b335c30086439cffb7333c9e283db259518b5771c29b90",
+  "test_sha256": "db92009d17cb38ed8a89fb3d702590b9a8f8a2f07565ab34418c8b51ab9b324a",
+  "frozen_family_path": ".tmp/repair-comparison-formal-expansion/b-shared-pset-family-v2/family.json",
+  "frozen_family_sha256": "ab50c3fc8e00ffae5ccba40077cc565387e81c214ab09dd644fad04309ea04de",
+  "denominator": 18,
+  "baseline": {
+    "failed": 4,
+    "passed": 14,
+    "pytest_seconds": 67.71
+  },
+  "candidate": {
+    "failed": 0,
+    "passed": 18,
+    "pytest_seconds": 62.72
+  },
+  "paired": {
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_pset-boolean-beam]": {
+      "baseline": "failed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_pset-boolean-window]": {
+      "baseline": "failed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_pset-identifier-beam]": {
+      "baseline": "failed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_pset-identifier-window]": {
+      "baseline": "failed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_property-boolean-beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_property-boolean-window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_property-identifier-beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[shared_property-identifier-window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[ordinary_pset-boolean-beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[ordinary_pset-boolean-window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[ordinary_pset-identifier-beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_occurrence_upsert_preserves_owner_graph_and_passes_express[ordinary_pset-identifier-window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_failure_after_shared_pset_copy_publishes_nothing[boolean-beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_failure_after_shared_pset_copy_publishes_nothing[boolean-window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_failure_after_shared_pset_copy_publishes_nothing[identifier-beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_failure_after_shared_pset_copy_publishes_nothing[identifier-window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_shared_type_mutation_is_rejected_before_copy[beam]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    },
+    "test_shared_type_mutation_is_rejected_before_copy[window]": {
+      "baseline": "passed",
+      "candidate": "passed"
+    }
+  },
+  "existing_direct_regressions": {
+    "failed": 0,
+    "passed": 61,
+    "pytest_seconds": 10.27
+  },
+  "raw_receipts": {
+    "red": {
+      "path": ".tmp/repair-comparison-formal-expansion/b-shared-pset-red/receipt.json",
+      "sha256": "641a0b4b1a09f5288d61fcf008ef8174c4fa8b70c89ece8137e5ca4b3fa96754"
+    },
+    "green": {
+      "path": ".tmp/repair-comparison-formal-expansion/b-shared-pset-green/receipt.json",
+      "sha256": "5d0092a5f0a9cce73267cfadba4573820f097258d4eb10b397e14ee41a36740a"
+    },
+    "regression": {
+      "path": ".tmp/repair-comparison-formal-expansion/b-shared-pset-regression/receipt.json",
+      "sha256": "47d89855f8064ab0e9e1c5a83389bd89c1ca8c3970196bea6586127ee8d4ca2c"
+    }
+  },
+  "native_validation": {
+    "library": "IfcOpenShell",
+    "version": "0.8.5",
+    "express_rules": true,
+    "sources": 12,
+    "source_diagnostics": 0,
+    "candidate_diagnostics": 0,
+    "red_native_diagnostics_per_affected_case": 2,
+    "rules": [
+      "IfcApplication.UR1",
+      "IfcApplication.UR2"
+    ],
+    "raw_red_diagnostics": ".tmp/repair-comparison-formal-expansion/b-shared-pset-red/native-express-diagnostics.json"
+  },
+  "safety": {
+    "source_bytes_unchanged": true,
+    "Type_and_peer_preserved": true,
+    "owner_graph_not_copied": true,
+    "post_clone_failure_no_partial_artifact": true,
+    "unsupported_Type_ownership_no_artifact": true
+  },
+  "compileall": {
+    "command": ".venv/Scripts/python.exe -m compileall -q src/text2ifc_ifc_repair/semantic_authoring.py tests/ifc_repair/test_shared_pset_owner_history.py",
+    "exit_code": 0,
+    "wall_seconds": 0.7274764
+  },
+  "git_diff_check": {
+    "command": "git diff --check -- src/text2ifc_ifc_repair/semantic_authoring.py",
+    "exit_code": 0,
+    "wall_seconds": 2.993218
+  },
+  "excluded_failures_from_behavior_denominator": {
+    "fixture_setup": "b-shared-pset-family/beam-boolean-shared_pset/fixture-diagnostics.json: mandatory rectangle profile Position was missing in two synthetic entities, corrected and retained before production edit",
+    "tool_environment": "b-shared-pset-tool-environment-failures.json; no command launched"
+  },
+  "stage_admission_relationship": "scoped supplement; parent/Runtime worker owns new full fake-SDK runtime seam and live admission hashes; this child does not authorize transport",
+  "allowed_claim": "Deterministic shared-Pset metadata copy bug fixed across the frozen regression family; no blind or system capability claim",
+  "models_called": false,
+  "network_transport_attempted": false,
+  "software_installed": false,
+  "full_preflight_run": false,
+  "git_commit_or_push_by_this_agent": false,
+  "limitations": [
+    "Two synthetic models are offline regression sources, not unseen test subjects",
+    "Direct production transaction publishes a candidate only; runtime terminal admission is independently rerun by Runtime worker",
+    "Previously revealed native02 fake-SDK failure retained elsewhere, never overwritten"
+  ]
+}

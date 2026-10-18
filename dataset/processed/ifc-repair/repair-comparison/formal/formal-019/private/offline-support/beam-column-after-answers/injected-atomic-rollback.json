@@ -1,0 +1,457 @@
+{
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": false,
+  "published": false,
+  "audit": {
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true,
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "status": "passed",
+        "evidence": {}
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "status": "passed",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        }
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "status": "passed",
+        "evidence": {
+          "actual_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587"
+        }
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "status": "passed",
+        "evidence": {
+          "actual_request_hash": "sha256:2a04f4f0c916a9c3ad4e0aef0188c2178027cee83b9708c4ce82ce2da503e881"
+        }
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "status": "passed",
+        "evidence": {
+          "operation_type": "add_beam"
+        }
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "status": "passed",
+        "evidence": {
+          "operation_type": "add_column"
+        }
+      }
+    ],
+    "operation_audits": [
+      {
+        "operation_id": "beam-1",
+        "operation_type": "add_beam",
+        "valid": true,
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "status": "passed",
+            "evidence": {
+              "storey_global_id": "15Z0v90RiHrPC20026FoKR"
+            }
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "status": "passed",
+            "evidence": {
+              "axis_extent_mm": 2800.0
+            }
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "status": "passed",
+            "evidence": {
+              "assignment_count": 1
+            }
+          }
+        ],
+        "evidence": {
+          "storey_global_id": "15Z0v90RiHrPC20026FoKR",
+          "axis_extent_mm": 2800.0
+        }
+      },
+      {
+        "operation_id": "column-2",
+        "operation_type": "add_column",
+        "valid": true,
+        "checks": [
+          {
+            "code": "STRUCTURAL_STOREY_AVAILABLE",
+            "status": "passed",
+            "evidence": {
+              "storey_global_id": "3mC5rj4wL5ZfT78mw_nj5F"
+            }
+          },
+          {
+            "code": "STRUCTURAL_AXIS_AVAILABLE",
+            "status": "passed",
+            "evidence": {
+              "axis_extent_mm": 15100.0
+            }
+          },
+          {
+            "code": "STRUCTURAL_TYPE_AUTHORIZED",
+            "status": "passed",
+            "evidence": {
+              "assignment_count": 1
+            }
+          }
+        ],
+        "evidence": {
+          "storey_global_id": "3mC5rj4wL5ZfT78mw_nj5F",
+          "axis_extent_mm": 15100.0
+        }
+      }
+    ],
+    "issues": []
+  },
+  "operations": [
+    {
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "changes": {
+        "created": [
+          {
+            "role": "beam",
+            "ifc_class": "IfcBeam",
+            "global_id": "1d28$WSxDRIRIZVTSrclBq"
+          },
+          {
+            "role": "structural_type",
+            "ifc_class": "IfcBeamType",
+            "global_id": "2gLXIjk85IFQhXut1Q4HvC"
+          },
+          {
+            "role": "structural_type_relationship",
+            "ifc_class": "IfcRelDefinesByType",
+            "global_id": "1fpeH94X1Ujuv$cuXiycHZ"
+          },
+          {
+            "role": "semantic_beam_pset",
+            "ifc_class": "IfcPropertySet",
+            "global_id": "2BY9s63BLT$9XPCBy96R6E"
+          },
+          {
+            "role": "semantic_beam_pset_relationship",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "global_id": "3_EEaterrTa8ryWhXezfrp"
+          }
+        ],
+        "modified": [
+          {
+            "role": "spatial_containment",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "global_id": "15Z0v90RiHrPC20066FoKR"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "storey_global_id": "15Z0v90RiHrPC20026FoKR",
+          "geometry": {
+            "axis_start_mm": [
+              -9449.0,
+              5090.0,
+              -406.4
+            ],
+            "axis_end_mm": [
+              -12249.0,
+              5090.0,
+              -406.4
+            ],
+            "axis_direction": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "axis_extent_mm": 2800.0,
+            "section": {
+              "shape": "rectangle",
+              "width_mm": 300.0,
+              "height_mm": 812.8
+            },
+            "orientation": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid"
+          },
+          "type_global_id": "2gLXIjk85IFQhXut1Q4HvC"
+        },
+        "semantic": {
+          "created": [
+            {
+              "role": "semantic_beam_pset",
+              "ifc_class": "IfcPropertySet",
+              "global_id": "2BY9s63BLT$9XPCBy96R6E"
+            },
+            {
+              "role": "semantic_beam_pset_relationship",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "global_id": "3_EEaterrTa8ryWhXezfrp"
+            }
+          ],
+          "modified": [],
+          "updated": [],
+          "skipped": [
+            "relationship:type"
+          ],
+          "scopes": {
+            "beam_occurrence": {
+              "created": [
+                {
+                  "role": "semantic_beam_pset",
+                  "ifc_class": "IfcPropertySet",
+                  "global_id": "2BY9s63BLT$9XPCBy96R6E"
+                },
+                {
+                  "role": "semantic_beam_pset_relationship",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "global_id": "3_EEaterrTa8ryWhXezfrp"
+                }
+              ],
+              "modified": [],
+              "updated": [],
+              "skipped": [
+                "relationship:type"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation_id": "column-2",
+      "operation_type": "add_column",
+      "changes": {
+        "created": [
+          {
+            "role": "column",
+            "ifc_class": "IfcColumn",
+            "global_id": "0JWtyzY3PVuw_k20Swgt0A"
+          },
+          {
+            "role": "structural_type",
+            "ifc_class": "IfcColumnType",
+            "global_id": "3fvLEmbVrGDfavPw_QK55D"
+          },
+          {
+            "role": "structural_type_relationship",
+            "ifc_class": "IfcRelDefinesByType",
+            "global_id": "2BVPLUdCzKBOI6P40Zn3pd"
+          },
+          {
+            "role": "semantic_column_pset",
+            "ifc_class": "IfcPropertySet",
+            "global_id": "29BQomOM5U6uNZbmi4hdgM"
+          },
+          {
+            "role": "semantic_column_pset_relationship",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "global_id": "1TUzwjqZzSlR6cl9OxeKZS"
+          }
+        ],
+        "modified": [
+          {
+            "role": "spatial_containment",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "global_id": "3mC5rj4wL5ZfT78m__nj5F"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "storey_global_id": "3mC5rj4wL5ZfT78mw_nj5F",
+          "geometry": {
+            "axis_start_mm": [
+              -12549.0,
+              5240.0,
+              0.0
+            ],
+            "axis_end_mm": [
+              -12549.0,
+              5240.0,
+              15100.0
+            ],
+            "axis_direction": [
+              0.0,
+              0.0,
+              1.0
+            ],
+            "axis_extent_mm": 15100.0,
+            "section": {
+              "shape": "rectangle",
+              "width_mm": 600.0,
+              "depth_mm": 600.0
+            },
+            "orientation": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid"
+          },
+          "type_global_id": "3fvLEmbVrGDfavPw_QK55D",
+          "containment_policy": "axis_base_storey_only"
+        },
+        "semantic": {
+          "created": [
+            {
+              "role": "semantic_column_pset",
+              "ifc_class": "IfcPropertySet",
+              "global_id": "29BQomOM5U6uNZbmi4hdgM"
+            },
+            {
+              "role": "semantic_column_pset_relationship",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "global_id": "1TUzwjqZzSlR6cl9OxeKZS"
+            }
+          ],
+          "modified": [],
+          "updated": [],
+          "skipped": [
+            "relationship:type"
+          ],
+          "scopes": {
+            "column_occurrence": {
+              "created": [
+                {
+                  "role": "semantic_column_pset",
+                  "ifc_class": "IfcPropertySet",
+                  "global_id": "29BQomOM5U6uNZbmi4hdgM"
+                },
+                {
+                  "role": "semantic_column_pset_relationship",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "global_id": "1TUzwjqZzSlR6cl9OxeKZS"
+                }
+              ],
+              "modified": [],
+              "updated": [],
+              "skipped": [
+                "relationship:type"
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "postconditions": [
+    {
+      "operation_id": "beam-1",
+      "valid": true,
+      "checks": [
+        {
+          "code": "BEAM_GEOMETRY_MATCHES",
+          "status": "passed",
+          "evidence": {
+            "axis_start_mm": [
+              -9449.0,
+              5090.0,
+              -406.4
+            ],
+            "axis_end_mm": [
+              -12249.0,
+              5090.0,
+              -406.4
+            ],
+            "axis_direction": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "axis_extent_mm": 2800.0,
+            "section": {
+              "shape": "rectangle",
+              "width_mm": 300.0,
+              "height_mm": 812.8
+            },
+            "orientation": [
+              -1.0,
+              0.0,
+              0.0
+            ],
+            "representation_type": "SweptSolid"
+          }
+        },
+        {
+          "code": "BEAM_CONTAINED_IN_STOREY",
+          "status": "passed",
+          "evidence": {}
+        },
+        {
+          "code": "BEAM_TYPE_BOUND",
+          "status": "passed",
+          "evidence": {}
+        },
+        {
+          "code": "BEAM_ANALYSIS_RELATIONSHIPS_ABSENT",
+          "status": "passed",
+          "evidence": {}
+        }
+      ],
+      "issues": [],
+      "evidence": {
+        "measurement": {
+          "axis_start_mm": [
+            -9449.0,
+            5090.0,
+            -406.4
+          ],
+          "axis_end_mm": [
+            -12249.0,
+            5090.0,
+            -406.4
+          ],
+          "axis_direction": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "axis_extent_mm": 2800.0,
+          "section": {
+            "shape": "rectangle",
+            "width_mm": 300.0,
+            "height_mm": 812.8
+          },
+          "orientation": [
+            -1.0,
+            0.0,
+            0.0
+          ],
+          "representation_type": "SweptSolid"
+        }
+      }
+    },
+    {
+      "operation_id": "column-2",
+      "valid": false,
+      "checks": [],
+      "issues": [
+        {
+          "code": "INJECTED_OFFLINE_SECOND_OPERATION_FAILURE",
+          "path": "/postconditions",
+          "message": "Explicit offline atomic rollback probe"
+        }
+      ]
+    }
+  ],
+  "output": null,
+  "issues": [
+    {
+      "code": "INJECTED_OFFLINE_SECOND_OPERATION_FAILURE",
+      "path": "/operations/1/postconditions",
+      "message": "Explicit offline atomic rollback probe"
+    }
+  ]
+}

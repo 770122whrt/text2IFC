@@ -1,0 +1,106 @@
+{
+  "manifests": {
+    "bimnet-ifc2x3": {
+      "path": "dataset/manifests/bimnet-ifc2x3.jsonl",
+      "record_count": 25,
+      "schemas": {
+        "IFC2X3": 25
+      },
+      "total_size_bytes": 74229819,
+      "valid": true
+    },
+    "external-corpora": {
+      "corpora": [
+        {
+          "corpus_id": "bim-whale-ifc-samples",
+          "file_count": 54,
+          "size_bytes": 110119981,
+          "source_revision": "595fa90e3af7120d004fcb37a79d8657f1d1c9c2",
+          "status": "linked-not-admitted"
+        },
+        {
+          "corpus_id": "ifc-bench",
+          "file_count": 168,
+          "size_bytes": 1510012238,
+          "source_revision": "fa301cfbff5bcc0a27a5e8ef7714fea48b123208",
+          "status": "linked-not-admitted"
+        }
+      ],
+      "path": "dataset/manifests/external-corpora.json",
+      "record_count": 2,
+      "valid": true
+    },
+    "raw-files": {
+      "path": "dataset/manifests/raw-files.jsonl",
+      "record_count": 11,
+      "schemas": {
+        "IFC2X3": 1,
+        "IFC4": 8,
+        "IFC4X3_ADD2": 2
+      },
+      "total_size_bytes": 2544671,
+      "valid": true
+    }
+  },
+  "processed_inventory": {
+    "classification_meaning": {
+      "regenerable": "derived output that can be rebuilt from checked-in inputs",
+      "retain": "contains source-bound evidence or split authority",
+      "review_before_delete": "mixed or unclassified content; requires explicit review"
+    },
+    "mutation_policy": "read_only",
+    "roots": [
+      {
+        "classification": "review_before_delete",
+        "file_count": 1367,
+        "path": "dataset/processed/agent-demo",
+        "size_bytes": 12877944,
+        "unreadable_directory_count": 0
+      },
+      {
+        "classification": "retain",
+        "file_count": 67,
+        "path": "dataset/processed/derived",
+        "size_bytes": 8362050,
+        "unreadable_directory_count": 0
+      },
+      {
+        "classification": "retain",
+        "file_count": 6207,
+        "path": "dataset/processed/experiments",
+        "size_bytes": 815448222,
+        "unreadable_directory_count": 0
+      },
+      {
+        "classification": "retain",
+        "file_count": 424,
+        "path": "dataset/processed/ifc-repair",
+        "size_bytes": 346943927,
+        "unreadable_directory_count": 2
+      },
+      {
+        "classification": "review_before_delete",
+        "file_count": 394,
+        "path": "dataset/processed/ifc-repair-runs",
+        "size_bytes": 84277085,
+        "unreadable_directory_count": 0
+      },
+      {
+        "classification": "retain",
+        "file_count": 5227,
+        "path": "dataset/processed/proof",
+        "size_bytes": 1542873838,
+        "unreadable_directory_count": 10
+      },
+      {
+        "classification": "retain",
+        "file_count": 141,
+        "path": "dataset/processed/text2json",
+        "size_bytes": 18757357,
+        "unreadable_directory_count": 0
+      }
+    ]
+  },
+  "schema_version": "text2ifc/dataset-audit/1.0",
+  "valid": true
+}

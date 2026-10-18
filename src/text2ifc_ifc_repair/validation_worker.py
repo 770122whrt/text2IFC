@@ -6,6 +6,7 @@ import argparse
 import ctypes
 import json
 import os
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -42,7 +43,14 @@ def run(
 
 def _peak_rss_bytes() -> int:
     try:
-        if os.name == "nt":
+        if sys.platform == "linux":
+            # getrusage's lifetime peak survives exec and can include the
+            # launcher's loaded embedding model. VmHWM belongs to this mm.
+            for line in Path("/proc/self/status").read_text(encoding="ascii").splitlines():
+                if line.startswith("VmHWM:"):
+                    return int(line.split()[1]) * 1024
+            raise ValueError("validator VmHWM unavailable")
+        elif os.name == "nt":
             from ctypes import wintypes
 
             class ProcessMemoryCounters(ctypes.Structure):
@@ -73,7 +81,11 @@ def _peak_rss_bytes() -> int:
                 resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
             )
     except Exception:
-        pass
+        # Preserve conservative accounting if procfs is unavailable.
+        if sys.platform == "linux":
+            import resource
+
+            return int(resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024)
     return 0
 
 

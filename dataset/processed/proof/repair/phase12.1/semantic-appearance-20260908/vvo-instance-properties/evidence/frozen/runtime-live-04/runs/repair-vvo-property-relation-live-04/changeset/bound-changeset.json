@@ -1,0 +1,128 @@
+{
+  "base_model_fingerprint": "sha256:7fb29d1f19d1e10ae44c7af432d8d2aa74379ccb434f9344a34ed5e01b7766d6",
+  "binding_status": "bound",
+  "changeset_id": "changeset/set-wall-pset-1-changeset-001",
+  "evidence_refs": [
+    "resolved:/operations/set-wall-pset-1/context/candidate_targets/0"
+  ],
+  "operations": [
+    {
+      "evidence_refs": [
+        "resolved:/operations/set-wall-pset-1/context/candidate_targets/0"
+      ],
+      "operation_id": "set-wall-pset-1",
+      "operation_type": "set_occurrence_properties",
+      "parameters": {},
+      "semantic_assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WallCommon.ExtendToStructure",
+          "operation_id": "set-wall-pset-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:set-wall-pset-1",
+            "property-hash:sha256:a31a0ac0ccaa6b4e533a0f6149b706cf644c138f80bc6d01889df99d11970aa5",
+            "source_fact_key:pset:Pset_WallCommon.ExtendToStructure"
+          ],
+          "source_fact_key": "pset:Pset_WallCommon.ExtendToStructure",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WallCommon.IsExternal",
+          "operation_id": "set-wall-pset-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:set-wall-pset-1",
+            "property-hash:sha256:68ed2c7605fc9cd014fc5cd01a712c697ee1f10b258fa05cb21b75a52dcc0127",
+            "source_fact_key:pset:Pset_WallCommon.IsExternal"
+          ],
+          "source_fact_key": "pset:Pset_WallCommon.IsExternal",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WallCommon.LoadBearing",
+          "operation_id": "set-wall-pset-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:set-wall-pset-1",
+            "property-hash:sha256:7d432b361ae2e1493b17222c9a12938fe8a1441fda2fcb03a3639040c588b67a",
+            "source_fact_key:pset:Pset_WallCommon.LoadBearing"
+          ],
+          "source_fact_key": "pset:Pset_WallCommon.LoadBearing",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": false,
+          "value_type": "IfcBoolean"
+        },
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "fact_key": "pset:Pset_WallCommon.Reference",
+          "operation_id": "set-wall-pset-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/text",
+            "operation:set-wall-pset-1",
+            "property-hash:sha256:87d17a22f13e87fe3b06998ea4347e0b8794735166b1bc4a482edd363b0bb163",
+            "source_fact_key:pset:Pset_WallCommon.Reference"
+          ],
+          "source_fact_key": "pset:Pset_WallCommon.Reference",
+          "source_kind": "explicit_request",
+          "source_ref": "request:/text",
+          "unit": null,
+          "value": "240",
+          "value_type": "IfcIdentifier"
+        }
+      ],
+      "semantic_manifest": {
+        "manifest_id": "semantic-manifest-56ea25cbba664776e028be82",
+        "policy_id": "occurrence.property.l2",
+        "policy_version": "0.1"
+      },
+      "target": {
+        "element_global_id": "2CsmzAChHF6O6maGXlo6PS"
+      }
+    }
+  ],
+  "postconditions": [
+    "target_preserved",
+    "requested_properties_match",
+    "shared_type_unchanged"
+  ],
+  "preconditions": [
+    "target_exists",
+    "target_class_supported",
+    "property_assignments_bound"
+  ],
+  "schema_version": "text2ifc/ifc-repair-changeset/0.2",
+  "scope": {
+    "forbidden_ids": [],
+    "target_ids": [
+      "2CsmzAChHF6O6maGXlo6PS"
+    ]
+  },
+  "semantic_manifest_ref": "changeset/semantic-manifest-set-wall-pset-1.json",
+  "semantic_manifest_sha256": "sha256:656e8cc305e2ad149049434affe80146b66f44dd96491b277137aa5d570cf203",
+  "source_request_hash": "sha256:78b31c7a44102d2d5d34a110d8417b4e8857a0d4f2ad97a1411609e334fbb598"
+}

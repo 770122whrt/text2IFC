@@ -1,0 +1,208 @@
+{
+  "passed": true,
+  "checks": {
+    "source_unchanged": true,
+    "G_native_schema_express_passed": true,
+    "D_native_schema_express_passed": true,
+    "only_declared_products_removed": true,
+    "no_product_created": true,
+    "only_selected_occurrence_properties_changed": true,
+    "retained_geometry_unchanged": true,
+    "nonempty_source_and_damaged_geometry": true,
+    "correct_typed_damage": true,
+    "removed_opening_regions_closed": true
+  },
+  "source_validation_reused": true,
+  "source_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "damaged_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "geometry_counts": {
+    "G": 310,
+    "D": 310
+  },
+  "unrelated_mesh_count_checked": 310,
+  "wall_closure": {},
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "change_kind": "modified",
+        "global_id": "1C2a90ohuYVDSNsdqV7HLI",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "240 X 300 mm"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Span",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPositiveLengthMeasure",
+                    "attributes": {
+                      "wrappedValue": 4500.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:c16fbbd9686be3e9d9bf4a57010ac1660c1de8bdc6bf7f75d4b257937e2d1baf"
+        },
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "规格待核对"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Span",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPositiveLengthMeasure",
+                    "attributes": {
+                      "wrappedValue": 4500.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:76d5371bfedb7dc09a7f58aae9ed531edab14ce30eb36dea49f8dd53431ac262"
+        }
+      }
+    ],
+    "removed": []
+  }
+}

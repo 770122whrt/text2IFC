@@ -1,0 +1,65 @@
+{
+  "checks": {
+    "all_requested_members_removed": true,
+    "schema_preserved": true,
+    "shared_type_and_storey_preserved": true,
+    "source_unchanged": true
+  },
+  "counts": {
+    "after": {
+      "IfcBeam": 36,
+      "IfcBeamType": 1,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 6,
+      "IfcColumn": 25,
+      "IfcColumnType": 26,
+      "IfcDoor": 8,
+      "IfcOpeningElement": 89,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 50,
+      "IfcRelContainedInSpatialStructure": 13,
+      "IfcRelDefinesByType": 101,
+      "IfcRelFillsElement": 68,
+      "IfcRelVoidsElement": 89,
+      "IfcSite": 1,
+      "IfcSpace": 10,
+      "IfcWall": 23,
+      "IfcWindow": 60
+    },
+    "before": {
+      "IfcBeam": 36,
+      "IfcBeamType": 1,
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 6,
+      "IfcColumn": 26,
+      "IfcColumnType": 26,
+      "IfcDoor": 8,
+      "IfcOpeningElement": 89,
+      "IfcProject": 1,
+      "IfcRelAssociatesMaterial": 50,
+      "IfcRelContainedInSpatialStructure": 13,
+      "IfcRelDefinesByType": 102,
+      "IfcRelFillsElement": 68,
+      "IfcRelVoidsElement": 89,
+      "IfcSite": 1,
+      "IfcSpace": 10,
+      "IfcWall": 23,
+      "IfcWindow": 60
+    }
+  },
+  "damage_scope": {
+    "family_counts": {
+      "beam": 0,
+      "column": 1
+    },
+    "occurrence_count": 1,
+    "removed_families": [
+      "column"
+    ]
+  },
+  "damaged_sha256": "c49baf2aaff8f197d30c997ec930360f2453ca0ddaf5d8f3efc4075f97312a7e",
+  "mutation_type": "remove_structural_members",
+  "schema_version": "text2ifc/ifc-repair-structural-mutation-report/0.1",
+  "source_sha256": "09d112a3e3760c08cc6540da9a38d7b7e8bda4e3809846eb022dae7e45aeafe3",
+  "valid": true
+}

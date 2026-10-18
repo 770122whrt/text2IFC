@@ -1,0 +1,87 @@
+{
+  "assignments": [
+    {
+      "applicability": "conditional",
+      "authoring_action": "bind_relationship",
+      "derivation": null,
+      "fact_key": "relationship:host",
+      "operation_id": "beam-1",
+      "ownership": "occurrence_direct",
+      "provenance": [
+        "resolved-host-target:13LV5dTeP3CAox54x56C1Z",
+        "resolved-host:13LV5dTeP3CAox54x56C1Z",
+        "operation:beam-1"
+      ],
+      "scope": "beam_occurrence",
+      "source_fact_key": "relationship:host",
+      "source_kind": "deterministic_derived",
+      "source_ref": "current-host-binding:13LV5dTeP3CAox54x56C1Z",
+      "unit": null,
+      "value": "13LV5dTeP3CAox54x56C1Z",
+      "value_type": "IfcBuildingStorey"
+    },
+    {
+      "applicability": "required",
+      "authoring_action": "bind_relationship",
+      "derivation": null,
+      "fact_key": "relationship:storey",
+      "operation_id": "beam-1",
+      "ownership": "occurrence_direct",
+      "provenance": [
+        "operation:beam-1",
+        "registered-beam-storey-policy:0.1"
+      ],
+      "scope": "beam_occurrence",
+      "source_fact_key": "relationship:storey",
+      "source_kind": "deterministic_derived",
+      "source_ref": "resolved:/operations/beam-1/target",
+      "unit": null,
+      "value": "13LV5dTeP3CAox54x56C1Z",
+      "value_type": "IfcBuildingStorey"
+    },
+    {
+      "applicability": "required",
+      "authoring_action": "inherit_from_type",
+      "derivation": {
+        "formal_attributes": {},
+        "ifc_class": "IfcBeamType",
+        "template": {
+          "name": "Text2IFC generated beam type beam-1",
+          "predefined_type": "NOTDEFINED",
+          "section": {
+            "height_mm": 500.0,
+            "shape": "rectangle",
+            "width_mm": 250.0
+          },
+          "section_digest": "sha256:bac569f2d600ce85748dc3cbaef53adeae48073672f143c013fc6b0c4f3e4789"
+        },
+        "template_digest": "sha256:57009a7af682a4f7d0b81fdff345290e98f754f93c4de097ead504ac7596dbb8",
+        "template_id": "text2ifc-rectangular-beam-type",
+        "template_version": "0.1"
+      },
+      "fact_key": "relationship:type",
+      "operation_id": "beam-1",
+      "ownership": "type_inherited",
+      "provenance": [
+        "operation:beam-1",
+        "generated-type-template:0.1"
+      ],
+      "scope": "beam_occurrence",
+      "source_fact_key": "relationship:type",
+      "source_kind": "deterministic_derived",
+      "source_ref": "generated-type:1UoK2w7n9ThubkXP7I5xis",
+      "unit": null,
+      "value": "1UoK2w7n9ThubkXP7I5xis",
+      "value_type": "IfcBeamType"
+    }
+  ],
+  "base_model_fingerprint": "sha256:846ce7dd3bcae22ea8dc7549f6f8063bf5bcf881f730bf4d3e1bf6a03c2a12c6",
+  "manifest_id": "semantic-manifest-8a3cefc55cb5f91e405e075d",
+  "operation_id": "beam-1",
+  "operation_type": "add_beam",
+  "policy": {
+    "policy_id": "beam.add.l2",
+    "policy_version": "0.1"
+  },
+  "schema_version": "text2ifc/ifc-repair-semantic-manifest/0.3"
+}

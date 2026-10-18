@@ -1,5 +1,7 @@
 # 已完成案例与开发工作区清理
 
+2026-10-17 维护：本记录对应的整理已完成，本目录一次性执行脚本（`archive.py`、`archive_phases.py`、`archive_scratch.py`、`phase_inventory.py`、`retire.ps1`、`retire_phases.ps1`、`scratch_inventory.py`、`verify_archive.py`、`verify_phases.py`）从本地退役；删除/保全收据与正式证据保留。旧执行命令只表示当时操作，不应重跑。脚本原文可从[整理前固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/development-cleanup-20260912)恢复；Proof 的日常校验继续使用现有 `scripts/proof/` 和 `text2ifc_proof` 工具。
+
 2026-09-12；分支 `codex/workflow-dataset-links`。用户批准执行既有删除清单，并按相同方式处理其他已完成案例和开发目录。本轮没有调用 Provider、修改生产行为、运行 Full Preflight 或合并 main。
 
 **已完成：** 464 个清单目录、352 个单独文件及 4 个测试链接均已退役，共删除 253,690 个旧文件、10,482,178,079 字节（约 9.76 GiB）。这是删除的源文件字节数，未扣减新增归档，不是磁盘净节省值。[汇总与核对](cleanup-summary.json) 保留准确数量；所有真实证据在 Proof／experiments，26 个当前依赖目录保留。本次清单没有待管理员处理的删除项。
@@ -18,7 +20,7 @@
 
 两个日志从 383,419,299 字节压缩为 19,914,355 字节，解压成员与原文 SHA-256 相同。归档不把旧失败或待审结果升级为已验收，不改原始响应和历史判断；若原目录与现有 Proof 中同名文件的字节不同，两份都保留。
 
-追加批次已完成：17 个旧案例目录、315 个 pytest 目录、328 个单独文件，实际删除 193,368 文件、3,138,312,816 字节。加光庭首批共 242,931 文件、3,882,821,572 字节；此处不含下述更早 Phase 批次。精确执行结果另存 `deletion-*.json`。清理脚本 [retire.ps1](retire.ps1) 只处理清单范围。权限错误、目录内容变化或缺失保留证据均停止该目标并记录，不重设 ACL、不操作活动工作树。
+追加批次已完成：17 个旧案例目录、315 个 pytest 目录、328 个单独文件，实际删除 193,368 文件、3,138,312,816 字节。加光庭首批共 242,931 文件、3,882,821,572 字节；此处不含下述更早 Phase 批次。精确执行结果另存 `deletion-*.json`。清理脚本 [retire.ps1](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/development-cleanup-20260912/retire.ps1) 只处理清单范围。权限错误、目录内容变化或缺失保留证据均停止该目标并记录，不重设 ACL、不操作活动工作树。
 
 **权限复核补存：** 三个目录的删除前检查发现不同 Windows 上下文的文件可见性不一致；首次归档遍历遗漏了权限隐藏的子目录。删除门禁保留了这三个目录。补存另外 883 文件、19,390,141 字节（包括原有离线矩阵、修复破坏材料及 5 个历史 pytest-cache 文件），原始复制索引不改，使用 [追加映射](../../../dataset/processed/experiments/development-retirement-permission-supplement-20260912.json)。补充材料全部逐字节验证，凭据扫描无发现；见 [补存验证](permission-supplement-verification.json)。不得仅凭原归档“绑定通过”推断原目录完整性。
 

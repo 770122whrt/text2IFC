@@ -1,6 +1,6 @@
 # text2IFC 路线与边界
 
-当前执行位置见 [STATE](STATE.md)，稳定约束见 [PROJECT](PROJECT.md)。
+当前执行位置见 [STATE](STATE.md)，稳定约束见 [PROJECT](PROJECT.md)。Repair 实验、数据分析与 UI 结合准备从 STATE 的现行专题进入，不从历史路线图自动续跑。
 
 | 方向 | 当前基线 | 后续范围 |
 |---|---|---|

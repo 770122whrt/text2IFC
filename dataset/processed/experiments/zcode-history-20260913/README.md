@@ -42,7 +42,7 @@
 
 需要完整恢复时，在**新的空恢复 checkout** 中检出上述固定修订，使用标准 Git LFS 按需获取 `archive/zcode-local-20260905/<所需文件>`，再按索引核对。不覆盖当前 checkout、Proof 或现有运行目录。原本只在历史 archive 存在的失败与子模块快照仍可由此恢复。
 
-原 [Zcode curator 重放脚本](../../../../docs/reports/main-integration-20260912/recheck_zcode_curator.py)是历史执行记录：它依赖旧运行与旧 Proof 布局，不是当前公共工具。重现时在隔离工作区恢复其固定来源与布局；不要为让旧脚本直接运行而修改当前 Proof。
+原 [Zcode curator 重放脚本](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/main-integration-20260912/recheck_zcode_curator.py)已从本地退役，链接保留固定 Git 原文：它依赖旧运行与旧 Proof 布局，不是当前公共工具。重现时在隔离工作区恢复其固定来源与布局；不要为让旧脚本直接运行而修改当前 Proof。
 
 本次 [远端可用性检查](../../../../docs/reports/archive-retirement-20260913/remote-availability.json)确认六个对象均可下载，且各一次 1 字节范围读取返回 HTTP 206、总大小匹配。原六个本地 ZIP 已与提交中的 LFS SHA-256 匹配；2026-09-05 的[独立完整下载验证](../../../../docs/reports/zcode-integration-20260905/remote-recovery-verification.json)保留。**本次没有重新下载并全量哈希远端 2.50 GiB 数据。**
 

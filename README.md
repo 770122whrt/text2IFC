@@ -3,8 +3,8 @@
 将自然语言建筑需求转成可检查的 IFC2X3；也支持已有 IFC 的局部修复，以及 IFC → 文本 → IFC 的往返研究。
 模型提出结构化候选，确定性代码负责合同校验、编译／应用、重开检查和发布。
 
-本分支为 **精简版本**，基于 2026-09-28 的 main。开发历史保留在 Git 中，接管时从下方当前入口开始。
-本轮清理范围、验证结果和恢复位置见 [精简记录](docs/reports/lean-branch-20261007/REPORT.md)。
+当前整合 Repair、实验依据与仓库精简；执行位置见 [STATE](.planning/STATE.md)。开发历史保留在 Git 中，接管时从下方当前入口开始。
+本地整理与恢复见[当前清理记录](docs/reports/workspace-cleanup-20261017/README.md)，此前 main 的精简检查点见[历史记录](docs/reports/lean-branch-20261007/REPORT.md)。
 
 ## 开始使用
 
@@ -44,5 +44,5 @@ Generation 保留默认 `legacy_full` 与显式 `staged`。旧 Schema／Prompt �
 | 模型、来源与证据 | [Dataset](dataset/data_organization.md)、[Proof](dataset/processed/proof/README.md) |
 
 生产代码在 `src/`；机器合同在 `schemas/`、`prompts/`；数据来源、运行基线和冻结证据在 `dataset/`。
-测试源码在完成本轮验证后按用户要求移出本分支，恢复方式见精简记录。
-开发验证工具另用 `requirements-dev.txt` 安装。专项 preflight 仍须真实执行测试，不能因测试已移除而放行。
+保留当前 Repair 的必要回归及其依赖；此前退役的历史测试按精简记录恢复。
+开发验证工具另用 `requirements-dev.txt` 安装。专项 preflight 仍须真实执行适用测试，缺失测试不代表通过。

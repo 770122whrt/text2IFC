@@ -1,0 +1,745 @@
+{
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true,
+  "published": true,
+  "audit": {
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true,
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "status": "passed",
+        "evidence": {}
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "status": "passed",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        }
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "status": "passed",
+        "evidence": {
+          "actual_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+        }
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "status": "passed",
+        "evidence": {
+          "actual_request_hash": "sha256:a4ea5bfd4c1e4f7a07f7a9ed831dbbc046de91555a1bf7d54388cc278be8f350"
+        }
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "status": "passed",
+        "evidence": {
+          "operation_type": "add_window_with_opening_to_wall"
+        }
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "status": "passed",
+        "evidence": {
+          "operation_type": "set_occurrence_properties"
+        }
+      }
+    ],
+    "operation_audits": [
+      {
+        "operation_id": "01-window",
+        "operation_type": "add_window_with_opening_to_wall",
+        "valid": true,
+        "checks": [
+          {
+            "code": "OPENING_WITHIN_WALL_HORIZONTAL",
+            "status": "passed",
+            "evidence": {
+              "requested_interval_mm": [
+                15641.249756751,
+                17451.249756751
+              ],
+              "wall_length_mm": 18419.299479
+            }
+          },
+          {
+            "code": "OPENING_WITHIN_WALL_VERTICAL",
+            "status": "passed",
+            "evidence": {
+              "requested_interval_mm": [
+                600.0,
+                3600.0
+              ],
+              "wall_height_mm": 18400.0
+            }
+          },
+          {
+            "code": "WALL_VOID_DEPTH_RESOLVED",
+            "status": "passed",
+            "evidence": {
+              "wall_thickness_mm": 312.5
+            }
+          },
+          {
+            "code": "OPENING_INTERVAL_AVAILABLE",
+            "status": "passed",
+            "evidence": {
+              "overlapping_region_mm": null
+            }
+          }
+        ],
+        "evidence": {
+          "wall_global_id": "3JZGeqq852COtfxExBeyvQ",
+          "wall_dimensions_mm": {
+            "length": 18419.299479,
+            "thickness": 312.5,
+            "height": 18400.0
+          },
+          "requested_interval_mm": [
+            15641.249756751,
+            17451.249756751
+          ],
+          "requested_vertical_interval_mm": [
+            600.0,
+            3600.0
+          ],
+          "existing_opening_intervals_mm": [
+            [
+              3120.0,
+              4930.0
+            ],
+            [
+              3129.308777,
+              4939.308777
+            ],
+            [
+              3129.308777,
+              4939.308777
+            ],
+            [
+              3129.308777,
+              4939.308777
+            ],
+            [
+              6011.117554,
+              6921.117554
+            ],
+            [
+              6031.117554,
+              6941.117554
+            ],
+            [
+              6031.117554,
+              6941.117554
+            ],
+            [
+              6031.117554,
+              6941.117554
+            ],
+            [
+              6159.299479,
+              7069.299479
+            ],
+            [
+              10541.799479,
+              12351.799479
+            ],
+            [
+              10559.299479,
+              12369.299479
+            ],
+            [
+              10559.299479,
+              12369.299479
+            ],
+            [
+              10559.299479,
+              12369.299479
+            ],
+            [
+              13131.799479,
+              14041.799479
+            ],
+            [
+              13236.799479,
+              14146.799479
+            ],
+            [
+              13236.799479,
+              14146.799479
+            ],
+            [
+              13236.799479,
+              14146.799479
+            ],
+            [
+              13236.799479,
+              14146.799479
+            ],
+            [
+              15641.799479000001,
+              17451.799479
+            ],
+            [
+              15681.799479000001,
+              17491.799479
+            ],
+            [
+              15711.799479000001,
+              17521.799479
+            ]
+          ],
+          "existing_opening_regions_mm": [
+            {
+              "horizontal_interval_mm": [
+                3120.0,
+                4930.0
+              ],
+              "vertical_interval_mm": [
+                5200.0,
+                8200.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                3129.308777,
+                4939.308777
+              ],
+              "vertical_interval_mm": [
+                600.0,
+                3600.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                3129.308777,
+                4939.308777
+              ],
+              "vertical_interval_mm": [
+                9800.0,
+                12800.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                3129.308777,
+                4939.308777
+              ],
+              "vertical_interval_mm": [
+                14400.0,
+                17400.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6011.117554,
+                6921.117554
+              ],
+              "vertical_interval_mm": [
+                11900.0,
+                12810.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6031.117554,
+                6941.117554
+              ],
+              "vertical_interval_mm": [
+                2700.0,
+                3610.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6031.117554,
+                6941.117554
+              ],
+              "vertical_interval_mm": [
+                7300.0,
+                8210.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6031.117554,
+                6941.117554
+              ],
+              "vertical_interval_mm": [
+                16500.0,
+                17410.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                6159.299479,
+                7069.299479
+              ],
+              "vertical_interval_mm": [
+                7300.0,
+                8210.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                10541.799479,
+                12351.799479
+              ],
+              "vertical_interval_mm": [
+                600.0,
+                3600.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                10559.299479,
+                12369.299479
+              ],
+              "vertical_interval_mm": [
+                5200.0,
+                8200.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                10559.299479,
+                12369.299479
+              ],
+              "vertical_interval_mm": [
+                9800.0,
+                12800.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                10559.299479,
+                12369.299479
+              ],
+              "vertical_interval_mm": [
+                14400.0,
+                17400.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                13131.799479,
+                14041.799479
+              ],
+              "vertical_interval_mm": [
+                16500.0,
+                17410.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                13236.799479,
+                14146.799479
+              ],
+              "vertical_interval_mm": [
+                2700.0,
+                3610.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                13236.799479,
+                14146.799479
+              ],
+              "vertical_interval_mm": [
+                7300.0,
+                8210.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                13236.799479,
+                14146.799479
+              ],
+              "vertical_interval_mm": [
+                11900.0,
+                12810.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                13236.799479,
+                14146.799479
+              ],
+              "vertical_interval_mm": [
+                16500.0,
+                17410.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                15641.799479000001,
+                17451.799479
+              ],
+              "vertical_interval_mm": [
+                5200.0,
+                8200.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                15681.799479000001,
+                17491.799479
+              ],
+              "vertical_interval_mm": [
+                9800.0,
+                12800.0
+              ]
+            },
+            {
+              "horizontal_interval_mm": [
+                15711.799479000001,
+                17521.799479
+              ],
+              "vertical_interval_mm": [
+                14400.0,
+                17400.0
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "operation_id": "02-door-property",
+        "operation_type": "set_occurrence_properties",
+        "valid": true,
+        "checks": [
+          {
+            "code": "PROPERTY_OCCURRENCE_READY",
+            "status": "passed",
+            "evidence": {
+              "global_id": "2U8KEAXbL24xySlUNSWHKK",
+              "ifc_class": "IfcDoor",
+              "assignment_count": 1
+            }
+          }
+        ],
+        "evidence": {
+          "target_global_id": "2U8KEAXbL24xySlUNSWHKK"
+        }
+      }
+    ],
+    "issues": []
+  },
+  "operations": [
+    {
+      "operation_id": "01-window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "changes": {
+        "created": [
+          {
+            "role": "opening",
+            "ifc_class": "IfcOpeningElement",
+            "global_id": "1VuYatHuvKyvZaOJFHDORK"
+          },
+          {
+            "role": "window",
+            "ifc_class": "IfcWindow",
+            "global_id": "0B887RlN1JFgE6ezHxrqhk"
+          },
+          {
+            "role": "voids_relationship",
+            "ifc_class": "IfcRelVoidsElement",
+            "global_id": "3YxXUn88rTpBS1UhBlxTP0"
+          },
+          {
+            "role": "fills_relationship",
+            "ifc_class": "IfcRelFillsElement",
+            "global_id": "3j4iHKIkrHrfLTJWrIpdxF"
+          },
+          {
+            "role": "semantic_pset",
+            "ifc_class": "IfcPropertySet",
+            "global_id": "1lPnLgvwnHhv90d4U61mxY"
+          },
+          {
+            "role": "semantic_pset_relationship",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "global_id": "1qxEorXNXNpxsVbtHbTYVv"
+          },
+          {
+            "role": "semantic_quantities",
+            "ifc_class": "IfcElementQuantity",
+            "global_id": "2yrDl_m2DP_PZkH94cSXrV"
+          },
+          {
+            "role": "semantic_quantity_relationship",
+            "ifc_class": "IfcRelDefinesByProperties",
+            "global_id": "1yDKjql5rMo9drM8$NJwmV"
+          },
+          {
+            "role": "semantic_material_relationship",
+            "ifc_class": "IfcRelAssociatesMaterial",
+            "global_id": "09ArRbwZ9Jh9ZKLRC1DDGt"
+          }
+        ],
+        "modified": [
+          {
+            "role": "host_wall",
+            "global_id": "3JZGeqq852COtfxExBeyvQ"
+          },
+          {
+            "role": "window_type_relationship",
+            "global_id": "3n8tkbqnFbIz8uPnjQl1aO"
+          },
+          {
+            "role": "spatial_containment",
+            "global_id": "3Zu5Bv0LOHrPC10066FoQQ"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "center_offset_mm": 16546.249756751,
+          "opening_depth_mm": 312.49999999999795,
+          "window_type_global_id": "14xJur$tAygZ8nD5oT1oMw",
+          "appearance": {
+            "applied": false,
+            "preserved": true,
+            "source": "type_representation",
+            "style_count": 2,
+            "item_count": 1
+          }
+        },
+        "semantic": {
+          "created": [
+            {
+              "role": "semantic_pset",
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1lPnLgvwnHhv90d4U61mxY"
+            },
+            {
+              "role": "semantic_pset_relationship",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "global_id": "1qxEorXNXNpxsVbtHbTYVv"
+            },
+            {
+              "role": "semantic_quantities",
+              "ifc_class": "IfcElementQuantity",
+              "global_id": "2yrDl_m2DP_PZkH94cSXrV"
+            },
+            {
+              "role": "semantic_quantity_relationship",
+              "ifc_class": "IfcRelDefinesByProperties",
+              "global_id": "1yDKjql5rMo9drM8$NJwmV"
+            },
+            {
+              "role": "semantic_material_relationship",
+              "ifc_class": "IfcRelAssociatesMaterial",
+              "global_id": "09ArRbwZ9Jh9ZKLRC1DDGt"
+            }
+          ],
+          "modified": [],
+          "updated": [],
+          "skipped": [
+            "label:Name",
+            "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+            "pset:Pset_ProductRequirements.Category",
+            "pset:Pset_WindowCommon.ThermalTransmittance",
+            "relationship:type"
+          ],
+          "scopes": {
+            "window_occurrence": {
+              "created": [
+                {
+                  "role": "semantic_pset",
+                  "ifc_class": "IfcPropertySet",
+                  "global_id": "1lPnLgvwnHhv90d4U61mxY"
+                },
+                {
+                  "role": "semantic_pset_relationship",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "global_id": "1qxEorXNXNpxsVbtHbTYVv"
+                },
+                {
+                  "role": "semantic_quantities",
+                  "ifc_class": "IfcElementQuantity",
+                  "global_id": "2yrDl_m2DP_PZkH94cSXrV"
+                },
+                {
+                  "role": "semantic_quantity_relationship",
+                  "ifc_class": "IfcRelDefinesByProperties",
+                  "global_id": "1yDKjql5rMo9drM8$NJwmV"
+                },
+                {
+                  "role": "semantic_material_relationship",
+                  "ifc_class": "IfcRelAssociatesMaterial",
+                  "global_id": "09ArRbwZ9Jh9ZKLRC1DDGt"
+                }
+              ],
+              "modified": [],
+              "updated": [],
+              "skipped": [
+                "label:Name",
+                "pset:Pset_ManufacturerTypeInformation.Manufacturer",
+                "pset:Pset_ProductRequirements.Category",
+                "pset:Pset_WindowCommon.ThermalTransmittance",
+                "relationship:type"
+              ]
+            }
+          }
+        }
+      }
+    },
+    {
+      "operation_id": "02-door-property",
+      "operation_type": "set_occurrence_properties",
+      "changes": {
+        "created": [],
+        "modified": [
+          {
+            "role": "target",
+            "ifc_class": "IfcDoor",
+            "global_id": "2U8KEAXbL24xySlUNSWHKK"
+          },
+          {
+            "role": "semantic_pset_updated",
+            "ifc_class": "IfcPropertySet",
+            "global_id": "1fB3RLwjRhPVndBPzHDbNH"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "target_global_id": "2U8KEAXbL24xySlUNSWHKK",
+          "target_ifc_class": "IfcDoor"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [
+            {
+              "role": "semantic_pset_updated",
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1fB3RLwjRhPVndBPzHDbNH"
+            }
+          ],
+          "updated": [
+            {
+              "role": "semantic_pset_property_updated",
+              "ifc_class": "IfcPropertySingleValue",
+              "global_id": "step:189291"
+            }
+          ],
+          "skipped": [],
+          "scopes": {
+            "occurrence_direct": {
+              "created": [],
+              "modified": [
+                {
+                  "role": "semantic_pset_updated",
+                  "ifc_class": "IfcPropertySet",
+                  "global_id": "1fB3RLwjRhPVndBPzHDbNH"
+                }
+              ],
+              "updated": [
+                {
+                  "role": "semantic_pset_property_updated",
+                  "ifc_class": "IfcPropertySingleValue",
+                  "global_id": "step:189291"
+                }
+              ],
+              "skipped": []
+            }
+          }
+        }
+      }
+    }
+  ],
+  "postconditions": [
+    {
+      "operation_id": "01-window",
+      "valid": true,
+      "checks": [
+        {
+          "code": "OPENING_VOIDS_TARGET_WALL",
+          "status": "passed",
+          "evidence": {
+            "width": 1810.0,
+            "height": 3000.0,
+            "center": 16546.249757,
+            "sill": 600.0
+          }
+        },
+        {
+          "code": "WINDOW_FILLS_OPENING",
+          "status": "passed",
+          "evidence": {
+            "width": 1810.0,
+            "height": 3000.0,
+            "center": 16546.249757,
+            "sill": 600.0
+          }
+        },
+        {
+          "code": "OPENING_GEOMETRY_MATCHES_PARAMETERS",
+          "status": "passed",
+          "evidence": {
+            "width": 1810.0,
+            "height": 3000.0,
+            "center": 16546.249757,
+            "sill": 600.0
+          }
+        },
+        {
+          "code": "WINDOW_NOMINAL_DIMENSIONS_MATCH_AUTHORITY",
+          "status": "passed",
+          "evidence": {
+            "width": 1810.0,
+            "height": 3000.0,
+            "center": 16546.249757,
+            "sill": 600.0
+          }
+        }
+      ],
+      "issues": [],
+      "evidence": {
+        "opening_global_id": "1VuYatHuvKyvZaOJFHDORK",
+        "window_global_id": "0B887RlN1JFgE6ezHxrqhk",
+        "measured": {
+          "width": 1810.0,
+          "height": 3000.0,
+          "center": 16546.249757,
+          "sill": 600.0
+        },
+        "expected": {
+          "width": 1810.0,
+          "height": 3000.0,
+          "center": 16546.249756751,
+          "sill": 600.0
+        },
+        "expected_nominal_dimensions_mm": {
+          "width": 1810.0,
+          "height": 3000.0
+        }
+      }
+    },
+    {
+      "operation_id": "02-door-property",
+      "valid": true,
+      "checks": [
+        {
+          "code": "PROPERTY_MATCH:Pset_DoorCommon.IsExternal",
+          "status": "passed",
+          "evidence": {
+            "expected": true,
+            "actual": true,
+            "ownership": "occurrence_direct"
+          }
+        }
+      ],
+      "issues": [],
+      "evidence": {
+        "target_global_id": "2U8KEAXbL24xySlUNSWHKK"
+      }
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next-ten-packages\\formal-020\\private\\offline-support\\window-property-after-answer\\repaired.ifc",
+    "sha256": "62c9ec32b5620cb5cdab753293449aec20d923a58c2021a6e410d6a7b33a1b08"
+  },
+  "issues": []
+}

@@ -9,6 +9,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass, replace
 from fnmatch import fnmatchcase
+import json
+import math
 from types import MappingProxyType
 from typing import Any, Mapping
 
@@ -24,7 +26,11 @@ from .run_models import hash_json
 from .index_models import ElementRecord, TypeRecord
 from .registry import OperationRegistry
 from .repair_intent import AttributeIntent, RepairIntent
-from .property_intent import ExactPropertyIntent, NaturalLanguagePropertyIntent
+from .property_intent import (
+    ExactPropertyIntent,
+    NaturalLanguagePropertyIntent,
+    validate_authorized_property_fact,
+)
 from .resolution_flow import ResolutionBatch, ResolvedOperation
 from .semantic_facts import (
     SemanticFact,
@@ -167,6 +173,7 @@ def build_production_evidence(
             policy=policy,
             request_hash=intent.source_request_hash,
             model_fingerprint=intent.model_fingerprint,
+            property_target_class=registry.require(operation_type).editable_occurrence_ifc_class,
         )
         if (
             registry.require(operation_type).capability_constraints.get(
@@ -222,10 +229,12 @@ def _operation_candidates(
     policy: Any,
     request_hash: str,
     model_fingerprint: str,
+    property_target_class: str | None = None,
 ) -> tuple[SemanticFact, ...]:
     facts: list[SemanticFact] = [
         _request_fact(operation_id, item) for item in operation_intent.attribute_intents
     ]
+    cohort_type_ids: list[str] = []
     target_id = resolved_operation.target_global_id
     target = _record(records_by_global_id, target_id, role="target")
     primary_scope = f"{policy.semantic_role}_occurrence"
@@ -235,6 +244,25 @@ def _operation_candidates(
             or target_id
         )
         created_host = records_by_global_id.get(created_host_id)
+        if policy.semantic_role == "window" and created_host is not None:
+            external = [p for p in created_host.properties if p.set_kind == "pset"
+                        and p.set_name == "Pset_WallCommon" and p.property_name == "IsExternal"]
+            direct = [p for p in external if not p.inherited]
+            external = direct or external
+            if external:
+                values = {(repr(p.value), p.value_type) for p in external}
+                if len(values) != 1 or not all(isinstance(p.value, bool) for p in external):
+                    raise ProductionEvidenceError("WINDOW_HOST_EXTERNAL_CONFLICT", created_host_id)
+                facts.append(SemanticFact(
+                    fact_key="pset:Pset_WindowCommon.IsExternal", value=external[0].value,
+                    value_type="IfcBoolean", unit=None, inherited=False,
+                    pset_path="Pset_WindowCommon.IsExternal",
+                    entity_source=f"{created_host.ifc_class}:{created_host_id}",
+                    source_kind=EvidenceSourceKind.SURVIVING_HOST,
+                    source_ref=f"current-host:{created_host_id}", occurrence_scope=primary_scope,
+                    provenance=(f"operation:{operation_id}", "window-is-external-from-host",
+                                *(f"host-wall-property:{p.provenance}" for p in external)),
+                ))
         created_host_class = (
             target.ifc_class
             if created_host_id == target_id
@@ -342,6 +370,7 @@ def _operation_candidates(
                     resolved_operation=resolved_operation,
                     request_hash=request_hash,
                     model_fingerprint=model_fingerprint,
+                    target_ifc_class=property_target_class or target.ifc_class,
                 )
             )
             continue
@@ -488,14 +517,7 @@ def _operation_candidates(
                     provenance=(provenance, f"operation:{operation_id}"),
                 )
             )
-            facts.extend(
-                _authorized_type_cohort_facts(
-                    type_global_id=global_id,
-                    records_by_global_id=records_by_global_id,
-                    operation_id=operation_id,
-                    policy=policy,
-                )
-            )
+            cohort_type_ids.append(global_id)
 
     for fact in deterministic_policy_facts:
         if fact.source_kind is EvidenceSourceKind.PRIVATE_ORIGINAL:
@@ -511,6 +533,16 @@ def _operation_candidates(
         ):
             raise ProductionEvidenceError("UNREGISTERED_POLICY_FACT", fact.fact_key)
         facts.append(_scope_fact(fact, operation_id))
+
+    # Resolve all explicit property authorizations before consulting the lower
+    # priority cohort, regardless of their order in authorized_semantics.
+    stronger_keys = frozenset((fact.occurrence_scope, fact.fact_key) for fact in facts
+        if fact.source_kind in _PRODUCTION_PRECEDENCE[:_PRODUCTION_PRECEDENCE.index(
+            EvidenceSourceKind.AUTHORIZED_TYPE_COHORT)])
+    for global_id in dict.fromkeys(cohort_type_ids):
+        facts.extend(_authorized_type_cohort_facts(
+            type_global_id=global_id, records_by_global_id=records_by_global_id,
+            operation_id=operation_id, policy=policy, superseded_keys=stronger_keys))
 
     for fact in facts:
         if fact.source_kind is EvidenceSourceKind.PRIVATE_ORIGINAL:
@@ -550,19 +582,18 @@ def _authorized_property_fact(
     resolved_operation: ResolvedOperation,
     request_hash: str,
     model_fingerprint: str,
+    target_ifc_class: str | None = None,
 ) -> SemanticFact:
     supplied_hash = str(authority.get("property_hash", ""))
-    expected_hash = hash_json(
-        {
-            str(key): value
-            for key, value in authority.items()
-            if key != "property_hash"
-        }
-    )
-    if supplied_hash != expected_hash:
-        raise ProductionEvidenceError(
-            "AUTHORIZED_PROPERTY_HASH_MISMATCH", operation_id
-        )
+    if target_ifc_class is None:
+        allowed_classes = operation_intent.target_query.allowed_ifc_classes
+        if len(allowed_classes) != 1:
+            raise ProductionEvidenceError("AUTHORIZED_PROPERTY_BINDING_MISMATCH", operation_id)
+        target_ifc_class = allowed_classes[0]
+    try:
+        validate_authorized_property_fact(authority, target_ifc_class=target_ifc_class)
+    except ValueError as exc:
+        raise ProductionEvidenceError(str(exc), operation_id) from exc
     if (
         authority.get("operation_id") != operation_id
         or authority.get("target_global_id") != resolved_operation.target_global_id
@@ -600,6 +631,9 @@ def _authorized_property_fact(
             f"operation:{operation_id}",
             f"property-hash:{supplied_hash}",
             f"source_fact_key:pset:{exact_path}",
+            "property-authority:" + json.dumps(
+                dict(authority), ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ),
             *(
                 (f"confirmation:{authority['confirmation_ref']}",)
                 if authority.get("confirmation_ref")
@@ -707,6 +741,8 @@ def _property_claim_matches_authority(
         claim.set_name == authority.get("set_name")
         and claim.property_name == authority.get("property_name")
         and claim.value == authority.get("value")
+        and (claim.requested_value_type is None or claim.requested_value_type == authority.get("value_type"))
+        and (claim.requested_unit is None or claim.requested_unit == authority.get("unit"))
     )
 
 
@@ -722,14 +758,19 @@ def _request_fact(operation_id: str, intent: AttributeIntent) -> SemanticFact:
         pset_path = None
     else:
         raise ProductionEvidenceError("UNSUPPORTED_REQUEST_FACT_KIND", intent.intent_kind)
+    value_type = "IfcMaterial" if intent.intent_kind == "material" else _value_type(intent.value)
+    if fact_key in {"attribute:OverallWidth", "attribute:OverallHeight"}:
+        # AttributeIntent has no model-selected IFC value type. These IFC
+        # slots are positive lengths regardless of JSON integer/real syntax.
+        # Retain normalized mm and strict typed equivalence downstream.
+        if (isinstance(intent.value, bool) or not isinstance(intent.value, (int, float))
+                or not math.isfinite(intent.value) or intent.value <= 0):
+            raise ProductionEvidenceError("REQUEST_DIMENSION_INVALID", fact_key)
+        value_type = "IfcPositiveLengthMeasure"
     return SemanticFact(
         fact_key=fact_key,
         value=intent.value,
-        value_type=(
-            "IfcMaterial"
-            if intent.intent_kind == "material"
-            else _value_type(intent.value)
-        ),
+        value_type=value_type,
         unit=None,
         inherited=False,
         pset_path=pset_path,
@@ -827,6 +868,7 @@ def _authorized_type_cohort_facts(
     records_by_global_id: Mapping[str, ElementRecord],
     operation_id: str,
     policy: Any,
+    superseded_keys: frozenset[tuple[str, str]] = frozenset(),
 ) -> tuple[SemanticFact, ...]:
     """Promote only conflict-free, policy-authorized facts from the bound Type cohort."""
 
@@ -882,6 +924,10 @@ def _authorized_type_cohort_facts(
         ).append(fact)
     selected: list[SemanticFact] = []
     for fact_key in sorted(by_key):
+        # A lower-priority population is a fallback, never an authority over
+        # an already established request, target, host or formal Type fact.
+        if fact_key in superseded_keys:
+            continue
         values = {
             (repr(fact.value), fact.value_type, fact.unit)
             for fact in by_key[fact_key]

@@ -1,0 +1,377 @@
+{
+  "schema_version": "local-ablation-artifact-audit/0.1",
+  "created_at_utc": "2026-10-17T05:50:17.202609+00:00",
+  "scope": {
+    "mode": "bounded local read-only metadata audit",
+    "provider_calls": 0,
+    "ssh_connections": 0,
+    "production_ledger_writes": 0,
+    "ifc_rehashes": 0,
+    "reasoning_or_large_logs_read": false,
+    "only_output": ".tmp/workspace-cleanup-20261017/ablation-audit.json"
+  },
+  "conclusion": {
+    "same_count_explained": "F-local 66/200 plus F-server 55/200 equals 121/400; no_c_loop also 121/400, but task universes differ. This is not same-task output equality.",
+    "strict_same_config_full_baseline_available": false,
+    "frozen_execution_statement": "three variants; complete Harness unavailable",
+    "paired": false,
+    "baseline_rerun": false,
+    "capability_conclusion": "No causal module contribution or system capability improvement established by submitted IFC counts."
+  },
+  "runs": {
+    "ablation": {
+      "local_root": "dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013",
+      "server_root": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013",
+      "requested_model": "ms-45fd2t64",
+      "runtime_revision": "harness-ablation-input/0.5",
+      "final_run_version": "qwen-client-nonthinking-20261014-01",
+      "final_scheduler": "harness-ablation-qwen-simple-bulk/0.1",
+      "final_max_running": 3,
+      "final_per_variant": 1,
+      "frozen_initial_provider_profile": {
+        "label": "Qwen3.8-27B",
+        "model": "ms-45fd2t64",
+        "max_input_tokens": 262144,
+        "max_output_tokens": 65536,
+        "request_options": {}
+      },
+      "thinking": false,
+      "tasks": 1200,
+      "case_count": 400,
+      "terminal": 1200,
+      "running": 0,
+      "ready": 0,
+      "variants": {
+        "no_a": {
+          "terminal": 400,
+          "running": 0,
+          "ready": 0,
+          "counts": {
+            "no_output": 104,
+            "budget_exhausted": 285,
+            "runtime_error": 11
+          },
+          "sealed_ifc_present": 0
+        },
+        "direct_b": {
+          "terminal": 400,
+          "running": 0,
+          "ready": 0,
+          "counts": {
+            "no_output": 333,
+            "budget_exhausted": 50,
+            "runtime_error": 15,
+            "submitted": 2
+          },
+          "sealed_ifc_present": 2
+        },
+        "no_c_loop": {
+          "terminal": 400,
+          "running": 0,
+          "ready": 0,
+          "counts": {
+            "submitted": 121,
+            "no_output": 269,
+            "runtime_error": 10
+          },
+          "sealed_ifc_present": 121
+        }
+      },
+      "submitted_IFC": 123,
+      "no_c_loop_submitted_IFC": 121,
+      "correctness_status": "not_evaluated",
+      "schema_checked_C": 29,
+      "C_remaining_schema_not_checked": 92,
+      "schema_express_rules": false
+    },
+    "F_local": {
+      "local_root": ".tmp/qwen-fg-ms95-20261012/endpoint45-200-pairs",
+      "group": "F full Harness",
+      "tasks": 200,
+      "terminal": 200,
+      "submitted_IFC": 66,
+      "frozen_provider_profile": {
+        "label": "Qwen3.5-35B-A3B",
+        "model": "ms-45fd2t64",
+        "max_input_tokens": 256000,
+        "max_output_tokens": 8192,
+        "request_options": {
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          },
+          "temperature": 0.6,
+          "top_p": 0.95
+        }
+      },
+      "b_validation_corrections_budget": 2,
+      "scene_grounding_version": "text2ifc/ifc-scene-grounding/0.7"
+    },
+    "F_server": {
+      "server_root": "/mnt/dataY/wanghaoyu/repair-qwen-fg-20261013/app/runs/F",
+      "local_config": ".tmp/repair-fg-server/new-batches/F/batch.json",
+      "group": "F full Harness",
+      "tasks": 200,
+      "terminal": 200,
+      "submitted_IFC": 55,
+      "frozen_provider_profile": {
+        "label": "Qwen3.5-35B-A3B",
+        "model": "ms-45fd2t64",
+        "max_input_tokens": 256000,
+        "max_output_tokens": 8192,
+        "request_options": {
+          "chat_template_kwargs": {
+            "enable_thinking": false
+          },
+          "temperature": 0.6,
+          "top_p": 0.95
+        }
+      },
+      "b_validation_corrections_budget": 2,
+      "scene_grounding_version": "text2ifc/ifc-scene-grounding/0.7",
+      "format_express_rules": true
+    },
+    "G_server": {
+      "server_root": "/mnt/dataY/wanghaoyu/repair-qwen-fg-20261013/app/runs/G",
+      "group": "G general executor, not full Harness",
+      "tasks": 400,
+      "submitted_IFC": 11,
+      "role_in_ablation": "public inputs only; no baseline results imported"
+    }
+  },
+  "comparability": {
+    "ablation_vs_F_server": {
+      "case_overlap": 200,
+      "identical_public_IFC_and_effective_request_hashes": 200,
+      "identical_per_task_token_call_time_tool_budgets": 200,
+      "other_200_ablation_cases_unpaired": 200
+    },
+    "ablation_vs_F_local_case_overlap": 0,
+    "F_local_vs_F_server_case_overlap": 0,
+    "known_confounders": [
+      "F manifests retain Qwen3.5 label; research report labels current endpoint Qwen3.8. Exact served backend identity per historical task needs binding, not relabeling.",
+      "F context/output limits 256000/8192 versus ablation 262144/65536.",
+      "Ablation initial provider profile has empty request_options; actual current run explicitly nonthinking/client-tools. Full F temperature/top_p and adapter path differ.",
+      "Ablation contains multiple historical runtime/control versions and failures.",
+      "No randomized interleaving or frozen identical full-baseline pairing.",
+      "F strict native publication differs from no_c_loop submitted_unverified.",
+      "Schema checks are not harmonized: full F EXPRESS true; known C29 EXPRESS false."
+    ]
+  },
+  "artifact_matching": {
+    "known_no_c_loop_inventory_coverage": {
+      "dated": "2026-10-15",
+      "known_artifacts": 29,
+      "final_artifacts": 121,
+      "missing_final_inventory_rows": 92
+    },
+    "known_F_server_inventory": 55,
+    "overlap_with_known_C_inventory": 12,
+    "byte_identical": 7,
+    "different_bytes": 5,
+    "matched_rows": [
+      {
+        "case_id": "formal-001-d004-world",
+        "no_c_loop_sha256": "75c80abe9e50da1d19320cfd88b4e940e1941dfd5cccaf64789f8060c34fb5c4",
+        "F_server_sha256": "75c80abe9e50da1d19320cfd88b4e940e1941dfd5cccaf64789f8060c34fb5c4",
+        "byte_identical": true
+      },
+      {
+        "case_id": "formal-001-d006-world",
+        "no_c_loop_sha256": "a7a50c337835d32e4150b2ec49b0d96acabf1b55b875d2dbdaaf8329affc76b8",
+        "F_server_sha256": "d998ebcb2bf26d7999682510d51f89a73e498d94e6531b9ae7779f312d66764d",
+        "byte_identical": false
+      },
+      {
+        "case_id": "formal-003-d004-world",
+        "no_c_loop_sha256": "79299b4fcfaa496e917422b89b0c246b046f5ada5dd171f65ccbe5de10ac8b47",
+        "F_server_sha256": "e6174af1b792d2ff4d0f4d9b8e2ea4e274ffd13f8c92bef4ff19767e63325110",
+        "byte_identical": false
+      },
+      {
+        "case_id": "formal-003-d008-world",
+        "no_c_loop_sha256": "a7f7b653b419182be92b21c1a020cd5bb295960badd94f083ac60de5cede0a7e",
+        "F_server_sha256": "a7f7b653b419182be92b21c1a020cd5bb295960badd94f083ac60de5cede0a7e",
+        "byte_identical": true
+      },
+      {
+        "case_id": "formal-005-d004-world",
+        "no_c_loop_sha256": "e3470875296eaba938455d7d209be25c48244e4de6ec8a89a8967d9a230730b4",
+        "F_server_sha256": "e3470875296eaba938455d7d209be25c48244e4de6ec8a89a8967d9a230730b4",
+        "byte_identical": true
+      },
+      {
+        "case_id": "formal-006-d001-world",
+        "no_c_loop_sha256": "52ac552330033b8c231f243bc77f2e6a8328e98d5ccb9d6582b6bd8b5cb71bdb",
+        "F_server_sha256": "675f6687b6d65b0e479ecfa667e9f7b56877acedddcc73440392bd4c273be19c",
+        "byte_identical": false
+      },
+      {
+        "case_id": "formal-006-d004-world",
+        "no_c_loop_sha256": "047fbf420a9851dacc01fff71ff7110497ed3ffcea4111028b1dcdfe389afda1",
+        "F_server_sha256": "047fbf420a9851dacc01fff71ff7110497ed3ffcea4111028b1dcdfe389afda1",
+        "byte_identical": true
+      },
+      {
+        "case_id": "formal-006-d005-world",
+        "no_c_loop_sha256": "23f16a14a71e4f607c8bf6d0fad8ab8db57c5bd1e7ce9f299836133e26366bdd",
+        "F_server_sha256": "444ea08f82426eb1233b67816fda930a4f5f85b126e96db6461d673a8c90c2fe",
+        "byte_identical": false
+      },
+      {
+        "case_id": "formal-007-d004-world",
+        "no_c_loop_sha256": "9c099367b8d95ff7bcf6f2d43d0546ee1067133775dca265c7dd5554b98f5666",
+        "F_server_sha256": "9c099367b8d95ff7bcf6f2d43d0546ee1067133775dca265c7dd5554b98f5666",
+        "byte_identical": true
+      },
+      {
+        "case_id": "formal-008-d002-world",
+        "no_c_loop_sha256": "65ccc1905264b06c83718e46cc3fbae4219f23549a4bc4b14a713044c6f1d90b",
+        "F_server_sha256": "65ccc1905264b06c83718e46cc3fbae4219f23549a4bc4b14a713044c6f1d90b",
+        "byte_identical": true
+      },
+      {
+        "case_id": "formal-008-d003-world",
+        "no_c_loop_sha256": "da56d4b86b5c3a8f1c1f9d2c572cd462d77579cdec933e1ee736647d8d769762",
+        "F_server_sha256": "9e9e502a8088c7effd4cd18589e9b294c353e0e6f6e03f8afd84e3d6dec6f3c3",
+        "byte_identical": false
+      },
+      {
+        "case_id": "formal-009-d011-world",
+        "no_c_loop_sha256": "72c279644ad5d02e951b7891e85c323c38a1808080772192e170a585e99932d6",
+        "F_server_sha256": "72c279644ad5d02e951b7891e85c323c38a1808080772192e170a585e99932d6",
+        "byte_identical": true
+      }
+    ],
+    "C_inventory_fields": [
+      "run_id",
+      "case_id",
+      "status",
+      "artifact.path",
+      "artifact.sha256",
+      "bytes",
+      "mtime"
+    ],
+    "F_inventory_fields": [
+      "run_id",
+      "case_id",
+      "artifact_sha256",
+      "common_format_validation",
+      "checks",
+      "report_sha256"
+    ],
+    "join_key": "case_id; do not join by final IFC count or row order",
+    "limits": [
+      "Hashes were compared from existing frozen metadata; actual IFC files were not reread or rehashed.",
+      "Different hashes do not prove semantic repair differences; identical bytes do not prove repair correctness."
+    ]
+  },
+  "loop_evidence": {
+    "configured_full_F_max_corrections": 2,
+    "actual_full_F_loop_trigger_count": "not present in the short summaries and artifact metadata read",
+    "known_funnel_metadata": {
+      "no_a": "raw_plan_loop_entered / accepted_binding_or_C_reached",
+      "direct_b": "general_edit_loop_entered / independent_C_entered / saved_candidates / published_ifc",
+      "source": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\host-review\\simple-20261015-01\\review-summary.json"
+    },
+    "required_per_case_metadata": [
+      "C reached count and each C accept/reject",
+      "validation feedback/correction attempt count and reason",
+      "first candidate hash and final submitted hash",
+      "C rejection terminal without published IFC",
+      "A/B failure before C",
+      "runtime revision and backend identity for each attempt"
+    ],
+    "no_c_loop_definition": "Independent C verification, publication gate and C-to-B loop removed; B internal transaction/postcondition and saved-file integrity retained."
+  },
+  "offline_analysis_next": [
+    "Collect final metadata-only inventory for all 400 cases per group: case_id, source/request hashes, status, sealed artifact path/hash/size, runtime/profile/backend hash, call/token/unknown usage, active time, C/feedback counts. Do not read reasoning.",
+    "Join the 200 same-input F-server cases to no_c_loop; report matched submission 2x2, F-only/C-only outputs, no-output overlap, byte identity among double-submissions, and reasons by stage.",
+    "Report 66 local F outputs separately because its case set is disjoint from no_c_loop.",
+    "For all sealed C121 and F55 outputs on shared cases, use one frozen host-only evaluator and consistent IFC reopen/schema/EXPRESS rules; keep failures and not_evaluable in denominators.",
+    "Slice metadata by mutation family, scene/mother model, difficulty tier and failure stage; keep transport/system errors separate from ordinary no-output and budget exhaustion.",
+    "Measure C reach rate, correction-trigger rate, correction success/failure and first-candidate-to-final hash change. Aggregate equality alone cannot distinguish no trigger, useful filtering, gains offset by regressions or task mix.",
+    "With paired and cohort-confounded observations, describe this batch only; do not claim causal/full-system or unseen-task capability improvement."
+  ],
+  "possible_explanations_and_discriminating_evidence": [
+    {
+      "hypothesis": "Equal totals caused by different task mixtures",
+      "evidence": "Already established: F-local disjoint from all ablation cases; only F-server200 overlaps."
+    },
+    {
+      "hypothesis": "First B candidate already passes C, so C never requests a change",
+      "evidence_needed": "Per-case first candidate C outcomes and correction count zero, joined to identical hashes."
+    },
+    {
+      "hypothesis": "C filters or repairs some cases but gains and losses cancel",
+      "evidence_needed": "Paired output/correctness discordance matrix and first/final candidate lineage."
+    },
+    {
+      "hypothesis": "Deterministic B application yields identical IFC for fixed accepted facts",
+      "evidence_needed": "Same public input plus bound changeset/semantic intent hashes; identical IFC is compatible with independent runs."
+    },
+    {
+      "hypothesis": "Runtime/model/context changes mask C contribution",
+      "evidence_needed": "Per-task runtime, profile, backend, request options, prompt/schema/evaluator bindings and fixed budget."
+    }
+  ],
+  "protocol_boundaries": [
+    "agent-capability-evaluation.md sections 1 and 3.1: complete denominator including failure/timeout/not_evaluable.",
+    "Sections 3.3-3.4: same tasks/model/config/budget/evaluator, all failures, paired delta and uncertainty required for capability claims.",
+    "Section 2.2: freeze artifacts and replay deterministic downstream to localize mechanisms; do not infer prompt/model root cause from final output."
+  ],
+  "sources": [
+    {
+      "path": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\REPORT.md",
+      "bytes": 28977
+    },
+    {
+      "path": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\server-preparation.json",
+      "bytes": 252668
+    },
+    {
+      "path": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\server-qwen-execution.json",
+      "bytes": 252297
+    },
+    {
+      "path": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\host-review\\batch-complete-20261017-01\\receipt.json",
+      "bytes": 2064
+    },
+    {
+      "path": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\host-review\\batch-complete-20261017-01\\machine\\summary.json",
+      "bytes": 616
+    },
+    {
+      "path": "dataset\\processed\\experiments\\harness-ablation-deepseek-20261011\\runs\\qwen-g400-20261013\\host-review\\c-schema-all-20261015-01\\remote-inventory.json",
+      "bytes": 18730
+    },
+    {
+      "path": "docs/reports/repair-experiment-summary-20261015/README.md",
+      "bytes": 3838
+    },
+    {
+      "path": "docs/reports/repair-experiment-summary-20261015/evidence/server-F-format-records.json",
+      "bytes": 64478
+    },
+    {
+      "path": ".tmp/repair-fg-server/README.md",
+      "bytes": 14958
+    },
+    {
+      "path": ".tmp/repair-fg-server/new-batches/F/batch.json",
+      "bytes": 427317
+    },
+    {
+      "path": ".tmp/repair-fg-server/server-F-evaluation/recorded-validation.json",
+      "bytes": 79870
+    },
+    {
+      "path": ".tmp/qwen-fg-ms95-20261012/endpoint45-200-pairs/batch.json",
+      "bytes": 755956
+    },
+    {
+      "path": "docs/validation/agent-capability-evaluation.md",
+      "bytes": 16548
+    }
+  ],
+  "snapshot_role": "Read-only metadata audit of existing runs; no correctness scores or causal C-loop claim"
+}

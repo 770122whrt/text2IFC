@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="10" time="49.602" timestamp="2026-09-08T14:06:46.700944+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_prints_mimo_question_before_reading_user_answer" time="0.522" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_quit_records_incomplete_without_ifc" time="0.417" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_reprompts_empty_clarification_answer" time="0.533" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_acknowledges_answer_before_rerunning_design_brief" time="0.481" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_ready_session_compiles_ifc_with_fix_acceptance_report" time="9.246" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_repl_chat_script_path_help_runs_from_repo_root" time="1.590" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_default_live_repl_design_brief_trace_is_session_scoped" time="9.738" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_routes_geometry_failure_through_audit_before_final_status" time="14.176" /><testcase classname="tests.agent.test_phase6_2_fix_repl_cli" name="test_live_repl_records_provider_failure_without_traceback" time="1.026" /><testcase classname="tests.ifc_repair.test_relation_damage_public_path" name="test_dataset_relation_damage_restores_properties_through_public_api" time="9.270"><failure message="AssertionError: RunResult(run_id='repair-297a951d1e6a4848892085038a629fd3', state_version=3, status='provider_failed', reason_code='RE...a11bab5186bd4bb5affff73a7f778605/manifest.json'}), clarification=None, schema_version='text2ifc/ifc-repair-result/0.1')&#10;assert 'provider_failed' == 'succeeded'&#10;  &#10;  - succeeded&#10;  + provider_failed">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-public-recheck-20260908-02/test_dataset_relation_damage_r0')
+
+    def test_dataset_relation_damage_restores_properties_through_public_api(tmp_path):
+        source=ROOT/'dataset/external/bimnet/vvo.ifc'
+        before=hashlib.sha256(source.read_bytes()).hexdigest()
+        model=ifcopenshell.open(str(source))
+        target=model.by_guid(TARGET)
+        rel=next(r for r in target.IsDefinedBy if r.is_a('IfcRelDefinesByProperties') and r.RelatingPropertyDefinition.Name=='Pset_WallCommon')
+        removed_guid=rel.GlobalId
+        model.remove(rel)
+        damaged=tmp_path/'damaged.ifc';model.write(str(damaged))
+        damaged_bytes=damaged.read_bytes()
+        request=f'For wall {TARGET}, set occurrence Pset_WallCommon.Reference to string 240, IsExternal true, ExtendToStructure false, LoadBearing false. Preserve all geometry and other facts.'
+        output=tmp_path/'public'
+        provider=PropertyProvider(output,request)
+        started=time.monotonic()
+        api=RepairAPI(output,provider=provider)
+        result=api.start(damaged,request)
+        (tmp_path/'public-path-result.json').write_text(json.dumps({'status':result.status,'elapsed_seconds':time.monotonic()-started,'calls':len(provider.calls),'source_entities':sum(1 for _ in model)},default=str),encoding='utf-8')
+&gt;       assert result.status=='succeeded',result
+E       AssertionError: RunResult(run_id='repair-297a951d1e6a4848892085038a629fd3', state_version=3, status='provider_failed', reason_code='RE...a11bab5186bd4bb5affff73a7f778605/manifest.json'}), clarification=None, schema_version='text2ifc/ifc-repair-result/0.1')
+E       assert 'provider_failed' == 'succeeded'
+E         
+E         - succeeded
+E         + provider_failed
+
+tests\ifc_repair\test_relation_damage_public_path.py:64: AssertionError</failure></testcase></testsuite></testsuites>

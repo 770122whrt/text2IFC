@@ -1,0 +1,387 @@
+{
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "status": "resolved",
+  "reason_code": null,
+  "operation_id": null,
+  "source_ifc_sha256": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+  "model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+  "operations": [
+    {
+      "operation_id": "01-window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "target_global_id": "3JZGeqq852COtfxExBeyvQ",
+      "scope_ids": [
+        "3JZGeqq852COtfxExBeyvQ"
+      ],
+      "evidence_pointers": [
+        "resolved:/operations/01-window/context/candidate_targets/0",
+        "public-window-installation/0.1:1GjejW8Xn4SugeTM2GVMaF"
+      ],
+      "parameters": {
+        "opening": {
+          "height_mm": 3000.0,
+          "sill_height_mm": 600.0,
+          "width_mm": 1810.0
+        },
+        "position": {
+          "center_offset_mm": 16546.249756751,
+          "reference": "wall_local_start"
+        },
+        "window": {
+          "fit_opening": true
+        }
+      },
+      "context": {
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "base_model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved",
+        "resolved_target_id": "ifc:3JZGeqq852COtfxExBeyvQ",
+        "operation_hints": [
+          "add_window_with_opening_to_wall"
+        ],
+        "candidate_targets": [
+          {
+            "target_id": "ifc:3JZGeqq852COtfxExBeyvQ",
+            "ifc_global_id": "3JZGeqq852COtfxExBeyvQ",
+            "ifc_class": "IfcWallStandardCase",
+            "name": "Basic Wall:Exterior Load Bearing wall:535375",
+            "type_name": "Basic Wall:Exterior Load Bearing wall",
+            "storey_name": "Level 0",
+            "geometry_capability": "straight_wall",
+            "geometry": {
+              "coordinate_basis": {
+                "axis_direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "axis_end_mm": [
+                  18419.2994786031,
+                  0.0,
+                  0.0
+                ],
+                "axis_start_mm": [
+                  0.0,
+                  0.0,
+                  0.0
+                ],
+                "reference": "wall_local_start",
+                "vertical_direction": [
+                  0.0,
+                  0.0,
+                  1.0
+                ],
+                "world_axis_direction": [
+                  -1.0,
+                  0.0,
+                  0.0
+                ],
+                "world_axis_start_mm": [
+                  -16117.419243249,
+                  27076.5285199089,
+                  0.0
+                ]
+              },
+              "orientation": "west",
+              "dimensions_mm": {
+                "height": 18400.0,
+                "length": 18419.2994786031,
+                "thickness": 312.49999999999795
+              }
+            },
+            "facets": {
+              "editable_target": true,
+              "space_names": []
+            },
+            "properties": [],
+            "retrieval": {
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 1000,
+              "fused_score": 1000,
+              "matched_fields": [
+                "global_id"
+              ]
+            },
+            "evidence": [
+              {
+                "field": "global_id",
+                "state": "matched",
+                "query_value": "3JZGeqq852COtfxExBeyvQ",
+                "candidate_value": "3JZGeqq852COtfxExBeyvQ",
+                "provenance": "IfcRoot.GlobalId"
+              },
+              {
+                "field": "ifc_class",
+                "state": "matched",
+                "query_value": [
+                  "IfcWall"
+                ],
+                "candidate_value": "IfcWallStandardCase",
+                "provenance": "IfcProduct.is_a"
+              },
+              {
+                "field": "name",
+                "state": "unavailable",
+                "query_value": null,
+                "candidate_value": "Basic Wall:Exterior Load Bearing wall:535375",
+                "provenance": "aliases"
+              },
+              {
+                "field": "storey",
+                "state": "unavailable",
+                "query_value": null,
+                "candidate_value": "Level 0",
+                "provenance": "spatial_relationship"
+              },
+              {
+                "field": "geometry_capability",
+                "state": "unavailable",
+                "query_value": null,
+                "candidate_value": "straight_wall",
+                "provenance": "adapter"
+              }
+            ]
+          }
+        ],
+        "model_constraints": {
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "vector_retrieval": "disabled",
+          "facts_source": "current_ifc_only",
+          "source_ifc_sha256": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+        },
+        "context_budget": {
+          "mode": "normal",
+          "max_candidates": 5,
+          "max_bytes": 48000,
+          "selected_candidate_count": 1,
+          "omitted_candidate_count": 0,
+          "actual_bytes": 2465,
+          "estimated_tokens": 617,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+        "window_installation_anchor": {
+          "method": "public-window-installation/0.1",
+          "reference_global_id": "1GjejW8Xn4SugeTM2GVMaF",
+          "reference_opening_global_id": "3_REz$QDrOHJb6bYoxdiUU",
+          "reference_wall_global_id": "3JZGeqq852COtfxExBeyvQ",
+          "type_global_id": "14xJur$tAygZ8nD5oT1oMw",
+          "axis_sign": -1.0,
+          "nominal_dimensions_mm": {
+            "width": 1810.0,
+            "height": 3000.0
+          },
+          "opening_dimensions_mm": {
+            "width": 1810.0,
+            "height": 3000.0
+          },
+          "wall_thickness_mm": 312.5,
+          "normal_center_offset_from_wall_mm": -6.25,
+          "center_offset_from_opening_mm": 0.0,
+          "base_offset_from_opening_mm": 0.0,
+          "geometry_extent_mm": {
+            "x": 1860.0,
+            "y": 375.0,
+            "z": 3000.0
+          },
+          "mapped_body": [
+            {
+              "map_index": 0,
+              "transform": [
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            }
+          ]
+        }
+      },
+      "authorized_semantics": [
+        {
+          "kind": "formal_type_binding",
+          "global_id": "3mC5rj4wL5ZfT78mw_nkVv",
+          "provenance": "current_ifc"
+        },
+        {
+          "kind": "user_authorized_prototype",
+          "global_id": "14xJur$tAygZ8nD5oT1oMw",
+          "authorization": "explicit_request_reference",
+          "prototype_lookup": "type_global_id",
+          "formal_constraints": {},
+          "request_provenance": {
+            "source_kind": "user_request",
+            "reference": "request:/text",
+            "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+          }
+        }
+      ]
+    },
+    {
+      "operation_id": "02-door-property",
+      "operation_type": "set_occurrence_properties",
+      "target_global_id": "2U8KEAXbL24xySlUNSWHKK",
+      "scope_ids": [
+        "2U8KEAXbL24xySlUNSWHKK"
+      ],
+      "evidence_pointers": [
+        "resolved:/operations/02-door-property/context/candidate_targets/0"
+      ],
+      "parameters": {},
+      "context": {
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "base_model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved",
+        "resolved_target_id": "ifc:2U8KEAXbL24xySlUNSWHKK",
+        "operation_hints": [
+          "set_occurrence_properties"
+        ],
+        "candidate_targets": [
+          {
+            "target_id": "ifc:2U8KEAXbL24xySlUNSWHKK",
+            "ifc_global_id": "2U8KEAXbL24xySlUNSWHKK",
+            "ifc_class": "IfcDoor",
+            "name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+            "type_name": "Doors_ExtDbl_Flush:1810x2110mm",
+            "storey_name": "Level 0",
+            "geometry_capability": "opening_filling",
+            "geometry": {
+              "dimensions_mm": {
+                "overall_height": 2800.0,
+                "overall_width": 1810.0
+              }
+            },
+            "facets": {
+              "editable_target": true,
+              "opening_global_ids": [
+                "28HNoWIinPuKfP0O_XOmeg"
+              ],
+              "host_wall_global_ids": [
+                "1yxOhPF9554907YvC6JwGQ"
+              ]
+            },
+            "properties": [],
+            "retrieval": {
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 1000,
+              "fused_score": 1000,
+              "matched_fields": [
+                "global_id"
+              ]
+            },
+            "evidence": [
+              {
+                "field": "global_id",
+                "state": "matched",
+                "query_value": "2U8KEAXbL24xySlUNSWHKK",
+                "candidate_value": "2U8KEAXbL24xySlUNSWHKK",
+                "provenance": "IfcRoot.GlobalId"
+              },
+              {
+                "field": "ifc_class",
+                "state": "matched",
+                "query_value": [
+                  "IfcDoor"
+                ],
+                "candidate_value": "IfcDoor",
+                "provenance": "IfcProduct.is_a"
+              },
+              {
+                "field": "name",
+                "state": "unavailable",
+                "query_value": null,
+                "candidate_value": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+                "provenance": "aliases"
+              },
+              {
+                "field": "storey",
+                "state": "unavailable",
+                "query_value": null,
+                "candidate_value": "Level 0",
+                "provenance": "spatial_relationship"
+              },
+              {
+                "field": "geometry_capability",
+                "state": "unavailable",
+                "query_value": null,
+                "candidate_value": "opening_filling",
+                "provenance": "adapter"
+              }
+            ]
+          }
+        ],
+        "model_constraints": {
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "vector_retrieval": "disabled",
+          "facts_source": "current_ifc_only",
+          "source_ifc_sha256": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+        },
+        "context_budget": {
+          "mode": "normal",
+          "max_candidates": 5,
+          "max_bytes": 48000,
+          "selected_candidate_count": 1,
+          "omitted_candidate_count": 0,
+          "actual_bytes": 2162,
+          "estimated_tokens": 541,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+      },
+      "authorized_semantics": [
+        {
+          "kind": "formal_type_binding",
+          "global_id": "0rKsJIRyuZVFLOJ5dbhor7",
+          "provenance": "current_ifc"
+        },
+        {
+          "kind": "authorized_property_fact",
+          "operation_id": "02-door-property",
+          "target_global_id": "2U8KEAXbL24xySlUNSWHKK",
+          "request_hash": "sha256:a4ea5bfd4c1e4f7a07f7a9ed831dbbc046de91555a1bf7d54388cc278be8f350",
+          "model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+          "set_name": "Pset_DoorCommon",
+          "property_name": "IsExternal",
+          "value": true,
+          "value_type": "IfcBoolean",
+          "unit": null,
+          "ownership": "occurrence_direct",
+          "source": {
+            "source_kind": "user_request",
+            "reference": "request:/text",
+            "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+          },
+          "confirmation_ref": null,
+          "confirmation_hash": null,
+          "classification": "standard",
+          "property_hash": "sha256:9fafbe7d3b7ac766943e8731ee6bfdd9091352b00afca51c125e126af05e3790"
+        }
+      ]
+    }
+  ],
+  "candidates": [],
+  "property_preview": null,
+  "property_resolutions": []
+}

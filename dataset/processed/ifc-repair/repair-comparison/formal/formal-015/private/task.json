@@ -1,0 +1,151 @@
+{
+  "budget": {
+    "limits": {
+      "active_seconds": 2400,
+      "calls": 48,
+      "extensions": [],
+      "tokens": 450000,
+      "tool_seconds": 120
+    },
+    "provider_calls_allowed": true,
+    "requires_current_stage_admission": true,
+    "status": "frozen"
+  },
+  "case_id": "formal-015",
+  "clarification": {
+    "facts": {},
+    "required_user_facts": []
+  },
+  "clarification_required": false,
+  "damage": [
+    {
+      "damaged_value": "规格待核对",
+      "expected_value": "240 X 300 mm",
+      "geometry": {
+        "bounds_world_m": [
+          [
+            -7.18836603836015,
+            -3.01336603836015
+          ],
+          [
+            7.730658968455458,
+            7.970658968455462
+          ],
+          [
+            3.48,
+            3.78
+          ]
+        ],
+        "center_xy_m": [
+          -5.1008660383601505,
+          7.85065896845546
+        ],
+        "class": "IfcBeam",
+        "geometry": {
+          "bounds_world_m": [
+            [
+              -7.18836603836015,
+              -3.01336603836015
+            ],
+            [
+              7.730658968455458,
+              7.970658968455462
+            ],
+            [
+              3.48,
+              3.78
+            ]
+          ],
+          "class": "IfcBeam",
+          "geometry_status": "available",
+          "guid": "0GPDis$EfEDBfMOcU9bDFh",
+          "name": "Glulam-Western Species:240 X 300 mm:468058",
+          "project_unit_to_mm": 1.0
+        },
+        "guid": "0GPDis$EfEDBfMOcU9bDFh",
+        "name": "Glulam-Western Species:240 X 300 mm:468058",
+        "storey": {
+          "guid": "1qv6ynVKX7xf87anS8vN2n",
+          "name": "Level 1",
+          "world_elevation_m": 4.0
+        }
+      },
+      "kind": "property",
+      "original_value_basis": "genuine_preselected_source_direct_instance_property",
+      "property": "Reference",
+      "property_set": "Pset_BeamCommon",
+      "scope": "occurrence_direct",
+      "target_guid": "0GPDis$EfEDBfMOcU9bDFh",
+      "target_name": "Glulam-Western Species:240 X 300 mm:468058",
+      "value_type": "IfcIdentifier"
+    }
+  ],
+  "damage_scale": "S1",
+  "damaged_sha256": "3a2a150474a5c994aaf5c491928e0221b1af36839d382d62fa64bdaef32961bb",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred"
+  },
+  "pipeline_readiness": {
+    "bound_instance_apply": {
+      "case_id": "formal-015",
+      "checks": {
+        "all_geometry_unchanged": true,
+        "exact_typed_value_restored": true,
+        "only_target_properties_changed": true,
+        "published": true,
+        "source_unchanged": true,
+        "valid": true
+      },
+      "evidence_class": "offline_bound_instance_property_apply_reopen_and_preservation",
+      "natural_language_pipeline_tested": false,
+      "passed": true,
+      "property_runtime_retrieval_tested": false,
+      "provider_calls": 0,
+      "schema_version": "next-ten-property-bound-support/0.1",
+      "whole_mixed_task_tested": null
+    },
+    "current_bound_evidence": "private/offline-support/property-review/README.md",
+    "four_arm_admission": "not_frozen_not_admitted",
+    "human_acceptance": false,
+    "natural_language_complete_path": "general_runtime_fake_provider_paths_passed; exact_case_not_model_tested",
+    "product_operation_supported": true,
+    "runtime_evidence": "dataset/processed/experiments/repair-comparison/development/structural-property-readiness/README.md",
+    "technical_review_accepted": true
+  },
+  "preservation": [
+    "All existing geometry and all unrelated properties/relations unchanged.",
+    "Only mixed window target host gains the required opening."
+  ],
+  "purpose": "formal_candidate",
+  "request": "以下位置按模型世界坐标描述，单位为米。标高 4 米的楼层，平面中心约在（X=-5.100866、Y=7.850659 米）、实体竖向范围为 Z=3.48 至 3.78 米的这根梁的规格标记被误改了，请恢复成“240 X 300 mm”，保留这段文字的空格和字符。只修正这一构件的属性，保留全部构件及其几何、位置、尺寸和其他属性。",
+  "required_product_count": 0,
+  "required_products": {},
+  "required_property_count": 1,
+  "required_relation_count": 0,
+  "review": {
+    "authorization": {
+      "property_revision_authorized": true,
+      "user_quote": "其他看起来没有问题 大体上没有问题 你再稍微过一遍即可。"
+    },
+    "human_viewed": false,
+    "kind": "delegated_technical",
+    "reviewed_at": "2026-10-09T04:02:21.373506+00:00",
+    "reviewer": "Codex technical review following user general approval",
+    "scope_note": "User generally approved the other cases and delegated this recheck; no per-case usBIM pass is attributed to the user.",
+    "status": "accepted_by_delegation",
+    "technical_review_passed": true
+  },
+  "schema_version": "repair-comparison-task-candidate/0.2",
+  "source": {
+    "asset_id": "gni-bim-dataset-model_1_structure-503b07ac2808",
+    "license": "CC-BY-4.0",
+    "rights_registry": "dataset/external/ifc-asset-register.jsonl",
+    "source_id": "gni-bim-dataset",
+    "source_path": "dataset/external/repairs/metadata-v2/gni-bim-dataset-model_1_structure-503b07ac2808/model_1_structure.ifc",
+    "source_role": "preselected_registered_format_repair_copy",
+    "source_sha256": "14c14cf304a5d66f2368286e93e1d32ef34f3bddeb616d18dcbf5721ec8f6c6a"
+  },
+  "source_sha256": "14c14cf304a5d66f2368286e93e1d32ef34f3bddeb616d18dcbf5721ec8f6c6a",
+  "title": "恢复一根梁的规格标记"
+}

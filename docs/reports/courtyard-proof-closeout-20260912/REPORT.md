@@ -1,5 +1,7 @@
 # 光庭Proof收纳与工作目录整理
 
+2026-10-17 维护：本记录对应的整理已完成，本目录一次性执行脚本（`curate.py`、`retire.ps1`、`verify.py`）从本地退役；删除/保全收据与正式证据保留。旧执行命令只表示当时操作，不应重跑。脚本原文可从[整理前固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/courtyard-proof-closeout-20260912)恢复；Proof 的日常校验继续使用现有 `scripts/proof/` 和 `text2ifc_proof` 工具。
+
 2026-09-12。用户已人工验收第二版敞开光庭，随后批准清单删除；75个目录和24个独立重复文件现已全部退役。工作分支为codex/workflow-dataset-links，起点af9be18b；本次没有改产品合同、生成策略或IFC成品，也没有Provider调用、Full Preflight、PR或main合并。
 
 ## 已完成的收纳

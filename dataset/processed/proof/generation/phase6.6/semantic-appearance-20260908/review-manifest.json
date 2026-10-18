@@ -1,0 +1,2795 @@
+{
+  "schema_version": "text2ifc/workflow-proof-package/0.1",
+  "collection_id": "semantic-appearance-20260908",
+  "workflow": "generation",
+  "status": "pending_human_review",
+  "registration_status": "unregistered",
+  "accepted_proof_installed": false,
+  "phase_assignment": "Organization only; phase status unchanged",
+  "cases": [
+    {
+      "case_id": "reception-basic-fillings",
+      "path": "reception-basic-fillings",
+      "status": "pending_human_review",
+      "outcome": "generated",
+      "evidence_mode": "live",
+      "provider_calls": 5,
+      "total_provider_calls_including_failed_attempts": 5,
+      "authority": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/acceptance-metrics.json",
+      "artifacts": {
+        "request.txt": {
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146,
+          "source": "reception-basic-fillings/request.txt"
+        },
+        "generated.ifc": {
+          "sha256": "132dcac6ffac2c50cd313a791b3b8767d81754fa42f6533ef0ef45bbdd484bf2",
+          "size_bytes": 42622,
+          "source": "reception-basic-fillings/generated.ifc"
+        },
+        "model.json": {
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736,
+          "source": "reception-basic-fillings/model.json"
+        }
+      },
+      "ifccompare": "Independent frozen request / IFC readback; full IFCCompare benchmark not run"
+    }
+  ],
+  "legacy_bundles": [
+    {
+      "id": "frozen",
+      "old_root": "dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/generation",
+      "entries": [
+        {
+          "legacy_path": "audit-approval-blocked-02.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-approval-blocked-02.json",
+          "sha256": "a63c6458843cefe5444b72d2b50b2459009f35c5844a6bc819a22345b770cca3",
+          "size_bytes": 585
+        },
+        {
+          "legacy_path": "audit-blocked.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-blocked.json",
+          "sha256": "7ab0181bab321328ff76965764244d17cd83fc20907029d24eaf6b2e22e9293c",
+          "size_bytes": 585
+        },
+        {
+          "legacy_path": "audit-payload-preview/audit/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/audit/prompt-render-input.json",
+          "sha256": "ce1e86b053225100b7bdc11d6218c3ce52767291b182c3b3fe3d28b28889742b",
+          "size_bytes": 51955
+        },
+        {
+          "legacy_path": "audit-payload-preview/audit/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/audit/prompt-rendered.md",
+          "sha256": "1f3e432ee10b5fb8dfd9907010f31e9e91049c491828c5714f43796a72dab022",
+          "size_bytes": 28065
+        },
+        {
+          "legacy_path": "audit-payload-preview/binding-admission.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/binding-admission.json",
+          "sha256": "121300f9aa7051a5d1e536c815e2d5fa19ed8960531b800e1ba4259e57fbbe9a",
+          "size_bytes": 26756
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "audit-payload-preview/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "audit-payload-preview/dynamic-gates.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/dynamic-gates.json",
+          "sha256": "aa524a0929f454f0cc664310e8a9313b007a3e5ae32ceb7b569ff3d57eefa964",
+          "size_bytes": 2258
+        },
+        {
+          "legacy_path": "audit-payload-preview/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "audit-payload-preview/gate-summary.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/gate-summary.json",
+          "sha256": "f2f90f745899359ca45242dba01106f4fe5dada50e4c4b9633fa777f0bbadb9f",
+          "size_bytes": 9476
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/events.jsonl",
+          "sha256": "99d8bc93de1b096909f05a2cf6b8be99cf3631f8c78441ea5f5c13155859ad39",
+          "size_bytes": 78853
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/metrics.json",
+          "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe",
+          "size_bytes": 970
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/model-text.txt",
+          "sha256": "534737b733b39040d4f28e8b9450f5b86a7d051d6520741ae17be0f9fe7ffe29",
+          "size_bytes": 13924
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/parsed-output.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/prompt-render-input.json",
+          "sha256": "5604ea45b207565e4702fc79d0337acf38930cb1e800bacc2943d04c517167a2",
+          "size_bytes": 99652
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/prompt-rendered.md",
+          "sha256": "c5879c42618b51033606ac968b4526167cb6b7dfce57cb53f8dc1a0e4b39e085",
+          "size_bytes": 51832
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/request.redacted.json",
+          "sha256": "a333e152a14649f67031743c7ea9bacf511b49ed3bddbb51d827af39c3ccd63b",
+          "size_bytes": 57576
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/response-metadata.json",
+          "sha256": "cccd3ed6e828ea066ab2c7b11569d8adf78894b6f57ca2e18cdf1c1dc76fa473",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/response.raw.json",
+          "sha256": "67a4c857588a677f27d727a0cc15875d11a9eace97eab7abe9ca58f99b6ad71c",
+          "size_bytes": 79181
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/trace-manifest.json",
+          "sha256": "6ac58c632c098de03854fc4b9e45c612181ac30100b1a1eea34c474196862b3e",
+          "size_bytes": 1854
+        },
+        {
+          "legacy_path": "audit-payload-preview/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "audit-payload-preview/geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/geometry-expectation.json",
+          "sha256": "b93a6d7d19e1381b49889d97cdb56d73e66f0cb4e77cc1888d690b84e978f77a",
+          "size_bytes": 1185
+        },
+        {
+          "legacy_path": "audit-payload-preview/geometry-feedback.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/geometry-feedback.json",
+          "sha256": "7b34a49cf077886e3db80d876c21df9ffa3937db92a00cbe6efdcb6abeaa3457",
+          "size_bytes": 976
+        },
+        {
+          "legacy_path": "audit-payload-preview/ifc-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/ifc-verification.json",
+          "sha256": "0d43a6fb36eb6d87c49fa559b0010cd8ae7b02cd3a138d919859735c089c2ba8",
+          "size_bytes": 255
+        },
+        {
+          "legacy_path": "audit-payload-preview/output.ifc",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/output.ifc",
+          "sha256": "04c64eeb2500a38e982a46e1667fc30983cd98cedaf3b45bde4a9cc6bdb14985",
+          "size_bytes": 42622
+        },
+        {
+          "legacy_path": "audit-payload-preview/PREVIEW.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/PREVIEW.json",
+          "sha256": "38cc70b8b4470abf05c5afdcff58f030108c88fc4430e00dc62df3e987be5896",
+          "size_bytes": 679
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/metrics.json",
+          "sha256": "c43316e1010946cd5aba732b8ff194120a2d6ced2f7210d1f767942e7ace0f1c",
+          "size_bytes": 681
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/repair-attempts.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/repair-attempts.json",
+          "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+          "size_bytes": 4
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/route.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/route.json",
+          "sha256": "45804bde3ce6f1e24179822343790b68c9ba2f991e44d6f5a9d7765b2fccf032",
+          "size_bytes": 691
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/source-validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/source-validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "audit-payload-preview/repair/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/repair/trace-manifest.json",
+          "sha256": "b9f6df1daf7e1a4d92f0f1d8374e33adb5b16e4874d8c672a204fea48cd5f53b",
+          "size_bytes": 919
+        },
+        {
+          "legacy_path": "audit-payload-preview/request-semantics.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/request-semantics.json",
+          "sha256": "eecb83e025f8cdfd9d8b80fba3af753553d5950c2d20ad589fae0dc0a77a22e1",
+          "size_bytes": 6229
+        },
+        {
+          "legacy_path": "audit-payload-preview/semantic-geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/semantic-geometry-expectation.json",
+          "sha256": "a2dc2889de6dc50e5d3e91dc385350a1387143d23f92d7aa8a71dd812f644393",
+          "size_bytes": 1150
+        },
+        {
+          "legacy_path": "audit-payload-preview/semantic-report.md",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/semantic-report.md",
+          "sha256": "8ee96361a411cbe4bec893ec75a95d274944db46e8bcbd75fed830e6bee1c0a8",
+          "size_bytes": 6778
+        },
+        {
+          "legacy_path": "audit-payload-preview/semantic-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/audit-payload-preview/semantic-verification.json",
+          "sha256": "ae0a411262bca06d013027c63542509225db56935cf2417d39673b10e8217e26",
+          "size_bytes": 4866
+        },
+        {
+          "legacy_path": "clarification-answer-01.txt",
+          "path": "reception-basic-fillings/evidence/frozen/clarification-answer-01.txt",
+          "sha256": "7a9bbf41e1a36720c4f1a30dcff3ceb5393b877f015000d86b8b8c61079690fd",
+          "size_bytes": 179
+        },
+        {
+          "legacy_path": "cli.log",
+          "path": "reception-basic-fillings/evidence/frozen/cli.log",
+          "sha256": "927a02651c0c8f43ed68be43e558a49bf5f807dffb4eb57de4fcd83a2c65d2d8",
+          "size_bytes": 147
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/events.jsonl",
+          "sha256": "99d8bc93de1b096909f05a2cf6b8be99cf3631f8c78441ea5f5c13155859ad39",
+          "size_bytes": 78853
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/metrics.json",
+          "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe",
+          "size_bytes": 970
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/model-text.txt",
+          "sha256": "534737b733b39040d4f28e8b9450f5b86a7d051d6520741ae17be0f9fe7ffe29",
+          "size_bytes": 13924
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/parsed-output.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/prompt-render-input.json",
+          "sha256": "5604ea45b207565e4702fc79d0337acf38930cb1e800bacc2943d04c517167a2",
+          "size_bytes": 99652
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/prompt-rendered.md",
+          "sha256": "c5879c42618b51033606ac968b4526167cb6b7dfce57cb53f8dc1a0e4b39e085",
+          "size_bytes": 51832
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/request.redacted.json",
+          "sha256": "a333e152a14649f67031743c7ea9bacf511b49ed3bddbb51d827af39c3ccd63b",
+          "size_bytes": 57576
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/response-metadata.json",
+          "sha256": "cccd3ed6e828ea066ab2c7b11569d8adf78894b6f57ca2e18cdf1c1dc76fa473",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/response.raw.json",
+          "sha256": "67a4c857588a677f27d727a0cc15875d11a9eace97eab7abe9ca58f99b6ad71c",
+          "size_bytes": 79181
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/trace-manifest.json",
+          "sha256": "6ac58c632c098de03854fc4b9e45c612181ac30100b1a1eea34c474196862b3e",
+          "size_bytes": 1854
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-binding-revalidation/request-semantics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-binding-revalidation/request-semantics.json",
+          "sha256": "eecb83e025f8cdfd9d8b80fba3af753553d5950c2d20ad589fae0dc0a77a22e1",
+          "size_bytes": 6229
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/binding-admission.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/binding-admission.json",
+          "sha256": "53da68fceedcd106b457a1c1ff699738baeaf009df643b0ed526fdbed244a664",
+          "size_bytes": 27273
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/dynamic-gates.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/dynamic-gates.json",
+          "sha256": "f0278b6229d494677ed2d4c32c3ed174d5ed60f6961a9a87f2321137e2d70ec2",
+          "size_bytes": 3011
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/gate-summary.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/gate-summary.json",
+          "sha256": "2dfd3087dd615a184980cb3de3dc5e2cf034da503cb996c4bf089185ba52e03c",
+          "size_bytes": 9761
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/events.jsonl",
+          "sha256": "99d8bc93de1b096909f05a2cf6b8be99cf3631f8c78441ea5f5c13155859ad39",
+          "size_bytes": 78853
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/metrics.json",
+          "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe",
+          "size_bytes": 970
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/model-text.txt",
+          "sha256": "534737b733b39040d4f28e8b9450f5b86a7d051d6520741ae17be0f9fe7ffe29",
+          "size_bytes": 13924
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/parsed-output.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/prompt-render-input.json",
+          "sha256": "5604ea45b207565e4702fc79d0337acf38930cb1e800bacc2943d04c517167a2",
+          "size_bytes": 99652
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/prompt-rendered.md",
+          "sha256": "c5879c42618b51033606ac968b4526167cb6b7dfce57cb53f8dc1a0e4b39e085",
+          "size_bytes": 51832
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/request.redacted.json",
+          "sha256": "a333e152a14649f67031743c7ea9bacf511b49ed3bddbb51d827af39c3ccd63b",
+          "size_bytes": 57576
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/response-metadata.json",
+          "sha256": "cccd3ed6e828ea066ab2c7b11569d8adf78894b6f57ca2e18cdf1c1dc76fa473",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/response.raw.json",
+          "sha256": "67a4c857588a677f27d727a0cc15875d11a9eace97eab7abe9ca58f99b6ad71c",
+          "size_bytes": 79181
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/trace-manifest.json",
+          "sha256": "6ac58c632c098de03854fc4b9e45c612181ac30100b1a1eea34c474196862b3e",
+          "size_bytes": 1854
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/geometry-expectation.json",
+          "sha256": "b93a6d7d19e1381b49889d97cdb56d73e66f0cb4e77cc1888d690b84e978f77a",
+          "size_bytes": 1185
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/geometry-feedback.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/geometry-feedback.json",
+          "sha256": "f400033099cc7c3d322f17197c69425889debeddada734a23c101d6675d50fbc",
+          "size_bytes": 960
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/ifc-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/ifc-verification.json",
+          "sha256": "f32ee5d05e777ec65bd6fa080f2a1970f2894984ef0be59ca7f171ea890ea09d",
+          "size_bytes": 256
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/output.ifc",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/output.ifc",
+          "sha256": "f1e260b0143ffe8aece0323768325b819d65a106303fc92740db26771763008b",
+          "size_bytes": 42622
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/request-semantics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/request-semantics.json",
+          "sha256": "eecb83e025f8cdfd9d8b80fba3af753553d5950c2d20ad589fae0dc0a77a22e1",
+          "size_bytes": 6229
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/semantic-geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/semantic-geometry-expectation.json",
+          "sha256": "b3c06c39d50b9a3cbd6fcd8a995bad0603d911ec8c300ac85174c3460ee4af9d",
+          "size_bytes": 1101
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/semantic-report.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/semantic-report.md",
+          "sha256": "8ee96361a411cbe4bec893ec75a95d274944db46e8bcbd75fed830e6bee1c0a8",
+          "size_bytes": 6778
+        },
+        {
+          "legacy_path": "corrective-02-compiler-revalidation/semantic-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-compiler-revalidation/semantic-verification.json",
+          "sha256": "ae0a411262bca06d013027c63542509225db56935cf2417d39673b10e8217e26",
+          "size_bytes": 4866
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/binding-admission.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/binding-admission.json",
+          "sha256": "ec03c7a197991c8a4057f30691a2f23071cf6dac0d45c8e2fd60491f9ab5a467",
+          "size_bytes": 26553
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/dynamic-gates.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/dynamic-gates.json",
+          "sha256": "aa524a0929f454f0cc664310e8a9313b007a3e5ae32ceb7b569ff3d57eefa964",
+          "size_bytes": 2258
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/gate-summary.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/gate-summary.json",
+          "sha256": "c48e7ccc79fe86c5a0cc0c9cf94c4f9277752b7cdbd3f017793966fe32a9124d",
+          "size_bytes": 8768
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/events.jsonl",
+          "sha256": "99d8bc93de1b096909f05a2cf6b8be99cf3631f8c78441ea5f5c13155859ad39",
+          "size_bytes": 78853
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/metrics.json",
+          "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe",
+          "size_bytes": 970
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/model-text.txt",
+          "sha256": "534737b733b39040d4f28e8b9450f5b86a7d051d6520741ae17be0f9fe7ffe29",
+          "size_bytes": 13924
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/parsed-output.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/prompt-render-input.json",
+          "sha256": "5604ea45b207565e4702fc79d0337acf38930cb1e800bacc2943d04c517167a2",
+          "size_bytes": 99652
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/prompt-rendered.md",
+          "sha256": "c5879c42618b51033606ac968b4526167cb6b7dfce57cb53f8dc1a0e4b39e085",
+          "size_bytes": 51832
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/request.redacted.json",
+          "sha256": "a333e152a14649f67031743c7ea9bacf511b49ed3bddbb51d827af39c3ccd63b",
+          "size_bytes": 57576
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/response-metadata.json",
+          "sha256": "cccd3ed6e828ea066ab2c7b11569d8adf78894b6f57ca2e18cdf1c1dc76fa473",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/response.raw.json",
+          "sha256": "67a4c857588a677f27d727a0cc15875d11a9eace97eab7abe9ca58f99b6ad71c",
+          "size_bytes": 79181
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/trace-manifest.json",
+          "sha256": "6ac58c632c098de03854fc4b9e45c612181ac30100b1a1eea34c474196862b3e",
+          "size_bytes": 1854
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/geometry-expectation.json",
+          "sha256": "b93a6d7d19e1381b49889d97cdb56d73e66f0cb4e77cc1888d690b84e978f77a",
+          "size_bytes": 1185
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/geometry-feedback.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/geometry-feedback.json",
+          "sha256": "7b34a49cf077886e3db80d876c21df9ffa3937db92a00cbe6efdcb6abeaa3457",
+          "size_bytes": 976
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/ifc-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/ifc-verification.json",
+          "sha256": "7e1546aca001175301fef51fdfe2f18734cf33730197b00fcc04977fbd57b323",
+          "size_bytes": 253
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/output.ifc",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/output.ifc",
+          "sha256": "de286192ba582f3218155654cf0241e42da5eb2e0fcd0eac999587ce83cd3e60",
+          "size_bytes": 42622
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/metrics.json",
+          "sha256": "c43316e1010946cd5aba732b8ff194120a2d6ced2f7210d1f767942e7ace0f1c",
+          "size_bytes": 681
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/repair-attempts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/repair-attempts.json",
+          "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+          "size_bytes": 4
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/route.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/route.json",
+          "sha256": "432874dde52395332e031b4bc7e357e441a364768c8a674faffecc267f56dddf",
+          "size_bytes": 689
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/source-validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/source-validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/repair/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/repair/trace-manifest.json",
+          "sha256": "1a1213884ceec9a6789b05c8e6dacd400e74fb7542c30c58e594e1d07ef35f6f",
+          "size_bytes": 917
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/request-semantics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/request-semantics.json",
+          "sha256": "eecb83e025f8cdfd9d8b80fba3af753553d5950c2d20ad589fae0dc0a77a22e1",
+          "size_bytes": 6229
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/semantic-geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/semantic-geometry-expectation.json",
+          "sha256": "a2dc2889de6dc50e5d3e91dc385350a1387143d23f92d7aa8a71dd812f644393",
+          "size_bytes": 1150
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/semantic-report.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/semantic-report.md",
+          "sha256": "8ee96361a411cbe4bec893ec75a95d274944db46e8bcbd75fed830e6bee1c0a8",
+          "size_bytes": 6778
+        },
+        {
+          "legacy_path": "corrective-02-final-revalidation/semantic-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-final-revalidation/semantic-verification.json",
+          "sha256": "ae0a411262bca06d013027c63542509225db56935cf2417d39673b10e8217e26",
+          "size_bytes": 4866
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/acceptance-metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/acceptance-metrics.json",
+          "sha256": "3756e2c18847a5ffbc57e198c19a53fec1f6b719620877bc51279885fb726f69",
+          "size_bytes": 640
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/audit-report.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/audit-report.json",
+          "sha256": "a044c54e1a81b590742d935181257626b198765fb6dc3482a9549767ca2329c1",
+          "size_bytes": 654
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/events.jsonl",
+          "sha256": "d8685cddf1a1be2b52b5c8ec5704c1ab6ff453cd575eab68fa8ac930d29d4803",
+          "size_bytes": 43757
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/metrics.json",
+          "sha256": "f10f71aa08ffe777f0ae29a21009dc6c8d42563727473ef9ae4cc93ee0bafd88",
+          "size_bytes": 906
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/model-text.txt",
+          "sha256": "0253766a85507f3469ec32eb3abacf6476322b89f8de973aab6685799eb27f35",
+          "size_bytes": 532
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/parsed-output.json",
+          "sha256": "a044c54e1a81b590742d935181257626b198765fb6dc3482a9549767ca2329c1",
+          "size_bytes": 654
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/prompt-render-input.json",
+          "sha256": "ce1e86b053225100b7bdc11d6218c3ce52767291b182c3b3fe3d28b28889742b",
+          "size_bytes": 51955
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/prompt-rendered.md",
+          "sha256": "1f3e432ee10b5fb8dfd9907010f31e9e91049c491828c5714f43796a72dab022",
+          "size_bytes": 28065
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/request.redacted.json",
+          "sha256": "bde465fc4dd130f5ff4ce28be39ad7d2dfd6a84d3f0dae27b15469d40dc5e5ea",
+          "size_bytes": 30534
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/response-metadata.json",
+          "sha256": "c00091846ae5f4963e0d8462e04b81a55e9c6d6a3d2b651d5df77de60aea5f8d",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/response.raw.json",
+          "sha256": "f216ff63ac6e02c2ff42c4466663dfbb1c6e0cb8dd00288beb91b55a6a397bf1",
+          "size_bytes": 44079
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/trace-manifest.json",
+          "sha256": "6f88de755385bf591b81ae6ca891b211e5185b46c6217bb6404698876a8f3f19",
+          "size_bytes": 1774
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/audit/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/audit/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/binding-admission.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/binding-admission.json",
+          "sha256": "121300f9aa7051a5d1e536c815e2d5fa19ed8960531b800e1ba4259e57fbbe9a",
+          "size_bytes": 26756
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/dynamic-gates.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/dynamic-gates.json",
+          "sha256": "aa524a0929f454f0cc664310e8a9313b007a3e5ae32ceb7b569ff3d57eefa964",
+          "size_bytes": 2258
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/execution.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/execution.json",
+          "sha256": "e1b822d689167fa9ec5273a8f8f398d29b2a0fb591fd8805c9dfd094e42002a9",
+          "size_bytes": 1716
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/gate-summary.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/gate-summary.json",
+          "sha256": "f2f90f745899359ca45242dba01106f4fe5dada50e4c4b9633fa777f0bbadb9f",
+          "size_bytes": 9476
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/candidate.json",
+          "path": "reception-basic-fillings/model.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/events.jsonl",
+          "sha256": "99d8bc93de1b096909f05a2cf6b8be99cf3631f8c78441ea5f5c13155859ad39",
+          "size_bytes": 78853
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/metrics.json",
+          "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe",
+          "size_bytes": 970
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/model-text.txt",
+          "sha256": "534737b733b39040d4f28e8b9450f5b86a7d051d6520741ae17be0f9fe7ffe29",
+          "size_bytes": 13924
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/parsed-output.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/prompt-render-input.json",
+          "sha256": "5604ea45b207565e4702fc79d0337acf38930cb1e800bacc2943d04c517167a2",
+          "size_bytes": 99652
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/prompt-rendered.md",
+          "sha256": "c5879c42618b51033606ac968b4526167cb6b7dfce57cb53f8dc1a0e4b39e085",
+          "size_bytes": 51832
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/request.redacted.json",
+          "sha256": "a333e152a14649f67031743c7ea9bacf511b49ed3bddbb51d827af39c3ccd63b",
+          "size_bytes": 57576
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/response-metadata.json",
+          "sha256": "cccd3ed6e828ea066ab2c7b11569d8adf78894b6f57ca2e18cdf1c1dc76fa473",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/response.raw.json",
+          "sha256": "67a4c857588a677f27d727a0cc15875d11a9eace97eab7abe9ca58f99b6ad71c",
+          "size_bytes": 79181
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/trace-manifest.json",
+          "sha256": "6ac58c632c098de03854fc4b9e45c612181ac30100b1a1eea34c474196862b3e",
+          "size_bytes": 1854
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/geometry-expectation.json",
+          "sha256": "b93a6d7d19e1381b49889d97cdb56d73e66f0cb4e77cc1888d690b84e978f77a",
+          "size_bytes": 1185
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/geometry-feedback.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/geometry-feedback.json",
+          "sha256": "7b34a49cf077886e3db80d876c21df9ffa3937db92a00cbe6efdcb6abeaa3457",
+          "size_bytes": 976
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/ifc-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/ifc-verification.json",
+          "sha256": "0d43a6fb36eb6d87c49fa559b0010cd8ae7b02cd3a138d919859735c089c2ba8",
+          "size_bytes": 255
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/output.ifc",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/output.ifc",
+          "sha256": "132dcac6ffac2c50cd313a791b3b8767d81754fa42f6533ef0ef45bbdd484bf2",
+          "size_bytes": 42622
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/metrics.json",
+          "sha256": "c43316e1010946cd5aba732b8ff194120a2d6ced2f7210d1f767942e7ace0f1c",
+          "size_bytes": 681
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/repair-attempts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/repair-attempts.json",
+          "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+          "size_bytes": 4
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/route.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/route.json",
+          "sha256": "45804bde3ce6f1e24179822343790b68c9ba2f991e44d6f5a9d7765b2fccf032",
+          "size_bytes": 691
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/source-validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/source-validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/repair/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/repair/trace-manifest.json",
+          "sha256": "b9f6df1daf7e1a4d92f0f1d8374e33adb5b16e4874d8c672a204fea48cd5f53b",
+          "size_bytes": 919
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/report.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/report.md",
+          "sha256": "b97196f4b98882e9865887ab29debf353cf740cb44ff84eafbf5bb4da4f2d07c",
+          "size_bytes": 2909
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/request-semantics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/request-semantics.json",
+          "sha256": "eecb83e025f8cdfd9d8b80fba3af753553d5950c2d20ad589fae0dc0a77a22e1",
+          "size_bytes": 6229
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/route-decision.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/route-decision.json",
+          "sha256": "f76a54037ae4e25fc0013ba3a950d325169b4f3e8200dcc5314acc113339562a",
+          "size_bytes": 1877
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/secret-scan.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/secret-scan.json",
+          "sha256": "2f909284c0423a7a98a28b35fc5c60131134263920e48b0902ef22a759c02e1c",
+          "size_bytes": 307
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/semantic-geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/semantic-geometry-expectation.json",
+          "sha256": "a2dc2889de6dc50e5d3e91dc385350a1387143d23f92d7aa8a71dd812f644393",
+          "size_bytes": 1150
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/semantic-report.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/semantic-report.md",
+          "sha256": "8ee96361a411cbe4bec893ec75a95d274944db46e8bcbd75fed830e6bee1c0a8",
+          "size_bytes": 6778
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/semantic-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/semantic-verification.json",
+          "sha256": "ae0a411262bca06d013027c63542509225db56935cf2417d39673b10e8217e26",
+          "size_bytes": 4866
+        },
+        {
+          "legacy_path": "corrective-02-general-revalidation/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-02-general-revalidation/trace-manifest.json",
+          "sha256": "e05549dc51aab4df3f650786b8c90ca42a0cdd01677ad52d138bd3d0d1b1adc9",
+          "size_bytes": 7567
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-attempt-02/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-attempt-02/dynamic-gates.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/dynamic-gates.json",
+          "sha256": "f0278b6229d494677ed2d4c32c3ed174d5ed60f6961a9a87f2321137e2d70ec2",
+          "size_bytes": 3011
+        },
+        {
+          "legacy_path": "corrective-attempt-02/execution.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/execution.json",
+          "sha256": "e8d1a8b8c86961f7535c039ef22505465e2fd5fcfb83da55a53f5e8e1e178e50",
+          "size_bytes": 29941
+        },
+        {
+          "legacy_path": "corrective-attempt-02/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "corrective-attempt-02/feedback.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/feedback.json",
+          "sha256": "a563bcf4efb9e6a56a083c61023534a7dffc60394bf78661459fd8da978b93d5",
+          "size_bytes": 20977
+        },
+        {
+          "legacy_path": "corrective-attempt-02/gate-summary.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/gate-summary.json",
+          "sha256": "085f51de13c6f458f86dac82cbe69115a3d8b9770d8987472aedf1c2f3d58732",
+          "size_bytes": 11558
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/candidate.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/classification.json",
+          "sha256": "edf3e57756b915bf391ce9dac46f282d66fde96d59374eda7d886f5066ca9ef9",
+          "size_bytes": 210
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/events.jsonl",
+          "sha256": "99d8bc93de1b096909f05a2cf6b8be99cf3631f8c78441ea5f5c13155859ad39",
+          "size_bytes": 78853
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/metrics.json",
+          "sha256": "208754d84296b28d310bc1ed8acd73c445a08b325a4bafd9f0046e5af5f98efe",
+          "size_bytes": 970
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/model-text.txt",
+          "sha256": "534737b733b39040d4f28e8b9450f5b86a7d051d6520741ae17be0f9fe7ffe29",
+          "size_bytes": 13924
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/parsed-output.json",
+          "sha256": "8cffe31a57740ff025422321bdfafe8f51315cc62f2d5f329842994a021fcec0",
+          "size_bytes": 17736
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/prompt-render-input.json",
+          "sha256": "5604ea45b207565e4702fc79d0337acf38930cb1e800bacc2943d04c517167a2",
+          "size_bytes": 99652
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/prompt-rendered.md",
+          "sha256": "c5879c42618b51033606ac968b4526167cb6b7dfce57cb53f8dc1a0e4b39e085",
+          "size_bytes": 51832
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/request.redacted.json",
+          "sha256": "a333e152a14649f67031743c7ea9bacf511b49ed3bddbb51d827af39c3ccd63b",
+          "size_bytes": 57576
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/response-metadata.json",
+          "sha256": "cccd3ed6e828ea066ab2c7b11569d8adf78894b6f57ca2e18cdf1c1dc76fa473",
+          "size_bytes": 782
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/response.raw.json",
+          "sha256": "67a4c857588a677f27d727a0cc15875d11a9eace97eab7abe9ca58f99b6ad71c",
+          "size_bytes": 79181
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/trace-manifest.json",
+          "sha256": "6ac58c632c098de03854fc4b9e45c612181ac30100b1a1eea34c474196862b3e",
+          "size_bytes": 1854
+        },
+        {
+          "legacy_path": "corrective-attempt-02/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/generator/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "corrective-attempt-02/geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/geometry-expectation.json",
+          "sha256": "f0db79b630744f08e05870a9a02017f0f716036a7cbf9d7cab7e1a646b2ba7bf",
+          "size_bytes": 1174
+        },
+        {
+          "legacy_path": "corrective-attempt-02/geometry-feedback.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/geometry-feedback.json",
+          "sha256": "24f3a822669b1c0472795264514c194f5c2ff3ae1016f41e664616fb03071571",
+          "size_bytes": 272
+        },
+        {
+          "legacy_path": "corrective-attempt-02/ifc-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/ifc-verification.json",
+          "sha256": "04ad377185ef4b02ea34093024d7a6a4beb2f3958afd9abec9b46b00c7e48241",
+          "size_bytes": 875
+        },
+        {
+          "legacy_path": "corrective-attempt-02/request-semantics.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/request-semantics.json",
+          "sha256": "40b90e6eb5e32ae0c0ee28a689ebee5c37879d9d844cc81b56c867adef01663c",
+          "size_bytes": 5603
+        },
+        {
+          "legacy_path": "corrective-attempt-02/semantic-geometry-expectation.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/semantic-geometry-expectation.json",
+          "sha256": "cd907d429ac14dc3cafa4ba3450ef6941c0ac2956e924bb6380ec06e83b7b94d",
+          "size_bytes": 1090
+        },
+        {
+          "legacy_path": "corrective-attempt-02/semantic-report.md",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/semantic-report.md",
+          "sha256": "abf2cfe153ba2dd181bb94d481fe8cf064d9cfbfc192b58f9231562e28ea8a1f",
+          "size_bytes": 3015
+        },
+        {
+          "legacy_path": "corrective-attempt-02/semantic-verification.json",
+          "path": "reception-basic-fillings/evidence/frozen/corrective-attempt-02/semantic-verification.json",
+          "sha256": "7d419cca5d92945959fcb358472b760720ced44ad23ede756561f442bc076b44",
+          "size_bytes": 5444
+        },
+        {
+          "legacy_path": "diagnostic-depth-view.html",
+          "path": "reception-basic-fillings/evidence/frozen/diagnostic-depth-view.html",
+          "sha256": "1f8534798eea501e0d39ca48f5da1a69c8fc94c12ccf031d8c42a10c63d9b2d6",
+          "size_bytes": 16817
+        },
+        {
+          "legacy_path": "diagnostic-view.html",
+          "path": "reception-basic-fillings/evidence/frozen/diagnostic-view.html",
+          "sha256": "67dd6c448f3ebb9868996bad4c71fe74a9943d2039cd9b1203b55341232ee768",
+          "size_bytes": 15301
+        },
+        {
+          "legacy_path": "door.png",
+          "path": "reception-basic-fillings/evidence/views/door.png",
+          "sha256": "7dd6f60f855708d090a76dce1f1659be123e2abdf0c14ba7adea18e8d45c621f",
+          "size_bytes": 8737
+        },
+        {
+          "legacy_path": "execution.json",
+          "path": "reception-basic-fillings/evidence/frozen/execution.json",
+          "sha256": "bd755929ef0ca5df2fd737ccbae4b803d130f8ef1d0e9bfed0876ef60d00855f",
+          "size_bytes": 439
+        },
+        {
+          "legacy_path": "final-independent-review.json",
+          "path": "reception-basic-fillings/evidence/frozen/final-independent-review.json",
+          "sha256": "dcf4ffd7936ede104b38bb70763a702df35a8e9ec379b39ea794159856e3f8ee",
+          "size_bytes": 7007
+        },
+        {
+          "legacy_path": "final-view-equivalence.json",
+          "path": "reception-basic-fillings/evidence/frozen/final-view-equivalence.json",
+          "sha256": "4a89768910495a8a1978666f74920a1b89227e8e7f9196613cdcda5f04b8a86f",
+          "size_bytes": 544
+        },
+        {
+          "legacy_path": "frozen-expectations.json",
+          "path": "reception-basic-fillings/evidence/frozen/frozen-expectations.json",
+          "sha256": "6e4ef58b03201f0ba7c9999410524814c2319437d8175e75e31174cc7c1a88f9",
+          "size_bytes": 1193
+        },
+        {
+          "legacy_path": "generated-review.ifc",
+          "path": "reception-basic-fillings/evidence/frozen/generated-review.ifc",
+          "sha256": "04c64eeb2500a38e982a46e1667fc30983cd98cedaf3b45bde4a9cc6bdb14985",
+          "size_bytes": 42622
+        },
+        {
+          "legacy_path": "generated.ifc",
+          "path": "reception-basic-fillings/generated.ifc",
+          "sha256": "132dcac6ffac2c50cd313a791b3b8767d81754fa42f6533ef0ef45bbdd484bf2",
+          "size_bytes": 42622
+        },
+        {
+          "legacy_path": "independent-review-diagnostic.json",
+          "path": "reception-basic-fillings/evidence/frozen/independent-review-diagnostic.json",
+          "sha256": "6220103ac2a536fbf6d4691f806b6ed1ddf2fa1cea1fcb4e62c2eec067586b43",
+          "size_bytes": 7008
+        },
+        {
+          "legacy_path": "independent-review.json",
+          "path": "reception-basic-fillings/evidence/frozen/independent-review.json",
+          "sha256": "71559cf286d941c9ff2a01fd569785fb317e02937158da6052936db01c784531",
+          "size_bytes": 7007
+        },
+        {
+          "legacy_path": "overall-diagnostic.png",
+          "path": "reception-basic-fillings/evidence/frozen/overall-diagnostic.png",
+          "sha256": "62781e06ef9c11ea92fffdc830f70dc6aad7f741260be9d3310a6ad816df7c51",
+          "size_bytes": 15187
+        },
+        {
+          "legacy_path": "overall.png",
+          "path": "reception-basic-fillings/evidence/views/overall.png",
+          "sha256": "62781e06ef9c11ea92fffdc830f70dc6aad7f741260be9d3310a6ad816df7c51",
+          "size_bytes": 15187
+        },
+        {
+          "legacy_path": "REPORT.md",
+          "path": "reception-basic-fillings/evidence/prior-REPORT.md",
+          "sha256": "debe4734d81024ab8bba89842c0597b95099618d766971f36eed99835873b910",
+          "size_bytes": 3851
+        },
+        {
+          "legacy_path": "request.txt",
+          "path": "reception-basic-fillings/request.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "resume-admission.json",
+          "path": "reception-basic-fillings/evidence/frozen/resume-admission.json",
+          "sha256": "4bcf5375643827cda174ac0a46196479d68217a1a9534e0cdb7ce9cf97cc2a9e",
+          "size_bytes": 561
+        },
+        {
+          "legacy_path": "resume-cli-01.log",
+          "path": "reception-basic-fillings/evidence/frozen/resume-cli-01.log",
+          "sha256": "3dfde80dafe216e101fd1480df743a90ed878ba57ed1e7444ef534975b9b0427",
+          "size_bytes": 259
+        },
+        {
+          "legacy_path": "resume-execution-01.json",
+          "path": "reception-basic-fillings/evidence/frozen/resume-execution-01.json",
+          "sha256": "057037b412728263e4d4e3a08d11e3f435cffb7fe532f14c28b74c338f6e88af",
+          "size_bytes": 443
+        },
+        {
+          "legacy_path": "review-final.html",
+          "path": "reception-basic-fillings/review.html",
+          "sha256": "32353214662347de49f99d92beb47cb9819e1c40065f0174fb5bcbc579ee550f",
+          "size_bytes": 29877
+        },
+        {
+          "legacy_path": "review.html",
+          "path": "reception-basic-fillings/evidence/frozen/review.html",
+          "sha256": "7937517e0240cc4e68487811cfd3bb1f18a2f9df7f467982747aaaeb8caa6e7e",
+          "size_bytes": 29884
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/conversation.json",
+          "sha256": "6cf4851077033e89f78f3162e29d19b269e5d7086f0bcef5d8209f8ef1e8ec5c",
+          "size_bytes": 1258
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/design-brief.json",
+          "sha256": "05beb909b598ae9b357841faa7371bd3b507d0e2ea1c15cd6c7861125ab3de76",
+          "size_bytes": 10403
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/metrics.json",
+          "sha256": "5d62438246e3bbb5f2aa3f7c8dff39e0d9c61833a3532b17ada47cf625da67a7",
+          "size_bytes": 909
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/model-text.txt",
+          "sha256": "af0f98449f57c77dcd3918b3d37104daf67343ae1bcf33c9126069799bd2a0e2",
+          "size_bytes": 6960
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/parsed-output.json",
+          "sha256": "05beb909b598ae9b357841faa7371bd3b507d0e2ea1c15cd6c7861125ab3de76",
+          "size_bytes": 10403
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/prompt-render-input.json",
+          "sha256": "a52c3e816e3fd5d079eeed82f0501d341102eee447dec5418eb0df5d18b3ab8b",
+          "size_bytes": 56405
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/prompt-rendered.md",
+          "sha256": "3bd8c456d5d607754e79d33f9f7d6b28110b314c742d04d80633de3df0607da4",
+          "size_bytes": 48464
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/request.redacted.json",
+          "sha256": "a189b01f7c4fb3da3bdbdff462e2d69fe8622f722a58c5c043a2033722ca8fef",
+          "size_bytes": 52089
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/response.raw.json",
+          "sha256": "2fb279ab88cc4b520a20d8b23290b85feaffb985c98c0178f45398447e38576d",
+          "size_bytes": 70200
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/01-design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/calls/02-design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/case-result.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/case-result.json",
+          "sha256": "46ff3c6f0c939613c085e884a5f949d4f311e6b977bf95970f5f0982b3713bb1",
+          "size_bytes": 648
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/context-selection.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/context-selection.json",
+          "sha256": "74de4c75a9cac234def1a8d40aba21776ea9276045f772a29c678e34f2609827",
+          "size_bytes": 43764
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/metrics.json",
+          "sha256": "e21d70fa45941e824bce7ec61c258786dc99b3100167e39d221949a0991bf971",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/model-text.txt",
+          "sha256": "982cfb0c4485abd99a4c7a774e596dc8566f72a473c77368ea78d981873fe229",
+          "size_bytes": 7540
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/parsed-output.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/prompt-render-input.json",
+          "sha256": "120983c2abf4fd8ae67912d31e495e84c46c73d12638f20e26bfe12e4cd1eb19",
+          "size_bytes": 57102
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/prompt-rendered.md",
+          "sha256": "a09271666e45f58a47997932ead7f67f99b777c8d0d83e3e52e734707b54e102",
+          "size_bytes": 49045
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/request.redacted.json",
+          "sha256": "3c146ff11301f5bbb2af5b7db68be99542268ddb210fd32e81bf3fc4d8dea04a",
+          "size_bytes": 52702
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/response.raw.json",
+          "sha256": "d9149aa6bd75b7f6ef0448575b77b1471367b18aba7716a72692e4565ad6f342",
+          "size_bytes": 113077
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief/validation.json",
+          "sha256": "430fb83f5e49066cb46eec9178bdda80cbf985ca3cda88d8882c81d26195cd45",
+          "size_bytes": 61
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/expected-facts.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/expected-facts.json",
+          "sha256": "912f22e13a5013187d68267d878d65cf3d40e01dc1ca0b60d9425321973f049d",
+          "size_bytes": 9460
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/feedback-rounds.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/feedback-rounds.json",
+          "sha256": "7fa3bada7ac6f19d331f1f8a5f56adc71a81d934f2dafc0f2d1495443fcf7d51",
+          "size_bytes": 2328
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generation-strategy.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generation-strategy.json",
+          "sha256": "bec09b87b85f46a4b6f66fd0eb798979837e67b9a0aaf6ef4415e6c4f8ae56f5",
+          "size_bytes": 119
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/classification.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/classification.json",
+          "sha256": "e0ffc642a02047f129db4e2d6c8f93705579e95c7abfce9151178533b997244c",
+          "size_bytes": 655
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/events.jsonl",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/events.jsonl",
+          "sha256": "70bad8e48ff1005c26ae1b72f06f1d986ba29893eed265b8a470711115135f85",
+          "size_bytes": 121851
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/metrics.json",
+          "sha256": "fbe38e6a6af2e3a2577cc80635f1c84d21be7a0d2d837ea268fb7a450ec0c3d3",
+          "size_bytes": 961
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/model-text.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/model-text.txt",
+          "sha256": "3364d18211725c332f766ea4c30956e959f4262ce4fb0141c98f9720b7e5e97b",
+          "size_bytes": 14827
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/original-classification-before-scaffold.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/original-classification-before-scaffold.json",
+          "sha256": "e0ffc642a02047f129db4e2d6c8f93705579e95c7abfce9151178533b997244c",
+          "size_bytes": 655
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/original-validation-before-scaffold.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/original-validation-before-scaffold.json",
+          "sha256": "6af8b8b414d7164133b332b8b0d5ebbd53f9e8cb85c70da71a09ad401864fc2e",
+          "size_bytes": 505
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/parsed-output.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/parsed-output.json",
+          "sha256": "6de88b447a5ebc7ccbb311868d7c35316e1835f27c4235c1b78722be50b98dc3",
+          "size_bytes": 18147
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/prompt-render-input.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/prompt-render-input.json",
+          "sha256": "2b01835e63c8a28496ebff5261c7300426ef7cd4d116a582d5cfe30fed2a662d",
+          "size_bytes": 76981
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/prompt-rendered.md",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/prompt-rendered.md",
+          "sha256": "ab441451951ae635bc650b5a3f65b77887c8878ea5099a5d56ee7e5069d37afb",
+          "size_bytes": 41428
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/request.redacted.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/request.redacted.json",
+          "sha256": "880de5a65f5c052abf3ada8750bf378fff56fba7a5d215d6d2031d3daf67b0af",
+          "size_bytes": 46041
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/response-metadata.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/response-metadata.json",
+          "sha256": "7631bd29d9d9761da71c88c49b6430e11df8cfa75b51c5fc62ecc49b1720a96c",
+          "size_bytes": 770
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/response.raw.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/response.raw.json",
+          "sha256": "ec5d13415f89a89c46e4ec4410c5270a8db129040b24310d27784c40533b365a",
+          "size_bytes": 122174
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/semantic-capabilities.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/semantic-capabilities.json",
+          "sha256": "7de0790fd62b41ce092dab5366e8b05fddb27eba874b0adffdd960ac28adc6f7",
+          "size_bytes": 1851
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/trace-manifest.json",
+          "sha256": "b7153d1e8dd47cafcda4aad9c516debde41aafd02581e6c19ef28a78ededc1da",
+          "size_bytes": 1836
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/generator/validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/generator/validation.json",
+          "sha256": "6af8b8b414d7164133b332b8b0d5ebbd53f9e8cb85c70da71a09ad401864fc2e",
+          "size_bytes": 505
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/issues.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/issues.json",
+          "sha256": "c6b73cade8259b75b672e8d12bdcfb6b26e50b9605cb7881fab37656d7047aa0",
+          "size_bytes": 1063
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/conversation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/conversation.json",
+          "sha256": "34d903e83ec2f93d2132843fc09356bb1b29fec27763cf726506d9b6f2682a3b",
+          "size_bytes": 1923
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/design-brief.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/design-brief.json",
+          "sha256": "a78fa0eb58e5cc15979ca61e0b4da8db6aab847ade6b5d86a68e9dce10bd80b8",
+          "size_bytes": 7887
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/generator-context.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/generator-context.json",
+          "sha256": "2d93c28f6a44e8823ce5ebbc37cc12262bf1715dba38f9b12c7289aa82704ac9",
+          "size_bytes": 50017
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/input.txt",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/input.txt",
+          "sha256": "d46bbd3648efd95d04a546b58b66770c94b33e65f3c8d64692d44077322415be",
+          "size_bytes": 1146
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/invalid-candidate.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/invalid-candidate.json",
+          "sha256": "6de88b447a5ebc7ccbb311868d7c35316e1835f27c4235c1b78722be50b98dc3",
+          "size_bytes": 18147
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/metrics.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/metrics.json",
+          "sha256": "8f6f5175a049a0bac01c8731b0b58c6d1a8196c06b87b2901226152ec7e1396f",
+          "size_bytes": 682
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/repair-attempts.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/repair-attempts.json",
+          "sha256": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+          "size_bytes": 4
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/route.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/route.json",
+          "sha256": "f62e62a4096b4ee8b3cc69f1db8de3bbefb32bf21da6654f3f5b4cfa5760fd13",
+          "size_bytes": 1010
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/source-validation.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/source-validation.json",
+          "sha256": "6af8b8b414d7164133b332b8b0d5ebbd53f9e8cb85c70da71a09ad401864fc2e",
+          "size_bytes": 505
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/repair/trace-manifest.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/repair/trace-manifest.json",
+          "sha256": "93afffa557e44f314a90fb2520fb4917623a97de84eb1b9bbf2829fdc555e254",
+          "size_bytes": 904
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/route-decision.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/route-decision.json",
+          "sha256": "83251f1c37908b0b1ef042397e3020f6f798711d7dde1a493178377a791f12b0",
+          "size_bytes": 536
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/scaffold/route.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/scaffold/route.json",
+          "sha256": "67d2fa2096f1a11f6e623e2318897daa2e85743ec9edcfb33319952d2a880952",
+          "size_bytes": 306
+        },
+        {
+          "legacy_path": "runtime/runs/bd9a2fd94c6e4be8/session-export.json",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/runs/bd9a2fd94c6e4be8/session-export.json",
+          "sha256": "a539183bef5a1725232de79491dacfda2983fcca2948fda5b09cd06b1d519276",
+          "size_bytes": 57504
+        },
+        {
+          "legacy_path": "runtime/sessions.sqlite",
+          "path": "reception-basic-fillings/evidence/frozen/runtime/sessions.sqlite",
+          "sha256": "abbea4ae091db64708c351975c02f096adbb693059b3334bea3c0b1e16acdb60",
+          "size_bytes": 81920
+        },
+        {
+          "legacy_path": "window-double.png",
+          "path": "reception-basic-fillings/evidence/views/window-double.png",
+          "sha256": "d1aac7ef2ad04b8f24c6bfa6b689a9297147ec37ea461b4502e20e45d1c8e7e5",
+          "size_bytes": 10435
+        },
+        {
+          "legacy_path": "window-single.png",
+          "path": "reception-basic-fillings/evidence/views/window-single.png",
+          "sha256": "775b968758560f63db247f6c61ed2ddd64ff7272177e6410b620c4b06944e782",
+          "size_bytes": 10258
+        }
+      ]
+    },
+    {
+      "id": "admission",
+      "old_root": "dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/admission",
+      "entries": [
+        {
+          "legacy_path": "all-relation-metadata-red-02.xml",
+          "path": "evidence/admission/all-relation-metadata-red-02.xml",
+          "sha256": "9b493da215d697d6f11e87a2a56409ddb2fb88314016f9632f5c1dd6fc2e7140",
+          "size_bytes": 11198
+        },
+        {
+          "legacy_path": "all-relation-metadata-red.xml",
+          "path": "evidence/admission/all-relation-metadata-red.xml",
+          "sha256": "150b4ecd3cd502afb217b537337e74049b791446de68b646c3a61760d6ddd009",
+          "size_bytes": 12458
+        },
+        {
+          "legacy_path": "attempt-preservation-green.xml",
+          "path": "evidence/admission/attempt-preservation-green.xml",
+          "sha256": "ccc051c163e74b8c37781a85dbd01c3863c900f9a2e133dbf72d363f84ec9823",
+          "size_bytes": 7637
+        },
+        {
+          "legacy_path": "attempt-preservation-red.xml",
+          "path": "evidence/admission/attempt-preservation-red.xml",
+          "sha256": "3410a2a601222bf8185df0106a42197c2a642ff9775bc664930739e32ef06414",
+          "size_bytes": 11566
+        },
+        {
+          "legacy_path": "clarify-resume-green.xml",
+          "path": "evidence/admission/clarify-resume-green.xml",
+          "sha256": "734c56be5fcb015acd089f2c7ef0d08f41704c2df21eccf6a9e749798e3b0154",
+          "size_bytes": 5747
+        },
+        {
+          "legacy_path": "clarify-resume-red.xml",
+          "path": "evidence/admission/clarify-resume-red.xml",
+          "sha256": "990ebed500cb4f66b34539fde2207668f616158af58b0f4b7e9054a1bea15137",
+          "size_bytes": 7235
+        },
+        {
+          "legacy_path": "evidence-collision-red-02.xml",
+          "path": "evidence/admission/evidence-collision-red-02.xml",
+          "sha256": "7121d88edd69b5057ec7ba727f9618f61884495c424bc9800f6f1938af5f37c4",
+          "size_bytes": 19247
+        },
+        {
+          "legacy_path": "general-boundaries-green-02.xml",
+          "path": "evidence/admission/general-boundaries-green-02.xml",
+          "sha256": "8b6f6e96f68e84eae843eea0fbd1ef9d6c08f5d743329585451642d82684078d",
+          "size_bytes": 16128
+        },
+        {
+          "legacy_path": "general-boundaries-green-03.xml",
+          "path": "evidence/admission/general-boundaries-green-03.xml",
+          "sha256": "a5b77fd81a0b232e72155974614e91efcc3cd7cba3545fefd242565fd4279ad7",
+          "size_bytes": 12700
+        },
+        {
+          "legacy_path": "general-boundaries-green.xml",
+          "path": "evidence/admission/general-boundaries-green.xml",
+          "sha256": "5698a223f0a41800095b3a39a5c386b3f50b5dd46cffb1b4c818254ade0d4d68",
+          "size_bytes": 34532
+        },
+        {
+          "legacy_path": "general-boundaries-red.xml",
+          "path": "evidence/admission/general-boundaries-red.xml",
+          "sha256": "6fa4186c6c18ef41e0bcb4b69b3c4a5e7df3b2925c73695e1288a30e2fe38e49",
+          "size_bytes": 19451
+        },
+        {
+          "legacy_path": "general-public-final.xml",
+          "path": "evidence/admission/general-public-final.xml",
+          "sha256": "2b11288415d2ef3818d9f2159a7c0c5055c5fbd63668448d745f130da32d8672",
+          "size_bytes": 5556
+        },
+        {
+          "legacy_path": "generation/execution.json",
+          "path": "evidence/admission/generation/execution.json",
+          "sha256": "c98e3e04685c1c4a7f677c3bc1b51022394a7fc4c6816823aabc331062d5bad2",
+          "size_bytes": 1145
+        },
+        {
+          "legacy_path": "generation/pytest.log",
+          "path": "evidence/admission/generation/pytest.log",
+          "sha256": "d585c56e110c6452250f9fdec87d8d84f989b1b489abd04beda7e90b26199650",
+          "size_bytes": 11628
+        },
+        {
+          "legacy_path": "generation/pytest.xml",
+          "path": "evidence/admission/generation/pytest.xml",
+          "sha256": "966bb0167a403f9559c1d66574496803e6451157480bb71dbd88cde981d85b34",
+          "size_bytes": 131185
+        },
+        {
+          "legacy_path": "generation-final/admission.json",
+          "path": "evidence/admission/generation-final/admission.json",
+          "sha256": "611e1566309727497ed36c3527192dcd7b561b5cda808196e067b3b73f7c21ec",
+          "size_bytes": 37417
+        },
+        {
+          "legacy_path": "generation-final/check-0.log",
+          "path": "evidence/admission/generation-final/check-0.log",
+          "sha256": "b000763c62e8165d90087300171092cb0dee7983beb786f647797baf4c3ac86a",
+          "size_bytes": 917
+        },
+        {
+          "legacy_path": "generation-final/check-1.log",
+          "path": "evidence/admission/generation-final/check-1.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "generation-final/check-2.log",
+          "path": "evidence/admission/generation-final/check-2.log",
+          "sha256": "0167a7255e45aca7173c4392e67e21e7e94209732c1b9bd447e0d391057ed228",
+          "size_bytes": 58621
+        },
+        {
+          "legacy_path": "generation-final/checks.json",
+          "path": "evidence/admission/generation-final/checks.json",
+          "sha256": "4eded995e9ca913c1beafe6b1e8531e60870953df42b520351f0391666e55a2b",
+          "size_bytes": 2097
+        },
+        {
+          "legacy_path": "generation-final/pytest.xml",
+          "path": "evidence/admission/generation-final/pytest.xml",
+          "sha256": "24f8f4ddae088c24f2d4bb5034404ab3947dd3590b2542b3baa2000c89f84b95",
+          "size_bytes": 16735
+        },
+        {
+          "legacy_path": "geometry-identity-green-02.xml",
+          "path": "evidence/admission/geometry-identity-green-02.xml",
+          "sha256": "04f5c22f99bc4f3ebf0e302eb83e8913f9f544046364d4224d5bd4e76511d2ca",
+          "size_bytes": 13099
+        },
+        {
+          "legacy_path": "geometry-identity-green.xml",
+          "path": "evidence/admission/geometry-identity-green.xml",
+          "sha256": "264648a1076beac6ec99734f3e73f0b32f595eb6c1d9da1f3b9cc7fec4f050d5",
+          "size_bytes": 14377
+        },
+        {
+          "legacy_path": "geometry-identity-red-02.xml",
+          "path": "evidence/admission/geometry-identity-red-02.xml",
+          "sha256": "ae24dd50285edd3197d4602a5f007d36c652c0d8357128e159cdceb1584cf178",
+          "size_bytes": 9666
+        },
+        {
+          "legacy_path": "geometry-identity-red.xml",
+          "path": "evidence/admission/geometry-identity-red.xml",
+          "sha256": "b648367fcf1a3477fd606a0bde82b23de33dca2edc473ccd5acddcf9cc585013",
+          "size_bytes": 12077
+        },
+        {
+          "legacy_path": "index-version-final.xml",
+          "path": "evidence/admission/index-version-final.xml",
+          "sha256": "90d98fed4cd7da2192520f594dbd3681eef753773723b9a3b47e60c31f1213be",
+          "size_bytes": 1504
+        },
+        {
+          "legacy_path": "proof-path-recheck-01.xml",
+          "path": "evidence/admission/proof-path-recheck-01.xml",
+          "sha256": "96f66a2eae211a5d7c7b2ffbfd4c070ba31277fae8b3d5ef2e4cd490b109cae9",
+          "size_bytes": 3535
+        },
+        {
+          "legacy_path": "public-recheck-02.xml",
+          "path": "evidence/admission/public-recheck-02.xml",
+          "sha256": "00182236e815f5378235539ecd6e348dd37dda7d32a08c13672f4fea3bc439b1",
+          "size_bytes": 3972
+        },
+        {
+          "legacy_path": "relation-names-green.xml",
+          "path": "evidence/admission/relation-names-green.xml",
+          "sha256": "025576d78614d6f10fb9f509839f2b9911168884cb57be72c30d0b8ca31a5858",
+          "size_bytes": 12116
+        },
+        {
+          "legacy_path": "relation-names-red.xml",
+          "path": "evidence/admission/relation-names-red.xml",
+          "sha256": "3744e291a61d9ce60c464b388c77d04c4b771230c291dc9d8e48a8ab94a7d72d",
+          "size_bytes": 29988
+        },
+        {
+          "legacy_path": "repair/execution.json",
+          "path": "evidence/admission/repair/execution.json",
+          "sha256": "59accd4634f76f9a7eb7011d9fa093192144bea783fee5523add1bc0aaa1324e",
+          "size_bytes": 993
+        },
+        {
+          "legacy_path": "repair/pytest.log",
+          "path": "evidence/admission/repair/pytest.log",
+          "sha256": "2de0d64e07ebad85abd212da4674f5a9621fb24d13550b59e88635079088eef6",
+          "size_bytes": 496
+        },
+        {
+          "legacy_path": "repair-property/execution.json",
+          "path": "evidence/admission/repair-property/execution.json",
+          "sha256": "258be8fd65e59fae2b4880eba8b769b6c71c755b3620b7c1df9d07f19ec2c6a8",
+          "size_bytes": 2894
+        },
+        {
+          "legacy_path": "repair-property/pytest.log",
+          "path": "evidence/admission/repair-property/pytest.log",
+          "sha256": "58e21a215fc6cb72eb5558bdd6fe7dd42d48af26531c8a878fc84553220c85cc",
+          "size_bytes": 3425
+        },
+        {
+          "legacy_path": "repair-property/pytest.xml",
+          "path": "evidence/admission/repair-property/pytest.xml",
+          "sha256": "772f4da1a1f1fb2b46f9e6e46d38976be3a22126ac465c4ebe99f77a4796370a",
+          "size_bytes": 62452
+        },
+        {
+          "legacy_path": "repair-property-final/admission.json",
+          "path": "evidence/admission/repair-property-final/admission.json",
+          "sha256": "914b57d17ef9743604c5248d3518285d26b712c0d261efb6c1c53328337c61c7",
+          "size_bytes": 41780
+        },
+        {
+          "legacy_path": "repair-property-final/compile.log",
+          "path": "evidence/admission/repair-property-final/compile.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "size_bytes": 0
+        },
+        {
+          "legacy_path": "repair-property-final/diff.log",
+          "path": "evidence/admission/repair-property-final/diff.log",
+          "sha256": "f98a49c71f1e30f5a2d3e9eb99394b4a43ed5e712dd8c057b0b12464707e0144",
+          "size_bytes": 58746
+        },
+        {
+          "legacy_path": "repair-property-final.xml",
+          "path": "evidence/admission/repair-property-final.xml",
+          "sha256": "0f6aa02f73183eae5f90ac3308e115d892f0c8719b446e03abf7aa54b3ff890e",
+          "size_bytes": 5137
+        },
+        {
+          "legacy_path": "repair-public-family-01.xml",
+          "path": "evidence/admission/repair-public-family-01.xml",
+          "sha256": "e021ab77d0e80505b486cafe92c6bef29be7b123bb589c2572e2999379ceb266",
+          "size_bytes": 4643
+        },
+        {
+          "legacy_path": "repair-public-family-02.xml",
+          "path": "evidence/admission/repair-public-family-02.xml",
+          "sha256": "c39ba126dc12f63eb9d01fad12fcdb49a160843622db39ce842ed44c824297f3",
+          "size_bytes": 798
+        },
+        {
+          "legacy_path": "repair-public-path.xml",
+          "path": "evidence/admission/repair-public-path.xml",
+          "sha256": "cae747cdabf0facb68852a25b6fb04eb2c3fdfc9b32c031f481df47d22063521",
+          "size_bytes": 2680
+        },
+        {
+          "legacy_path": "repair-public-recheck-03.xml",
+          "path": "evidence/admission/repair-public-recheck-03.xml",
+          "sha256": "6c2e7c102a22c5e42544923994c7d5df951050cf0a5fa12cf82db9db1e1120c8",
+          "size_bytes": 414
+        },
+        {
+          "legacy_path": "rotation-family.xml",
+          "path": "evidence/admission/rotation-family.xml",
+          "sha256": "0e1d2fef8327b49a7ed8363d79b1fa86c59678f713d1397a94beda57eed59307",
+          "size_bytes": 1587
+        },
+        {
+          "legacy_path": "semantic-binding-green.xml",
+          "path": "evidence/admission/semantic-binding-green.xml",
+          "sha256": "c9266844b9eb77282fba6901438a53cfb9009377da5d10dbefb98c27ddcbaddc",
+          "size_bytes": 6328
+        },
+        {
+          "legacy_path": "semantic-binding-red.xml",
+          "path": "evidence/admission/semantic-binding-red.xml",
+          "sha256": "35267a9b6e991b086e01820c509884e99d1e67df638919a41789763194f30c18",
+          "size_bytes": 7763
+        }
+      ]
+    },
+    {
+      "id": "review-evidence",
+      "old_root": "dataset/processed/ifc-presentation-validation/live-semantic-20260908-01/review-evidence",
+      "entries": [
+        {
+          "legacy_path": "actual-provider-attempts-before-audit.json",
+          "path": "evidence/review-evidence/actual-provider-attempts-before-audit.json",
+          "sha256": "a65d290bcca3503155db0944e8152425c0251a08e3d6a13751e9d36114eb843a",
+          "size_bytes": 3229
+        },
+        {
+          "legacy_path": "actual-provider-attempts.json",
+          "path": "evidence/review-evidence/actual-provider-attempts.json",
+          "sha256": "de6528e8a51aec7df415952f2b0561e8b688224fea98cd3b87bc6200d60a9cf6",
+          "size_bytes": 3614
+        },
+        {
+          "legacy_path": "check_generation_review.py",
+          "path": "evidence/review-evidence/check_generation_review.py",
+          "sha256": "a743945da34115df80deb7c685423b7e50fa388d77a12743debf379c88175e25",
+          "size_bytes": 7613
+        },
+        {
+          "legacy_path": "check_repair_review.py",
+          "path": "evidence/review-evidence/check_repair_review.py",
+          "sha256": "36e16a970aa94e25ba9a38fcaaaf087d850d7e09323899ee5b6502b867e92321",
+          "size_bytes": 4295
+        },
+        {
+          "legacy_path": "code-delivery.json",
+          "path": "evidence/review-evidence/code-delivery.json",
+          "sha256": "71442f5c02fe4fcff2ea8d3e11f78c7c6d31bb19df399f3a5f1ab18a71a28a96",
+          "size_bytes": 593
+        },
+        {
+          "legacy_path": "continue_generation_corrective_review.py",
+          "path": "evidence/review-evidence/continue_generation_corrective_review.py",
+          "sha256": "c73e07d4d897c2d4c38346301b6b2c95ae3e44d6c84929d5ccc95258ae16e071",
+          "size_bytes": 7159
+        },
+        {
+          "legacy_path": "export_ifc_review_png.py",
+          "path": "evidence/review-evidence/export_ifc_review_png.py",
+          "sha256": "8732421d0dee3c32ebbbb8519fb8a827baa466c82c2b782f9e4bb0c58f9ebe75",
+          "size_bytes": 3434
+        },
+        {
+          "legacy_path": "final-handoff-check.json",
+          "path": "evidence/review-evidence/final-handoff-check.json",
+          "sha256": "f8a5c8ec776f61f7e70f5bdaa9009bb88ac2ec35012fea1adb10014693238d63",
+          "size_bytes": 180
+        },
+        {
+          "legacy_path": "handoff-check.json",
+          "path": "evidence/review-evidence/handoff-check.json",
+          "sha256": "75cfecae71e0372d8d07fe8892b1dbe3716c44c4bb624b1518d70a962905b4d1",
+          "size_bytes": 243
+        },
+        {
+          "legacy_path": "public-boundary-check.json",
+          "path": "evidence/review-evidence/public-boundary-check.json",
+          "sha256": "6181824438d91b4c756c271abe599e9dc71cc87f5d9ee9f954d78b48919408d3",
+          "size_bytes": 895
+        },
+        {
+          "legacy_path": "run_generation_corrective_review.py",
+          "path": "evidence/review-evidence/run_generation_corrective_review.py",
+          "sha256": "d240c07239d35e818d730360d36358bcebdb9873601df0b5c6ace8625a3fb133",
+          "size_bytes": 4879
+        },
+        {
+          "legacy_path": "run_repair_live_review.py",
+          "path": "evidence/review-evidence/run_repair_live_review.py",
+          "sha256": "1920433ccfb084df30e7efa2175e244aad05f18171affecd644c14ba246e89f0",
+          "size_bytes": 2889
+        }
+      ]
+    }
+  ]
+}

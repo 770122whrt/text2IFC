@@ -1,0 +1,37 @@
+{
+  "attempt": 1,
+  "issues": [],
+  "normalizations": [],
+  "provider_metadata": {
+    "estimated_input_tokens": "[REDACTED]",
+    "evidence_class": "live",
+    "max_input_tokens": "[REDACTED]",
+    "model": "deepseek-v4-flash",
+    "provider": "deepseek-openai-compatible",
+    "request_configuration": {
+      "temperature": {
+        "effective": false,
+        "value": 0
+      },
+      "thinking": {
+        "type": "enabled"
+      }
+    },
+    "response_id": "c0ece3a6-a1e8-41ab-ad90-93f457779cea",
+    "session_id": "ifc-repair-intent-request-78b31c7a44102d2d",
+    "stop_reason": "stop",
+    "transport_attempts": 1,
+    "usage": {
+      "completion_tokens": 8325,
+      "completion_tokens_details": "[REDACTED]",
+      "prompt_cache_hit_tokens": "[REDACTED]",
+      "prompt_cache_miss_tokens": "[REDACTED]",
+      "prompt_tokens": 12774,
+      "prompt_tokens_details": "[REDACTED]",
+      "total_tokens": 21099
+    }
+  },
+  "response_excerpt": "{\"schema_version\":\"text2ifc/ifc-repair-intent-body/0.10\",\"operations\":[{\"operation_id\":\"set-wall-properties-1\",\"operation_type\":\"set_occurrence_properties\",\"routing_intent\":{\"component_family\":\"occurrence\",\"action\":\"set_properties\",\"operation_profile\":\"occurrence.set-properties\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"请按下述明确要求写入实例 Pset_WallCommon\"}},\"target_query\":{\"schema_version\":\"text2ifc/ifc-target-query/0.1\",\"allowed_ifc_classes\":[\"IfcWall\",\"IfcWallStandardCase\"],\"global_id\":\"2CsmzAChHF6O6maGXlo6PS\"},\"parameters\":{},\"attribute_intents\":[],\"property_intents\":[{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"Reference\",\"raw_value\":\"240\",\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"Reference 为字符串 \\\"240\\\"\"}},{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"IsExternal\",\"raw_value\":true,\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"IsExternal 为布尔 true\"}},{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"ExtendToStructure\",\"raw_value\":false,\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"ExtendToStructure 为布尔 false\"}},{\"intent_kind\":\"exact_property\",\"set_name\":\"Pset_WallCommon\",\"property_name\":\"LoadBearing\",\"raw_value\":false,\"raw_unit\":null,\"requested_value_type\":null,\"scope\":\"occurrence_direct\",\"source\":{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"LoadBearing 为布尔 false\"}}],\"semantic_bundle_refs\":[],\"quantity_intents\":[],\"occurrence_reuse_intent\":null,\"prototype_intent\":null,\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"请修复这个 IFC2X3 文件中墙体 2CsmzAChHF6O6maGXlo6PS 的实例属性关联。\"}],\"appearance_intent\":null}],\"unsupported_requests\":[],\"semantic_bundles\":[],\"provenance\":[{\"source_kind\":\"user_request\",\"reference\":\"request:/text\",\"excerpt\":\"请修复这个 IFC2X3 文件中墙体 2CsmzAChHF6O6maGXlo6PS 的实例属性关联。\"}]}",
+  "response_sha256": "sha256:19c3e7aebe7933abd48fe8db43d53be568b83a797e6cce6a5f2bb1ce3eb1cacd",
+  "status": "valid"
+}

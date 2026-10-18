@@ -4,7 +4,7 @@
 that the current Text2IFC Repair system can execute increasingly large,
 atomic, multi-family IFC modifications producing visually and structurally
 meaningful BIM artifact changes (specification
-`docs/validation/parallel-goal-prompts-audit-inputs/final-prompt-a.md`).
+[frozen task specification](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/validation/parallel-goal-prompts-audit-inputs/final-prompt-a.md)).
 
 **Current state: COMPLETE.** Every offline gate is GREEN (48/48 composite
 suite), and the genuine DeepSeek execution has been PERFORMED under explicit

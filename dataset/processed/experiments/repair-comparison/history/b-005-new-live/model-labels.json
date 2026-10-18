@@ -1,0 +1,121 @@
+{
+  "schema_version": "repair-experiment-model-labels/0.1",
+  "interpretation": "Gateway-observed request/response labels, not verified underlying model identity or equivalence.",
+  "counting": "Counts are per retained wire record; repeated labels within one response count once. Missing labels remain missing, including HTTP errors.",
+  "groups": {
+    "A": {
+      "wire_records": 0,
+      "requested_labels": {},
+      "returned_labels": {},
+      "missing_request_labels": 0,
+      "missing_response_labels": 0
+    },
+    "B": {
+      "wire_records": 5,
+      "requested_labels": {
+        "deepseek-v4-flash": 5
+      },
+      "returned_labels": {
+        "deepseek-flash": 5
+      },
+      "missing_request_labels": 0,
+      "missing_response_labels": 0
+    },
+    "C": {
+      "wire_records": 0,
+      "requested_labels": {},
+      "returned_labels": {},
+      "missing_request_labels": 0,
+      "missing_response_labels": 0
+    },
+    "D": {
+      "wire_records": 0,
+      "requested_labels": {},
+      "returned_labels": {},
+      "missing_request_labels": 0,
+      "missing_response_labels": 0
+    }
+  },
+  "records": [
+    {
+      "run_id": "formal-005-B",
+      "arm": "B",
+      "request_id": "wire-b711c4abfe414a7d8c71153396b0b5a9",
+      "requested_model": "deepseek-v4-flash",
+      "returned_models": [
+        {
+          "field": "response.body.model",
+          "model": "deepseek-flash"
+        }
+      ],
+      "request_label_missing": false,
+      "response_label_missing": false,
+      "http_status": 200,
+      "error_type": null
+    },
+    {
+      "run_id": "formal-005-B",
+      "arm": "B",
+      "request_id": "wire-3c4137d125d9419292428c43dff1816c",
+      "requested_model": "deepseek-v4-flash",
+      "returned_models": [
+        {
+          "field": "response.body.model",
+          "model": "deepseek-flash"
+        }
+      ],
+      "request_label_missing": false,
+      "response_label_missing": false,
+      "http_status": 200,
+      "error_type": null
+    },
+    {
+      "run_id": "formal-005-B",
+      "arm": "B",
+      "request_id": "wire-534d7d654488480a9d7bbb3d2e123aaf",
+      "requested_model": "deepseek-v4-flash",
+      "returned_models": [
+        {
+          "field": "response.body.model",
+          "model": "deepseek-flash"
+        }
+      ],
+      "request_label_missing": false,
+      "response_label_missing": false,
+      "http_status": 200,
+      "error_type": null
+    },
+    {
+      "run_id": "formal-005-B",
+      "arm": "B",
+      "request_id": "wire-22ec6864174c4e7495b598fe2ecb48a0",
+      "requested_model": "deepseek-v4-flash",
+      "returned_models": [
+        {
+          "field": "response.body.model",
+          "model": "deepseek-flash"
+        }
+      ],
+      "request_label_missing": false,
+      "response_label_missing": false,
+      "http_status": 200,
+      "error_type": null
+    },
+    {
+      "run_id": "formal-005-B",
+      "arm": "B",
+      "request_id": "wire-07078154d5fc4b0da880a681bddfe3b7",
+      "requested_model": "deepseek-v4-flash",
+      "returned_models": [
+        {
+          "field": "response.body.model",
+          "model": "deepseek-flash"
+        }
+      ],
+      "request_label_missing": false,
+      "response_label_missing": false,
+      "http_status": 200,
+      "error_type": null
+    }
+  ]
+}

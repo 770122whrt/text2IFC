@@ -1,5 +1,7 @@
 # archive 退役与 Zcode 重构参考收纳
 
+2026-10-17 维护：本记录对应的整理已完成，本目录一次性执行脚本（`check_remote_archives.py`、`prepare_archive.py`）从本地退役；删除/保全收据与正式证据保留。旧执行命令只表示当时操作，不应重跑。脚本原文可从[整理前固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/archive-retirement-20260913)恢复；Proof 的日常校验继续使用现有 `scripts/proof/` 和 `text2ifc_proof` 工具。
+
 日期：2026-09-13。用户批准按已讨论方向处理根 `archive`，保留 Proof 中的重要内容。当前工作分支为 `codex/workflow-dataset-links`；基线 `d1639232`。本轮不合 main、不做生产重构或 Provider 调用。
 
 后续指示：用户明确要求将有价值的 Zcode 重构实际接入当前代码。接下来逐项实施评估拆分、Proof 包提取和 runner 整理；本报告只记录已完成的 archive 退役，不把参考包保留当作重构实施完成。

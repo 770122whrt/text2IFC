@@ -2,6 +2,8 @@
 
 整理基线：`a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f`。下表链接固定 Git 原稿，保留当时的失败、预算阻断和诊断结论；它们不是当前执行指令。活动文档只保留一份现状。历史失败不能因为后来成功而移出失败分母。
 
+2026-09-29 经批准清理了早期 IFC2Text 的部分未跟踪诊断、重试和测试输出，见[删除范围与执行记录](../../reports/repository-hygiene-20260929/README.md)。已提交历史、代码及正式成功案例依赖保留；下面的历史结论仍可查阅，但被清理的本地原始轨迹不再承诺可重放。
+
 | 原记录 | 用途 |
 |---|---|
 | [IFC2Text：重新归因、真实探针与下一步指南](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/reports/ifc2text-attribution-and-next-steps-2026-09-21.md) | ifc2text-attribution-and-next-steps-2026-09-21.md |
@@ -20,6 +22,8 @@
 | [材料清单支持后的单次续跑](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/validation/ifc2text/material-list-continuation-v11-2026-09-22.md) | material-list-continuation-v11-2026-09-22.md |
 | [IFC2Text 两项修复：v0.7 执行边界](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/validation/ifc2text/wall-recovery-v07-2026-09-21.md) | wall-recovery-v07-2026-09-21.md |
 | [修复后的 hxp 整栋单次重跑](https://github.com/770122whrt/text2IFC/blob/a7e0dcd5886610ce9ee45d0f808d7b198c43ec4f/docs/validation/ifc2text/whole-building-rerun-v10-2026-09-22.md) | whole-building-rerun-v10-2026-09-22.md |
+
+16 份只保留跳转的旧本地文件已在 2026-10-17 删除；上表固定 Git 原稿继续承接历史检索，当前结果与维护只从本专题索引进入。
 
 ## 部件阶段与准入
 

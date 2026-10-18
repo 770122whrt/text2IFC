@@ -1,0 +1,47 @@
+{
+  "schema_version": "text2ifc/phase12-public-structural-request/0.1",
+  "case_id": "preparation-probe-013",
+  "request": "请补回模型中缺失的一根属于标高 -3.03203e-14 米楼层的竖直矩形柱，柱底、柱顶中心分别位于（-10.198885，4.729831，0）米和（-10.198885，4.729831，2.5）米，截面为 350.000 × 350.000 毫米，第一条边按方向向量（-1，0）布置。以上坐标均使用模型的全局坐标；保留其他构件及其现有属性。",
+  "operations": [
+    {
+      "operation_id": "column-1",
+      "operation_type": "add_column",
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "value": -3.0320279620355e-11,
+            "tolerance_mm": 0.1
+          }
+        ]
+      },
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -10198.885,
+            "y_mm": 4729.831,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -10198.885,
+            "y_mm": 4729.831,
+            "z_mm": 2500.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 350.0,
+          "depth_mm": 350.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          }
+        }
+      }
+    }
+  ]
+}

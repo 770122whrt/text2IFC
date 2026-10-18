@@ -1,0 +1,340 @@
+{
+  "damaged_sha256": "3859c6e7f3c004e043bd5625fb92871c9b8a25d041b0a03745185f229a8a85b3",
+  "input_bindings": {
+    "D": "3859c6e7f3c004e043bd5625fb92871c9b8a25d041b0a03745185f229a8a85b3",
+    "G": "1e03199ccaed384dcdbd4a5382b23c7a4cec235692cb8b478cba7108ef89fb2e",
+    "answer_card": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "contract": "ab6365bda7d8b0488c8979e05f6ce77a6d3180718fe7a1451684b467b73a6eb3",
+    "public_ifc": "3859c6e7f3c004e043bd5625fb92871c9b8a25d041b0a03745185f229a8a85b3",
+    "request": "66670c794b90e5a3a28b0601eb687388f1ada6e6334d74908235114a131db392"
+  },
+  "notes": [
+    "尺寸来自实际单位和几何，不从 Name 猜测。名义宽高与带框网格外包尺寸分别记录。",
+    "技术审题按实际 G/D 重算；未声称人工打开 usBIM。"
+  ],
+  "passed": true,
+  "request": "请完成以下门窗补全。下面的位置均按模型世界坐标描述，X、Y 和楼层标高的单位是米，尺寸的单位是毫米。\n\n1．在标高 0.000 米的楼层，平面中心位于（X=7.360、Y=15.760 米）的墙面位置，补一扇窗，名义宽 1360 毫米、高 910 毫米；墙洞宽 1360 毫米、高 910 毫米，洞口下沿距该层标高 950 毫米（世界标高 0.950 米）。外观参照标高 0.000 米楼层、平面中心（X=12.400、Y=5.840 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n请保留其余墙体、门窗和其他构件及其位置；只在上述位置补全，使门窗、墙洞和所在墙体的关系完整。",
+  "source_sha256": "1e03199ccaed384dcdbd4a5382b23c7a4cec235692cb8b478cba7108ef89fb2e",
+  "targets": [
+    {
+      "errors": [],
+      "id": "target-1",
+      "measured": {
+        "bounds_world_m": [
+          [
+            6.654999999999999,
+            8.065
+          ],
+          [
+            15.580000000000002,
+            15.95250000000096
+          ],
+          [
+            0.9500000000000001,
+            1.8599999999999999
+          ]
+        ],
+        "height_mm": 910.0000000000009,
+        "host_bounds_world_m": [
+          [
+            6.075,
+            11.515
+          ],
+          [
+            15.605,
+            15.915
+          ],
+          [
+            0.0,
+            2.95
+          ]
+        ],
+        "host_guid": "1liwxY5MLB$fPkp2_DFxnx",
+        "host_placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            6.075
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            15.76
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.3099999999999987,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          7.359999999999999,
+          15.76625000000048,
+          1.405
+        ],
+        "mesh_local_extents_mm": [
+          1410.0000000000002,
+          372.5000000009579,
+          909.9999999999997
+        ],
+        "mesh_sha256": "f83462f1b9e951d9c5ec2bc6b1365917de3a6435d06f94992f43967df4b24b57",
+        "mesh_triangles": 208,
+        "opening_bottom_world_m": 0.9500000000000001,
+        "opening_bounds_world_m": [
+          [
+            6.68,
+            8.040000000000001
+          ],
+          [
+            15.605,
+            15.915000000000001
+          ],
+          [
+            0.9500000000000001,
+            1.860000000000001
+          ]
+        ],
+        "opening_center_world_m": [
+          7.36,
+          15.760000000000002,
+          1.4050000000000005
+        ],
+        "opening_center_xy_m": [
+          7.36,
+          15.760000000000002
+        ],
+        "opening_guid": "314RKHJGrMRLHl_rJsqxxe",
+        "opening_height_mm": 910.000000000001,
+        "opening_width_mm": 1360.0000000000011,
+        "operation_type": "SINGLE_PANEL",
+        "placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            7.36
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            15.75154343217484
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.25
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 950.0000000000001,
+        "source_step_id": 2855,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "1liwxY5MLB$fPkp2_DFxnz",
+        "type_guid": "1liwxY5MLB$fPkp3gDFxnQ",
+        "unit_to_mm": 1.0,
+        "width_mm": 1360.0000000000005
+      },
+      "mesh_local_extents_mm": [
+        1410.0000000000002,
+        372.5000000009579,
+        909.9999999999997
+      ],
+      "nominal_dimensions_mm": [
+        1360.0000000000005,
+        910.0000000000009
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          -8.881784197001252e-16,
+          0.006250000000479261,
+          -4.440892098500626e-16
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          -1.7763568394002505e-15,
+          0.006250000000481037,
+          -4.440892098500626e-16
+        ],
+        "reference_offset_world_m": [
+          1.7763568394002505e-15,
+          -0.006250000000481037,
+          -4.440892098500626e-16
+        ],
+        "target_validation_delta_m": 1.9860273225978185e-15
+      },
+      "opening_dimensions_mm": [
+        1360.0000000000011,
+        910.000000000001
+      ],
+      "opening_sill_mm": 950.0000000000001,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            11.695,
+            13.105
+          ],
+          [
+            5.64749999999904,
+            6.019999999999998
+          ],
+          [
+            0.9500000000000001,
+            1.8599999999999999
+          ]
+        ],
+        "height_mm": 910.0000000000009,
+        "host_bounds_world_m": [
+          [
+            9.924999999999997,
+            14.485
+          ],
+          [
+            5.685,
+            5.995
+          ],
+          [
+            0.0,
+            2.950000000000001
+          ]
+        ],
+        "host_guid": "1liwxY5MLB$fPkp2_DFxn2",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            14.485
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5.84
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.3100000000000005,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          12.4,
+          5.833749999999519,
+          1.405
+        ],
+        "mesh_local_extents_mm": [
+          1410.0000000000002,
+          372.5000000009579,
+          909.9999999999997
+        ],
+        "mesh_sha256": "f83462f1b9e951d9c5ec2bc6b1365917de3a6435d06f94992f43967df4b24b57",
+        "mesh_triangles": 208,
+        "opening_bottom_world_m": 0.9500000000000001,
+        "opening_bounds_world_m": [
+          [
+            11.719999999999999,
+            13.079999999999998
+          ],
+          [
+            5.6850000000000005,
+            5.995
+          ],
+          [
+            0.9500000000000001,
+            1.860000000000001
+          ]
+        ],
+        "opening_center_world_m": [
+          12.399999999999999,
+          5.84,
+          1.4050000000000005
+        ],
+        "opening_center_xy_m": [
+          12.399999999999999,
+          5.84
+        ],
+        "opening_guid": "0gn3P7Lrdk3kE7cwN2qqrA",
+        "opening_height_mm": 910.000000000001,
+        "opening_width_mm": 1359.9999999999995,
+        "operation_type": "SINGLE_PANEL",
+        "placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            12.4
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            5.84845656782516
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            -0.25
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 950.0000000000001,
+        "source_step_id": 3897,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "1liwxY5MLB$fPkp2_DFxn3",
+        "type_guid": "2P3s7$enLFje2$TRxtxldZ",
+        "unit_to_mm": 1.0,
+        "width_mm": 1360.0000000000027
+      },
+      "reference_guid": "1liwxY5MLB$fPkp2_DFxn3",
+      "reference_nominal_dimensions_mm": [
+        1360.0000000000027,
+        910.0000000000009
+      ],
+      "requested_dimensions_mm": [
+        1360.0000000000005,
+        910.0000000000009
+      ],
+      "step_id": 2855
+    }
+  ]
+}

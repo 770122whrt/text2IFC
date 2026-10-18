@@ -1,0 +1,145 @@
+{
+  "schema_version": "text2ifc/ifc-repair-intent/0.8",
+  "request_id": "candidate-020-after-preset-answer",
+  "source_request_hash": "sha256:a4ea5bfd4c1e4f7a07f7a9ed831dbbc046de91555a1bf7d54388cc278be8f350",
+  "model_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+  "prompt_fingerprint": "sha256:b7e7f01363d4cc612cba16d080a3624a2c53f0b4865d2b32f76261a996f8a367",
+  "operations": [
+    {
+      "attribute_intents": [
+        {
+          "intent_kind": "attribute",
+          "name": "OverallWidth",
+          "value": 1810.0,
+          "source": {
+            "source_kind": "user_request",
+            "reference": "request:/text",
+            "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+          }
+        },
+        {
+          "intent_kind": "attribute",
+          "name": "OverallHeight",
+          "value": 3000.0,
+          "source": {
+            "source_kind": "user_request",
+            "reference": "request:/text",
+            "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+          }
+        }
+      ],
+      "property_intents": [],
+      "semantic_bundle_refs": [],
+      "quantity_intents": [],
+      "occurrence_reuse_intent": null,
+      "prototype_intent": {
+        "reference_kind": "global_id",
+        "reference": "14xJur$tAygZ8nD5oT1oMw",
+        "source": {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+        }
+      },
+      "provenance": [
+        {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+        }
+      ],
+      "operation_id": "01-window",
+      "operation_type": "add_window_with_opening_to_wall",
+      "routing_intent": {
+        "component_family": "window",
+        "action": "add_with_opening",
+        "operation_profile": "window.add-with-opening.v0.3",
+        "source": {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+        }
+      },
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcWall"
+        ],
+        "global_id": "3JZGeqq852COtfxExBeyvQ"
+      },
+      "parameters": {
+        "position": {
+          "reference": "wall_local_start",
+          "center_offset_mm": 16546.249756751
+        },
+        "opening": {
+          "width_mm": 1810.0,
+          "height_mm": 3000.0,
+          "sill_height_mm": 600.0
+        },
+        "window": {
+          "fit_opening": true
+        }
+      }
+    },
+    {
+      "attribute_intents": [],
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "set_name": "Pset_DoorCommon",
+          "property_name": "IsExternal",
+          "raw_value": true,
+          "raw_unit": null,
+          "requested_value_type": "IfcBoolean",
+          "scope": "occurrence_direct",
+          "source": {
+            "source_kind": "user_request",
+            "reference": "request:/text",
+            "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+          }
+        }
+      ],
+      "semantic_bundle_refs": [],
+      "quantity_intents": [],
+      "occurrence_reuse_intent": null,
+      "prototype_intent": null,
+      "provenance": [
+        {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+        }
+      ],
+      "operation_id": "02-door-property",
+      "operation_type": "set_occurrence_properties",
+      "routing_intent": {
+        "component_family": "door",
+        "action": "set_properties",
+        "operation_profile": "occurrence.set-properties",
+        "source": {
+          "source_kind": "user_request",
+          "reference": "request:/text",
+          "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+        }
+      },
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcDoor"
+        ],
+        "global_id": "2U8KEAXbL24xySlUNSWHKK"
+      },
+      "parameters": {}
+    }
+  ],
+  "unsupported_requests": [],
+  "semantic_bundles": [],
+  "provenance": [
+    {
+      "source_kind": "user_request",
+      "reference": "request:/text",
+      "excerpt": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。\n\n澄清答复（离线预写事实）：\n窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。"
+    }
+  ]
+}

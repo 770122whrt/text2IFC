@@ -17,6 +17,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'src'))
 
 from scripts.ifc2text.run_goal import SCOPE, git, load
+from scripts.ifc2text.temporary_output import new_pytest_basetemp, run_pytest_with_cleanup
 from text2ifc_ifc2text.llm_pipeline import _write_json
 
 TARGETS = [
@@ -100,14 +101,14 @@ def main():
     root = base / ('check-' + commit[:12])
     root.mkdir(exist_ok=False)
     _write_json(base.parent / 'config.json', cfg)
-    temp = root / 'pytest-temp'
+    temp = new_pytest_basetemp(ROOT)
     command = [*TARGETS, '-q', '--basetemp=' + str(temp), '-p', 'no:cacheprovider']
     observer = OfflineRecorder()
     stream = io.StringIO()
     start = datetime.now(timezone.utc).isoformat()
     with observer.network_guard():
         with contextlib.redirect_stdout(stream), contextlib.redirect_stderr(stream):
-            exit_code = int(pytest.main(command, plugins=[observer]))
+            exit_code = int(run_pytest_with_cleanup(ROOT, command, pytest.main, plugins=[observer]))
     log = stream.getvalue()
     (root / 'pytest.log').write_text(log, encoding='utf-8')
     compiled = all(compileall.compile_dir(str(ROOT / path), quiet=1) for path in

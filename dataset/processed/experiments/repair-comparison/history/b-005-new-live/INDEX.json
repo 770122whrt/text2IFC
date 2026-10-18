@@ -1,0 +1,91 @@
+{
+  "schema_version": "repair-comparison-experiment-checkpoint/0.1",
+  "runs": [
+    {
+      "run_id": "formal-005-B",
+      "status": "submitted",
+      "success": false,
+      "metric_status": "scored",
+      "review_required": [],
+      "score_status": "scored",
+      "original_score_current_for_terminal": true,
+      "original_score_cached_terminal": "submitted",
+      "active_seconds": 206.48895049095154,
+      "calls": 5,
+      "known_tokens": 89175,
+      "unknown_calls": 0,
+      "total_tokens": 89175,
+      "usage_status": "complete",
+      "artifact_sha256": "29df473212593e44df74ca25362310307a1353f950a0aaab5b43eec5e035aa6f",
+      "report": "runs/formal-005-B/REPORT.md",
+      "score": "runs/formal-005-B/score.json",
+      "records": "runs/formal-005-B/records.zip",
+      "public_inputs": {
+        "model.ifc": {
+          "repository_path": "dataset/processed/ifc-repair/repair-comparison/formal/formal-005/public/model.ifc",
+          "sha256": "f4ecea67260e02bb322a874f9ae6c07d4607afba6c1770d7b44579d5e104fe7a",
+          "archive_member": "public/damaged.ifc"
+        },
+        "request.txt": {
+          "repository_path": "dataset/processed/ifc-repair/repair-comparison/formal/formal-005/public/request.txt",
+          "sha256": "844ba7c6c0fd137433fbcf30b84f39db4e61edfa13ec4e141f4f96489adbeb0c",
+          "archive_member": "public/request.txt"
+        }
+      },
+      "returned_thought_requests": 4,
+      "additional_scores": [
+        {
+          "original_repository_path": ".tmp/repair-comparison-b-scoring-v2/roots/b-005-new-live/formal-005-B.json",
+          "sha256": "a26913b28e6c4023c92fc473f3196ad77aa11da6b8600e83561ad646528f4e9a",
+          "package_path": "runs/formal-005-B/additional-score-01.json",
+          "schema_version": "repair-comparison-formal-score/0.2",
+          "success": true,
+          "original_score_replaced": false,
+          "input_and_result_authority_matches_frozen_run": true,
+          "binding_verification": "frozen_inputs_and_actual_result_sha256",
+          "input_and_result_authority_matches_original": true
+        }
+      ],
+      "reasoning_status": "API_returned_fields_preserved",
+      "secret_excluded_events_reference": false
+    }
+  ],
+  "files": {
+    "common.zip": {
+      "sha256": "dedb85bf80f317bcea699ff188881ca83adc3553f29795f2d7593aff7cd2002c",
+      "bytes": 5074650
+    },
+    "MANIFEST.json": {
+      "sha256": "1691f72164494f2c03c8c3b5f642bd187b41c6df4045ec3f0266baff6e3cde8b",
+      "bytes": 26091
+    },
+    "model-labels.json": {
+      "sha256": "da14166a86b3a0b9c6689166422d7060ce0e06e359c9581fd80a908626ea729f",
+      "bytes": 3295
+    },
+    "README.md": {
+      "sha256": "77cb6e0f9ee4b6c590c8b2717821e74a0d03c579da91e54f978776cd4ad558b2",
+      "bytes": 307
+    },
+    "runs/formal-005-B/additional-score-01.json": {
+      "sha256": "a26913b28e6c4023c92fc473f3196ad77aa11da6b8600e83561ad646528f4e9a",
+      "bytes": 16944
+    },
+    "runs/formal-005-B/records.zip": {
+      "sha256": "3aa52310fc7c4260267c11b057bcf1d4e442e9f2cbcb20ba6bd28f2fe615cbd9",
+      "bytes": 982523
+    },
+    "runs/formal-005-B/REPORT.md": {
+      "sha256": "04d281cd0f7b772a76a2df7c815ef2cc4afd83155ed8b4846c1820bc7a5e750b",
+      "bytes": 898
+    },
+    "runs/formal-005-B/score.json": {
+      "sha256": "55ceb725444be205aa8dc22c5780faf14a17afe51570b9fd05aa1e5a3c67ab69",
+      "bytes": 15707
+    },
+    "runs/formal-005-B/submitted.ifc": {
+      "sha256": "29df473212593e44df74ca25362310307a1353f950a0aaab5b43eec5e035aa6f",
+      "bytes": 2622000
+    }
+  }
+}

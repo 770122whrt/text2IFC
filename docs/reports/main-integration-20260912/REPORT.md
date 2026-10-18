@@ -1,5 +1,7 @@
 # text2IFC 清理与分支整合报告
 
+2026-10-17 维护：本记录对应的整理已完成，本目录一次性执行脚本（`archive_development_support.py`、`backup_pytest_workspaces.py`、`inspect_local_scratch.py`、`inspect_scratch_directories.py`、`inventory.py`、`package_c1_c5.py`、`recheck_generation.py`、`recheck_zcode_curator.py`）从本地退役；删除/保全收据与正式证据保留。旧执行命令只表示当时操作，不应重跑。脚本原文可从[整理前固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/main-integration-20260912)恢复；Proof 的日常校验继续使用现有 `scripts/proof/` 和 `text2ifc_proof` 工具。
+
 当前结果：当前分支和 Zcode 已完成真实历史合并；采用用户最后确认的精简验证范围。main 发布结果以最终 Git 推送核对为准。本轮真实 Provider 调用为 0。
 
 ## 已完成
@@ -56,6 +58,6 @@
 
 ## 2026-09-23：重复 Prompt 快照去重
 
-用户批准后，九个离线 fixture 基线案例的相同 `rendered-prompt.md` 保留[setsem-01 共享原件](baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，其余八份删除。九份工作目录字节原本完全相同；各案例的原始响应、诊断、renderer-input、profile 与 metadata 仍分别保留。读取其他八案的 Prompt 时使用共享原件；旧路径、哈希和历史恢复版本见[去重记录](https://github.com/770122whrt/text2IFC/blob/d8ee81607c3c1239256c40c4b6dfff1761f40db3/docs/document-catalog.md#第三批删除已完成重复-prompt-快照-d15d22)。
+用户批准后，九个离线 fixture 基线案例的相同 `rendered-prompt.md` 保留[setsem-01 共享原件](baseline-runs/composite-evidence-setsem-01/attempt-001/rendered-prompt.md)，其余八份删除。九份工作目录字节原本完全相同；各案例的原始响应、诊断、renderer-input、profile 与 metadata 仍分别保留。读取其他八案的 Prompt 时使用共享原件；旧路径、哈希和历史恢复版本见[去重记录](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/document-catalog.md#第三批删除已完成重复-prompt-快照-d15d22)。
 
 上文“9 目录／54 文件”是 9 月 12 日归档时的数量；本次仅删除八份相同 Markdown 后为 46 文件。该批为 fixture 基线，不是真实 Provider 运行；没有合并失败次数或改写任何诊断。

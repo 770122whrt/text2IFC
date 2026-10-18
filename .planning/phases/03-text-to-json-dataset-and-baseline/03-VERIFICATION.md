@@ -13,7 +13,7 @@ splitting precedes pair generation, the structured-output baseline emits BIM
 JSON 2.0 rather than STEP, and the evaluator reports parse, schema, field,
 collection, and semantic results.
 
-`03-06-SUMMARY.md` records 100 provenance-linked pairs, 25 formal BIMNet
+[03-06-SUMMARY.md](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/.planning/phases/03-text-to-json-dataset-and-baseline/03-06-SUMMARY.md) records 100 provenance-linked pairs, 25 formal BIMNet
 records across 19 scene families, the evaluation harness, and a successful
 validated BIM JSON -> reopened IFC2X3 demo. Its final repository regression
 reported 281 passing tests. Requirements `TEXT-01`, `TEXT-02`, `TEXT-03`, and

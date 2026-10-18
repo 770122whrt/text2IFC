@@ -144,9 +144,13 @@ def structural_l1_comparison_report(
             axis_end_mm=_operation_point(axis[end_key]),
             section=operation["parameters"]["section"],
         )
-        measured = measure_straight_rectangular_member(
-            member, relative_to=storey
-        )
+        if family == 'beam' and application.get('public_geometry_requirement', {}).get('exact_beam_body'):
+            from ..public_beam_copy import measure_beam
+            measured = measure_beam(member, relative_to=storey)
+        else:
+            measured = measure_straight_rectangular_member(
+                member, relative_to=storey
+            )
         geometry = compare_structural_l1_measurement(
             family=family,
             expected=expected,
@@ -406,6 +410,7 @@ def bind_structural_type(
     generated_type_factory: Any,
     factory_context: Mapping[str, Any],
     appearance: Mapping[str, Any] | None = None,
+    preserve_occurrence_appearance: bool = False,
 ) -> dict[str, Any]:
     """Bind one exact/generated structural Type without copying semantics.
 
@@ -476,12 +481,13 @@ def bind_structural_type(
                 "global_id": str(bound_type.GlobalId),
             },
         )
-    appearance_result = apply_repair_appearance_on_occurrence(
-        model,
-        type_object=bound_type,
-        occurrence=occurrence,
-        explicit_appearance=(None if appearance is None else dict(appearance)),
-    )
+    appearance_result = ({'applied': False, 'source': 'exact_public_body_preserved'}
+        if preserve_occurrence_appearance else apply_repair_appearance_on_occurrence(
+            model,
+            type_object=bound_type,
+            occurrence=occurrence,
+            explicit_appearance=(None if appearance is None else dict(appearance)),
+        ))
     return {
         "type": bound_type,
         "relationship": relationship,

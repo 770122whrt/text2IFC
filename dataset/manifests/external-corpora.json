@@ -11,8 +11,8 @@
       "source_revision": "595fa90e3af7120d004fcb37a79d8657f1d1c9c2",
       "license": "MIT",
       "license_evidence": "dataset/external/bim-whale-ifc-samples/LICENSE",
-      "file_count": 59,
-      "size_bytes": 167443501,
+      "file_count": 54,
+      "size_bytes": 110119981,
       "ifc_inventory": {
         "file_count": 6,
         "ifc2x3_reopen_eligible_count": 6
@@ -24,7 +24,24 @@
       ],
       "training_eligible": false,
       "status": "linked-not-admitted",
-      "notes": "Dummy sample models. Promote selected files through raw-files.jsonl and a leak-free split before training use."
+      "notes": "Dummy sample models. Promote selected files through raw-files.jsonl and a leak-free split before training use.",
+      "historical_inventory_before_rvt_removal": {
+        "file_count": 59,
+        "size_bytes": 167443501,
+        "ifc_file_count": 6
+      },
+      "local_inventory_verified_at": "2026-09-13",
+      "rvt_file_count": 0,
+      "intentionally_removed_files": [
+        "BasicHouse/Revit/BasicHouse.rvt",
+        "LargeBuilding/Revit/LargeBuilding_Revit2021.rvt",
+        "ManySimpleWalls/Revit/ManySimpleWalls_Revit2021.rvt",
+        "SimpleWall/Revit/SimpleWall_Revit2021.rvt",
+        "TallBuilding/Revit/TallBuilding_Revit2021.rvt"
+      ],
+      "removal_reason": "User explicitly requested removing these five RVTs while retaining source IFCs.",
+      "restore_policy": "do_not_restore_removed_rvts_without_user_request",
+      "inventory_evidence": "dataset/manifests/dataset-registration-20260913/deletion-journal.jsonl"
     },
     {
       "corpus_id": "ifc-bench",

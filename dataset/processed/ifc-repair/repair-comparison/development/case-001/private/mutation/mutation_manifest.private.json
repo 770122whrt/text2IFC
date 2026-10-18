@@ -1,0 +1,122 @@
+{
+  "counts": {
+    "after": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 59,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 59,
+      "IfcRelVoidsElement": 59,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 41
+    },
+    "before": {
+      "IfcBuilding": 1,
+      "IfcBuildingStorey": 2,
+      "IfcDoor": 18,
+      "IfcOpeningElement": 60,
+      "IfcProject": 1,
+      "IfcRelFillsElement": 60,
+      "IfcRelVoidsElement": 60,
+      "IfcSite": 1,
+      "IfcSpace": 8,
+      "IfcWall": 18,
+      "IfcWindow": 42
+    }
+  },
+  "damaged_ifc": {
+    "path": "damaged.ifc",
+    "sha256": "48f37b74fb88ce614af6c92554520932d65fad13a0719f7d074e5288a00c6dcd"
+  },
+  "mutation_type": "remove_window_and_opening",
+  "opening_representation": [
+    {
+      "identifier": "Body",
+      "items": [
+        {
+          "depth": 200.0,
+          "extruded_direction": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "ifc_class": "IfcExtrudedAreaSolid",
+          "profile_ifc_class": "IfcRectangleProfileDef",
+          "profile_x_dim": 1830.0,
+          "profile_y_dim": 914.999999999999
+        }
+      ],
+      "type": "SweptSolid"
+    }
+  ],
+  "schema_version": "text2ifc/ifc-repair-mutation-private/0.1",
+  "source": {
+    "path": "E:/code for project/bimnet/dataset/processed/ifc-repair/repair-comparison/development/case-001/private/reference.ifc",
+    "schema": "IFC2X3",
+    "sha256": "5a0c3abcd22689dd6a4537339aadce4af17678cbc9d6f5cf26742156e0f25262",
+    "size_bytes": 1295487
+  },
+  "target": {
+    "opening": {
+      "geometric_center_offset_mm": 12227.5,
+      "global_id": "2cXV28XOjE6f6irhW0CO_u",
+      "ifc_class": "IfcOpeningElement",
+      "sill_height_mm": 305.0,
+      "step_id": 35354,
+      "wall_local_geometry_bounds_mm": {
+        "x": [
+          11770.0,
+          12685.0
+        ],
+        "y": [
+          -100.0,
+          100.0
+        ],
+        "z": [
+          305.0,
+          2135.0
+        ]
+      },
+      "wall_local_origin_mm": [
+        11770.0,
+        -100.0,
+        305.0
+      ]
+    },
+    "relationships": {
+      "fills_step_id": 35368,
+      "voids_step_id": 35357
+    },
+    "wall": {
+      "axis_end_mm": [
+        20000.0,
+        0.0,
+        0.0
+      ],
+      "axis_start_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "geometry_capability": "straight_wall",
+      "global_id": "2cXV28XOjE6f6irgi0COkg",
+      "ifc_class": "IfcWallStandardCase",
+      "length_mm": 20000.0,
+      "local_reference": "wall_local_start",
+      "name": "Basic Wall:Outside wall:352966",
+      "step_id": 2736,
+      "storey": "Level 1"
+    },
+    "window": {
+      "global_id": "2cXV28XOjE6f6irgi0CO_u",
+      "height_mm": 1830.0,
+      "ifc_class": "IfcWindow",
+      "name": "M_Fixed:0915 x 1830mm:354004",
+      "step_id": 13235,
+      "width_mm": 914.999999999999
+    }
+  }
+}

@@ -6,7 +6,7 @@
 
 最新决定：用户选择“采用建议：小型模板＋Generation 基础门窗细节”。它取代此前 Generation 全程保持现有几何的范围限制；默认配色、性能属性缺省不写入、不实现跨 IFC 参照的决定继续有效。实施顺序为先补齐语义链路，再完善配色与门窗细节。第 10 节保留工程探测、模板边界和独立审查依据。
 
-本计划的目标是让 IFC 在当前支持的建筑范围内同时满足请求、具有合理语义，并呈现协调的颜色。它接续已有 presentation 实现，不改变既有 Phase 或 Proof 的验收状态。最初实现基线为 `362f5b49`（历史定位，不是当前HEAD），历史实现与验证记录见 [第一阶段边界](../validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md)。
+本计划的目标是让 IFC 在当前支持的建筑范围内同时满足请求、具有合理语义，并呈现协调的颜色。它接续已有 presentation 实现，不改变既有 Phase 或 Proof 的验收状态。最初实现基线为 `362f5b49`（历史定位，不是当前HEAD），历史实现与验证记录见 [第一阶段边界](https://github.com/770122whrt/text2IFC/blob/11f29030f3f3b5967535d16c4c4b31085e21ff64/docs/validation/ifc2x3-changeset/ifc-presentation-development-boundary-2026-09-03.md)。
 
 ## 1. 已确定的范围
 

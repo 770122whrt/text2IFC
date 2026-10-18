@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import multiprocessing
 import os
 import subprocess
 import sys
@@ -440,7 +441,11 @@ def _execute_default_accelerated(
 ) -> dict[str, Any]:
     """Validate both files concurrently, then run the dependent full diff."""
 
-    executor = ProcessPoolExecutor(max_workers=2)
+    # A forked worker inherits a loaded property model and its threads. Start
+    # fresh interpreters so validation memory belongs to the validator only.
+    executor = ProcessPoolExecutor(
+        max_workers=2, mp_context=multiprocessing.get_context("spawn")
+    )
     futures = {
         role: executor.submit(
             _cached_single_validation,
@@ -799,6 +804,12 @@ def _windows_process_memory_counters() -> Any | None:
 
 
 def _current_process_peak_rss() -> int:
+    if sys.platform == "linux":
+        # Pool workers use the same executable-local peak as subprocess
+        # validators; getrusage can retain the spawning runtime's old peak.
+        from .validation_worker import _peak_rss_bytes
+
+        return _peak_rss_bytes()
     try:
         if os.name == "nt":
             counters = _windows_process_memory_counters()

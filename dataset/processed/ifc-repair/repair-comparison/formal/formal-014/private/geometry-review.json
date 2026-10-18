@@ -1,0 +1,198 @@
+{
+  "schema_version": "repair-comparison-structural-numeric-review/0.1",
+  "status": "passed",
+  "targets": [
+    {
+      "target_id": "target-1",
+      "family": "column",
+      "target_name": "Columns_Rectangular:450 x450:384197",
+      "source_global_id_private": "0x6DwwA218Jw4vC5fvh0RS",
+      "actual_geometry_basis": "IfcOpenShell actual Body mesh, full storey placement and IFC length unit",
+      "actual_body_axis_world_m": [
+        [
+          -15.8454139652959,
+          15.9192212497682,
+          0.0
+        ],
+        [
+          -15.8454139652959,
+          15.9192212497682,
+          23.0
+        ]
+      ],
+      "original_ifc_axis_world_m": [
+        [
+          -15.8454139652959,
+          15.9192212497682,
+          0.0
+        ],
+        [
+          -15.8454139652959,
+          15.9192212497682,
+          23.0
+        ]
+      ],
+      "public_axis_world_m": [
+        [
+          -15.845,
+          15.919,
+          0.0
+        ],
+        [
+          -15.845,
+          15.919,
+          23.0
+        ]
+      ],
+      "endpoint_rounding_errors_mm": [
+        0.46938121621735795,
+        0.46938121621735795
+      ],
+      "public_section_mm": {
+        "shape": "rectangle",
+        "width_mm": 200.0,
+        "depth_mm": 450.0,
+        "orientation": {
+          "x": -1.0,
+          "y": 0.0
+        }
+      },
+      "original_section_mm": {
+        "shape": "rectangle",
+        "width_mm": 199.999999999998,
+        "depth_mm": 449.999999999999,
+        "orientation": {
+          "x": -1.0,
+          "y": 0.0
+        }
+      },
+      "actual_storey_world_translation_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "storey_attribute_elevation_m": 0.0,
+      "parameters_storey_local_mm": {
+        "axis": {
+          "base": {
+            "x_mm": -15845.0,
+            "y_mm": 15919.0,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -15845.0,
+            "y_mm": 15919.0,
+            "z_mm": 23000.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 200.0,
+          "depth_mm": 450.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          }
+        }
+      },
+      "world_local_roundtrip_error_mm": 0.0,
+      "source_mesh_rectangle_check": {
+        "rectangular_mesh_matches_authored_axis_section": true,
+        "bounds_max_error_mm": 1.3073986337985843e-12,
+        "vertices_surface_max_error_mm": 0.0,
+        "actual_volume_mm3": 2069999999.9999917,
+        "expected_volume_mm3": 2069999999.9999747,
+        "volume_relative_error": 8.177642085126157e-15,
+        "vertices": 8,
+        "triangles": 12,
+        "actual_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            23000.0
+          ],
+          [
+            -100.0,
+            100.0
+          ],
+          [
+            -224.99999999999818,
+            225.0
+          ]
+        ],
+        "expected_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            23000.0
+          ],
+          [
+            -99.999999999999,
+            99.999999999999
+          ],
+          [
+            -224.9999999999995,
+            224.9999999999995
+          ]
+        ],
+        "tolerances": {
+          "bounds_mm": 0.05,
+          "surface_mm": 0.05,
+          "relative_volume": 1e-05
+        },
+        "volume_is_supporting_check_only": true,
+        "independent_of_provider": true
+      },
+      "requested_geometry_support_frame": {
+        "axis_start_mm": [
+          -15845.0,
+          15919.0,
+          0.0
+        ],
+        "axis_end_mm": [
+          -15845.0,
+          15919.0,
+          23000.0
+        ],
+        "axis_direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "axis_extent_mm": 23000.0,
+        "profile_x_direction": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "profile_y_direction": [
+          -0.0,
+          -1.0,
+          0.0
+        ],
+        "orientation": [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 200.0,
+          "depth_mm": 450.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          }
+        }
+      },
+      "coordinate_rounding_admission_mm": 1.0,
+      "dimensions_match_geometry": true,
+      "passed": true,
+      "check_not_experiment_scoring_tolerance": true
+    }
+  ],
+  "human_viewed": false,
+  "required_clarification_facts": [
+    "column_section_orientation"
+  ],
+  "private_prewritten_fact_checks_passed": true,
+  "public_request_complete_without_clarification": false
+}

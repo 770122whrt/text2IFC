@@ -1,0 +1,59 @@
+{
+  "case_id": "formal-019",
+  "status": "pending_human_review",
+  "package": ".tmp/repair-comparison-formal-expansion/next-ten-packages/formal-019",
+  "source": "gni-bim-dataset-model_174-d7fdca7cce24",
+  "source_unchanged": true,
+  "target_count": 2,
+  "source_native_diagnostics": 0,
+  "damaged_native_diagnostics": 0,
+  "all_checks_passed": true,
+  "mesh_counts": {
+    "G": 325,
+    "D": 323
+  },
+  "public_identity_leaks": false,
+  "published_as_formal": false,
+  "provider_calls": 0,
+  "property_requirements": [
+    {
+      "target_id": "target-1",
+      "target_name": "Concrete-Rectangular Beam:16 x 32:480440",
+      "family": "beam",
+      "pset_name": "Pset_BeamCommon",
+      "property_name": "LoadBearing",
+      "value": true,
+      "value_type": "IfcBoolean",
+      "pset_global_id_private": "2y_el1_oZZi4feh$eBwjPg",
+      "scope": "occurrence",
+      "unit": null,
+      "original_value_manufactured": false,
+      "operation_type": "add_beam",
+      "semantic_scope_role": "beam_occurrence",
+      "interface": "property_intents -> property knowledge normalization/admissibility -> authorized_semantics -> semantic_assignments",
+      "property_runtime_status": "full natural-language/experiment runtime not yet verified"
+    },
+    {
+      "target_id": "target-2",
+      "target_name": "Concrete-Rectangular-Column:24X24:320343",
+      "family": "column",
+      "pset_name": "Pset_ColumnCommon",
+      "property_name": "LoadBearing",
+      "value": true,
+      "value_type": "IfcBoolean",
+      "pset_global_id_private": "2vn40_36j1xRLsRAOgRW0A",
+      "scope": "occurrence",
+      "unit": null,
+      "original_value_manufactured": false,
+      "operation_type": "add_column",
+      "semantic_scope_role": "column_occurrence",
+      "interface": "property_intents -> property knowledge normalization/admissibility -> authorized_semantics -> semantic_assignments",
+      "property_runtime_status": "full natural-language/experiment runtime not yet verified"
+    }
+  ],
+  "clarification_required": true,
+  "required_clarification_facts": [
+    "beam_load_bearing",
+    "column_load_bearing"
+  ]
+}

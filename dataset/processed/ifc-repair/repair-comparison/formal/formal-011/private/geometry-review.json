@@ -1,0 +1,173 @@
+{
+  "schema_version": "repair-comparison-structural-numeric-review/0.1",
+  "status": "passed",
+  "targets": [
+    {
+      "target_id": "target-1",
+      "family": "beam",
+      "target_name": "STB Träger - rechteckig:STB 250 x 500:2578656",
+      "source_global_id_private": "0fngfWeyj0Qwg_a6RxVlQC",
+      "actual_geometry_basis": "IfcOpenShell actual Body mesh, full storey placement and IFC length unit",
+      "actual_body_axis_world_m": [
+        [
+          12.875,
+          29.0,
+          2.9499999999999984
+        ],
+        [
+          12.875,
+          25.0,
+          2.9499999999999984
+        ]
+      ],
+      "original_ifc_axis_world_m": [
+        [
+          12.875,
+          29.0,
+          3.2
+        ],
+        [
+          12.875,
+          25.0,
+          3.2
+        ]
+      ],
+      "public_axis_world_m": [
+        [
+          12.875,
+          29.0,
+          2.95
+        ],
+        [
+          12.875,
+          25.0,
+          2.95
+        ]
+      ],
+      "endpoint_rounding_errors_mm": [
+        1.7763568394002505e-12,
+        1.7763568394002505e-12
+      ],
+      "public_section_mm": {
+        "shape": "rectangle",
+        "width_mm": 250.0,
+        "height_mm": 500.0
+      },
+      "original_section_mm": {
+        "shape": "rectangle",
+        "width_mm": 250.000000000004,
+        "height_mm": 500.0
+      },
+      "actual_storey_world_translation_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "storey_attribute_elevation_m": 0.0,
+      "parameters_storey_local_mm": {
+        "axis": {
+          "start": {
+            "x_mm": 12875.0,
+            "y_mm": 29000.0,
+            "z_mm": 2950.0
+          },
+          "end": {
+            "x_mm": 12875.0,
+            "y_mm": 25000.0,
+            "z_mm": 2950.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 250.0,
+          "height_mm": 500.0
+        }
+      },
+      "world_local_roundtrip_error_mm": 0.0,
+      "source_mesh_rectangle_check": {
+        "rectangular_mesh_matches_authored_axis_section": true,
+        "bounds_max_error_mm": 1.8474111129762605e-13,
+        "vertices_surface_max_error_mm": 0.0,
+        "actual_volume_mm3": 500000000.0000072,
+        "expected_volume_mm3": 500000000.00000805,
+        "volume_relative_error": 1.6689300537109106e-15,
+        "vertices": 8,
+        "triangles": 12,
+        "actual_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            4000.0
+          ],
+          [
+            -125.00000000000182,
+            125.00000000000182
+          ],
+          [
+            -250.0,
+            250.0
+          ]
+        ],
+        "expected_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            4000.0
+          ],
+          [
+            -125.000000000002,
+            125.000000000002
+          ],
+          [
+            -250.0,
+            250.0
+          ]
+        ],
+        "tolerances": {
+          "bounds_mm": 0.05,
+          "surface_mm": 0.05,
+          "relative_volume": 1e-05
+        },
+        "volume_is_supporting_check_only": true,
+        "independent_of_provider": true
+      },
+      "requested_geometry_support_frame": {
+        "axis_start_mm": [
+          12875.0,
+          29000.0,
+          2950.0
+        ],
+        "axis_end_mm": [
+          12875.0,
+          25000.0,
+          2950.0
+        ],
+        "axis_direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "axis_extent_mm": 4000.0,
+        "profile_x_direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "profile_y_direction": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "orientation": null,
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 250.0,
+          "height_mm": 500.0
+        }
+      },
+      "coordinate_rounding_admission_mm": 1.0,
+      "dimensions_match_geometry": true,
+      "passed": true,
+      "check_not_experiment_scoring_tolerance": true
+    }
+  ],
+  "human_viewed": false
+}

@@ -13,6 +13,7 @@ import ifcopenshell.guid
 import ifcopenshell.geom
 import ifcopenshell.util.placement
 import ifcopenshell.util.shape
+import ifcopenshell.util.unit
 
 from text2ifc_ifc_repair.context import build_window_wall_candidate
 from text2ifc_ifc_repair.geometry import (
@@ -22,6 +23,7 @@ from text2ifc_ifc_repair.geometry import (
     product_geometry_bounds_in_host_mm,
     straight_wall_axis,
     wall_dimensions_mm,
+    wall_normal_center_offset_mm,
 )
 from text2ifc_ifc_repair.evaluation_policy import (
     ComparisonRule,
@@ -36,6 +38,8 @@ from text2ifc_ifc_repair.type_templates import ensure_bound_type
 from text2ifc_presentation import apply_repair_appearance_on_occurrence
 from text2ifc_ifc_repair.window_geometry import (
     select_window_placement_in_opening,
+    public_window_installation_anchor,
+    measure_window_installation,
 )
 from text2ifc_ifc_repair.operations.hosted_opening import (
     body_context as hosted_body_context,
@@ -686,7 +690,56 @@ def _clean_numbers(values: Mapping[str, float]) -> dict[str, float]:
     return {key: round(float(value), 6) for key, value in values.items()}
 
 
-def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
+def _nominal_window_dimensions_mm(operation: Mapping[str, Any]) -> dict[str, float]:
+    """Nominal occurrence dimensions have their own bound semantic authority.
+
+    Legacy operations without assignments retain the historical opening-size
+    default. Dimension assignments are normalized to mm, including unit=None;
+    never infer them from the mapped body's frame/board bounding box.
+    """
+    opening = operation["parameters"]["opening"]
+    result = {"width": float(opening["width_mm"]), "height": float(opening["height_mm"])}
+    for key, attribute in (("width", "OverallWidth"), ("height", "OverallHeight")):
+        values = []
+        for assignment in operation.get("semantic_assignments", ()):
+            if (assignment.get("fact_key") != f"attribute:{attribute}"
+                    or assignment.get("authoring_action") != "set_attribute"
+                    or assignment.get("ownership") == "type_inherited"):
+                continue
+            unit = assignment.get("unit")
+            unit = None if unit is None else str(unit).strip().casefold()
+            factor = {None: 1., "mm": 1., "m": 1000., "cm": 10.}.get(unit)
+            if factor is None:
+                raise ValueError("WINDOW_NOMINAL_DIMENSION_UNIT_UNSUPPORTED")
+            value = float(assignment["value"]) * factor
+            if not math.isfinite(value) or value <= 0:
+                raise ValueError("WINDOW_NOMINAL_DIMENSION_INVALID")
+            values.append(value)
+        if values:
+            if len(set(values)) != 1:
+                raise ValueError("WINDOW_NOMINAL_DIMENSION_AUTHORITY_AMBIGUOUS")
+            result[key] = values[0]
+    return result
+
+
+def _public_installation_anchor(operation: Mapping[str, Any], model: Any) -> Mapping[str, Any] | None:
+    """Read a bound evidence identity and remeasure it in the public model.
+
+    The scene/resolution stage alone adds this versioned evidence reference;
+    the Stage 2 draft cannot add, remove or change an authority evidence ref.
+    No new model-authored parameter or released schema field is introduced.
+    """
+    prefix = "public-window-installation/0.1:"
+    references = [ref[len(prefix):] for ref in operation.get("evidence_refs", ()) if ref.startswith(prefix)]
+    if not references:
+        return None
+    if len(references) != 1 or not references[0]:
+        raise ValueError("WINDOW_INSTALLATION_BINDING_AMBIGUOUS")
+    return public_window_installation_anchor(model.by_guid(references[0]))
+
+
+def _applicator(*, operation: Mapping[str, Any], model: Any,
+                public_geometry_requirement: Mapping[str, Any] | None = None) -> dict[str, Any]:
     """Create a deterministic Window-Opening-Wall chain incrementally."""
 
     wall = _require_guid(model, str(operation["target"]["wall_global_id"]), "IfcWall")
@@ -698,6 +751,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     center = float(parameters["position"]["center_offset_mm"])
     wall_dimensions = wall_dimensions_mm(wall)
     thickness = float(wall_dimensions["thickness"])
+    nominal = _nominal_window_dimensions_mm(operation)
     body_context = _body_context(model)
 
     ids = {
@@ -726,24 +780,21 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         ObjectType="Opening",
         Tag=str(operation["operation_id"]),
     )
-    opening_representation = ifcopenshell.api.geometry.add_wall_representation(
-        model,
-        context=body_context,
-        length=width / 1000.0,
-        height=height / 1000.0,
-        thickness=thickness / 1000.0,
-        offset=-thickness / 2000.0,
-    )
-    opening.Representation = model.create_entity(
-        "IfcProductDefinitionShape", Representations=[opening_representation]
-    )
-    opening.ObjectPlacement = _opening_placement(
-        model,
-        wall=wall,
-        center_mm=center,
-        width_mm=width,
-        sill_mm=sill,
-    )
+    normal_center = wall_normal_center_offset_mm(wall)
+    if public_geometry_requirement:
+        from ..public_geometry import place_public_product
+        reference_opening = model.by_guid(public_geometry_requirement['reference_opening_id'])
+        opening.Representation = ifcopenshell.util.element.copy_deep(model, reference_opening.Representation,
+            exclude=['IfcGeometricRepresentationContext', 'IfcGeometricRepresentationSubContext'])
+        place_public_product(opening, wall, public_geometry_requirement['opening_placement_world_mm'])
+    else:
+        opening_representation = ifcopenshell.api.geometry.add_wall_representation(
+            model, context=body_context, length=width / 1000.0, height=height / 1000.0,
+            thickness=thickness / 1000.0, offset=(normal_center - thickness / 2.0) / 1000.0)
+        opening.Representation = model.create_entity(
+            'IfcProductDefinitionShape', Representations=[opening_representation])
+        opening.ObjectPlacement = _opening_placement(
+            model, wall=wall, center_mm=center, width_mm=width, sill_mm=sill)
 
     bound_type_assignment = next(
         (
@@ -770,8 +821,8 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         Name=f"Text2IFC window {operation['operation_id']}",
         ObjectType=str(window_type.Name) if window_type is not None else "Text2IFC fixed window",
         Tag=str(operation["operation_id"]),
-        OverallHeight=millimetres_to_project_units(model, height),
-        OverallWidth=millimetres_to_project_units(model, width),
+        OverallHeight=millimetres_to_project_units(model, nominal["height"]),
+        OverallWidth=millimetres_to_project_units(model, nominal["width"]),
     )
     if window_type is not None and window_type.RepresentationMaps:
         mapped_representations = [
@@ -790,7 +841,7 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
             length=width / 1000.0,
             height=height / 1000.0,
             thickness=thickness / 1000.0,
-            offset=-thickness / 2000.0,
+            offset=(normal_center - thickness / 2.0) / 1000.0,
         )
         window.Representation = model.create_entity(
             "IfcProductDefinitionShape", Representations=[window_representation]
@@ -798,11 +849,18 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
     uses_mapped_representation = bool(
         window_type is not None and window_type.RepresentationMaps
     )
-    if uses_mapped_representation:
+    if public_geometry_requirement:
+        if not uses_mapped_representation:
+            raise ValueError('PUBLIC_GEOMETRY_WINDOW_REPRESENTATION_UNSUPPORTED')
+        from ..public_geometry import place_public_product
+        place_public_product(window, opening, public_geometry_requirement['placement_world_mm'])
+    elif uses_mapped_representation:
         placement = select_window_placement_in_opening(
             window,
             opening,
             window_type,
+            host_wall=wall,
+            installation_anchor=_public_installation_anchor(operation, model),
         )
         window.ObjectPlacement = _local_placement(
             model,
@@ -905,7 +963,11 @@ def _applicator(*, operation: Mapping[str, Any], model: Any) -> dict[str, Any]:
         "removed": [],
         "resolved": {
             "center_offset_mm": center,
-            "opening_depth_mm": thickness,
+            "opening_depth_mm": opening_dimensions_mm(opening)['depth'],
+            "opening_void_depth_mm": max(0., min(product_geometry_bounds_in_host_mm(opening, wall)['y'][1],
+                                                  product_geometry_bounds_in_host_mm(wall, wall)['y'][1])
+                - max(product_geometry_bounds_in_host_mm(opening, wall)['y'][0],
+                      product_geometry_bounds_in_host_mm(wall, wall)['y'][0])),
             "window_type_global_id": (
                 str(window_type.GlobalId) if window_type is not None else None
             ),
@@ -944,6 +1006,7 @@ def _postcondition_checker(
 
     parameters = operation["parameters"]
     requested_opening = parameters["opening"]
+    expected_nominal = _nominal_window_dimensions_mm(operation)
     dimensions = _clean_numbers(opening_dimensions_mm(opening))
     position = opening_position_in_wall_mm(opening, wall)
     voids_ok = (
@@ -975,15 +1038,15 @@ def _postcondition_checker(
             "/parameters/opening",
         ),
         (
-            "WINDOW_DIMENSIONS_MATCH_OPENING",
+            "WINDOW_NOMINAL_DIMENSIONS_MATCH_AUTHORITY",
             math.isclose(
                 project_units_to_millimetres(model, window.OverallWidth),
-                expected["width"],
+                expected_nominal["width"],
                 abs_tol=1e-4,
             )
             and math.isclose(
                 project_units_to_millimetres(model, window.OverallHeight),
-                expected["height"],
+                expected_nominal["height"],
                 abs_tol=1e-4,
             ),
             "/parameters/window",
@@ -1004,6 +1067,7 @@ def _postcondition_checker(
             "window_global_id": str(window.GlobalId),
             "measured": facts,
             "expected": expected,
+            "expected_nominal_dimensions_mm": expected_nominal,
         },
     }
 
@@ -1087,6 +1151,7 @@ def _measure_comparison_adapter(
     after_volume = _element_volume_m3(wall_after)
     restored_void_volume = before_volume - after_volume
     expected_void_volume = 0.0
+    public_void_requirements = []
     for sibling in batch_operations:
         if sibling.get("operation_type") != OPERATION_TYPE:
             continue
@@ -1095,18 +1160,27 @@ def _measure_comparison_adapter(
         sibling_opening = sibling["parameters"]["opening"]
         sibling_application = batch_applications.get(
             str(sibling.get("operation_id")),
-            {},
+            {"changes": application}
+            if sibling.get("operation_id") == operation.get("operation_id") else {},
         )
+        requirement = sibling_application.get("changes", {}).get("public_geometry_requirement")
+        if requirement:
+            public_void_requirements.append(requirement)
+            continue
         sibling_depth = float(
             sibling_application.get("changes", {})
             .get("resolved", {})
-            .get("opening_depth_mm", expected_depth)
+            .get("opening_void_depth_mm", sibling_application.get("changes", {}).get("resolved", {}).get("opening_depth_mm", expected_depth))
         )
         expected_void_volume += (
             float(sibling_opening["width_mm"])
             * float(sibling_opening["height_mm"])
             * sibling_depth
             / 1_000_000_000.0
+        )
+    if public_void_requirements:
+        expected_void_volume += _public_opening_void_volume_m3(
+            before_model, wall_before, public_void_requirements
         )
 
     voids_correct = (
@@ -1149,15 +1223,16 @@ def _measure_comparison_adapter(
         <= 2.0 * linear_tolerance
         for axis in ("x", "z")
     )
+    nominal_dimensions = _nominal_window_dimensions_mm(operation)
     window_nominal_dimensions_match = (
         math.isclose(
             project_units_to_millimetres(after_model, window.OverallWidth),
-            expected_width,
+            nominal_dimensions["width"],
             abs_tol=linear_tolerance,
         )
         and math.isclose(
             project_units_to_millimetres(after_model, window.OverallHeight),
-            expected_height,
+            nominal_dimensions["height"],
             abs_tol=linear_tolerance,
         )
     )
@@ -1166,6 +1241,26 @@ def _measure_comparison_adapter(
         == "MappedRepresentation"
         for representation in getattr(window.Representation, "Representations", ())
     )
+    installation_anchor = _public_installation_anchor(operation, before_model)
+    installation = None
+    if application.get('public_geometry_requirement'):
+        from ..public_geometry import measure_public_installation
+        installation = measure_public_installation(window, opening, application['public_geometry_requirement'],
+                                                  reference_model=before_model)
+    elif installation_anchor is not None:
+        # The witness comes from the immutable public before-model. Recheck
+        # the after-model's reference, Type, map and pose independently too.
+        installation = measure_window_installation(window, opening, installation_anchor)
+    if installation is not None:
+        window_geometry_fits = bool(installation["valid"]) and window_nominal_dimensions_match
+    else:
+        window_geometry_fits = (
+            window_geometry_contained and window_depth_aligned
+            and (window_geometry_matches_opening_edges or (
+                uses_mapped_representation and window_geometry_centered
+                and window_nominal_dimensions_match
+            ))
+        )
     wall_storeys = {
         str(relation.RelatingStructure.GlobalId)
         for relation in wall_after.ContainedInStructure
@@ -1195,18 +1290,7 @@ def _measure_comparison_adapter(
         "correct_host_wall": voids_correct,
         "opening_voids_wall": voids_correct,
         "window_fills_opening": fills_correct,
-        "window_geometry_fits_opening": (
-            window_geometry_contained
-            and window_depth_aligned
-            and (
-                window_geometry_matches_opening_edges
-                or (
-                    uses_mapped_representation
-                    and window_geometry_centered
-                    and window_nominal_dimensions_match
-                )
-            )
-        ),
+        "window_geometry_fits_opening": window_geometry_fits,
         "storey_consistent": bool(wall_storeys) and wall_storeys == window_storeys,
         "linear_geometry_within_tolerance": max(
             center_error, sill_error, width_error, height_error, depth_error
@@ -1224,6 +1308,7 @@ def _measure_comparison_adapter(
         "height_error_mm": round(height_error, 6),
         "depth_error_mm": round(depth_error, 6),
         "orientation_error_degrees": round(orientation_error, 6),
+        "window_installation": installation,
         "restored_void_volume_m3": round(restored_void_volume, 6),
         "expected_void_volume_m3": round(expected_void_volume, 6),
         "matching_chain_count": duplicate_count,
@@ -1432,6 +1517,50 @@ def _inverse_rigid_transform(matrix: Any) -> Any:
     inverse[:3, 3] = -(rotation.T @ matrix[:3, 3])
     inverse[3, :] = (0.0, 0.0, 0.0, 1.0)
     return inverse
+
+
+def _public_opening_void_volume_m3(
+    before_model: Any, wall: Any, requirements: list[Mapping[str, Any]]
+) -> float:
+    """Measure authorized cuts against an isolated copy of the original host.
+
+    Public reference openings can be BReps, project beyond the wall faces, or
+    have sloped profiles. Their bounding-box prism is not their wall cut volume.
+    Reconstruct only the public-authorized openings from the immutable source;
+    never use candidate geometry or reported application depths as the oracle.
+    Existing voids remain in the host so only newly removed material is counted.
+    """
+    probe = ifcopenshell.file(schema=before_model.schema)
+    probe.add(before_model.by_type("IfcProject")[0])
+    probe_wall = probe.add(wall)
+    for relation in wall.HasOpenings:
+        probe.add(relation)
+    original_volume = _element_volume_m3(probe_wall)
+    scale_mm = ifcopenshell.util.unit.calculate_unit_scale(before_model) * 1000.0
+    for requirement in requirements:
+        reference = _require_guid(
+            before_model, str(requirement["reference_opening_id"]), "IfcOpeningElement"
+        )
+        frame = requirement["opening_placement_world_mm"]
+        # Author the absolute world pose directly, independently of the
+        # applicator's conversion to the host's relative placement frame.
+        placement = probe.createIfcAxis2Placement3D(
+            probe.createIfcCartesianPoint(tuple(float(frame[i][3]) / scale_mm for i in range(3))),
+            probe.createIfcDirection(tuple(float(frame[i][2]) for i in range(3))),
+            probe.createIfcDirection(tuple(float(frame[i][0]) for i in range(3))),
+        )
+        opening = probe.create_entity(
+            "IfcOpeningElement", GlobalId=ifcopenshell.guid.new(),
+            OwnerHistory=probe_wall.OwnerHistory,
+            Representation=probe.add(reference.Representation),
+            ObjectPlacement=probe.createIfcLocalPlacement(None, placement),
+        )
+        probe.create_entity(
+            "IfcRelVoidsElement", GlobalId=ifcopenshell.guid.new(),
+            OwnerHistory=probe_wall.OwnerHistory,
+            RelatingBuildingElement=probe_wall, RelatedOpeningElement=opening,
+        )
+    return original_volume - _element_volume_m3(probe_wall)
 
 
 def _element_volume_m3(element: Any) -> float:

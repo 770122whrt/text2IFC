@@ -1,0 +1,169 @@
+{
+  "evaluation_complete": false,
+  "formal_case_self_checks_completed": 24,
+  "formal_case_self_checks_total": 38,
+  "formal_case_receipts": [
+    {
+      "case_id": "formal-001-d001-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d001-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d002-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d002-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d003-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d003-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d004-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d004-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d005-host_wall",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d005-world",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d006-host_wall",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d006-world",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d007-host_wall",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d007-world",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d008-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d008-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d009-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d009-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d010-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d010-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d011-host_wall",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d011-world",
+      "evaluator_admitted": true,
+      "codes": []
+    },
+    {
+      "case_id": "formal-001-d012-host_wall",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    },
+    {
+      "case_id": "formal-001-d012-world",
+      "evaluator_admitted": false,
+      "codes": [
+        "POSITIVE_COMPARISON_INVALID",
+        "PRESERVATION"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "kind": "evaluator_normalization_defect",
+      "evidence": [
+        "positive-preservation-diagnostic.json",
+        "property-sharing-diagnostic.json"
+      ],
+      "observation": "Target property owned by 10 Psets in reference control, but 1 in damaged input; evaluator shadow normalization modifies unrelated Psets. Positive control rejects preservation. Do not count this as a model failure.",
+      "next_scope": "Versioned host-only normalization correction, shared-property positive/negative/preservation tests, rescore every affected method under same corrected evaluator; do not relax preservation."
+    },
+    {
+      "kind": "old_task_policy_not_frozen",
+      "scope": "original formal-011..020",
+      "next_scope": "Keep formal_success null; property diagnostics and geometry measurements are available; freeze a reviewed evaluation policy before claiming a formal success rate."
+    }
+  ],
+  "prior_results_and_failures_preserved": true,
+  "allowance_checkpoint_note": "The earlier evaluator run paused at an account boundary; that is a historical run state, not a current account limit."
+}

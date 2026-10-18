@@ -1,0 +1,615 @@
+{
+  "case_id": "formal-011",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evaluation_authority": {
+    "current_scorer": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\formal_scoring_v2.py",
+      "sha256": "aba73b9416a9dba2d82c36c4c5855bdb380f54599fda453ca47a68acd4ed9b8c"
+    },
+    "original_report": {
+      "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-live\\evaluation\\formal-011-C.json",
+      "sha256": "e00a905f4bb656d6b8fe0a344b1ba851d690dff68fc58d7218af82611211ed99"
+    },
+    "projection": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\preservation_v2.py",
+      "sha256": "0f951f98ad2d8783a1e141dc77dc49e23ca134d40eda51dca34c532b29064e99"
+    },
+    "role": "offline_same_frozen_output_rescore_no_model_calls",
+    "unaffected_checks": "Hash-bound original matching/geometry/relations/native-validation reused."
+  },
+  "evaluator_revision": {
+    "legacy_schema": "repair-comparison-formal-score/0.1",
+    "preservation": "repair-comparison-preservation/0.2",
+    "unchanged": [
+      "input",
+      "target matching",
+      "quantity",
+      "component checks",
+      "relationships",
+      "IFC validator",
+      "policy tolerances",
+      "clarification"
+    ]
+  },
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "checks_sha256": "b3aba76ea46dbfb26eafaa659da5a0a2bca8f83bb463f67cfc712708b4bd6786",
+    "damaged_sha256": "5b4b6cf972522d8bd602b1fd71bfd710c1d89882cc23ae7b203d693677aa7b7b",
+    "result_sha256": "891dd042bb73ccb8e87dca0e1eaffd0d516bb1b44f0eac8bc9693d36161c0423",
+    "source_sha256": "e3e452604ce83836e395c57fe0f6eb2b2340e97d46a5e5057d27c612b0aa57f3",
+    "task_sha256": "4821c96283b77bee7a18dc508f9fed99a4b40ebf5dc65652ebdffba5bdf1517a"
+  },
+  "interaction_success": false,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 0,
+      "affected_root_ids": [],
+      "extra_products": false,
+      "preservation_pass": true,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 2,
+      "numerator": 2,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": false
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": false
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcWindow": 2
+      },
+      "credited_by_class": {
+        "IfcWindow": 2
+      },
+      "denominator": 2,
+      "excess_by_class": {
+        "IfcWindow": 0
+      },
+      "numerator": 2,
+      "required_by_class": {
+        "IfcWindow": 2
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 6,
+      "numerator": 6,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": false
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 20,
+    "diagnostics": [
+      {
+        "attribute": "",
+        "instance": "#41273=IfcApplication(#41274,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41273=IfcApplication(#41274,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                 ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         \nRule IfcApplication.UR2:\n    The combination of attributes ApplicationFullName and Version should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                         ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         "
+      },
+      {
+        "attribute": "",
+        "instance": "#41273=IfcApplication(#41274,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41273=IfcApplication(#41274,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                                    ^^^^^^^ \nRule IfcApplication.UR1:\n    The attribute ApplicationIdentifier should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                            ^^^^^^^ "
+      },
+      {
+        "attribute": "",
+        "instance": "#41283=IfcApplication(#41284,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41283=IfcApplication(#41284,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                 ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         \nRule IfcApplication.UR2:\n    The combination of attributes ApplicationFullName and Version should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                         ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         "
+      },
+      {
+        "attribute": "",
+        "instance": "#41283=IfcApplication(#41284,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41283=IfcApplication(#41284,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                                    ^^^^^^^ \nRule IfcApplication.UR1:\n    The attribute ApplicationIdentifier should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                            ^^^^^^^ "
+      },
+      {
+        "attribute": "",
+        "instance": "#41292=IfcApplication(#41293,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41292=IfcApplication(#41293,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                 ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         \nRule IfcApplication.UR2:\n    The combination of attributes ApplicationFullName and Version should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                         ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         "
+      },
+      {
+        "attribute": "",
+        "instance": "#41292=IfcApplication(#41293,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41292=IfcApplication(#41293,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                                    ^^^^^^^ \nRule IfcApplication.UR1:\n    The attribute ApplicationIdentifier should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                            ^^^^^^^ "
+      },
+      {
+        "attribute": "",
+        "instance": "#41315=IfcApplication(#41316,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41315=IfcApplication(#41316,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                 ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         \nRule IfcApplication.UR2:\n    The combination of attributes ApplicationFullName and Version should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                         ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         "
+      },
+      {
+        "attribute": "",
+        "instance": "#41315=IfcApplication(#41316,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41315=IfcApplication(#41316,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                                    ^^^^^^^ \nRule IfcApplication.UR1:\n    The attribute ApplicationIdentifier should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                            ^^^^^^^ "
+      },
+      {
+        "attribute": "",
+        "instance": "#41325=IfcApplication(#41326,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41325=IfcApplication(#41326,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                 ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         \nRule IfcApplication.UR2:\n    The combination of attributes ApplicationFullName and Version should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                         ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         "
+      },
+      {
+        "attribute": "",
+        "instance": "#41325=IfcApplication(#41326,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41325=IfcApplication(#41326,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                                    ^^^^^^^ \nRule IfcApplication.UR1:\n    The attribute ApplicationIdentifier should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                            ^^^^^^^ "
+      },
+      {
+        "attribute": "",
+        "instance": "#41334=IfcApplication(#41335,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41334=IfcApplication(#41335,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                 ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         \nRule IfcApplication.UR2:\n    The combination of attributes ApplicationFullName and Version should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                         ^^^^^^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^         "
+      },
+      {
+        "attribute": "",
+        "instance": "#41334=IfcApplication(#41335,'2021','Autodesk Revit 2021 (ENU)','Revit')",
+        "level": "error",
+        "message": "On instance:\n    #41334=IfcApplication(#41335,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                                    ^^^^^^^ \nRule IfcApplication.UR1:\n    The attribute ApplicationIdentifier should be unique\nViolated by:\n    #5=IfcApplication(#1,'2021','Autodesk Revit 2021 (ENU)','Revit')\n                                                            ^^^^^^^ "
+      },
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#5840=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5839))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #5842=IfcProductDefinitionShape($,$,(#5840))\n      2. #41264=IfcProductDefinitionShape($,$,(#5840))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#5873=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5872))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #5875=IfcProductDefinitionShape($,$,(#5873))\n      2. #41305=IfcProductDefinitionShape($,$,(#5873))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#39378=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39377))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #39380=IfcProductDefinitionShape($,$,(#39378))\n      2. #41259=IfcProductDefinitionShape($,$,(#39378))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#39414=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39413))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #39416=IfcProductDefinitionShape($,$,(#39414))\n      2. #41300=IfcProductDefinitionShape($,$,(#39414))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#5840=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5839))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((2 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 2 = sizeof((#5842=IfcProductDefinitionShape($,$,(#5840)), #41264=IfcProductDefinitionShape($,$,(#5840))))\n     +    where (#5842=IfcProductDefinitionShape($,$,(#5840)), #41264=IfcProductDefinitionShape($,$,(#5840))) = #5840=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5839)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #5840=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5839)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #5840=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5839))\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#5873=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5872))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((2 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 2 = sizeof((#5875=IfcProductDefinitionShape($,$,(#5873)), #41305=IfcProductDefinitionShape($,$,(#5873))))\n     +    where (#5875=IfcProductDefinitionShape($,$,(#5873)), #41305=IfcProductDefinitionShape($,$,(#5873))) = #5873=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5872)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #5873=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5872)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #5873=IfcShapeRepresentation(#125,'Body','MappedRepresentation',(#5872))\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#39378=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39377))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((2 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 2 = sizeof((#39380=IfcProductDefinitionShape($,$,(#39378)), #41259=IfcProductDefinitionShape($,$,(#39378))))\n     +    where (#39380=IfcProductDefinitionShape($,$,(#39378)), #41259=IfcProductDefinitionShape($,$,(#39378))) = #39378=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39377)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #39378=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39377)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #39378=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39377))\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#39414=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39413))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((2 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 2 = sizeof((#39416=IfcProductDefinitionShape($,$,(#39414)), #41300=IfcProductDefinitionShape($,$,(#39414))))\n     +    where (#39416=IfcProductDefinitionShape($,$,(#39414)), #41300=IfcProductDefinitionShape($,$,(#39414))) = #39414=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39413)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #39414=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39413)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #39414=IfcShapeRepresentation(#125,'Body','SweptSolid',(#39413))\n"
+      }
+    ],
+    "express_rules": true,
+    "passed": false,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 2200.0,
+        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          3.65940149055538,
+          0.86191868039637,
+          5.95
+        ],
+        "opening_bottom_world_m": 4.85,
+        "opening_center_xy_m": [
+          3.65940149055538,
+          0.86191868039637
+        ],
+        "opening_height_mm": 2200.000000000001,
+        "opening_width_mm": 999.9999999999804,
+        "reference_guid": "0g_QdKP4DAmhTDvOJ17qSK",
+        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
+        "target_center_offset_from_opening_m": [
+          -1.7763568394002505e-15,
+          0.030638727700231017,
+          -8.881784197001252e-16
+        ],
+        "width_mm": 999.99999999998
+      },
+      "target-2": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 2200.0,
+        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          5.8494014905553815,
+          0.86191868039636,
+          5.95
+        ],
+        "opening_bottom_world_m": 4.85,
+        "opening_center_xy_m": [
+          5.8494014905553815,
+          0.86191868039636
+        ],
+        "opening_height_mm": 2200.000000000001,
+        "opening_width_mm": 999.9999999999795,
+        "reference_guid": "0g_QdKP4DAmhTDvOJ17qSK",
+        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
+        "target_center_offset_from_opening_m": [
+          -1.7763568394002505e-15,
+          0.030638727700231017,
+          -8.881784197001252e-16
+        ],
+        "width_mm": 999.99999999998
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": true,
+    "projection_version": "repair-comparison-preservation/0.2",
+    "removed_roots": [],
+    "scope": "unchanged existing roots after shallow new-product/relationship projection; no host waiver; same occurrence-support rule; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 2,
+    "required": 2
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "0whFl3OWL4Y945Z7y1HfsS",
+          "relation_guid": "19c83n$mPFghUCPvJQCDNn"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0whFl3OWL4Y945Z7y1HfsS",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0g_QdKP4DAmhTDvOJ17q23",
+          "relation_guid": "33t14B6996aQDhcBEdkM8b"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0g_QdKP4DAmhTDvOJ17q23",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2sN_BucX5FDeYkrTQRxW4S",
+          "relation_guid": "1lEppLgS1ACQsKQVnfmdN0"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2sN_BucX5FDeYkrTQRxW4S",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0UOYrr$qf3U858BM9uEogO",
+          "relation_guid": "2GECxUTJf1wBWY5OHJMrAB"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0UOYrr$qf3U858BM9uEogO",
+      "extra_invalid": [],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0g_QdKP4DAmhTDvOJ17q23",
+          "relation_guid": "2THW2v9H52oA42f0m8DnR6"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0g_QdKP4DAmhTDvOJ17q23",
+      "extra_invalid": [],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2sN_BucX5FDeYkrTQRxW4S",
+          "relation_guid": "1lEppLgS1ACQsKQVnfmdN0"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2sN_BucX5FDeYkrTQRxW4S",
+      "extra_invalid": [],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-2"
+    }
+  ],
+  "relations": {
+    "correct": 6,
+    "required": 6
+  },
+  "repair_success": false,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.2",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 2200.0,
+        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          3.65940149055538,
+          0.86191868039637,
+          5.95
+        ],
+        "opening_bottom_world_m": 4.85,
+        "opening_center_xy_m": [
+          3.65940149055538,
+          0.86191868039637
+        ],
+        "opening_height_mm": 2200.000000000001,
+        "opening_width_mm": 999.9999999999804,
+        "reference_guid": "0g_QdKP4DAmhTDvOJ17qSK",
+        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
+        "target_center_offset_from_opening_m": [
+          -1.7763568394002505e-15,
+          0.030638727700231017,
+          -8.881784197001252e-16
+        ],
+        "width_mm": 999.99999999998
+      },
+      "matching": {
+        "candidates": [
+          "22ewJ9_X15UxioUnyAcmef"
+        ],
+        "distances_m": [
+          0.030638727700231017
+        ],
+        "guid": "22ewJ9_X15UxioUnyAcmef",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "0whFl3OWL4Y945Z7y1HfsS"
+        ],
+        "distances_m": [
+          8.881784197001252e-16
+        ],
+        "guid": "0whFl3OWL4Y945Z7y1HfsS",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 999.9999999999804,
+        "required_mm": 999.9999999999804,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          2.042810365310288e-14,
+          0.030638727700231017,
+          -8.881784197001252e-16
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -1.7763568394002505e-15,
+            0.030638727700231017,
+            -8.881784197001252e-16
+          ]
+        ],
+        "max_axis_errors_m": [
+          2.220446049250313e-14
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    },
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 2200.0,
+        "host_guid": "0g_QdKP4DAmhTDvOJ17q23",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          5.8494014905553815,
+          0.86191868039636,
+          5.95
+        ],
+        "opening_bottom_world_m": 4.85,
+        "opening_center_xy_m": [
+          5.8494014905553815,
+          0.86191868039636
+        ],
+        "opening_height_mm": 2200.000000000001,
+        "opening_width_mm": 999.9999999999795,
+        "reference_guid": "0g_QdKP4DAmhTDvOJ17qSK",
+        "storey_guid": "2sN_BucX5FDeYkrTQRxW4S",
+        "target_center_offset_from_opening_m": [
+          -1.7763568394002505e-15,
+          0.030638727700231017,
+          -8.881784197001252e-16
+        ],
+        "width_mm": 999.99999999998
+      },
+      "matching": {
+        "candidates": [
+          "3_64TeZu1B986sRYigpy7K"
+        ],
+        "distances_m": [
+          0.030638727700231017
+        ],
+        "guid": "3_64TeZu1B986sRYigpy7K",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "0UOYrr$qf3U858BM9uEogO"
+        ],
+        "distances_m": [
+          8.881784197001252e-16
+        ],
+        "guid": "0UOYrr$qf3U858BM9uEogO",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 999.9999999999795,
+        "required_mm": 999.9999999999795,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          1.9539925233402755e-14,
+          0.030638727700231017,
+          -8.881784197001252e-16
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -1.7763568394002505e-15,
+            0.030638727700231017,
+            -8.881784197001252e-16
+          ]
+        ],
+        "max_axis_errors_m": [
+          2.1316282072803006e-14
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-2"
+    }
+  ],
+  "terminal": "submitted"
+}

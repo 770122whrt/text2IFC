@@ -18,6 +18,7 @@ from text2ifc_ifc_repair.geometry import (
     opening_position_in_wall_mm,
     straight_wall_axis,
     wall_dimensions_mm,
+    wall_normal_center_offset_mm,
 )
 from text2ifc_ifc_repair.registry import OperationRegistryError
 from text2ifc_ifc_repair.spatial import resolve_opening_storey
@@ -223,9 +224,12 @@ def create_hosted_opening(
     operation: Mapping[str, Any],
     wall: Any,
     role_prefix: str = "",
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     footprint = footprint_from_operation(operation)
     thickness = float(wall_dimensions_mm(wall)["thickness"])
+    normal_center = wall_normal_center_offset_mm(wall)
+    context = body_context(model, product=wall)
     prefix = f"{role_prefix}_" if role_prefix else ""
     opening_id = deterministic_global_id(operation, f"{prefix}opening")
     void_id = deterministic_global_id(operation, f"{prefix}voids_relationship")
@@ -238,24 +242,36 @@ def create_hosted_opening(
         ObjectType="Opening",
         Tag=str(operation["operation_id"]),
     )
-    representation = ifcopenshell.api.geometry.add_wall_representation(
-        model,
-        context=body_context(model),
-        length=footprint.width_mm / 1000.0,
-        height=footprint.height_mm / 1000.0,
-        thickness=thickness / 1000.0,
-        offset=-thickness / 2000.0,
-    )
-    opening.Representation = model.create_entity(
-        "IfcProductDefinitionShape", Representations=[representation]
-    )
-    opening.ObjectPlacement = opening_placement(
-        model,
-        wall=wall,
-        center_mm=footprint.center_offset_mm,
-        width_mm=footprint.width_mm,
-        sill_mm=footprint.sill_height_mm,
-    )
+    if public_geometry_requirement:
+        from ifcopenshell.util.element import copy_deep
+        from ..public_geometry import place_public_product
+        reference = require_guid(model, str(public_geometry_requirement['reference_opening_id']),
+                                 'IfcOpeningElement')
+        opening.Representation = copy_deep(model, reference.Representation,
+            exclude=('IfcGeometricRepresentationContext', 'IfcGeometricRepresentationSubContext'))
+        place_public_product(opening, wall, public_geometry_requirement['opening_placement_world_mm'])
+        depth = opening_dimensions_mm(opening)['depth']
+    else:
+        representation = ifcopenshell.api.geometry.add_wall_representation(
+            model,
+            context=context,
+            length=footprint.width_mm / 1000.0,
+            height=footprint.height_mm / 1000.0,
+            thickness=thickness / 1000.0,
+            offset=(normal_center - thickness / 2.0) / 1000.0,
+        )
+        representation.RepresentationIdentifier = "Body"
+        opening.Representation = model.create_entity(
+            "IfcProductDefinitionShape", Representations=[representation]
+        )
+        opening.ObjectPlacement = opening_placement(
+            model,
+            wall=wall,
+            center_mm=footprint.center_offset_mm,
+            width_mm=footprint.width_mm,
+            sill_mm=footprint.sill_height_mm,
+        )
+        depth = thickness
     void = model.create_entity(
         "IfcRelVoidsElement",
         GlobalId=void_id,
@@ -266,7 +282,7 @@ def create_hosted_opening(
     return {
         "opening": opening,
         "voids_relationship": void,
-        "opening_depth_mm": thickness,
+        "opening_depth_mm": depth,
         "footprint": footprint,
     }
 
@@ -297,7 +313,39 @@ def assert_ids_available(model: Any, global_ids: Any) -> None:
             )
 
 
-def body_context(model: Any) -> Any:
+def body_context(model: Any, *, product: Any = None) -> Any:
+    if product is not None:
+        # Context labels are author-defined. Hosted geometry belongs to the
+        # selected public host's actual Body context, not the first globally
+        # named Model/Body context in STEP order.
+        representation = getattr(product, "Representation", None)
+        bodies = [
+            body
+            for body in getattr(representation, "Representations", ()) or ()
+            if getattr(body, "RepresentationIdentifier", None) == "Body"
+        ]
+        contexts = {}
+        for body in bodies:
+            context = getattr(body, "ContextOfItems", None)
+            if (
+                context is None
+                or not context.is_a("IfcGeometricRepresentationContext")
+                or int(getattr(context, "CoordinateSpaceDimension", 0) or 0) != 3
+            ):
+                raise OperationRegistryError(
+                    "BODY_CONTEXT_NOT_FOUND", "Selected host Body requires a 3D context"
+                )
+            contexts[context.id()] = context
+        if not contexts:
+            raise OperationRegistryError(
+                "BODY_CONTEXT_NOT_FOUND", "Selected host has no 3D Body context"
+            )
+        if len(contexts) != 1:
+            raise OperationRegistryError(
+                "BODY_CONTEXT_AMBIGUOUS", "Selected host Body has distinct contexts"
+            )
+        return next(iter(contexts.values()))
+
     preferred = [
         context
         for context in model.by_type("IfcGeometricRepresentationSubContext")

@@ -1,0 +1,157 @@
+{
+  "case_id": "formal-004",
+  "checks": {},
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "errors": [],
+  "evaluation_authority": {
+    "current_scorer": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\formal_scoring_v2.py",
+      "sha256": "aba73b9416a9dba2d82c36c4c5855bdb380f54599fda453ca47a68acd4ed9b8c"
+    },
+    "original_report": {
+      "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-live\\evaluation\\formal-004-A.json",
+      "sha256": "584770dcf42227048b661fbf9e324e0c15dfcde4c567f125a7d36a44c5ee1a1b"
+    },
+    "projection": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\preservation_v2.py",
+      "sha256": "0f951f98ad2d8783a1e141dc77dc49e23ca134d40eda51dca34c532b29064e99"
+    },
+    "role": "offline_same_frozen_output_rescore_no_model_calls",
+    "unaffected_checks": "Hash-bound original matching/geometry/relations/native-validation reused."
+  },
+  "evaluator_revision": {
+    "legacy_schema": "repair-comparison-formal-score/0.1",
+    "preservation": "repair-comparison-preservation/0.2",
+    "unchanged": [
+      "input",
+      "target matching",
+      "quantity",
+      "component checks",
+      "relationships",
+      "IFC validator",
+      "policy tolerances",
+      "clarification"
+    ]
+  },
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "interaction_success": false,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": null,
+      "affected_root_ids": [],
+      "extra_products": null,
+      "preservation_pass": null,
+      "status": "not_evaluable"
+    },
+    "component_completion": {
+      "denominator": 1,
+      "numerator": 0,
+      "status": "scored",
+      "value": 0.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": false
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": false
+    },
+    "quantity_completion": {
+      "denominator": 1,
+      "numerator": 0,
+      "status": "scored",
+      "value": 0.0
+    },
+    "relation_completion": {
+      "denominator": 3,
+      "numerator": 0,
+      "status": "scored",
+      "value": 0.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": false
+    }
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 1830.0,
+        "host_guid": "0ZBert7zf3GhThdO12NKAr",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -4.013778009882009,
+          0.123301084193077,
+          1.2199999999999993
+        ],
+        "opening_bottom_world_m": 0.304999999999999,
+        "opening_center_xy_m": [
+          -4.013778009882009,
+          0.123301084193077
+        ],
+        "opening_height_mm": 1830.0000000000005,
+        "opening_width_mm": 914.9999999999987,
+        "reference_guid": "0ZBert7zf3GhThbO52NKVB",
+        "storey_guid": "2nxdYR2RHCDBiKJuiQr1XP",
+        "target_center_offset_from_opening_m": [
+          9.048317650695026e-15,
+          1.3697376566312869e-14,
+          6.661338147750939e-16
+        ],
+        "width_mm": 914.9999999999991
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "passed": null,
+    "status": "not_evaluable"
+  },
+  "products": {
+    "correct": 0,
+    "required": 1
+  },
+  "relation_details": [],
+  "relations": {
+    "correct": 0,
+    "required": 3
+  },
+  "repair_success": false,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.2",
+  "status": "scored",
+  "target_results": [],
+  "terminal": "budget_exhausted"
+}

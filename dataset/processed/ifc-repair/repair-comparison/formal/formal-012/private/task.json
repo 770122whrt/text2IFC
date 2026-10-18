@@ -1,0 +1,295 @@
+{
+  "allowed_alternatives": [
+    "new identities and equivalent STEP serialization",
+    "parallel rectangular orientation modulo 180 degrees"
+  ],
+  "author_expectations": {
+    "target-1": {
+      "axis_world_m": [
+        [
+          11.161,
+          -4.074,
+          4.2198
+        ],
+        [
+          17.061,
+          -4.074,
+          4.2198
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          11.1612059393908,
+          17.061205939390803
+        ],
+        [
+          -4.15438724378933,
+          -3.9943872437893297
+        ],
+        [
+          3.9997999999999996,
+          4.439800000000001
+        ]
+      ],
+      "column_section_orientation_equivalence": null,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-1",
+      "ifc_class": "IfcBeam",
+      "kind": "beam",
+      "operation_type": "add_beam",
+      "section": {
+        "height_mm": 440.0,
+        "shape": "rectangle",
+        "width_mm": 160.0
+      },
+      "source_global_id_private": "2Gu4LA54T1iw_BohnrvlDN",
+      "source_name_private": "金柱中枋:金柱门头枋:940121",
+      "storey_attribute_elevation_m": 0.0,
+      "storey_global_id_private": "3NCYgWTsv4QA_Llz6Y6mVX",
+      "storey_world_elevation_m": 0.0
+    },
+    "target-2": {
+      "axis_world_m": [
+        [
+          -6.999,
+          -4.074,
+          4.2198
+        ],
+        [
+          -1.099,
+          -4.074,
+          4.2198
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          -6.99879406060921,
+          -1.09879406060921
+        ],
+        [
+          -4.15438724378933,
+          -3.9943872437893297
+        ],
+        [
+          3.9997999999999996,
+          4.439800000000001
+        ]
+      ],
+      "column_section_orientation_equivalence": null,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-2",
+      "ifc_class": "IfcBeam",
+      "kind": "beam",
+      "operation_type": "add_beam",
+      "section": {
+        "height_mm": 440.0,
+        "shape": "rectangle",
+        "width_mm": 160.0
+      },
+      "source_global_id_private": "2Gu4LA54T1iw_BohnrvlDL",
+      "source_name_private": "金柱中枋:金柱门头枋:940123",
+      "storey_attribute_elevation_m": 0.0,
+      "storey_global_id_private": "3NCYgWTsv4QA_Llz6Y6mVX",
+      "storey_world_elevation_m": 0.0
+    }
+  },
+  "budget": {
+    "limits": {
+      "active_seconds": 2400,
+      "calls": 48,
+      "extensions": [],
+      "tokens": 450000,
+      "tool_seconds": 120
+    },
+    "provider_calls_allowed": true,
+    "requires_current_stage_admission": true,
+    "status": "frozen"
+  },
+  "case_id": "formal-012",
+  "clarification": {
+    "answer_policy": "only restate public facts; no runtime lookup of G/private identities",
+    "facts": {},
+    "required_user_facts": []
+  },
+  "clarification_required": false,
+  "damage": [
+    {
+      "kind": "beam",
+      "mutation": "remove_structural_members",
+      "source_name": "金柱中枋:金柱门头枋:940121",
+      "target_guid": "2Gu4LA54T1iw_BohnrvlDN",
+      "target_id": "target-1"
+    },
+    {
+      "kind": "beam",
+      "mutation": "remove_structural_members",
+      "source_name": "金柱中枋:金柱门头枋:940123",
+      "target_guid": "2Gu4LA54T1iw_BohnrvlDL",
+      "target_id": "target-2"
+    }
+  ],
+  "damage_profile": {
+    "composition": "multiple",
+    "level": "S2",
+    "target_count": 2
+  },
+  "damaged_sha256": "a14d794f04527906fd6ca8b2fb010b873e4e310a933a1eded491dd2a48591f29",
+  "data_scope": "evaluator_preparation_only",
+  "draft": true,
+  "freeze_status": "not_frozen",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred"
+  },
+  "old_global_plan_applies": false,
+  "pipeline_readiness": {
+    "human_acceptance": false,
+    "technical_review_accepted": true
+  },
+  "preservation": {
+    "all_other_products_geometry_placement_properties_and_relationships": "required",
+    "source_is_immutable": true
+  },
+  "private_inputs_never_for_tested_system": [
+    "private/",
+    "REVIEW.md",
+    "VIEW.html",
+    "IFC-VALIDATION.md"
+  ],
+  "property_runtime_full_chain_verified": false,
+  "public": {
+    "ifc": "public/model.ifc",
+    "request": "public/request.txt"
+  },
+  "published_as_formal": false,
+  "purpose": "formal_candidate",
+  "reference_guids": [
+    "2Gu4LA54T1iw_BohnrvlDk"
+  ],
+  "request": "地面标高0米的这一层少了两根水平梁。请补回这两根矩形梁，截面均为宽160毫米、竖向高440毫米。\n\n第一根梁的两个端面中心是（11.161，-4.074，4.2198）米和（17.061，-4.074，4.2198）米；第二根梁的两个端面中心是（-6.999，-4.074，4.2198）米和（-1.099，-4.074，4.2198）米。\n\n以上位置使用模型全局坐标，坐标和标高的单位是米。请保留其余构件及其位置、几何和现有属性。",
+  "review": {
+    "authorization": {
+      "property_revision_authorized": true,
+      "user_quote": "其他看起来没有问题 大体上没有问题 你再稍微过一遍即可。"
+    },
+    "human_viewed": false,
+    "kind": "delegated_technical",
+    "reviewed_at": "2026-10-09T04:02:21.373506+00:00",
+    "reviewer": "Codex technical review following user general approval",
+    "scope_note": "User generally approved the other cases and delegated this recheck; no per-case usBIM pass is attributed to the user.",
+    "status": "accepted_by_delegation",
+    "technical_review_passed": true
+  },
+  "run_status": "not_started",
+  "schema_version": "repair-comparison-task-candidate/0.2",
+  "scoring": {
+    "old_window_door_policy_not_applied": true,
+    "policy_version": null,
+    "status": "draft_not_admitted"
+  },
+  "source": {
+    "asset_id": "htsm-historic-timber-v6-timber-demo",
+    "license": "CC-BY-4.0",
+    "reference_role": "preselected_reference_from_registered_repair_copy",
+    "registry": "dataset/external/ifc-asset-register.jsonl",
+    "registry_line": 376,
+    "source_id": "htsm-historic-timber",
+    "source_path": "dataset/external/repairs/v7/htsm-historic-timber-v6-timber-demo/Test model.ifc"
+  },
+  "source_sha256": "a0850aff01cdbefdfef5b14d282a48d7cd25c6acadf619651d4439c2751b61b2",
+  "summary": "补回两根矩形梁",
+  "targets": [
+    {
+      "axis_world_m": [
+        [
+          11.161,
+          -4.074,
+          4.2198
+        ],
+        [
+          17.061,
+          -4.074,
+          4.2198
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          11.1612059393908,
+          17.061205939390803
+        ],
+        [
+          -4.15438724378933,
+          -3.9943872437893297
+        ],
+        [
+          3.9997999999999996,
+          4.439800000000001
+        ]
+      ],
+      "column_section_orientation_equivalence": null,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-1",
+      "ifc_class": "IfcBeam",
+      "kind": "beam",
+      "operation_type": "add_beam",
+      "section": {
+        "height_mm": 440.0,
+        "shape": "rectangle",
+        "width_mm": 160.0
+      },
+      "source_global_id_private": "2Gu4LA54T1iw_BohnrvlDN",
+      "source_name_private": "金柱中枋:金柱门头枋:940121",
+      "storey_attribute_elevation_m": 0.0,
+      "storey_global_id_private": "3NCYgWTsv4QA_Llz6Y6mVX",
+      "storey_world_elevation_m": 0.0
+    },
+    {
+      "axis_world_m": [
+        [
+          -6.999,
+          -4.074,
+          4.2198
+        ],
+        [
+          -1.099,
+          -4.074,
+          4.2198
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          -6.99879406060921,
+          -1.09879406060921
+        ],
+        [
+          -4.15438724378933,
+          -3.9943872437893297
+        ],
+        [
+          3.9997999999999996,
+          4.439800000000001
+        ]
+      ],
+      "column_section_orientation_equivalence": null,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-2",
+      "ifc_class": "IfcBeam",
+      "kind": "beam",
+      "operation_type": "add_beam",
+      "section": {
+        "height_mm": 440.0,
+        "shape": "rectangle",
+        "width_mm": 160.0
+      },
+      "source_global_id_private": "2Gu4LA54T1iw_BohnrvlDL",
+      "source_name_private": "金柱中枋:金柱门头枋:940123",
+      "storey_attribute_elevation_m": 0.0,
+      "storey_global_id_private": "3NCYgWTsv4QA_Llz6Y6mVX",
+      "storey_world_elevation_m": 0.0
+    }
+  ]
+}

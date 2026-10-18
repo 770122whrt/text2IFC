@@ -1,0 +1,37 @@
+{
+  "role": "frozen offline regression family before production change; not blind capability evidence",
+  "network_transport_attempted": false,
+  "models_called": false,
+  "created_at": "2026-10-08T11:47:08.632213+00:00",
+  "git_commit": "c3bbe66e89c449a5ebc440326398d5f811c1d48e",
+  "source_files": {
+    "src/text2ifc_ifc_repair/operations/beam.py": "5aae127a1db5c6ca08ac38a79ee3ac2e2e4a63f59458245d3e7dddb79aae6156",
+    "src/text2ifc_ifc_repair/operations/column.py": "5ecdf007879735b007fefdf313359055bf2f49c7f53f8782c819e1fa9ce07e52",
+    "tests/ifc_repair/test_structural_multi_containment.py": "b0736897c9bb52280e784109707cba5ceaca3f98d03f75a4fe7a784e15023048",
+    "dataset/external/bimnet/d7n.ifc": "43b6756b88874f9525f6a511d7dc718844dac59b638a11e3fbc36b321e0ab8b7",
+    "dataset/external/bimnet/vvo.ifc": "b6c435be955aeb6b2998f42a62f4ebf8c3f91eb7d373ca71a2dcedfeb95b3fdc"
+  },
+  "family": {
+    "positive": "beam/column × 0/1/2/3 relations × normal/reversed nontrivial order × d7n/vvo",
+    "negative": "same-axis conflicts in each old relation and order, nonexistent/wrong-class storey, absent Type authority, deterministic member ID collision, mixed failure rollback",
+    "scope": "two production applicators only; existing containment/Type/geometry/atomicity policy unchanged"
+  },
+  "hypotheses": [
+    {
+      "rank": 1,
+      "hypothesis": "Precondition confuses legal Storey relation multiplicity with occurrence ownership ambiguity",
+      "prediction": "count=0/1 pass; count=2/3 fail only multiplicity guard with unchanged unique storey and authorized Type"
+    },
+    {
+      "rank": 2,
+      "hypothesis": "Applicator requires selecting one old relation for multi-containment",
+      "prediction": "Dedicated new relation yields unique new occurrence ownership and leaves every old relation byte unchanged"
+    },
+    {
+      "rank": 3,
+      "hypothesis": "Existing same-axis safety depends on first relation",
+      "prediction": "Conflicts in every old relation remain detected independent of relation ordering"
+    }
+  ],
+  "test_fixture_corrections": "Use declared public scene Storey identities; preserve canonical assignment schema while isolating missing Type and duplicate occurrence guards. No production change yet."
+}

@@ -1,0 +1,61 @@
+[
+  {
+    "command": [
+      "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pytest",
+      "tests/agent/test_design_brief_attempt_preservation.py",
+      "tests/agent/test_interactive_cli_flow.py",
+      "tests/agent/test_interactive_cli_generation.py",
+      "tests/agent/test_interactive_cli_session.py",
+      "tests/agent/test_phase6_2_fix_repl_cli.py",
+      "tests/agent/test_phase6_2_openai_compat.py",
+      "tests/agent/test_semantic_public_paths.py",
+      "tests/agent/test_generation_semantic_closure.py",
+      "tests/agent/test_generation_semantic_versions.py",
+      "tests/agent/test_live_clarification.py",
+      "tests/agent/test_prompt_registry.py",
+      "-q",
+      "--basetemp",
+      "E:\\code for project\\bimnet\\.tmp\\live-generation-final-20260908-01",
+      "--junitxml",
+      "E:\\code for project\\bimnet\\dataset\\processed\\ifc-presentation-validation\\live-semantic-20260908-01\\admission\\generation-final\\pytest.xml"
+    ],
+    "started_at": "2026-09-08T06:09:37.289752+00:00",
+    "finished_at": "2026-09-08T06:13:08.634463+00:00",
+    "exit_code": 0,
+    "timeout": false,
+    "log": "check-0.log",
+    "sha256": "b000763c62e8165d90087300171092cb0dee7983beb786f647797baf4c3ac86a"
+  },
+  {
+    "command": [
+      "E:\\code for project\\bimnet\\.venv\\Scripts\\python.exe",
+      "-m",
+      "compileall",
+      "-q",
+      "src",
+      "tests",
+      "scripts"
+    ],
+    "started_at": "2026-09-08T06:13:08.650228+00:00",
+    "finished_at": "2026-09-08T06:13:09.580147+00:00",
+    "exit_code": 0,
+    "timeout": false,
+    "log": "check-1.log",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "command": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "started_at": "2026-09-08T06:13:09.583120+00:00",
+    "finished_at": "2026-09-08T06:13:09.943419+00:00",
+    "exit_code": 0,
+    "timeout": false,
+    "log": "check-2.log",
+    "sha256": "0167a7255e45aca7173c4392e67e21e7e94209732c1b9bd447e0d391057ed228"
+  }
+]

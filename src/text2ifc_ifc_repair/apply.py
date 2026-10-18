@@ -27,6 +27,7 @@ def apply_changeset(
     changeset: Mapping[str, Any],
     output_path: Path | str,
     registry: OperationRegistry,
+    public_geometry_requirements: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Apply all operations in memory and publish only a verified IFC artifact."""
 
@@ -79,11 +80,31 @@ def apply_changeset(
         else ifcopenshell.open(str(damaged))
     )
     operation_results: list[dict[str, Any]] = []
+    verified_geometry = {}
+    try:
+        from .public_geometry import verify_public_geometry_requirement
+        for operation in changeset['operations']:
+            requirement = (public_geometry_requirements or {}).get(operation['operation_id'])
+            if requirement is not None:
+                verified = verify_public_geometry_requirement(requirement, repair_request, model)
+                if (verified['operation_id'] != operation['operation_id']
+                        or verified['operation_type'] != operation['operation_type']
+                        or verified['target_id'] not in operation['target'].values()):
+                    raise ValueError('PUBLIC_GEOMETRY_OPERATION_BINDING_MISMATCH')
+                if verified.get('placement_world_mm'):
+                    verified_geometry[operation['operation_id']] = verified
+    except Exception as error:
+        return _failure('PUBLIC_GEOMETRY_REQUIREMENT_INVALID', '/operations',
+                        f'{type(error).__name__}: {error}', audit=audit)
     for operation in changeset["operations"]:
         try:
+            requirement = verified_geometry.get(operation['operation_id'])
             changes = registry.dispatch(
-                "applicator", operation, model=model
+                "applicator", operation, model=model,
+                **({'public_geometry_requirement': requirement} if requirement else {}),
             )
+            if requirement:
+                changes['public_geometry_requirement'] = requirement
             if operation.get("semantic_assignments") is not None:
                 definition = registry.require(str(operation["operation_type"]))
                 handler_owned_facts = frozenset(
@@ -113,7 +134,8 @@ def apply_changeset(
                     next(iter(scope_roles))
                     if not explicit_assignment_scopes
                     and len(scope_roles) == 1
-                    else "window_occurrence"
+                    else next(scope for scope, role in scope_roles.items()
+                              if role == registry.require_evaluation_policy(str(operation['operation_type'])).semantic_role)
                 )
                 assignment_scopes = explicit_assignment_scopes or {
                     legacy_scope

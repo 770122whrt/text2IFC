@@ -1,0 +1,2312 @@
+{
+  "passed": true,
+  "checks": {
+    "source_unchanged": true,
+    "G_native_schema_express_passed": true,
+    "D_native_schema_express_passed": true,
+    "only_declared_products_removed": true,
+    "no_product_created": true,
+    "only_selected_occurrence_properties_changed": true,
+    "retained_geometry_unchanged": true,
+    "nonempty_source_and_damaged_geometry": true,
+    "correct_typed_damage": true,
+    "removed_opening_regions_closed": true
+  },
+  "source_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "damaged_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "geometry_counts": {
+    "G": 731,
+    "D": 729
+  },
+  "unrelated_mesh_count_checked": 728,
+  "wall_closure": {
+    "3JZGeqq852COtfxExBeyvQ": {
+      "before_m3": 83.41191089211537,
+      "after_m3": 85.10878589211536,
+      "expected_delta_m3": 1.6968749999999915,
+      "actual_delta_m3": 1.6968749999999915,
+      "closed": true
+    }
+  },
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "change_kind": "modified",
+        "global_id": "1fB3RLwjRhPVndBPzHDbNH",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_DoorCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "1810x2110mm"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:6dd45b86e674195dadd57242629a5ed8bb090fdc3e03da0e042ea4192443ae32"
+        },
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_DoorCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "1810x2110mm"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:b0c82aa49d9b064c7e907905f50782f405b87a628665825fbf09e4e181e2ff29"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSJa"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSKD"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSNA"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSQ3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSSM"
+              },
+              {
+                "ifc_class": "IfcStair",
+                "global_id": "0PCu1ujKrAOfcdL5f2cVcA"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM$h"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM1r"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM5B"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM65"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM7z"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMAR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMBv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMCt"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMDT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM_x"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMaF"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "1GjejW8Xn4SugeTM2GVMed"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "1GjejW8Xn4SugeTM2GVMfR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMm1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMoD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMq3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMqr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMrZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMsb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMuh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMvT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMwx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMyR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMzZ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwGQ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwH_"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwJn"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwKI"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwMJ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwSl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6Jxfl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6Jxii"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JxlR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6Jxll"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JxxO"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEGj"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEau"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEhA"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWG0q"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWG10"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWG2D"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWG8l"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWG_s"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWGqP"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWGtl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWH9t"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHDi"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHKK"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHMu"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHXQ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHY5"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHZT"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHj_"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHld"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHwL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2U8KEAXbL24xySlUNSWM9b"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWMV3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWMkR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWMr3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWMso"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "3JZGeqq852COtfxExBeynN"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3JZGeqq852COtfxExBeyvQ"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "3Zu5Bv0LOHrPC10026FoQQ"
+            }
+          },
+          "content_sha256": "sha256:6f5f9b4355e1126e07c5e587e19eebedf198948c5941506f8568bb5dc48f6b5c"
+        },
+        "after": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSJa"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSKD"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSNA"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSQ3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "0PCu1ujKrAOfcdL5f2cSSM"
+              },
+              {
+                "ifc_class": "IfcStair",
+                "global_id": "0PCu1ujKrAOfcdL5f2cVcA"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM$h"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM1r"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM5B"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM65"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM7z"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMAR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMBv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMCt"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMDT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM_x"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMaF"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "1GjejW8Xn4SugeTM2GVMed"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "1GjejW8Xn4SugeTM2GVMfR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMm1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMoD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMq3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMqr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMrZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMsb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMuh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMvT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMwx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMyR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMzZ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwGQ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwH_"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwJn"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwKI"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwMJ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JwSl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6Jxfl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6Jxii"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JxlR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6Jxll"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "1yxOhPF9554907YvC6JxxO"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEGj"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEau"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEhA"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWG0q"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWG10"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWG2D"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWG8l"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWG_s"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWGqP"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWGtl"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWH9t"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHDi"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHKK"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHMu"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHXQ"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHY5"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHZT"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWHj_"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHld"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWHwL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2U8KEAXbL24xySlUNSWM9b"
+              },
+              {
+                "ifc_class": "IfcDoor",
+                "global_id": "2U8KEAXbL24xySlUNSWMV3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWMkR"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWMr3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "2U8KEAXbL24xySlUNSWMso"
+              },
+              {
+                "ifc_class": "IfcSlab",
+                "global_id": "3JZGeqq852COtfxExBeynN"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv3"
+              },
+              {
+                "ifc_class": "IfcWallStandardCase",
+                "global_id": "3JZGeqq852COtfxExBeyvQ"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "3Zu5Bv0LOHrPC10026FoQQ"
+            }
+          },
+          "content_sha256": "sha256:e872eb8675d8d06afaedccbe6a9a526648b01a25855bedccf345eefca7f2ff3d"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "3g1ttfzlxSmGJnK1yZb8jM",
+        "ifc_class": "IfcRelAssociatesMaterial",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "0I80$KZ1nEiJUQjR5uW6el"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "0UGd$Foe5EZAD5pWPmp8k$"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "14xJur$tAygZ8nD5oT1oMw"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM$h"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM1r"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM5B"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM65"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM7z"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMAR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMBv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMCt"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMDT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM_x"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMaF"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMm1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMoD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMq3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMqr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMrZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMsb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMuh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMvT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMwx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMyR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMzZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNar"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNe3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNen"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNhp"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNkn"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "1ZRctHHMRyfxTDqJ1mcEBv"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "1ksZ44yaGyAW5KfbOFmHdx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8HL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8IJ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8JL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8KH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8fj"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8gT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8hh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8jT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8lP"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8ms"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8q_"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8sQ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8vC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8ze"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTA5m"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTA8y"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTA9q"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAAq"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAD2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAFo"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAJ6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAMU"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTARC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAbV"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAdv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAgT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAhX"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAj2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAlm"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTB0L"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTB25"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTB8v"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBAx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBBb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBCD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBER"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBFb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBL1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBN$"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBOH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBP9"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBRD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBSR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBUH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE0P"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE4$"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE9I"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEB6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEEy"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEGj"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEKL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTENL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTESb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEUt"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEVl"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEau"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEhA"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEn9"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEtg"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF4f"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF8c"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF9Y"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFCc"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFF0"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFo4"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFsq"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKp1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKqK"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKrm"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKs_"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKwo"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2U8KEAXbL24xySlUNSWM9b"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "2gWHKGVwQQVUZ7tTCl0cTY"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "2rr4L8eGGzIdsB14JnX6HE"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyvD"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "3lmBK9Mbioq1vVJggFv1i1"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterialList",
+              "attributes": {
+                "Materials": [
+                  {
+                    "ifc_class": "IfcMaterial",
+                    "attributes": {
+                      "Name": "Glass"
+                    }
+                  },
+                  {
+                    "ifc_class": "IfcMaterial",
+                    "attributes": {
+                      "Name": "Window Frame"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "content_sha256": "sha256:6a1678437c6aed2de53e77c1af1b1237364c215a30652e3ca8e4b993d691ec95"
+        },
+        "after": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "0I80$KZ1nEiJUQjR5uW6el"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "0UGd$Foe5EZAD5pWPmp8k$"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "14xJur$tAygZ8nD5oT1oMw"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM$h"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM1r"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM5B"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM65"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM7z"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMAR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMBv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMCt"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMDT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM_x"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMaF"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMm1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMoD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMq3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMqr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMrZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMsb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMuh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMvT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMwx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMyR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMzZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNar"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNe3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNen"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNhp"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVNkn"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "1ZRctHHMRyfxTDqJ1mcEBv"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "1ksZ44yaGyAW5KfbOFmHdx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8HL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8IJ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8JL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8KH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8fj"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8gT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8hh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8jT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8lP"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8ms"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8q_"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8sQ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8vC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8ze"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTA5m"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTA8y"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTA9q"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAAq"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAD2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAFo"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAJ6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAMU"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTARC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAbV"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAdv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAgT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAhX"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAj2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAlm"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTB0L"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTB25"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTB8v"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBAx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBBb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBCD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBER"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBFb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBL1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBN$"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBOH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBP9"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBRD"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBSR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTBUH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE0P"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE4$"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE9I"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEB6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEEy"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEGj"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEKL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTENL"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTESb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEUt"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEVl"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEau"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEhA"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEn9"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTEtg"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF4f"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF8c"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF9Y"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFCc"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFF0"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFo4"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFsq"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKp1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKqK"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKrm"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKs_"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTKwo"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2U8KEAXbL24xySlUNSWM9b"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "2gWHKGVwQQVUZ7tTCl0cTY"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "2rr4L8eGGzIdsB14JnX6HE"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv1"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyvD"
+              },
+              {
+                "ifc_class": "IfcWindowStyle",
+                "global_id": "3lmBK9Mbioq1vVJggFv1i1"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterialList",
+              "attributes": {
+                "Materials": [
+                  {
+                    "ifc_class": "IfcMaterial",
+                    "attributes": {
+                      "Name": "Glass"
+                    }
+                  },
+                  {
+                    "ifc_class": "IfcMaterial",
+                    "attributes": {
+                      "Name": "Window Frame"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "content_sha256": "sha256:fdae5627a1abe7daef1a2bb56dcb325a0bc20ba584f8a0fa928bab500d599b0e"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "3n8tkbqnFbIz8uPnjQl1aO",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM$h"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM_x"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMaF"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMq3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMqr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMrZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMsb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMuh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMvT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMwx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMyR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMzZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8KH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8q_"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8sQ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8vC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAJ6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAMU"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTARC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAbV"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAdv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAgT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAhX"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAlm"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE4$"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTESb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF8c"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF9Y"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFCc"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFF0"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFo4"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFsq"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2U8KEAXbL24xySlUNSWM9b"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv2"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyvD"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcWindowStyle",
+              "global_id": "14xJur$tAygZ8nD5oT1oMw"
+            }
+          },
+          "content_sha256": "sha256:7d05ad9f865f5a26c4d76d3be0dde744bd88467b928bf178705a4a9e9083f3aa"
+        },
+        "after": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM$h"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVM_x"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMaF"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMq3"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMqr"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMrZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMsb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMuh"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMvT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMwx"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMyR"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "1GjejW8Xn4SugeTM2GVMzZ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8KH"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8q_"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8sQ"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QT8vC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAJ6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAMU"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTARC"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAbV"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAdv"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAgT"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAhX"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTAlm"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTE4$"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTESb"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF8c"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTF9Y"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFCc"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFF0"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFo4"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2QcJCEEbz6n8$8xJ1QTFsq"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "2U8KEAXbL24xySlUNSWM9b"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv6"
+              },
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyvD"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcWindowStyle",
+              "global_id": "14xJur$tAygZ8nD5oT1oMw"
+            }
+          },
+          "content_sha256": "sha256:f72fcc61e90a15f92593fbf03b6dcdf096143203e793e6a07692a57f503a43b6"
+        }
+      }
+    ],
+    "removed": [
+      {
+        "change_kind": "removed",
+        "global_id": "0OU_OrgHWgsvgeBFzSxw8R",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv2"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "26ZHHkGcfYLGJXhaCsCwVX"
+            }
+          },
+          "content_sha256": "sha256:cded4ab2421e09808080bedd0d16f507bba19a18062023a987086bd51dfb7c61"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0heVk0tNLZUkX1JJ_24Zjn",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcOpeningElement",
+          "name": "Windows_Sgl_Plain:3.2x1.8m:535383:1",
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "535383"
+          },
+          "placement": [
+            [
+              -1.0,
+              0.0,
+              0.0,
+              -33.568669
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              26.920279
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.6
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [],
+          "types": [],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:04123ccc127a65e1f04ff7388da4f95f37dd904ad7cad7497be1dc940ccb67d0"
+          },
+          "content_sha256": "sha256:3a33faa642d8be80d062bbc02c5d28fe1d11058f140f3b2159c7c690f8839171"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "26ZHHkGcfYLGJXhaCsCwVX",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "3.2x1.8m"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:4a260905f9af76b62e3aff2cf140a341175b28f09107a7a61cf6d8dd34460a5a"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2XMQrzxN$nhBGh9jPPp8HH",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelFillsElement",
+          "name": null,
+          "attributes": {
+            "RelatingOpeningElement": {
+              "ifc_class": "IfcOpeningElement",
+              "global_id": "0heVk0tNLZUkX1JJ_24Zjn"
+            },
+            "RelatedBuildingElement": {
+              "ifc_class": "IfcWindow",
+              "global_id": "3JZGeqq852COtfxExBeyv2"
+            }
+          },
+          "content_sha256": "sha256:d131f08e8dcbc81e05383feb646627d5618b681c97fb07fe192c5377b5d96180"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2YJr39sQwBZL1FDYa9Ad69",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv2"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "3kgE0dI095Lar$rKQFsKnB"
+            }
+          },
+          "content_sha256": "sha256:0a31b1ae6aeacf4abd856a1989fd132994c97d37ae87f7454c22bad1aad153b7"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2viTsgkF3vsa2n9WGMl3wv",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcWindow",
+                "global_id": "3JZGeqq852COtfxExBeyv2"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "32u13oUFaUCCba_hUC77zA"
+            }
+          },
+          "content_sha256": "sha256:d3086654809494ce2cb33746b6928ae4ec80351eaa95cb2026186fea7b5de98f"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "32u13oUFaUCCba_hUC77zA",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "3.2x1.8m"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:22b97e6cbe96001fa6fa103cfa2b0f4b0b01cf152971f6a6f109ee5eb6f71566"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3JZGeqq852COtfxExBeyv2",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcWindow",
+          "name": "Windows_Sgl_Plain:3.2x1.8m:535383",
+          "attributes": {
+            "ObjectType": "Windows_Sgl_Plain:3.2x1.8m",
+            "Tag": "535383",
+            "OverallHeight": 3.0,
+            "OverallWidth": 1.81
+          },
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -33.568669
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              26.920279
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.6
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "3Zu5Bv0LOHrPC10026FoQQ"
+          ],
+          "types": [
+            "14xJur$tAygZ8nD5oT1oMw"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:95d8fcfb3358004e790b0068e9c25a924e81d4be7fe8c4decf09348bfbd06ec2"
+          },
+          "content_sha256": "sha256:48300962dec63d5e51e0b84dc18d7ffe30a7dd1266c71f3550b7dbcafd2d1e56"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3JZGeqq852COtfxFhBeyv2",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null,
+          "attributes": {
+            "RelatingBuildingElement": {
+              "ifc_class": "IfcWallStandardCase",
+              "global_id": "3JZGeqq852COtfxExBeyvQ"
+            },
+            "RelatedOpeningElement": {
+              "ifc_class": "IfcOpeningElement",
+              "global_id": "0heVk0tNLZUkX1JJ_24Zjn"
+            }
+          },
+          "content_sha256": "sha256:49cc62927657c0f3ec64d86ca2a0be5666dda7ad11c69aca533273167323acdc"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3kgE0dI095Lar$rKQFsKnB",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ProductRequirements",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Category",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "Windows"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:d48100901c2130d8b7a9a076a20f14be92c5fe4d8b0c367525e6695e39b4cb8e"
+        },
+        "after": null
+      }
+    ]
+  }
+}

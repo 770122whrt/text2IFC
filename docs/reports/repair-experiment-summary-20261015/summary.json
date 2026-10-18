@@ -1,0 +1,128 @@
+{
+  "as_of": "2026-10-15",
+  "metrics_are_not_repair_correctness": true,
+  "rows": [
+    {
+      "group": "A",
+      "method": "DeepSeek＋通用执行器",
+      "scope": "原20题＋正式批次已结束任务",
+      "ended": 58,
+      "denominator": 58,
+      "IFC": 7,
+      "format_passed": 7,
+      "format_failed": 0,
+      "strict_repair_correctness": "incomplete",
+      "IFC_output_rate": 0.1206896551724138,
+      "format_rate_among_IFCs": 1.0,
+      "format_rate_among_all_tasks": 0.1206896551724138
+    },
+    {
+      "group": "B",
+      "method": "DeepSeek＋Repair Harness",
+      "scope": "原20题＋正式批次已结束任务",
+      "ended": 58,
+      "denominator": 58,
+      "IFC": 45,
+      "format_passed": 44,
+      "format_failed": 1,
+      "strict_repair_correctness": "incomplete",
+      "IFC_output_rate": 0.7758620689655172,
+      "format_rate_among_IFCs": 0.9777777777777777,
+      "format_rate_among_all_tasks": 0.7586206896551724
+    },
+    {
+      "group": "C",
+      "method": "GPT-6 Sol＋通用执行器",
+      "scope": "原20题＋正式批次已结束任务",
+      "ended": 57,
+      "denominator": 57,
+      "IFC": 52,
+      "format_passed": 25,
+      "format_failed": 27,
+      "strict_repair_correctness": "incomplete",
+      "IFC_output_rate": 0.9122807017543859,
+      "format_rate_among_IFCs": 0.4807692307692308,
+      "format_rate_among_all_tasks": 0.43859649122807015
+    },
+    {
+      "group": "D",
+      "method": "DeepSeek＋官方DSH",
+      "scope": "原20题＋正式批次已结束任务",
+      "ended": 58,
+      "denominator": 58,
+      "IFC": 12,
+      "format_passed": 12,
+      "format_failed": 0,
+      "strict_repair_correctness": "incomplete",
+      "IFC_output_rate": 0.20689655172413793,
+      "format_rate_among_IFCs": 1.0,
+      "format_rate_among_all_tasks": 0.20689655172413793
+    },
+    {
+      "group": "E",
+      "method": "GPT-6 Sol＋Repair Harness",
+      "scope": "本轮20题＋正式38题；不计早期6题",
+      "ended": 58,
+      "denominator": 58,
+      "IFC": 44,
+      "format_passed": 44,
+      "format_failed": 0,
+      "strict_repair_correctness": "pending",
+      "IFC_output_rate": 0.7586206896551724,
+      "format_rate_among_IFCs": 1.0,
+      "format_rate_among_all_tasks": 0.7586206896551724
+    },
+    {
+      "group": "F-local",
+      "method": "Qwen3.8-27B＋Repair Harness",
+      "scope": "本地200题（独立批次）",
+      "ended": 200,
+      "denominator": 200,
+      "IFC": 66,
+      "format_passed": 66,
+      "format_failed": 0,
+      "strict_repair_correctness": "not_evaluated",
+      "IFC_output_rate": 0.33,
+      "format_rate_among_IFCs": 1.0,
+      "format_rate_among_all_tasks": 0.33
+    },
+    {
+      "group": "F-server",
+      "method": "Qwen3.8-27B＋Repair Harness",
+      "scope": "服务器200题（独立批次）",
+      "ended": 200,
+      "denominator": 200,
+      "IFC": 55,
+      "format_passed": 55,
+      "format_failed": 0,
+      "strict_repair_correctness": "not_evaluated",
+      "IFC_output_rate": 0.275,
+      "format_rate_among_IFCs": 1.0,
+      "format_rate_among_all_tasks": 0.275
+    },
+    {
+      "group": "G-server",
+      "method": "Qwen3.8-27B＋通用执行器",
+      "scope": "服务器400题",
+      "ended": 400,
+      "denominator": 400,
+      "IFC": 11,
+      "format_passed": 11,
+      "format_failed": 0,
+      "strict_repair_correctness": "not_evaluated",
+      "IFC_output_rate": 0.0275,
+      "format_rate_among_IFCs": 1.0,
+      "format_rate_among_all_tasks": 0.0275
+    }
+  ],
+  "formal_E_status_counts": {
+    "submitted": 26,
+    "no_output": 12
+  },
+  "local_F_status_counts": {
+    "submitted": 66,
+    "no_output": 134
+  },
+  "model_calls_by_this_curation": 0,
+  "task_reruns": 0
+}

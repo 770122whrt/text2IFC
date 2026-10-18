@@ -1,0 +1,156 @@
+{
+  "schema_version": "text2ifc/ifc-repair-application/0.1",
+  "valid": true,
+  "published": true,
+  "audit": {
+    "schema_version": "text2ifc/ifc-repair-audit/0.1",
+    "valid": true,
+    "checks": [
+      {
+        "code": "CHANGESET_SCHEMA",
+        "status": "passed",
+        "evidence": {}
+      },
+      {
+        "code": "IFC_SCHEMA",
+        "status": "passed",
+        "evidence": {
+          "actual_schema": "IFC2X3"
+        }
+      },
+      {
+        "code": "BASE_MODEL_FINGERPRINT",
+        "status": "passed",
+        "evidence": {
+          "actual_fingerprint": "sha256:b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0"
+        }
+      },
+      {
+        "code": "SOURCE_REQUEST_HASH",
+        "status": "passed",
+        "evidence": {
+          "actual_request_hash": "sha256:5c5c31fe441a0be61299b343d1c4ba565ae62482dbe702d6d7a28b8f00f96ae8"
+        }
+      },
+      {
+        "code": "OPERATION_REGISTRATION",
+        "status": "passed",
+        "evidence": {
+          "operation_type": "set_occurrence_properties"
+        }
+      }
+    ],
+    "operation_audits": [
+      {
+        "operation_id": "property-020",
+        "operation_type": "set_occurrence_properties",
+        "valid": true,
+        "checks": [
+          {
+            "code": "PROPERTY_OCCURRENCE_READY",
+            "status": "passed",
+            "evidence": {
+              "global_id": "2U8KEAXbL24xySlUNSWHKK",
+              "ifc_class": "IfcDoor",
+              "assignment_count": 1
+            }
+          }
+        ],
+        "evidence": {
+          "target_global_id": "2U8KEAXbL24xySlUNSWHKK"
+        }
+      }
+    ],
+    "issues": []
+  },
+  "operations": [
+    {
+      "operation_id": "property-020",
+      "operation_type": "set_occurrence_properties",
+      "changes": {
+        "created": [],
+        "modified": [
+          {
+            "role": "target",
+            "ifc_class": "IfcDoor",
+            "global_id": "2U8KEAXbL24xySlUNSWHKK"
+          },
+          {
+            "role": "semantic_pset_updated",
+            "ifc_class": "IfcPropertySet",
+            "global_id": "1fB3RLwjRhPVndBPzHDbNH"
+          }
+        ],
+        "removed": [],
+        "resolved": {
+          "target_global_id": "2U8KEAXbL24xySlUNSWHKK",
+          "target_ifc_class": "IfcDoor"
+        },
+        "semantic": {
+          "created": [],
+          "modified": [
+            {
+              "role": "semantic_pset_updated",
+              "ifc_class": "IfcPropertySet",
+              "global_id": "1fB3RLwjRhPVndBPzHDbNH"
+            }
+          ],
+          "updated": [
+            {
+              "role": "semantic_pset_property_updated",
+              "ifc_class": "IfcPropertySingleValue",
+              "global_id": "step:189291"
+            }
+          ],
+          "skipped": [],
+          "scopes": {
+            "occurrence_direct": {
+              "created": [],
+              "modified": [
+                {
+                  "role": "semantic_pset_updated",
+                  "ifc_class": "IfcPropertySet",
+                  "global_id": "1fB3RLwjRhPVndBPzHDbNH"
+                }
+              ],
+              "updated": [
+                {
+                  "role": "semantic_pset_property_updated",
+                  "ifc_class": "IfcPropertySingleValue",
+                  "global_id": "step:189291"
+                }
+              ],
+              "skipped": []
+            }
+          }
+        }
+      }
+    }
+  ],
+  "postconditions": [
+    {
+      "operation_id": "property-020",
+      "valid": true,
+      "checks": [
+        {
+          "code": "PROPERTY_MATCH:Pset_DoorCommon.IsExternal",
+          "status": "passed",
+          "evidence": {
+            "expected": true,
+            "actual": true,
+            "ownership": "occurrence_direct"
+          }
+        }
+      ],
+      "issues": [],
+      "evidence": {
+        "target_global_id": "2U8KEAXbL24xySlUNSWHKK"
+      }
+    }
+  ],
+  "output": {
+    "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-expansion\\next-ten-property-bound-020\\property-restored.ifc",
+    "sha256": "791f8b274f0b192ded38df0dfc48e98a04a072b454df855b236219a8c0ea9f89"
+  },
+  "issues": []
+}

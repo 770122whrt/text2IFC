@@ -1,0 +1,204 @@
+{
+  "appearance_requests": [
+    {
+      "profile": "warm-residential"
+    },
+    {
+      "profile": "warm-residential"
+    }
+  ],
+  "expectations": [
+    {
+      "entity_id": "wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/0",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/1",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/2",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/3",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "slab-ground",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/4",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "door-south",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/5",
+      "value": {
+        "parameters": {},
+        "template_id": "door-left",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-east",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/6",
+      "value": {
+        "parameters": {},
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/7",
+      "value": {
+        "parameters": {},
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "wall-south",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/0",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-north",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/1",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-west",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/2",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "wall-east",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/3",
+      "value": {
+        "kind": "single_material",
+        "name": "砖"
+      }
+    },
+    {
+      "entity_id": "slab-ground",
+      "kind": "material",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/4",
+      "value": {
+        "kind": "single_material",
+        "name": "混凝土"
+      }
+    },
+    {
+      "entity_id": "door-south",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/5",
+      "value": {
+        "parameters": {},
+        "template_id": "door-left",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-east",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/6",
+      "value": {
+        "parameters": {},
+        "template_id": "window-double-vertical",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    },
+    {
+      "entity_id": "window-west",
+      "kind": "template",
+      "scope": "direct",
+      "source_path": "/known_facts/semantic_requirements/7",
+      "value": {
+        "parameters": {},
+        "template_id": "window-single",
+        "template_version": "text2ifc/basic-filling/1.0"
+      }
+    }
+  ],
+  "expectations_hash": "be9b3c69ce03509ca82b4da84eaa4716cb1dcc09bbe2854ae59ce9f0c7339d83",
+  "issues": [
+    {
+      "code": "UNREQUESTED_MATERIAL",
+      "message": "配色或模板不能补写未经请求授权的材料。",
+      "path": "/entities/wall-storey-1-wall-south/materials"
+    },
+    {
+      "code": "UNREQUESTED_MATERIAL",
+      "message": "配色或模板不能补写未经请求授权的材料。",
+      "path": "/entities/wall-storey-1-wall-north/materials"
+    },
+    {
+      "code": "UNREQUESTED_MATERIAL",
+      "message": "配色或模板不能补写未经请求授权的材料。",
+      "path": "/entities/wall-storey-1-wall-west/materials"
+    },
+    {
+      "code": "UNREQUESTED_MATERIAL",
+      "message": "配色或模板不能补写未经请求授权的材料。",
+      "path": "/entities/wall-storey-1-wall-east/materials"
+    }
+  ],
+  "minimum_schema_version": "bim-json/2.1",
+  "schema_version": "text2ifc/request-semantics/1.0",
+  "valid": false
+}

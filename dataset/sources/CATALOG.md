@@ -1,6 +1,12 @@
 # External Data Source Catalog
 
-当前完整来源登记以 [ifc-sources.json](../manifests/ifc-sources.json) 与 [ifc-files.jsonl](../manifests/ifc-files.jsonl) 为入口；下文保留初始来源审查记录。新增来源的存在不自动意味着训练或再分发许可。BIMNet 当前位置为 `dataset/external/bimnet/`，授权边界不变。
+最新文件资产视图为 [387 个来源资产登记](../external/ifc-asset-register.csv)（2026-09-26）。本批建筑来源、修复与许可见[执行报告](../external/_checks/ifc-expand-20260926-v8/REPORT.md)与[逐模型许可证据](../external/_checks/ifc-expand-20260926-v8/rights/RIGHTS.md)。新增Tafraout与欧洲LCA均CC BY4；IfcOpenHouse仍许可未明。139个核心场景与训练准入保留；来源登记不等于统一开放许可。此前许可矩阵仍见[9月24日复核](../external/_checks/ifc-readiness-20260924-v7/rights/RIGHTS.md)。
+
+原 [324 份 IFC 清理登记](../manifests/dataset-registration-20260913/active-ifc-register.csv)保留为扩充前基线：原 274 份与 50 份 ResBIM。ResBIM 的 MIT 声明、RVT 哈希和转换验证报告保留在 [RVT 管理目录](../external/RVT/README.md)，仍为合成住宅单元；RVT 扩充与转换继续暂停。
+
+本页下方是来源历史说明。BIM Whale 的五个 RVT 已于 2026-09-13 经用户明确批准删除，六个 IFC 保留；IFC-Bench 本地为 48 个 IFC，上游历史的 50 个不代表现存数量。
+
+既有 canonical 来源登记以 [ifc-sources.json](../manifests/ifc-sources.json) 与 [ifc-files.jsonl](../manifests/ifc-files.jsonl) 为入口；新增资产与修复首选版本以本页顶部 external 登记为准。下文保留初始来源审查记录。新增来源的存在不自动意味着训练或再分发许可。BIMNet 当前位置为 `dataset/external/bimnet/`，授权边界不变。
 
 This catalog records sources considered for text2IFC data expansion. A public
 download URL alone does not make a source suitable for training. Each source

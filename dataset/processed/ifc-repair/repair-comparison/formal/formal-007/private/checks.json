@@ -1,0 +1,1514 @@
+{
+  "checks": {
+    "damaged_native_validation_passed": true,
+    "no_products_created": true,
+    "no_unexpected_modified_products": true,
+    "only_expected_products_removed": true,
+    "removed_door_regions_closed": true,
+    "removed_window_regions_closed": true,
+    "required_relation_edges_verified": true,
+    "retained_door_openings_empty_and_hosted": true,
+    "schema_preserved": true,
+    "source_native_validation_passed": true,
+    "source_unchanged": true,
+    "targets_and_references_have_geometry": true
+  },
+  "damaged_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "host": {
+    "bounds_world_m": [
+      [
+        -10.316165700312364,
+        -9.820865700312364
+      ],
+      [
+        -13.012910651284468,
+        11.04723934871554
+      ],
+      [
+        0.0,
+        14.020800000000001
+      ]
+    ],
+    "class": "IfcWallStandardCase",
+    "geometry_status": "available",
+    "guid": "2iLpbw1JTCxhSAA5dilMd9",
+    "name": "Basic Wall:Exterior - Brick on CMU:173225",
+    "project_unit_to_mm": 304.8
+  },
+  "removed_product_guids": [
+    "0L$DY82en23vPAzQO9fT_$",
+    "0Y750fYpD0FwowATjAsR7u"
+  ],
+  "required_relation_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0Y750fYpD0FwowATjAsR7u",
+          "parent_guid": "0L$DY82en23vPAzQO9fT_$",
+          "relation_guid": "0x4BXm5gjCcBJ64WrciFJV"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0L$DY82en23vPAzQO9fT_$",
+          "parent_guid": "2iLpbw1JTCxhSAA5dilMd9",
+          "relation_guid": "1dkZt93GDCseKOisqgtViy"
+        }
+      ],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0Y750fYpD0FwowATjAsR7u",
+          "parent_guid": "0L$DY82en23vPAzQO9ev2U",
+          "relation_guid": "3nLNtyc9r0oPgvK3ziZQef"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3E0YCLkWHE2uqfSDCvRS2i",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:058393ae27db8ab1e7c300de61afbd9b36a5aac2b150c59b91d81ae4da973411",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3E0YCLkWHE2uqfSDCvRS2i",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:7a884e64956ef5e04603e7f42f4aed7b1418ba5e64935c3fa3281342b1d7a545",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "0GhsumvjjBHP$YGAK4v_YN",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0iBWlqiX53jg$JnVEs4voI",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:7e9384b3f0980c88145c6d286673b15817aff8a8f8676bc71876ef9affa04652",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0iBWlqiX53jg$JnVEs4voI",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:137b7dbb59dd1e58e83962debc557edca1d04d3dc9dc58d8073e4d4912209df5",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "1WnwO1apvD68u4kCq5Bcce",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "13tuYCI0z7tvfnBs1sHUPT",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:133da2634d3dc441d94426579b0c3be7c15be1545aecd43a459c15fbb85184be",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "13tuYCI0z7tvfnBs1sHUPT",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:7e763dcc08cbf338d04d96269cec279af1d5466e36e19d795ebf71734b80a8bf",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "1ZW2YuHCvFCOvRYbZwvH76",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2jRQTs$Eb8qfyXfI2$xBt7",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:188fdb2ce73fbbaa2b36a1397e15b9eeddbf390efd2e02e807051568eb034fe7",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2jRQTs$Eb8qfyXfI2$xBt7",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:ac2e41554ee56be4d28796f752f173fe621cf1f5038dfdf99e8b0808acf01441",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "2DoAX61zX3xwhTDQiqLkTw",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "034e5B_fz7vAW8vjpCcFkS",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:af8ce724adf0b020de0f733e272b5a0d220b3c98335387a807981afcab60463c",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wgESE2Yb7g8PPk_szuqQW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "034e5B_fz7vAW8vjpCcFkS",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:228fe083ba1da0cce59e6b08c26da005d8586d718aae47927e963924191a41c9",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "2Pb_0qxG90lvbFzBdiRwMb",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "0JyWiYU3fE9eqQtO9f3y9s",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1T9",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1UK",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1Uc",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1Uz",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KlcbIfvL1t9$3IM14kDWm",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0KlcbIfvL1t9$3IM14kDY7",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0S4TGKDX5FsvETM2lopwZJ",
+                "ifc_class": "IfcSlab"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxsE",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxt2",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtG",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtd",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtl",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtz",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0zm_RkrLH2tRithg6zqEqi",
+                "ifc_class": "IfcRailing"
+              },
+              {
+                "global_id": "0zm_RkrLH2tRithg6zqEsr",
+                "ifc_class": "IfcRailing"
+              },
+              {
+                "global_id": "2EL2EcOZ54awnlXHq9ra7u",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv32QK",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33$x",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv330h",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv331R",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv332N",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv334N",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv3355",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv3369",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv337$",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv339e",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Jf",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33L4",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Ml",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33PC",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Sg",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33V0",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Zh",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33_x",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33ak",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33dn",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33fA",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33jI",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33lY",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33mV",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33q3",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33r1",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33w5",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33xB",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33yr",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33zv",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv342F",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv347Y",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34IM",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34Yq",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34a4",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34bQ",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34mc",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34qc",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35Xd",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35br",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35hV",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35ig",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35mB",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35tU",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35vZ",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2WQTd7eN165QjO5EIMm2Ac",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfLXm",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfLt4",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfQOq",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfR06",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfR3f",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfR5G",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfRrH",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "0L$DY82en23vPAzQO9ev2U",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:94862ee8028141ad181a1779dd7f7bd1c71bada8304ec3cc94ecb65dc55d0846",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "0JyWiYU3fE9eqQtO9f3y9s",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1T9",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1UK",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1Uc",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KTFdt0TL5180HU_Crb1Uz",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0KlcbIfvL1t9$3IM14kDWm",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0KlcbIfvL1t9$3IM14kDY7",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0S4TGKDX5FsvETM2lopwZJ",
+                "ifc_class": "IfcSlab"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxsE",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxt2",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtG",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtd",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtl",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0V9KxczyP2dvIUwfCrNxtz",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0zm_RkrLH2tRithg6zqEqi",
+                "ifc_class": "IfcRailing"
+              },
+              {
+                "global_id": "0zm_RkrLH2tRithg6zqEsr",
+                "ifc_class": "IfcRailing"
+              },
+              {
+                "global_id": "2EL2EcOZ54awnlXHq9ra7u",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv32QK",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33$x",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv330h",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv331R",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv332N",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv334N",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv3355",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv3369",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv337$",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv339e",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Jf",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33L4",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Ml",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33PC",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Sg",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33V0",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33Zh",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33_x",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33ak",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33dn",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33fA",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33jI",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33lY",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33mV",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33q3",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33r1",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33w5",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33xB",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33yr",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv33zv",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv342F",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv347Y",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34IM",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34Yq",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34a4",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34bQ",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34mc",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv34qc",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35Xd",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35br",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35hV",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35ig",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35mB",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35tU",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2QQDlWe5j2XODRFxkv35vZ",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "2WQTd7eN165QjO5EIMm2Ac",
+                "ifc_class": "IfcFlowTerminal"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfLXm",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfLt4",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfQOq",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfR06",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfR3f",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfR5G",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3aFPed1ijDewmDm14mfRrH",
+                "ifc_class": "IfcDoor"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "0L$DY82en23vPAzQO9ev2U",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:f844571c3a7913c4cc036cdad6bd94a97998fc1de3a0bd11ebc71c4561b57ea4",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "3nLNtyc9r0oPgvK3ziZQef",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true
+      }
+    ],
+    "removed": [
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Head Height",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 10.0
+                    },
+                    "ifc_class": "IfcLengthMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:15928f9bc8bf691d889e2f94da3d01106330b09aa04fcf401ea7ca6a65b15db4",
+          "ifc_class": "IfcPropertySet",
+          "name": "PSet_Revit_Other"
+        },
+        "change_kind": "removed",
+        "global_id": "09Wtqlvpj5luKz6ZWQeTKy",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": null
+          },
+          "containers": [],
+          "content_sha256": "sha256:e127af52e3066ec46f2ffd757a8976c575870cb3a25d569f026843cbac8e466f",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:56ed41b92623483c506015eb8d37bb952a0777c2a4604a90680b36661a857468"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Fixed:36\" x 72\":36\" x 72\":283972:1",
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              -33.845688
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              26.244224
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              34.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "0L$DY82en23vPAzQO9fT_$",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0la3abNv98AQUmRyC1fSSW",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:7a7280902d0915db2f043680c0d6616ba05a8fc1d9d87646a16c6449a449a3ca",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0VLbRZoLLELuIKPfEvMeYM",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "36\" x 72\"",
+            "OverallHeight": 6.000000000000007,
+            "OverallWidth": 3.0,
+            "Tag": "283972"
+          },
+          "containers": [
+            "0L$DY82en23vPAzQO9ev2U"
+          ],
+          "content_sha256": "sha256:368a6aba7b27f28490b21a18212f5d5bb54cc149f68e07b845995003fb8d10d6",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:a5dd68554cee99c70c211b40a353b1cdb58b64da71e391a811033c2d2ebfee21"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "Fixed:36\" x 72\":36\" x 72\":283972",
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              -33.845688
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              26.244224
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              34.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "13tuYCI0z7tvfnBs1sHUPT"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "0Y750fYpD0FwowATjAsR7u",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1osOQny1HFpvNWtDp10JIH",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:021479aa84877a3809da7f7b06f861d1b4528718fc2249138fe2a655181416f1",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0hBa$TGij1OueROfsMsQmP",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": true
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Fixed:36\" x 72\""
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:381780a9c49f68f92b69ff7e7e7d1bca16baa430e00d0d1f30e0e59bcce09a9e",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "0la3abNv98AQUmRyC1fSSW",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "0Y750fYpD0FwowATjAsR7u",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "0L$DY82en23vPAzQO9fT_$",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:481f6cf0631f84cb536e962958fbcf0d60f310a3bead785193db1cf6fdaad0f3",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0x4BXm5gjCcBJ64WrciFJV",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Level",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "03 Third Floor"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Sill Height",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 4.0
+                    },
+                    "ifc_class": "IfcLengthMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:3c0c8e4b159c472de3e4eb5e4eb1ab56d74e9981447ff1c935f5ac4b49a0a2c7",
+          "ifc_class": "IfcPropertySet",
+          "name": "PSet_Revit_Constraints"
+        },
+        "change_kind": "removed",
+        "global_id": "1R4j0PZtv0awd9tdDIN_A7",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Mark",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "57"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:6ac28fde7df595e2b27d3c08eaf2174733bada6df76d22a27565ad97f46272c4",
+          "ifc_class": "IfcPropertySet",
+          "name": "PSet_Revit_Identity Data"
+        },
+        "change_kind": "removed",
+        "global_id": "1cn6bTDgH8$wNJgbzngeWw",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "0L$DY82en23vPAzQO9fT_$",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "2iLpbw1JTCxhSAA5dilMd9",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:92a1a3bff69fe3f0ec4e296549ec84b9bfb5e6e1602c151f3e44c26f0e5a93e0",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1dkZt93GDCseKOisqgtViy",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1cn6bTDgH8$wNJgbzngeWw",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:4da784f5942c955ae13f44acf3d73ef9e7552b14d1a825c4e1c447f3f275a490",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1frnoolTfF1x9st7uQE0iO",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1R4j0PZtv0awd9tdDIN_A7",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:89b9118ca34e6ba4bd82c7a5727860876b6210c98e0d0a4c469dcbd6f098276a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1h5Y0VXFD0AhinJtqwxkpE",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Phase Created",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "New Construction"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:8c7685de660aa64c15bfc39d485248ef6418c386e47fa96404095fe9144abccc",
+          "ifc_class": "IfcPropertySet",
+          "name": "PSet_Revit_Phasing"
+        },
+        "change_kind": "removed",
+        "global_id": "1osOQny1HFpvNWtDp10JIH",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ConnectionGeometry": {
+              "attributes": {
+                "SurfaceOnRelatedElement": null,
+                "SurfaceOnRelatingElement": {
+                  "attributes": {
+                    "Depth": 6.0,
+                    "ExtrudedDirection": {
+                      "ifc_class": "IfcDirection",
+                      "name": null
+                    },
+                    "Position": {
+                      "ifc_class": "IfcAxis2Placement3D",
+                      "name": null
+                    },
+                    "SweptCurve": {
+                      "ifc_class": "IfcArbitraryOpenProfileDef",
+                      "name": null
+                    }
+                  },
+                  "ifc_class": "IfcSurfaceOfLinearExtrusion"
+                }
+              },
+              "ifc_class": "IfcConnectionSurfaceGeometry"
+            },
+            "InternalOrExternalBoundary": "EXTERNAL",
+            "PhysicalOrVirtualBoundary": "PHYSICAL",
+            "RelatedBuildingElement": {
+              "global_id": "0Y750fYpD0FwowATjAsR7u",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingSpace": {
+              "global_id": "2tMe7qG7n4XhDG_TV6Qihy",
+              "ifc_class": "IfcSpace"
+            }
+          },
+          "content_sha256": "sha256:8a7cc3308fffad1ad0d248f3dae3f971185c80b06fffddb532bcb0a109f80b97",
+          "ifc_class": "IfcRelSpaceBoundary",
+          "name": "1stLevel"
+        },
+        "change_kind": "removed",
+        "global_id": "2F1yEeUeL3mgGJgYvlYv3$",
+        "ifc_class": "IfcRelSpaceBoundary",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0Y750fYpD0FwowATjAsR7u",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "09Wtqlvpj5luKz6ZWQeTKy",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:4283d38a451be4780aa018270d4b72effa920f2a4b3179fc3f7bea5549a49690",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "2x4YLrERn9DBNGgA9ig_t3",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      }
+    ]
+  },
+  "source_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -10.316165700312364,
+            -9.820865700312364
+          ],
+          [
+            -13.012910651284468,
+            11.04723934871554
+          ],
+          [
+            0.0,
+            14.020800000000001
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2iLpbw1JTCxhSAA5dilMd9",
+        "name": "Basic Wall:Exterior - Brick on CMU:173225",
+        "project_unit_to_mm": 304.8
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -10.316165700312368,
+            -9.820865700312368
+          ],
+          [
+            7.084839348715536,
+            7.999239348715536
+          ],
+          [
+            10.363199999999999,
+            12.192000000000002
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "0L$DY82en23vPAzQO9fT_$",
+        "name": "Fixed:36\" x 72\":36\" x 72\":283972:1",
+        "project_unit_to_mm": 304.8
+      },
+      "opening_guid": "0L$DY82en23vPAzQO9fT_$",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 130543,
+      "target": {
+        "OverallHeight_mm": 1828.8000000000022,
+        "OverallWidth_mm": 914.4000000000001,
+        "bounds_world_m": [
+          [
+            -10.316165700312368,
+            -9.820865700312368
+          ],
+          [
+            7.084839348715534,
+            7.999239348715535
+          ],
+          [
+            10.3632,
+            12.192000000000002
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "0Y750fYpD0FwowATjAsR7u",
+        "name": "Fixed:36\" x 72\":36\" x 72\":283972",
+        "project_unit_to_mm": 304.8
+      },
+      "target_guid": "0Y750fYpD0FwowATjAsR7u",
+      "wall_guid": "2iLpbw1JTCxhSAA5dilMd9"
+    }
+  ],
+  "wall_closure": {
+    "2iLpbw1JTCxhSAA5dilMd9": {
+      "actual_delta_m3": 0.8282677628160116,
+      "closed": true,
+      "expected_delta_m3": 0.8282677628160013,
+      "volume_after_m3": 159.54476062441086,
+      "volume_before_m3": 158.71649286159484
+    }
+  }
+}

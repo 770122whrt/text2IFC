@@ -1,5 +1,7 @@
 # 本对话运行目录清理提案
 
+2026-10-17 维护：本记录对应的整理已完成，本目录一次性执行脚本（`execute-approved-cleanup.ps1`）从本地退役；删除/保全收据与正式证据保留。旧执行命令只表示当时操作，不应重跑。脚本原文可从[整理前固定 Git 目录](https://github.com/770122whrt/text2IFC/tree/48f32bba4c1976178a97267a98e569080f44063e/docs/reports/run-cleanup-review-20260910)恢复；Proof 的日常校验继续使用现有 `scripts/proof/` 和 `text2ifc_proof` 工具。
+
 状态：用户已明确批准，实验完成后已执行并核验。路径均相对于 `E:/code for project/bimnet`。
 
 | 拟删除目录 | 文件数 | MiB | 保全依据 |

@@ -1,0 +1,455 @@
+{
+  "budget": {
+    "limits": {
+      "active_seconds": 2400,
+      "calls": 48,
+      "extensions": [],
+      "tokens": 450000,
+      "tool_seconds": 120
+    },
+    "provider_calls_allowed": true,
+    "requires_current_stage_admission": true,
+    "status": "frozen"
+  },
+  "case_id": "formal-020",
+  "clarification": {
+    "facts": {
+      "window_opening_bottom": {
+        "answer_text": "窗洞下沿的世界标高是 0.6 米，即距该层标高 600 毫米。",
+        "basis": "pre-run authored placement intent, independently measured before review",
+        "height_above_storey_mm": 600.0,
+        "world_elevation_m": 0.6
+      }
+    },
+    "out_of_card_policy": "Ask user; never inspect G for new run-time answers.",
+    "reply_policy": "Reply only to the fact actually asked; do not send the full card.",
+    "required_user_facts": [
+      "window_opening_bottom"
+    ]
+  },
+  "clarification_required": true,
+  "damage": [
+    {
+      "kind": "window",
+      "method": "remove_product_and_opening_restore_continuous_wall",
+      "numeric_spec": {
+        "bounds_world_m": [
+          [
+            -33.593669243249,
+            -31.733669243249004
+          ],
+          [
+            26.895278519908956,
+            27.270278519909915
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "height_mm": 3000.0,
+        "host_bounds_world_m": [
+          [
+            -34.53671872185208,
+            -16.117419243248982
+          ],
+          [
+            26.920278519908898,
+            27.232778519908898
+          ],
+          [
+            0.0,
+            18.4
+          ]
+        ],
+        "host_guid": "3JZGeqq852COtfxExBeyvQ",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -16.117419243249
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            27.0765285199089
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          -32.663669243249004,
+          27.082778519909436,
+          2.1
+        ],
+        "mesh_local_extents_mm": [
+          1859.9999999999995,
+          375.00000000095923,
+          3000.0
+        ],
+        "mesh_sha256": "356b357b3288f14e3c25283a67eb1eae4dbbbdef7c155646e5aec577836b4d70",
+        "mesh_triangles": 208,
+        "opening_bottom_world_m": 0.6,
+        "opening_bounds_world_m": [
+          [
+            -33.568669243249005,
+            -31.758669243249003
+          ],
+          [
+            26.920278519908955,
+            27.232778519908955
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "opening_center_world_m": [
+          -32.663669243249004,
+          27.076528519908955,
+          2.1
+        ],
+        "opening_center_xy_m": [
+          -32.663669243249004,
+          27.076528519908955
+        ],
+        "opening_guid": "0heVk0tNLZUkX1JJ_24Zjn",
+        "opening_height_mm": 3000.0,
+        "opening_width_mm": 1810.0000000000023,
+        "operation_type": "SINGLE_PANEL",
+        "placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -33.568669243249005
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            26.920278519908955
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.6
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 600.0,
+        "source_step_id": 3786,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "3JZGeqq852COtfxExBeyv2",
+        "type_guid": "14xJur$tAygZ8nD5oT1oMw",
+        "unit_to_mm": 1000,
+        "width_mm": 1810.0
+      },
+      "opening_guid": "0heVk0tNLZUkX1JJ_24Zjn",
+      "opening_name": "Windows_Sgl_Plain:3.2x1.8m:535383:1",
+      "reference_guid": "1GjejW8Xn4SugeTM2GVMaF",
+      "reference_name": "Windows_Sgl_Plain:3.2x1.8m:564746",
+      "reference_numeric_spec": {
+        "bounds_world_m": [
+          [
+            -21.0817280201735,
+            -19.2217280201735
+          ],
+          [
+            26.895278519908913,
+            27.270278519909873
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "height_mm": 3000.0,
+        "host_bounds_world_m": [
+          [
+            -34.53671872185208,
+            -16.117419243248982
+          ],
+          [
+            26.920278519908898,
+            27.232778519908898
+          ],
+          [
+            0.0,
+            18.4
+          ]
+        ],
+        "host_guid": "3JZGeqq852COtfxExBeyvQ",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -16.117419243249
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            27.0765285199089
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          -20.1517280201735,
+          27.082778519909393,
+          2.1
+        ],
+        "mesh_local_extents_mm": [
+          1859.9999999999995,
+          375.00000000095923,
+          3000.0
+        ],
+        "mesh_sha256": "356b357b3288f14e3c25283a67eb1eae4dbbbdef7c155646e5aec577836b4d70",
+        "mesh_triangles": 208,
+        "opening_bottom_world_m": 0.6,
+        "opening_bounds_world_m": [
+          [
+            -21.056728020173498,
+            -19.2467280201735
+          ],
+          [
+            26.920278519908912,
+            27.232778519908912
+          ],
+          [
+            0.6,
+            3.6
+          ]
+        ],
+        "opening_center_world_m": [
+          -20.1517280201735,
+          27.076528519908912,
+          2.1
+        ],
+        "opening_center_xy_m": [
+          -20.1517280201735,
+          27.076528519908912
+        ],
+        "opening_guid": "3_REz$QDrOHJb6bYoxdiUU",
+        "opening_height_mm": 3000.0,
+        "opening_width_mm": 1809.9999999999986,
+        "operation_type": "SINGLE_PANEL",
+        "placement_world_m": [
+          [
+            1.0,
+            0.0,
+            0.0,
+            -21.0567280201735
+          ],
+          [
+            0.0,
+            1.0,
+            0.0,
+            26.920278519908912
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            0.6
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 600.0,
+        "source_step_id": 148130,
+        "storey_attribute_elevation_m": 0.0,
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "storey_world_elevation_m": 0.0,
+        "target_guid": "1GjejW8Xn4SugeTM2GVMaF",
+        "type_guid": "14xJur$tAygZ8nD5oT1oMw",
+        "unit_to_mm": 1000,
+        "width_mm": 1810.0
+      },
+      "target_guid": "3JZGeqq852COtfxExBeyv2",
+      "target_name": "Windows_Sgl_Plain:3.2x1.8m:535383",
+      "wall_guid": "3JZGeqq852COtfxExBeyvQ",
+      "wall_name": "Basic Wall:Exterior Load Bearing wall:535375"
+    },
+    {
+      "damaged_value": false,
+      "expected_value": true,
+      "geometry": {
+        "bounds_world_m": [
+          [
+            -16.018218721851138,
+            -15.819218721851131
+          ],
+          [
+            7.81044088208915,
+            9.670440882089144
+          ],
+          [
+            0.0,
+            2.79999999999999
+          ]
+        ],
+        "center_xy_m": [
+          -15.918718721851135,
+          8.740440882089146
+        ],
+        "class": "IfcDoor",
+        "geometry": {
+          "OverallHeight_mm": 2800.0,
+          "OverallWidth_mm": 1810.0,
+          "bounds_world_m": [
+            [
+              -16.018218721851138,
+              -15.819218721851131
+            ],
+            [
+              7.81044088208915,
+              9.670440882089144
+            ],
+            [
+              0.0,
+              2.79999999999999
+            ]
+          ],
+          "class": "IfcDoor",
+          "geometry_status": "available",
+          "guid": "2U8KEAXbL24xySlUNSWHKK",
+          "name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+          "project_unit_to_mm": 1000
+        },
+        "guid": "2U8KEAXbL24xySlUNSWHKK",
+        "name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+        "storey": {
+          "guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "name": "Level 0",
+          "world_elevation_m": 0.0
+        }
+      },
+      "kind": "property",
+      "original_value_basis": "genuine_preselected_source_direct_instance_property",
+      "property": "IsExternal",
+      "property_set": "Pset_DoorCommon",
+      "scope": "occurrence_direct",
+      "target_guid": "2U8KEAXbL24xySlUNSWHKK",
+      "target_name": "Doors_ExtDbl_Flush:1810x2110mm:544057",
+      "value_type": "IfcBoolean"
+    }
+  ],
+  "damage_scale": "S2",
+  "damaged_sha256": "b827e0da8fe83991034f97f8f687ea91716cea22963fa2c15e74c7f4caee49f0",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred"
+  },
+  "pipeline_readiness": {
+    "bound_instance_apply": {
+      "case_id": "formal-020",
+      "checks": {
+        "all_geometry_unchanged": true,
+        "exact_typed_value_restored": true,
+        "only_target_properties_changed": true,
+        "published": true,
+        "source_unchanged": true,
+        "valid": true
+      },
+      "evidence_class": "offline_bound_instance_property_apply_reopen_and_preservation",
+      "natural_language_pipeline_tested": false,
+      "passed": true,
+      "property_runtime_retrieval_tested": false,
+      "provider_calls": 0,
+      "schema_version": "next-ten-property-bound-support/0.1",
+      "whole_mixed_task_tested": false
+    },
+    "bound_window_property_after_answer": {
+      "answer_role": "explicitly simulated prewritten height answer; no observed clarification dialogue",
+      "evidence": "private/offline-support/window-property-after-answer/result.json",
+      "formal_admission": false,
+      "passed": true,
+      "provider_calls": 0,
+      "whole_mixed_task_tested": true
+    },
+    "four_arm_admission": "not_frozen_not_admitted",
+    "human_acceptance": false,
+    "natural_language_complete_path": "general_runtime_fake_provider_paths_passed; exact_case_not_model_tested",
+    "product_operation_supported": true,
+    "runtime_evidence": "dataset/processed/experiments/repair-comparison/development/structural-property-readiness/README.md",
+    "technical_review_accepted": true
+  },
+  "preservation": [
+    "All existing geometry and unrelated properties/relations unchanged.",
+    "Only target host gains the requested window opening."
+  ],
+  "purpose": "formal_candidate",
+  "request": "请修复模型中以下两处问题。以下坐标按模型世界坐标，位置和标高用米，尺寸用毫米。\n\n1．在标高 0 米的楼层，平面中心约（X=-32.663669、Y=27.076529 米）的墙上缺一扇窗。请在这里重新开洞并补窗：窗名义宽 1810 毫米、高 3000 毫米；墙洞宽 1810 毫米、高 3000 毫米。窗框、窗扇和玻璃分格请参照标高 0 米楼层、平面中心约（X=-20.151728、Y=27.076529 米）处保留的同规格窗；沿目标墙面安装。\n\n2．标高 0 米的楼层，平面中心约在（X=-15.918719、Y=8.740441 米）、实体竖向范围为 Z=0 至 2.8 米的这扇门的外门标记被误改了，请恢复为外门。\n\n只在上述位置补窗和修正这扇门的属性，保留其余构件的几何、位置和属性，使新窗与墙洞、墙体及楼层的关系完整。",
+  "required_product_count": 1,
+  "required_products": {
+    "IfcWindow": 1
+  },
+  "required_property_count": 1,
+  "required_relation_count": 3,
+  "review": {
+    "authorization": {
+      "property_revision_authorized": true,
+      "user_quote": "其他看起来没有问题 大体上没有问题 你再稍微过一遍即可。"
+    },
+    "human_viewed": false,
+    "kind": "delegated_technical",
+    "reviewed_at": "2026-10-09T04:02:21.373506+00:00",
+    "reviewer": "Codex technical review following user general approval",
+    "scope_note": "User generally approved the other cases and delegated this recheck; no per-case usBIM pass is attributed to the user.",
+    "status": "accepted_by_delegation",
+    "technical_review_passed": true
+  },
+  "schema_version": "repair-comparison-task-candidate/0.2",
+  "source": {
+    "asset_id": "gni-bim-dataset-model_148-fa35088eb0e7",
+    "license": "CC-BY-4.0",
+    "rights_registry": "dataset/external/ifc-asset-register.jsonl",
+    "source_id": "gni-bim-dataset",
+    "source_path": "dataset/external/_checks/ifc-assets-20260913-v4/repairs/gni-bim-dataset-model_148-fa35088eb0e7/repaired.ifc",
+    "source_role": "preselected_registered_format_repair_copy",
+    "source_sha256": "f7961502bbdbabb8ba928dbebe31261bcf3ac4a68c3818d545915774d7eb81d3"
+  },
+  "source_sha256": "f7961502bbdbabb8ba928dbebe31261bcf3ac4a68c3818d545915774d7eb81d3",
+  "title": "补回一扇窗并恢复一扇门的外门属性"
+}

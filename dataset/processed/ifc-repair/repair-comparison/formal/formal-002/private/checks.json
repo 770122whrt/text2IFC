@@ -1,0 +1,1552 @@
+{
+  "checks": {
+    "damaged_native_validation_passed": true,
+    "no_products_created": true,
+    "no_unexpected_modified_products": true,
+    "only_expected_products_removed": true,
+    "removed_window_regions_closed": true,
+    "required_relation_edges_verified": true,
+    "retained_door_openings_empty_and_hosted": true,
+    "schema_preserved": true,
+    "source_native_validation_passed": true,
+    "source_unchanged": true,
+    "targets_and_references_have_geometry": true
+  },
+  "damaged_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "host": {
+    "bounds_world_m": [
+      [
+        -4.325330356969773,
+        6.234669643030243
+      ],
+      [
+        -4.92044807824589,
+        -4.640448078245856
+      ],
+      [
+        0.0,
+        3.130566144283413
+      ]
+    ],
+    "class": "IfcWallStandardCase",
+    "geometry_status": "available",
+    "guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+    "name": "Basic Wall:Ext. Wall:450065",
+    "project_unit_to_mm": 1000
+  },
+  "removed_product_guids": [
+    "02Dv1Xl$kfATxxxYAh4dyd",
+    "2RSe2HhlvNk5U1xE$7AxvX",
+    "3UH$Yu7uLAlvnoFYVwGbeQ",
+    "3UH$Yu7uLAlvnoFYVwGbfW"
+  ],
+  "required_relation_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+          "parent_guid": "02Dv1Xl$kfATxxxYAh4dyd",
+          "relation_guid": "263r515BF9APUMlSa23buO"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "02Dv1Xl$kfATxxxYAh4dyd",
+          "parent_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+          "relation_guid": "3UH$Yu7uLAlvnoFZFwGbfW"
+        }
+      ],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+          "parent_guid": "0r295zILD0gwHPe_YsN9m6",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+          "parent_guid": "2RSe2HhlvNk5U1xE$7AxvX",
+          "relation_guid": "1jCJhhWLjm$CgaNzWdytNO"
+        }
+      ],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "2RSe2HhlvNk5U1xE$7AxvX",
+          "parent_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+          "relation_guid": "3UH$Yu7uLAlvnoFZFwGbeQ"
+        }
+      ],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+          "parent_guid": "0r295zILD0gwHPe_YsN9m6",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "1GfgA5HI0BvlcqzKUZLeGH",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbiI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3tC1wlHj7Lpurmks5It7fW",
+                "ifc_class": "IfcWindowStyle"
+              }
+            ],
+            "RelatingMaterial": {
+              "attributes": {
+                "Materials": [
+                  {
+                    "attributes": {
+                      "Name": "Windows_Glass_Clear"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Windows_Standard_Range_White_PX"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Windows_Window_Handle_White"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  }
+                ]
+              },
+              "ifc_class": "IfcMaterialList"
+            }
+          },
+          "content_sha256": "sha256:7dd17f0a9106db017e1f50946258bcbaf066b27859775dc02dee0d485b203da5",
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "1GfgA5HI0BvlcqzKUZLeGH",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbiI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3tC1wlHj7Lpurmks5It7fW",
+                "ifc_class": "IfcWindowStyle"
+              }
+            ],
+            "RelatingMaterial": {
+              "attributes": {
+                "Materials": [
+                  {
+                    "attributes": {
+                      "Name": "Windows_Glass_Clear"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Windows_Standard_Range_White_PX"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  },
+                  {
+                    "attributes": {
+                      "Name": "Windows_Window_Handle_White"
+                    },
+                    "ifc_class": "IfcMaterial"
+                  }
+                ]
+              },
+              "ifc_class": "IfcMaterialList"
+            }
+          },
+          "content_sha256": "sha256:63fe5eef1b20a325e448e6952d0fbcd2c215114b667c966f7115480e104e162a",
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "0CCcuhhnuWzgpFVI7Vqksr",
+        "ifc_class": "IfcRelAssociatesMaterial",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbiI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcLf",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcMW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingClassification": {
+              "attributes": {
+                "ItemReference": "B2020100",
+                "Location": "https://www.csiresources.org/standards/uniformat",
+                "Name": "Uniformat",
+                "ReferencedSource": {
+                  "attributes": {
+                    "Edition": "1998",
+                    "EditionDate": null,
+                    "Name": "Uniformat",
+                    "Source": "https://www.csiresources.org/standards/uniformat"
+                  },
+                  "ifc_class": "IfcClassification"
+                }
+              },
+              "ifc_class": "IfcClassificationReference"
+            }
+          },
+          "content_sha256": "sha256:86ca6cc57b7123eba9c61cde8c8fa260b8042bd0d41421d5a5e799e6caa1c503",
+          "ifc_class": "IfcRelAssociatesClassification",
+          "name": "Uniformat:B2020100"
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbiI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcLf",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcMW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingClassification": {
+              "attributes": {
+                "ItemReference": "B2020100",
+                "Location": "https://www.csiresources.org/standards/uniformat",
+                "Name": "Uniformat",
+                "ReferencedSource": {
+                  "attributes": {
+                    "Edition": "1998",
+                    "EditionDate": null,
+                    "Name": "Uniformat",
+                    "Source": "https://www.csiresources.org/standards/uniformat"
+                  },
+                  "ifc_class": "IfcClassification"
+                }
+              },
+              "ifc_class": "IfcClassificationReference"
+            }
+          },
+          "content_sha256": "sha256:642ffd7f271c3864b8aebefa0694d26ec2f32958f9cbd72481a16e6ae2f9f21b",
+          "ifc_class": "IfcRelAssociatesClassification",
+          "name": "Uniformat:B2020100"
+        },
+        "change_kind": "modified",
+        "global_id": "1CDbZAbWcuxH8L2ZzghP2V",
+        "ifc_class": "IfcRelAssociatesClassification",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "1GfgA5HI0BvlcqzKUZLeGH",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:7f8b67a26b00ff6f9947353553a8a64cd9fdd42c47a1e9f1d2bb09c55a751b47",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "1GfgA5HI0BvlcqzKUZLeGH",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:db1023ae3fcfe7323c69f088d170c1527723e39a73c4a3fd45cb9f5383fcfbf3",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "1yVkgbm_Mj0lfgEFnRaA5v",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3qF",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sI",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sN",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sS",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sX",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sb",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbiI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbjK",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbk9",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbka",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGblQ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc29",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc3B",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc4R",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc6s",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc75",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc7k",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcHt",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcLf",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcMW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcPq",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcQl",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcRh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcSB",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcUj",
+                "ifc_class": "IfcWallStandardCase"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "0r295zILD0gwHPe_YsN9m6",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:04a2b280388fe59cc1db0ecef24e611bf752ae20632b963c52b2458d423020e8",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3qF",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sI",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sN",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sS",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sX",
+                "ifc_class": "IfcFooting"
+              },
+              {
+                "global_id": "2N8nlo0kj6BfhzwnR9V3sb",
+                "ifc_class": "IfcCovering"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbem",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbgC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbiI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbjK",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbk9",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbka",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGblQ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc29",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc3B",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc4R",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc6s",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc75",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGc7k",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcHt",
+                "ifc_class": "IfcDoor"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcLf",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcMW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcNI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcPq",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcQl",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcRh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcSB",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGcUj",
+                "ifc_class": "IfcWallStandardCase"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "0r295zILD0gwHPe_YsN9m6",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:b38100ec4cf12526d868bb9f5a02ce94d147de3799794cb14661dd1f8698f246",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "3Zu5Bv0LOHrPC10066FoQQ",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true
+      }
+    ],
+    "removed": [
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "450475"
+          },
+          "containers": [],
+          "content_sha256": "sha256:f4e2ad6d0f64f43d0056c5920eb1dacec5e4efffd74042b98b46515597f79088",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:f4f0aaa69c685184c0999457fe0a3d3be59af3703bfbe0a3d117451f847d762a"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475:1",
+          "placement": [
+            [
+              -1.0,
+              0.0,
+              0.0,
+              5.05467
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              -4.640448
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.85
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "02Dv1Xl$kfATxxxYAh4dyd",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "35W6_aO8_tEIGxf8wBizyi",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:f2d47b706cb7d442fd3c94e2cb270b1c8f36454137f18174e4e90af63a064249",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0D0Kki90qXIiapQBjrcWi6",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:75af521883061a576a842bc60cd9faeb4389972e5dd42d22de01fd9a078cfb5d",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff"
+        },
+        "change_kind": "removed",
+        "global_id": "0zaPMdkJ7t37RvLjrPvOCm",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3AKhLS$Afc72GwUmuLxgWQ",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:e49f80fe45b641af07c8d7de0f50d86fe32af8e8f3a7da48f5a48414fd82a9a1",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1fCMl2tuKSUiminr7YFaHy",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "2RSe2HhlvNk5U1xE$7AxvX",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:96e746297861d2abe26b93df83afbface86c57982b936220b214cced511692f1",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1jCJhhWLjm$CgaNzWdytNO",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:9e954df919624a832b878c4f889dfda7b4c9925df2b0f12fc0865c8d3df27337",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff"
+        },
+        "change_kind": "removed",
+        "global_id": "23RqzT6Yy3aEPSTos8AXQ1",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "02Dv1Xl$kfATxxxYAh4dyd",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:b36f789ec1ffcbab917e68994b6d83e2849cc3a858a6d5a6caaa19aa22af02f8",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "263r515BF9APUMlSa23buO",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0zaPMdkJ7t37RvLjrPvOCm",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:20026d830a8e29659fa0243d0af1b8943e1519cd3e33690acc3d3e69e9a2729f",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "26YrXjb2jNqXSg8iTNecH6",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "450513"
+          },
+          "containers": [],
+          "content_sha256": "sha256:97b1ce3ff51a215defa1eb4aabfd03e9f45b6712c0f2ad627a946b8f59c2d75e",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:798c677d756718ad06e819589576f5a76626bf4acd3c4b3af8919acb6a85e576"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513:1",
+          "placement": [
+            [
+              -1.0,
+              0.0,
+              0.0,
+              -1.99533
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              -4.640448
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.85
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "2RSe2HhlvNk5U1xE$7AxvX",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Category",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Windows"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:86f257b4667d4bfd28a6ab9959eb0764f5ceca6f838278d22d44b1e8f63c7de8",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ProductRequirements"
+        },
+        "change_kind": "removed",
+        "global_id": "2SrIqUM_8cSm0392UYLGak",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": false
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:65a16abf4cae7be6151e2c7ea7ae0b04b4d8aa7477545517cde754f3d77e9478",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "35W6_aO8_tEIGxf8wBizyi",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Category",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Windows"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:109d0d336bfaee4c1ccc4fd42071036c539280cbbd3caac29a44cd10ddc38dc7",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ProductRequirements"
+        },
+        "change_kind": "removed",
+        "global_id": "3AKhLS$Afc72GwUmuLxgWQ",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200",
+            "OverallHeight": 1.2000000000000017,
+            "OverallWidth": 1.1999999999999984,
+            "Tag": "450513"
+          },
+          "containers": [
+            "0r295zILD0gwHPe_YsN9m6"
+          ],
+          "content_sha256": "sha256:2a03d62ae89fb89f9bce671d99ef5a68041194c8a522f6f07d94240381ef6170",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:a712cc6ebfaa05ba62c12f8364aaf8cde4053dba8d45aaacc5d951f1f292fc73"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513",
+          "placement": [
+            [
+              -1.0,
+              0.0,
+              0.0,
+              -1.99533
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              -4.640448
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.85
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "1GfgA5HI0BvlcqzKUZLeGH"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200",
+            "OverallHeight": 1.2000000000000017,
+            "OverallWidth": 1.199999999999998,
+            "Tag": "450475"
+          },
+          "containers": [
+            "0r295zILD0gwHPe_YsN9m6"
+          ],
+          "content_sha256": "sha256:8665547318d7b49d737834824990b7eba8c66fd3b7c14944eaa169be61bcc0a5",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:a712cc6ebfaa05ba62c12f8364aaf8cde4053dba8d45aaacc5d951f1f292fc73"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475",
+          "placement": [
+            [
+              -1.0,
+              0.0,
+              0.0,
+              5.05467
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              -4.640448
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.85
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "1GfgA5HI0BvlcqzKUZLeGH"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "2RSe2HhlvNk5U1xE$7AxvX",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "3UH$Yu7uLAlvnoFYVwGblQ",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:37cbfd7195525483eedb502114060a9126deb34abe428184de1e159cf602a287",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3UH$Yu7uLAlvnoFZFwGbeQ",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "02Dv1Xl$kfATxxxYAh4dyd",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "3UH$Yu7uLAlvnoFYVwGblQ",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:a222b3d1c3f30ee56e9a1a7ca4176f3582f829609dbcdde9a8f443accb265fe8",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3UH$Yu7uLAlvnoFZFwGbfW",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": false
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:cc440d21c9a4e7aacf0f9d49266777582394b194f0d55bc7c7a740fe89c97a6e",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "3XnPHeXLpL288$BsQS0ieT",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "23RqzT6Yy3aEPSTos8AXQ1",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:edd5e6d1815e58fb0ce69294eeb810a48d22c58359119cb3c55b3f2afe84d572",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3ZHSvBlIXZYProiiolichg",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbeQ",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3XnPHeXLpL288$BsQS0ieT",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:9667df309c1cc668c4c5f0fff32821d19a43793c4e8b8a5450e4e2a7acb89b34",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3b_L0XmSRM0ZxGu0oRPVB0",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "3UH$Yu7uLAlvnoFYVwGbfW",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2SrIqUM_8cSm0392UYLGak",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:a559ae609ddd09ffa7c0048fa9d17762ffbaf543aee1738380ab661cffa4c9ed",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3hGlNWXq$IQxBTMxCyE7ss",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      }
+    ]
+  },
+  "source_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -4.325330356969773,
+            6.234669643030243
+          ],
+          [
+            -4.92044807824589,
+            -4.640448078245856
+          ],
+          [
+            0.0,
+            3.130566144283413
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "name": "Basic Wall:Ext. Wall:450065",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            3.8546696430302374,
+            5.054669643030236
+          ],
+          [
+            -4.920448078245866,
+            -4.640448078245866
+          ],
+          [
+            0.8500000000000001,
+            2.0500000000000016
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "02Dv1Xl$kfATxxxYAh4dyd",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "02Dv1Xl$kfATxxxYAh4dyd",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 58630,
+      "target": {
+        "OverallHeight_mm": 1200.0000000000018,
+        "OverallWidth_mm": 1199.999999999998,
+        "bounds_world_m": [
+          [
+            3.82966964303023,
+            5.079669643030231
+          ],
+          [
+            -4.92303657829133,
+            -4.615448078245867
+          ],
+          [
+            0.8429815000000359,
+            2.050000000000007
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450475",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "3UH$Yu7uLAlvnoFYVwGbfW",
+      "wall_guid": "3UH$Yu7uLAlvnoFYVwGblQ"
+    },
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -4.325330356969773,
+            6.234669643030243
+          ],
+          [
+            -4.92044807824589,
+            -4.640448078245856
+          ],
+          [
+            0.0,
+            3.130566144283413
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "name": "Basic Wall:Ext. Wall:450065",
+        "project_unit_to_mm": 1000
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -3.1953303569697638,
+            -1.9953303569697654
+          ],
+          [
+            -4.920448078245844,
+            -4.640448078245844
+          ],
+          [
+            0.8500000000000001,
+            2.0500000000000016
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "2RSe2HhlvNk5U1xE$7AxvX",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513:1",
+        "project_unit_to_mm": 1000
+      },
+      "opening_guid": "2RSe2HhlvNk5U1xE$7AxvX",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 58644,
+      "target": {
+        "OverallHeight_mm": 1200.0000000000018,
+        "OverallWidth_mm": 1199.9999999999984,
+        "bounds_world_m": [
+          [
+            -3.2203303569697717,
+            -1.9703303569697708
+          ],
+          [
+            -4.923036578291308,
+            -4.615448078245845
+          ],
+          [
+            0.8429815000000359,
+            2.050000000000007
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+        "name": "Window_Profile-22_Flush-Tilt-Turn_Single-Opening:Window_Profile-22_Flush-Tilt-Turn_Single-Opening 1200x1200:450513",
+        "project_unit_to_mm": 1000
+      },
+      "target_guid": "3UH$Yu7uLAlvnoFYVwGbeQ",
+      "wall_guid": "3UH$Yu7uLAlvnoFYVwGblQ"
+    }
+  ],
+  "wall_closure": {
+    "3UH$Yu7uLAlvnoFYVwGblQ": {
+      "actual_delta_m3": 0.8064000000000169,
+      "closed": true,
+      "expected_delta_m3": 0.8064000000000001,
+      "volume_after_m3": 8.388016859138085,
+      "volume_before_m3": 7.581616859138069
+    }
+  }
+}

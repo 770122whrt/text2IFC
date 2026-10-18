@@ -1,0 +1,383 @@
+{
+  "case_id": "formal-007",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "checks_sha256": "cac11786edf8bc0a95d9b224f5d1e8da8637c1daebdec27339a12151e5c1fc25",
+    "damaged_sha256": "3fd14684739cc59f0bab6f36f852674cf1c4dc5c0e332f34389b1447e216fa54",
+    "result_sha256": "8df5e74e214a6308287affbcc7f27d65e685d4edb258df78ea860390b21692ad",
+    "source_sha256": "96077863a6734f574fadc33c77199a9b82222fc4b3f4c0da6612eef9347c99a9",
+    "task_sha256": "3659fbd2a44c79aac00c41ff83dbd7095338308e23db46241902fd5fc73f1505"
+  },
+  "interaction_success": false,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 12,
+      "affected_root_ids": [
+        "034e5B_fz7vAW8vjpCcFkS",
+        "046MlDE_5D1PNUulEKA1gT",
+        "0GhsumvjjBHP$YGAK4v_YN",
+        "0iBWlqiX53jg$JnVEs4voI",
+        "0kNS8jU4D7UQn$BOysqjks",
+        "1WnwO1apvD68u4kCq5Bcce",
+        "2DoAX61zX3xwhTDQiqLkTw",
+        "2Pb_0qxG90lvbFzBdiRwMb",
+        "2jRQTs$Eb8qfyXfI2$xBt7",
+        "2ync$ggVbBLPbCfgtttbQo",
+        "3E0YCLkWHE2uqfSDCvRS2i",
+        "3suyewUoDEBwqb0khRjVOU"
+      ],
+      "extra_products": false,
+      "preservation_pass": false,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 1,
+      "numerator": 1,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": false
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": false
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcWindow": 1
+      },
+      "credited_by_class": {
+        "IfcWindow": 1
+      },
+      "denominator": 1,
+      "excess_by_class": {
+        "IfcWindow": 0
+      },
+      "numerator": 1,
+      "required_by_class": {
+        "IfcWindow": 1
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 3,
+      "numerator": 3,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": false
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 9,
+    "diagnostics": [
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#130570=IfcPropertySet('034e5B_fz7vAW8vjpCcFkS',#42,'PSet_Revit_Type_Identity Data',$,(#130552,#130558,#130559,#130560,#130561))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #130818=IfcRelDefinesByProperties('2Pb_0qxG90lvbFzBdiRwMb',#42,$,$,(#130602),#130570)\n      2. #131258=IfcRelDefinesByProperties('3fMHA99wn8dfoffLsliXRk',#42,$,$,(#131247),#130570)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#130571=IfcPropertySet('2jRQTs$Eb8qfyXfI2$xBt7',#42,'PSet_Revit_Type_Materials and Finishes',$,(#130553,#130555))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #130819=IfcRelDefinesByProperties('2DoAX61zX3xwhTDQiqLkTw',#42,$,$,(#130602),#130571)\n      2. #131259=IfcRelDefinesByProperties('1qcfruJKj2yB8ETu6rT9AI',#42,$,$,(#131247),#130571)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#130572=IfcPropertySet('0iBWlqiX53jg$JnVEs4voI',#42,'PSet_Revit_Type_Dimensions',$,(#130554,#73771,#130556,#130557))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #130820=IfcRelDefinesByProperties('1WnwO1apvD68u4kCq5Bcce',#42,$,$,(#130602),#130572)\n      2. #131260=IfcRelDefinesByProperties('3YqcAmhnLFpwSjpSRpv9jj',#42,$,$,(#131247),#130572)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#130573=IfcPropertySet('3E0YCLkWHE2uqfSDCvRS2i',#42,'PSet_Revit_Type_Construction',$,(#2737))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #130821=IfcRelDefinesByProperties('0GhsumvjjBHP$YGAK4v_YN',#42,$,$,(#130602),#130573)\n      2. #131261=IfcRelDefinesByProperties('1ndSUYQPzFHfPuKwd5cnSm',#42,$,$,(#131247),#130573)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeRepresentation.OfProductRepresentation",
+        "instance": "#130583=IfcShapeRepresentation(#36,'Body','SweptSolid',(#130582))",
+        "level": "error",
+        "message": "With inverse:\n    OfProductRepresentation : SET [0:1] OF IfcProductRepresentation FOR Representations\nValue:\n    [\n      1. #130584=IfcProductDefinitionShape($,$,(#130583))\n      2. #131237=IfcProductDefinitionShape($,$,(#130583))\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#130604=IfcPropertySet('3suyewUoDEBwqb0khRjVOU',#42,'Pset_WindowCommon',$,(#130603,#1760))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #130605=IfcRelDefinesByProperties('046MlDE_5D1PNUulEKA1gT',#42,$,$,(#130602),#130604)\n      2. #131250=IfcRelDefinesByProperties('34$4lDg$1FMOYtDWfTgtAC',#42,$,$,(#131247),#130604)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcPropertySet.PropertyDefinitionOf",
+        "instance": "#130617=IfcPropertySet('0kNS8jU4D7UQn$BOysqjks',#42,'PSet_Revit_Phasing',$,(#130610))",
+        "level": "error",
+        "message": "With inverse:\n    PropertyDefinitionOf : SET [0:1] OF IfcRelDefinesByProperties FOR RelatingPropertyDefinition\nValue:\n    [\n      1. #130618=IfcRelDefinesByProperties('2ync$ggVbBLPbCfgtttbQo',#42,$,$,(#130602),#130617)\n      2. #131262=IfcRelDefinesByProperties('05MqoJCSf2y8MP7tZPC5TZ',#42,$,$,(#131247),#130617)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcWindowStyle.ObjectTypeOf",
+        "instance": "#130530=IfcWindowStyle('13tuYCI0z7tvfnBs1sHUPT',#42,'36\" x 72\"',$,$,(#130529),(#130527,#130528),'283972',.NOTDEFINED.,.NOTDEFINED.,.F.,.F.)",
+        "level": "error",
+        "message": "With inverse:\n    ObjectTypeOf : SET [0:1] OF IfcRelDefinesByType FOR RelatingType\nValue:\n    [\n      1. #130774=IfcRelDefinesByType('1ZW2YuHCvFCOvRYbZwvH76',#42,$,$,(#130602),#130530)\n      2. #131249=IfcRelDefinesByType('30XIMRnhb6Z9vTcsz_Qvcd',#42,$,$,(#131247),#130530)\n    ]\nNot valid\n"
+      },
+      {
+        "attribute": "IfcShapeModel.WR11",
+        "instance": "#130583=IfcShapeRepresentation(#36,'Body','SweptSolid',(#130582))",
+        "level": "error",
+        "message": "(sizeof(SELF.OfProductRepresentation) == 1) ^ (sizeof(SELF.RepresentationMap) == 1) ^ (sizeof(ofshapeaspect) == 1)\n\nViolated by:\n    ((2 == 1 ^ 0 == 1) ^ 0 == 1)\n     +  where 2 = sizeof((#130584=IfcProductDefinitionShape($,$,(#130583)), #131237=IfcProductDefinitionShape($,$,(#130583))))\n     +    where (#130584=IfcProductDefinitionShape($,$,(#130583)), #131237=IfcProductDefinitionShape($,$,(#130583))) = #130583=IfcShapeRepresentation(#36,'Body','SweptSolid',(#130582)).OfProductRepresentation\n     +  and   0 = sizeof(())\n     +    where () = #130583=IfcShapeRepresentation(#36,'Body','SweptSolid',(#130582)).RepresentationMap\n     +  and   0 = sizeof(())\n\nOn instance:\n    #130583=IfcShapeRepresentation(#36,'Body','SweptSolid',(#130582))\n"
+      }
+    ],
+    "express_rules": true,
+    "passed": false,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 1828.8000000000022,
+        "host_guid": "2iLpbw1JTCxhSAA5dilMd9",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -10.068515700312368,
+          7.5420393487155355,
+          11.2776
+        ],
+        "opening_bottom_world_m": 10.363199999999999,
+        "opening_center_xy_m": [
+          -10.068515700312368,
+          7.5420393487155355
+        ],
+        "opening_height_mm": 1828.800000000003,
+        "opening_width_mm": 914.3999999999996,
+        "reference_guid": "0wgESE2Yb7g8PPk_szuqQW",
+        "storey_guid": "0L$DY82en23vPAzQO9ev2U",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -1.3322676295501878e-15,
+          0.0
+        ],
+        "width_mm": 914.4000000000001
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": false,
+    "removed_roots": [
+      "034e5B_fz7vAW8vjpCcFkS",
+      "046MlDE_5D1PNUulEKA1gT",
+      "0GhsumvjjBHP$YGAK4v_YN",
+      "0iBWlqiX53jg$JnVEs4voI",
+      "0kNS8jU4D7UQn$BOysqjks",
+      "1WnwO1apvD68u4kCq5Bcce",
+      "2DoAX61zX3xwhTDQiqLkTw",
+      "2Pb_0qxG90lvbFzBdiRwMb",
+      "2jRQTs$Eb8qfyXfI2$xBt7",
+      "2ync$ggVbBLPbCfgtttbQo",
+      "3E0YCLkWHE2uqfSDCvRS2i",
+      "3suyewUoDEBwqb0khRjVOU"
+    ],
+    "scope": "unchanged existing roots after subtracting new products; no whole-host waiver; introduced roots must be occurrence support; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 1,
+    "required": 1
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "0FgkCWqs18ARZ1A73tzB$m",
+          "relation_guid": "2SxueEp5P2a8mX_5e5w2yS"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0FgkCWqs18ARZ1A73tzB$m",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "2iLpbw1JTCxhSAA5dilMd9",
+          "relation_guid": "08w94Bttb43eS$ERd7VYts"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2iLpbw1JTCxhSAA5dilMd9",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0L$DY82en23vPAzQO9ev2U",
+          "relation_guid": "3nLNtyc9r0oPgvK3ziZQef"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0L$DY82en23vPAzQO9ev2U",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    }
+  ],
+  "relations": {
+    "correct": 3,
+    "required": 3
+  },
+  "repair_success": false,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.1",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 1828.8000000000022,
+        "host_guid": "2iLpbw1JTCxhSAA5dilMd9",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -10.068515700312368,
+          7.5420393487155355,
+          11.2776
+        ],
+        "opening_bottom_world_m": 10.363199999999999,
+        "opening_center_xy_m": [
+          -10.068515700312368,
+          7.5420393487155355
+        ],
+        "opening_height_mm": 1828.800000000003,
+        "opening_width_mm": 914.3999999999996,
+        "reference_guid": "0wgESE2Yb7g8PPk_szuqQW",
+        "storey_guid": "0L$DY82en23vPAzQO9ev2U",
+        "target_center_offset_from_opening_m": [
+          0.0,
+          -1.3322676295501878e-15,
+          0.0
+        ],
+        "width_mm": 914.4000000000001
+      },
+      "matching": {
+        "candidates": [
+          "1crKZzq15D5wLjSYZMRTzd"
+        ],
+        "distances_m": [
+          7.105427357601002e-15
+        ],
+        "guid": "1crKZzq15D5wLjSYZMRTzd",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "0FgkCWqs18ARZ1A73tzB$m"
+        ],
+        "distances_m": [
+          7.105427357601002e-15
+        ],
+        "guid": "0FgkCWqs18ARZ1A73tzB$m",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 914.3999999999996,
+        "required_mm": 914.3999999999996,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          0.0,
+          -8.881784197001252e-16,
+          1.7763568394002505e-15
+        ],
+        "allowed_offsets_world_m": [
+          [
+            0.0,
+            -1.3322676295501878e-15,
+            0.0
+          ]
+        ],
+        "max_axis_errors_m": [
+          1.7763568394002505e-15
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    }
+  ],
+  "terminal": "submitted"
+}

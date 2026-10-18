@@ -12,6 +12,7 @@ import json
 import math
 import uuid
 from dataclasses import dataclass, replace
+from pathlib import Path
 from typing import Any, Mapping, Protocol
 
 import ifcopenshell.guid
@@ -134,6 +135,7 @@ def resolve_repair_intent(
     property_registry: IfcKnowledgeRegistry | None = None,
     property_knowledge_resolver: PropertyKnowledgeResolverProtocol | None = None,
     source_ifc_path: Any = None,
+    installation_references: Mapping[str, Any] | None = None,
 ) -> ResolutionBatch:
     """Resolve all operations in stable order or return one fail-closed pause."""
 
@@ -298,6 +300,57 @@ def resolve_repair_intent(
                         for item in decision.get("authorized_semantics", ())
                     ),
                 )
+        # Only the scene API's verified, persisted reference identities enter
+        # this internal canonical field. Provider parameters cannot supply it.
+        installation = (installation_references or {}).get(operation.operation_id)
+        if installation is not None:
+            from .door_geometry import (
+                public_door_installation_anchor, validate_door_installation_target, has_direct_door_brep,
+            )
+            from .window_geometry import public_window_installation_anchor
+            is_window = operation.operation_type == "add_window_with_opening_to_wall"
+            prefix = "WINDOW" if is_window else "DOOR"
+            try:
+                if (operation.operation_type not in {"fill_existing_opening_with_door", "add_door_with_opening_to_wall", "add_window_with_opening_to_wall"}
+                        or installation["target_global_id"] != record.ifc_global_id
+                        or source_ifc_path is None):
+                    raise ValueError(f"{prefix}_INSTALLATION_BINDING_MISMATCH")
+                source_bytes = Path(source_ifc_path).read_bytes()
+                if hashlib.sha256(source_bytes).hexdigest() != expected_source_sha256.removeprefix("sha256:"):
+                    raise ValueError(f"{prefix}_INSTALLATION_SOURCE_MISMATCH")
+                public_model = ifcopenshell.file.from_string(source_bytes.decode("utf-8"))
+                reference = public_model.by_guid(str(installation["reference_global_id"]))
+                if not reference.is_a("IfcWindow" if is_window else "IfcDoor"):
+                    raise ValueError(f"{prefix}_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
+                reference_types = [relation.RelatingType for relation in reference.IsDefinedBy
+                                   if relation.is_a("IfcRelDefinesByType")]
+                if len(reference_types) != 1 or not reference_types[0].is_a("IfcWindowStyle" if is_window else "IfcDoorStyle"):
+                    raise ValueError(f"{prefix}_INSTALLATION_REFERENCE_TYPE_AMBIGUOUS")
+                prototype = operation.to_dict().get("prototype_intent") or {}
+                if (prototype.get("reference_kind") != "global_id"
+                        or prototype.get("reference") != str(reference_types[0].GlobalId)):
+                    raise ValueError(f"{prefix}_INSTALLATION_REFERENCE_TYPE_MISMATCH")
+                # Exact direct Brep geometry can be reused from this offered
+                # Door occurrence even when its Type has no maps. Other legacy
+                # mapless representations retain the old rectangle creator.
+                # A mapped Type never falls back after an invalid witness.
+                if reference_types[0].RepresentationMaps or (not is_window and has_direct_door_brep(reference)):
+                    anchor = public_window_installation_anchor(reference) if is_window else public_door_installation_anchor(reference,
+                        allow_wall_face_adaptation=(not reference_types[0].RepresentationMaps
+                            and installation.get("wall_face_adaptation_authorized") is True))
+                    if operation.operation_type == "fill_existing_opening_with_door":
+                        validate_door_installation_target(public_model.by_guid(record.ifc_global_id), anchor)
+                    if is_window:
+                        # Keep the released Window intent/parameter schemas
+                        # unchanged. The exact reference is trusted canonical
+                        # evidence, echoed unchanged by the draft and binder.
+                        context = {**context, "window_installation_anchor": anchor}
+                        evidence = (*evidence, f"public-window-installation/0.1:{anchor['reference_global_id']}")
+                    else:
+                        resolved_parameters = {**resolved_parameters, "door_installation_anchor": anchor}
+            except (ValueError, RuntimeError, KeyError, TypeError, AttributeError) as error:
+                return _failure(intent, str(error), operation_id=operation.operation_id,
+                                operations=completed, source_sha=expected_source_sha256)
         completed.append(
             ResolvedOperation(
                 operation_id=operation.operation_id,
@@ -600,7 +653,11 @@ def resolve_repair_intent(
                 property_resolution = resolve_exact_property_intent(
                     exact_intent,
                     target_ifc_class=property_target_class,
-                    existing_facts=(),
+                    existing_facts=(
+                        record.properties
+                        if record.ifc_class == property_target_class
+                        else ()
+                    ),
                     registry=knowledge,
                 )
                 if semantic_source is not None and prototype is not None and prototype.reference_kind in {"global_id", "type_name"}:

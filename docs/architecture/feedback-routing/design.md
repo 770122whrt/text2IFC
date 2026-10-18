@@ -1,6 +1,27 @@
 # Text2IFC Workflow Language Policy and Feedback Routing Design
 
-> 文档类型：架构专题设计；配套实施指令见同目录 `implementation-prompt.md`。
+> 文档类型：Phase 6.4 初始架构设计与历史决策。旧实施 Prompt 的有效约束已收拢于本页，不再另立执行入口。
+
+## 阅读定位（2026-10-17 整理）
+
+本页正文中的“当前”“下一阶段”和“尚未成立”指 Phase 6.4 立项时的判断。
+Issue／RouteDecision 字段、语言分层、拒绝错误放行和三类两层案例的设计保留于下文；
+阶段合同以 [Phase 6.4 SPEC](../../../.planning/phases/06.4-feedback-routing-loop-mvp-and-live-deepseek-matrix/06.4-SPEC.md)
+为准，后续 Generation 链路见[截至 Phase 6.5 的工作流](../current-workflow-and-data-flow.md)。
+
+- [Phase 6.4 历史验收](../../../.planning/phases/06.4-feedback-routing-loop-mvp-and-live-deepseek-matrix/06.4-VERIFICATION.md)
+  已记录 Issue 归一化、RouteDecision v2、有界反馈、矩阵及真实 Provider 的 accepted／
+  non-accept 路径。确定性矩阵的零 false accept 不等于任意复杂两层建筑均能成功；
+  后续 datum／stair 几何问题仍保留为 non-accept 证据，Audit 不能覆盖确定性失败。
+- 本页 `max_feedback_rounds = 2` 属于 Phase 6.4 MVP；Phase 6.5 已采用绑定 Candidate
+  Hash、Issue 与授权范围的 Scoped ChangeSet，默认最多三轮返工。两种阶段策略各按
+  对应合同理解，不能把旧 Prompt 的两轮值当作现行全局配置。
+- 英文控制词汇用于机器字段、枚举、路由和 Prompt；中文用户原文、澄清记录及人读
+  报告按相应合同保留。语言整理不改变原始事实或已注册 Prompt 的历史版本。
+
+[原实施 Prompt](https://github.com/770122whrt/text2IFC/blob/48f32bba4c1976178a97267a98e569080f44063e/docs/architecture/feedback-routing/implementation-prompt.md)
+保留于固定 Git 修订，供追溯当时的任务指令；其字段、路由、产物、测试和成功标准
+由本页及上述阶段合同承接，不作为新的开发或真实调用授权。
 
 ## 1. 文档目的
 
@@ -742,6 +763,10 @@ report.md
 ---
 
 ## 13. 建议实施顺序
+
+实施前先核对并复用已有 validation、compiler／reopen、Gate、Audit、expected facts、
+Provider、CLI／session、route、report 与 trace 模块，再补齐缺失的归一化和路由接缝；
+避免创建重复概念或把这一专题扩大为整库重构。
 
 建议按以下顺序推进：
 

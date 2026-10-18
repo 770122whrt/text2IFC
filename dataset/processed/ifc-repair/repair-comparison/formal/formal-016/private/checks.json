@@ -1,0 +1,208 @@
+{
+  "passed": true,
+  "checks": {
+    "source_unchanged": true,
+    "G_native_schema_express_passed": true,
+    "D_native_schema_express_passed": true,
+    "only_declared_products_removed": true,
+    "no_product_created": true,
+    "only_selected_occurrence_properties_changed": true,
+    "retained_geometry_unchanged": true,
+    "nonempty_source_and_damaged_geometry": true,
+    "correct_typed_damage": true,
+    "removed_opening_regions_closed": true
+  },
+  "source_validation_reused": true,
+  "source_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "damaged_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "geometry_counts": {
+    "G": 2647,
+    "D": 2647
+  },
+  "unrelated_mesh_count_checked": 2647,
+  "wall_closure": {},
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "change_kind": "modified",
+        "global_id": "0NIp9HAf14peCTB8qDIG0n",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ColumnCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "120"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "kolom vierkant_gen_lxb 500x800 (C35/45)"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:e8b94f46f67eaa2173ae5c499fbdc10119866050c55d3980404fb3aeea18b098"
+        },
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ColumnCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "FireRating",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "60"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "kolom vierkant_gen_lxb 500x800 (C35/45)"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:2a96c46c34c189b4271e866947e76ddbadec00ad638b9f5063a1d4320bab3520"
+        }
+      }
+    ],
+    "removed": []
+  }
+}

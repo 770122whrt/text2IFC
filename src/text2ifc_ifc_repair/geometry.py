@@ -74,6 +74,30 @@ def wall_dimensions_mm(wall: Any) -> dict[str, float]:
     }
 
 
+def wall_normal_center_offset_mm(wall: Any) -> float:
+    """Measure the physical Body centre relative to its straight IFC Axis.
+
+    Axis may lie at a wall face or another authoring datum. A through-wall
+    cutter must follow the measured Body, while its along-axis position and
+    sill remain the requested facts. Local mesh coordinates are SI metres.
+    """
+    start, end = straight_wall_axis(wall)
+    dx, dy = end[0] - start[0], end[1] - start[1]
+    length = math.hypot(dx, dy)
+    if not math.isfinite(length) or length <= 0:
+        raise ValueError(UNSUPPORTED_WALL_GEOMETRY)
+    normal = (-dy / length, dx / length)
+    scale = ifcopenshell.util.unit.calculate_unit_scale(wall.file) * 1000.0
+    axis_normal_mm = (start[0] * normal[0] + start[1] * normal[1]) * scale
+    shape = ifcopenshell.geom.create_shape(ifcopenshell.geom.settings(), wall)
+    vertices = shape.geometry.verts
+    coordinates = [(vertices[i] * normal[0] + vertices[i + 1] * normal[1]) * 1000.0
+                   - axis_normal_mm for i in range(0, len(vertices), 3)]
+    if not coordinates or not all(math.isfinite(value) for value in coordinates):
+        raise ValueError(UNSUPPORTED_WALL_GEOMETRY)
+    return (min(coordinates) + max(coordinates)) / 2.0
+
+
 def opening_dimensions_mm(opening: Any) -> dict[str, float]:
     """Measure an axis-aligned opening in its object-local coordinates."""
 

@@ -14,7 +14,11 @@ from text2ifc_ifc_repair.evaluation_policy import (
     SemanticFactSpec,
 )
 from text2ifc_ifc_repair.registry import OperationDefinition
-from text2ifc_ifc_repair.semantic_facts import extract_property_facts
+from text2ifc_ifc_repair.property_intent import validate_authorized_property_fact
+from text2ifc_ifc_repair.semantic_facts import (
+    extract_property_facts,
+    semantic_fact_key_token,
+)
 from text2ifc_knowledge.registry import load_ifc2x3_registry
 
 
@@ -162,6 +166,8 @@ def _precondition_checker(
     for index, assignment in enumerate(assignments):
         issue = _assignment_authority_issue(
             target_ifc_class=target.is_a(),
+            target_global_id=str(target.GlobalId),
+            operation_id=str(operation.get("operation_id", "")),
             assignment=assignment,
         )
         if issue is not None:
@@ -210,8 +216,55 @@ def _check_failure(
 def _assignment_authority_issue(
     *,
     target_ifc_class: str,
+    target_global_id: str,
+    operation_id: str,
     assignment: Mapping[str, Any],
 ) -> tuple[str, str] | None:
+    authority_entries = [
+        str(item).removeprefix("property-authority:")
+        for item in assignment.get("provenance", ())
+        if str(item).startswith("property-authority:")
+    ]
+    confirmed_custom = False
+    if authority_entries:
+        if len(authority_entries) != 1:
+            return "PROPERTY_AUTHORITY_INVALID", "duplicate property authority"
+        try:
+            authority = json.loads(authority_entries[0])
+            if not isinstance(authority, dict):
+                raise ValueError("AUTHORIZED_PROPERTY_BINDING_MISMATCH")
+            validate_authorized_property_fact(authority, target_ifc_class=target_ifc_class)
+        except (TypeError, ValueError) as exc:
+            return "PROPERTY_AUTHORITY_INVALID", str(exc)
+        exact_path = f"{authority['set_name']}.{authority['property_name']}"
+        provenance = set(assignment.get("provenance", ()))
+        expected_provenance = {
+            f"property-hash:{authority['property_hash']}",
+            f"operation:{operation_id}",
+            f"request-source:{authority['source']['source_kind']}",
+            f"request-evidence:{authority['source']['reference']}",
+            f"source_fact_key:pset:{exact_path}",
+        }
+        if authority.get("classification") == "custom_confirmed":
+            expected_provenance.add(f"confirmation:{authority['confirmation_ref']}")
+            confirmed_custom = True
+        if (
+            authority["operation_id"] != operation_id
+            or authority["target_global_id"] != target_global_id
+            or assignment.get("operation_id") != operation_id
+            or assignment.get("fact_key") != f"pset:{semantic_fact_key_token(exact_path)}"
+            or assignment.get("source_fact_key") != f"pset:{exact_path}"
+            or assignment.get("value") != authority["value"]
+            or assignment.get("value_type") != authority["value_type"]
+            or assignment.get("unit") != authority["unit"]
+            or assignment.get("source_kind") != EvidenceSourceKind.EXPLICIT_REQUEST.value
+            or assignment.get("source_ref") != authority["source"]["reference"]
+            or not expected_provenance.issubset(provenance)
+        ):
+            return "PROPERTY_AUTHORITY_BINDING_MISMATCH", exact_path
+    if confirmed_custom:
+        return _assignment_scope_issue(target_ifc_class, assignment)
+
     fact_key = str(assignment.get("fact_key") or "")
     source_fact_key = str(assignment.get("source_fact_key") or "")
     if fact_key != source_fact_key or not fact_key.startswith("pset:"):
@@ -244,6 +297,12 @@ def _assignment_authority_issue(
     if actual_type != expected_type:
         return "PROPERTY_VALUE_TYPE_MISMATCH", actual_type
 
+    return _assignment_scope_issue(target_ifc_class, assignment)
+
+
+def _assignment_scope_issue(
+    target_ifc_class: str, assignment: Mapping[str, Any]
+) -> tuple[str, str] | None:
     class_scope = {
         "IfcBeam": "beam_occurrence",
         "IfcColumn": "column_occurrence",
@@ -377,6 +436,11 @@ def _comparison_adapter(
             "semantic_pset_relationship": "IfcRelDefinesByProperties",
             "semantic_pset_copy_on_write": "IfcPropertySet",
             "semantic_pset_relationship_copy_on_write": "IfcRelDefinesByProperties",
+            **{f"{role}_{index}": ifc_class
+               for role, ifc_class in (
+                   ("semantic_pset_copy_on_write", "IfcPropertySet"),
+                   ("semantic_pset_relationship_copy_on_write", "IfcRelDefinesByProperties"))
+               for index in range(2, 65)},
             **{
                 f"semantic_pset_{index}": "IfcPropertySet"
                 for index in range(2, 65)
@@ -390,6 +454,11 @@ def _comparison_adapter(
             "target": target_class,
             "semantic_pset_updated": "IfcPropertySet",
             "semantic_shared_pset_relationship": "IfcRelDefinesByProperties",
+            **{f"{role}_{index}": ifc_class
+               for role, ifc_class in (
+                   ("semantic_pset_updated", "IfcPropertySet"),
+                   ("semantic_shared_pset_relationship", "IfcRelDefinesByProperties"))
+               for index in range(2, 65)},
         },
         "removed": {},
         "required_roles": {"modified": ("target",)},
@@ -403,6 +472,9 @@ def _comparison_adapter(
             "semantic_shared_pset_relationship": {
                 "ifc_class": "IfcRelDefinesByProperties"
             },
+            **{f"{role}_{index}": {"ifc_class": "IfcRelDefinesByProperties"}
+               for role in ("semantic_shared_pset_relationship", "semantic_pset_relationship_copy_on_write")
+               for index in range(2, 65)},
             **{
                 f"semantic_pset_relationship_{index}": {
                     "ifc_class": "IfcRelDefinesByProperties"

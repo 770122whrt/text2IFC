@@ -1,0 +1,3077 @@
+{
+  "schema_version": "repair-final-artifact-pairs/0.1",
+  "checked_at_utc": "2026-10-17T07:05:31.377115+00:00",
+  "scope": {
+    "server_no_c_loop": "current read-only ledger metadata and file existence/stat",
+    "server_f": "frozen 55-artifact inventory collected 2026-10-15; not recollected in this audit",
+    "production_writes": 0,
+    "model_calls": 0,
+    "reruns": 0,
+    "ifc_rehashes": 0
+  },
+  "old_partial_snapshot": {
+    "no_c_inventory": {
+      "path": "dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/host-review/c-schema-all-20261015-01/remote-inventory.json",
+      "sha256": "a275039d570c18f7e1ae624e45cb98dff88c29f8ac7bfd4c158e8baaa7dedb83"
+    },
+    "no_c_artifacts": 29,
+    "matched_pairs": 12,
+    "identical_sha256": 7,
+    "different_sha256": 5,
+    "then_uncollected_artifact_rows": 92,
+    "meaning": "metadata collection gap, not missing server IFC files or failed tasks"
+  },
+  "final_snapshot": {
+    "no_c_tasks": 400,
+    "no_c_artifacts": 121,
+    "existing_no_c_artifacts": 121,
+    "no_c_status_counts": {
+      "submitted": 121,
+      "no_output": 269,
+      "runtime_error": 10
+    },
+    "no_c_activities": 0,
+    "no_c_inflight": 0,
+    "previous_29_hashes_preserved": true,
+    "new_inventory_rows_collected": 92
+  },
+  "common_200_case_output_table": {
+    "f_artifacts": 55,
+    "no_c_artifacts": 62,
+    "both_output": 43,
+    "f_only_output": 12,
+    "no_c_only_output": 19,
+    "neither_output": 126,
+    "both_output_same_sha256": 32,
+    "both_output_different_sha256": 11
+  },
+  "outside_common_200": {
+    "ablation_additional_cases": 200,
+    "no_c_artifacts": 59,
+    "full_f_counterpart": false
+  },
+  "F_inventory": {
+    "path": ".tmp/repair-fg-server/server-F-evaluation/recorded-validation.json",
+    "sha256": "633425f6ff90188ea8d65fff8a1de81202952697a1c8bb22e7f313cc97e1c789"
+  },
+  "common_case_rows": [
+    {
+      "case_id": "formal-001-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "75c80abe9e50da1d19320cfd88b4e940e1941dfd5cccaf64789f8060c34fb5c4",
+      "no_c_sha256": "75c80abe9e50da1d19320cfd88b4e940e1941dfd5cccaf64789f8060c34fb5c4",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-001-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "3d3d5f35212ebddd95a8e45f45a32aa40b646bdf8dee5fced109eacbc80003ac",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-001-d006-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "d998ebcb2bf26d7999682510d51f89a73e498d94e6531b9ae7779f312d66764d",
+      "no_c_sha256": "a7a50c337835d32e4150b2ec49b0d96acabf1b55b875d2dbdaaf8329affc76b8",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-001-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-001-e2-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "a6a02fa033b905957217ba0e7e8b76f2a5fa2e7c93ab8ce715806b34ac3ea49a",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-002-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-002-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-002-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-002-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "runtime_error"
+    },
+    {
+      "case_id": "formal-002-d013-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-003-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "e6174af1b792d2ff4d0f4d9b8e2ea4e274ffd13f8c92bef4ff19767e63325110",
+      "no_c_sha256": "79299b4fcfaa496e917422b89b0c246b046f5ada5dd171f65ccbe5de10ac8b47",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-003-d008-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "a7f7b653b419182be92b21c1a020cd5bb295960badd94f083ac60de5cede0a7e",
+      "no_c_sha256": "a7f7b653b419182be92b21c1a020cd5bb295960badd94f083ac60de5cede0a7e",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-003-d028-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "runtime_error"
+    },
+    {
+      "case_id": "formal-003-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-003-s1-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "runtime_error"
+    },
+    {
+      "case_id": "formal-004-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-004-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-004-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-004-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "1fedba1defd2e87c03b8b6b54011127b8491d50fb85f16238c4a58a70ac7d274",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-004-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-005-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "e3470875296eaba938455d7d209be25c48244e4de6ec8a89a8967d9a230730b4",
+      "no_c_sha256": "e3470875296eaba938455d7d209be25c48244e4de6ec8a89a8967d9a230730b4",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-005-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-005-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-005-d017-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-005-e2-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-006-d001-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "675f6687b6d65b0e479ecfa667e9f7b56877acedddcc73440392bd4c273be19c",
+      "no_c_sha256": "52ac552330033b8c231f243bc77f2e6a8328e98d5ccb9d6582b6bd8b5cb71bdb",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-006-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "047fbf420a9851dacc01fff71ff7110497ed3ffcea4111028b1dcdfe389afda1",
+      "no_c_sha256": "047fbf420a9851dacc01fff71ff7110497ed3ffcea4111028b1dcdfe389afda1",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-006-d005-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "444ea08f82426eb1233b67816fda930a4f5f85b126e96db6461d673a8c90c2fe",
+      "no_c_sha256": "23f16a14a71e4f607c8bf6d0fad8ab8db57c5bd1e7ce9f299836133e26366bdd",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-006-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-006-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-007-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "9c099367b8d95ff7bcf6f2d43d0546ee1067133775dca265c7dd5554b98f5666",
+      "no_c_sha256": "9c099367b8d95ff7bcf6f2d43d0546ee1067133775dca265c7dd5554b98f5666",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-007-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "5ea3e0940f85e81dbc9f67d6b815a1e9c519ebf32fd11d41d6b51633324a91f6",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-007-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-007-s1-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-007-s1-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-008-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "65ccc1905264b06c83718e46cc3fbae4219f23549a4bc4b14a713044c6f1d90b",
+      "no_c_sha256": "65ccc1905264b06c83718e46cc3fbae4219f23549a4bc4b14a713044c6f1d90b",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-008-d003-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "9e9e502a8088c7effd4cd18589e9b294c353e0e6f6e03f8afd84e3d6dec6f3c3",
+      "no_c_sha256": "da56d4b86b5c3a8f1c1f9d2c572cd462d77579cdec933e1ee736647d8d769762",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-008-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "b31e68d8ab64d487b0d104aa089bc15ff08da296ffd12485eb9ad56cb1e34a80",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-008-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-008-d010-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-009-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "83c70191492f2eedf33b9c16dfb50d564578b80572917eec475b702759ab0016",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-009-d011-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "72c279644ad5d02e951b7891e85c323c38a1808080772192e170a585e99932d6",
+      "no_c_sha256": "72c279644ad5d02e951b7891e85c323c38a1808080772192e170a585e99932d6",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-009-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-009-d013-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "719aaa8b6974f9574a116a056f9cc6a5ebe3c3825c22591938cd683aa7386ed3",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-009-d014-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "runtime_error"
+    },
+    {
+      "case_id": "formal-010-d008-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "8d17fe338dd73fab6a710b265161e297352ffb79bdebd724d24a235ba42ba78b",
+      "no_c_sha256": "8d17fe338dd73fab6a710b265161e297352ffb79bdebd724d24a235ba42ba78b",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-010-d010-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "71aaa2bdbf46e1426623dab775262b7e0e53b7b4fe76f7771e9d1dc2a5410158",
+      "no_c_sha256": "71aaa2bdbf46e1426623dab775262b7e0e53b7b4fe76f7771e9d1dc2a5410158",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-010-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-010-d013-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-010-d014-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "cbd881c1f27ca32f7b949ef6986048854b1bb5f15d1d4a7b15c42b11a53ab31f",
+      "no_c_sha256": "cbd881c1f27ca32f7b949ef6986048854b1bb5f15d1d4a7b15c42b11a53ab31f",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-011-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-011-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-011-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "a3ddccc04b928fecc72c9b029421c4f8380facdbbfc1436083f4809592b39016",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-011-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-011-e2-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-012-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-012-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-012-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-012-d017-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-012-e2-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-013-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-013-d005-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "eb8a6669038defa778de9f29928bdeda1fb5dc36f54e80628adf1d57196199db",
+      "no_c_sha256": "eb8a6669038defa778de9f29928bdeda1fb5dc36f54e80628adf1d57196199db",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-013-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-013-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-013-e2-d003-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "85f22d87a6331422f8b7eefd52a6613efe45a4360349d844f85fa4502378ea84",
+      "no_c_sha256": "85f22d87a6331422f8b7eefd52a6613efe45a4360349d844f85fa4502378ea84",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-014-d009-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "74151998e9fdc56e0210a6ef3ed4a20c771b005f8fc45829b43b6ed57759d52e",
+      "no_c_sha256": "986033ae7c2c2a0df322feec2f70d9b515f546619800b75cd8f6a0140c60ef5f",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-014-d019-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "runtime_error"
+    },
+    {
+      "case_id": "formal-014-d022-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "010d3c4ddba9735e5c55aadc12695cfce4e779086fbb7f7b94dfbdb35e19793c",
+      "no_c_sha256": "010d3c4ddba9735e5c55aadc12695cfce4e779086fbb7f7b94dfbdb35e19793c",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-014-d028-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "51750a3ea43a50a2d5f60d6340365ac53d878258df983a08fe0777b7118de351",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-014-e2-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "ef50c0d1826497adb55089e18493cca7f1aa3daa2907f8a25d357b088e96843d",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-015-d005-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "ac36dab57e1824c242181f786d2ab91adc5ccc7e349dd7322fd066b89ebe1cd3",
+      "no_c_sha256": "ac36dab57e1824c242181f786d2ab91adc5ccc7e349dd7322fd066b89ebe1cd3",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-015-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-015-d015-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "99a665ed3afd8368eba355153823c85d0012b25a33e033a2472667ad43a7d327",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-015-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-015-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-016-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "f164b9050e46ccf8d2463d55aa6d8bb9423d8e971e3f30ecc09a9e5e14a3bfce",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-016-s1-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-016-s1-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-016-s1-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-016-s1-d018-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-017-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-017-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-017-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-017-d015-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-017-d022-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-018-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-018-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-018-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-018-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-018-e2-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-019-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "03cf0b014e62559abaab31e39b23a5fd94db58a2c9b4a56fcf53cca54bc2d71a",
+      "no_c_sha256": "ab222c15b7fcbf9599f23b0071f4f84fa28108e397b8c7627a7b1642a514b963",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-019-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-019-d017-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-019-d022-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "9e5620c04fd381d6c2c234948ec567c0e19807296fe5861e5166734fee0b4f52",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-019-d024-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-020-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-020-d010-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-020-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-020-d014-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "2d02928b3511dc92f1715ceae04858818c8203b8644d16a8f88c8812aabe2acc",
+      "no_c_sha256": "2d02928b3511dc92f1715ceae04858818c8203b8644d16a8f88c8812aabe2acc",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-020-e2-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-021-d001-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "c0fc126e61f264fbc2aa766f12767056baa32462e8e029cf56508d28daa7d979",
+      "no_c_sha256": "c0fc126e61f264fbc2aa766f12767056baa32462e8e029cf56508d28daa7d979",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-021-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-021-d009-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "48290cd1844d38c442886b014e1e217155d2b12b6d5715579818dfce42ccc5c2",
+      "no_c_sha256": "48290cd1844d38c442886b014e1e217155d2b12b6d5715579818dfce42ccc5c2",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-021-s1-d003-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "eb16aedd92e8401d360ff40df0bc48b015c94976b0fca1b94c4a2c7ea5cb482e",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-021-s1-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "1307778340600258edffef96cdf5822a96bb3e673008f808502ac3e672921f67",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-022-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "82a10c7f8316ecb2801af11749fadc82c34bcbdfc310fab396d19c441ecc329a",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-022-d005-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "f4baeec8c0d95fc5bf43f7547a27776907dc183c18f96544410c1f92d5bf7f24",
+      "no_c_sha256": "f4baeec8c0d95fc5bf43f7547a27776907dc183c18f96544410c1f92d5bf7f24",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-022-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-022-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "40ad5afba53d8c5568783c7b50d912a4d8b141988098732086e56833545fe0b1",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-022-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-023-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-023-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-023-d012-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "0e2d22f862f956d8a1edb4a64dcd7b390741ff38877955cefcd39ce11e183f56",
+      "no_c_sha256": "0e2d22f862f956d8a1edb4a64dcd7b390741ff38877955cefcd39ce11e183f56",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-023-d013-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-023-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-024-d006-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "d18ab57e34a37b3ccd07dc45bd7f9f8f02fe16b50da717979164060ff157babb",
+      "no_c_sha256": "ca81783f53c6fdb96d77f390d70e84bafcee81172e9223e7145099c8c1026b34",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-024-d007-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "92c9b5b0fc97c64ab2986b6122dbe7750ab68ba122b99dff8e9c6fbe71b62b9a",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-024-d010-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-024-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-024-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-025-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-025-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-025-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "e370d75b3e95dd8377b418e4d4d92b0e1917de072ea5cb7cdcce1052775c5319",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-025-s1-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "e370d75b3e95dd8377b418e4d4d92b0e1917de072ea5cb7cdcce1052775c5319",
+      "no_c_sha256": "e370d75b3e95dd8377b418e4d4d92b0e1917de072ea5cb7cdcce1052775c5319",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-025-s1-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "27385cf0ea9e333bfe512990978a2b7a3b069f6f86e59d222006567846daa50f",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-026-d001-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "ea84ab3fe0cb64307996ce0621b16dc12db83f938ed96d89a879a8e674ccc5a4",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-026-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "bb6042bbf478aeec6e62bf44c892097e6e55c3e791530d131a60d3e3a0c4334e",
+      "no_c_sha256": "bb6042bbf478aeec6e62bf44c892097e6e55c3e791530d131a60d3e3a0c4334e",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-026-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-026-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "696f9b286ad907be84975eaddccca10d92d83485732487789c2751eae329c85b",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-026-d013-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "a67b0b923a25afeae0360bdcd433b430e73d940c6921b1ea7a81a73840d1b8a8",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-027-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-027-d018-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "5204cb5443a183ef8ded2f04510e43255ed915f079aecf4f9c44bfeebe0917f4",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-027-d022-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-027-d030-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "96a237b13bac630fc1a3a778fe8f2432b8069b5adf1ce004239eb15c281fc52a",
+      "no_c_sha256": "96a237b13bac630fc1a3a778fe8f2432b8069b5adf1ce004239eb15c281fc52a",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-027-e2-d003-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "1f800f5405050a5b7bb8421005fafcb5d86652821c1e8393e2144d83b28add6e",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-029-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-029-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-029-d008-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "eabc993502a8e712a1c195dc187628bbe84e146cc1817b08dd54b699df0b9a6b",
+      "no_c_sha256": "eabc993502a8e712a1c195dc187628bbe84e146cc1817b08dd54b699df0b9a6b",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-029-d010-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-029-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-030-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-030-d005-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "22c20a17a3c77a9e4475b88f665856662869a85c4f8887c82c01cb279c71c741",
+      "no_c_sha256": "22c20a17a3c77a9e4475b88f665856662869a85c4f8887c82c01cb279c71c741",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-030-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-030-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-030-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-031-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-031-d011-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "82ad6366be182a4c1fd10709add8d15579335b75dece8c71e2ab6179e61af0dd",
+      "no_c_sha256": "82ad6366be182a4c1fd10709add8d15579335b75dece8c71e2ab6179e61af0dd",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-031-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-031-d019-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-031-d022-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-032-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-032-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-032-s1-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-032-s1-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-032-s1-d010-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-033-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-033-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-033-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-033-d010-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-033-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-034-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-034-d003-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-034-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "ee6403582bf17ab8d53f96e8575587be45369ea3bf69d0fe1471570257e118dc",
+      "no_c_sha256": "ee6403582bf17ab8d53f96e8575587be45369ea3bf69d0fe1471570257e118dc",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-034-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-034-d012-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "a41897c26811c28c557ae4f33a59d00b3ff70c38ff754fe379d21f99c811067e",
+      "no_c_sha256": "a41897c26811c28c557ae4f33a59d00b3ff70c38ff754fe379d21f99c811067e",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-035-d001-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "04ccb99502ca084a52f597fed269df18b2a9dffd0fdaf3040465748a55ffe95a",
+      "no_c_sha256": "cbdf0bc67587be9509a95a8c3889ba313fdaeb316b8e0eee66fb185f036996b4",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-035-d003-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "28f1741e27092d45dc5173622b6151b177b46a2b5779aad2df8a422145d1c2d0",
+      "no_c_sha256": "9afee136fab0b6d8cf680ffefcecbe2f3fc107af4da8214bdcd8de6bc33d77c0",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-035-d004-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "37a36457a16f3d0da993c36b4a4971481c2893981e36e5fe6766a2c22a072436",
+      "no_c_sha256": "37a36457a16f3d0da993c36b4a4971481c2893981e36e5fe6766a2c22a072436",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-035-d005-world",
+      "F_has_output": true,
+      "no_c_has_output": false,
+      "F_sha256": "66b345b7fb5f1536205afb53e8408ee4e358502e6a9980e3fc7b76b0a0fb54cf",
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-035-e2-d002-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "267017ac2054929a98ecb8fd7e66e93d8baf6eb87519216f8dc5189908ef8363",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-036-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-036-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "939106a820d75d5215c439de950f32f2f483ed50db01664352bc61fe9f5003b7",
+      "no_c_sha256": "939106a820d75d5215c439de950f32f2f483ed50db01664352bc61fe9f5003b7",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-036-d008-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-036-d012-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "672c451b861dbf60daaaf951cfe267696e5a091751abb8c7e4768e92f3dd9ecf",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-036-d013-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-037-d007-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-037-d014-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-037-d015-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-037-d018-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-037-e2-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-038-d011-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-038-d018-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-038-d025-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-038-e2-d004-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-038-e2-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-039-d009-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "c0d842c16065ac09f32ac8e77b0b02180dd6e0c7a8a07c71147db8bcc996ca85",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-039-d011-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "5544fd43b69f7082b0768bbe3c1f4292c6ea4e9ab68271ed3778a270b6e7d3af",
+      "no_c_sha256": "5544fd43b69f7082b0768bbe3c1f4292c6ea4e9ab68271ed3778a270b6e7d3af",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-039-d012-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "998ffdc4a070521948f8a1b41316f797b8d362566cc8f07a6d24eb855ad28c4b",
+      "no_c_sha256": "b248551d4c618fac2cbe4658ee2b339b9d9302537c1a4c212a8642e88f7b248c",
+      "identical_sha256": false,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-039-d015-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-039-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-040-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-040-d005-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-040-d006-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-040-d018-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-040-e2-d001-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-041-e2-d002-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "104409513f76605437b76b56ecd7fa5f09acbd3bfcc6afc8617b7f646cdb1e93",
+      "no_c_sha256": "104409513f76605437b76b56ecd7fa5f09acbd3bfcc6afc8617b7f646cdb1e93",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-041-e2-d014-world",
+      "F_has_output": false,
+      "no_c_has_output": false,
+      "F_sha256": null,
+      "no_c_sha256": null,
+      "identical_sha256": null,
+      "no_c_status": "no_output"
+    },
+    {
+      "case_id": "formal-041-e2-d020-world",
+      "F_has_output": true,
+      "no_c_has_output": true,
+      "F_sha256": "3eb8f7514a9c5013ecd85a7bf69b242f3f84ce50905612884d93d59c8bf0bd5e",
+      "no_c_sha256": "3eb8f7514a9c5013ecd85a7bf69b242f3f84ce50905612884d93d59c8bf0bd5e",
+      "identical_sha256": true,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-041-e2-d025-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "ae9274fc421aff21dcb566fbb1831568c21d505522580fa69f5fdb18bc4b7898",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    },
+    {
+      "case_id": "formal-041-e2-d026-world",
+      "F_has_output": false,
+      "no_c_has_output": true,
+      "F_sha256": null,
+      "no_c_sha256": "d256c2d436ae0204b9a40b328005abdc748d745207046ed28a758f7d412a8e4c",
+      "identical_sha256": null,
+      "no_c_status": "submitted"
+    }
+  ],
+  "no_c_final_artifact_inventory": [
+    {
+      "case_id": "formal-001-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-001-d001-world/execution/workspace-output/native/runs/repair-343ae539ec0c477896b24c845c4f5956/staging/application-candidate.ifc",
+        "sha256": "ade9e6a06afa0cea6fcc6ede4a33b74ab357ba4a1f485b5f73a45baa4abfefbd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 941089,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-001-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-001-d004-world/execution/workspace-output/native/runs/repair-7a200e42c12243dabeda2d47d282b87a/staging/application-candidate.ifc",
+        "sha256": "75c80abe9e50da1d19320cfd88b4e940e1941dfd5cccaf64789f8060c34fb5c4"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 941198,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-001-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-001-d005-world/execution/workspace-output/native/runs/repair-d122b6baa2bf413689d2b200f2c998d6/staging/application-candidate.ifc",
+        "sha256": "3d3d5f35212ebddd95a8e45f45a32aa40b646bdf8dee5fced109eacbc80003ac"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 941169,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-001-d006-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-001-d006-world/execution/workspace-output/native/runs/repair-fcf5ff74e09840b190a82cdedd6fd569/staging/application-candidate.ifc",
+        "sha256": "a7a50c337835d32e4150b2ec49b0d96acabf1b55b875d2dbdaaf8329affc76b8"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 941872,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-001-d007-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-001-d007-world/execution/workspace-output/native/runs/repair-04915329b253452e87965a8cdaae6c09/staging/application-candidate.ifc",
+        "sha256": "ecf35fcb984408de7e49ff00c6307a9882746e74d52a73921500145cbade43a3"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 941867,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-002-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-002-d009-world/execution/workspace-output/native/runs/repair-7e36fc1acc5a46809aaa1eb5b9479a5a/staging/application-candidate.ifc",
+        "sha256": "3367c2ee5f8cc04ebd6ea3a8d719158439e65b6ae6ae5ea22dc63b3e02bd8c76"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 10119132,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-002-e2-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-002-e2-d002-world/execution/workspace-output/native/runs/repair-8ee1fa97127d4add941b970452a87f6d/staging/application-candidate.ifc",
+        "sha256": "993f6a6396a5316816dbdd6c54a131920f6b42da10b22676e7fd1251ccfc201c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 10119052,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-003-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-003-d004-world/execution/workspace-output/native/runs/repair-79146308c8f04048af102c37141005c6/staging/application-candidate.ifc",
+        "sha256": "79299b4fcfaa496e917422b89b0c246b046f5ada5dd171f65ccbe5de10ac8b47"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1741766,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-003-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-003-d008-world/execution/workspace-output/native/runs/repair-239bbf83c1ac4dbc966bba1a4a43a14f/staging/application-candidate.ifc",
+        "sha256": "a7f7b653b419182be92b21c1a020cd5bb295960badd94f083ac60de5cede0a7e"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1742631,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-004-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-004-d002-world/execution/workspace-output/native/runs/repair-5d0998a01e52463092deffdebca3358b/staging/application-candidate.ifc",
+        "sha256": "eeba9ec034427d09cd48e14c0da27dbb9c276d12f75b14a58d1bc775236afb80"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 602860,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-004-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-004-d011-world/execution/workspace-output/native/runs/repair-3d99080dca2640f3a067e115ba3db746/staging/application-candidate.ifc",
+        "sha256": "1fedba1defd2e87c03b8b6b54011127b8491d50fb85f16238c4a58a70ac7d274"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 604973,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-005-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-005-d004-world/execution/workspace-output/native/runs/repair-bd1b4b642dc04274996c3ad7945c2d58/staging/application-candidate.ifc",
+        "sha256": "e3470875296eaba938455d7d209be25c48244e4de6ec8a89a8967d9a230730b4"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2625529,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-005-d018-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-005-d018-world/execution/workspace-output/native/runs/repair-43122fdeeb954c5483cb39ba4cd08274/staging/application-candidate.ifc",
+        "sha256": "e3470875296eaba938455d7d209be25c48244e4de6ec8a89a8967d9a230730b4"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2625529,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-006-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-006-d001-world/execution/workspace-output/native/runs/repair-b50621e8e3154c50839fa366509a427b/staging/application-candidate.ifc",
+        "sha256": "52ac552330033b8c231f243bc77f2e6a8328e98d5ccb9d6582b6bd8b5cb71bdb"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 523522,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-006-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-006-d003-world/execution/workspace-output/native/runs/repair-7399092543304feba5a7f2c26e2d8338/staging/application-candidate.ifc",
+        "sha256": "cfc157c82ddc308dabffacded5f24b0c9128fb4c39cc2f7a03510941d9ec8e62"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 522572,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-006-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-006-d004-world/execution/workspace-output/native/runs/repair-571ec1ac251749738bb6fbcc81a99d58/staging/application-candidate.ifc",
+        "sha256": "047fbf420a9851dacc01fff71ff7110497ed3ffcea4111028b1dcdfe389afda1"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 527868,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-006-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-006-d005-world/execution/workspace-output/native/runs/repair-4ec05a779e564cf8addb24f15b4b8da3/staging/application-candidate.ifc",
+        "sha256": "23f16a14a71e4f607c8bf6d0fad8ab8db57c5bd1e7ce9f299836133e26366bdd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 526103,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-007-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-007-d004-world/execution/workspace-output/native/runs/repair-114814d16480426a86dc5b8279ee2278/staging/application-candidate.ifc",
+        "sha256": "9c099367b8d95ff7bcf6f2d43d0546ee1067133775dca265c7dd5554b98f5666"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7236418,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-007-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-007-d008-world/execution/workspace-output/native/runs/repair-9b9929a5f57a4a02b0f3f42e32d4ae1c/staging/application-candidate.ifc",
+        "sha256": "c6da80bd40df56e35010d51894a95d1ccb43bba1b65786e62196e30b1af3a076"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7236418,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-007-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-007-d009-world/execution/workspace-output/native/runs/repair-65b9739bbea4425b9fcfa94af8334649/staging/application-candidate.ifc",
+        "sha256": "5ea3e0940f85e81dbc9f67d6b815a1e9c519ebf32fd11d41d6b51633324a91f6"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7236419,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-007-d014-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-007-d014-world/execution/workspace-output/native/runs/repair-3284010f1b514f918e9086415bfcb838/staging/application-candidate.ifc",
+        "sha256": "fbec860b23ad23fb60f59084d1d5d69f5ea9125181cb0185123965afb923c184"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7235392,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-008-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-008-d002-world/execution/workspace-output/native/runs/repair-bbb2ab0133654c5b8668f449407f5be1/staging/application-candidate.ifc",
+        "sha256": "65ccc1905264b06c83718e46cc3fbae4219f23549a4bc4b14a713044c6f1d90b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7094789,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-008-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-008-d003-world/execution/workspace-output/native/runs/repair-f413ed833f2e40398de88f28b18880cf/staging/application-candidate.ifc",
+        "sha256": "da56d4b86b5c3a8f1c1f9d2c572cd462d77579cdec933e1ee736647d8d769762"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7095022,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-008-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-008-d004-world/execution/workspace-output/native/runs/repair-49ff2a281bbc4c759726d76753a7f38f/staging/application-candidate.ifc",
+        "sha256": "b31e68d8ab64d487b0d104aa089bc15ff08da296ffd12485eb9ad56cb1e34a80"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7095153,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-008-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-008-d008-world/execution/workspace-output/native/runs/repair-771c4568c0bc4ad9b2ff409b0711a3c8/staging/application-candidate.ifc",
+        "sha256": "d545c8ad6b53c1d9d3cb42c40f727f649705a4f658e6dc3372c8a6d30affe749"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7094927,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-008-e2-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-008-e2-d002-world/execution/workspace-output/native/runs/repair-2a0954cf4aad4409aad06dea9101c078/staging/application-candidate.ifc",
+        "sha256": "e6b524902957c62dcd9f25f74c5f2f642b5c53639003695d8d459ffb66ec2d75"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7094989,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-009-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-009-d003-world/execution/workspace-output/native/runs/repair-7f261f35ab6643e386ca99ec7dddc22f/staging/application-candidate.ifc",
+        "sha256": "83c70191492f2eedf33b9c16dfb50d564578b80572917eec475b702759ab0016"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9399190,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-009-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-009-d011-world/execution/workspace-output/native/runs/repair-b0f2eabeda5047f78fe57584e1ed91f5/staging/application-candidate.ifc",
+        "sha256": "72c279644ad5d02e951b7891e85c323c38a1808080772192e170a585e99932d6"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9398856,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-009-d013-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-009-d013-world/execution/workspace-output/native/runs/repair-9f26fe2d757a4627a3623b6d097ba3e7/staging/application-candidate.ifc",
+        "sha256": "719aaa8b6974f9574a116a056f9cc6a5ebe3c3825c22591938cd683aa7386ed3"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9399074,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-009-e2-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-009-e2-d001-world/execution/workspace-output/native/runs/repair-e4097cc3ba9c4e73bbea47e8786aef12/staging/application-candidate.ifc",
+        "sha256": "33d32c1a7dc5687f13b0f5ca807044e3f102db48b541be4910048b78f973304b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9399150,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-010-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-010-d008-world/execution/workspace-output/native/runs/repair-8d2445d1fa58478d8f3b62fba137721f/staging/application-candidate.ifc",
+        "sha256": "8d17fe338dd73fab6a710b265161e297352ffb79bdebd724d24a235ba42ba78b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1916836,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-010-d010-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-010-d010-world/execution/workspace-output/native/runs/repair-1e5b17e7b6c7419482bb2c8ae17cd480/staging/application-candidate.ifc",
+        "sha256": "71aaa2bdbf46e1426623dab775262b7e0e53b7b4fe76f7771e9d1dc2a5410158"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1916227,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-010-d014-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-010-d014-world/execution/workspace-output/native/runs/repair-6f9aac777c3a42ce9f6724a39c0d24ef/staging/application-candidate.ifc",
+        "sha256": "cbd881c1f27ca32f7b949ef6986048854b1bb5f15d1d4a7b15c42b11a53ab31f"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1916293,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-010-e2-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-010-e2-d001-world/execution/workspace-output/native/runs/repair-43998cfd9f0f4320bcacaaaadc175b5b/staging/application-candidate.ifc",
+        "sha256": "87e09b14bb17fec928161a448b2707bf13748aad27bb5a6790a9c4b043c723ae"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1916770,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-011-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-011-d009-world/execution/workspace-output/native/runs/repair-cc7d35695afd485e852f7ed6dd892d01/staging/application-candidate.ifc",
+        "sha256": "a3ddccc04b928fecc72c9b029421c4f8380facdbbfc1436083f4809592b39016"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5156900,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-011-d013-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-011-d013-world/execution/workspace-output/native/runs/repair-0dbff4c3b0af47ddabd93424718334e1/staging/application-candidate.ifc",
+        "sha256": "d9decd0dcbe388f1717a27ce5b33a9cceb052c5d3fd1d87dfbfec58bb7fc0e5a"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5155512,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-013-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-013-d005-world/execution/workspace-output/native/runs/repair-b2d4787484624e4c94c4bfa106e4dce3/staging/application-candidate.ifc",
+        "sha256": "eb8a6669038defa778de9f29928bdeda1fb5dc36f54e80628adf1d57196199db"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 246230,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-013-d010-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-013-d010-world/execution/workspace-output/native/runs/repair-aafe25cfe7534b28b5ae0d302907b519/staging/application-candidate.ifc",
+        "sha256": "03db7bb5a1e36a15b3232f3a16f2cac21c54c5ac7ed82d5ca8d5b0756335c4fb"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 246164,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-013-e2-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-013-e2-d003-world/execution/workspace-output/native/runs/repair-6a2f352b2e5c434aaf7bb09184120212/staging/application-candidate.ifc",
+        "sha256": "85f22d87a6331422f8b7eefd52a6613efe45a4360349d844f85fa4502378ea84"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 246307,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-014-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-014-d009-world/execution/workspace-output/native/runs/repair-2a451f041521498c95a47feb91d64c33/staging/application-candidate.ifc",
+        "sha256": "986033ae7c2c2a0df322feec2f70d9b515f546619800b75cd8f6a0140c60ef5f"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7007948,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-014-d012-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-014-d012-world/execution/workspace-output/native/runs/repair-bc560df72a6d4587aaa2d1e6f9dc1729/staging/application-candidate.ifc",
+        "sha256": "010d3c4ddba9735e5c55aadc12695cfce4e779086fbb7f7b94dfbdb35e19793c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7008968,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-014-d022-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-014-d022-world/execution/workspace-output/native/runs/repair-223b0fd6cb15437b91e2ec7c30408aa7/staging/application-candidate.ifc",
+        "sha256": "010d3c4ddba9735e5c55aadc12695cfce4e779086fbb7f7b94dfbdb35e19793c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7008968,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-014-d025-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-014-d025-world/execution/workspace-output/native/runs/repair-4c037a3986b24e498096ce6cd028fc57/staging/application-candidate.ifc",
+        "sha256": "d1410d60a2563d33e13acb7776fd708b7b8b785d36cc4f7c0ff5eb924338821d"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7009201,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-015-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-015-d005-world/execution/workspace-output/native/runs/repair-88f9bbe7fd0b448e8841cda09b871f52/staging/application-candidate.ifc",
+        "sha256": "ac36dab57e1824c242181f786d2ab91adc5ccc7e349dd7322fd066b89ebe1cd3"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 556124,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-015-d020-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-015-d020-world/execution/workspace-output/native/runs/repair-4036f8bcbeef41adad4586261acad7be/staging/application-candidate.ifc",
+        "sha256": "076fa1fc4824cbf1ec621595249171bff36cbc066e28ba2794ffd6ce97cb058b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 556124,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-016-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-016-d011-world/execution/workspace-output/native/runs/repair-69c7f9ebda244ff1a8b14a2b883389cc/staging/application-candidate.ifc",
+        "sha256": "f164b9050e46ccf8d2463d55aa6d8bb9423d8e971e3f30ecc09a9e5e14a3bfce"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7264496,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-016-d025-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-016-d025-world/execution/workspace-output/native/runs/repair-f385627acf9c444399dabcdb80438bc4/staging/application-candidate.ifc",
+        "sha256": "19635e3f24b04e28c798981b66d027d705a7482f674038b6f3418d9f587ac5fd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 7264409,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-017-e2-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-017-e2-d001-world/execution/workspace-output/native/runs/repair-2ad80accfba8436dad18a66457e9b224/staging/application-candidate.ifc",
+        "sha256": "ef959515344e2f9d9872f23f1a8e8e32e33b4d8fa221c6a03e5e4df40e437dcb"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 6115006,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-018-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-018-d002-world/execution/workspace-output/native/runs/repair-961c4b5e810e4f508d28b627cf62309b/staging/application-candidate.ifc",
+        "sha256": "4c7027abbd3a99d6ab8116cceda6d208dd4339a32105f13d0c960cb5da13819b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 6881884,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-018-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-018-d009-world/execution/workspace-output/native/runs/repair-c07dc174e1034543bb47162d4bef55c0/staging/application-candidate.ifc",
+        "sha256": "ba9302f93a94d872a572a14f192b891c87a4d660ecea64cb08ab5824979dcb7a"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 6881186,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-019-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-019-d004-world/execution/workspace-output/native/runs/repair-115e2e61aa324e3c95b3ae79ac6409d5/staging/application-candidate.ifc",
+        "sha256": "ab222c15b7fcbf9599f23b0071f4f84fa28108e397b8c7627a7b1642a514b963"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 8407470,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-019-d013-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-019-d013-world/execution/workspace-output/native/runs/repair-9aae7c75690147caa961eb4f03307dac/staging/application-candidate.ifc",
+        "sha256": "a5387975afbb8716cf8f65f2157ab2c55d16d192b75c41ec7c40d0fd40d3b011"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 8407039,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-019-e2-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-019-e2-d003-world/execution/workspace-output/native/runs/repair-4bd9f74ec6ff49b8b7678673a3335b0f/staging/application-candidate.ifc",
+        "sha256": "b4249fe64837a5c39d0df49414df2eb9c85a9fa14c312275c62d070a01e18939"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 8406086,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-020-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-020-d004-world/execution/workspace-output/native/runs/repair-211e63c444e34035bd9c21788a9bb73b/staging/application-candidate.ifc",
+        "sha256": "2e3f908fe2254191d5dfe3a230c2cad24892a9c02b60ad722e9410f6f742d23e"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9795188,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-020-d014-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-020-d014-world/execution/workspace-output/native/runs/repair-056b4baaf1d8449b9b2a91ab9e6f1962/staging/application-candidate.ifc",
+        "sha256": "2d02928b3511dc92f1715ceae04858818c8203b8644d16a8f88c8812aabe2acc"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9796611,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-021-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-021-d001-world/execution/workspace-output/native/runs/repair-dcedde2ca67b40c9bbe2ff1027161fcf/staging/application-candidate.ifc",
+        "sha256": "c0fc126e61f264fbc2aa766f12767056baa32462e8e029cf56508d28daa7d979"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 190631,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-021-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-021-d002-world/execution/workspace-output/native/runs/repair-08d6fe076b884cabb94bc2578ed2a040/staging/application-candidate.ifc",
+        "sha256": "6874be1af286e64267c49fb9dcedb8b0a537c0716aed4dd57aac80324b5691dc"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 190723,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-021-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-021-d009-world/execution/workspace-output/native/runs/repair-38b6ef7e21f54cfc84f9cae7a538cd74/staging/application-candidate.ifc",
+        "sha256": "48290cd1844d38c442886b014e1e217155d2b12b6d5715579818dfce42ccc5c2"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 190658,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-021-e2-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-021-e2-d001-world/execution/workspace-output/native/runs/repair-5b8bd1baea834343b29e850a265a2cf4/staging/application-candidate.ifc",
+        "sha256": "10e100f6b54a06774004638e86f025f90ad334304efb8ce11f2f6d854366b9ce"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 190815,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-021-s1-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-021-s1-d001-world/execution/workspace-output/native/runs/repair-21b61635abca4f59a1f35434624bf721/staging/application-candidate.ifc",
+        "sha256": "1307778340600258edffef96cdf5822a96bb3e673008f808502ac3e672921f67"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 190723,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-021-s1-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-021-s1-d004-world/execution/workspace-output/native/runs/repair-3ba8e97f15194f19859a69db6998cc5b/staging/application-candidate.ifc",
+        "sha256": "1307778340600258edffef96cdf5822a96bb3e673008f808502ac3e672921f67"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 190723,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-022-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-022-d001-world/execution/workspace-output/native/runs/repair-1edfc7ac0c7f418e89fb5eda8197bad7/staging/application-candidate.ifc",
+        "sha256": "a12da9b578c98ebf9e4853c8b9e51b9ab47a918d463e7d45fa395cf0764c2cc7"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1223811,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-022-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-022-d003-world/execution/workspace-output/native/runs/repair-6c006ae9447a4f1ea08047ad4f5553ff/staging/application-candidate.ifc",
+        "sha256": "212f2d56b04899ba49b6f14db41736a5c8b26ee0c4ecc76b27a17b83ec243ac6"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1223822,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-022-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-022-d005-world/execution/workspace-output/native/runs/repair-ce234fede0b8400386bbf7508d6ebe31/staging/application-candidate.ifc",
+        "sha256": "f4baeec8c0d95fc5bf43f7547a27776907dc183c18f96544410c1f92d5bf7f24"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1223204,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-022-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-022-d008-world/execution/workspace-output/native/runs/repair-0be52ac16aaa4bb49b1d09ae03ceb59d/staging/application-candidate.ifc",
+        "sha256": "40ad5afba53d8c5568783c7b50d912a4d8b141988098732086e56833545fe0b1"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1223303,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-022-e2-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-022-e2-d002-world/execution/workspace-output/native/runs/repair-63a89ad6ebf449959d8e1f438cae3535/staging/application-candidate.ifc",
+        "sha256": "aa69070e3295aff3fcfbf864253d8a5f7b3d257999877570cc3fe0a66bd10fbc"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1223141,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-023-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-023-d004-world/execution/workspace-output/native/runs/repair-ea4c6e950f594d83819f7bf05f5893e2/staging/application-candidate.ifc",
+        "sha256": "cbe9f116ed0240efada06c6cae6fd0f9b79aab789325543c9d97a5d6c01aebea"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1478780,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-023-d012-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-023-d012-world/execution/workspace-output/native/runs/repair-d4b1aaaead44427eaec80a658a288a5a/staging/application-candidate.ifc",
+        "sha256": "0e2d22f862f956d8a1edb4a64dcd7b390741ff38877955cefcd39ce11e183f56"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1478759,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-024-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-024-d003-world/execution/workspace-output/native/runs/repair-c767d4cf739d421e924fae1ed8eadce0/staging/application-candidate.ifc",
+        "sha256": "8725beaa5ec0817133fb53a73f7afc38b60f108b7c870adc1f405e9ef1799926"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 6428383,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-024-d006-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-024-d006-world/execution/workspace-output/native/runs/repair-a2e414583edd47aeaf80d36c76d7dcd5/staging/application-candidate.ifc",
+        "sha256": "ca81783f53c6fdb96d77f390d70e84bafcee81172e9223e7145099c8c1026b34"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 6428536,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-024-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-024-d011-world/execution/workspace-output/native/runs/repair-8e74b41bacfb484a9e974bf33d5d96ef/staging/application-candidate.ifc",
+        "sha256": "350c889a18358400b2aa3af57745308078942d68e9045f338bb2ce28bfe65a88"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 6427817,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-025-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-025-d001-world/execution/workspace-output/native/runs/repair-81c603b238da418299b767e9aae0a7e2/staging/application-candidate.ifc",
+        "sha256": "03349e0bc1d1a9e8f82acd83777e4cc52bd81b59531b4302adf0ab4f7cbbbd6c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 248421,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-025-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-025-d003-world/execution/workspace-output/native/runs/repair-f0157972e9364503bb9bf55fd6633e13/staging/application-candidate.ifc",
+        "sha256": "82e13294a784315f3b9ee023e0815d931bf05d092e59a954588909441a841109"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 248514,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-025-d006-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-025-d006-world/execution/workspace-output/native/runs/repair-c325feac7e724eeaa6e8030000328468/staging/application-candidate.ifc",
+        "sha256": "815d8dd94a044554ebaab61178423a3dab805d70f0e6f9704a10711e1ae51661"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 248486,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-025-e2-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-025-e2-d001-world/execution/workspace-output/native/runs/repair-429f4c05c8ba4fedb12fe3435359ab75/staging/application-candidate.ifc",
+        "sha256": "e370d75b3e95dd8377b418e4d4d92b0e1917de072ea5cb7cdcce1052775c5319"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 248486,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-025-s1-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-025-s1-d002-world/execution/workspace-output/native/runs/repair-eba6c7c814a940d9816def257be88052/staging/application-candidate.ifc",
+        "sha256": "e370d75b3e95dd8377b418e4d4d92b0e1917de072ea5cb7cdcce1052775c5319"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 248486,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-025-s1-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-025-s1-d004-world/execution/workspace-output/native/runs/repair-acec14d36a834fdcbbbcd2c8a1a9ec51/staging/application-candidate.ifc",
+        "sha256": "27385cf0ea9e333bfe512990978a2b7a3b069f6f86e59d222006567846daa50f"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 248579,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-026-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-026-d002-world/execution/workspace-output/native/runs/repair-325f404121294277b673944580ac6cf6/staging/application-candidate.ifc",
+        "sha256": "bb6042bbf478aeec6e62bf44c892097e6e55c3e791530d131a60d3e3a0c4334e"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 578072,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-026-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-026-d005-world/execution/workspace-output/native/runs/repair-829a6fc0bf894e7bb1e0e675ec136c39/staging/application-candidate.ifc",
+        "sha256": "bb6042bbf478aeec6e62bf44c892097e6e55c3e791530d131a60d3e3a0c4334e"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 578072,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-026-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-026-d008-world/execution/workspace-output/native/runs/repair-0d05c294a32d4966aed84c911b0ce4b6/staging/application-candidate.ifc",
+        "sha256": "696f9b286ad907be84975eaddccca10d92d83485732487789c2751eae329c85b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 578169,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-026-e2-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-026-e2-d001-world/execution/workspace-output/native/runs/repair-83dfe179a45f44d2a17952f6f981d828/staging/application-candidate.ifc",
+        "sha256": "696f9b286ad907be84975eaddccca10d92d83485732487789c2751eae329c85b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 578169,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-027-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-027-d011-world/execution/workspace-output/native/runs/repair-ee01f655c45145039107e756fdd812a3/staging/application-candidate.ifc",
+        "sha256": "fce4e9557c5ebed802a9d807ab37a4aa006935f07db5d357c9e1af7cfb49c106"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1655926,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-027-d018-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-027-d018-world/execution/workspace-output/native/runs/repair-bb8f25019e974af9b1927bec8f445c85/staging/application-candidate.ifc",
+        "sha256": "5204cb5443a183ef8ded2f04510e43255ed915f079aecf4f9c44bfeebe0917f4"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1658820,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-027-d026-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-027-d026-world/execution/workspace-output/native/runs/repair-7f0487731d374659ba83fec638c56ed4/staging/application-candidate.ifc",
+        "sha256": "aaf39cf123c47b3dc32bd6e204cf92167d9b24a7dd08536bcedc05ba6c78b660"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1655829,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-027-d028-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-027-d028-world/execution/workspace-output/native/runs/repair-46d24978859b485285f0080fc5c0c5c3/staging/application-candidate.ifc",
+        "sha256": "e3b4fcc4cf9490f37521e70be00f0474bfe4c6bbad75024e3c80a03247192d92"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1658750,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-027-d030-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-027-d030-world/execution/workspace-output/native/runs/repair-ed6948ce28624c23ac39fd5053bd7489/staging/application-candidate.ifc",
+        "sha256": "96a237b13bac630fc1a3a778fe8f2432b8069b5adf1ce004239eb15c281fc52a"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1658723,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-029-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-029-d008-world/execution/workspace-output/native/runs/repair-3292b92c776c488dbc00c55e070ee843/staging/application-candidate.ifc",
+        "sha256": "eabc993502a8e712a1c195dc187628bbe84e146cc1817b08dd54b699df0b9a6b"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 379064,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-030-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-030-d001-world/execution/workspace-output/native/runs/repair-b4b7e50f52734015bcacd319d19cbb92/staging/application-candidate.ifc",
+        "sha256": "92ee5114f7f4076c22e33063b6241c4a62dc89f42150f786a53b3bbd6984916f"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1271532,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-030-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-030-d004-world/execution/workspace-output/native/runs/repair-70a04ae2718b4d5f84b04920c4e3f281/staging/application-candidate.ifc",
+        "sha256": "dadfb1876d28156610e1744f0bb3be36fc22f845476058b6159b721ebd958b1f"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1274704,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-030-d005-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-030-d005-world/execution/workspace-output/native/runs/repair-61fd82d5c9f544eba2de21a329561ab6/staging/application-candidate.ifc",
+        "sha256": "22c20a17a3c77a9e4475b88f665856662869a85c4f8887c82c01cb279c71c741"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1271512,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-030-d010-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-030-d010-world/execution/workspace-output/native/runs/repair-f78d20a0fd8e40f2915530f66049d589/staging/application-candidate.ifc",
+        "sha256": "814bff66989788fceab72f808cf01751867262248189726ccdc857f1d9bd6b38"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1263932,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-030-e2-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-030-e2-d002-world/execution/workspace-output/native/runs/repair-d3e1aa21ed624dfd9f5d278bf17e5b93/staging/application-candidate.ifc",
+        "sha256": "26c884d13cab92ca7fafbbdac29db1956927174f9d04465bdbe36692c3078cdf"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 1265025,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-031-d008-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-031-d008-world/execution/workspace-output/native/runs/repair-a9561c032dbc44829332a51b2b762bb8/staging/application-candidate.ifc",
+        "sha256": "82ad6366be182a4c1fd10709add8d15579335b75dece8c71e2ab6179e61af0dd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 4923532,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-031-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-031-d011-world/execution/workspace-output/native/runs/repair-8cda314556f54381ae52bd557c20e81c/staging/application-candidate.ifc",
+        "sha256": "82ad6366be182a4c1fd10709add8d15579335b75dece8c71e2ab6179e61af0dd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 4923532,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-031-d017-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-031-d017-world/execution/workspace-output/native/runs/repair-0519b9e30282441caf434d2b9bb25a13/staging/application-candidate.ifc",
+        "sha256": "82ad6366be182a4c1fd10709add8d15579335b75dece8c71e2ab6179e61af0dd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 4923532,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-031-d020-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-031-d020-world/execution/workspace-output/native/runs/repair-d2c028a1ee854667a923cf4e9dbcc221/staging/application-candidate.ifc",
+        "sha256": "82ad6366be182a4c1fd10709add8d15579335b75dece8c71e2ab6179e61af0dd"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 4923532,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-033-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-033-d002-world/execution/workspace-output/native/runs/repair-54cc8e5409684677983225c4f48802dd/staging/application-candidate.ifc",
+        "sha256": "7d88a3b4cda1388c3ac8abe1cd5d946bc40b132ba2e8bde96434f3d23db2d258"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 4278872,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-033-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-033-d004-world/execution/workspace-output/native/runs/repair-e518ae6ba8594fc9805055f1344c7156/staging/application-candidate.ifc",
+        "sha256": "1aa1e40105d6c5cb320e6314a3e16e03fc2a5dc6505f59a76f30b3df935fbd2c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 4278231,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-034-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-034-d004-world/execution/workspace-output/native/runs/repair-863ef27382874b358201ced965b51f32/staging/application-candidate.ifc",
+        "sha256": "ee6403582bf17ab8d53f96e8575587be45369ea3bf69d0fe1471570257e118dc"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 13842339,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-034-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-034-d009-world/execution/workspace-output/native/runs/repair-7eb1c42a297c4f95b476b37b682604f6/staging/application-candidate.ifc",
+        "sha256": "d10e26893a70dc554d69228d2174a256a742034bfd3f97fc82983ebe86f95cd4"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 13842463,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-034-d012-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-034-d012-world/execution/workspace-output/native/runs/repair-79ce75a4872040198e9d3de9618e4ff9/staging/application-candidate.ifc",
+        "sha256": "a41897c26811c28c557ae4f33a59d00b3ff70c38ff754fe379d21f99c811067e"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 13842564,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-035-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-035-d001-world/execution/workspace-output/native/runs/repair-bafbf65f59a4438e85688d876676da19/staging/application-candidate.ifc",
+        "sha256": "cbdf0bc67587be9509a95a8c3889ba313fdaeb316b8e0eee66fb185f036996b4"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 552839,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-035-d003-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-035-d003-world/execution/workspace-output/native/runs/repair-cd728582dcd2460f88d27b067eea25c6/staging/application-candidate.ifc",
+        "sha256": "9afee136fab0b6d8cf680ffefcecbe2f3fc107af4da8214bdcd8de6bc33d77c0"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 551855,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-035-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-035-d004-world/execution/workspace-output/native/runs/repair-42e29d394aa94667b8c1e3572b8ea36b/staging/application-candidate.ifc",
+        "sha256": "37a36457a16f3d0da993c36b4a4971481c2893981e36e5fe6766a2c22a072436"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 554749,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-035-d006-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-035-d006-world/execution/workspace-output/native/runs/repair-463d6a70868b441abfbffd5436fe8004/staging/application-candidate.ifc",
+        "sha256": "49a317a40504fd33711c90f281fd6b66a0fabd47b05a04ee82a755341236036c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 556271,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-035-e2-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-035-e2-d002-world/execution/workspace-output/native/runs/repair-0c2a610bd9d1464ebca5098f4e4c3b6a/staging/application-candidate.ifc",
+        "sha256": "267017ac2054929a98ecb8fd7e66e93d8baf6eb87519216f8dc5189908ef8363"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 557243,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-036-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-036-d002-world/execution/workspace-output/native/runs/repair-b83821b18bb14220abc67338c6df5bf0/staging/application-candidate.ifc",
+        "sha256": "939106a820d75d5215c439de950f32f2f483ed50db01664352bc61fe9f5003b7"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9136351,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-036-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-036-d004-world/execution/workspace-output/native/runs/repair-dde387af70cf484587ab36e76a9e4ed1/staging/application-candidate.ifc",
+        "sha256": "210884c08a72888dfbc88bc4f9fd031c620db127b83a9d6366a1b33275b3acda"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9135437,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-036-d006-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-036-d006-world/execution/workspace-output/native/runs/repair-560b123f56ec4a1987962bb5f48d3fe9/staging/application-candidate.ifc",
+        "sha256": "8e3985832a9dccfd7ead085dc0c8202d25ddfff088fb37fd2d7773538b56c24f"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9136327,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-036-d012-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-036-d012-world/execution/workspace-output/native/runs/repair-36113bb230a74ab586d0cffd5675aa2a/staging/application-candidate.ifc",
+        "sha256": "672c451b861dbf60daaaf951cfe267696e5a091751abb8c7e4768e92f3dd9ecf"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 9136015,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-039-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-039-d002-world/execution/workspace-output/native/runs/repair-2498efaab49f4995ad6b5eb0c48981b1/staging/application-candidate.ifc",
+        "sha256": "5ab25e887bf51b46ec8b5e43f0a935c18ee6d19f45b32d07880a9eb37087d3cf"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5075236,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-039-d004-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-039-d004-world/execution/workspace-output/native/runs/repair-c9581223150f40d795c27ede28e19471/staging/application-candidate.ifc",
+        "sha256": "6001b84da79de21cd6d90904484c94ad12d97595ea3f005ee1520b810000a107"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5072938,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-039-d009-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-039-d009-world/execution/workspace-output/native/runs/repair-b66a5b823752467a8724729eac6ba05e/staging/application-candidate.ifc",
+        "sha256": "c0d842c16065ac09f32ac8e77b0b02180dd6e0c7a8a07c71147db8bcc996ca85"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5073010,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-039-d011-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-039-d011-world/execution/workspace-output/native/runs/repair-a66c6bc3f5154e4d8279627e3a7d1d01/staging/application-candidate.ifc",
+        "sha256": "5544fd43b69f7082b0768bbe3c1f4292c6ea4e9ab68271ed3778a270b6e7d3af"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5073939,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-039-d012-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-039-d012-world/execution/workspace-output/native/runs/repair-bc100f8846614e758e2462fb373f8fd9/staging/application-candidate.ifc",
+        "sha256": "b248551d4c618fac2cbe4658ee2b339b9d9302537c1a4c212a8642e88f7b248c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 5069178,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-041-e2-d002-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-041-e2-d002-world/execution/workspace-output/native/runs/repair-394162d2d1b84b82bc92d67964376794/staging/application-candidate.ifc",
+        "sha256": "104409513f76605437b76b56ecd7fa5f09acbd3bfcc6afc8617b7f646cdb1e93"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2678542,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-041-e2-d020-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-041-e2-d020-world/execution/workspace-output/native/runs/repair-827ea34df73e4203ab25b55bfcf35a1d/staging/application-candidate.ifc",
+        "sha256": "3eb8f7514a9c5013ecd85a7bf69b242f3f84ce50905612884d93d59c8bf0bd5e"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2678472,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-041-e2-d025-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-041-e2-d025-world/execution/workspace-output/native/runs/repair-efad7949b1414579b524cf4ec0fcdcd5/staging/application-candidate.ifc",
+        "sha256": "ae9274fc421aff21dcb566fbb1831568c21d505522580fa69f5fdb18bc4b7898"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2677311,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-041-e2-d026-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-041-e2-d026-world/execution/workspace-output/native/runs/repair-6b0c32aee97249c392be8ac050f555ae/staging/application-candidate.ifc",
+        "sha256": "d256c2d436ae0204b9a40b328005abdc748d745207046ed28a758f7d412a8e4c"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2679770,
+      "in_common_200": true
+    },
+    {
+      "case_id": "formal-041-e2-d029-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-041-e2-d029-world/execution/workspace-output/native/runs/repair-22816ffe554e4f8eab1e1cce317ba923/staging/application-candidate.ifc",
+        "sha256": "33a07112de655d3671a81aaf61f03b74f3dbe29b2dbf78cc4e649c44532ebe38"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2678472,
+      "in_common_200": false
+    },
+    {
+      "case_id": "formal-041-p3-d001-world",
+      "artifact": {
+        "path": "/mnt/dataY/wanghaoyu/harness-ablation-deepseek-20261011/app/dataset/processed/experiments/harness-ablation-deepseek-20261011/runs/qwen-g400-20261013/no_c_loop/tasks/formal-041-p3-d001-world/execution/workspace-output/native/runs/repair-cf7a8895f2a64bf5966319472c4b4df5/staging/application-candidate.ifc",
+        "sha256": "2667384818962bbd15f7932258e095073bc2c6ac97836f148c6119425292fd00"
+      },
+      "artifact_exists": true,
+      "artifact_bytes": 2677823,
+      "in_common_200": false
+    }
+  ],
+  "limits": [
+    "SHA256 equality compares recorded sealed bytes, not repair correctness.",
+    "Different bytes may be serialization differences or meaningful semantic/geometry differences.",
+    "No new schema/EXPRESS or independent repair-correctness evaluation was performed.",
+    "Runtime/configuration differences remain; this is descriptive pairing, not a causal C ablation estimate."
+  ]
+}

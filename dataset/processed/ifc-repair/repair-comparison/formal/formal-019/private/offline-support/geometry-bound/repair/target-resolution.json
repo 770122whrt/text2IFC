@@ -1,0 +1,327 @@
+{
+  "candidates": [],
+  "model_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+  "operation_id": null,
+  "operations": [
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {},
+          "global_id": "3Hq$OCMArLBhd8uYUsG4hr",
+          "ifc_class": "IfcBeamType",
+          "kind": "system_generated_type",
+          "operation_id": "beam-1",
+          "template": {
+            "name": "Text2IFC generated beam type beam-1",
+            "predefined_type": "NOTDEFINED",
+            "section": {
+              "height_mm": 812.8,
+              "shape": "rectangle",
+              "width_mm": 300.0
+            },
+            "section_digest": "sha256:a62ff9b69122216f5fa30df90287d582a4daf4b2bfe6001b9e3ca244d433db1c"
+          },
+          "template_digest": "sha256:71fdab312d8223a85be99959d8c685b1258cd0c9a4b10a391e362e891f8a71af",
+          "template_id": "text2ifc-rectangular-beam-type",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "15Z0v90RiHrPC20026FoKR",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcBuildingStorey",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcBuildingStorey"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Level 1",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": null,
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "structural_storey_target",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": 4700.0,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 0.1,
+                  "value": 4700.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": false
+            },
+            "geometry": {},
+            "geometry_capability": "structural_storey_target",
+            "ifc_class": "IfcBuildingStorey",
+            "ifc_global_id": "15Z0v90RiHrPC20026FoKR",
+            "name": "Level 1",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": null,
+            "target_id": "ifc:15Z0v90RiHrPC20026FoKR",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2063,
+          "estimated_tokens": 516,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "source_ifc_sha256": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+        "operation_hints": [
+          "add_beam"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:15Z0v90RiHrPC20026FoKR",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/beam-1/context/candidate_targets/0"
+      ],
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "parameters": {
+        "axis": {
+          "end": {
+            "x_mm": -12249.219,
+            "y_mm": 5090.441,
+            "z_mm": -406.4
+          },
+          "start": {
+            "x_mm": -9449.219,
+            "y_mm": 5090.441,
+            "z_mm": -406.4
+          }
+        },
+        "section": {
+          "height_mm": 812.8,
+          "shape": "rectangle",
+          "width_mm": 300.0
+        }
+      },
+      "scope_ids": [
+        "15Z0v90RiHrPC20026FoKR"
+      ],
+      "target_global_id": "15Z0v90RiHrPC20026FoKR"
+    },
+    {
+      "authorized_semantics": [
+        {
+          "authorization": "deterministic_policy",
+          "formal_attributes": {},
+          "global_id": "0CFcFyo7zLCP5aTw1pykX5",
+          "ifc_class": "IfcColumnType",
+          "kind": "system_generated_type",
+          "operation_id": "column-2",
+          "template": {
+            "name": "Text2IFC generated column type column-2",
+            "predefined_type": "NOTDEFINED",
+            "section": {
+              "depth_mm": 600.0,
+              "shape": "rectangle",
+              "width_mm": 600.0
+            },
+            "section_digest": "sha256:ba7bec5fb78d78ac67ebcec7dee6902c5317c949e0864f3cfb4d17be96cc4f0e"
+          },
+          "template_digest": "sha256:fcc43ecd9382134300e9dc105f7cdfc0dcc72b82f3b34fde2e698d5cae2545c0",
+          "template_id": "text2ifc-rectangular-column-type",
+          "template_version": "0.1"
+        }
+      ],
+      "context": {
+        "base_model_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+        "candidate_targets": [
+          {
+            "evidence": [
+              {
+                "candidate_value": "3mC5rj4wL5ZfT78mw_nj5F",
+                "field": "global_id",
+                "provenance": "IfcRoot.GlobalId",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "IfcBuildingStorey",
+                "field": "ifc_class",
+                "provenance": "IfcProduct.is_a",
+                "query_value": [
+                  "IfcBuildingStorey"
+                ],
+                "state": "matched"
+              },
+              {
+                "candidate_value": "Foundation level",
+                "field": "name",
+                "provenance": "aliases",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": null,
+                "field": "storey",
+                "provenance": "spatial_relationship",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": "structural_storey_target",
+                "field": "geometry_capability",
+                "provenance": "adapter",
+                "query_value": null,
+                "state": "unavailable"
+              },
+              {
+                "candidate_value": -1000.0,
+                "field": "geometry:storey_elevation_mm",
+                "provenance": "ifc_geometry",
+                "query_value": {
+                  "tolerance_mm": 0.1,
+                  "value": -1000.0
+                },
+                "state": "matched"
+              }
+            ],
+            "facets": {
+              "editable_target": false
+            },
+            "geometry": {},
+            "geometry_capability": "structural_storey_target",
+            "ifc_class": "IfcBuildingStorey",
+            "ifc_global_id": "3mC5rj4wL5ZfT78mw_nj5F",
+            "name": "Foundation level",
+            "properties": [],
+            "retrieval": {
+              "fused_score": 0,
+              "matched_fields": [],
+              "retriever": "structured",
+              "retriever_version": "text2ifc/structured-retriever/0.1",
+              "source_score": 0
+            },
+            "storey_name": null,
+            "target_id": "ifc:3mC5rj4wL5ZfT78mw_nj5F",
+            "type_name": null
+          }
+        ],
+        "context_budget": {
+          "actual_bytes": 2085,
+          "estimated_tokens": 522,
+          "max_bytes": 48000,
+          "max_candidates": 5,
+          "mode": "normal",
+          "omitted_candidate_count": 0,
+          "selected_candidate_count": 1,
+          "token_estimator": "ceil(utf8_bytes/4)"
+        },
+        "model_constraints": {
+          "facts_source": "current_ifc_only",
+          "ifc_schema": "IFC2X3",
+          "index_schema_version": "text2ifc/ifc-index/0.5",
+          "source_ifc_sha256": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+          "vector_retrieval": "disabled"
+        },
+        "model_fingerprint": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+        "operation_hints": [
+          "add_column"
+        ],
+        "query_schema_version": "text2ifc/ifc-target-query/0.1",
+        "resolution_schema_version": "text2ifc/ifc-target-resolution/0.1",
+        "resolved_target_id": "ifc:3mC5rj4wL5ZfT78mw_nj5F",
+        "schema_version": "text2ifc/ifc-target-context/0.1",
+        "score_version": "text2ifc/target-score/0.1",
+        "status": "resolved"
+      },
+      "evidence_pointers": [
+        "resolved:/operations/column-2/context/candidate_targets/0"
+      ],
+      "operation_id": "column-2",
+      "operation_type": "add_column",
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -12549.219,
+            "y_mm": 5240.441,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -12549.219,
+            "y_mm": 5240.441,
+            "z_mm": 15100.0
+          }
+        },
+        "section": {
+          "depth_mm": 600.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          },
+          "shape": "rectangle",
+          "width_mm": 600.0
+        }
+      },
+      "scope_ids": [
+        "3mC5rj4wL5ZfT78mw_nj5F"
+      ],
+      "target_global_id": "3mC5rj4wL5ZfT78mw_nj5F"
+    }
+  ],
+  "property_preview": null,
+  "property_resolutions": [],
+  "reason_code": null,
+  "schema_version": "text2ifc/ifc-resolution-flow/0.1",
+  "source_ifc_sha256": "sha256:ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+  "status": "resolved"
+}

@@ -1,0 +1,210 @@
+{
+  "schema_version": "repair-comparison-bound-after-answers-support/0.1",
+  "case": "019",
+  "timestamp": "2026-10-08T12:49:10.391491+00:00",
+  "status": "passed",
+  "operation_count": 2,
+  "one_atomic_changeset": true,
+  "atomic_second_operation_rollback_passed": true,
+  "checks": [
+    {
+      "family": "beam",
+      "output_id": "1d28$WSxDRIRIZVTSrclBq",
+      "source_name_private": "Concrete-Rectangular Beam:16 x 32:480440",
+      "shape_matches_authorized_public_geometry": true,
+      "shape_check": {
+        "rectangular_mesh_matches_authored_axis_section": true,
+        "bounds_max_error_mm": 1.8189894035458565e-12,
+        "vertices_surface_max_error_mm": 3.410605131648481e-13,
+        "actual_volume_mm3": 682752000.0000014,
+        "expected_volume_mm3": 682752000.0,
+        "volume_relative_error": 2.0952138911484332e-15,
+        "vertices": 8,
+        "triangles": 12,
+        "actual_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            2799.999999999998
+          ],
+          [
+            -150.0,
+            150.0000000000009
+          ],
+          [
+            -406.4000000000001,
+            406.39999999999964
+          ]
+        ],
+        "expected_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            2800.0
+          ],
+          [
+            -150.0,
+            150.0
+          ],
+          [
+            -406.4,
+            406.4
+          ]
+        ],
+        "tolerances": {
+          "bounds_mm": 0.05,
+          "surface_mm": 0.05,
+          "relative_volume": 1e-05
+        },
+        "volume_is_supporting_check_only": true,
+        "independent_of_provider": true
+      },
+      "gold_world_bounds_max_error_mm": 0.44088208915127325,
+      "gold_deviation_within_prewritten_request_rounding": true,
+      "preparation_rounding_bound_mm_not_formal_scoring_tolerance": 1.0,
+      "LoadBearing": [
+        {
+          "value": true,
+          "value_type": "IfcBoolean",
+          "unit": null,
+          "scope": "occurrence_direct"
+        }
+      ],
+      "exact_direct_IfcBoolean_true": true,
+      "unique_correct_containment": true
+    },
+    {
+      "family": "column",
+      "output_id": "0JWtyzY3PVuw_k20Swgt0A",
+      "source_name_private": "Concrete-Rectangular-Column:24X24:320343",
+      "shape_matches_authorized_public_geometry": true,
+      "shape_check": {
+        "rectangular_mesh_matches_authored_axis_section": true,
+        "bounds_max_error_mm": 1.8189894035458565e-12,
+        "vertices_surface_max_error_mm": 0.0,
+        "actual_volume_mm3": 5436000000.000016,
+        "expected_volume_mm3": 5436000000.0,
+        "volume_relative_error": 2.9824251984742916e-15,
+        "vertices": 8,
+        "triangles": 12,
+        "actual_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            15100.0
+          ],
+          [
+            -300.0000000000018,
+            300.0
+          ],
+          [
+            -300.0,
+            300.0
+          ]
+        ],
+        "expected_bounds_in_request_frame_mm": [
+          [
+            0.0,
+            15100.0
+          ],
+          [
+            -300.0,
+            300.0
+          ],
+          [
+            -300.0,
+            300.0
+          ]
+        ],
+        "tolerances": {
+          "bounds_mm": 0.05,
+          "surface_mm": 0.05,
+          "relative_volume": 1e-05
+        },
+        "volume_is_supporting_check_only": true,
+        "independent_of_provider": true
+      },
+      "gold_world_bounds_max_error_mm": 0.44088208913972693,
+      "gold_deviation_within_prewritten_request_rounding": true,
+      "preparation_rounding_bound_mm_not_formal_scoring_tolerance": 1.0,
+      "LoadBearing": [
+        {
+          "value": true,
+          "value_type": "IfcBoolean",
+          "unit": null,
+          "scope": "occurrence_direct"
+        }
+      ],
+      "exact_direct_IfcBoolean_true": true,
+      "unique_correct_containment": true
+    }
+  ],
+  "semantic_assignments": [
+    {
+      "operation_id": "beam-1",
+      "passed": true,
+      "assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "operation_id": "beam-1",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/clarification/beam_load_bearing",
+            "operation:beam-1",
+            "property-hash:sha256:bf1899778436fcb6e45babfd1fffa722d863531277f8a709de5376870d61bae8",
+            "source_fact_key:pset:Pset_BeamCommon.LoadBearing"
+          ],
+          "scope": "beam_occurrence",
+          "source_fact_key": "pset:Pset_BeamCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/clarification/beam_load_bearing",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ]
+    },
+    {
+      "operation_id": "column-2",
+      "passed": true,
+      "assignments": [
+        {
+          "applicability": "conditional",
+          "authoring_action": "set_occurrence_pset",
+          "derivation": null,
+          "fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+          "operation_id": "column-2",
+          "ownership": "occurrence_direct",
+          "provenance": [
+            "request-source:user_request",
+            "request-evidence:request:/clarification/column_load_bearing",
+            "operation:column-2",
+            "property-hash:sha256:1cdfe6eba4212bf82fabbb2ebc7b6845007d3748acc604997306c775f46af7ac",
+            "source_fact_key:pset:Pset_ColumnCommon.LoadBearing"
+          ],
+          "scope": "column_occurrence",
+          "source_fact_key": "pset:Pset_ColumnCommon.LoadBearing",
+          "source_kind": "explicit_value",
+          "source_ref": "request:/clarification/column_load_bearing",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ]
+    }
+  ],
+  "complete_preservation_success": true,
+  "protected_source_D_request_and_old_probe_unchanged": true,
+  "evidence_class": "offline_bound_after_prewritten_answers_geometry_and_exact_property_execution_only",
+  "standard_property_resolution": "existing checked-in exact IFC2X3 registry; no retrieval model, reranker or network",
+  "questions_generated": false,
+  "initial_natural_clarification_or_resume_tested": false,
+  "full_B_experiment_runtime_verified": false,
+  "provider_calls": 0,
+  "private_gold_supplied_to_repair": false,
+  "human_review_status": "pending_human_review",
+  "relative_evidence_directory": "private/offline-support/beam-column-after-answers",
+  "seconds": 64.42200000000594,
+  "passed": true
+}

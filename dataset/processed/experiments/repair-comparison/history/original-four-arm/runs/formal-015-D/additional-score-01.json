@@ -1,0 +1,494 @@
+{
+  "case_id": "formal-015",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evaluation_authority": {
+    "current_scorer": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\formal_scoring_v2.py",
+      "sha256": "aba73b9416a9dba2d82c36c4c5855bdb380f54599fda453ca47a68acd4ed9b8c"
+    },
+    "original_report": {
+      "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-formal-live\\evaluation\\formal-015-D.json",
+      "sha256": "48558909f522766160b3f501ceea845e2caea5a886738daf0653eb7cb9f72de7"
+    },
+    "projection": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\preservation_v2.py",
+      "sha256": "0f951f98ad2d8783a1e141dc77dc49e23ca134d40eda51dca34c532b29064e99"
+    },
+    "role": "first_complete_offline_score_of_terminal_output_old_pending_cache_preserved",
+    "unaffected_checks": "Full matching/geometry/relations/native-validation recomputed from actual frozen output."
+  },
+  "evaluator_revision": {
+    "legacy_schema": "repair-comparison-formal-score/0.1",
+    "preservation": "repair-comparison-preservation/0.2",
+    "unchanged": [
+      "input",
+      "target matching",
+      "quantity",
+      "component checks",
+      "relationships",
+      "IFC validator",
+      "policy tolerances",
+      "clarification"
+    ]
+  },
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "checks_sha256": "0ad402ff6e6f21caa1a4b30f1aa10e220cded3272e6e0199f57984532b98fd33",
+    "damaged_sha256": "9b34138c9e14f0abc899276875073d321776dc2847561bdb281a18f910964984",
+    "result_sha256": "5b984db2e69b56b0e0bfec473ff73189e5170b002b99bdee5109a41efd6a031f",
+    "source_sha256": "0a0523e913f7a884c9a990d87086ad8d0d4304c36b4e64e1787fafb0652de654",
+    "task_sha256": "971f2de7597be6c28bbbb2c3bc12ddd47712ec693f24ac1af7d9fe49725d64bf"
+  },
+  "interaction_success": true,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 0,
+      "affected_root_ids": [],
+      "extra_products": false,
+      "preservation_pass": true,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 2,
+      "numerator": 2,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": true
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": true
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcDoor": 2
+      },
+      "credited_by_class": {
+        "IfcDoor": 2
+      },
+      "denominator": 2,
+      "excess_by_class": {
+        "IfcDoor": 0
+      },
+      "numerator": 2,
+      "required_by_class": {
+        "IfcDoor": 2
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 6,
+      "numerator": 6,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": true
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 2110.0,
+        "host_guid": "0czr4CX$5BNOOrbw_mEmfh",
+        "ifc_class": "IfcDoor",
+        "match_center_world_m": [
+          5.6000000000000005,
+          11.120000000000001,
+          1.055
+        ],
+        "opening_bottom_world_m": 0.0,
+        "opening_center_xy_m": [
+          5.6000000000000005,
+          11.120000000000001
+        ],
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 810.0000000000005,
+        "reference_guid": "0czr4CX$5BNOOrbw_mEmfi",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "target_center_offset_from_opening_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "width_mm": 810.0
+      },
+      "target-2": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "height_mm": 2110.0,
+        "host_guid": "0czr4CX$5BNOOrbw_mEmff",
+        "ifc_class": "IfcDoor",
+        "match_center_world_m": [
+          6.96,
+          14.479999999999999,
+          1.055
+        ],
+        "opening_bottom_world_m": 0.0,
+        "opening_center_xy_m": [
+          6.96,
+          14.479999999999999
+        ],
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 809.9999999999987,
+        "reference_guid": "0czr4CX$5BNOOrbw_mEmfi",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "target_center_offset_from_opening_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "width_mm": 810.0
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": true,
+    "projection_version": "repair-comparison-preservation/0.2",
+    "removed_roots": [],
+    "scope": "unchanged existing roots after shallow new-product/relationship projection; no host waiver; same occurrence-support rule; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 2,
+    "required": 2
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "2vnE3qD4r5PgXMr1wLcO$i",
+          "relation_guid": "3Sr3BOhgH5Ov_oQ$lc2efh"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "2vnE3qD4r5PgXMr1wLcO$i",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0czr4CX$5BNOOrbw_mEmfh",
+          "relation_guid": "1CjMSfKwH7M9PM_mlfxGQa"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0czr4CX$5BNOOrbw_mEmfh",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "1BhpzsM9n5N8CcojUPkJZ$",
+          "relation_guid": "3pAnWSwNfE8uczA7pemPX3"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "1BhpzsM9n5N8CcojUPkJZ$",
+      "extra_invalid": [],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0czr4CX$5BNOOrbw_mEmff",
+          "relation_guid": "1aDfjE2xLEpfhoxN$KTXRk"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0czr4CX$5BNOOrbw_mEmff",
+      "extra_invalid": [],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+      "extra_invalid": [],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-2"
+    }
+  ],
+  "relations": {
+    "correct": 6,
+    "required": 6
+  },
+  "repair_success": true,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.2",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 2110.0,
+        "host_guid": "0czr4CX$5BNOOrbw_mEmfh",
+        "ifc_class": "IfcDoor",
+        "match_center_world_m": [
+          5.6000000000000005,
+          11.120000000000001,
+          1.055
+        ],
+        "opening_bottom_world_m": 0.0,
+        "opening_center_xy_m": [
+          5.6000000000000005,
+          11.120000000000001
+        ],
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 810.0000000000005,
+        "reference_guid": "0czr4CX$5BNOOrbw_mEmfi",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "target_center_offset_from_opening_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "width_mm": 810.0
+      },
+      "matching": {
+        "candidates": [
+          "1Os1tugtnF7Av4coKSOA4$"
+        ],
+        "distances_m": [
+          0.02150000000048724
+        ],
+        "guid": "1Os1tugtnF7Av4coKSOA4$",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "2vnE3qD4r5PgXMr1wLcO$i"
+        ],
+        "distances_m": [
+          0.0
+        ],
+        "guid": "2vnE3qD4r5PgXMr1wLcO$i",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 810.0000000000005,
+        "required_mm": 810.0000000000005,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          -0.02150000000048724,
+          -1.7763568394002505e-15,
+          0.01750000000000007
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -0.02150000000048724,
+            8.881784197001252e-16,
+            0.01750000000000007
+          ]
+        ],
+        "max_axis_errors_m": [
+          2.6645352591003757e-15
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    },
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public_author_intent",
+        "coarse_match_m": 0.35,
+        "explicit_contract": true,
+        "height_mm": 2110.0,
+        "host_guid": "0czr4CX$5BNOOrbw_mEmff",
+        "ifc_class": "IfcDoor",
+        "match_center_world_m": [
+          6.96,
+          14.479999999999999,
+          1.055
+        ],
+        "opening_bottom_world_m": 0.0,
+        "opening_center_xy_m": [
+          6.96,
+          14.479999999999999
+        ],
+        "opening_height_mm": 2110.0,
+        "opening_width_mm": 809.9999999999987,
+        "reference_guid": "0czr4CX$5BNOOrbw_mEmfi",
+        "storey_guid": "3Zu5Bv0LOHrPC10026FoQQ",
+        "target_center_offset_from_opening_m": [
+          -0.02150000000048724,
+          8.881784197001252e-16,
+          0.01750000000000007
+        ],
+        "width_mm": 810.0
+      },
+      "matching": {
+        "candidates": [
+          "0snKQea6r1ev1$Z4ZGIy60"
+        ],
+        "distances_m": [
+          0.02150000000048724
+        ],
+        "guid": "0snKQea6r1ev1$Z4ZGIy60",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "1BhpzsM9n5N8CcojUPkJZ$"
+        ],
+        "distances_m": [
+          1.7763568394002505e-15
+        ],
+        "guid": "1BhpzsM9n5N8CcojUPkJZ$",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 810.0000000000005,
+        "required_mm": 809.9999999999987,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          -0.02150000000048724,
+          -1.7763568394002505e-15,
+          0.01750000000000007
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -0.02150000000048724,
+            8.881784197001252e-16,
+            0.01750000000000007
+          ]
+        ],
+        "max_axis_errors_m": [
+          2.6645352591003757e-15
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-2"
+    }
+  ],
+  "terminal": "submitted"
+}

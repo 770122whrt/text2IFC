@@ -324,20 +324,13 @@ def _preconditions(
             }
         )
     containment = list(storey.ContainsElements)
-    if len(containment) > 1:
-        issues.append(
-            {
-                "code": "STRUCTURAL_STOREY_CONTAINMENT_AMBIGUOUS",
-                "path": "/target/storey_global_id",
-                "message": storey_id,
-            }
-        )
     for relation in containment:
         for existing_beam in relation.RelatedElements:
             if not existing_beam.is_a("IfcBeam"):
                 continue
             try:
-                measured = measure_straight_rectangular_member(
+                from ..public_beam_copy import measure_beam
+                measured = measure_beam(
                     existing_beam, relative_to=storey
                 )
             except (ValueError, RuntimeError):
@@ -411,7 +404,8 @@ def _preconditions(
 
 
 def _applicator(
-    *, operation: Mapping[str, Any], model: Any
+    *, operation: Mapping[str, Any], model: Any,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     storey = require_guid(
         model,
@@ -420,18 +414,30 @@ def _applicator(
     )
     frame = _frame(operation)
     occurrence_id = deterministic_global_id(operation, "beam")
-    created_member = create_straight_rectangular_member(
-        model=model,
-        occurrence_class="IfcBeam",
-        occurrence_global_id=occurrence_id,
-        operation_id=str(operation["operation_id"]),
-        axis_start_mm=frame["axis_start_mm"],
-        axis_end_mm=frame["axis_end_mm"],
-        section=frame["section"],
-        storey=storey,
-        owner_history=storey.OwnerHistory,
-        representation_context=body_context(model),
-    )
+    if public_geometry_requirement:
+        if operation.get('appearance'):
+            raise ValueError('PUBLIC_GEOMETRY_BEAM_APPEARANCE_OVERRIDE_UNSUPPORTED')
+        from ..public_beam_copy import copy_body, measure_beam
+        from ..public_geometry import place_public_product
+        reference = require_guid(model, str(public_geometry_requirement['reference_id']), 'IfcBeam')
+        beam = model.create_entity('IfcBeam', GlobalId=occurrence_id, OwnerHistory=storey.OwnerHistory,
+            Name=f"Text2IFC beam {operation['operation_id']}", ObjectType='Beam', Tag=str(operation['operation_id']))
+        copy_body(beam, reference)
+        place_public_product(beam, storey, public_geometry_requirement['placement_world_mm'])
+        created_member = {'occurrence': beam, 'measurement': measure_beam(beam, relative_to=storey)}
+    else:
+        created_member = create_straight_rectangular_member(
+            model=model,
+            occurrence_class="IfcBeam",
+            occurrence_global_id=occurrence_id,
+            operation_id=str(operation["operation_id"]),
+            axis_start_mm=frame["axis_start_mm"],
+            axis_end_mm=frame["axis_end_mm"],
+            section=frame["section"],
+            storey=storey,
+            owner_history=storey.OwnerHistory,
+            representation_context=body_context(model),
+        )
     beam = created_member["occurrence"]
     assignment = next(
         item
@@ -448,6 +454,7 @@ def _applicator(
         generated_type_factory=create_generated_beam_type,
         factory_context={"section": frame["section"]},
         appearance=operation.get("appearance"),
+        preserve_occurrence_appearance=bool(public_geometry_requirement),
     )
     containment = list(storey.ContainsElements)
     created: list[dict[str, str]] = [
@@ -455,7 +462,8 @@ def _applicator(
         *binding["created"],
     ]
     modified: list[dict[str, str]] = [*binding["modified"]]
-    if containment:
+    # Multiple existing relations stay untouched; the new member gets its own.
+    if len(containment) == 1:
         add_to_containment(containment[0], beam)
         modified.append(
             {
@@ -505,7 +513,11 @@ def _postconditions(
             str(operation["target"]["storey_global_id"]),
             "IfcBuildingStorey",
         )
-        measured = measure_straight_rectangular_member(beam, relative_to=storey)
+        if application.get('public_geometry_requirement', {}).get('exact_beam_body'):
+            from ..public_beam_copy import measure_beam
+            measured = measure_beam(beam, relative_to=storey)
+        else:
+            measured = measure_straight_rectangular_member(beam, relative_to=storey)
     except (KeyError, OperationRegistryError, ValueError) as error:
         return {
             "valid": False,
@@ -525,6 +537,10 @@ def _postconditions(
         and _point_close(measured["axis_end_mm"], frame["axis_end_mm"])
         and measured["section"] == frame["section"]
     )
+    if application.get('public_geometry_requirement', {}).get('exact_beam_body'):
+        from ..public_beam_copy import measure_beam_installation
+        geometry_matches = geometry_matches and measure_beam_installation(
+            beam, application['public_geometry_requirement'])['valid']
     contained = [
         relation.RelatingStructure
         for relation in beam.ContainedInStructure

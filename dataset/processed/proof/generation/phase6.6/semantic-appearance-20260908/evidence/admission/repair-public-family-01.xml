@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="1" time="24.824" timestamp="2026-09-08T14:16:39.964276+08:00" hostname="what-do-matter"><testcase classname="tests.ifc_repair.test_relation_damage_public_path" name="test_dataset_relation_damage_restores_properties_through_public_api[complete]" time="22.440"><failure message="text2ifc_ifc_repair.run_models.RunStoreError: RUN_STATE_CONFLICT: run cannot resume from succeeded">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/live-repair-public-family-20260908-01/test_dataset_relation_damage_r0')
+mode = 'complete'
+
+    @pytest.mark.parametrize('mode', ['complete', 'malformed_then_corrected', 'clarification_resume'])
+    def test_dataset_relation_damage_restores_properties_through_public_api(tmp_path, mode):
+        source=ROOT/'dataset/external/bimnet/vvo.ifc'
+        before=hashlib.sha256(source.read_bytes()).hexdigest()
+        model=ifcopenshell.open(str(source))
+        target=model.by_guid(TARGET)
+        rel=next(r for r in target.IsDefinedBy if r.is_a('IfcRelDefinesByProperties') and r.RelatingPropertyDefinition.Name=='Pset_WallCommon')
+        removed_guid=rel.GlobalId
+        model.remove(rel)
+        damaged=tmp_path/'damaged.ifc';model.write(str(damaged))
+        damaged_bytes=damaged.read_bytes()
+        request=f'For wall {TARGET}, set occurrence Pset_WallCommon.Reference to string 240, IsExternal true, ExtendToStructure false, LoadBearing false. Preserve all geometry and other facts.'
+        output=tmp_path/'public'
+        provider=PropertyProvider(output,request,mode)
+        started=time.monotonic()
+        api=RepairAPI(output,provider=provider)
+        result=api.start(damaged,request)
+        if mode == 'clarification_resume':
+            assert result.status == 'clarification_required', result
+            assert not list(output.rglob('successful-repaired.ifc'))
+            api = RepairAPI(output, provider=provider)
+            result = api.continue_with_answer(result.run_id, clarification_id=result.clarification.clarification_id,
+                expected_state_version=result.state_version, answer={'kind':'add_detail','detail':'Reference must be string "240"; the other three Boolean values remain as requested.'})
+        (tmp_path/'public-path-result.json').write_text(json.dumps({'status':result.status,'elapsed_seconds':time.monotonic()-started,'calls':len(provider.calls),'source_entities':sum(1 for _ in model)},default=str),encoding='utf-8')
+        assert result.status=='succeeded',result
+        assert len(provider.calls)==(2 if mode=='complete' else 3)
+        public=''.join(call['prompt'] for call in provider.calls)
+        assert removed_guid not in public
+        assert 'evaluator-private' not in public
+        assert max(len(c['prompt']) for c in provider.calls)&lt;262144
+        assert damaged.read_bytes()==damaged_bytes
+        assert hashlib.sha256(source.read_bytes()).hexdigest()==before
+        paths=list(output.rglob('repaired.ifc'))
+        assert paths
+        repaired=ifcopenshell.open(str(paths[0]))
+        pset=ifcopenshell.util.element.get_pset(repaired.by_guid(TARGET),'Pset_WallCommon',should_inherit=False)
+        assert {k:pset[k] for k in ('Reference','IsExternal','ExtendToStructure','LoadBearing')}=={'Reference':'240','IsExternal':True,'ExtendToStructure':False,'LoadBearing':False}
+        reopened_api = RepairAPI(output, provider=provider)
+&gt;       assert reopened_api.resume(result.run_id).status == 'succeeded'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\ifc_repair\test_relation_damage_public_path.py:91: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;text2ifc_ifc_repair.api.RepairAPI object at 0x0000021ACF7A7BC0&gt;
+run_id = 'repair-77913e2d2cd24944a8a3fc2b976a17b9'
+
+    def resume(self, run_id: str) -&gt; RunResult:
+        """Resume a non-terminal run from its last committed public boundary."""
+    
+        state = self.store.load(run_id)
+        if state.stage is RunStage.CLARIFICATION_REQUIRED:
+            return self.store.read_result(run_id)
+        if state.stage is not RunStage.INTENT_READY:
+&gt;           raise RunStoreError(
+                "RUN_STATE_CONFLICT",
+                f"run cannot resume from {state.stage.value}",
+            )
+E           text2ifc_ifc_repair.run_models.RunStoreError: RUN_STATE_CONFLICT: run cannot resume from succeeded
+
+src\text2ifc_ifc_repair\api.py:477: RunStoreError</failure></testcase></testsuite></testsuites>

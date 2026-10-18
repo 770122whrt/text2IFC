@@ -1,0 +1,114 @@
+{
+  "budget": {
+    "provider_calls_allowed": false,
+    "status": "not_calibrated"
+  },
+  "case_id": "case-002",
+  "damage_profile": {
+    "composition": "single",
+    "level": "S1",
+    "target_count": 1,
+    "targets": {
+      "IfcDoor": 1
+    }
+  },
+  "damaged_sha256": "84f28b942adb7526ec3edc573d994cd162b0cd26d8b7730766ab436d6d42fbbb",
+  "definition": {
+    "case_id": "case-002",
+    "clarification": {
+      "note": "本题不强设澄清。后续选择位置、楼层或必需尺寸等确实无法从公开输入确定的事实，不把普通可选开向当作强制提問。",
+      "out_of_card_policy": "pending_user_decision",
+      "required_user_facts": []
+    },
+    "damage": {
+      "kind": "door",
+      "preserve_opening": true,
+      "target_guid": "1hOSvn6df7F8_7GcBWlSFK"
+    },
+    "request": {
+      "basis": [
+        "2026-09-29 用户认为仅为开向偏好而强设澄清不合适；当前题改为信息充分的简单补门任务。",
+        "仅用 D 核对：二层墙体上、门高范围的未填充洞口只有一处，底标高3.1m；不依赖隐藏身份即可定位。Duplex 没有声明 TrueNorth，不凭空写东南西北。",
+        "D 的洞口及指定同层参照可确定864×2032mm尺寸；公开坐标取保留洞口与参照门的世界几何包围盒平面中心，保留三位小数用于定位；不是1mm定位验收值。左右开启均可，不将原 G 的开向变成用户义务。"
+      ],
+      "text": "请给二层那个空着的室内门洞补一扇单扇门。门洞的平面中心约在模型全局坐标X=1.915米、Y=-6.188米处，底部标高Z=3.100米。门的名义宽度为864毫米、高度为2032毫米；门框截面、门扇造型和表面外观，以同层平面中心约在X=6.889米、Y=-11.612米处的那扇现有门为准。把门安装在空洞内，左右开启均可。保留现有门洞的位置和大小，墙及其他门保持原样。"
+    },
+    "source": {
+      "approved_use": "research-evaluation",
+      "asset_id": "buildingsmart-community-duplex_a_20110907-b347a2c8aa8f",
+      "attribution_files": [
+        "scripts/ifc_repair/repair_comparison/source-notices.md"
+      ],
+      "leakage_group": "duplex-apartment",
+      "path": "dataset/external/buildingsmart-community/Duplex Apartment/Duplex_A_20110907.ifc",
+      "reference_role": "原始登记字节作为事前选择的损坏前参考。原门开向不是必须恢复的隐藏答案，当前请求允许合理的左右开启方式。",
+      "rights": "CC BY 4.0；保留来源署名、许可链接和修改说明",
+      "scene_family": "Duplex Apartment",
+      "sha256": "b347a2c8aa8fff6db896a4417a9c50c22ac0ccd7c5cfc22b99b8d29336c606ed"
+    },
+    "task": {
+      "acceptance": [
+        "在二层唯一空室内门洞处新增一扇 IfcDoor，OverallWidth=864mm、OverallHeight=2032mm，正确填充保留洞口。外框包围尺寸不与Overall尺寸混淆。",
+        "门框和门扇几何可生成，样式与公开坐标指定的现存参照门一致。左右开启均允许；不以与G原开向不同判错，也不要求为此提问。",
+        "fill、Level 2 containment两条应修边正确；保留洞口的void关系和几何不变。"
+      ],
+      "allowed_alternatives": [
+        "新增门与关系允许新GlobalId及等价几何表示，不恢复已删除门的Tag或隐藏属性。",
+        "可以复用相容门类型、创建语义和外观等价的新类型，或在实例表达所需语义。IfcRelDefinesByType不设为必修边；当前任务不把开向列为必答事实。"
+      ],
+      "localization_evidence": {
+        "bottom_world_z_m": 3.1,
+        "description": "二层唯一空室内门洞",
+        "north_not_declared": true,
+        "source": "damaged IFC only",
+        "unfilled_wall_opening_candidates": [
+          "1xS3BCk291UvhgP2dvNozF"
+        ]
+      },
+      "matching": "按 D 中二层唯一空室内门洞的位置匹配唯一新增 IfcDoor，粗匹配取洞口中心0.5m范围；fill关系和尺寸在匹配后独立检验。",
+      "preservation": [
+        "不移动或缩放保留洞口，不改变墙的轴线、厚度、高度、材料或其他洞口。",
+        "两种现存参照门及其他对象保持身份、几何、属性与关系；不重复补门。"
+      ],
+      "reference_guids": [
+        "1xS3BCk291UvhgP2dvNozF",
+        "1hOSvn6df7F8_7GcBWlSDm",
+        "2OBrcmyk58NupXoVOHUuXp"
+      ],
+      "required_products": {
+        "IfcDoor": 1
+      },
+      "required_relations": [
+        {
+          "basis": "新增门填充保留洞口；原 fill 被删除。保留的墙–洞口 void 已正确，不计入应修分母。",
+          "id": "opening_fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "新门加入 Level 2 的成员边；删除前G中的这条成员边在D缺失。",
+          "id": "storey_containment",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "summary": "给二层唯一的空室内门洞补门",
+      "tolerances": {
+        "angle_degrees": 0.1,
+        "length_mm": 1.0,
+        "note": "开发审阅草案；Duplex项目单位是m，检查统一换算mm。",
+        "status": "pending_human_review"
+      }
+    }
+  },
+  "excluded_formal_scene_family": "Duplex Apartment",
+  "formal_eligible": false,
+  "purpose": "development_only",
+  "required_product_count": 1,
+  "required_relation_count": 2,
+  "review": {
+    "reviewed_at": null,
+    "reviewer": null,
+    "status": "pending_human_review"
+  },
+  "schema_version": "repair-comparison-development/0.1",
+  "source_sha256": "b347a2c8aa8fff6db896a4417a9c50c22ac0ccd7c5cfc22b99b8d29336c606ed"
+}

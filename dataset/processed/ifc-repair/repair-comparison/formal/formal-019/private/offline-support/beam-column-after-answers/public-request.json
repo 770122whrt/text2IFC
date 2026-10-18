@@ -1,0 +1,115 @@
+{
+  "schema_version": "text2ifc/phase12-public-structural-request/0.1",
+  "case_id": "candidate-019-after-preset-answers",
+  "request": "模型里少了一根水平梁和一根竖直柱，请分别补回。\n\n梁属于楼层标高4.7米的那层，两个端面中心为（-9.449，5.09，4.2936）米和（-12.249，5.09，4.2936）米，截面宽300毫米、竖向高812.8毫米。\n\n柱的平面中心为（X=-12.549，Y=5.24）米，柱底中心标高-1米，柱顶中心标高14.1米，截面600×600毫米，截面的边平行于模型X、Y方向，归属于柱底所在的-1米楼层。\n\n请把这根梁和这根柱的承重标记也补齐。\n\n以上位置使用模型全局坐标，坐标和标高的单位是米。请保留其余构件及其位置、几何和现有属性。\n\n澄清答复（离线预写事实）：\n这根梁的承重标记为“是”（true）。\n这根柱的承重标记为“是”（true）。",
+  "operations": [
+    {
+      "operation_id": "beam-1",
+      "operation_type": "add_beam",
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "value": 4700.0,
+            "tolerance_mm": 0.1
+          }
+        ]
+      },
+      "parameters": {
+        "axis": {
+          "start": {
+            "x_mm": -9449.0,
+            "y_mm": 5090.0,
+            "z_mm": -406.40000000000055
+          },
+          "end": {
+            "x_mm": -12249.0,
+            "y_mm": 5090.0,
+            "z_mm": -406.40000000000055
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 300.0,
+          "height_mm": 812.8
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "set_name": "Pset_BeamCommon",
+          "property_name": "LoadBearing",
+          "raw_value": true,
+          "raw_unit": null,
+          "requested_value_type": "IfcBoolean",
+          "scope": "occurrence_direct",
+          "source": {
+            "source_kind": "user_request",
+            "reference": "request:/clarification/beam_load_bearing",
+            "excerpt": "这根梁的承重标记为“是”（true）。"
+          }
+        }
+      ]
+    },
+    {
+      "operation_id": "column-2",
+      "operation_type": "add_column",
+      "target_query": {
+        "schema_version": "text2ifc/ifc-target-query/0.1",
+        "allowed_ifc_classes": [
+          "IfcBuildingStorey"
+        ],
+        "geometry_constraints": [
+          {
+            "field": "storey_elevation_mm",
+            "value": -1000.0,
+            "tolerance_mm": 0.1
+          }
+        ]
+      },
+      "parameters": {
+        "axis": {
+          "base": {
+            "x_mm": -12549.0,
+            "y_mm": 5240.0,
+            "z_mm": 0.0
+          },
+          "top": {
+            "x_mm": -12549.0,
+            "y_mm": 5240.0,
+            "z_mm": 15100.0
+          }
+        },
+        "section": {
+          "shape": "rectangle",
+          "width_mm": 600.0,
+          "depth_mm": 600.0,
+          "orientation": {
+            "x": -1.0,
+            "y": 0.0
+          }
+        }
+      },
+      "property_intents": [
+        {
+          "intent_kind": "exact_property",
+          "set_name": "Pset_ColumnCommon",
+          "property_name": "LoadBearing",
+          "raw_value": true,
+          "raw_unit": null,
+          "requested_value_type": "IfcBoolean",
+          "scope": "occurrence_direct",
+          "source": {
+            "source_kind": "user_request",
+            "reference": "request:/clarification/column_load_bearing",
+            "excerpt": "这根柱的承重标记为“是”（true）。"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "basis": "Read-only current damaged IFC index; no Provider call",
+  "user_selector": "标高0层，约2.22米长、240毫米厚的墙",
+  "query": {
+    "storey_name": "标高0",
+    "geometry_constraints": [
+      {
+        "field": "wall_length_mm",
+        "value": 2220,
+        "tolerance_mm": 10
+      },
+      {
+        "field": "wall_thickness_mm",
+        "value": 240,
+        "tolerance_mm": 1
+      }
+    ],
+    "global_id": null
+  },
+  "result": {
+    "schema_version": "text2ifc/ifc-target-resolution/0.1",
+    "score_version": "text2ifc/target-score/0.1",
+    "status": "ambiguous",
+    "resolved_target_id": null,
+    "candidates": [
+      {
+        "record_id": "ifc:2CsmzAChHF6O6maGXlo6PS",
+        "ifc_global_id": "2CsmzAChHF6O6maGXlo6PS",
+        "retriever": "structured",
+        "retriever_version": "text2ifc/structured-retriever/0.1",
+        "source_score": 0,
+        "fused_score": 0,
+        "matched_fields": [],
+        "evidence": [
+          {
+            "field": "global_id",
+            "state": "unavailable",
+            "query_value": null,
+            "candidate_value": "2CsmzAChHF6O6maGXlo6PS",
+            "provenance": "IfcRoot.GlobalId"
+          },
+          {
+            "field": "ifc_class",
+            "state": "matched",
+            "query_value": [
+              "IfcWall"
+            ],
+            "candidate_value": "IfcWallStandardCase",
+            "provenance": "IfcProduct.is_a"
+          },
+          {
+            "field": "name",
+            "state": "unavailable",
+            "query_value": null,
+            "candidate_value": "基本墙:240:223174",
+            "provenance": "aliases"
+          },
+          {
+            "field": "storey",
+            "state": "matched",
+            "query_value": "标高0",
+            "candidate_value": "标高0",
+            "provenance": "spatial_relationship"
+          },
+          {
+            "field": "geometry_capability",
+            "state": "unavailable",
+            "query_value": null,
+            "candidate_value": "straight_wall",
+            "provenance": "adapter"
+          },
+          {
+            "field": "geometry:wall_length_mm",
+            "state": "matched",
+            "query_value": {
+              "value": 2220,
+              "tolerance_mm": 10
+            },
+            "candidate_value": 2217.5,
+            "provenance": "ifc_geometry"
+          },
+          {
+            "field": "geometry:wall_thickness_mm",
+            "state": "matched",
+            "query_value": {
+              "value": 240,
+              "tolerance_mm": 1
+            },
+            "candidate_value": 240.000000000002,
+            "provenance": "ifc_geometry"
+          }
+        ]
+      },
+      {
+        "record_id": "ifc:2CsmzAChHF6O6maGXlo6ay",
+        "ifc_global_id": "2CsmzAChHF6O6maGXlo6ay",
+        "retriever": "structured",
+        "retriever_version": "text2ifc/structured-retriever/0.1",
+        "source_score": 0,
+        "fused_score": 0,
+        "matched_fields": [],
+        "evidence": [
+          {
+            "field": "global_id",
+            "state": "unavailable",
+            "query_value": null,
+            "candidate_value": "2CsmzAChHF6O6maGXlo6ay",
+            "provenance": "IfcRoot.GlobalId"
+          },
+          {
+            "field": "ifc_class",
+            "state": "matched",
+            "query_value": [
+              "IfcWall"
+            ],
+            "candidate_value": "IfcWallStandardCase",
+            "provenance": "IfcProduct.is_a"
+          },
+          {
+            "field": "name",
+            "state": "unavailable",
+            "query_value": null,
+            "candidate_value": "基本墙:240:223398",
+            "provenance": "aliases"
+          },
+          {
+            "field": "storey",
+            "state": "matched",
+            "query_value": "标高0",
+            "candidate_value": "标高0",
+            "provenance": "spatial_relationship"
+          },
+          {
+            "field": "geometry_capability",
+            "state": "unavailable",
+            "query_value": null,
+            "candidate_value": "straight_wall",
+            "provenance": "adapter"
+          },
+          {
+            "field": "geometry:wall_length_mm",
+            "state": "matched",
+            "query_value": {
+              "value": 2220,
+              "tolerance_mm": 10
+            },
+            "candidate_value": 2215.0,
+            "provenance": "ifc_geometry"
+          },
+          {
+            "field": "geometry:wall_thickness_mm",
+            "state": "matched",
+            "query_value": {
+              "value": 240,
+              "tolerance_mm": 1
+            },
+            "candidate_value": 240.000000000002,
+            "provenance": "ifc_geometry"
+          }
+        ]
+      }
+    ],
+    "attribute_intents": []
+  },
+  "limitation": "direction currently means signed wall axis orientation, not building facade position; north facade / ordinal position not expressible in current query schema."
+}

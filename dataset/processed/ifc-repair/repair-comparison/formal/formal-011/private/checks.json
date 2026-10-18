@@ -1,0 +1,1429 @@
+{
+  "schema_version": "repair-comparison-structural-draft-checks/0.1",
+  "timestamp": "2026-10-08T12:08:27.035160+00:00",
+  "checks": {
+    "schema_preserved": true,
+    "source_native_validation_passed": true,
+    "damaged_native_validation_passed": true,
+    "source_unchanged": true,
+    "reference_is_exact_source_copy": true,
+    "only_expected_products_removed": true,
+    "no_products_created": true,
+    "no_unexpected_modified_products": true,
+    "no_unexpected_root_changes": true,
+    "removed_targets_absent_in_d": true,
+    "targets_and_references_have_geometry": true,
+    "no_mesh_generation_errors": true,
+    "all_retained_meshes_and_placements_unchanged": true,
+    "original_types_and_storeys_preserved": true,
+    "public_numeric_facts_match_actual_geometry": true,
+    "public_request_has_no_original_name_or_guid": true,
+    "directory_acl_not_changed": true
+  },
+  "source_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "damaged_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "removed_product_guids_private": [
+    "0fngfWeyj0Qwg_a6RxVlQC"
+  ],
+  "unexpected_modified_products": [],
+  "unexpected_root_changes": [],
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "change_kind": "modified",
+        "global_id": "0fngfWeyj0Qwg_a6VxVlPA",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQC"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQh"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlSX"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlT1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlTa"
+              },
+              {
+                "ifc_class": "IfcFlowTerminal",
+                "global_id": "3gui558Mr4$fnQpgI3Jsln"
+              },
+              {
+                "ifc_class": "IfcFlowTerminal",
+                "global_id": "3gui558Mr4$fnQpgI3Jslo"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "13LV5dTeP3CAox54x56C1Z"
+            }
+          },
+          "content_sha256": "sha256:6e3a5877d5a79abecc46374402511b05ed096740881eb6413a4d76164eef5518"
+        },
+        "after": {
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null,
+          "attributes": {
+            "RelatedElements": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQh"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlSX"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlT1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlTa"
+              },
+              {
+                "ifc_class": "IfcFlowTerminal",
+                "global_id": "3gui558Mr4$fnQpgI3Jsln"
+              },
+              {
+                "ifc_class": "IfcFlowTerminal",
+                "global_id": "3gui558Mr4$fnQpgI3Jslo"
+              }
+            ],
+            "RelatingStructure": {
+              "ifc_class": "IfcBuildingStorey",
+              "global_id": "13LV5dTeP3CAox54x56C1Z"
+            }
+          },
+          "content_sha256": "sha256:ae24a75c0b5b5671a84e991f517e26327cb1bc54b8f3082cbc1ec10ea8b00d2b"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "1WZ6XE$Pozb5qPADR0z0xL",
+        "ifc_class": "IfcRelAssociatesMaterial",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSGO"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSGm"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHW"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHX"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHa"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHc"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHd"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSIK"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSJK"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSe4"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSGO"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSGm"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHW"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHX"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHa"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHc"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHd"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSIK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSJK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSe4"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0WATl4XE586wha9BnaO4E_"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0WATl4XE586wha9BnaO6wE"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0WATl4XE586whaBBnaO4E_"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0WATl4XE586whaBBnaO6wE"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6O"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6z"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7L"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7m"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHT"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHr"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViS9"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViSy"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUP"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVi"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVo"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViw$"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwX"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwZ"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViw_"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwu"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwv"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViww"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwx"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwy"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwz"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl20"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl21"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl22"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl23"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl26"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2O"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2S"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2T"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2U"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2V"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAm"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAn"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAo"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAq"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAr"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAs"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAt"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAv"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAx"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQC"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQh"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlSX"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlT1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlTa"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViw$"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwX"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwZ"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViw_"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwu"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwv"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViww"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwx"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwy"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwz"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl20"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl21"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl22"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl23"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl26"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2O"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2S"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2T"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2U"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2V"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAm"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAn"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAo"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAp"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAq"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAr"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAs"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAt"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAv"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAx"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterial",
+              "attributes": {
+                "Name": "Ortbeton - bewehrt Verputzt"
+              }
+            }
+          },
+          "content_sha256": "sha256:8a4150806624a96029884a9a435073d22a9330abfb02b442f85a1a1204a15b79"
+        },
+        "after": {
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSGO"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSGm"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHW"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHX"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHa"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHc"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSHd"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSIK"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSJK"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0L7CYrHeL9Jv5oSU25sSe4"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSGO"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSGm"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHW"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHX"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHa"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHc"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSHd"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSIK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSJK"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0L7CYrHeL9Jv5oUU25sSe4"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0WATl4XE586wha9BnaO4E_"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0WATl4XE586wha9BnaO6wE"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0WATl4XE586whaBBnaO4E_"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0WATl4XE586whaBBnaO6wE"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6O"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6z"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7L"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7m"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHT"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHr"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViS9"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViSy"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUP"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVi"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVo"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViw$"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwX"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwZ"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViw_"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwu"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwv"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViww"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwx"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwy"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxViwz"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl20"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl21"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl22"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl23"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl26"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2O"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2S"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2T"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2U"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVl2V"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAm"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAn"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAo"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAp"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAq"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAr"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAs"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAt"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAv"
+              },
+              {
+                "ifc_class": "IfcColumn",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlAx"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQh"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlSX"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlT1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlTa"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViw$"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwX"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwZ"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViw_"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwu"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwv"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViww"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwx"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwy"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxViwz"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl20"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl21"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl22"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl23"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl26"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2O"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2S"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2T"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2U"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVl2V"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAm"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAn"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAo"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAp"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAq"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAr"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAs"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAt"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAv"
+              },
+              {
+                "ifc_class": "IfcColumnType",
+                "global_id": "0fngfWeyj0Qwg_c6RxVlAx"
+              }
+            ],
+            "RelatingMaterial": {
+              "ifc_class": "IfcMaterial",
+              "attributes": {
+                "Name": "Ortbeton - bewehrt Verputzt"
+              }
+            }
+          },
+          "content_sha256": "sha256:78e37eec7a6be0eaf643501f696135db1832e7c940992f19767eb12a31a75136"
+        }
+      },
+      {
+        "change_kind": "modified",
+        "global_id": "3$mEuhlrp0Y_n9g6SlVtRp",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6O"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6z"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7L"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7m"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHT"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHr"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViS9"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViSy"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUP"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVi"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVo"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQC"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlSX"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlT1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlTa"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcBeamType",
+              "global_id": "2SCp4O5u8Z$DZWtJU$8nZa"
+            }
+          },
+          "content_sha256": "sha256:0f298e42460830e7ee7723d5d2a43b4de7882befc775d04acf1ff5f87e420ac9"
+        },
+        "after": {
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6O"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi6z"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7L"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVi7m"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHT"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViHr"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViS9"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViSy"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUP"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViUw"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVi"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxViVo"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlSX"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlT1"
+              },
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlTa"
+              }
+            ],
+            "RelatingType": {
+              "ifc_class": "IfcBeamType",
+              "global_id": "2SCp4O5u8Z$DZWtJU$8nZa"
+            }
+          },
+          "content_sha256": "sha256:e1403579aa9957c81fc6cf429be2eea6bab3d229fdf383796b87831e88179bd5"
+        }
+      }
+    ],
+    "removed": [
+      {
+        "change_kind": "removed",
+        "global_id": "0fngfWeyj0Qwg_a6RxVlQC",
+        "ifc_class": "IfcBeam",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcBeam",
+          "name": "STB Träger - rechteckig:STB 250 x 500:2578656",
+          "attributes": {
+            "ObjectType": "STB Träger - rechteckig:STB 250 x 500",
+            "Tag": "2578656"
+          },
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              12.875
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              29.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              3.2
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "containers": [
+            "13LV5dTeP3CAox54x56C1Z"
+          ],
+          "types": [
+            "2SCp4O5u8Z$DZWtJU$8nZa"
+          ],
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:f6fc56e40630a00a06f3cb0530262da68af6132b47a7f6d794d0b0c5b4ef9418"
+          },
+          "content_sha256": "sha256:260c6e50be174b2d0ddd337967339e32f73d7d71207b008812e7697cee91e169"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "0lAsOm_4z8CvSimeJrbGZ8",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_BeamCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "STB 250 x 500"
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Slope",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPlaneAngleMeasure",
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Span",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcPositiveLengthMeasure",
+                    "attributes": {
+                      "wrappedValue": 4.0
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:6d5625509b2a19b93b16caead25e2b49e30bc1515484364780a6a85963419d99"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "2d07edjrJRhMleB_kVI2AU",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQC"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "32QlNe1GfLwHB3PNg8pbyL"
+            }
+          },
+          "content_sha256": "sha256:547f76edc923fa14a195437b851cec7c60d5a98a3544bf95ec748610c594580b"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "32QlNe1GfLwHB3PNg8pbyL",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ReinforcementBarPitchOfBeam",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcLabel",
+                    "attributes": {
+                      "wrappedValue": "STB 250 x 500"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:c1b865661494ed909190ce7fa8baaaf9afe9f4c20ef483fe491ce6fc7490f7cd"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "38EEkzZ4ylsbyFAy1t3$3G",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "STB 250 x 500"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:a18335d6a7fb3cf9a29edbdeb7ea8cc63c420d163395b8720dfce6cd35fc2121"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3MZnEpNyNynHnkzfVNQHdP",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQC"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "38EEkzZ4ylsbyFAy1t3$3G"
+            }
+          },
+          "content_sha256": "sha256:3193042cb7e190694a254031155f337cf6c09439122f0f70b56d07a2de29e231"
+        },
+        "after": null
+      },
+      {
+        "change_kind": "removed",
+        "global_id": "3NKGOLsCP8DL8Mub8xeDuf",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true,
+        "before": {
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null,
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "ifc_class": "IfcBeam",
+                "global_id": "0fngfWeyj0Qwg_a6RxVlQC"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "ifc_class": "IfcPropertySet",
+              "global_id": "0lAsOm_4z8CvSimeJrbGZ8"
+            }
+          },
+          "content_sha256": "sha256:3935c2e290e9a63d1900df8ce4cb1add1ed051ce93601822065b500973a83803"
+        },
+        "after": null
+      }
+    ]
+  },
+  "mesh_counts": {
+    "G": 1543,
+    "D": 1542
+  },
+  "mesh_errors": {
+    "G": [],
+    "D": []
+  },
+  "model_calls": 0,
+  "human_review_status": "pending_human_review",
+  "request_numeric_review": {
+    "actual_request_text_checked": true,
+    "required_geometry_literals_present": true,
+    "unexpected_numeric_literals": [],
+    "numeric_literals": [
+      0.0,
+      12.875,
+      29.0,
+      2.95,
+      12.875,
+      25.0,
+      2.95,
+      250.0,
+      500.0
+    ],
+    "check_basis": "actual author_request output versus independently measured geometry-review rows",
+    "passed": true
+  }
+}

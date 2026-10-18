@@ -1,0 +1,4018 @@
+{
+  "checks": {
+    "damaged_native_validation_passed": true,
+    "no_products_created": true,
+    "no_unexpected_modified_products": true,
+    "only_expected_products_removed": true,
+    "removed_door_regions_closed": true,
+    "removed_window_regions_closed": true,
+    "required_relation_edges_verified": true,
+    "retained_door_openings_empty_and_hosted": true,
+    "schema_preserved": true,
+    "source_native_validation_passed": true,
+    "source_unchanged": true,
+    "targets_and_references_have_geometry": true
+  },
+  "damaged_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "effective_opening_evidence": {
+    "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+    "openings": [
+      {
+        "effective_volume_m3": 0.10799999999999965,
+        "ifcopenshell_version": "0.8.5",
+        "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfn",
+        "positive_volume_epsilon_m3": 1e-09,
+        "raw_cutter_volume_m3": 0.330479999999994,
+        "wall_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "wall_volume_before_m3": 7.182,
+        "wall_volume_without_opening_m3": 7.29
+      },
+      {
+        "effective_volume_m3": 0.10799999999999965,
+        "ifcopenshell_version": "0.8.5",
+        "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfm",
+        "positive_volume_epsilon_m3": 1e-09,
+        "raw_cutter_volume_m3": 0.330480000000006,
+        "wall_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "wall_volume_before_m3": 7.182,
+        "wall_volume_without_opening_m3": 7.29
+      },
+      {
+        "effective_volume_m3": 0.10799999999999965,
+        "ifcopenshell_version": "0.8.5",
+        "method": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfN",
+        "positive_volume_epsilon_m3": 1e-09,
+        "raw_cutter_volume_m3": 0.3304800000000042,
+        "wall_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "wall_volume_before_m3": 7.451999999999998,
+        "wall_volume_without_opening_m3": 7.559999999999998
+      }
+    ],
+    "walls": {
+      "2b5zO_zNf8pA8_ICS7f_$K": {
+        "absolute_difference_m3": 0.0,
+        "effective_sum_m3": 0.2159999999999993,
+        "group_delta_m3": 0.2159999999999993,
+        "non_overlapping": true,
+        "opening_guids": [
+          "08RhMK5Vz6LfdN2hFKqVfn",
+          "08RhMK5Vz6LfdN2hFKqVfm"
+        ],
+        "tolerance_m3": 1e-07,
+        "wall_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "wall_volume_before_m3": 7.182,
+        "wall_volume_without_openings_m3": 7.398
+      },
+      "2ebGMQTpv7KeV9ceEWxGjA": {
+        "absolute_difference_m3": 0.0,
+        "effective_sum_m3": 0.10799999999999965,
+        "group_delta_m3": 0.10799999999999965,
+        "non_overlapping": true,
+        "opening_guids": [
+          "08RhMK5Vz6LfdN2hFKqVfN"
+        ],
+        "tolerance_m3": 1e-07,
+        "wall_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "wall_volume_before_m3": 7.451999999999998,
+        "wall_volume_without_openings_m3": 7.559999999999998
+      }
+    }
+  },
+  "host": {
+    "bounds_world_m": [
+      [
+        -2.80991774963,
+        -2.50991774963
+      ],
+      [
+        -22.821818272,
+        -13.221818272
+      ],
+      [
+        3.0,
+        6.0
+      ]
+    ],
+    "class": "IfcWallStandardCase",
+    "geometry_status": "available",
+    "guid": "2b5zO_zNf8pA8_ICS7f_$K",
+    "name": "Seinä-102",
+    "project_unit_to_mm": 1.0
+  },
+  "removed_product_guids": [
+    "08RhMK5Vz6LfdN2hFKqVfN",
+    "08RhMK5Vz6LfdN2hFKqVfm",
+    "08RhMK5Vz6LfdN2hFKqVfn",
+    "0v7AnS9_D4R9vXkxldrO46",
+    "1UYvRALJb9dBcNbn5Vdiib",
+    "34mV4OHM10ZPX8Zg5zOvcK"
+  ],
+  "required_relation_evidence": [
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "34mV4OHM10ZPX8Zg5zOvcK",
+          "parent_guid": "08RhMK5Vz6LfdN2hFKqVfn",
+          "relation_guid": "0pSUaYNG15t8_HPVJpZgSh"
+        }
+      ],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "08RhMK5Vz6LfdN2hFKqVfn",
+          "parent_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+          "relation_guid": "1zQAzFSoX6RRIL3iWSmuao"
+        }
+      ],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "34mV4OHM10ZPX8Zg5zOvcK",
+          "parent_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+          "relation_guid": "08RhMK5Vz6LfdN2g7KqVfj"
+        }
+      ],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "1UYvRALJb9dBcNbn5Vdiib",
+          "parent_guid": "08RhMK5Vz6LfdN2hFKqVfm",
+          "relation_guid": "0WF7GoUqX5T8vDWqNHqz7F"
+        }
+      ],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "08RhMK5Vz6LfdN2hFKqVfm",
+          "parent_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+          "relation_guid": "0NMvu_9nz3EwLuXdk2iH5h"
+        }
+      ],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "1UYvRALJb9dBcNbn5Vdiib",
+          "parent_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+          "relation_guid": "08RhMK5Vz6LfdN2g7KqVfj"
+        }
+      ],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0v7AnS9_D4R9vXkxldrO46",
+          "parent_guid": "08RhMK5Vz6LfdN2hFKqVfN",
+          "relation_guid": "27n2Yo5oTFRBBYQ7unwEXq"
+        }
+      ],
+      "id": "target-3.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "08RhMK5Vz6LfdN2hFKqVfN",
+          "parent_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+          "relation_guid": "3nkawzKEX4fvCMsXqm2u5z"
+        }
+      ],
+      "id": "target-3.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "verified": true
+    },
+    {
+      "after": [],
+      "before": [
+        {
+          "member_guid": "0v7AnS9_D4R9vXkxldrO46",
+          "parent_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+          "relation_guid": "08RhMK5Vz6LfdN2g7KqVfj"
+        }
+      ],
+      "id": "target-3.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "verified": true
+    }
+  ],
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "after": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "02gfkbKi91zO_Scj5r7iGe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "04oCFUJ7r9oBJALw$dgC2b",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "057$LGZzz27B08CuznGDgh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06BvTKFo571wrlEuT4YUXK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "07x0XdQjD69udSh7flKACa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0A7Icjva9EXR14W9ExGpRi",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0BDODo9an5CPnjO$Ije8Ob",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0Cw7rKvJ98S8x4Iyo3nQu8",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0EpfF4eSj2l8yPy1TUdY3l",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0FB5I9ZiD0Z8abDvEZsz3p",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0PiBTm9j9COvxmJODm5fnP",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0Sa8xFbuH97OUwuSELufBL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0SgCWuPUXACwRXmJror2FK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0TSbukdOv3Ax4sGGEJtgwn",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0VO1ABLI12sOvi8X$097BU",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0Y5iIr6ZT1bgLIcOnBNke3",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0_$UgLgdj859l6eXZwQx6i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0aBVXZ7Gz5BRVoFUtfpZJQ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0cFmRiFRj09AFje643ADPZ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0cjeskYUXDy9R7RVH_9MEV",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0dM3A9uVb5YQR_bZSTMbNH",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0fCAIJQVLDpQnUN_kZuRxa",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0fJyOKXyXBOgKztEOENqRU",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0gO3vPQyr7$PvCMQLcvfjO",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0i_ZtatBf2ywhzZxRTAd_J",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0jPecwNbr7shjFwB2JeuNF",
+                "ifc_class": "IfcBuildingElementProxy"
+              },
+              {
+                "global_id": "0jRPQ2iyDCEBusa_8OhGfE",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0lfLyM_lvApeMk3ZgGZiUa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0uSqYx_MP0MROowT$mtLh6",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0uk3FywAf1O9VOI8kF98fF",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wI_iMMVH3TOQCSGA3hBLr",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1$AWqT1GHFCRteqXshA$19",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "13bH$wdPHE3OijTSvqmkYs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "14rt$YUlv00vF6aUeOGH$P",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "15lWs0f352svwexMhogM5J",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1C$IRVTQ5EyQeqnTK1k7kg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1C49KtI357vAehhkn5qg_h",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1HB8AH_AT1GQbQ5DjZkbro",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1HeGhe1sbE59KzBYeC_Uim",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1IJW8zlJnEOwWNPvz_z4HQ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Mt8OQRxDEaREf2hR$d_qN",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Pg1U$OXj6jQ4l1VBY1zfM",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1RN$E3m5D3CBvJzGMTOZ1y",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1T2FOBD4nDhgcqD_EPt2zd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1XWyJpzSL9iuRH2lqjx5Hg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1YuwPpoTb1yxFKoxhkm3yb",
+                "ifc_class": "IfcBuildingElementProxy"
+              },
+              {
+                "global_id": "1_GANEa3z6SB2Ne3WAxfqa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1_LZg68UT318e8nSGyK_eb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGMraZbv6uvSOqDXDKOs7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGsK44iD86fmgI2_cB9rX",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1b4dYaXFH39wFJy4SiXIbI",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1dpI5mXfz0KwCpoTw0RZXn",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1fYJTka8H2FA7BTtWbdtGc",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1iIJplgLTCJwf61NUvCZcC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1n7V29WyDFMBwrhJB2WqUF",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1pJMOGmpH5o9gamDDHaN$_",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1u74FPRdz7SxTqt7ebetG9",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1ulKHAnhvAK9t$fex8CaH0",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1wlBXGlCfB9Pj9dYUx$p4o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1yZQpZb_92XAGrYIbn5Sm6",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1ypkBPMDT1iQkD$ldNaITm",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20nwtUYf55n83yEgdPjJMF",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "23OQm8E$j4R9qZ$$N_voAh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "25Uhm4dd136uNySSqkJHZ0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "26dbUt9F99TQxXxmai2LiV",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "26pwqCBsD4ihOd4U5cyZ7B",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "26wMRRb7n1og7wTPoNXBvS",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "29N9cPguT79OCozzKCNpIj",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2BLT9aLx578uhc3C9QFUbD",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2Hg7F$etT5ghEurn_fCMJw",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2Hqbg3fm592RrGBNEw3_Ei",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2V5dzFkov9vuCg5McW948H",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2agWFRA3DFMvTb4v0IpGSs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2b5zO_zNf8pA8_ICS7f_$K",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2ebGMQTpv7KeV9ceEWxGjA",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2fABjFuUf4oQLiweMlxkt0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2fGfWzPM96owp4Eio1akn0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2iVanxNffCLOft5CjZ43Xs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2lj5pS78j6qxImLf8WIVjZ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2oEPMj4XTDS8v2xZsvL3dn",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2pxl76VLTFaf4sx8N2Pcbh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2qZIXRvFf6XOotuQt$CaC1",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2qpKQ5ImL71xbD$JY6X6Uq",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2rd1LLyW12292TCQ2cvAJ9",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2suNrwUNL9Ah79JdcQHGWw",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tBJCzp$jCrhtYrK0w4W7o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tO_SCMTDBFBvw1ctKfjZx",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2tmTHTAPvAdwHr_XTFIFBS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2x0k9IryX5Dg9QZjdFyGDG",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2xNIOM0V16UeVU9NvPXlA8",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2yfgV1jKj628FXl0of0yDC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2zXl17v0v7aBotXv3orCdW",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3$sEl3KmX9LgsaZIzCCn_a",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "30651CPF5ErgA8jcsHyR6N",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "30RonFCGfC4vomlMTLB57P",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "31ETXzag90f8jfEWKYamcK",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "34fEPUniTEQxOuuCqOR_l3",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "34zouEbor8O95cwbdef59B",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "35EjG4XJXFbOmvfJq29ngX",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "36LE_eNajAwuBdRB8qQD9U",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "37VWZ7ZhPD$xW2HRyxBYut",
+                "ifc_class": "IfcBuildingElementProxy"
+              },
+              {
+                "global_id": "3E7A7AuUz0DhRKt16BWz_Q",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3FS5_F2F96X9SwF$od748S",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3FmsnZGmf29AGjIFi2dlw3",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3GSR4PvjD6MAX0g$lYYtfA",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3IHZ1v3Tf1tuOxHck2aWQ8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Isv2zKZj74hwfgnkleV_i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3JK7vihjb6vONNDK59W8u8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3KjTpaF0jBBg8ml42Jhmgl",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3NaYqvtz94BP7QXVUe9JFN",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3O2fIEL755NRXygEUM53ED",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ODeVmWz11rQYQajWbip$H",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3OKOLMYcb0Sh675aQjoaVS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3PU41CXCn6EAvvMSq7n3pa",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3SaeSjIIr0CPz6lU0STwzD",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3TVNLGrgX9KOe_DM9E8hJ8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UllicZ_jByv_xghEPA1ei",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3_dGzVv5z1X90VI1MZJgat",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3bFibsAb1Emu0FI4jE9gAj",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3bl_Lkvsb2Nfrs0s0OEw_o",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3f7PT_m4z66fgPvD8rZ9Yt",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3f_UdS6hX9VhZpBay2R0lU",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3fgKznOtP1vu9XI5VYwPIh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3hNDVkEnH3t9aP7dy9aKsn",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3j213H3G9EQR9BmdQxGW$g",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3pzhJQ76fCi819P4A1uBQu",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3q6aqzBof9JvHyDozm$CxR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ruvDiQdr2PBdP0BHeJC1Q",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3th9a4w7L9lw8zOnmDSJAk",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3vL1G70Qf9eQYVRC8sL1$X",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "2F0V3QPDDFMRTpJqxqPeZR",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:32ee4c55cc2e62b49b570221fb05144bede5d00fb552520223b53a1e811ab2ad",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedElements": [
+              {
+                "global_id": "02gfkbKi91zO_Scj5r7iGe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "04oCFUJ7r9oBJALw$dgC2b",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "057$LGZzz27B08CuznGDgh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06BvTKFo571wrlEuT4YUXK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "07x0XdQjD69udSh7flKACa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0A7Icjva9EXR14W9ExGpRi",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0BDODo9an5CPnjO$Ije8Ob",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0Cw7rKvJ98S8x4Iyo3nQu8",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0EpfF4eSj2l8yPy1TUdY3l",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0FB5I9ZiD0Z8abDvEZsz3p",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0PiBTm9j9COvxmJODm5fnP",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0Sa8xFbuH97OUwuSELufBL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0SgCWuPUXACwRXmJror2FK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0TSbukdOv3Ax4sGGEJtgwn",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0VO1ABLI12sOvi8X$097BU",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0Y5iIr6ZT1bgLIcOnBNke3",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0_$UgLgdj859l6eXZwQx6i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0aBVXZ7Gz5BRVoFUtfpZJQ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0cFmRiFRj09AFje643ADPZ",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0cjeskYUXDy9R7RVH_9MEV",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0dM3A9uVb5YQR_bZSTMbNH",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0fCAIJQVLDpQnUN_kZuRxa",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0fJyOKXyXBOgKztEOENqRU",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0gO3vPQyr7$PvCMQLcvfjO",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0i_ZtatBf2ywhzZxRTAd_J",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "0jPecwNbr7shjFwB2JeuNF",
+                "ifc_class": "IfcBuildingElementProxy"
+              },
+              {
+                "global_id": "0jRPQ2iyDCEBusa_8OhGfE",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0lfLyM_lvApeMk3ZgGZiUa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0uSqYx_MP0MROowT$mtLh6",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0uk3FywAf1O9VOI8kF98fF",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0v7AnS9_D4R9vXkxldrO46",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wI_iMMVH3TOQCSGA3hBLr",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1$AWqT1GHFCRteqXshA$19",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "13bH$wdPHE3OijTSvqmkYs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "14rt$YUlv00vF6aUeOGH$P",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "15lWs0f352svwexMhogM5J",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1C$IRVTQ5EyQeqnTK1k7kg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1C49KtI357vAehhkn5qg_h",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1HB8AH_AT1GQbQ5DjZkbro",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1HeGhe1sbE59KzBYeC_Uim",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1IJW8zlJnEOwWNPvz_z4HQ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Mt8OQRxDEaREf2hR$d_qN",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Pg1U$OXj6jQ4l1VBY1zfM",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1RN$E3m5D3CBvJzGMTOZ1y",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1T2FOBD4nDhgcqD_EPt2zd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1XWyJpzSL9iuRH2lqjx5Hg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1YuwPpoTb1yxFKoxhkm3yb",
+                "ifc_class": "IfcBuildingElementProxy"
+              },
+              {
+                "global_id": "1_GANEa3z6SB2Ne3WAxfqa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1_LZg68UT318e8nSGyK_eb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGMraZbv6uvSOqDXDKOs7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGsK44iD86fmgI2_cB9rX",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1b4dYaXFH39wFJy4SiXIbI",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1dpI5mXfz0KwCpoTw0RZXn",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1fYJTka8H2FA7BTtWbdtGc",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1iIJplgLTCJwf61NUvCZcC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1n7V29WyDFMBwrhJB2WqUF",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1pJMOGmpH5o9gamDDHaN$_",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1u74FPRdz7SxTqt7ebetG9",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1ulKHAnhvAK9t$fex8CaH0",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1wlBXGlCfB9Pj9dYUx$p4o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1yZQpZb_92XAGrYIbn5Sm6",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "1ypkBPMDT1iQkD$ldNaITm",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "20nwtUYf55n83yEgdPjJMF",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "23OQm8E$j4R9qZ$$N_voAh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "25Uhm4dd136uNySSqkJHZ0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "26dbUt9F99TQxXxmai2LiV",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "26pwqCBsD4ihOd4U5cyZ7B",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "26wMRRb7n1og7wTPoNXBvS",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "29N9cPguT79OCozzKCNpIj",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2BLT9aLx578uhc3C9QFUbD",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2Hg7F$etT5ghEurn_fCMJw",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2Hqbg3fm592RrGBNEw3_Ei",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2V5dzFkov9vuCg5McW948H",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2agWFRA3DFMvTb4v0IpGSs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2b5zO_zNf8pA8_ICS7f_$K",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2ebGMQTpv7KeV9ceEWxGjA",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2fABjFuUf4oQLiweMlxkt0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2fGfWzPM96owp4Eio1akn0",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2iVanxNffCLOft5CjZ43Xs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2lj5pS78j6qxImLf8WIVjZ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2oEPMj4XTDS8v2xZsvL3dn",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2pxl76VLTFaf4sx8N2Pcbh",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2qZIXRvFf6XOotuQt$CaC1",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2qpKQ5ImL71xbD$JY6X6Uq",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2rd1LLyW12292TCQ2cvAJ9",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2suNrwUNL9Ah79JdcQHGWw",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tBJCzp$jCrhtYrK0w4W7o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tO_SCMTDBFBvw1ctKfjZx",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2tmTHTAPvAdwHr_XTFIFBS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2x0k9IryX5Dg9QZjdFyGDG",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2xNIOM0V16UeVU9NvPXlA8",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "2yfgV1jKj628FXl0of0yDC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2zXl17v0v7aBotXv3orCdW",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3$sEl3KmX9LgsaZIzCCn_a",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "30651CPF5ErgA8jcsHyR6N",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "30RonFCGfC4vomlMTLB57P",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "31ETXzag90f8jfEWKYamcK",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "34fEPUniTEQxOuuCqOR_l3",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "34zouEbor8O95cwbdef59B",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "35EjG4XJXFbOmvfJq29ngX",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "36LE_eNajAwuBdRB8qQD9U",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "37VWZ7ZhPD$xW2HRyxBYut",
+                "ifc_class": "IfcBuildingElementProxy"
+              },
+              {
+                "global_id": "3E7A7AuUz0DhRKt16BWz_Q",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3FS5_F2F96X9SwF$od748S",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3FmsnZGmf29AGjIFi2dlw3",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3GSR4PvjD6MAX0g$lYYtfA",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3IHZ1v3Tf1tuOxHck2aWQ8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Isv2zKZj74hwfgnkleV_i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3JK7vihjb6vONNDK59W8u8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3KjTpaF0jBBg8ml42Jhmgl",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3NaYqvtz94BP7QXVUe9JFN",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3O2fIEL755NRXygEUM53ED",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ODeVmWz11rQYQajWbip$H",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3OKOLMYcb0Sh675aQjoaVS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3PU41CXCn6EAvvMSq7n3pa",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3SaeSjIIr0CPz6lU0STwzD",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3TVNLGrgX9KOe_DM9E8hJ8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3UllicZ_jByv_xghEPA1ei",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3_dGzVv5z1X90VI1MZJgat",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3bFibsAb1Emu0FI4jE9gAj",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3bl_Lkvsb2Nfrs0s0OEw_o",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3f7PT_m4z66fgPvD8rZ9Yt",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3f_UdS6hX9VhZpBay2R0lU",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3fgKznOtP1vu9XI5VYwPIh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3hNDVkEnH3t9aP7dy9aKsn",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3j213H3G9EQR9BmdQxGW$g",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3pzhJQ76fCi819P4A1uBQu",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3q6aqzBof9JvHyDozm$CxR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ruvDiQdr2PBdP0BHeJC1Q",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3th9a4w7L9lw8zOnmDSJAk",
+                "ifc_class": "IfcWallStandardCase"
+              },
+              {
+                "global_id": "3vL1G70Qf9eQYVRC8sL1$X",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingStructure": {
+              "global_id": "2F0V3QPDDFMRTpJqxqPeZR",
+              "ifc_class": "IfcBuildingStorey"
+            }
+          },
+          "content_sha256": "sha256:3fd5680be5df07efb2d18c825e808b3a451ab56269de7977ff18d1dc5b65ee7b",
+          "ifc_class": "IfcRelContainedInSpatialStructure",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "08RhMK5Vz6LfdN2g7KqVfj",
+        "ifc_class": "IfcRelContainedInSpatialStructure",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "02gfkbKi91zO_Scj5r7iGe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06BvTKFo571wrlEuT4YUXK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06ex6UcLrFuweKwgEDhy0d",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06zZtvTV53FPp3yEK4roJe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "07I$zJ4$DBFhPd3rjbXqky",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbE",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbF",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbY",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbd",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbn",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbt",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbu",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbv",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbx",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIcG",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIcI",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIcJ",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "0ASarN5lXDFhdCt3CZ853F",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0AUY3bLn117Bhz_svy0zWd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0FB5I9ZiD0Z8abDvEZsz3p",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0GD_RyLUz7qhLaQt9nXeOL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0L2ya5Kaj0au4S39qgNGn8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0P8_T0OwP9shzDGK44700r",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0ZsG8q5kDEKuykdyVD$BaD",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_$UgLgdj859l6eXZwQx6i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_7xk$gC93wxabvGAeN2S3",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0aSXb218TF6gCL5_uWonR4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0f8nOQ9aL39u_MbUOB6ygE",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0gWNusLIf8cxu1$brkHKae",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0i0PkUV6fBmQhJaaOmNhz2",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0j6sQUz5H6Re4wD3vR1Egz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0vYpia5rT66vqNQO6Jn1IL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wI_iMMVH3TOQCSGA3hBLr",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wKuCD12j3$9txIXXOdYSa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0yljTDhqHEsxqkgHj77Svg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1$1lxLJtrCMPad0ycU9ak4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "10QL6_EVP6GO5BQ_AnNEKL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "10e4$EoZL6FeQE0PeyfGMY",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "18VWsA14f7LvGEwurEVvP_",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19J9uU7DzFMuXn3yvfAmvj",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19s9qJ_bH4OvRy4dHFVrH4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1AopJBygD2bArVgDOGXS80",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1CZ1pUJkXDPQfUdUfbETI7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1CaONY$en59gOtS9QUbtWg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1D0XkT6DrDH839MDlKLOM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Eir$qpYz7XRVaOqNGugh5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Hn6Dm_Tf9Y9oZaUR2qo9I",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1JJ8GAPRH3z84Vn_aQd$Lp",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1KxYrcm9D0Huef1EG1BfgM",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1QfLYbIQXBhuM14iUX0eN5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UWiWXRQr6auhKqybjcW5H",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1VluSzn1HBp8maklyGPi2z",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1XFq6sGeX92hNyagELm3bh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGMraZbv6uvSOqDXDKOs7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1fFr6uZXLFsRLKed3GS8fb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1gYsJuPSP9Iu812MT$wujt",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1gmXlYWzX56RcldXXwQ74j",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1iHR2wCzzDFABk5yfaWzuR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1iIJplgLTCJwf61NUvCZcC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1jbPvFtg9CVg8NZAeEOuoa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1la5yqGHbC381DhLzguMCL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1wlBXGlCfB9Pj9dYUx$p4o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1xYOr5kHvAsvJxrl5xeSYd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "22Ji41vbr4FQTWeazlv2va",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28acbQ68TAY9YC45Ac7sZI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28tKHfL0r0HebKsGleXG7x",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2CZACicO967PWCSJOjjd37",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2FvRgqeyH2nhzPenG1_kCX",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2Te4anYZbFTux2EFxvI3w9",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2WsF4NY1v28RuyGEuNHz8W",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2YpxipEkjDyvurfdcDJ3rW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2aOcM1KFfCPuqS6Z5ErVsR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2agWFRA3DFMvTb4v0IpGSs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2iVanxNffCLOft5CjZ43Xs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2qP4rNgZbCpAYid$og9SC$",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tBJCzp$jCrhtYrK0w4W7o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tmTHTAPvAdwHr_XTFIFBS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2xoi72bxDCbBr6ps8PSfPh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "33XtiIPlfDKu3gA8xy9G4Z",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "36krCCVy5CZB7OIz1FqUwx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Do_ZAMcL7TBY8bHpU00Dx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ET$CnHTz6aOJXmEg6qSZy",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3FS5_F2F96X9SwF$od748S",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Isv2zKZj74hwfgnkleV_i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3KjTpaF0jBBg8ml42Jhmgl",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3NupZ5kJj3yBEVgehlM0NS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3OKOLMYcb0Sh675aQjoaVS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3PBIpDVvnBJeHQUsACBEpb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3SB76tNOT77va21$4V5_Up",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3SMFaQsj99JeSsimV2MGX4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3YyMjrLKX76wUZCHCoCHM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ZqnFDAVb4L9d3rnqxzIhz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3b_A7uFpP1FffQHqFEWtZK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3g_ykJOAH6QeFypeQABevJ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3kQ8Xoj51818SN_y9ufegw",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3mOeZh5PD0QgFBXTmJPAxX",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3q6aqzBof9JvHyDozm$CxR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3tdjjxG4D938Oi5VD73p4s",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3vXPAyCAf50ObNqx50cNBz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3w16QqZ_nAtPcna5TOtgUR",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingMaterial": {
+              "attributes": {
+                "Name": "Puu - mänty rae vaakasuora"
+              },
+              "ifc_class": "IfcMaterial"
+            }
+          },
+          "content_sha256": "sha256:0c386db2ded5229d24515525f1290e479854e54cd88f3494fb31781c5612ce61",
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "02gfkbKi91zO_Scj5r7iGe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06BvTKFo571wrlEuT4YUXK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06ex6UcLrFuweKwgEDhy0d",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06zZtvTV53FPp3yEK4roJe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "07I$zJ4$DBFhPd3rjbXqky",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbE",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbF",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbY",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbd",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbn",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbt",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbu",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbv",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIbx",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIcG",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIcI",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "08RhMK5Vz6LfdN2hNKqIcJ",
+                "ifc_class": "IfcWindowStyle"
+              },
+              {
+                "global_id": "0ASarN5lXDFhdCt3CZ853F",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0AUY3bLn117Bhz_svy0zWd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0FB5I9ZiD0Z8abDvEZsz3p",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0GD_RyLUz7qhLaQt9nXeOL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0L2ya5Kaj0au4S39qgNGn8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0P8_T0OwP9shzDGK44700r",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0ZsG8q5kDEKuykdyVD$BaD",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_$UgLgdj859l6eXZwQx6i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_7xk$gC93wxabvGAeN2S3",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0aSXb218TF6gCL5_uWonR4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0f8nOQ9aL39u_MbUOB6ygE",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0gWNusLIf8cxu1$brkHKae",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0i0PkUV6fBmQhJaaOmNhz2",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0j6sQUz5H6Re4wD3vR1Egz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0v7AnS9_D4R9vXkxldrO46",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0vYpia5rT66vqNQO6Jn1IL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wI_iMMVH3TOQCSGA3hBLr",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0wKuCD12j3$9txIXXOdYSa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0yljTDhqHEsxqkgHj77Svg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1$1lxLJtrCMPad0ycU9ak4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "10QL6_EVP6GO5BQ_AnNEKL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "10e4$EoZL6FeQE0PeyfGMY",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "18VWsA14f7LvGEwurEVvP_",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19J9uU7DzFMuXn3yvfAmvj",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19s9qJ_bH4OvRy4dHFVrH4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1AopJBygD2bArVgDOGXS80",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1CZ1pUJkXDPQfUdUfbETI7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1CaONY$en59gOtS9QUbtWg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1D0XkT6DrDH839MDlKLOM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Eir$qpYz7XRVaOqNGugh5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Hn6Dm_Tf9Y9oZaUR2qo9I",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1JJ8GAPRH3z84Vn_aQd$Lp",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1KxYrcm9D0Huef1EG1BfgM",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1QfLYbIQXBhuM14iUX0eN5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UWiWXRQr6auhKqybjcW5H",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1VluSzn1HBp8maklyGPi2z",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1XFq6sGeX92hNyagELm3bh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGMraZbv6uvSOqDXDKOs7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1fFr6uZXLFsRLKed3GS8fb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1gYsJuPSP9Iu812MT$wujt",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1gmXlYWzX56RcldXXwQ74j",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1iHR2wCzzDFABk5yfaWzuR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1iIJplgLTCJwf61NUvCZcC",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1jbPvFtg9CVg8NZAeEOuoa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1la5yqGHbC381DhLzguMCL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1wlBXGlCfB9Pj9dYUx$p4o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1xYOr5kHvAsvJxrl5xeSYd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "22Ji41vbr4FQTWeazlv2va",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28acbQ68TAY9YC45Ac7sZI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28tKHfL0r0HebKsGleXG7x",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2CZACicO967PWCSJOjjd37",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2FvRgqeyH2nhzPenG1_kCX",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2Te4anYZbFTux2EFxvI3w9",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2WsF4NY1v28RuyGEuNHz8W",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2YpxipEkjDyvurfdcDJ3rW",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2aOcM1KFfCPuqS6Z5ErVsR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2agWFRA3DFMvTb4v0IpGSs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2iVanxNffCLOft5CjZ43Xs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2qP4rNgZbCpAYid$og9SC$",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tBJCzp$jCrhtYrK0w4W7o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tmTHTAPvAdwHr_XTFIFBS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2xoi72bxDCbBr6ps8PSfPh",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "33XtiIPlfDKu3gA8xy9G4Z",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "36krCCVy5CZB7OIz1FqUwx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Do_ZAMcL7TBY8bHpU00Dx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ET$CnHTz6aOJXmEg6qSZy",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3FS5_F2F96X9SwF$od748S",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Isv2zKZj74hwfgnkleV_i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3KjTpaF0jBBg8ml42Jhmgl",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3NupZ5kJj3yBEVgehlM0NS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3OKOLMYcb0Sh675aQjoaVS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3PBIpDVvnBJeHQUsACBEpb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3SB76tNOT77va21$4V5_Up",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3SMFaQsj99JeSsimV2MGX4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3YyMjrLKX76wUZCHCoCHM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ZqnFDAVb4L9d3rnqxzIhz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3b_A7uFpP1FffQHqFEWtZK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3g_ykJOAH6QeFypeQABevJ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3kQ8Xoj51818SN_y9ufegw",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3mOeZh5PD0QgFBXTmJPAxX",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3q6aqzBof9JvHyDozm$CxR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3tdjjxG4D938Oi5VD73p4s",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3vXPAyCAf50ObNqx50cNBz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3w16QqZ_nAtPcna5TOtgUR",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingMaterial": {
+              "attributes": {
+                "Name": "Puu - mänty rae vaakasuora"
+              },
+              "ifc_class": "IfcMaterial"
+            }
+          },
+          "content_sha256": "sha256:a0686473a81f0f80b3143ef872ec562ea6c408b708f564b374a3b15f45033896",
+          "ifc_class": "IfcRelAssociatesMaterial",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "1ZnbVhlrbDaP2Dc7tj$16z",
+        "ifc_class": "IfcRelAssociatesMaterial",
+        "is_relationship": true
+      },
+      {
+        "after": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "06BvTKFo571wrlEuT4YUXK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06zZtvTV53FPp3yEK4roJe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "07I$zJ4$DBFhPd3rjbXqky",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0ASarN5lXDFhdCt3CZ853F",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0FB5I9ZiD0Z8abDvEZsz3p",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0L2ya5Kaj0au4S39qgNGn8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0ZsG8q5kDEKuykdyVD$BaD",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_$UgLgdj859l6eXZwQx6i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_7xk$gC93wxabvGAeN2S3",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0f8nOQ9aL39u_MbUOB6ygE",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0j6sQUz5H6Re4wD3vR1Egz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0yljTDhqHEsxqkgHj77Svg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "10QL6_EVP6GO5BQ_AnNEKL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "18VWsA14f7LvGEwurEVvP_",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19J9uU7DzFMuXn3yvfAmvj",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19s9qJ_bH4OvRy4dHFVrH4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1AopJBygD2bArVgDOGXS80",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1CaONY$en59gOtS9QUbtWg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1D0XkT6DrDH839MDlKLOM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Eir$qpYz7XRVaOqNGugh5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Hn6Dm_Tf9Y9oZaUR2qo9I",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1JJ8GAPRH3z84Vn_aQd$Lp",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1QfLYbIQXBhuM14iUX0eN5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UWiWXRQr6auhKqybjcW5H",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1VluSzn1HBp8maklyGPi2z",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGMraZbv6uvSOqDXDKOs7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1fFr6uZXLFsRLKed3GS8fb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1gYsJuPSP9Iu812MT$wujt",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1jbPvFtg9CVg8NZAeEOuoa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1la5yqGHbC381DhLzguMCL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1wlBXGlCfB9Pj9dYUx$p4o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1xYOr5kHvAsvJxrl5xeSYd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "22Ji41vbr4FQTWeazlv2va",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28acbQ68TAY9YC45Ac7sZI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28tKHfL0r0HebKsGleXG7x",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2CZACicO967PWCSJOjjd37",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2WsF4NY1v28RuyGEuNHz8W",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2aOcM1KFfCPuqS6Z5ErVsR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2agWFRA3DFMvTb4v0IpGSs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2iVanxNffCLOft5CjZ43Xs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tBJCzp$jCrhtYrK0w4W7o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tmTHTAPvAdwHr_XTFIFBS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "36krCCVy5CZB7OIz1FqUwx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Do_ZAMcL7TBY8bHpU00Dx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Isv2zKZj74hwfgnkleV_i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3KjTpaF0jBBg8ml42Jhmgl",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3SB76tNOT77va21$4V5_Up",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3YyMjrLKX76wUZCHCoCHM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ZqnFDAVb4L9d3rnqxzIhz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3b_A7uFpP1FffQHqFEWtZK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3g_ykJOAH6QeFypeQABevJ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3kQ8Xoj51818SN_y9ufegw",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3q6aqzBof9JvHyDozm$CxR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3tdjjxG4D938Oi5VD73p4s",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3vXPAyCAf50ObNqx50cNBz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3w16QqZ_nAtPcna5TOtgUR",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "08RhMK5Vz6LfdN2hNKqIbd",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:f4b5662070147bf365678abe858d24652cef6250f702d9192daa6421c2132d44",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null
+        },
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "06BvTKFo571wrlEuT4YUXK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "06zZtvTV53FPp3yEK4roJe",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "07I$zJ4$DBFhPd3rjbXqky",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0ASarN5lXDFhdCt3CZ853F",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0FB5I9ZiD0Z8abDvEZsz3p",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0L2ya5Kaj0au4S39qgNGn8",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0ZsG8q5kDEKuykdyVD$BaD",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_$UgLgdj859l6eXZwQx6i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0_7xk$gC93wxabvGAeN2S3",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0f8nOQ9aL39u_MbUOB6ygE",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0j6sQUz5H6Re4wD3vR1Egz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0v7AnS9_D4R9vXkxldrO46",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "0yljTDhqHEsxqkgHj77Svg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "10QL6_EVP6GO5BQ_AnNEKL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "18VWsA14f7LvGEwurEVvP_",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19J9uU7DzFMuXn3yvfAmvj",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "19s9qJ_bH4OvRy4dHFVrH4",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1AopJBygD2bArVgDOGXS80",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1CaONY$en59gOtS9QUbtWg",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1D0XkT6DrDH839MDlKLOM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Eir$qpYz7XRVaOqNGugh5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1Hn6Dm_Tf9Y9oZaUR2qo9I",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1JJ8GAPRH3z84Vn_aQd$Lp",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1QfLYbIQXBhuM14iUX0eN5",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UWiWXRQr6auhKqybjcW5H",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1VluSzn1HBp8maklyGPi2z",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1aGMraZbv6uvSOqDXDKOs7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1fFr6uZXLFsRLKed3GS8fb",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1gYsJuPSP9Iu812MT$wujt",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1jbPvFtg9CVg8NZAeEOuoa",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1la5yqGHbC381DhLzguMCL",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1wlBXGlCfB9Pj9dYUx$p4o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "1xYOr5kHvAsvJxrl5xeSYd",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "22Ji41vbr4FQTWeazlv2va",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28acbQ68TAY9YC45Ac7sZI",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "28tKHfL0r0HebKsGleXG7x",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2CZACicO967PWCSJOjjd37",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2WsF4NY1v28RuyGEuNHz8W",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2aOcM1KFfCPuqS6Z5ErVsR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2agWFRA3DFMvTb4v0IpGSs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2iVanxNffCLOft5CjZ43Xs",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tBJCzp$jCrhtYrK0w4W7o",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "2tmTHTAPvAdwHr_XTFIFBS",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "36krCCVy5CZB7OIz1FqUwx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Do_ZAMcL7TBY8bHpU00Dx",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3Isv2zKZj74hwfgnkleV_i",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3KjTpaF0jBBg8ml42Jhmgl",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3SB76tNOT77va21$4V5_Up",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3YyMjrLKX76wUZCHCoCHM7",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3ZqnFDAVb4L9d3rnqxzIhz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3b_A7uFpP1FffQHqFEWtZK",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3g_ykJOAH6QeFypeQABevJ",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3kQ8Xoj51818SN_y9ufegw",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3q6aqzBof9JvHyDozm$CxR",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3tdjjxG4D938Oi5VD73p4s",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3vXPAyCAf50ObNqx50cNBz",
+                "ifc_class": "IfcWindow"
+              },
+              {
+                "global_id": "3w16QqZ_nAtPcna5TOtgUR",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingType": {
+              "global_id": "08RhMK5Vz6LfdN2hNKqIbd",
+              "ifc_class": "IfcWindowStyle"
+            }
+          },
+          "content_sha256": "sha256:078135fb0395d6318dcd5a8f3e3f1b1f6346f463c1d4fedd998efffaec0bb40d",
+          "ifc_class": "IfcRelDefinesByType",
+          "name": null
+        },
+        "change_kind": "modified",
+        "global_id": "3p$BdEF3n9MuLwxZ4FjMiC",
+        "ifc_class": "IfcRelDefinesByType",
+        "is_relationship": true
+      }
+    ],
+    "removed": [
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0v7AnS9_D4R9vXkxldrO46",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2EPvJ6TkBt2CNriTdZJHLD",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:4d544924ce1b9fb6731729e8da3bde968fa47867285850a2a5e9cac736bb427f",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "01OgBgDXL7Bho_YTMhLPIs",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "294072"
+          },
+          "containers": [],
+          "content_sha256": "sha256:3eca7361d34c8bc30ff4317313f3f0f7b21b0a269df65e2075f27f93e4d78085",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:7627bb8b3ca4269172bd4fb9811c3008f20526c41d337aa8ccb59ff8b8f1ec74"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Seinä-091",
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              3000.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "08RhMK5Vz6LfdN2hFKqVfN",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "294047"
+          },
+          "containers": [],
+          "content_sha256": "sha256:0934662aef4a484be0c815ffacb70feb66df462b76e3c315d24e18770459b9c4",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:dd3f003b51384145c59e867b142655795c1e16a4c4bdb09f7c7efde8ab6ca541"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Seinä-102",
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              3000.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "08RhMK5Vz6LfdN2hFKqVfm",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "Opening",
+            "Tag": "294046"
+          },
+          "containers": [],
+          "content_sha256": "sha256:66b6c9dfe868be2272ed60cd8b41b807b711fd5face3f96f8b31be6de1255951",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:d61ce0e24cc0f8452261ac79728a0f4c4e336c128b1b5150a51e7a3a2d2214b4"
+          },
+          "ifc_class": "IfcOpeningElement",
+          "name": "Seinä-102",
+          "placement": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              3000.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": []
+        },
+        "change_kind": "removed",
+        "global_id": "08RhMK5Vz6LfdN2hFKqVfn",
+        "ifc_class": "IfcOpeningElement",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Category",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Windows"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:a8756a9d74855c173de33632d28246a42e6888f84059cafd3a58d124b2b9d283",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ProductRequirements"
+        },
+        "change_kind": "removed",
+        "global_id": "08jyaIjsXjIcRoYdL9vUog",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "1zhd99sgsdga2nEUxOrBgr",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:ff7e26553c8097e9ee2386aba6aeb0242919048ccff00687c62466fcd522271f",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0EHdD1GD93WwBVWMsc0a9M",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "08RhMK5Vz6LfdN2hFKqVfm",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "2b5zO_zNf8pA8_ICS7f_$K",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:2d3d4130bb018b4cb3cf86eda1200a25387f805d8237bbf9830f488db87462b0",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0NMvu_9nz3EwLuXdk2iH5h",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "08RhMK5Vz6LfdN2hFKqVfm",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:c2f69fe2a72af362835d730a590070bc98660732dcba266634d69718feaf4c1b",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0WF7GoUqX5T8vDWqNHqz7F",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "GlazingAreaFraction",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.1849
+                    },
+                    "ifc_class": "IfcPositiveRatioMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": true
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "WINDOW 21141"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "ThermalTransmittance",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    },
+                    "ifc_class": "IfcThermalTransmittanceMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:2c20b51496461248cf2817d997214e8b5c95a0ce2f320e40a771eff86db0e1dc",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "0ggG3mKaXRCD898AejH_6N",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "08RhMK5Vz6LfdN2hFKqVfn",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:3bf3c3fee5900a6d6d62a7adad9d4007f0cc0f5f878bdb05096b299b17c8047e",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0pSUaYNG15t8_HPVJpZgSh",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Category",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Windows"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:7fda3cb564a889c871dc4afdb3122974edddb1a967b2a6af0f534cb2f9686159",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ProductRequirements"
+        },
+        "change_kind": "removed",
+        "global_id": "0sJVvNLkjE99iTEuBdsUmL",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2nIku3EhvG2UbHnzk7s8Ob",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:d1644ac4b770e5cff05ea3e74133fbf995b5376596c9776d91b5107fd76da3e0",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "0sorlV1vb7NA78ibdMcA1m",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "WINDOW 21141:WINDOW 21141",
+            "OverallHeight": 600.0,
+            "OverallWidth": 600.0,
+            "Tag": "294072"
+          },
+          "containers": [
+            "2F0V3QPDDFMRTpJqxqPeZR"
+          ],
+          "content_sha256": "sha256:64266bf0c2b1ff97da1cca22d22474860592531ca41ba8693a4f7c0ddd843f2b",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:645a40f2650ca044b229ffdc23d7b899bbd18b29922e910d6fbd95ff6d8f5ba5"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "WINDOW 21141:WINDOW 21141:294072",
+          "placement": [
+            [
+              -1.0,
+              0.0,
+              0.0,
+              16584.892826
+            ],
+            [
+              0.0,
+              -1.0,
+              0.0,
+              -930.818272
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              5000.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "08RhMK5Vz6LfdN2hNKqIbd"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "0v7AnS9_D4R9vXkxldrO46",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "WINDOW 21141"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:6edf9afefd22dfb9c00e13ca62952130294046385eeb857a3da7a7d321742670",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff"
+        },
+        "change_kind": "removed",
+        "global_id": "0wkFRo2oD$lKHcnkcpMJaZ",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0wkFRo2oD$lKHcnkcpMJaZ",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:adb7faab4d75d4e75d0ee0191e5d3b56f50cd102a0342a7e470bbb236d840ea3",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1JL9ccD$rA5OQAQ$LlVY4Z",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "WINDOW 21141:WINDOW 21141",
+            "OverallHeight": 600.0,
+            "OverallWidth": 600.0,
+            "Tag": "294047"
+          },
+          "containers": [
+            "2F0V3QPDDFMRTpJqxqPeZR"
+          ],
+          "content_sha256": "sha256:781cb20f328e3f5056051f6e697f4a50274b28eb24a321c51302513613e9f96c",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:645a40f2650ca044b229ffdc23d7b899bbd18b29922e910d6fbd95ff6d8f5ba5"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "WINDOW 21141:WINDOW 21141:294047",
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              -2200.91775
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              -18913.330494
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              5000.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "08RhMK5Vz6LfdN2hNKqIbd"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0v7AnS9_D4R9vXkxldrO46",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "08jyaIjsXjIcRoYdL9vUog",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:2c9f97d43590dfa8cd0c0a7772ba7a652dd0d23a590c3ee470a0d02537fcbc84",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1cueyST1nFivV_FbM27KK2",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "08RhMK5Vz6LfdN2hFKqVfn",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "2b5zO_zNf8pA8_ICS7f_$K",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:6e61618a3db214e0ab61190d1a803879f4fb7f08c4d889fd81aa6bb5ebb85734",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "1zQAzFSoX6RRIL3iWSmuao",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "WINDOW 21141"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:f352c604938a7f07bedcc07218d6c2a24c89fe8a026488c45e930e1a14065768",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff"
+        },
+        "change_kind": "removed",
+        "global_id": "1zhd99sgsdga2nEUxOrBgr",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedBuildingElement": {
+              "global_id": "0v7AnS9_D4R9vXkxldrO46",
+              "ifc_class": "IfcWindow"
+            },
+            "RelatingOpeningElement": {
+              "global_id": "08RhMK5Vz6LfdN2hFKqVfN",
+              "ifc_class": "IfcOpeningElement"
+            }
+          },
+          "content_sha256": "sha256:d69ac2e7d8efc111cfc3174800cbdc7caddffdf3011ed041384f14d228c91ef0",
+          "ifc_class": "IfcRelFillsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "27n2Yo5oTFRBBYQ7unwEXq",
+        "ifc_class": "IfcRelFillsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "GlazingAreaFraction",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.1849
+                    },
+                    "ifc_class": "IfcPositiveRatioMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": true
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "WINDOW 21141"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "ThermalTransmittance",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    },
+                    "ifc_class": "IfcThermalTransmittanceMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:b488bb37075a03a2cea476146325a8bf985694f30ea23f88cb63473e97dff089",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "2EPvJ6TkBt2CNriTdZJHLD",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "GlazingAreaFraction",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.1849
+                    },
+                    "ifc_class": "IfcPositiveRatioMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "IsExternal",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": true
+                    },
+                    "ifc_class": "IfcBoolean"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "WINDOW 21141"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              },
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "ThermalTransmittance",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": 0.0
+                    },
+                    "ifc_class": "IfcThermalTransmittanceMeasure"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:514e7e27a4ea3fb853fbf72a68b0cf5b2a8275b4e725839df4750a04dd219bfb",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WindowCommon"
+        },
+        "change_kind": "removed",
+        "global_id": "2JR83TTSF2sItTa3WN1EZA",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0sJVvNLkjE99iTEuBdsUmL",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:1d0fa1d20c4e2059db835778cf003cbd64c0907d434efe63a176f9a4d27d998a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "2RSmzv8lb6zh$0P7f34LkF",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Category",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "Windows"
+                    },
+                    "ifc_class": "IfcLabel"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:21888ca6abf90568a0a9053fd017977b39181eff51f17691b48f52ebb4344278",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_ProductRequirements"
+        },
+        "change_kind": "removed",
+        "global_id": "2nIku3EhvG2UbHnzk7s8Ob",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "ObjectType": "WINDOW 21141:WINDOW 21141",
+            "OverallHeight": 600.0,
+            "OverallWidth": 600.0,
+            "Tag": "294046"
+          },
+          "containers": [
+            "2F0V3QPDDFMRTpJqxqPeZR"
+          ],
+          "content_sha256": "sha256:6c0dc0ed1446c5daa95e8a81a4092fd5dbc9afa3a5a8b133c8ff9199e04a4e7f",
+          "geometry": {
+            "available": true,
+            "representation_sha256": "sha256:645a40f2650ca044b229ffdc23d7b899bbd18b29922e910d6fbd95ff6d8f5ba5"
+          },
+          "ifc_class": "IfcWindow",
+          "name": "WINDOW 21141:WINDOW 21141:294046",
+          "placement": [
+            [
+              0.0,
+              1.0,
+              0.0,
+              -2200.91775
+            ],
+            [
+              -1.0,
+              0.0,
+              0.0,
+              -16520.020689
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              5000.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "types": [
+            "08RhMK5Vz6LfdN2hNKqIbd"
+          ]
+        },
+        "change_kind": "removed",
+        "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+        "ifc_class": "IfcWindow",
+        "is_relationship": false
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "34mV4OHM10ZPX8Zg5zOvcK",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "2JR83TTSF2sItTa3WN1EZA",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:0873559445b575561c9ccf443dd393d2dc7e2bd8fbce39f0d0015b01670e2c51",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "37wUuDIfj4JALyNALw6kjx",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "0v7AnS9_D4R9vXkxldrO46",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "3qP5tZ2ZdHdsOK2vZWcOVf",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:7004654eae62df637e5657eee394472eaebdc4613bcf76cd6bd75f45ecc8b32a",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3LwJjLNCX1Oey_5bFmTjJS",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedObjects": [
+              {
+                "global_id": "1UYvRALJb9dBcNbn5Vdiib",
+                "ifc_class": "IfcWindow"
+              }
+            ],
+            "RelatingPropertyDefinition": {
+              "global_id": "0ggG3mKaXRCD898AejH_6N",
+              "ifc_class": "IfcPropertySet"
+            }
+          },
+          "content_sha256": "sha256:d8a94ef7497b5cf49743d7cc7cb5ade983a66f10fc734b9802e8bc9735d79bec",
+          "ifc_class": "IfcRelDefinesByProperties",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3bhYN5bnv0pwCLX2B5ZXMY",
+        "ifc_class": "IfcRelDefinesByProperties",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "RelatedOpeningElement": {
+              "global_id": "08RhMK5Vz6LfdN2hFKqVfN",
+              "ifc_class": "IfcOpeningElement"
+            },
+            "RelatingBuildingElement": {
+              "global_id": "2ebGMQTpv7KeV9ceEWxGjA",
+              "ifc_class": "IfcWallStandardCase"
+            }
+          },
+          "content_sha256": "sha256:93e24201c9ecdf119a1ff8d1c3b01c7a8f8a9f8d175d56c4009330de51b1a336",
+          "ifc_class": "IfcRelVoidsElement",
+          "name": null
+        },
+        "change_kind": "removed",
+        "global_id": "3nkawzKEX4fvCMsXqm2u5z",
+        "ifc_class": "IfcRelVoidsElement",
+        "is_relationship": true
+      },
+      {
+        "after": null,
+        "before": {
+          "attributes": {
+            "HasProperties": [
+              {
+                "attributes": {
+                  "Description": null,
+                  "Name": "Reference",
+                  "NominalValue": {
+                    "attributes": {
+                      "wrappedValue": "WINDOW 21141"
+                    },
+                    "ifc_class": "IfcIdentifier"
+                  },
+                  "Unit": null
+                },
+                "ifc_class": "IfcPropertySingleValue"
+              }
+            ]
+          },
+          "content_sha256": "sha256:91993d4b2fd048d929663477c8fe9e89d40118c44cd7d8fa78fb67276d21de06",
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_QuantityTakeOff"
+        },
+        "change_kind": "removed",
+        "global_id": "3qP5tZ2ZdHdsOK2vZWcOVf",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false
+      }
+    ]
+  },
+  "source_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "targets": [
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -2.80991774963,
+            -2.50991774963
+          ],
+          [
+            -22.821818272,
+            -13.221818272
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "name": "Seinä-102",
+        "project_unit_to_mm": 1.0
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -3.11891774963,
+            -2.20091774963
+          ],
+          [
+            -17.120020689140002,
+            -16.52002068914
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "08RhMK5Vz6LfdN2hFKqVfn",
+        "name": "Seinä-102",
+        "project_unit_to_mm": 1.0
+      },
+      "opening_guid": "08RhMK5Vz6LfdN2hFKqVfn",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-1.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 13019,
+      "target": {
+        "OverallHeight_mm": 600.0,
+        "OverallWidth_mm": 600.0,
+        "bounds_world_m": [
+          [
+            -2.85991774963,
+            -2.78491774963
+          ],
+          [
+            -17.120020689140002,
+            -16.52002068914
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "34mV4OHM10ZPX8Zg5zOvcK",
+        "name": "WINDOW 21141:WINDOW 21141:294046",
+        "project_unit_to_mm": 1.0
+      },
+      "target_guid": "34mV4OHM10ZPX8Zg5zOvcK",
+      "wall_guid": "2b5zO_zNf8pA8_ICS7f_$K"
+    },
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            -2.80991774963,
+            -2.50991774963
+          ],
+          [
+            -22.821818272,
+            -13.221818272
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "name": "Seinä-102",
+        "project_unit_to_mm": 1.0
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            -3.11891774963,
+            -2.20091774963
+          ],
+          [
+            -19.513330493590004,
+            -18.913330493590003
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "08RhMK5Vz6LfdN2hFKqVfm",
+        "name": "Seinä-102",
+        "project_unit_to_mm": 1.0
+      },
+      "opening_guid": "08RhMK5Vz6LfdN2hFKqVfm",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-2.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 13060,
+      "target": {
+        "OverallHeight_mm": 600.0,
+        "OverallWidth_mm": 600.0,
+        "bounds_world_m": [
+          [
+            -2.85991774963,
+            -2.78491774963
+          ],
+          [
+            -19.513330493590004,
+            -18.913330493590003
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "1UYvRALJb9dBcNbn5Vdiib",
+        "name": "WINDOW 21141:WINDOW 21141:294047",
+        "project_unit_to_mm": 1.0
+      },
+      "target_guid": "1UYvRALJb9dBcNbn5Vdiib",
+      "wall_guid": "2b5zO_zNf8pA8_ICS7f_$K"
+    },
+    {
+      "host": {
+        "bounds_world_m": [
+          [
+            10.205082250399999,
+            20.1050822504
+          ],
+          [
+            -0.621818272043,
+            -0.32181827204299995
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "class": "IfcWallStandardCase",
+        "geometry_status": "available",
+        "guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "name": "Seinä-091",
+        "project_unit_to_mm": 1.0
+      },
+      "kind": "window",
+      "opening": {
+        "bounds_world_m": [
+          [
+            15.984892826380001,
+            16.584892826380003
+          ],
+          [
+            -0.930818272043,
+            -0.012818272043
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "class": "IfcOpeningElement",
+        "geometry_status": "available",
+        "guid": "08RhMK5Vz6LfdN2hFKqVfN",
+        "name": "Seinä-091",
+        "project_unit_to_mm": 1.0
+      },
+      "opening_guid": "08RhMK5Vz6LfdN2hFKqVfN",
+      "preserve_opening": false,
+      "required_relations": [
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-3.fill",
+          "ifc_class": "IfcRelFillsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-3.void",
+          "ifc_class": "IfcRelVoidsElement"
+        },
+        {
+          "basis": "One required membership edge for this target.",
+          "id": "target-3.storey",
+          "ifc_class": "IfcRelContainedInSpatialStructure"
+        }
+      ],
+      "source_step_id": 16220,
+      "target": {
+        "OverallHeight_mm": 600.0,
+        "OverallWidth_mm": 600.0,
+        "bounds_world_m": [
+          [
+            15.984892826380003,
+            16.584892826380003
+          ],
+          [
+            -0.3468182720430001,
+            -0.271818272043
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "class": "IfcWindow",
+        "geometry_status": "available",
+        "guid": "0v7AnS9_D4R9vXkxldrO46",
+        "name": "WINDOW 21141:WINDOW 21141:294072",
+        "project_unit_to_mm": 1.0
+      },
+      "target_guid": "0v7AnS9_D4R9vXkxldrO46",
+      "wall_guid": "2ebGMQTpv7KeV9ceEWxGjA"
+    }
+  ],
+  "wall_closure": {
+    "2b5zO_zNf8pA8_ICS7f_$K": {
+      "actual_delta_m3": 0.2159999999999993,
+      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+      "closed": true,
+      "expected_delta_m3": 0.2159999999999993,
+      "volume_after_m3": 7.398,
+      "volume_before_m3": 7.182
+    },
+    "2ebGMQTpv7KeV9ceEWxGjA": {
+      "actual_delta_m3": 0.10799999999999965,
+      "basis": "host-volume-delta-after-in-memory-void-relation-removal/0.1",
+      "closed": true,
+      "expected_delta_m3": 0.10799999999999965,
+      "volume_after_m3": 7.559999999999998,
+      "volume_before_m3": 7.451999999999998
+    }
+  }
+}

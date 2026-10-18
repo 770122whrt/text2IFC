@@ -1,0 +1,502 @@
+{
+  "case_id": "formal-002",
+  "checks": {
+    "no_extra_products": true,
+    "reopen": true,
+    "schema": true,
+    "unique_guids": true
+  },
+  "clarification": {
+    "answered": [],
+    "asked": [],
+    "required": [],
+    "status": "not_applicable",
+    "success": null
+  },
+  "duplicate_guids": [],
+  "errors": [],
+  "evaluation_authority": {
+    "current_scorer": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\formal_scoring_v2.py",
+      "sha256": "aba73b9416a9dba2d82c36c4c5855bdb380f54599fda453ca47a68acd4ed9b8c"
+    },
+    "original_report": {
+      "path": "E:\\code for project\\bimnet\\.tmp\\repair-comparison-b-first-five-revalidation\\evaluation\\formal-002-B.json",
+      "sha256": "2d6c2ef1b558e5b3323f72e70c15dd60bb42478ef3a79459b768c03791851e5b"
+    },
+    "projection": {
+      "path": "E:\\code for project\\bimnet\\scripts\\ifc_repair\\repair_comparison\\preservation_v2.py",
+      "sha256": "0f951f98ad2d8783a1e141dc77dc49e23ca134d40eda51dca34c532b29064e99"
+    },
+    "role": "offline_same_frozen_output_rescore_no_model_calls",
+    "unaffected_checks": "Hash-bound original matching/geometry/relations/native-validation reused."
+  },
+  "evaluator_revision": {
+    "legacy_schema": "repair-comparison-formal-score/0.1",
+    "preservation": "repair-comparison-preservation/0.2",
+    "unchanged": [
+      "input",
+      "target matching",
+      "quantity",
+      "component checks",
+      "relationships",
+      "IFC validator",
+      "policy tolerances",
+      "clarification"
+    ]
+  },
+  "evidence_class": "independent_candidate_evaluation",
+  "formal_eligible": true,
+  "input_bindings": {
+    "answer_card_sha256": "84a0a5bbedc9717f601697f9c3550ae0be43ec17453ce41a008dfa960788e551",
+    "checks_sha256": "4127906b384b251c80ab12abb924da472c70c334da33ec0e709c02ae65ab3bc4",
+    "damaged_sha256": "df01658cd17f2030a2936cbb8208554e605ba96792b23a5d89f72a5c9aad4a27",
+    "result_sha256": "fe30eb95e0d16029c22108a6d704604a99cd081846598b3f45da953b09af1920",
+    "source_sha256": "49f13fedf98c6535ad7b141f0c1141a6ab5de5500c613a0d04427c65ba0b7c17",
+    "task_sha256": "a2f5e1821ed94bd6553721e9c22ef26f9cec3f6d9bcbdd10fe0e1d7222996e9e"
+  },
+  "interaction_success": true,
+  "metrics": {
+    "clarification": {
+      "answered": [],
+      "asked": [],
+      "required": [],
+      "status": "not_applicable",
+      "success": null
+    },
+    "collateral_changes": {
+      "affected_root_count": 0,
+      "affected_root_ids": [],
+      "extra_products": false,
+      "preservation_pass": true,
+      "status": "scored"
+    },
+    "component_completion": {
+      "denominator": 2,
+      "numerator": 2,
+      "status": "scored",
+      "value": 1.0
+    },
+    "ifc_validation_pass": {
+      "status": "scored",
+      "value": true
+    },
+    "interactive_success": {
+      "status": "scored",
+      "value": true
+    },
+    "quantity_completion": {
+      "added_by_class": {
+        "IfcWindow": 2
+      },
+      "credited_by_class": {
+        "IfcWindow": 2
+      },
+      "denominator": 2,
+      "excess_by_class": {
+        "IfcWindow": 0
+      },
+      "numerator": 2,
+      "required_by_class": {
+        "IfcWindow": 2
+      },
+      "status": "scored",
+      "value": 1.0
+    },
+    "relation_completion": {
+      "denominator": 6,
+      "numerator": 6,
+      "status": "scored",
+      "value": 1.0
+    },
+    "task_success": {
+      "status": "scored",
+      "value": true
+    }
+  },
+  "native_validation": {
+    "diagnostic_count": 0,
+    "diagnostics": [],
+    "express_rules": true,
+    "passed": true,
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5"
+  },
+  "policy": {
+    "angle_check": "not independently measured; appearance witness only; angle_degrees is reserved",
+    "angle_degrees": 0.1,
+    "appearance_equivalence": "unproven differences require review",
+    "appearance_grid_offsets_m": [
+      0.0,
+      5e-07
+    ],
+    "appearance_max_axis_quantization_m": 1e-06,
+    "appearance_method": "public-host-local-centered-triangle-style-multiset-fixed-eight-grids",
+    "appearance_style_decimals": 5,
+    "appearance_vertex_round_m": 1e-06,
+    "coarse_match_m": 0.5,
+    "frozen": true,
+    "length_mm": 1.0,
+    "position_method": "public opening center/bottom and predeclared target offset alternatives",
+    "targets": {
+      "target-1": {
+        "basis": "public request numeric intent and surviving D reference; pre-run technical review required",
+        "coarse_match_m": 0.5,
+        "height_mm": 1200,
+        "host_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          4.455,
+          -4.78,
+          1.45
+        ],
+        "opening_bottom_world_m": 0.85,
+        "opening_center_xy_m": [
+          4.455,
+          -4.78
+        ],
+        "opening_height_mm": 1200,
+        "opening_width_mm": 1200,
+        "reference_guid": "3UH$Yu7uLAlvnoFYVwGbgC",
+        "storey_guid": "0r295zILD0gwHPe_YsN9m6",
+        "target_center_offsets_from_opening_m": [
+          [
+            -5.329070518200751e-15,
+            0.011205749977266866,
+            -0.0035092499999794247
+          ]
+        ],
+        "width_mm": 1200
+      },
+      "target-2": {
+        "basis": "public request numeric intent and surviving D reference; pre-run technical review required",
+        "coarse_match_m": 0.5,
+        "height_mm": 1200,
+        "host_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -2.595,
+          -4.78,
+          1.45
+        ],
+        "opening_bottom_world_m": 0.85,
+        "opening_center_xy_m": [
+          -2.595,
+          -4.78
+        ],
+        "opening_height_mm": 1200,
+        "opening_width_mm": 1200,
+        "reference_guid": "3UH$Yu7uLAlvnoFYVwGbgC",
+        "storey_guid": "0r295zILD0gwHPe_YsN9m6",
+        "target_center_offsets_from_opening_m": [
+          [
+            -5.329070518200751e-15,
+            0.011205749977266866,
+            -0.0035092499999794247
+          ]
+        ],
+        "width_mm": 1200
+      }
+    },
+    "version": "repair-comparison-formal-policy/0.1"
+  },
+  "preservation": {
+    "extra_old_object_relations": [],
+    "modified_roots": [],
+    "passed": true,
+    "projection_version": "repair-comparison-preservation/0.2",
+    "removed_roots": [],
+    "scope": "unchanged existing roots after shallow new-product/relationship projection; no host waiver; same occurrence-support rule; unreachable non-root entities not audited",
+    "status": "scored",
+    "unrelated_added_roots": []
+  },
+  "products": {
+    "correct": 2,
+    "required": 2
+  },
+  "relation_details": [
+    {
+      "actual": [
+        {
+          "parent_guid": "3EUn3BT15OFfjFVcOrumG6",
+          "relation_guid": "3i8JJMXOHLkee_GRYNQH6y"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3EUn3BT15OFfjFVcOrumG6",
+      "extra_invalid": [],
+      "id": "target-1.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+          "relation_guid": "3Fh19RjvbVqw9mOL0YNbc2"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+      "extra_invalid": [],
+      "id": "target-1.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0r295zILD0gwHPe_YsN9m6",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0r295zILD0gwHPe_YsN9m6",
+      "extra_invalid": [],
+      "id": "target-1.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-1"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "1_7zyQyl1TGBSW68j9wZu$",
+          "relation_guid": "1pCS7mDVvQNBxWAJK_$MTZ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "1_7zyQyl1TGBSW68j9wZu$",
+      "extra_invalid": [],
+      "id": "target-2.fill",
+      "ifc_class": "IfcRelFillsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+          "relation_guid": "38nESFOZnRfPTSeEQhRfSC"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+      "extra_invalid": [],
+      "id": "target-2.void",
+      "ifc_class": "IfcRelVoidsElement",
+      "restored": true,
+      "target_id": "target-2"
+    },
+    {
+      "actual": [
+        {
+          "parent_guid": "0r295zILD0gwHPe_YsN9m6",
+          "relation_guid": "3Zu5Bv0LOHrPC10066FoQQ"
+        }
+      ],
+      "duplicate": false,
+      "expected_parent_guid": "0r295zILD0gwHPe_YsN9m6",
+      "extra_invalid": [],
+      "id": "target-2.storey",
+      "ifc_class": "IfcRelContainedInSpatialStructure",
+      "restored": true,
+      "target_id": "target-2"
+    }
+  ],
+  "relations": {
+    "correct": 6,
+    "required": 6
+  },
+  "repair_success": true,
+  "review_required": [],
+  "schema_version": "repair-comparison-formal-score/0.2",
+  "status": "scored",
+  "target_results": [
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public request numeric intent and surviving D reference; pre-run technical review required",
+        "coarse_match_m": 0.5,
+        "explicit_contract": true,
+        "height_mm": 1200,
+        "host_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          4.455,
+          -4.78,
+          1.45
+        ],
+        "opening_bottom_world_m": 0.85,
+        "opening_center_xy_m": [
+          4.455,
+          -4.78
+        ],
+        "opening_height_mm": 1200,
+        "opening_width_mm": 1200,
+        "reference_guid": "3UH$Yu7uLAlvnoFYVwGbgC",
+        "storey_guid": "0r295zILD0gwHPe_YsN9m6",
+        "target_center_offsets_from_opening_m": [
+          [
+            -5.329070518200751e-15,
+            0.011205749977266866,
+            -0.0035092499999794247
+          ]
+        ],
+        "width_mm": 1200
+      },
+      "matching": {
+        "candidates": [
+          "0xCsRdv99U9xtRlYkDus4h"
+        ],
+        "distances_m": [
+          0.010757671731394858
+        ],
+        "guid": "0xCsRdv99U9xtRlYkDus4h",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "3EUn3BT15OFfjFVcOrumG6"
+        ],
+        "distances_m": [
+          0.0004480782458733401
+        ],
+        "guid": "3EUn3BT15OFfjFVcOrumG6",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 1200.0000000000002,
+        "required_mm": 1200,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          -5.329070518200751e-15,
+          0.011205749977268198,
+          -0.003509249999978925
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -5.329070518200751e-15,
+            0.011205749977266866,
+            -0.0035092499999794247
+          ]
+        ],
+        "max_axis_errors_m": [
+          1.3322676295501878e-15
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-1"
+    },
+    {
+      "checks": {
+        "appearance": true,
+        "host": true,
+        "no_extra_target_relations": true,
+        "nominal_dimensions": true,
+        "opening_geometry": true,
+        "opening_height": true,
+        "opening_position": true,
+        "opening_width": true,
+        "relations": true,
+        "target_at_opening": true,
+        "target_geometry": true,
+        "target_position": true,
+        "unique_target": true
+      },
+      "expectations": {
+        "basis": "public request numeric intent and surviving D reference; pre-run technical review required",
+        "coarse_match_m": 0.5,
+        "explicit_contract": true,
+        "height_mm": 1200,
+        "host_guid": "3UH$Yu7uLAlvnoFYVwGblQ",
+        "ifc_class": "IfcWindow",
+        "match_center_world_m": [
+          -2.595,
+          -4.78,
+          1.45
+        ],
+        "opening_bottom_world_m": 0.85,
+        "opening_center_xy_m": [
+          -2.595,
+          -4.78
+        ],
+        "opening_height_mm": 1200,
+        "opening_width_mm": 1200,
+        "reference_guid": "3UH$Yu7uLAlvnoFYVwGbgC",
+        "storey_guid": "0r295zILD0gwHPe_YsN9m6",
+        "target_center_offsets_from_opening_m": [
+          [
+            -5.329070518200751e-15,
+            0.011205749977266866,
+            -0.0035092499999794247
+          ]
+        ],
+        "width_mm": 1200
+      },
+      "matching": {
+        "candidates": [
+          "3qKPLhpcTMEv9O2GoAou0F"
+        ],
+        "distances_m": [
+          0.010757671731394858
+        ],
+        "guid": "3qKPLhpcTMEv9O2GoAou0F",
+        "status": "matched"
+      },
+      "opening_matching": {
+        "candidates": [
+          "1_7zyQyl1TGBSW68j9wZu$"
+        ],
+        "distances_m": [
+          0.0004480782458733401
+        ],
+        "guid": "1_7zyQyl1TGBSW68j9wZu$",
+        "status": "matched"
+      },
+      "opening_width_evidence": {
+        "actual_host_local_x_span_mm": 1200.0000000000002,
+        "required_mm": 1200,
+        "tolerance_mm": 1.0
+      },
+      "position_evidence": {
+        "actual_center_offset_world_m": [
+          -4.884981308350689e-15,
+          0.011205749977268198,
+          -0.003509249999978925
+        ],
+        "allowed_offsets_world_m": [
+          [
+            -5.329070518200751e-15,
+            0.011205749977266866,
+            -0.0035092499999794247
+          ]
+        ],
+        "max_axis_errors_m": [
+          1.3322676295501878e-15
+        ]
+      },
+      "status": "passed",
+      "target_id": "target-2"
+    }
+  ],
+  "terminal": "submitted"
+}

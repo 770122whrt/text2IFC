@@ -1,0 +1,980 @@
+{
+  "damaged_sha256": "738712071f216932d835aad904b770f41e587776eeeda89b5b05432dc4bf375e",
+  "input_bindings": {
+    "D": "738712071f216932d835aad904b770f41e587776eeeda89b5b05432dc4bf375e",
+    "G": "dc58869b12b33b322dbd14a22559aa6b54614baa516288a4c10e60f50bfbc6ab",
+    "answer_card": "312899514d57cf269d4264374ad3193dc4968039c8db8596a11e5dd88440e7cc",
+    "contract": "601bc405360eb3145b4f7589ec3020dbee60a64d87a8d7c69c7d013090195f93",
+    "public_ifc": "738712071f216932d835aad904b770f41e587776eeeda89b5b05432dc4bf375e",
+    "request": "cdfd54ffc1f4467ddc233004910eb3a23edf8f5b3c7acd9acf197cff4ebe9dc1"
+  },
+  "notes": [
+    "尺寸来自实际单位和几何，不从 Name 猜测。名义宽高与带框网格外包尺寸分别记录。",
+    "技术审题按实际 G/D 重算；未声称人工打开 usBIM。"
+  ],
+  "passed": true,
+  "request": "请完成以下门窗补全。下面的位置均按模型世界坐标描述，X、Y 和楼层标高的单位是米，尺寸的单位是毫米。\n\n1．在标高 3.000 米的楼层，平面中心位于（X=-2.660、Y=-16.820 米）的墙面位置，补一扇窗，名义宽 600 毫米、高 600 毫米；墙洞宽 600 毫米、高 600 毫米，洞口下沿距该层标高 2000 毫米（世界标高 5.000 米）。外观参照标高 3.000 米楼层、平面中心（X=13.872、Y=-0.472 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n2．在标高 3.000 米的楼层，平面中心位于（X=-2.660、Y=-19.213 米）的墙面位置，补一扇窗，名义宽 600 毫米、高 600 毫米；墙洞宽 600 毫米、高 600 毫米，洞口下沿距该层标高 2000 毫米（世界标高 5.000 米）。外观参照标高 3.000 米楼层、平面中心（X=13.872、Y=-0.472 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n3．在标高 3.000 米的楼层，平面中心位于（X=16.285、Y=-0.472 米）的墙面位置，补一扇窗，名义宽 600 毫米、高 600 毫米；墙洞宽 600 毫米、高 600 毫米，洞口下沿距该层标高 2000 毫米（世界标高 5.000 米）。外观参照标高 3.000 米楼层、平面中心（X=13.872、Y=-0.472 米）处保留的窗：保持相同的框、扇和玻璃分格。\n\n请保留其余墙体、门窗和其他构件及其位置；只在上述位置补全，使门窗、墙洞和所在墙体的关系完整。",
+  "source_sha256": "dc58869b12b33b322dbd14a22559aa6b54614baa516288a4c10e60f50bfbc6ab",
+  "targets": [
+    {
+      "errors": [],
+      "id": "target-1",
+      "measured": {
+        "bounds_world_m": [
+          [
+            -2.85991774963,
+            -2.78491774963
+          ],
+          [
+            -17.120020689140002,
+            -16.52002068914
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "height_mm": 600.0,
+        "host_bounds_world_m": [
+          [
+            -2.80991774963,
+            -2.50991774963
+          ],
+          [
+            -22.821818272,
+            -13.221818272
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "host_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "host_placement_world_m": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            -2.65991774963
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -13.221818272
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.2999999999999998,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          -2.82241774963,
+          -16.82002068914,
+          5.3
+        ],
+        "mesh_local_extents_mm": [
+          600.0000000000014,
+          75.00000000000017,
+          599.9999999999997
+        ],
+        "mesh_sha256": "3b614dd0a79894d8cfbe680f7f272fa2303455dbc11b682abd5a4698b6b4acbb",
+        "mesh_triangles": 156,
+        "opening_bottom_world_m": 5.000000000000001,
+        "opening_bounds_world_m": [
+          [
+            -3.11891774963,
+            -2.20091774963
+          ],
+          [
+            -17.120020689140002,
+            -16.52002068914
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "opening_center_world_m": [
+          -2.65991774963,
+          -16.82002068914,
+          5.300000000000001
+        ],
+        "opening_center_xy_m": [
+          -2.65991774963,
+          -16.82002068914
+        ],
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfn",
+        "opening_height_mm": 599.9999999999997,
+        "opening_width_mm": 600.0000000000014,
+        "operation_type": "NOTDEFINED",
+        "placement_world_m": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            -2.20091774963
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -16.52002068914
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 2000.000000000001,
+        "source_step_id": 13019,
+        "storey_attribute_elevation_m": 3.0,
+        "storey_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+        "storey_world_elevation_m": 3.0,
+        "target_guid": "34mV4OHM10ZPX8Zg5zOvcK",
+        "type_guid": "08RhMK5Vz6LfdN2hNKqIbd",
+        "unit_to_mm": 1.0,
+        "width_mm": 600.0
+      },
+      "mesh_local_extents_mm": [
+        600.0000000000014,
+        75.00000000000017,
+        599.9999999999997
+      ],
+      "nominal_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          -0.1625000000000001,
+          0.0,
+          -8.881784197001252e-16
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          -0.16249999999999998,
+          0.0,
+          -8.881784197001252e-16
+        ],
+        "reference_offset_world_m": [
+          0.0,
+          0.16249999999999998,
+          -8.881784197001252e-16
+        ],
+        "target_validation_delta_m": 1.1102230246251565e-16
+      },
+      "opening_dimensions_mm": [
+        600.0000000000014,
+        599.9999999999997
+      ],
+      "opening_sill_mm": 2000.000000000001,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            13.5720337908,
+            14.1720337908
+          ],
+          [
+            -0.3468182720430001,
+            -0.271818272043
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "height_mm": 600.0,
+        "host_bounds_world_m": [
+          [
+            10.205082250399999,
+            20.1050822504
+          ],
+          [
+            -0.621818272043,
+            -0.32181827204299995
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "host_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            20.1050822504
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.471818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.30000000000000004,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          13.8720337908,
+          -0.30931827204300005,
+          5.3
+        ],
+        "mesh_local_extents_mm": [
+          599.9999999999997,
+          75.00000000000007,
+          599.9999999999997
+        ],
+        "mesh_sha256": "3b614dd0a79894d8cfbe680f7f272fa2303455dbc11b682abd5a4698b6b4acbb",
+        "mesh_triangles": 156,
+        "opening_bottom_world_m": 5.000000000000001,
+        "opening_bounds_world_m": [
+          [
+            13.572033790799999,
+            14.1720337908
+          ],
+          [
+            -0.930818272043,
+            -0.012818272043
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "opening_center_world_m": [
+          13.8720337908,
+          -0.47181827204300003,
+          5.300000000000001
+        ],
+        "opening_center_xy_m": [
+          13.8720337908,
+          -0.47181827204300003
+        ],
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfM",
+        "opening_height_mm": 599.9999999999997,
+        "opening_width_mm": 600.0000000000014,
+        "operation_type": "NOTDEFINED",
+        "placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            14.1720337908
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.930818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 2000.000000000001,
+        "source_step_id": 16251,
+        "storey_attribute_elevation_m": 3.0,
+        "storey_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+        "storey_world_elevation_m": 3.0,
+        "target_guid": "2agWFRA3DFMvTb4v0IpGSs",
+        "type_guid": "08RhMK5Vz6LfdN2hNKqIbd",
+        "unit_to_mm": 1.0,
+        "width_mm": 600.0
+      },
+      "reference_guid": "2agWFRA3DFMvTb4v0IpGSs",
+      "reference_nominal_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "requested_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "step_id": 13019
+    },
+    {
+      "errors": [],
+      "id": "target-2",
+      "measured": {
+        "bounds_world_m": [
+          [
+            -2.85991774963,
+            -2.78491774963
+          ],
+          [
+            -19.513330493590004,
+            -18.913330493590003
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "height_mm": 600.0,
+        "host_bounds_world_m": [
+          [
+            -2.80991774963,
+            -2.50991774963
+          ],
+          [
+            -22.821818272,
+            -13.221818272
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "host_guid": "2b5zO_zNf8pA8_ICS7f_$K",
+        "host_placement_world_m": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            -2.65991774963
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -13.221818272
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.2999999999999998,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          -2.82241774963,
+          -19.213330493590004,
+          5.3
+        ],
+        "mesh_local_extents_mm": [
+          600.0000000000014,
+          75.00000000000017,
+          599.9999999999997
+        ],
+        "mesh_sha256": "3b614dd0a79894d8cfbe680f7f272fa2303455dbc11b682abd5a4698b6b4acbb",
+        "mesh_triangles": 156,
+        "opening_bottom_world_m": 5.000000000000001,
+        "opening_bounds_world_m": [
+          [
+            -3.11891774963,
+            -2.20091774963
+          ],
+          [
+            -19.513330493590004,
+            -18.913330493590003
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "opening_center_world_m": [
+          -2.65991774963,
+          -19.213330493590004,
+          5.300000000000001
+        ],
+        "opening_center_xy_m": [
+          -2.65991774963,
+          -19.213330493590004
+        ],
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfm",
+        "opening_height_mm": 599.9999999999997,
+        "opening_width_mm": 600.0000000000014,
+        "operation_type": "NOTDEFINED",
+        "placement_world_m": [
+          [
+            0.0,
+            1.0,
+            0.0,
+            -2.20091774963
+          ],
+          [
+            -1.0,
+            0.0,
+            0.0,
+            -18.913330493590003
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 2000.000000000001,
+        "source_step_id": 13060,
+        "storey_attribute_elevation_m": 3.0,
+        "storey_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+        "storey_world_elevation_m": 3.0,
+        "target_guid": "1UYvRALJb9dBcNbn5Vdiib",
+        "type_guid": "08RhMK5Vz6LfdN2hNKqIbd",
+        "unit_to_mm": 1.0,
+        "width_mm": 600.0
+      },
+      "mesh_local_extents_mm": [
+        600.0000000000014,
+        75.00000000000017,
+        599.9999999999997
+      ],
+      "nominal_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          -0.1625000000000001,
+          0.0,
+          -8.881784197001252e-16
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          -0.16249999999999998,
+          0.0,
+          -8.881784197001252e-16
+        ],
+        "reference_offset_world_m": [
+          0.0,
+          0.16249999999999998,
+          -8.881784197001252e-16
+        ],
+        "target_validation_delta_m": 1.1102230246251565e-16
+      },
+      "opening_dimensions_mm": [
+        600.0000000000014,
+        599.9999999999997
+      ],
+      "opening_sill_mm": 2000.000000000001,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            13.5720337908,
+            14.1720337908
+          ],
+          [
+            -0.3468182720430001,
+            -0.271818272043
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "height_mm": 600.0,
+        "host_bounds_world_m": [
+          [
+            10.205082250399999,
+            20.1050822504
+          ],
+          [
+            -0.621818272043,
+            -0.32181827204299995
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "host_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            20.1050822504
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.471818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.30000000000000004,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          13.8720337908,
+          -0.30931827204300005,
+          5.3
+        ],
+        "mesh_local_extents_mm": [
+          599.9999999999997,
+          75.00000000000007,
+          599.9999999999997
+        ],
+        "mesh_sha256": "3b614dd0a79894d8cfbe680f7f272fa2303455dbc11b682abd5a4698b6b4acbb",
+        "mesh_triangles": 156,
+        "opening_bottom_world_m": 5.000000000000001,
+        "opening_bounds_world_m": [
+          [
+            13.572033790799999,
+            14.1720337908
+          ],
+          [
+            -0.930818272043,
+            -0.012818272043
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "opening_center_world_m": [
+          13.8720337908,
+          -0.47181827204300003,
+          5.300000000000001
+        ],
+        "opening_center_xy_m": [
+          13.8720337908,
+          -0.47181827204300003
+        ],
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfM",
+        "opening_height_mm": 599.9999999999997,
+        "opening_width_mm": 600.0000000000014,
+        "operation_type": "NOTDEFINED",
+        "placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            14.1720337908
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.930818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 2000.000000000001,
+        "source_step_id": 16251,
+        "storey_attribute_elevation_m": 3.0,
+        "storey_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+        "storey_world_elevation_m": 3.0,
+        "target_guid": "2agWFRA3DFMvTb4v0IpGSs",
+        "type_guid": "08RhMK5Vz6LfdN2hNKqIbd",
+        "unit_to_mm": 1.0,
+        "width_mm": 600.0
+      },
+      "reference_guid": "2agWFRA3DFMvTb4v0IpGSs",
+      "reference_nominal_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "requested_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "step_id": 13060
+    },
+    {
+      "errors": [],
+      "id": "target-3",
+      "measured": {
+        "bounds_world_m": [
+          [
+            15.984892826380003,
+            16.584892826380003
+          ],
+          [
+            -0.3468182720430001,
+            -0.271818272043
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "height_mm": 600.0,
+        "host_bounds_world_m": [
+          [
+            10.205082250399999,
+            20.1050822504
+          ],
+          [
+            -0.621818272043,
+            -0.32181827204299995
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "host_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            20.1050822504
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.471818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.30000000000000004,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          16.284892826380002,
+          -0.30931827204300005,
+          5.3
+        ],
+        "mesh_local_extents_mm": [
+          599.9999999999997,
+          75.00000000000007,
+          599.9999999999997
+        ],
+        "mesh_sha256": "3b614dd0a79894d8cfbe680f7f272fa2303455dbc11b682abd5a4698b6b4acbb",
+        "mesh_triangles": 156,
+        "opening_bottom_world_m": 5.000000000000001,
+        "opening_bounds_world_m": [
+          [
+            15.984892826380001,
+            16.584892826380003
+          ],
+          [
+            -0.930818272043,
+            -0.012818272043
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "opening_center_world_m": [
+          16.284892826380002,
+          -0.47181827204300003,
+          5.300000000000001
+        ],
+        "opening_center_xy_m": [
+          16.284892826380002,
+          -0.47181827204300003
+        ],
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfN",
+        "opening_height_mm": 599.9999999999997,
+        "opening_width_mm": 600.0000000000014,
+        "operation_type": "NOTDEFINED",
+        "placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            16.584892826380003
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.930818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 2000.000000000001,
+        "source_step_id": 16220,
+        "storey_attribute_elevation_m": 3.0,
+        "storey_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+        "storey_world_elevation_m": 3.0,
+        "target_guid": "0v7AnS9_D4R9vXkxldrO46",
+        "type_guid": "08RhMK5Vz6LfdN2hNKqIbd",
+        "unit_to_mm": 1.0,
+        "width_mm": 600.0
+      },
+      "mesh_local_extents_mm": [
+        599.9999999999997,
+        75.00000000000007,
+        599.9999999999997
+      ],
+      "nominal_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "offset_witness": {
+        "actual_target_offset_world_m": [
+          0.0,
+          0.16249999999999998,
+          -8.881784197001252e-16
+        ],
+        "basis": "retained_public_reference_geometry",
+        "matches_target_within_1mm": true,
+        "offset_m": [
+          0.0,
+          0.16249999999999998,
+          -8.881784197001252e-16
+        ],
+        "reference_offset_world_m": [
+          0.0,
+          0.16249999999999998,
+          -8.881784197001252e-16
+        ],
+        "target_validation_delta_m": 0.0
+      },
+      "opening_dimensions_mm": [
+        600.0000000000014,
+        599.9999999999997
+      ],
+      "opening_sill_mm": 2000.000000000001,
+      "reference_d": {
+        "bounds_world_m": [
+          [
+            13.5720337908,
+            14.1720337908
+          ],
+          [
+            -0.3468182720430001,
+            -0.271818272043
+          ],
+          [
+            5.0,
+            5.6
+          ]
+        ],
+        "height_mm": 600.0,
+        "host_bounds_world_m": [
+          [
+            10.205082250399999,
+            20.1050822504
+          ],
+          [
+            -0.621818272043,
+            -0.32181827204299995
+          ],
+          [
+            3.0,
+            6.0
+          ]
+        ],
+        "host_guid": "2ebGMQTpv7KeV9ceEWxGjA",
+        "host_placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            20.1050822504
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.471818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            3.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "host_thickness_m": 0.30000000000000004,
+        "ifc_class": "IfcWindow",
+        "kind": "window",
+        "mesh_center_world_m": [
+          13.8720337908,
+          -0.30931827204300005,
+          5.3
+        ],
+        "mesh_local_extents_mm": [
+          599.9999999999997,
+          75.00000000000007,
+          599.9999999999997
+        ],
+        "mesh_sha256": "3b614dd0a79894d8cfbe680f7f272fa2303455dbc11b682abd5a4698b6b4acbb",
+        "mesh_triangles": 156,
+        "opening_bottom_world_m": 5.000000000000001,
+        "opening_bounds_world_m": [
+          [
+            13.572033790799999,
+            14.1720337908
+          ],
+          [
+            -0.930818272043,
+            -0.012818272043
+          ],
+          [
+            5.000000000000001,
+            5.6000000000000005
+          ]
+        ],
+        "opening_center_world_m": [
+          13.8720337908,
+          -0.47181827204300003,
+          5.300000000000001
+        ],
+        "opening_center_xy_m": [
+          13.8720337908,
+          -0.47181827204300003
+        ],
+        "opening_guid": "08RhMK5Vz6LfdN2hFKqVfM",
+        "opening_height_mm": 599.9999999999997,
+        "opening_width_mm": 600.0000000000014,
+        "operation_type": "NOTDEFINED",
+        "placement_world_m": [
+          [
+            -1.0,
+            0.0,
+            0.0,
+            14.1720337908
+          ],
+          [
+            0.0,
+            -1.0,
+            0.0,
+            -0.930818272043
+          ],
+          [
+            0.0,
+            0.0,
+            1.0,
+            5.0
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "sill_mm": 2000.000000000001,
+        "source_step_id": 16251,
+        "storey_attribute_elevation_m": 3.0,
+        "storey_guid": "2F0V3QPDDFMRTpJqxqPeZR",
+        "storey_world_elevation_m": 3.0,
+        "target_guid": "2agWFRA3DFMvTb4v0IpGSs",
+        "type_guid": "08RhMK5Vz6LfdN2hNKqIbd",
+        "unit_to_mm": 1.0,
+        "width_mm": 600.0
+      },
+      "reference_guid": "2agWFRA3DFMvTb4v0IpGSs",
+      "reference_nominal_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "requested_dimensions_mm": [
+        600.0,
+        600.0
+      ],
+      "step_id": 16220
+    }
+  ]
+}

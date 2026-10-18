@@ -1,0 +1,191 @@
+{
+  "purpose": "private development preparation; never mount this file in any tested environment",
+  "cases": [
+    {
+      "case_id": "case-001",
+      "source": {
+        "path": "dataset/external/_checks/ifc-assets-20260913-v4/repairs/bim-whale-ifc-samples-largebuilding-102f8123f85e/repaired.ifc",
+        "sha256": "5a0c3abcd22689dd6a4537339aadce4af17678cbc9d6f5cf26742156e0f25262",
+        "asset_id": "bim-whale-ifc-samples-largebuilding-102f8123f85e",
+        "scene_family": "LargeBuilding",
+        "leakage_group": "unresolved-bim-whale-ifc-samples-largebuilding-102f8123f85e",
+        "rights": "MIT；保留版权和许可声明",
+        "approved_use": "research-evaluation",
+        "reference_role": "事前选择的损坏前参考；采用已登记、通过既有检查的历史修复副本，不是下载原件。本题语义与参考角色仍待人审。",
+        "attribution_files": [
+          "scripts/ifc_repair/repair_comparison/source-notices.md",
+          "dataset/external/bim-whale-ifc-samples/LICENSE"
+        ]
+      },
+      "damage": {
+        "kind": "window",
+        "target_guid": "2cXV28XOjE6f6irgi0CO_u",
+        "opening_guid": "2cXV28XOjE6f6irhW0CO_u",
+        "wall_guid": "2cXV28XOjE6f6irgi0COkg"
+      },
+      "request": {
+        "text": "一层最西边那栋楼的西侧长外墙上，从北往南数第二扇和第三扇现有窗之间缺了一扇窗。请在这两扇窗中心连线的中点补一扇固定窗：宽915毫米、高1830毫米，窗台距这一层地面305毫米。窗框截面、框内分格、玻璃和表面外观以刚才数到的第二扇窗为准；沿墙安装，朝向与它一致，并在墙上开出对应的窗洞。其余窗和墙的其他部分保持原样。",
+        "basis": [
+          "2026-09-29 用户要求改为自然语言和方位定位；公开请求不使用 GUID、构件 Name、类型名或方法提示。",
+          "仅用 D 核对：IFC TrueNorth 约为(0,1)，最西侧长外墙的一层现存窗由北向南排序，第二、第三扇正是两扇保留参照；其中心Y约3.2942与0.2642m。",
+          "中点、915×1830mm、窗台305mm及明确指定的第二扇窗样式均由 D 中公开参照确定；不要求恢复原 Tag、GUID 或隐藏属性。关系术语不写入请求，开洞、安装和楼层语义由任务表达。"
+        ]
+      },
+      "task": {
+        "summary": "在两扇现存窗正中补回同型固定窗",
+        "reference_guids": [
+          "2cXV28XOjE6f6irgi0CO$D",
+          "2cXV28XOjE6f6irgi0COvo"
+        ],
+        "required_products": {
+          "IfcWindow": 1
+        },
+        "required_relations": [
+          {
+            "id": "host_void",
+            "ifc_class": "IfcRelVoidsElement",
+            "basis": "新洞口必须切开请求指定的存活墙；G–D 中对应一条 void 关系消失。"
+          },
+          {
+            "id": "opening_fill",
+            "ifc_class": "IfcRelFillsElement",
+            "basis": "新窗填充新洞口；G–D 中对应一条 fill 关系消失。"
+          },
+          {
+            "id": "storey_containment",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "basis": "新窗属于 Level 1；按窗到楼层的一条成员边计数，不把关系实体数量当分母。"
+          }
+        ],
+        "acceptance": [
+          "新增一扇 IfcWindow，具备可生成的窗框和玻璃几何，宽915 mm、高1830 mm、窗台305 mm，方向与两侧一致。",
+          "新窗中心位于同墙两侧公开参照窗中心的中点；拟定中心墙局部X=12227.5 mm，数值用于私有核对，公开依赖两侧参照。",
+          "建立一处相应洞口；墙的开洞区域与窗匹配，host/void/fill与楼层关系满足上列三条边。",
+          "框/玻璃部件、表面外观和摆放与参照一致；不把原始序列化、隐藏Tag或未请求的性能属性加入义务。"
+        ],
+        "preservation": [
+          "除目标窗与必要洞口、关系外，不新增或删除其他构件。",
+          "允许目标墙因重新开洞发生相应体积变化；墙轴线、厚度、高度、材料和其他洞口不变。",
+          "两个参照窗及其他现存对象保持身份、几何、属性与关系。"
+        ],
+        "allowed_alternatives": [
+          "新增窗、洞口及必要关系可以采用新 GlobalId、不同STEP编号。",
+          "允许几何等价的表示；可以复用或新建固定窗类型，也可在实例表达所需语义。IfcRelDefinesByType不设为必修边，不要求复制原实体树。"
+        ],
+        "matching": "按 D 中最西侧长外墙及自北向南第二、第三扇现存窗的中点匹配唯一新增窗；粗区域前后各0.5 m，尺寸和关系另行评分，不以它们挑选最有利对象。",
+        "tolerances": {
+          "status": "pending_human_review",
+          "length_mm": 1.0,
+          "angle_degrees": 0.1,
+          "note": "开发审阅草案；需要评分器自检支持后再冻结，不继承IFC2Text旧阈值。"
+        },
+        "localization_evidence": {
+          "source": "damaged IFC only",
+          "north_xy": [
+            0.0,
+            1.0
+          ],
+          "wall_guid": "2cXV28XOjE6f6irgi0COkg",
+          "reference_order_north_to_south": [
+            2,
+            3
+          ],
+          "reference_center_y_m": [
+            3.29420155,
+            0.26420155
+          ]
+        }
+      },
+      "clarification": {
+        "required_user_facts": [],
+        "out_of_card_policy": "pending_user_decision"
+      }
+    },
+    {
+      "case_id": "case-002",
+      "source": {
+        "path": "dataset/external/buildingsmart-community/Duplex Apartment/Duplex_A_20110907.ifc",
+        "sha256": "b347a2c8aa8fff6db896a4417a9c50c22ac0ccd7c5cfc22b99b8d29336c606ed",
+        "asset_id": "buildingsmart-community-duplex_a_20110907-b347a2c8aa8f",
+        "scene_family": "Duplex Apartment",
+        "leakage_group": "duplex-apartment",
+        "rights": "CC BY 4.0；保留来源署名、许可链接和修改说明",
+        "approved_use": "research-evaluation",
+        "reference_role": "原始登记字节作为事前选择的损坏前参考。原门开向不是必须恢复的隐藏答案，当前请求允许合理的左右开启方式。",
+        "attribution_files": [
+          "scripts/ifc_repair/repair_comparison/source-notices.md"
+        ]
+      },
+      "damage": {
+        "kind": "door",
+        "target_guid": "1hOSvn6df7F8_7GcBWlSFK",
+        "preserve_opening": true
+      },
+      "request": {
+        "text": "请给二层那个空着的室内门洞补一扇单扇门。门洞的平面中心约在模型全局坐标X=1.915米、Y=-6.188米处，底部标高Z=3.100米。门的名义宽度为864毫米、高度为2032毫米；门框截面、门扇造型和表面外观，以同层平面中心约在X=6.889米、Y=-11.612米处的那扇现有门为准。把门安装在空洞内，左右开启均可。保留现有门洞的位置和大小，墙及其他门保持原样。",
+        "basis": [
+          "2026-09-29 用户认为仅为开向偏好而强设澄清不合适；当前题改为信息充分的简单补门任务。",
+          "仅用 D 核对：二层墙体上、门高范围的未填充洞口只有一处，底标高3.1m；不依赖隐藏身份即可定位。Duplex 没有声明 TrueNorth，不凭空写东南西北。",
+          "D 的洞口及指定同层参照可确定864×2032mm尺寸；公开坐标取保留洞口与参照门的世界几何包围盒平面中心，保留三位小数用于定位；不是1mm定位验收值。左右开启均可，不将原 G 的开向变成用户义务。"
+        ]
+      },
+      "task": {
+        "summary": "给二层唯一的空室内门洞补门",
+        "reference_guids": [
+          "1xS3BCk291UvhgP2dvNozF",
+          "1hOSvn6df7F8_7GcBWlSDm",
+          "2OBrcmyk58NupXoVOHUuXp"
+        ],
+        "required_products": {
+          "IfcDoor": 1
+        },
+        "required_relations": [
+          {
+            "id": "opening_fill",
+            "ifc_class": "IfcRelFillsElement",
+            "basis": "新增门填充保留洞口；原 fill 被删除。保留的墙–洞口 void 已正确，不计入应修分母。"
+          },
+          {
+            "id": "storey_containment",
+            "ifc_class": "IfcRelContainedInSpatialStructure",
+            "basis": "新门加入 Level 2 的成员边；删除前G中的这条成员边在D缺失。"
+          }
+        ],
+        "acceptance": [
+          "在二层唯一空室内门洞处新增一扇 IfcDoor，OverallWidth=864mm、OverallHeight=2032mm，正确填充保留洞口。外框包围尺寸不与Overall尺寸混淆。",
+          "门框和门扇几何可生成，样式与公开坐标指定的现存参照门一致。左右开启均允许；不以与G原开向不同判错，也不要求为此提问。",
+          "fill、Level 2 containment两条应修边正确；保留洞口的void关系和几何不变。"
+        ],
+        "preservation": [
+          "不移动或缩放保留洞口，不改变墙的轴线、厚度、高度、材料或其他洞口。",
+          "两种现存参照门及其他对象保持身份、几何、属性与关系；不重复补门。"
+        ],
+        "allowed_alternatives": [
+          "新增门与关系允许新GlobalId及等价几何表示，不恢复已删除门的Tag或隐藏属性。",
+          "可以复用相容门类型、创建语义和外观等价的新类型，或在实例表达所需语义。IfcRelDefinesByType不设为必修边；当前任务不把开向列为必答事实。"
+        ],
+        "matching": "按 D 中二层唯一空室内门洞的位置匹配唯一新增 IfcDoor，粗匹配取洞口中心0.5m范围；fill关系和尺寸在匹配后独立检验。",
+        "tolerances": {
+          "status": "pending_human_review",
+          "length_mm": 1.0,
+          "angle_degrees": 0.1,
+          "note": "开发审阅草案；Duplex项目单位是m，检查统一换算mm。"
+        },
+        "localization_evidence": {
+          "source": "damaged IFC only",
+          "description": "二层唯一空室内门洞",
+          "bottom_world_z_m": 3.1,
+          "unfilled_wall_opening_candidates": [
+            "1xS3BCk291UvhgP2dvNozF"
+          ],
+          "north_not_declared": true
+        }
+      },
+      "clarification": {
+        "required_user_facts": [],
+        "out_of_card_policy": "pending_user_decision",
+        "note": "本题不强设澄清。后续选择位置、楼层或必需尺寸等确实无法从公开输入确定的事实，不把普通可选开向当作强制提問。"
+      }
+    }
+  ]
+}

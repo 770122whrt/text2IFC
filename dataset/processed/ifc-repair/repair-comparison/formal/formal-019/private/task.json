@@ -1,0 +1,370 @@
+{
+  "allowed_alternatives": [
+    "new identities and equivalent STEP serialization",
+    "parallel rectangular orientation modulo 180 degrees"
+  ],
+  "author_expectations": {
+    "target-1": {
+      "axis_world_m": [
+        [
+          -9.449,
+          5.09,
+          4.2936
+        ],
+        [
+          -12.249,
+          5.09,
+          4.2936
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          -12.249218721852149,
+          -9.44921872185215
+        ],
+        [
+          4.940440882089149,
+          5.2404408820891515
+        ],
+        [
+          3.887199999999998,
+          4.6999999999999975
+        ]
+      ],
+      "column_section_orientation_equivalence": null,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-1",
+      "ifc_class": "IfcBeam",
+      "kind": "beam",
+      "operation_type": "add_beam",
+      "property_requirements": [
+        {
+          "property_name": "LoadBearing",
+          "pset_name": "Pset_BeamCommon",
+          "scope": "occurrence",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "section": {
+        "height_mm": 812.8,
+        "shape": "rectangle",
+        "width_mm": 300.0
+      },
+      "source_global_id_private": "3dYhAmtj90CAuJMSpTXsSS",
+      "source_name_private": "Concrete-Rectangular Beam:16 x 32:480440",
+      "storey_attribute_elevation_m": 4.7,
+      "storey_global_id_private": "15Z0v90RiHrPC20026FoKR",
+      "storey_world_elevation_m": 4.7
+    },
+    "target-2": {
+      "axis_world_m": [
+        [
+          -12.549,
+          5.24,
+          -1.0
+        ],
+        [
+          -12.549,
+          5.24,
+          14.1
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          -12.8492187218521,
+          -12.249218721852099
+        ],
+        [
+          4.94044088208914,
+          5.54044088208914
+        ],
+        [
+          -1.0,
+          14.1
+        ]
+      ],
+      "column_section_orientation_equivalence": "parallel axes, modulo 180 degrees",
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-2",
+      "ifc_class": "IfcColumn",
+      "kind": "column",
+      "operation_type": "add_column",
+      "property_requirements": [
+        {
+          "property_name": "LoadBearing",
+          "pset_name": "Pset_ColumnCommon",
+          "scope": "occurrence",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "section": {
+        "depth_mm": 600.0,
+        "orientation": {
+          "x": -1.0,
+          "y": 0.0
+        },
+        "shape": "rectangle",
+        "width_mm": 600.0
+      },
+      "source_global_id_private": "3mC5rj4wL5ZfT78mw_nkxP",
+      "source_name_private": "Concrete-Rectangular-Column:24X24:320343",
+      "storey_attribute_elevation_m": -1.0,
+      "storey_global_id_private": "3mC5rj4wL5ZfT78mw_nj5F",
+      "storey_world_elevation_m": -1.0
+    }
+  },
+  "budget": {
+    "limits": {
+      "active_seconds": 2400,
+      "calls": 48,
+      "extensions": [],
+      "tokens": 450000,
+      "tool_seconds": 120
+    },
+    "provider_calls_allowed": true,
+    "requires_current_stage_admission": true,
+    "status": "frozen"
+  },
+  "case_id": "formal-019",
+  "clarification": {
+    "facts": {
+      "column_position_x": {
+        "answer_text": "柱平面中心的世界X坐标为-12.549米。",
+        "applies_to": "target-2",
+        "fact_kind": "placement_world_x",
+        "necessary_because": "公开请求只给柱在梁西端附近，Type不能提供该实例的准确世界平面位置。",
+        "private_identity_in_answer": false,
+        "source": "prewritten_from_reviewed_geometry_before_experiment",
+        "unit": "m",
+        "value": -12.549
+      },
+      "column_position_y": {
+        "answer_text": "柱平面中心的世界Y坐标为5.24米。",
+        "applies_to": "target-2",
+        "fact_kind": "placement_world_y",
+        "necessary_because": "公开请求只给柱在梁西端附近，Type不能提供该实例的准确世界平面位置。",
+        "private_identity_in_answer": false,
+        "source": "prewritten_from_reviewed_geometry_before_experiment",
+        "unit": "m",
+        "value": 5.24
+      }
+    },
+    "reply_policy": "Only facts explicitly asked; no full card injection or runtime Gold lookup.",
+    "required_user_facts": [
+      "column_position_x",
+      "column_position_y"
+    ]
+  },
+  "clarification_required": true,
+  "damage": [
+    {
+      "kind": "beam",
+      "mutation": "remove_structural_members",
+      "source_name": "Concrete-Rectangular Beam:16 x 32:480440",
+      "target_guid": "3dYhAmtj90CAuJMSpTXsSS",
+      "target_id": "target-1"
+    },
+    {
+      "kind": "column",
+      "mutation": "remove_structural_members",
+      "source_name": "Concrete-Rectangular-Column:24X24:320343",
+      "target_guid": "3mC5rj4wL5ZfT78mw_nkxP",
+      "target_id": "target-2"
+    }
+  ],
+  "damage_profile": {
+    "composition": "multiple",
+    "level": "S2",
+    "target_count": 2
+  },
+  "damaged_sha256": "ee3d065347a19fbcb25e92a28f22fc66cfdb74d67e839ff881e71feda144e587",
+  "data_scope": "evaluator_preparation_only",
+  "draft": true,
+  "freeze_status": "not_frozen",
+  "metrics": {
+    "formal_scoring_frozen": false,
+    "status": "deferred"
+  },
+  "old_global_plan_applies": false,
+  "pipeline_readiness": {
+    "existing_bound_support_scope": "same D, same final geometry and properties; historical complete-input mechanical execution, not revised clarification flow",
+    "human_acceptance": false,
+    "revised_clarification_resume_tested": false,
+    "technical_review_accepted": true
+  },
+  "preservation": {
+    "all_other_products_geometry_placement_properties_and_relationships": "required",
+    "source_is_immutable": true
+  },
+  "private_inputs_never_for_tested_system": [
+    "private/",
+    "REVIEW.md",
+    "VIEW.html",
+    "IFC-VALIDATION.md"
+  ],
+  "property_runtime_full_chain_verified": false,
+  "public": {
+    "ifc": "public/model.ifc",
+    "request": "public/request.txt"
+  },
+  "published_as_formal": false,
+  "purpose": "formal_candidate",
+  "reference_guids": [
+    "3dYhAmtj90CAuJMSpTXsTa",
+    "3mC5rj4wL5ZfT78mw_nkvu"
+  ],
+  "request": "模型里少了一根水平梁和一根竖直柱，请分别补回。\n\n梁属于楼层标高4.7米的那层，两个端面中心为（-9.449，5.09，4.2936）米和（-12.249，5.09，4.2936）米，截面宽300毫米、竖向高812.8毫米。\n\n柱位于这根梁的西端附近，柱底中心标高-1米，柱顶中心标高14.1米，截面600×600毫米，截面的边平行于模型X、Y方向，归属于柱底所在的-1米楼层。\n\n请把这根梁和这根柱的承重标记均设置为“是”。\n\n以上位置使用模型全局坐标，坐标和标高的单位是米。请保留其余构件及其位置、几何和现有属性。",
+  "review": {
+    "authorization": {
+      "property_revision_authorized": true,
+      "user_quote": "其他看起来没有问题 大体上没有问题 你再稍微过一遍即可。"
+    },
+    "human_viewed": false,
+    "kind": "delegated_technical",
+    "reviewed_at": "2026-10-09T04:02:21.373506+00:00",
+    "reviewer": "Codex technical review following user general approval",
+    "scope_note": "User generally approved the other cases and delegated this recheck; no per-case usBIM pass is attributed to the user.",
+    "status": "accepted_by_delegation",
+    "technical_review_passed": true
+  },
+  "run_status": "not_started",
+  "schema_version": "repair-comparison-task-candidate/0.2",
+  "scoring": {
+    "old_window_door_policy_not_applied": true,
+    "policy_version": null,
+    "status": "draft_not_admitted"
+  },
+  "source": {
+    "asset_id": "gni-bim-dataset-model_174-d7fdca7cce24",
+    "license": "CC-BY-4.0",
+    "reference_role": "preselected_reference_from_registered_repair_copy",
+    "registry": "dataset/external/ifc-asset-register.jsonl",
+    "registry_line": 207,
+    "source_id": "gni-bim-dataset",
+    "source_path": "dataset/external/repairs/metadata-v2/gni-bim-dataset-model_174-d7fdca7cce24/model_174.ifc"
+  },
+  "source_sha256": "4fbd73d3934ba642946e8894436d787e4dc01621a17f0032c0b30dd6ed30b031",
+  "summary": "补回一根梁和一根柱，并恢复承重属性",
+  "targets": [
+    {
+      "axis_world_m": [
+        [
+          -9.449,
+          5.09,
+          4.2936
+        ],
+        [
+          -12.249,
+          5.09,
+          4.2936
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          -12.249218721852149,
+          -9.44921872185215
+        ],
+        [
+          4.940440882089149,
+          5.2404408820891515
+        ],
+        [
+          3.887199999999998,
+          4.6999999999999975
+        ]
+      ],
+      "column_section_orientation_equivalence": null,
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-1",
+      "ifc_class": "IfcBeam",
+      "kind": "beam",
+      "operation_type": "add_beam",
+      "property_requirements": [
+        {
+          "property_name": "LoadBearing",
+          "pset_name": "Pset_BeamCommon",
+          "scope": "occurrence",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "section": {
+        "height_mm": 812.8,
+        "shape": "rectangle",
+        "width_mm": 300.0
+      },
+      "source_global_id_private": "3dYhAmtj90CAuJMSpTXsSS",
+      "source_name_private": "Concrete-Rectangular Beam:16 x 32:480440",
+      "storey_attribute_elevation_m": 4.7,
+      "storey_global_id_private": "15Z0v90RiHrPC20026FoKR",
+      "storey_world_elevation_m": 4.7
+    },
+    {
+      "axis_world_m": [
+        [
+          -12.549,
+          5.24,
+          -1.0
+        ],
+        [
+          -12.549,
+          5.24,
+          14.1
+        ]
+      ],
+      "bounds_world_m": [
+        [
+          -12.8492187218521,
+          -12.249218721852099
+        ],
+        [
+          4.94044088208914,
+          5.54044088208914
+        ],
+        [
+          -1.0,
+          14.1
+        ]
+      ],
+      "column_section_orientation_equivalence": "parallel axes, modulo 180 degrees",
+      "geometry_semantics": "physical body end-face centres / column base-top centres",
+      "gold_is_evaluation_side_only": true,
+      "id": "target-2",
+      "ifc_class": "IfcColumn",
+      "kind": "column",
+      "operation_type": "add_column",
+      "property_requirements": [
+        {
+          "property_name": "LoadBearing",
+          "pset_name": "Pset_ColumnCommon",
+          "scope": "occurrence",
+          "unit": null,
+          "value": true,
+          "value_type": "IfcBoolean"
+        }
+      ],
+      "section": {
+        "depth_mm": 600.0,
+        "orientation": {
+          "x": -1.0,
+          "y": 0.0
+        },
+        "shape": "rectangle",
+        "width_mm": 600.0
+      },
+      "source_global_id_private": "3mC5rj4wL5ZfT78mw_nkxP",
+      "source_name_private": "Concrete-Rectangular-Column:24X24:320343",
+      "storey_attribute_elevation_m": -1.0,
+      "storey_global_id_private": "3mC5rj4wL5ZfT78mw_nj5F",
+      "storey_world_elevation_m": -1.0
+    }
+  ]
+}

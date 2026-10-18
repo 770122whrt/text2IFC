@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "checks": {
+    "source_unchanged": true,
+    "G_native_schema_express_passed": true,
+    "D_native_schema_express_passed": true,
+    "only_declared_products_removed": true,
+    "no_product_created": true,
+    "only_selected_occurrence_properties_changed": true,
+    "retained_geometry_unchanged": true,
+    "nonempty_source_and_damaged_geometry": true,
+    "correct_typed_damage": true,
+    "removed_opening_regions_closed": true
+  },
+  "source_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "damaged_validation": {
+    "validator": "ifcopenshell.validate",
+    "version": "0.8.5",
+    "express_rules": true,
+    "diagnostic_count": 0,
+    "passed": true,
+    "diagnostics": []
+  },
+  "geometry_counts": {
+    "G": 1402,
+    "D": 1402
+  },
+  "unrelated_mesh_count_checked": 1402,
+  "wall_closure": {},
+  "root_diff": {
+    "created": [],
+    "modified": [
+      {
+        "change_kind": "modified",
+        "global_id": "21px8oV7niXWdwSfZVj86W",
+        "ifc_class": "IfcPropertySet",
+        "is_relationship": false,
+        "before": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WallCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "ExtendToStructure",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "Exterrior Wall - 200mm"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:8afdda48d5cb557a8855c2dba5800a85139a81c1a4f8baf9c671bff912522e02"
+        },
+        "after": {
+          "ifc_class": "IfcPropertySet",
+          "name": "Pset_WallCommon",
+          "attributes": {
+            "HasProperties": [
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "ExtendToStructure",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "IsExternal",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": false
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "LoadBearing",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcBoolean",
+                    "attributes": {
+                      "wrappedValue": true
+                    }
+                  },
+                  "Unit": null
+                }
+              },
+              {
+                "ifc_class": "IfcPropertySingleValue",
+                "attributes": {
+                  "Name": "Reference",
+                  "Description": null,
+                  "NominalValue": {
+                    "ifc_class": "IfcIdentifier",
+                    "attributes": {
+                      "wrappedValue": "Exterrior Wall - 200mm"
+                    }
+                  },
+                  "Unit": null
+                }
+              }
+            ]
+          },
+          "content_sha256": "sha256:d1c64e6ab9f2e8aeeeec40e6dd8f261444567e102aaad157a88f92c88ca2a66c"
+        }
+      }
+    ],
+    "removed": []
+  }
+}

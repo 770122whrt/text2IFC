@@ -11,6 +11,7 @@ import ifcopenshell.api.geometry
 from text2ifc_ifc_repair.door_geometry import (
     measure_door_opening_alignment,
     select_door_placement_in_opening,
+    reuse_public_door_body,
 )
 from text2ifc_ifc_repair.door_resolution import (
     SUPPORTED_GENERATED_OPERATIONS,
@@ -445,12 +446,14 @@ def _add_door_applicator(
     *,
     operation: Mapping[str, Any],
     model: Any,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     wall = require_guid(
         model, str(operation["target"]["wall_global_id"]), "IfcWall"
     )
     hosted = create_hosted_opening(
-        model=model, operation=operation, wall=wall
+        model=model, operation=operation, wall=wall,
+        public_geometry_requirement=public_geometry_requirement,
     )
     return _create_door(
         model=model,
@@ -459,6 +462,7 @@ def _add_door_applicator(
         opening=hosted["opening"],
         opening_depth_mm=float(hosted["opening_depth_mm"]),
         created_opening=hosted,
+        public_geometry_requirement=public_geometry_requirement,
     )
 
 
@@ -466,6 +470,7 @@ def _fill_door_applicator(
     *,
     operation: Mapping[str, Any],
     model: Any,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     opening = require_guid(
         model,
@@ -485,6 +490,7 @@ def _fill_door_applicator(
         opening=opening,
         opening_depth_mm=float(dimensions["depth"]),
         created_opening=None,
+        public_geometry_requirement=public_geometry_requirement,
     )
 
 
@@ -496,6 +502,7 @@ def _create_door(
     opening: Any,
     opening_depth_mm: float,
     created_opening: Mapping[str, Any] | None,
+    public_geometry_requirement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     door_id = deterministic_global_id(operation, "door")
     fill_id = deterministic_global_id(operation, "fills_relationship")
@@ -539,7 +546,12 @@ def _create_door(
         OverallHeight=millimetres_to_project_units(model, height),
         OverallWidth=millimetres_to_project_units(model, width),
     )
-    if door_style is not None and door_style.RepresentationMaps:
+    installation_anchor = operation["parameters"].get("door_installation_anchor")
+    direct_body = bool(installation_anchor and installation_anchor.get("direct_body"))
+    if direct_body:
+        reference = require_guid(model, str(installation_anchor["reference_global_id"]), "IfcDoor")
+        representations = reuse_public_door_body(model, reference)
+    elif door_style is not None and door_style.RepresentationMaps:
         representations = [
             ifcopenshell.api.geometry.map_representation(
                 model,
@@ -561,13 +573,32 @@ def _create_door(
     door.Representation = model.create_entity(
         "IfcProductDefinitionShape", Representations=representations
     )
-    selected_placement = select_door_placement_in_opening(door, opening)
-    door.ObjectPlacement = local_placement(
-        model,
-        relative_to=opening.ObjectPlacement,
-        location=selected_placement["location"],
-        ref_direction=selected_placement["ref_direction"],
-    )
+    if installation_anchor is not None and (
+        door_style is None
+        or str(door_style.GlobalId) != installation_anchor.get("type_global_id")
+    ):
+        raise ValueError("DOOR_INSTALLATION_TYPE_MISMATCH")
+    if public_geometry_requirement:
+        if not direct_body and not (door_style is not None and door_style.RepresentationMaps):
+            raise ValueError('PUBLIC_GEOMETRY_DOOR_REPRESENTATION_UNSUPPORTED')
+        from ..public_geometry import place_public_product
+        place_public_product(door, opening, public_geometry_requirement['placement_world_mm'])
+        selected_placement = {
+            'location': door.ObjectPlacement.RelativePlacement.Location.Coordinates,
+            'ref_direction': door.ObjectPlacement.RelativePlacement.RefDirection.DirectionRatios,
+            'diagnostics': {'orientation_source': 'original_public_request'},
+        }
+    else:
+        selected_placement = select_door_placement_in_opening(
+            door, opening, **({"installation_anchor": installation_anchor}
+                             if installation_anchor is not None else {}),
+        )
+        door.ObjectPlacement = local_placement(
+            model,
+            relative_to=opening.ObjectPlacement,
+            location=selected_placement["location"],
+            ref_direction=selected_placement["ref_direction"],
+        )
     fill = model.create_entity(
         "IfcRelFillsElement",
         GlobalId=fill_id,
@@ -609,14 +640,17 @@ def _create_door(
             "global_id": str(containment.GlobalId),
         }
     )
-    appearance_result = apply_repair_appearance_on_occurrence(
-        model,
-        type_object=door_style,
-        occurrence=door,
-        explicit_appearance=(
-            None if operation.get("appearance") is None else dict(operation["appearance"])
-        ),
-    )
+    if direct_body and operation.get("appearance") is None:
+        appearance_result = {
+            "applied": False, "preserved": True, "source": "verified_public_occurrence_body",
+        }
+    else:
+        appearance_result = apply_repair_appearance_on_occurrence(
+            model, type_object=door_style, occurrence=door,
+            explicit_appearance=(
+                None if operation.get("appearance") is None else dict(operation["appearance"])
+            ),
+        )
     created = [
         *(
             [
@@ -869,7 +903,12 @@ def _postconditions(
         }
     expected = operation["parameters"]["door"]
     try:
-        alignment = measure_door_opening_alignment(door, opening)
+        installation_anchor = operation["parameters"].get("door_installation_anchor")
+        alignment = measure_door_opening_alignment(
+            door, opening, **({"installation_anchor": installation_anchor}
+                             if installation_anchor is not None else {}),
+            public_geometry_requirement=application.get('public_geometry_requirement'),
+        )
     except Exception as error:
         alignment = {
             "valid": False,

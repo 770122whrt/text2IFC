@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="3" skipped="0" tests="20" time="25.499" timestamp="2026-09-08T19:29:15.707481+08:00" hostname="what-do-matter"><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[60-wall-1]" time="2.124" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[60-wall-storey-1-wall-1]" time="3.231" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[30-wall-1]" time="2.756" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_public_gate_binds_frozen_identity_and_still_reads_value[30-wall-storey-1-wall-1]" time="2.964" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[canonical]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[legacy]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[both]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[duplicate-storeys]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[wrong-family]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_identity_binding_is_unique_and_family_scoped[unoffered]" time="0.001" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[False-IfcWall]" time="0.016"><failure message="AssertionError: assert False is (('IfcWall' != 'IfcSlab' and not False))&#10; +  where False = all(&lt;generator object test_dynamic_host_binding_and_wall_family.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000211AFF136B0&gt;)">wall_class = 'IfcWall', wrong_host = False
+
+    @pytest.mark.parametrize('wall_class', ['IfcWall', 'IfcWallStandardCase', 'IfcSlab'])
+    @pytest.mark.parametrize('wrong_host', [False, True])
+    def test_dynamic_host_binding_and_wall_family(wall_class, wrong_host):
+        from text2ifc_agent.dynamic_gates import evaluate_dynamic_gates
+        from tests.agent.test_phase6_3_dynamic_gates import _candidate, _expected_facts
+        expected = _expected_facts(storeys=['storey-1'], doors=[
+            {'id': 'door-1', 'storey': 'storey-1', 'host_wall': 'w'}], windows=[])
+        expected['walls'] = [{'id': 'w', 'storey': 'storey-1'}]
+        expected['total_counts']['IfcWall'] = 1
+        expected['entity_id_contract'] = {'walls': [
+            {'brief_id': 'w', 'entity_id': 'wall-storey-1-w', 'storey': 'storey-1'}]}
+        candidate = _candidate(storeys=['storey-1'], walls=[('wall-storey-1-w', 'storey-1'), ('other', 'storey-1')],
+                               doors=[('door-1', 'storey-1', 'other' if wrong_host else 'wall-storey-1-w')],
+                               windows=[], include_opening_relationships=True)
+        for entity in candidate['entities']:
+            if entity['id'] in {'wall-storey-1-w', 'other'}:
+                entity['ifc_class'] = wall_class
+        gates = evaluate_dynamic_gates(candidate=candidate, expected_facts=expected)
+&gt;       assert all(g['status'] != 'failed' for g in gates) is (wall_class != 'IfcSlab' and not wrong_host)
+E       AssertionError: assert False is (('IfcWall' != 'IfcSlab' and not False))
+E        +  where False = all(&lt;generator object test_dynamic_host_binding_and_wall_family.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000211AFF136B0&gt;)
+
+tests\agent\test_semantic_identity_binding.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[False-IfcWallStandardCase]" time="0.002"><failure message="AssertionError: assert False is (('IfcWallStandardCase' != 'IfcSlab' and not False))&#10; +  where False = all(&lt;generator object test_dynamic_host_binding_and_wall_family.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000211AE364EE0&gt;)">wall_class = 'IfcWallStandardCase', wrong_host = False
+
+    @pytest.mark.parametrize('wall_class', ['IfcWall', 'IfcWallStandardCase', 'IfcSlab'])
+    @pytest.mark.parametrize('wrong_host', [False, True])
+    def test_dynamic_host_binding_and_wall_family(wall_class, wrong_host):
+        from text2ifc_agent.dynamic_gates import evaluate_dynamic_gates
+        from tests.agent.test_phase6_3_dynamic_gates import _candidate, _expected_facts
+        expected = _expected_facts(storeys=['storey-1'], doors=[
+            {'id': 'door-1', 'storey': 'storey-1', 'host_wall': 'w'}], windows=[])
+        expected['walls'] = [{'id': 'w', 'storey': 'storey-1'}]
+        expected['total_counts']['IfcWall'] = 1
+        expected['entity_id_contract'] = {'walls': [
+            {'brief_id': 'w', 'entity_id': 'wall-storey-1-w', 'storey': 'storey-1'}]}
+        candidate = _candidate(storeys=['storey-1'], walls=[('wall-storey-1-w', 'storey-1'), ('other', 'storey-1')],
+                               doors=[('door-1', 'storey-1', 'other' if wrong_host else 'wall-storey-1-w')],
+                               windows=[], include_opening_relationships=True)
+        for entity in candidate['entities']:
+            if entity['id'] in {'wall-storey-1-w', 'other'}:
+                entity['ifc_class'] = wall_class
+        gates = evaluate_dynamic_gates(candidate=candidate, expected_facts=expected)
+&gt;       assert all(g['status'] != 'failed' for g in gates) is (wall_class != 'IfcSlab' and not wrong_host)
+E       AssertionError: assert False is (('IfcWallStandardCase' != 'IfcSlab' and not False))
+E        +  where False = all(&lt;generator object test_dynamic_host_binding_and_wall_family.&lt;locals&gt;.&lt;genexpr&gt; at 0x00000211AE364EE0&gt;)
+
+tests\agent\test_semantic_identity_binding.py:76: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[False-IfcSlab]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[True-IfcWall]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[True-IfcWallStandardCase]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_dynamic_host_binding_and_wall_family[True-IfcSlab]" time="0.002" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[False-False]" time="2.842" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[False-True]" time="2.916"><failure message="assert False is not False">tmp_path = WindowsPath('E:/code for project/bimnet/.tmp/pytest-all-identities-red-02/test_reopened_geometry_uses_fr1')
+canonical = True, wrong_geometry = False
+
+    @pytest.mark.parametrize('canonical', [False, True])
+    @pytest.mark.parametrize('wrong_geometry', [False, True])
+    def test_reopened_geometry_uses_frozen_id_contract(tmp_path, canonical, wrong_geometry):
+        from text2ifc_agent.expected_facts import build_expected_facts
+        from tests.agent.test_phase6_2_fix_semantic_fidelity import _outside_boundary_design_brief, _outside_boundary_center_overlap_candidate
+        brief = _outside_boundary_design_brief()
+        candidate = _outside_boundary_center_overlap_candidate()
+        expected = build_expected_facts(case_id='geometry-identity', design_brief=brief)
+        if wrong_geometry:
+            space = next(e for e in candidate['entities'] if e['ifc_class'] == 'IfcSpace')
+            space['attributes']['ObjectPlacement']['origin'][0] += 1000
+        if canonical:
+            aliases = {r['brief_id']: r['entity_id'] for records in expected['entity_id_contract'].values() for r in records}
+            def replace(value):
+                if isinstance(value, str):
+                    return aliases.get(value, value)
+                if isinstance(value, dict):
+                    return {k: replace(v) for k, v in value.items()}
+                if isinstance(value, list):
+                    return [replace(v) for v in value]
+                return value
+            candidate = replace(candidate)
+        (tmp_path / 'generator').mkdir()
+        for name, value in [('generator/candidate.json', candidate), ('design-brief.json', brief), ('expected-facts.json', expected)]:
+            (tmp_path / name).write_text(json.dumps(value), encoding='utf-8')
+        frozen = (tmp_path / 'expected-facts.json').read_bytes()
+        result = run_candidate_gate_stage(case_dir=tmp_path, output_dir=tmp_path, case_id='geometry-identity')
+&gt;       assert result['geometry_success'] is not wrong_geometry
+E       assert False is not False
+
+tests\agent\test_semantic_identity_binding.py:106: AssertionError</failure></testcase><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[True-False]" time="2.973" /><testcase classname="tests.agent.test_semantic_identity_binding" name="test_reopened_geometry_uses_frozen_id_contract[True-True]" time="3.025" /></testsuite></testsuites>
